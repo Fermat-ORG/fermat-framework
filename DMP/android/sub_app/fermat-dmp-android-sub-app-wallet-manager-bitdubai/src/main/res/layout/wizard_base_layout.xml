@@ -32,8 +32,10 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/checkbox"
+            android:backgroundTint="#000"
             android:layout_gravity="center"
-            android:checked="false"
+            android:checked="true"
+            android:textColorLink="#00B397"
             android:buttonTint="#58595B"
             android:textColor="#58595B"/>
 

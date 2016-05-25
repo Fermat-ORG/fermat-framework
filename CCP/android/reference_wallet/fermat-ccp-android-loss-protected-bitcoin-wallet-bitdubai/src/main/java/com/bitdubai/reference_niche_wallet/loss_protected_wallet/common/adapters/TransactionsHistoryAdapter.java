@@ -6,9 +6,13 @@ import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionHistoryViewHolder2;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionListItemViewHolder;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
@@ -16,50 +20,28 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
-
 /**
  * Created by Joaquin Carrasquero on 05/04/16.
  */
-public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalletTransaction, TransactionHistoryViewHolder2> {
+public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalletTransaction, TransactionListItemViewHolder> {
 
     private com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList onRefreshList;
-    // private View.OnClickListener mOnClickListener;
     LossProtectedWallet cryptoWallet;
     LossProtectedWalletSession referenceWalletSession;
     Typeface tf;
-    protected TransactionsHistoryAdapter(Context context) {
-        super(context);
-    }
 
     public TransactionsHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
-        //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
 
-
-    }
-
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
-
-    }
-
-    /**
-     * Create a new holder instance
-     *
-     * @param itemView View object
-     * @param type     int type
-     * @return ViewHolder
-     */
     @Override
-    protected TransactionHistoryViewHolder2 createHolder(View itemView, int type) {
-        return new TransactionHistoryViewHolder2(itemView);
+    protected TransactionListItemViewHolder createHolder(View itemView, int type) {
+        return new TransactionListItemViewHolder(itemView);
     }
 
     /**
@@ -69,7 +51,7 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.history_transaction_row;
+        return R.layout.list_item_trasaction_row;
     }
 
     /**
@@ -80,25 +62,37 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
      * @param position position to render
      */
     @Override
-    protected void bindHolder(TransactionHistoryViewHolder2 holder, LossProtectedWalletTransaction data, int position) {
+    protected void bindHolder(TransactionListItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
 
+        //set Amount transaction
+        holder.getTransaction_amount().setText(WalletUtils.formatBalanceString(data.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTypeface(tf) ;
+        //formatter for date transaction
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
+        holder.getTransaction_date().setText("Date: " + sdf.format(data.getTimestamp()) + ".");
 
-        if(data.getInvolvedActor() != null)
-            holder.getTxt_contactName().setText(data.getInvolvedActor().getName());
+        //Validate Involved Actor for contact name
+        String contactName = "";
+        if (data.getInvolvedActor() != null)
+                contactName = data.getInvolvedActor().getName();
         else
-            holder.getTxt_contactName().setText("Unknown");
+        if (data.getTransactionType() == TransactionType.CREDIT)
+            if (data.getActorFromType()== Actors.BITCOIN_BASIC_USER)
+                contactName = "Bitcoin Wallet";
+            else
+                contactName = "Unknown";
+        else
+            contactName = "Unknown";
 
-        holder.getTxt_contactName().setTypeface(tf);
+        //Validate if the transaction is credit or debit
+        if (data.getTransactionType() == TransactionType.CREDIT)
+            holder.getTransaction_user().setText("From: " + contactName + ".");
+        else
+            holder.getTransaction_user().setText("To: " + contactName + ".");
 
-        holder.getTxt_notes().setText(data.getMemo());
-        holder.getTxt_notes().setTypeface(tf);
+        //Set transaction note
+        holder.getTransaction_note().setText("Note: " + data.getMemo() + ".");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
-        holder.getTxt_time().setText(sdf.format(data.getTimestamp()) + " hs");
-        holder.getTxt_time().setTypeface(tf);
 
     }
 }

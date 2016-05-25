@@ -12,30 +12,34 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, ActiveActorIdentityInformation> {
+
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW, maintainerMail = "alex_jimenez76@hotmail.com", createdBy = "alexanderejm", layer = Layers.SUB_APP_MODULE, platform = Platforms.ART_PLATFORM, plugin = Plugins.FAN_COMMUNITY_SUB_APP_MODULE)
+public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, FanCommunitySelectableIdentity> {
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
-
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
     private FanManager fanNetworkServiceManager;
@@ -48,6 +52,12 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM,                addon  = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.ARTIST_ACTOR_CONNECTION)
+    private ArtistActorConnectionManager artistActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST   )
+    private ArtistManager artistNetworkServiceManager;
 
     private FanCommunityManager fanCommunityManager;
     /**
@@ -63,10 +73,11 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
                 fanActorConnectionManager,
                 fanNetworkServiceManager,
                 fanaticIdentityManager,
-                errorManager,
                 pluginFileSystem,
                 pluginId,
-                this.getPluginVersionReference());
+                this.getPluginVersionReference(),
+                artistActorConnectionManager,
+                artistNetworkServiceManager);
     }
 
     @Override
@@ -92,7 +103,7 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     }
 
     @Override
-    public ModuleManager<FanCommunitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<FanCommunitySettings, FanCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
         if(fanCommunityManager == null)
             initPluginManager();
         return fanCommunityManager;

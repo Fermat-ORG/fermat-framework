@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
@@ -23,8 +23,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -35,19 +35,19 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
     private UUID                 pluginId;
     private ErrorManager         errorManager;
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
     public OutgoingIntraActorTransactionManager(UUID pluginId,
                                                 ErrorManager errorManager,
-                                                BitcoinWalletManager bitcoinWalletManager,
+                                                CryptoWalletManager cryptoWalletManager,
                                                 PluginDatabaseSystem pluginDatabaseSystem,
                                                 BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager) {
 
         this.pluginId             = pluginId;
         this.errorManager         = errorManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinLossProtectedWalletManager = bitcoinLossProtectedWalletManager;
     }
@@ -60,8 +60,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
                 //TODO: el disponible es en base al exchange rate del momento
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
@@ -121,10 +121,10 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             long funds = 0;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-                     funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                 break;
-                //TODO: el disponible es en base al exchange rate del momento
+
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
                     funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
@@ -163,16 +163,16 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            boolean sendFromSameDevice,
                            BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
-        BitcoinWalletWallet bitcoinWalletWallet = null;
+        CryptoWalletWallet cryptoWalletWallet = null;
         try {
 
             long funds =0;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
-                //TODO: el disponible es en base al exchange rate del momento
+
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
                     funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);

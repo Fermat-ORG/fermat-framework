@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -20,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 11/11/15.
  */
-public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
+public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation, Serializable {
     private static final Random random = new Random(321515131);
     private static final Calendar instance = Calendar.getInstance();
     private static final NumberFormat numberFormat = DecimalFormat.getInstance();

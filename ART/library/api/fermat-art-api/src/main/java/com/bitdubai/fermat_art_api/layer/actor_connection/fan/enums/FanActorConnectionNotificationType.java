@@ -12,6 +12,7 @@ public enum FanActorConnectionNotificationType implements FermatEnum {
     /**
      * To do make code more readable, please keep the elements in the Enum sorted alphabetically.
      */
+    ACTOR_CONNECTED              ("AARTCTD"),
     CONNECTION_REQUEST_RECEIVED  ("AFANCRR"),
 
     ;

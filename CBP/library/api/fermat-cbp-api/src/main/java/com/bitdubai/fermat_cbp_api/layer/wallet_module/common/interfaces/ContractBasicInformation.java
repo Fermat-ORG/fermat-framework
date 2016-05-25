@@ -2,12 +2,13 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by nelson on 29/09/15.
  */
-public interface ContractBasicInformation {
+public interface ContractBasicInformation extends Serializable {
 
     /**
      * @return the amount of merchandise the customer want to buy

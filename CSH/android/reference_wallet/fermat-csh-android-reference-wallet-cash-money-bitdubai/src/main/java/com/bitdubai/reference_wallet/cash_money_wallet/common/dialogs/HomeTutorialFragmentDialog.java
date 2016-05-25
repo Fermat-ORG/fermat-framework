@@ -9,8 +9,8 @@ import android.view.Window;
 import android.widget.CheckBox;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
@@ -30,7 +30,6 @@ public class HomeTutorialFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
     private CashMoneyWalletSession walletSession;
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private Resources resources;
 
     /**
@@ -50,7 +49,6 @@ public class HomeTutorialFragmentDialog extends Dialog implements
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.walletSession = cashMoneyWalletSession;
-        this.settingsManager = cashMoneyWalletSession.getModuleManager().getSettingsManager();
         this.resources = resources;
     }
 
@@ -88,10 +86,12 @@ public class HomeTutorialFragmentDialog extends Dialog implements
 
         if( i == R.id.csh_dismiss_button){
             try{
-                walletSettings = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+                final CashMoneyWalletModuleManager moduleManager = walletSession.getModuleManager();
+
+                walletSettings = moduleManager.loadAndGetSettings(walletSession.getAppPublicKey());
                 walletSettings.setIsHomeTutorialDialogEnabled(!dontShowCheckbox.isChecked());
-                settingsManager.persistSettings(walletSession.getAppPublicKey(), walletSettings);
-            } catch (Exception e){}
+                moduleManager.persistSettings(walletSession.getAppPublicKey(), walletSettings);
+            } catch (Exception ignore){}
 
             dismiss();
         }

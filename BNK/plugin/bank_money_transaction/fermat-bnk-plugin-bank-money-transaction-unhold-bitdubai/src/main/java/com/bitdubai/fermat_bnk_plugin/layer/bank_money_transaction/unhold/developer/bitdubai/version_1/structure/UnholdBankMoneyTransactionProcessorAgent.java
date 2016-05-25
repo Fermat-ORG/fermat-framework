@@ -1,15 +1,19 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.UnholdBankMoneyTransactionPluginRoot;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -21,12 +25,12 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final UnholdBankMoneyTransactionPluginRoot pluginRoot;
     private final UnholdBankMoneyTransactionManager unholdTransactionManager;
     private final BankMoneyWalletManager bankMoneyWalletManager;
 
-    public UnholdBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final UnholdBankMoneyTransactionManager holdManager,final BankMoneyWalletManager bankMoneyWalletManager) {
-        this.errorManager = errorManager;
+    public UnholdBankMoneyTransactionProcessorAgent(final UnholdBankMoneyTransactionPluginRoot pluginRoot, final UnholdBankMoneyTransactionManager holdManager,final BankMoneyWalletManager bankMoneyWalletManager) {
+        this.pluginRoot = pluginRoot;
         this.unholdTransactionManager = holdManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.agentThread = new Thread(new Runnable() {
@@ -82,7 +86,7 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
         try {
             transactionList = unholdTransactionManager.getAcknowledgedTransactionList();
         } catch (CantGetUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
 
@@ -94,22 +98,37 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
           * If not: Changes transaction status to Rejected.
          */
 
-        double heldfunds;
+        BigDecimal holdFunds;
         for(BankTransaction transaction : transactionList) {
 
-            //TODO: tomar los heldfunds de la wallet y compararlos contra el transaction amount para despues ejecutar el unhold
-            heldfunds = 0;
+            //TODO: tomar los holdFunds de la wallet y compararlos contra el transaction amount para despues ejecutar el unhold
             try {
-                heldfunds = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getBookBalance().getBalance(transaction.getAccountNumber());
-                if(heldfunds >= transaction.getAmount()) {
-                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
+                holdFunds = bankMoneyWalletManager.getBookBalance().getBalance(transaction.getAccountNumber());
+                if(transaction.getAmount().compareTo(holdFunds) >= 0) {
+                    bankMoneyWalletManager.unhold(new BankMoneyTransactionRecordImpl(
+                            transaction.getTransactionId(),
+                            BalanceType.AVAILABLE.getCode(),
+                            TransactionType.UNHOLD.getCode(),
+                            transaction.getAmount(),
+                            transaction.getCurrency().getCode(),
+                            BankOperationType.UNHOLD.getCode(),
+                            "testing reference",
+                            "test BNK name",
+                            transaction.getAccountNumber(),
+                            BankAccountType.SAVINGS.getCode(),
+                            BigDecimal.ZERO,
+                            BigDecimal.ZERO,
+                            transaction.getTimestamp(),
+                            transaction.getMemo(),
+                            BankTransactionStatus.CONFIRMED.getCode()));
+
                     unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {
                     unholdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 }
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 return;
             }
 

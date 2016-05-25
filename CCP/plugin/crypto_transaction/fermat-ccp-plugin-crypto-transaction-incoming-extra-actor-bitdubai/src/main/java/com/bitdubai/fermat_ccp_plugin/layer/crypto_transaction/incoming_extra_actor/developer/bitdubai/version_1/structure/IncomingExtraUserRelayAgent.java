@@ -5,12 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
     /*
     * DealsWithBitcoinWallet Interface member variables.
     */
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -80,8 +80,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
     /**
      * The Specialized Constructor
      */
-    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, EventManager eventManager,final IncomingExtraUserRegistry registry, final CryptoAddressBookManager cryptoAddressBookManager,Broadcaster broadcaster, BitcoinLossProtectedWalletManager lossProtectedWalletManager){
-        this.bitcoinWalletManager = bitcoinWalletManager;
+    public IncomingExtraUserRelayAgent(final CryptoWalletManager cryptoWalletManager, final ErrorManager errorManager, EventManager eventManager,final IncomingExtraUserRegistry registry, final CryptoAddressBookManager cryptoAddressBookManager,Broadcaster broadcaster, BitcoinLossProtectedWalletManager lossProtectedWalletManager){
+        this.cryptoWalletManager = cryptoWalletManager;
         this.errorManager = errorManager;
         this.registry = registry;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
@@ -104,7 +104,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
     @Override
     public void start() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantStartAgentException {
 
-        relayAgent = new RelayAgent(bitcoinWalletManager, cryptoAddressBookManager, errorManager,eventManager, registry, broadcaster,lossProtectedWalletManager);
+        relayAgent = new RelayAgent(cryptoWalletManager, cryptoAddressBookManager, errorManager,eventManager, registry, broadcaster,lossProtectedWalletManager);
         try {
             relayAgent.initialize();
             agentThread = new Thread(this.relayAgent);
@@ -131,7 +131,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
 
         private AtomicBoolean running = new AtomicBoolean(false);
 
-        private final BitcoinWalletManager bitcoinWalletManager;
+        private final CryptoWalletManager cryptoWalletManager;
         private final CryptoAddressBookManager cryptoAddressBookManager;
         private final ErrorManager errorManager;
         private final EventManager eventManager;
@@ -142,8 +142,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
 
         private static final int SLEEP_TIME = 10000;
 
-        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry, final Broadcaster broadcaster, BitcoinLossProtectedWalletManager lossProtectedWalletManager){
-            this.bitcoinWalletManager = bitcoinWalletManager;
+        public RelayAgent(final CryptoWalletManager cryptoWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry, final Broadcaster broadcaster, BitcoinLossProtectedWalletManager lossProtectedWalletManager){
+            this.cryptoWalletManager = cryptoWalletManager;
             this.cryptoAddressBookManager = cryptoAddressBookManager;
             this.errorManager = errorManager;
             this.registry = registry;
@@ -164,7 +164,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithRegistry, com.bitdu
          * MonitorAgent interface implementation.
          */
         private void initialize () {
-            transactionHandler = new IncomingExtraUserTransactionHandler(bitcoinWalletManager, cryptoAddressBookManager, eventManager,broadcaster,lossProtectedWalletManager);
+            transactionHandler = new IncomingExtraUserTransactionHandler(cryptoWalletManager, cryptoAddressBookManager, eventManager,broadcaster,lossProtectedWalletManager);
         }
 
         /**

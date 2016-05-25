@@ -4,13 +4,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by angel on 28/11/15.
  */
 
-public class ContractSaleClauseInformation implements ContractClause {
+public class ContractSaleClauseInformation implements ContractClause, Serializable {
 
     // TODO: Cambiar los numeros primos
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;

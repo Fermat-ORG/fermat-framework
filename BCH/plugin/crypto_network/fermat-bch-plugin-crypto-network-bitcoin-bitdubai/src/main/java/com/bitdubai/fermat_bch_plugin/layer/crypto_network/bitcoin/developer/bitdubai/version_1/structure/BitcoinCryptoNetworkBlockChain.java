@@ -139,10 +139,10 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             if (firstTime){
                 switch (BLOCKCHAIN_NETWORK_TYPE){
                     case TEST_NET:
-                        loadCheckpoint("2016-04-14 00:00:01");
+                        loadCheckpoint("2016-05-11 02:52:07");
                         break;
                     case PRODUCTION:
-                        loadCheckpoint("2016-03-31 00:00:01");
+                        loadCheckpoint("2016-04-27 00:00:01");
                         break;
                 }
             }

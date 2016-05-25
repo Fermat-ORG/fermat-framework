@@ -32,8 +32,8 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.StartNegotiationAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.TextValueDialog;
@@ -174,7 +174,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         try {
 
             Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
-            Collection<ClauseInformation> clauses = new ArrayList<>();
+            Collection<ClauseInformation> clauses;
             String customerPublicKey = negotiationInfo.getCustomer().getPublicKey();
             String brokerPublicKey = negotiationInfo.getBroker().getPublicKey();
 
@@ -283,14 +283,11 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, numberFormat.format(exchangeRate.getExchangeRate()));
-//            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
-//            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)
                 negotiationInfo.setBroker(brokerIdentity);
 
-//            final CryptoCustomerIdentity customerIdentity = moduleManager.getAssociatedIdentity();
             final CryptoCustomerIdentity customerIdentity = moduleManager.getAssociatedIdentity(appSession.getAppPublicKey());
             if (customerIdentity != null)
                 negotiationInfo.setCustomer(customerIdentity);

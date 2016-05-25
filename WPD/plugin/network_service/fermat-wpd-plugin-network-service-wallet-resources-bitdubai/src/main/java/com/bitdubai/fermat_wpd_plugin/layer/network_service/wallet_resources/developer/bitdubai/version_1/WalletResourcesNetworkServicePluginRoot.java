@@ -5,10 +5,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -20,11 +18,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -43,15 +39,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletUninstalledEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
@@ -103,7 +95,6 @@ import java.util.UUID;
  */
 
 public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin implements
-        NetworkService,
         WalletResourcesInstalationManager,
         WalletResourcesProviderManager {
 
@@ -273,177 +264,6 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
-    }
-
-    /**
-     * NetworkService Interface implementation.
-     */
-    @Override
-    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return null;
-    }
-
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return null;
-    }
-
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return null;
-    }
-
-    @Override
-    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
-        return null;
-    }
-
-    @Override
-    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-
-    }
-
-    @Override
-    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return null;
-    }
-
-    @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return null;
-    }
-
-    /**
-     * Handles the events CompleteComponentRegistrationNotification
-     * @param platformComponentProfileRegistered
-     */
-    @Override
-    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
-
-    }
-
-
-    @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
-
-    }
-
-    @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-
-    }
-
-
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     * @param remoteComponentProfile
-     */
-    @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
-
-    }
-
-    /**
-     * Handles the events VPNConnectionCloseNotificationEvent
-     * @param fermatEvent
-     */
-    @Override
-    public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
-      /*  if(fermatEvent instanceof VPNConnectionCloseNotificationEvent){
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
-                if(communicationNetworkServiceConnectionManager != null)
-                communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
-            }
-        } */
-
-    }
-
-    /**
-     * Handles the events ClientConnectionCloseNotificationEvent
-     * @param fermatEvent
-     */
-    @Override
-    public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
-
-      /*  if(fermatEvent instanceof ClientConnectionCloseNotificationEvent){
-            this.register = false;
-            if(communicationNetworkServiceConnectionManager != null)
-            communicationNetworkServiceConnectionManager.closeAllConnection();
-        } */
-
-    }
-
-    /*
-    * Handles the events ClientConnectionLooseNotificationEvent
-    */
-    @Override
-    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
-
-//        if(communicationNetworkServiceConnectionManager != null)
-//            communicationNetworkServiceConnectionManager.stop();
-
-    }
-
-    /*
-     * Handles the events ClientSuccessfullReconnectNotificationEvent
-     */
-    @Override
-    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
-
-//        if(communicationNetworkServiceConnectionManager != null)
-//            communicationNetworkServiceConnectionManager.restart();
-
-//        if(!this.register){
-//           communicationRegistrationProcessNetworkServiceAgent.start();
-//        }
-
-    }
-
-    @Override
-    public boolean isRegister() {
-        return false;
-    }
-
-    @Override
-    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
-
-    }
-
-    @Override
-    public void initializeCommunicationNetworkServiceConnectionManager() {
-
-    }
-
-    @Override
-    public String getIdentityPublicKey() {
-        return null;
-    }
-
-    @Override
-    public String getAlias() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public String getExtraData() {
-        return null;
-    }
-
-    @Override
-    public void handleNewMessages(FermatMessage incomingMessage) {
-        //TODO: implementar el handle new messages
-    }
-
-    @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
 
     }
 
@@ -981,22 +801,22 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error write layout file resource  ", "");
         }  catch (CantGetRepositoryPathRecordException e) {
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error created image file resource ", "");
 
         }
     }
 
 
     @Override
-    public WalletNavigationStructure getNavigationStructure(String walletPublicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
+    public AppNavigationStructure getNavigationStructure(String walletPublicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
         String content = "";
         try {
 
@@ -1013,21 +833,21 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             content = layoutFile.getContent();
 
-            return (WalletNavigationStructure) XMLParser.parseXML(content, new WalletNavigationStructure());
+            return (AppNavigationStructure) XMLParser.parseXML(content, new AppNavigationStructure());
 
         } catch (FileNotFoundException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error write layout file resource  ", "");
         }  catch (CantGetRepositoryPathRecordException e) {
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error created image file resource ", "");
 
         }
     }

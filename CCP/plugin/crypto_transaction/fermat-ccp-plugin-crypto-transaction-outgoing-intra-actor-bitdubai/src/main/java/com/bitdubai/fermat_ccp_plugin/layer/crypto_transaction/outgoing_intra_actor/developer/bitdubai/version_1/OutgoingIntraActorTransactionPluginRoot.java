@@ -17,10 +17,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
@@ -34,8 +35,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.OutgoingIntraActorTransactionProcessorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
@@ -43,16 +43,16 @@ import java.util.List;
 /**
  * Created by loui on 20/02/15.
  */
+
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_INTRA_ACTOR)
+
 public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         OutgoingIntraActorManager {
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
+    private CryptoWalletManager cryptoWalletManager;
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
@@ -114,7 +114,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
      */
     @Override
     public IntraActorCryptoTransactionManager getTransactionManager() throws CantGetOutgoingIntraActorTransactionManagerException {
-        return new OutgoingIntraActorTransactionManager(this.pluginId,this.errorManager,this.bitcoinWalletManager,this.pluginDatabaseSystem,lossProtectedWalletManager);
+        return new OutgoingIntraActorTransactionManager(this.pluginId,getErrorManager(),this.cryptoWalletManager,this.pluginDatabaseSystem,lossProtectedWalletManager);
     }
 
     @Override
@@ -128,13 +128,13 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @Override
     public void start() {
         try {
-            this.outgoingIntraActorDao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
+            this.outgoingIntraActorDao = new OutgoingIntraActorDao(getErrorManager(), this.pluginDatabaseSystem);
             this.outgoingIntraActorDao.initialize(this.pluginId);
-            this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.bitcoinWalletManager, this.outgoingIntraActorDao,this.lossProtectedWalletManager);
-            this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(this.errorManager,
+            this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.cryptoWalletManager, this.outgoingIntraActorDao,this.lossProtectedWalletManager);
+            this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(getErrorManager(),
                                                                                             this.cryptoVaultManager,
                                                                                             this.bitcoinNetworkManager,
-                                                                                            this.bitcoinWalletManager,
+                                                                                            this.cryptoWalletManager,
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
                                                                                             this.cryptoTransmissionNetworkServiceManager,
@@ -153,7 +153,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     }
 
     private void reportUnexpectedException(Exception e) {
-        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
     }
 
     @Override

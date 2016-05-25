@@ -1,54 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_height="wrap_content"
+android:layout_width="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:gravity="center"
+android:orientation="vertical"
+android:background="#ffffff">
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="4.5dp"
+    android:background="#DC5A0F"
+    android:fitsSystemWindows="true" />
+
+<LinearLayout
     android:layout_width="wrap_content"
-    android:layout_height="400sp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    >
+    android:paddingBottom="2dp"
+    android:paddingEnd="1dp"
+    android:paddingLeft="1dp"
+    android:paddingRight="1dp"
+    android:paddingStart="1dp"
+    android:paddingTop="20dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/confirm_text"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/confirm_text"
-            android:textColor="#000000"
-            android:layout_alignBottom="@+id/back_btn"
-            android:visibility="invisible"/>
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_title"
+                android:text="Warning!"
+                android:paddingLeft="5dp"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textColor="#073487"
+                app:typeface="CAVIAR_DREAMS_BOLD"
+                android:gravity="left"
+                android:layout_gravity="center" />
 
-
-            <Button
-                android:id="@+id/cancel_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#F44336"
-                android:text="@string/cancel_btn"
-                android:textColor="#FFFFFF"
-                android:layout_weight="1" />
-            <Button
-                android:id="@+id/accept_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#01579B"
-                android:text="@string/accept_btn"
-                android:textColor="#FFFFFF"
-                android:layout_weight="1" />
-
-
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.4"
+                android:src="@drawable/lpw_icon"
+                android:paddingBottom="2dp"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#073487"
+            android:layout_marginBottom="12dp" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingBottom="5dp"
+            android:paddingTop="7sp"
+            android:text="@string/confirm_text"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="20dp"
+            android:textColor="#1d1d26"
+            android:paddingRight="30dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#073487" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="#073487"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:background="#DC5A0F"
+            android:text="@string/cancel_btn"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/accept_btn"
+            android:layout_width="0dp"
+
+            android:background="#073487"
+            android:text="@string/accept_btn"
+            android:textColor="#FFFFFF"
+            android:layout_weight="1"
+            android:layout_height="40dp" />
 
     </LinearLayout>
 
 </LinearLayout>
+
+</RelativeLayout>

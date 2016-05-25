@@ -2,10 +2,12 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import java.io.Serializable;
+
 /**
  * Created by rodrigo on 3/9/16.
  */
-public class BlockchainDownloadProgress {
+public class BlockchainDownloadProgress implements Serializable{
     BlockchainNetworkType blockchainNetworkType;
     int pendingBlocks;
     int totalBlocks;

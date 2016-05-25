@@ -12,9 +12,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private CustomerOnlinePaymentPluginRoot pluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -38,20 +38,20 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
     public CustomerOnlinePaymentRecorderService(
             CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            CustomerOnlinePaymentPluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager=errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(customerOnlinePaymentBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the customer online payment database handler",
                     "The database handler is null");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
@@ -81,12 +81,12 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -104,12 +104,12 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch(CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -144,7 +144,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(
@@ -152,7 +152,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
                     "Starting the CustomerOnlinePaymentRecorderService",
                     "The CustomerOnlinePaymentRecorderService is probably null");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
@@ -168,7 +168,7 @@ public class CustomerOnlinePaymentRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }

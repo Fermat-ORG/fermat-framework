@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.session;
 
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -9,11 +10,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
@@ -25,7 +25,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class LossProtectedWalletSession extends AbstractFermatSession<InstalledWallet,LossProtectedWalletManager,WalletResourcesProviderManager>  {
+public class LossProtectedWalletSession extends AbstractFermatSession<InstalledWallet,LossProtectedWallet,WalletResourcesProviderManager>  {
 
 
 
@@ -51,7 +51,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     *
     */
 
-    public static String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
+    public static String typeBalanceSelected =BalanceType.REAL.getCode();
 
     public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
@@ -62,14 +62,14 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     private LossProtectedPaymentRequest paymentRequest;
     private String communityConnection;
 
-    private double actualExchangeRate;
+    private double actualExchangeRate = 0;
 
     private UUID transactionDetailId;
     public LossProtectedWalletSession() {
     }
 
 
-    public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWalletManager moduleManager, WalletResourcesProviderManager resourceProviderManager) {
+    public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWallet moduleManager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
@@ -141,10 +141,8 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     public LossProtectedWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException {
         List<LossProtectedWalletIntraUserIdentity> lst = null;
         try {
-            lst = getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();
+            lst = getModuleManager().getAllIntraWalletUsersFromCurrentDeviceUser();
         } catch (CantListLossProtectedWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
             e.printStackTrace();
         }
         return (lst.isEmpty()) ? null : lst.get(0);

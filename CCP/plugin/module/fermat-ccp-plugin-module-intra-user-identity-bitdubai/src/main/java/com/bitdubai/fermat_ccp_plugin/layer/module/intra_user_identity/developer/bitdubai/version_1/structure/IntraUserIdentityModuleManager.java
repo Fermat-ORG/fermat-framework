@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -22,7 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantListIntraUsersIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -191,13 +188,4 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
         return new int[0];
     }
 
-    @Override
-    public void persistSettings(String publicKey, IntraUserIdentitySettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey,settings);
-    }
-
-    @Override
-    public IntraUserIdentitySettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 }

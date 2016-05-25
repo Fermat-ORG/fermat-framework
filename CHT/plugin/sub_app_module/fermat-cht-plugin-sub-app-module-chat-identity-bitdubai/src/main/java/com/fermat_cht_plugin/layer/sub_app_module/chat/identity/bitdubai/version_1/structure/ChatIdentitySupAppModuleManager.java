@@ -1,12 +1,10 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -14,7 +12,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdent
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 
 import java.io.Serializable;
@@ -24,18 +21,20 @@ import java.util.UUID;
 /**
  * Created by franklin on 03/04/16.
  */
-public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManager, Serializable {
+public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdentityPreferenceSettings> implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
-    private SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
+
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
                                            UUID pluginId){
+        super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
         this.pluginFileSystem    = pluginFileSystem                         ;
         this.pluginId            = pluginId;
+
     }
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -54,8 +53,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city) throws CantCreateNewChatIdentityException {
-        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city);
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState);
     }
 
     /**
@@ -67,8 +66,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
-        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city);
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
     }
 
     /**
@@ -77,18 +76,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    public SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
 
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -118,7 +106,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
     }
 
     @Override
@@ -130,4 +118,6 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
+
 }

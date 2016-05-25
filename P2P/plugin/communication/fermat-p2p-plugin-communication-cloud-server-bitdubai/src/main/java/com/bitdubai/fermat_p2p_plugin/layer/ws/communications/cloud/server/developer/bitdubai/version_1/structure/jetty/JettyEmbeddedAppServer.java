@@ -208,6 +208,7 @@ public class JettyEmbeddedAppServer {
                 new PortMappingListener(desiredMapping)
         );
 
+
         upnpService.getControlPoint().search();
 
         /* Use this is OK, load the ip dynamically

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.negotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Update by Nelson Ramirez on 04/12/2015
  */
 
-public interface Negotiation {
+public interface Negotiation extends Serializable {
 
     /**
      * @return the broker public key

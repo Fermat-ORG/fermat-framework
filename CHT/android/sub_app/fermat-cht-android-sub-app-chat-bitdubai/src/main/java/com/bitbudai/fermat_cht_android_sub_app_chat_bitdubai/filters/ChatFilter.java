@@ -15,12 +15,13 @@ import java.util.List;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/04/16.
  * @version 1.0
  */
-public class ChatFilter extends Filter {
+public class ChatFilter extends
+ Filter {
 
-    private ArrayList<String> data;
+    private ArrayList<ChatMessage> data;
     private ChatAdapter adapter;
 
-    public ChatFilter(ArrayList<String> data, ChatAdapter adapter) {
+    public ChatFilter(ArrayList<ChatMessage> data, ChatAdapter adapter) {
         this.data = data;
         this.adapter = adapter;
     }
@@ -32,17 +33,17 @@ public class ChatFilter extends Filter {
 
         FilterResults results = new FilterResults();
 
-        final ArrayList<String> list = data;
+        final ArrayList<ChatMessage> list = data;
 
         int count = list.size();
-        final ArrayList<String> nlist = new ArrayList<>(count);
+        final ArrayList<ChatMessage> nlist = new ArrayList<>(count);
 
         String filterableString;
-        String resource;
+        ChatMessage resource;
 
         for (int i = 0; i < count; i++) {
             resource = list.get(i);
-            filterableString = resource;
+            filterableString = resource.getMessage();
             if (filterableString.toLowerCase().contains(filterString)) {
                 nlist.add(list.get(i));
             }
@@ -57,7 +58,9 @@ public class ChatFilter extends Filter {
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
 //        adapter.changeDataSet((List<DigitalAsset>) filterResults.values);
-        adapter.setData((ArrayList<ChatMessage>) filterResults.values);
+        //adapter.setData((ArrayList<ChatMessage>) filterResults.values);
+        adapter.changeDataSet((ArrayList<ChatMessage>) filterResults.values);
         adapter.notifyDataSetChanged();
+        adapter.setFilterSetted(1);
     }
 }

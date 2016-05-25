@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -20,10 +20,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CashMoneyWalletNo
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletBalance;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.WalletCashMoneyPluginRoot;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -37,24 +36,23 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final ErrorManager errorManager;
+    private final WalletCashMoneyPluginRoot pluginRoot;
 
     private CashMoneyWalletDao dao;
-    private CashMoneyWalletBalanceImpl cashMoneyWalletBalanceImpl;
     private String walletPublicKey;
 
 
     public CashMoneyWalletImpl(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId,
-                               final ErrorManager errorManager, String walletPublicKey) throws CantGetCashMoneyWalletException {
+                               final WalletCashMoneyPluginRoot pluginRoot, String walletPublicKey) throws CantGetCashMoneyWalletException, CashMoneyWalletDoesNotExistException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.walletPublicKey = walletPublicKey;
 
 
 
         try {
-            this.dao = new CashMoneyWalletDao(pluginDatabaseSystem, pluginId, errorManager);
+            this.dao = new CashMoneyWalletDao(pluginDatabaseSystem, pluginId, pluginRoot);
             dao.initialize();
 
             if (dao.walletExists(walletPublicKey))
@@ -63,7 +61,7 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
                 throw new CashMoneyWalletDoesNotExistException();
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCashMoneyWalletException(CantGetCashMoneyWalletException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -89,12 +87,12 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
 
     @Override
     public CashMoneyWalletBalance getBookBalance() throws CantGetCashMoneyWalletBalanceException {
-        return new CashMoneyWalletBalanceImpl(pluginDatabaseSystem, pluginId, errorManager, walletPublicKey, BalanceType.BOOK);
+        return new CashMoneyWalletBalanceImpl(pluginDatabaseSystem, pluginId, pluginRoot, walletPublicKey, BalanceType.BOOK);
     }
 
     @Override
     public CashMoneyWalletBalance getAvailableBalance() throws CantGetCashMoneyWalletBalanceException {
-        return new CashMoneyWalletBalanceImpl(pluginDatabaseSystem, pluginId, errorManager, walletPublicKey, BalanceType.AVAILABLE);
+        return new CashMoneyWalletBalanceImpl(pluginDatabaseSystem, pluginId, pluginRoot, walletPublicKey, BalanceType.AVAILABLE);
     }
 
     @Override

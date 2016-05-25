@@ -60,6 +60,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME = "status";
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
 
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TABLE_FIRST_KEY_COLUMN = "event_id";
 

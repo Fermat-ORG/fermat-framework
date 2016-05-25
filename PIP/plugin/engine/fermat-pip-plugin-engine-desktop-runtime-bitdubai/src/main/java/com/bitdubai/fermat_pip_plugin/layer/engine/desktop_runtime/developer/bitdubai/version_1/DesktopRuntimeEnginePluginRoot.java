@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -52,6 +54,8 @@ import java.util.Set;
  *
  * Created by Matias Furszyfer 16/9/2015
  */
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "matiasfurszyfer@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements DesktopRuntimeManager {
 
     final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
@@ -133,7 +137,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             pluginTextFile.loadFromMedia();
             dev = pluginTextFile.getContent();
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             dev = "false";
         }
         return dev.equals("true");
@@ -443,6 +447,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeDesktopObject.addActivity(activity);
 
 
+        //settings bitcoin network
         activity = new Activity();
         activity.setBackgroundColor("#000000");
         activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
@@ -464,6 +469,30 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
         runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
+        //settings export/import key
+        activity = new Activity();
+        activity.setBackgroundColor("#000000");
+        activity.setActivityType(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode());
+        activity.setType(Activities.DESKTOP_SETTING_IMPORT_KEY);
+        activity.setStartFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setLabel("Export Key");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        activity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
 

@@ -487,55 +487,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
         if (this.tableFilter != null) {
             for (int i = 0; i < tableFilter.size(); ++i) {
 
-                strFilter.append(tableFilter.get(i).getColumn());
-
-                switch (tableFilter.get(i).getType()) {
-                    case NOT_EQUALS:
-                        strFilter.append(" <> '")
-                                .append(tableFilter.get(i).getValue())
-                                .append("'");
-                        break;
-                    case EQUAL:
-                        strFilter.append(" ='")
-                                .append(tableFilter.get(i).getValue())
-                                .append("'");
-                        break;
-                    case GREATER_OR_EQUAL_THAN:
-                        strFilter.append(" >= '")
-                                .append(tableFilter.get(i).getValue())
-                                .append("'");
-                        break;
-                    case GREATER_THAN:
-                        strFilter.append(" >'")
-                                .append(tableFilter.get(i).getValue())
-                                .append("'");
-                        break;
-                    case LESS_OR_EQUAL_THAN:
-                        strFilter.append(" <= ")
-                                .append(tableFilter.get(i).getValue());
-                        break;
-                    case LESS_THAN:
-                        strFilter.append(" < ")
-                                .append(tableFilter.get(i).getValue());
-                        break;
-                    case LIKE:
-                        strFilter.append(" Like '%")
-                                .append(tableFilter.get(i).getValue())
-                                .append("%'");
-                        break;
-                    case STARTS_WITH:
-                        strFilter.append(" Like '")
-                                .append(tableFilter.get(i).getValue())
-                                .append("%'");
-                        break;
-                    case ENDS_WITH:
-                        strFilter.append(" Like '%")
-                                .append(tableFilter.get(i).getValue())
-                                .append("'");
-                    default:
-                        strFilter.append(" ");
-                        break;
-                }
+                strFilter.append(makeInternalCondition(tableFilter.get(i)));
 
                 if (i < tableFilter.size() - 1)
                     strFilter.append(" AND ");
@@ -813,7 +765,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                         .append("'");
                 break;
             default:
-                strFilter.append(" ");
+                throw new RuntimeException("Database Filter Type not implemented yet. "+filter.getType());
         }
         return strFilter.toString();
     }

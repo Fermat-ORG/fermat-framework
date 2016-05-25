@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -31,7 +30,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossPro
 public class LossProtectedWalletFermatAppConnection extends AppConnections<LossProtectedWalletSession>{
 
     private LossProtectedWallet moduleManager = null;
-    private LossProtectedWalletSession referenceWalletSession;
+    private LossProtectedWalletSession lossWalletSession;
 
     public LossProtectedWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -60,10 +59,10 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
-
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
        // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity());
+
+        return new LossProtectedWalletNavigationViewPainter(getContext(),null, null); //getApplicationManager()
     }
 
     @Override
@@ -80,26 +79,27 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     public NotificationPainter getNotificationPainter(String code){
      try
         {
-            SettingsManager<LossProtectedWalletSettings> settingsManager = null;
+          LossProtectedWalletSettings lossProtectedWalletSettings;
+            //SettingsManager<LossProtectedWalletSettings> settingsManager = null;
 
             boolean enabledNotification = true;
-            this.referenceWalletSession = this.getFullyLoadedSession();
-            if(referenceWalletSession!=  null) {
-                String walletPublicKey = referenceWalletSession.getAppPublicKey();
-                if (referenceWalletSession.getModuleManager() != null) {
-                    moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+            this.lossWalletSession = this.getFullyLoadedSession();
+            if(lossWalletSession!=  null) {
+                String walletPublicKey = lossWalletSession.getAppPublicKey();
+                if (lossWalletSession.getModuleManager() != null) {
+                    moduleManager = lossWalletSession.getModuleManager();
 
                     //enable notification settings
 
-                    settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-                    enabledNotification = settingsManager.loadAndGetSettings(walletPublicKey).getNotificationEnabled();
+                    lossProtectedWalletSettings = moduleManager.loadAndGetSettings(walletPublicKey);
+                    enabledNotification = lossProtectedWalletSettings.getNotificationEnabled();
                 }
 
 
                 if (enabledNotification)
-                    return LossProtectedWalletBuildNotificationPainter.getNotification(moduleManager, code, Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return LossProtectedWalletBuildNotificationPainter.getNotification(moduleManager, code, walletPublicKey,Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
-                    return new LossProtectedWalletNotificationPainter("", "", "", "", false,walletPublicKey);
+                    return new LossProtectedWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
             }
             else
@@ -111,4 +111,6 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
         }
         return null;
     }
+
+
 }

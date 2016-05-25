@@ -2,7 +2,7 @@ package com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitd
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
-import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantGetCurrentIPAddressException;
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.CantGetCurrentIPAddressException;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.model.DeviceLocation;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,7 +31,7 @@ public final class LocationProvider {
 
         try {
 
-            String ipAddress = IPAddressHelper.getCurrentIPAddress();
+            String ipAddress = com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper.getCurrentIPAddress();
 
             return acquireLocationThroughIP(ipAddress);
 

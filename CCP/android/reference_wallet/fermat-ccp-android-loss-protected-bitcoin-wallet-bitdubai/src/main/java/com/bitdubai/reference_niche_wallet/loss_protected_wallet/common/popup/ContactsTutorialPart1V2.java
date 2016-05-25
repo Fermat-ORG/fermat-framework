@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
@@ -60,7 +61,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSes
 
     @Override
     protected int setLayoutId() {
-        return R.layout.contacts_tutorial_part1_v2;
+        return R.layout.loss_contacts_tutorial_part1_v2;
     }
 
     @Override
@@ -96,15 +97,20 @@ public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSes
     private void saveSettings(){
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
             try {
-                SettingsManager<LossProtectedWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
-                LossProtectedWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                LossProtectedWallet lossProtectedWalletManager = getSession().getModuleManager();
+                LossProtectedWalletSettings bitcoinWalletSettings = lossProtectedWalletManager.loadAndGetSettings(getSession().getAppPublicKey());
                 bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
-                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+
+                lossProtectedWalletManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
                 e.printStackTrace();
             } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
     }

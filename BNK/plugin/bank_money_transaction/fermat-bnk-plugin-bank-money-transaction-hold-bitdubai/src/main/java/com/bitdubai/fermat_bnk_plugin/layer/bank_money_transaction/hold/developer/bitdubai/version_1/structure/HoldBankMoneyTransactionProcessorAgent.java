@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.HoldBankMoneyTransactionPluginRoot;
 
+import java.math.BigDecimal;
 import java.util.List;
+
 
 /**
  * Created by memo on 25/11/15.
@@ -21,12 +26,12 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final HoldBankMoneyTransactionPluginRoot pluginRoot;
     private final HoldBankMoneyTransactionManager holdTransactionManager;
     private final BankMoneyWalletManager bankMoneyWalletManager;
 
-    public HoldBankMoneyTransactionProcessorAgent(final ErrorManager errorManager, final HoldBankMoneyTransactionManager holdManager, final BankMoneyWalletManager bankMoneyWalletManager) {
-        this.errorManager = errorManager;
+    public HoldBankMoneyTransactionProcessorAgent(final HoldBankMoneyTransactionPluginRoot pluginRoot, final HoldBankMoneyTransactionManager holdManager, final BankMoneyWalletManager bankMoneyWalletManager) {
+        this.pluginRoot = pluginRoot;
         this.holdTransactionManager = holdManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.agentThread = new Thread(new Runnable() {
@@ -50,7 +55,7 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
 
     @Override
     public void stop() {
-        if(isRunning())
+        if (isRunning())
             this.agentThread.interrupt();
         this.status = AgentStatus.STOPPED;
     }
@@ -82,7 +87,7 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
         try {
             transactionList = holdTransactionManager.getAcknowledgedTransactionList();
         } catch (CantGetHoldTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
 
@@ -96,25 +101,36 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
 
         //TODO: try to get the BNK wallet manager, using transaction's wallet public key, and then try to get its available balance!!
 
-        double availableBalance;
+        BigDecimal availableBalance;
         for(BankTransaction transaction : transactionList) {
 
-
-            availableBalance = 0;
-
             try {
-                availableBalance = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getAvailableBalance().getBalance(transaction.getAccountNumber());
-                if(availableBalance >= transaction.getAmount()) {
-                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
-                    //bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), transaction.getMemo(), null);
-                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).hold(bankMoneyTransactionRecord);
+                availableBalance = bankMoneyWalletManager.getAvailableBalance().getBalance(transaction.getAccountNumber());
+                if(availableBalance.compareTo(transaction.getAmount()) >= 0) {
+                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(
+                            transaction.getTransactionId(),
+                            BalanceType.AVAILABLE.getCode(),
+                            TransactionType.HOLD.getCode(),
+                            transaction.getAmount(),
+                            transaction.getCurrency().getCode(),
+                            BankOperationType.HOLD.getCode(),
+                            "testing reference",
+                            "test BNK name",
+                            transaction.getAccountNumber(),
+                            BankAccountType.SAVINGS.getCode(),
+                            BigDecimal.ZERO,
+                            BigDecimal.ZERO,
+                            transaction.getTimestamp(),
+                            transaction.getMemo(),
+                            BankTransactionStatus.CONFIRMED.getCode());
+
+                    bankMoneyWalletManager.hold(bankMoneyTransactionRecord);
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
-                }
-                else {
+                } else {
                     holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 }
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 return;
             }
 
@@ -123,6 +139,7 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
         }
 
     }
+
     private void cleanResources() {
         /**
          * Disconnect from database and explicitly set all references to null.

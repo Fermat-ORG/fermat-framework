@@ -17,12 +17,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.BusinessTransactionBankMoneyRestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyRestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils.BankTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final BusinessTransactionBankMoneyRestockPluginRoot pluginRoot;
     private final StockTransactionBankMoneyRestockManager stockTransactionBankMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final HoldManager holdManager;
@@ -56,21 +56,21 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
     /**
      * Constructor for BusinessTransactionBankMoneyRestockMonitorAgent
      *
-     * @param errorManager
+     * @param pluginRoot
      * @param stockTransactionBankMoneyRestockManager
      * @param cryptoBrokerWalletManager
      * @param holdManager
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public BusinessTransactionBankMoneyRestockMonitorAgent(ErrorManager errorManager,
+    public BusinessTransactionBankMoneyRestockMonitorAgent(BusinessTransactionBankMoneyRestockPluginRoot pluginRoot,
                                                            StockTransactionBankMoneyRestockManager stockTransactionBankMoneyRestockManager,
                                                            CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                            HoldManager holdManager,
                                                            PluginDatabaseSystem pluginDatabaseSystem,
                                                            UUID pluginId) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.stockTransactionBankMoneyRestockManager = stockTransactionBankMoneyRestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.holdManager = holdManager;
@@ -270,8 +270,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                 }
             }
         } catch (FermatException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 

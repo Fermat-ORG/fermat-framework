@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -48,9 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerUpdateNegotiationTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -75,75 +72,69 @@ public class CustomerBrokerUpdateAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
-    private Database database;
+    private Database                                                database;
 
-    private Thread agentThread;
+    private Thread                                                  agentThread;
 
-    private LogManager logManager;
+    private LogManager                                              logManager;
 
-    private EventManager eventManager;
+    private EventManager                                            eventManager;
 
-    private ErrorManager errorManager;
+    private NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot;
 
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem                                    pluginDatabaseSystem;
 
-    private UUID pluginId;
+    private UUID                                                    pluginId;
 
     /*Represent the Network Service*/
-    private NegotiationTransmissionManager negotiationTransmissionManager;
+    private NegotiationTransmissionManager                          negotiationTransmissionManager;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation;
+    private CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation;
 
     /*Represent the Negotiation Purchase*/
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    private CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation;
+    private CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation;
 
     /*Represent the Negotiation Sale*/
-    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    private CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager;
 
     /*Represent the Monitor Agent*/
-    private MonitorAgentTransaction monitorAgentTransaction;
+    private MonitorAgentTransaction                                 monitorAgentTransaction;
 
     /** Let me send a fire a broadcast to show a notification or update a view */
-    private Broadcaster broadcaster;
-
-    /*Represent Plugin Version*/
-    private PluginVersionReference pluginVersionReference;
+    private Broadcaster                                             broadcaster;
 
     public CustomerBrokerUpdateAgent(
-            PluginDatabaseSystem pluginDatabaseSystem,
-            LogManager logManager,
-            ErrorManager errorManager,
-            EventManager eventManager,
-            UUID pluginId,
-            NegotiationTransmissionManager negotiationTransmissionManager,
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-            CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-            Broadcaster broadcaster,
-            PluginVersionReference pluginVersionReference
+            PluginDatabaseSystem                                    pluginDatabaseSystem,
+            LogManager                                              logManager,
+            NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot,
+            EventManager                                            eventManager,
+            UUID                                                    pluginId,
+            NegotiationTransmissionManager                          negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation                       customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation                           customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager,
+            Broadcaster                                             broadcaster
 
     ) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.logManager = logManager;
-        this.errorManager = errorManager;
-        this.eventManager = eventManager;
-        this.pluginId = pluginId;
-        this.negotiationTransmissionManager = negotiationTransmissionManager;
-        this.customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiation;
-        this.customerBrokerSaleNegotiation = customerBrokerSaleNegotiation;
-        this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
-        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.pluginDatabaseSystem                       = pluginDatabaseSystem;
+        this.logManager                                 = logManager;
+        this.pluginRoot                                 = pluginRoot;
+        this.eventManager                               = eventManager;
+        this.pluginId                                   = pluginId;
+        this.negotiationTransmissionManager             = negotiationTransmissionManager;
+        this.customerBrokerPurchaseNegotiation          = customerBrokerPurchaseNegotiation;
+        this.customerBrokerSaleNegotiation              = customerBrokerSaleNegotiation;
+        this.customerBrokerPurchaseNegotiationManager   = customerBrokerPurchaseNegotiationManager;
+        this.customerBrokerSaleNegotiationManager       = customerBrokerSaleNegotiationManager;
         this.broadcaster = broadcaster;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -155,12 +146,11 @@ public class CustomerBrokerUpdateAgent implements
         monitorAgentTransaction = new MonitorAgentTransaction();
 
         this.monitorAgentTransaction.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgentTransaction.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgentTransaction.Initialize();
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         this.agentThread = new Thread(monitorAgentTransaction);
@@ -169,16 +159,8 @@ public class CustomerBrokerUpdateAgent implements
     }
 
     @Override
-    public void stop() {
-        this.agentThread.interrupt();
-    }
-
-    /*IMPLEMENTATION DealsWithErrors*/
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
+    public void stop() { this.agentThread.interrupt(); }
+    
     /*IMPLEMENTATION DealsWithEvents*/
     @Override
     public void setEventManager(EventManager eventManager) {
@@ -204,15 +186,13 @@ public class CustomerBrokerUpdateAgent implements
     }
 
     /*INNER CLASS*/
-    private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgentTransaction implements DealsWithPluginDatabaseSystem, Runnable {
 
         private CustomerBrokerUpdateSaleNegotiationTransaction      customerBrokerUpdateSaleNegotiationTransaction;
 
         private CustomerBrokerUpdatePurchaseNegotiationTransaction  customerBrokerUpdatePurchaseNegotiationTransaction;
 
         private volatile boolean                                    agentRunning;
-
-        ErrorManager                                                errorManager;
 
         PluginDatabaseSystem                                        pluginDatabaseSystem;
 
@@ -232,12 +212,6 @@ public class CustomerBrokerUpdateAgent implements
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
-        }
-
-        /*IMPLEMENTATION DealsWithErrors*/
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
         }
 
         /*IMPLEMENTATION Runnable*/
@@ -266,7 +240,7 @@ public class CustomerBrokerUpdateAgent implements
                     doTheMainTask();
 
                 } catch (CantSendCustomerBrokerUpdateNegotiationTransactionException | CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException | CantUpdateRecordException e) {
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -284,12 +258,12 @@ public class CustomerBrokerUpdateAgent implements
                     CustomerBrokerUpdateNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerUpdateNegotiationTransactionDatabaseFactory(this.pluginDatabaseSystem);
                     database = databaseFactory.createDatabase(pluginId, CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException, "Customer Broker Update Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
                 }
 
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantInitializeCBPAgent(exception, "Customer Broker Update Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
             }
 
@@ -412,8 +386,7 @@ public class CustomerBrokerUpdateAgent implements
 
                     CustomerBrokerUpdateForwardTransaction forwardTransaction = new CustomerBrokerUpdateForwardTransaction(
                             customerBrokerUpdateNegotiationTransactionDatabaseDao,
-                            errorManager,
-                            pluginVersionReference,
+                            pluginRoot,
                             transactionSend
                     );
 
@@ -424,22 +397,22 @@ public class CustomerBrokerUpdateAgent implements
                 }
 
             } catch (CantSendNegotiationToCryptoBrokerException e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(CantSendCustomerBrokerUpdateNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendNegotiationToCryptoCustomerException e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(CantSendCustomerBrokerUpdateNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Sale Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoBrokerException e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException(CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Purchase Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantSendConfirmToCryptoCustomerException e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException(CantSendCustomerBrokerUpdateConfirmationNegotiationTransactionException.DEFAULT_MESSAGE, e, "Sending Confirm Sale Negotiation", "Error in Negotiation Transmission Network Service");
             } catch (CantGetNegotiationTransactionListException e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Sending Negotiation", "Cannot get the Negotiation list from database");
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Sending Negotiation", "UNKNOWN FAILURE.");
             }
 
@@ -494,8 +467,7 @@ public class CustomerBrokerUpdateAgent implements
                                                 customerBrokerUpdatePurchaseNegotiationTransaction = new CustomerBrokerUpdatePurchaseNegotiationTransaction(
                                                         customerBrokerPurchaseNegotiationManager,
                                                         customerBrokerUpdateNegotiationTransactionDatabaseDao,
-                                                        errorManager,
-                                                        pluginVersionReference
+                                                        pluginRoot
                                                 );
 
                                                 final String purchaseCancelReason = purchaseNegotiation.getCancelReason();
@@ -529,8 +501,7 @@ public class CustomerBrokerUpdateAgent implements
                                                 customerBrokerUpdateSaleNegotiationTransaction = new CustomerBrokerUpdateSaleNegotiationTransaction(
                                                         customerBrokerSaleNegotiationManager,
                                                         customerBrokerUpdateNegotiationTransactionDatabaseDao,
-                                                        errorManager,
-                                                        pluginVersionReference
+                                                        pluginRoot
                                                 );
 
                                                 final String saleCancelReason = saleNegotiation.getCancelReason();
@@ -619,7 +590,7 @@ public class CustomerBrokerUpdateAgent implements
                 }
 
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }

@@ -8,10 +8,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.StockTransactionsCashMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.exceptions.MissingCashMoneyDestockDataException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -27,7 +28,7 @@ public class StockTransactionCashMoneyDestockManager implements
         CashMoneyDestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private final StockTransactionsCashMoneyDestockPluginRoot pluginRoot;
 
     /**
      * Constructor with params.
@@ -37,10 +38,10 @@ public class StockTransactionCashMoneyDestockManager implements
      */
     public StockTransactionCashMoneyDestockManager(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId,
-                                                   ErrorManager errorManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.errorManager = errorManager;
+                                                   StockTransactionsCashMoneyDestockPluginRoot pluginRoot) {
+        this.pluginDatabaseSystem   = pluginDatabaseSystem;
+        this.pluginId               = pluginId            ;
+        this.pluginRoot             = pluginRoot;
     }
 
     @Override
@@ -67,10 +68,10 @@ public class StockTransactionCashMoneyDestockManager implements
             StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateCashMoneyDestockException("Database Operation.", FermatException.wrapException(e), null, null);
         } catch (MissingCashMoneyDestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateCashMoneyDestockException("Missing Cash Money Destock Data.", FermatException.wrapException(e), null, null);
         }
     }

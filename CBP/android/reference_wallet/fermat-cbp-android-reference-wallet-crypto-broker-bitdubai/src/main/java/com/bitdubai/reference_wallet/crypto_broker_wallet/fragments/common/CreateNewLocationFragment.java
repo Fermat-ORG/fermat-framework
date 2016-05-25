@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -114,8 +114,6 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
 
-        if (selectedCountry != null)
-            location.append(selectedCountry.getCountry()).append(", ");
 
         if (cityTextView.getText().toString().length() > 0)
             location.append(cityTextView.getText().toString()).append(", ");
@@ -132,6 +130,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
         if (addressLineTwoEditText.getText().toString().length() > 0)
             location.append(addressLineTwoEditText.getText().toString()).append(", ");
 
+        if (selectedCountry != null)
+            location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
             try {

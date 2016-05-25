@@ -18,20 +18,18 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
@@ -44,8 +42,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.threads_pool.RejectedBroadcastExecutionHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -65,7 +63,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     private ErrorManager errorManager;
     private CryptoVaultManager cryptoVaultManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
     private OutgoingIntraActorDao outgoingIntraActorDao;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
@@ -82,7 +80,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
     public OutgoingIntraActorTransactionProcessorAgent(final ErrorManager errorManager,
                                                        final CryptoVaultManager cryptoVaultManager,
                                                        final BitcoinNetworkManager bitcoinNetworkManager,
-                                                       final BitcoinWalletManager bitcoinWalletManager,
+                                                       final CryptoWalletManager cryptoWalletManager,
                                                        final OutgoingIntraActorDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                                        final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
@@ -94,12 +92,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
         this.bitcoinNetworkManager                   = bitcoinNetworkManager;
-        this.bitcoinWalletManager                    = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.errorManager = errorManager;
         this.cryptoVaultManager = cryptoVaultManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.outgoingIntraActorDao = outgoingIntraActorDao;
         this.transactionHandlerFactory = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
@@ -117,9 +115,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager,executorPool,broadcaster,bitcoinLossProtectedWalletManager);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.cryptoWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager,executorPool,broadcaster,bitcoinLossProtectedWalletManager);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
-        this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.bitcoinWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager,broadcaster,bitcoinLossProtectedWalletManager);
+        this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.cryptoWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager,broadcaster,bitcoinLossProtectedWalletManager);
         this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
         this.status = AgentStatus.STARTED;
@@ -144,7 +142,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private AtomicBoolean running = new AtomicBoolean(false);
         private OutgoingIntraActorDao dao;
         private ErrorManager errorManager;
-        private BitcoinWalletManager bitcoinWalletManager;
+        private CryptoWalletManager cryptoWalletManager;
         private CryptoVaultManager cryptoVaultManager;
         private BitcoinNetworkManager bitcoinNetworkManager;
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
@@ -162,7 +160,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
          */
         private void initialize (ErrorManager                               errorManager,
                                  OutgoingIntraActorDao dao,
-                                 BitcoinWalletManager                       bitcoinWalletManager,
+                                 CryptoWalletManager cryptoWalletManager,
                                  CryptoVaultManager cryptoVaultManager,
                                  BitcoinNetworkManager bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
@@ -174,7 +172,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
             this.bitcoinNetworkManager = bitcoinNetworkManager;
-            this.bitcoinWalletManager = bitcoinWalletManager;
+            this.cryptoWalletManager = cryptoWalletManager;
             this.executorPool = executorPool;
             this.broadcaster = broadcaster;
             this.bitcoinLossProtectedWalletManager  = bitcoinLossProtectedWalletManager;
@@ -182,7 +180,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
         private void initialize(ErrorManager errorManager,
                                 OutgoingIntraActorDao dao,
-                                BitcoinWalletManager bitcoinWalletManager,
+                                CryptoWalletManager cryptoWalletManager,
                                 CryptoVaultManager cryptoVaultManager,
                                 OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                 CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
@@ -192,7 +190,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             this.dao = dao;
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
-            this.bitcoinWalletManager = bitcoinWalletManager;
+            this.cryptoWalletManager = cryptoWalletManager;
             this.transactionHandlerFactory = transactionHandlerFactory;
             this.cryptoTransmissionManager = cryptoTransmissionNetworkServiceManager;
             this.eventManager = eventManager;
@@ -268,7 +266,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             System.out.print("Debit new transaction.");
                         } else {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,false);
+                            roolback(transaction,true);
                             // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
                             System.out.print("ROLLBACK 1");
@@ -340,7 +338,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction, false);
+                            roolback(transaction, true);
                             System.out.print("ROLLBACK 2");
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);
@@ -434,7 +432,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private long getWalletAvailableBalance(String walletPublicKey, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantLoadWalletsException, CantCalculateBalanceException, OutgoingIntraActorWalletNotSupportedException, CantLoadWalletException {
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    return this.bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    return this.cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     return this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
@@ -446,7 +444,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private void debitFromAvailableBalance(OutgoingIntraActorTransactionWrapper transaction) throws CantLoadWalletsException, CantRegisterDebitException, OutgoingIntraActorWalletNotSupportedException, CantLoadWalletException {
             switch (transaction.getReferenceWallet()) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    this.bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).debit(transaction);
+                    this.cryptoWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).debit(transaction);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     this.bitcoinLossProtectedWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).debit(transaction);
@@ -466,10 +464,10 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 switch (transaction.getReferenceWallet()) {
                     case BASIC_WALLET_BITCOIN_WALLET:
                         //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
-                        BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
+                        CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
 
                         //change transaction state to reversed and update balance to revert
-                        bitcoinWalletWallet.revertTransaction(transaction,credit);
+                        cryptoWalletWallet.revertTransaction(transaction,credit);
 
                         //if the transaction is a payment request, rollback it state too
                         notificateRollbackToGUI(transaction);

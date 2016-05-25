@@ -1,14 +1,17 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.music_player.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
@@ -30,23 +33,25 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public class MusicPlayerManager implements MusicPlayerModuleManager, Serializable{
+public class MusicPlayerManager
+        extends ModuleManagerImpl<MusicPlayerPreferenceSettings>
+        implements MusicPlayerModuleManager, Serializable{
     private final ErrorManager errorManager;
     private final SongWalletTokenlyManager songWalletTokenlyManager;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
+    private final FanaticIdentityManager fanaticIdentityManager;
 
     private SettingsManager<MusicPlayerPreferenceSettings> settingsManager;
 
 
     public MusicPlayerManager(ErrorManager errorManager,
                               SongWalletTokenlyManager songWalletTokenlyManager,
+                              FanaticIdentityManager fanaticIdentityManager,
                               PluginFileSystem pluginFileSystem,
                               UUID pluginId) {
+        super(pluginFileSystem, pluginId);
         this.errorManager = errorManager;
         this.songWalletTokenlyManager = songWalletTokenlyManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
+        this.fanaticIdentityManager = fanaticIdentityManager;
     }
 
 
@@ -96,7 +101,7 @@ public class MusicPlayerManager implements MusicPlayerModuleManager, Serializabl
     }
 
 
-    @Override
+    /*@Override
     public SettingsManager<MusicPlayerPreferenceSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -107,11 +112,37 @@ public class MusicPlayerManager implements MusicPlayerModuleManager, Serializabl
         );
 
         return this.settingsManager;
-    }
+    }*/
 
+    /**
+     * This method returns the ActiveActorIdentityInformation from the selected identity.
+     * @return
+     * @throws CantGetSelectedActorIdentityException
+     * @throws ActorIdentityNotSelectedException
+     */
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Fanatic> fanaticList = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Fanatic fanatic;
+            if(fanaticList!=null||!fanaticList.isEmpty()){
+                fanatic = fanaticList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
+
     }
 
     @Override

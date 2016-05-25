@@ -26,7 +26,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.fan_community.commons.popups.AcceptDialog;
@@ -62,7 +62,7 @@ public class ConnectionNotificationsFragment extends
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private FanCommunityInformation cryptoCustomerInformation;
+    private FanCommunityInformation fanCommunityInformation;
     private List<LinkedFanIdentity> linkedFanIdentities;
 
     /**
@@ -78,7 +78,7 @@ public class ConnectionNotificationsFragment extends
         super.onCreate(savedInstanceState);
         // setting up  module
         fanCommunitySubAppSession = appSession;
-        cryptoCustomerInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        fanCommunityInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = fanCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         linkedFanIdentities = new ArrayList<>();
@@ -106,7 +106,7 @@ public class ConnectionNotificationsFragment extends
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.afc_empty_view);
 
             onRefresh();

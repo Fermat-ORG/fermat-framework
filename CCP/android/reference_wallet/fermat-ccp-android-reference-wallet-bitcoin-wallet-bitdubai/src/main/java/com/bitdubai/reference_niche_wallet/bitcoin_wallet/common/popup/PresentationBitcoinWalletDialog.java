@@ -141,15 +141,22 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         int id = v.getId();
 
         if(id == R.id.btn_left){
-            try {
-                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
-                getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-            } catch (CantCreateNewIntraWalletUserException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            saveSettings();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                        getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
+                    } catch (CantCreateNewIntraWalletUserException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    saveSettings();
+
+                }
+            }).start();
             dismiss();
         }
         else if(id == R.id.btn_right){
@@ -159,21 +166,32 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
 
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
+                                    cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                                } catch (CantCreateNewIntraWalletUserException e) {
+                                    e.printStackTrace();
+                                }
+                                saveSettings();
+                            }
+                        }).start();
 
-                        try {
-                            //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
-                            cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
-                        } catch (CantCreateNewIntraWalletUserException e) {
-                            e.printStackTrace();
-                        }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            saveSettings();
             dismiss();
         } else if ( id == R.id.btn_dismiss){
-            saveSettings();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    saveSettings();
+                }
+            }).start();
+
             dismiss();
         }
     }
@@ -219,7 +237,13 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     @Override
     public void onBackPressed() {
-        saveSettings();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveSettings();
+            }
+        }).start();
+
         super.onBackPressed();
     }
 }

@@ -8,10 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.WalletCashMoneyPluginRoot;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.UUID;
 
@@ -22,22 +23,22 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final ErrorManager errorManager;
+    private final WalletCashMoneyPluginRoot pluginRoot;
 
     private CashMoneyWalletDao dao;
     private CashMoneyWalletImpl cashMoneyWalletImpl;
 
 
-    public CashMoneyWalletManagerImpl(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
+    public CashMoneyWalletManagerImpl(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final WalletCashMoneyPluginRoot pluginRoot) throws CantStartPluginException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
 
         try {
-            this.dao = new CashMoneyWalletDao(pluginDatabaseSystem, pluginId, errorManager);
+            this.dao = new CashMoneyWalletDao(pluginDatabaseSystem, pluginId, pluginRoot);
             dao.initialize();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), "CashMoneyWalletManagerImpl", null);
         }
     }
@@ -47,10 +48,10 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
     public CashMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyWalletException {
 
         try {
-            this.cashMoneyWalletImpl = new CashMoneyWalletImpl(pluginDatabaseSystem, pluginId, errorManager, walletPublicKey);
+            this.cashMoneyWalletImpl = new CashMoneyWalletImpl(pluginDatabaseSystem, pluginId, pluginRoot, walletPublicKey);
             return cashMoneyWalletImpl;
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantLoadCashMoneyWalletException(CantLoadCashMoneyWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), "CashMoneyWalletManagerImpl", null);
         }
     }
@@ -60,7 +61,7 @@ public class CashMoneyWalletManagerImpl implements CashMoneyWalletManager {
         try {
             dao.createCashMoneyWallet(walletPublicKey, fiatCurrency);
         } catch (CantCreateCashMoneyWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCashMoneyWalletException(CantCreateCashMoneyWalletException.DEFAULT_MESSAGE, e, "CashMoneyWalletManagerImpl", null);
         }
     }

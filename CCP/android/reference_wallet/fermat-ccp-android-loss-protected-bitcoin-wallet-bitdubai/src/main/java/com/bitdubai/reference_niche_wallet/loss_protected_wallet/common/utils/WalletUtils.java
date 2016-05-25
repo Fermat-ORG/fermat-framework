@@ -11,9 +11,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
@@ -116,6 +113,24 @@ public class WalletUtils {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(5);
         df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
+
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(maxDecimal);
+        df.setMinimumFractionDigits(minDecimal);
 
         stringAmount =df.format(amount);//+ " BTC";
 

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
@@ -213,7 +213,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     private DatabaseTransaction addNavigationStructureRecordToTransaction(DatabaseTransaction transaction, WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException, CantLoadTableToMemoryException {
-        WalletNavigationStructure navigationStructure = null;
+        AppNavigationStructure navigationStructure = null;
 
         navigationStructure = walletFactoryProject.getNavigationStructure();
         if (navigationStructure != null){
@@ -351,7 +351,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             List<Skin> skins;
             Language language;
             List<Language> languages;
-            WalletNavigationStructure navigationStructure;
+            AppNavigationStructure navigationStructure;
             int size;
             WalletCategory walletCategory;
             FactoryProjectType factoryProjectType;
@@ -458,12 +458,12 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
 
             @Override
-            public WalletNavigationStructure getNavigationStructure() {
+            public AppNavigationStructure getNavigationStructure() {
                 return navigationStructure;
             }
 
             @Override
-            public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+            public void setNavigationStructure(AppNavigationStructure navigationStructure) {
                 this.navigationStructure = navigationStructure;
             }
 
@@ -599,7 +599,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
                 // I will add the navigation structure information from the database
                 DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
                 if (navigationStructureRecord != null){
-                    WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+                    AppNavigationStructure navigationStructure = new AppNavigationStructure();
                     navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
                     walletFactoryProject.setNavigationStructure(navigationStructure);
                 }

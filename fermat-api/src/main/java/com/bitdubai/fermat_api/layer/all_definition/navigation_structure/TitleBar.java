@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import java.awt.Color;
-
 /**
  * Created by Matias Furszyfer on 2015.09.1..
  */

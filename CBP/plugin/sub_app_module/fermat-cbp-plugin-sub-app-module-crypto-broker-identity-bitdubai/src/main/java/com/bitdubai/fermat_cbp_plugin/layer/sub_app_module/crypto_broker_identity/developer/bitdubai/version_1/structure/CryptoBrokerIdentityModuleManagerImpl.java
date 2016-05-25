@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -24,9 +24,10 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,25 +35,22 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.04.16.
  */
-public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdentityModuleManager {
+public class CryptoBrokerIdentityModuleManagerImpl
+        extends ModuleManagerImpl<IdentityBrokerPreferenceSettings> implements CryptoBrokerIdentityModuleManager, Serializable {
 
     private CryptoBrokerIdentityManager identityManager;
-    private PluginFileSystem            pluginFileSystem;
-    private UUID                        pluginId;
-    private ErrorManager                errorManager;
+    private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
     private PluginVersionReference      pluginVersionReference;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
             PluginFileSystem            pluginFileSystem,
             UUID                        pluginId,
-            ErrorManager                errorManager,
-            PluginVersionReference      pluginVersionReference
+            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot
     ){
+        super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
-        this.pluginFileSystem       = pluginFileSystem;
-        this.pluginId               = pluginId;
-        this.errorManager           = errorManager;
+        this.pluginRoot           = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -84,13 +82,14 @@ public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdenti
             this.identityManager.publishIdentity(publicKey);
 
         } catch (CantPublishIdentityException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            
             throw new CantPublishCryptoBrokerException(e, "", "Problem publishing the identity.");
         } catch (IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantPublishCryptoBrokerException(e, "", "Cannot find the identity.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantPublishCryptoBrokerException(e, "", "Unhandled Exception.");
         }
     }
@@ -104,15 +103,15 @@ public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdenti
 
         } catch (CantHideIdentityException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Problem hiding the identity.");
         } catch (IdentityNotFoundException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Cannot find the identity.");
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Unhandled Exception.");
         }
     }
@@ -134,19 +133,6 @@ public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdenti
         return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel());
     }
 
-    private SettingsManager<IdentityBrokerPreferenceSettings> settingsManager;
-
-    @Override
-    public SettingsManager<IdentityBrokerPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-        return this.settingsManager;
-    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

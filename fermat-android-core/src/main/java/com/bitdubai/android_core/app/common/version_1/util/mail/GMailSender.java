@@ -73,7 +73,27 @@ public class GMailSender extends javax.mail.Authenticator
         message.setText(body);
         Transport.send(message);
 
-    }   
+    }
+
+    public synchronized void sendMailPrivateKey(String subject, String body, String sender, String recipients) throws Exception
+    {
+        MimeMessage message = new MimeMessage(session);
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+        message.setSender(new InternetAddress(sender));
+        message.setSubject(subject);
+
+        message.setFileName("Fermat Wallet Private Key");
+
+        message.setDataHandler(handler);
+        message.setContent(_multipart);
+        if (recipients.indexOf(',') > 0)
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+        else
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        message.setText(body);
+        Transport.send(message);
+
+    }
 
     public void addAttachment(String filename) throws Exception 
     {

@@ -11,7 +11,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.IntraUserInfoViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
@@ -42,7 +41,7 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_information_list_item;
+        return R.layout.loss_intra_user_information_list_item;
     }
 
     @Override

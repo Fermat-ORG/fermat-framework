@@ -27,8 +27,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -68,8 +68,8 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
 
         try {
             chatSession = ((ChatSession) appSession);
-            moduleManager = chatSession.getModuleManager();
-            chatManager = moduleManager.getChatManager();
+            chatManager = chatSession.getModuleManager();
+            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             //toolbar = getToolbar();
             //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -82,7 +82,7 @@ public class WizardTwoStepBroadcastFragment extends AbstractFermatFragment {
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         try {
-            chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }

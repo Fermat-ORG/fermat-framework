@@ -12,13 +12,16 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/12/15.
@@ -30,7 +33,7 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOfflineMerchandiseBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private BrokerSubmitOfflineMerchandisePluginRoot pluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -39,23 +42,18 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
     public BrokerSubmitOfflineMerchandiseRecorderService(
             BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOfflineMerchandiseBusinessTransactionDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            BrokerSubmitOfflineMerchandisePluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager = errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(brokerSubmitOfflineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+            this.pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the submit offline merchandise recorder service",
                     "The database handler is null");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                     "Cannot set the submit offline merchandise recorder service",
                     "Unexpected error");
@@ -64,10 +62,10 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
 
     private void setDatabaseDao(BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao)
             throws CantSetObjectException {
-        if(brokerSubmitOnlineMerchandiseBusinessTransactionDao==null){
+        if (brokerSubmitOnlineMerchandiseBusinessTransactionDao == null) {
             throw new CantSetObjectException("The BrokerSubmitOnlineMerchandiseBusinessTransactionDao is null");
         }
-        this.brokerSubmitOfflineMerchandiseBusinessTransactionDao =brokerSubmitOnlineMerchandiseBusinessTransactionDao;
+        this.brokerSubmitOfflineMerchandiseBusinessTransactionDao = brokerSubmitOnlineMerchandiseBusinessTransactionDao;
     }
 
     public void setEventManager(EventManager eventManager) {
@@ -75,48 +73,38 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
     }
 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE.getCode())) {
                 this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
-                    "Unexpected error",
-                    "Check the cause");
+        } catch (CantSaveEventException exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
+                    "incoming new Contract Status Update Event Handler CantSaveException", "");
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "Unexpected error", "Check the cause");
         }
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
-        try{
+        try {
             //Logger LOG = Logger.getGlobal();
             //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-            if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE.getCode())) {
+            if (event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE.getCode())) {
                 this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
                 //LOG.info("CHECK THE DATABASE");
             }
-        }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
-                    "Unexpected error",
-                    "Check the cause");
+        } catch (CantSaveEventException exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception,
+                    "incoming Confirm Business Transaction Response CantSaveException", "");
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, exception, "Unexpected error", "Check the cause");
         }
     }
 
@@ -144,19 +132,15 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
             listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+        } catch (CantSetObjectException exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
             throw new CantStartServiceException(
                     exception,
                     "Starting the BrokerSubmitOfflineMerchandiseRecorderService",
                     "The BrokerSubmitOfflineMerchandiseRecorderService is probably null");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(DISABLES_THIS_PLUGIN, exception);
+            throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, exception,
                     "Starting the CustomerOnlinePaymentRecorderService",
                     "Unexpected error");
         }
@@ -165,18 +149,15 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
 
     @Override
     public void stop() {
-        try{
+        try {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
-    private void removeRegisteredListeners(){
+    private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }

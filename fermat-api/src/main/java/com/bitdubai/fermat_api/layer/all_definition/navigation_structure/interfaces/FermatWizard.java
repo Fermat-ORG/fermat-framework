@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 
 import java.io.Serializable;

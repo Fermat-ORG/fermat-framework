@@ -11,8 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
@@ -34,6 +37,7 @@ import java.util.HashMap;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "darkpriestrelative@gmail.com", createdBy = "darkestpriest", layer = Layers.EXTERNAL_API, platform = Platforms.TOKENLY, plugin = Plugins.TOKENLY_API)
 public class TokenlyPluginRoot extends AbstractPlugin {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -71,6 +75,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //signatureAndGETTest();
             //getSongsTest();
             //getSongTest();
+            //getTokenlyAPIStatusTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -256,15 +261,30 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             e.printStackTrace();
         }
     }
+
     private void getSongTest(){
         try{
             MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
                     "username",
                     "password");
-            Song song = TokenlySongProcessor.getSongByAuthenticatedUser(musicUser,"3438022c-ec0f-4e57-abb4-8e0b2ea503e0");
+            Song song = TokenlySongProcessor.getSongByAuthenticatedUser(musicUser,
+                    "3438022c-ec0f-4e57-abb4-8e0b2ea503e0");
             System.out.println("TKY - song: "+song);
         } catch (Exception e) {
             System.out.println("TKY: Test get song from Tokenly exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void getTokenlyAPIStatusTest(){
+        try{
+            //Check Music API
+            TokenlyAPIStatus tokenlyAPIStatus = this.tokenlyManager.getMusicAPIStatus();
+            System.out.println("TKY: Test Music API status - "+tokenlyAPIStatus);
+            tokenlyAPIStatus = this.tokenlyManager.getSwapBotAPIStatus();
+            System.out.println("TKY: Test Swapbot API status - "+tokenlyAPIStatus);
+        } catch (Exception e) {
+            System.out.println("TKY: Test get API status exception:"+e);
             e.printStackTrace();
         }
     }

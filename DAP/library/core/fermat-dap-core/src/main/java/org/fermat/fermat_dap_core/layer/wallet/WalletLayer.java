@@ -1,9 +1,10 @@
 package org.fermat.fermat_dap_core.layer.wallet;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+
 import org.fermat.fermat_dap_core.layer.wallet.asset_issuer.AssetIssuerPluginSubsystem;
 import org.fermat.fermat_dap_core.layer.wallet.asset_user.AssetUserPluginSubsystem;
 import org.fermat.fermat_dap_core.layer.wallet.redeem_point.RedeemPointPluginSubsystem;

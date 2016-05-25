@@ -6,11 +6,11 @@ package com.bitdubai.fermat_api.layer.all_definition.github;
 
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
-
-
 import com.google.gson.JsonParseException;
+
 import org.apache.commons.io.IOUtils;
-import org.eclipse.egit.github.core.*;
+import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;

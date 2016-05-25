@@ -11,8 +11,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -44,12 +47,14 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
@@ -66,6 +71,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateCon
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,6 +81,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -141,6 +150,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
 
+    private ExecutorService _executor;
+
     public static ContactsFragment newInstance() {
 
         ContactsFragment f = new ContactsFragment();
@@ -156,6 +167,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
+
+        _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
         } catch (Exception e) {
@@ -175,17 +188,27 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
-            onRefresh();
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
+
+            _executor.submit(new Runnable() {
+                @Override
                 public void run() {
+                    try {
+                        walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    } catch (CantGetAllWalletContactsException e) {
+                        e.printStackTrace();
+                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                        e.printStackTrace();
+                    } catch (CantGetCryptoWalletException e) {
+                        e.printStackTrace();
+                    }
+
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            if(isHelpEnabled)
-                              setUpTutorial(true);
+                            if (isHelpEnabled)
+                                setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -195,7 +218,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }
-            }, 300);
+            });
+
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -204,14 +229,17 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         return container;
     }
 
+    private SubActionButton button1;
+    private SubActionButton button2;
     @SuppressWarnings("ResourceType")
     private void setUpFAB() {
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
-
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
         frameLayout.setLayoutParams(lbs);
+
+        int padding = FermatScreenCalculator.getPx(getActivity(), 15);
+        frameLayout.setPadding(0, 0, padding, 0);
 
         ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
@@ -219,21 +247,29 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
+
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-        // repeat many times:
+
         ImageView itemIcon = new ImageView(getActivity());
         itemIcon.setImageResource(R.drawable.extra_user_button);
-
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
+        button1 = itemBuilder
+                .setContentView(itemIcon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button))
+                .setText("External User")
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .build();
         button1.setId(ID_BTN_EXTRA_USER);
-
 
         ImageView itemIcon2 = new ImageView(getActivity());
         itemIcon2.setImageResource(R.drawable.intra_user_button);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
+        button2 = itemBuilder.setContentView(itemIcon2)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button))
+                .setText("Fermat User")
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .build();
         button2.setId(ID_BTN_INTRA_USER);
 
-         actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .attachTo(actionButton)
@@ -241,7 +277,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
-
     }
 
     @Override
@@ -255,14 +290,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     }
 
     @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
-
+    public void onDrawerOpen() {
+        actionButton.setVisibility(View.GONE);
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
     }
 
     @Override
-    public void onDrawerSlide(View drawerView, float offset) {
-        FermatAnimationsUtils.showEmpty(getActivity(), false, actionMenu.getActivityContentView());
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+        actionButton.setVisibility(View.VISIBLE);
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -295,7 +334,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -838,8 +877,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             loadingView.setVisibility(View.GONE);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
         }
-
-
     }
 
     /**
@@ -888,33 +925,4 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         }
 
     }
-
-    @Override
-    public void onDrawerOpen() {
-
-        //close add contacts menu - FloatingActionButton
-
-    }
-
-   /* @Override
-    public void onDrawerSlide(View drawerView, float offset){
-
-        try{
-
-            if(offset == 1) {
-                actionButton.setAlpha(0);
-                actionMenu.close(false);
-            }
-            esle
-            {
-                actionButton.setAlpha(1);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }*/
-
 }

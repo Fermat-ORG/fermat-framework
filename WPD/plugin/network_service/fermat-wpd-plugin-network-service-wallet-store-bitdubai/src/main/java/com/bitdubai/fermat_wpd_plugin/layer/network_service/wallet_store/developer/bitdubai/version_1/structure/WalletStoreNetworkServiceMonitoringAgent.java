@@ -2,6 +2,8 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -9,10 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
@@ -60,7 +59,6 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
     /**
      * DealsWithCommunicationLayerManager interface variables and implementation
      */
-    CommunicationLayerManager communicationLayerManager;
 
     /**
      * constructor
@@ -69,13 +67,12 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
      * @param logManager
      * @param pluginDatabaseSystem
      */
-    public WalletStoreNetworkServiceMonitoringAgent(EventManager eventManager, ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, CommunicationLayerManager communicationLayerManager){
+    public WalletStoreNetworkServiceMonitoringAgent(EventManager eventManager, ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
         this.eventManager = eventManager;
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.communicationLayerManager = communicationLayerManager;
     }
 
     /**

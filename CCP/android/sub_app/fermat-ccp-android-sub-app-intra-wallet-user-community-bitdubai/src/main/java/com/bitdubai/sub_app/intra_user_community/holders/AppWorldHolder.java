@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.intra_user_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
@@ -18,6 +19,7 @@ public class AppWorldHolder extends FermatViewHolder {
     public FermatTextView name;
     public ImageView connectionState;
     public FermatTextView row_connection_state;
+    public ProgressBar progressBar;
 
     /**
      * Constructor
@@ -30,5 +32,6 @@ public class AppWorldHolder extends FermatViewHolder {
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
+        progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
     }
 }

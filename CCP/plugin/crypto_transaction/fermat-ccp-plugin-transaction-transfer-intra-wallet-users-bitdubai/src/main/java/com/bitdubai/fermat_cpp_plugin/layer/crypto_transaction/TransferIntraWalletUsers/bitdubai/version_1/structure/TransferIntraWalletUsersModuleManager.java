@@ -8,18 +8,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
@@ -29,13 +25,12 @@ import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWall
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.CantReceiveWalletTransactionException;
-import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.TransferIntraWalletUsersCantCancelTransactionException;
-import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.BitcoinWalletTransactionWalletRecord;
+import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.CryptoWalletTransactionWalletRecord;
 
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.TransferIntraWalletUsersCantInsertRecordException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.BitcoinLossProtectedWalletTransactionWalletRecord;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.TransferIntraWalletUsersWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -46,22 +41,21 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
 
     private final BitcoinLossProtectedWalletManager bitcoinLossWalletManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final ErrorManager errorManager;
     private final TransferIntraWalletUsersDao dao;
-    private final Broadcaster broadcaster;
+
 
 
     public TransferIntraWalletUsersModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
-                                                 final BitcoinWalletManager bitcoinWalletManager,
+                                                 final CryptoWalletManager cryptoWalletManager,
                                                  final ErrorManager errorManager,
-                                                 final TransferIntraWalletUsersDao dao,
-                                                 final Broadcaster broadcaster) {
+                                                 final TransferIntraWalletUsersDao dao
+                                                ) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.errorManager = errorManager;
         this.dao = dao;
-        this.broadcaster = broadcaster;
     }
 
 
@@ -72,7 +66,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             String txHash, //ESTE TX HASH PARA QUE SERIA?
             long cryptoAmount,
             String notes,
-            Actors actortype,
+            Actors actortypeFrom,
+            Actors actortypeTo,
             ReferenceWallet reference_wallet_sending,
             ReferenceWallet reference_wallet_receiving,
             String wallet_public_key_sending,
@@ -90,7 +85,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     txHash,
                     cryptoAmount,
                     notes,
-                    actortype,
+                    actortypeTo,
                     reference_wallet_sending,
                     reference_wallet_receiving,
                     wallet_public_key_sending,
@@ -108,8 +103,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
                     //Consult current balance of the sending wallet
 
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
-                    initialBalance = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(wallet_public_key_sending);
+                    initialBalance = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
 
                     //Checks the balance of the debiting wallet in order to decide if to continue or not.
@@ -121,7 +116,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
                         //TODO: los actors de estas transacciones van a ser la wallets, hay que distinguir
                         // esto con el actor type para poder mostrar despues bien el que seria el contacto asociado
-                        BitcoinWalletTransactionRecord bitcoinWalletTransactionWalletRecord = buildBitcoinWalletRecord(id,
+                        CryptoWalletTransactionRecord bitcoinWalletTransactionWalletRecord = buildBitcoinWalletRecord(id,
                                 new CryptoAddress("", CryptoCurrency.BITCOIN),
                                 null,
                                 cryptoAmount,
@@ -131,14 +126,14 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 "",
                                 wallet_public_key_sending,
                                 wallet_public_key_receiving,
-                                actortype,
-                                actortype,
+                                actortypeTo,
+                                actortypeFrom,
                                 blockchainNetworkType);
 
 
 
-                        bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord);
-                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord);
+                        cryptoWalletWallet.getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord);
+                        cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord);
 
                         //Proceeds to credit in the destination wallet
                         try
@@ -147,7 +142,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 txHash,
                                 cryptoAmount,
                                 notes,
-                                actortype,
+                                actortypeFrom,
+                                actortypeTo,
                                 reference_wallet_sending,
                                 reference_wallet_receiving,
                                 wallet_public_key_sending,
@@ -155,9 +151,9 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 blockchainNetworkType);
                         } catch (CantReceiveWalletTransactionException e){
                             //change transaction state to reversed and update balance to revert
-                            bitcoinWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
+                            cryptoWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
                             dao.setToError(transferIntraWalletUsersWrapper);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
                         }
@@ -167,7 +163,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
 
                     } else {
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                       // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
                         //change transaction state to error
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
@@ -202,8 +198,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 "",
                                 "",
                                 "",
-                                actortype,
-                                actortype,
+                                actortypeTo,
+                                actortypeFrom,
                                 blockchainNetworkType);
 
 
@@ -215,7 +211,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                         txHash,
                                         cryptoAmount,
                                         notes,
-                                        actortype,
+                                        actortypeFrom,
+                                        actortypeTo,
                                         reference_wallet_sending,
                                         reference_wallet_receiving,
                                         wallet_public_key_sending,
@@ -225,7 +222,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             } catch (CantReceiveWalletTransactionException e){
 
                                 bitcoinLossProtectedWallet.revertTransaction(bitcoinLossProtectedWalletTransactionWalletRecord2, false);
-                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                                //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                                 dao.setToError(transferIntraWalletUsersWrapper);
                                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
@@ -238,7 +235,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     } else {
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                        //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                         throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction", null, "", "NotEnoughFunds");
                     }
@@ -266,6 +263,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
         } catch (CantLoadTableToMemoryException e) {
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         }
+        catch(TransferIntraWalletUsersNotEnoughFundsException e){
+            throw new TransferIntraWalletUsersNotEnoughFundsException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Not Enough Funds Exception");
+
+        }
         catch (Exception e){
             throw new CantSendTransactionException("I could not send the transaction", FermatException.wrapException(e), "TransferIntraWalletUsersModuleManager", "unknown reason");
 
@@ -279,7 +280,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                  String txHash,
                                  long cryptoAmount,
                                  String notes,
-                                 Actors actortype,
+                                  Actors actortypeFrom,
+                                 Actors actortypeTo,
                                  ReferenceWallet reference_wallet_sending,
                                  ReferenceWallet reference_wallet_receiving,
                                  String wallet_public_key_sending,
@@ -296,7 +298,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
                     //Prepares the record to be used within transactions
 
-                    BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord2 = buildBitcoinWalletRecord(id,
+                    CryptoWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord2 = buildBitcoinWalletRecord(id,
                             new CryptoAddress("", CryptoCurrency.BITCOIN),
                             null,
                             cryptoAmount,
@@ -306,22 +308,22 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             "",
                             wallet_public_key_sending,
                             wallet_public_key_receiving,
-                            actortype,
-                            actortype,
+                            actortypeTo,
+                            actortypeFrom,
                             blockchainNetworkType);
 
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving);
+                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(wallet_public_key_receiving);
 
                     try {
-                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
+                        cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
 
                     }catch (CantRegisterCreditException e){
                         throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
                     }
                     try {
-                        bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
+                        cryptoWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
                     }catch (CantRegisterCreditException e){
-                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord2);
+                        cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord2);
                         throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
                     }
                     break;
@@ -342,8 +344,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             "",
                             wallet_public_key_sending,
                             wallet_public_key_receiving,
-                            actortype,
-                            actortype,
+                            actortypeTo,
+                            actortypeFrom,
                             blockchainNetworkType);
 
                  try {
@@ -414,7 +416,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
     }
 
 
-    public BitcoinWalletTransactionWalletRecord buildBitcoinWalletRecord(UUID transactionId,
+    public CryptoWalletTransactionWalletRecord buildBitcoinWalletRecord(UUID transactionId,
                                                                          CryptoAddress addressFrom,
                                                                          UUID requestId,
                                                                          long amount,
@@ -429,7 +431,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                          com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
 
 
-        BitcoinWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinWalletTransactionWalletRecord(transactionId,
+        CryptoWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new CryptoWalletTransactionWalletRecord(transactionId,
                 addressFrom,
                 requestId,
                 amount,

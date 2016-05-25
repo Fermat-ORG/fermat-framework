@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -27,41 +28,12 @@ public class ChatMetadataRecord implements ChatMetadata {
     String chatName;
     ChatMessageStatus chatMessageStatus;
     MessageStatus messageStatus;
-    Timestamp date;
+    String date;
     UUID messageId;
     String message;
     DistributionStatus distributionStatus;
     TypeChat typeChat;
     List<GroupMember> groupMembers;
-
-//    public ChatMetadataRecord(
-//            UUID chatId,
-//            UUID objectId,
-//            PlatformComponentType localActorType,
-//            String localActorPublicKey,
-//            PlatformComponentType remoteActorType,
-//            String remoteActorPublicKey,
-//            String chatName,
-//            ChatMessageStatus chatMessageStatus,
-//            MessageStatus messageStatus,
-//            Timestamp date,
-//            UUID messageId,
-//            String message,
-//            DistributionStatus distributionStatus) {
-//        this.chatId = chatId;
-//        this.objectId = objectId;
-//        this.localActorType = localActorType;
-//        this.localActorPublicKey = localActorPublicKey;
-//        this.remoteActorType = remoteActorType;
-//        this.remoteActorPublicKey = remoteActorPublicKey;
-//        this.chatName = chatName;
-//        this.chatMessageStatus = chatMessageStatus;
-//        this.messageStatus = messageStatus;
-//        this.date = date;
-//        this.messageId = messageId;
-//        this.message = message;
-//        this.distributionStatus = distributionStatus;
-//    }
 
     public ChatMetadataRecord(
             UUID chatId,
@@ -73,7 +45,7 @@ public class ChatMetadataRecord implements ChatMetadata {
             String chatName,
             ChatMessageStatus chatMessageStatus,
             MessageStatus messageStatus,
-            Timestamp date,
+            String date,
             UUID messageId,
             String message,
             DistributionStatus distributionStatus,
@@ -142,7 +114,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public Timestamp getDate() {
+    public String getDate() {
         return this.date;
     }
 
@@ -169,6 +141,17 @@ public class ChatMetadataRecord implements ChatMetadata {
     @Override
     public List<GroupMember> getGroupMembers() {
         return groupMembers;
+    }
+
+    @Override
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static ChatMetadataRecord fromJson(String json){
+        Gson gson = new Gson();
+        return gson.fromJson(json, ChatMetadataRecord.class);
     }
 
     @Override
@@ -208,7 +191,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.chatMessageStatus = chatMessageStatus;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

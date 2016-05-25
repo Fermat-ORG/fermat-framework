@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.events.interfaces;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 
@@ -15,13 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface FermatEvent {
+public interface FermatEvent<T extends FermatEventEnum> {
 
     /**
      * Throw the method <code>getEventType</code> you can get the information of the event type.
      * @return an instance of a Fermat Enum.
      */
-    FermatEventEnum getEventType();
+    T getEventType();
 
     /**
      * Throw the method <code>setSource</code> you can set the source of the event.

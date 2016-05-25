@@ -1,34 +1,55 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
@@ -39,11 +60,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
 
-    private LossProtectedWalletSession referenceWalletSession;
-    private LossProtectedWallet cryptoWallet;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
-    private LossProtectedWalletSettings bitcoinWalletSettings = null;
+    private LossProtectedWalletSession lossProtectedWalletSession;
+    private LossProtectedWallet lossProtectedWalletManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
+    //private LossProtectedWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
+    private String previousSelectedItemExchange = null;
+
+    BlockchainNetworkType blockchainNetworkType;
 
     public static LossProtectedSettingsFragment newInstance() {
         return new LossProtectedSettingsFragment();
@@ -52,14 +76,19 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = appSession;
+        lossProtectedWalletSession = appSession;
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+           } catch (CantGetSettingsException e) {
+            lossProtectedWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
+        } catch (SettingsNotFoundException e) {
+            lossProtectedWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
         }
     }
 
@@ -70,20 +99,21 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
-        BlockchainNetworkType blockchainNetworkType= null;
+
+        final UUID exchangeProviderId2 ;
         UUID exchangeProviderId = null;
-        List<PreferenceSettingsItem> list = new ArrayList<>();
+        final List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
 
 
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
 
-            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
+            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",lossProtectedWalletSettings.getNotificationEnabled()));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getNotificationEnabled()));
+            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",lossProtectedWalletSettings.getLossProtectedEnabled()));
 
-            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            if (lossProtectedWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
                 switch (blockchainNetworkType) {
                     case PRODUCTION:
@@ -99,35 +129,59 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             }
 
+            final Bundle networkDialog = new Bundle();
+            String items[] = new String[]{"MainNet", "TestNet", "RegTest"};
+            networkDialog.putStringArray("items_array", items);
+            networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            networkDialog.putString("title", getResources().getString(R.string.title_label));
+            networkDialog.putString("mode", "single_option");
+            networkDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
 
-            final Bundle dataDialog = new Bundle();
-            dataDialog.putInt("items", R.array.items);
-            dataDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
-            dataDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            dataDialog.putString("title", getResources().getString(R.string.title_label));
-            dataDialog.putString("mode", "single_option");
-            dataDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+
+            // Exchange Rate Provider
+
+            if (lossProtectedWalletManager.getExchangeProvider() != null)
+                exchangeProviderId =  lossProtectedWalletManager.getExchangeProvider();
+
+            exchangeProviderId2 = exchangeProviderId;
+
+            getExecutor().submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+
+                        List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
+                        String itemsProviders[] = new String[providers.size()];
+                        for (int i=0; i<providers.size(); i++) {
+                            ExchangeRateProvider provider = providers.get(i);
+
+                                itemsProviders[i] = provider.getProviderName();
+
+                            if(provider.getProviderId().equals(exchangeProviderId2))
+                                previousSelectedItemExchange = provider.getProviderName();
+                        }
+
+                        final Bundle providerDialog = new Bundle();
+                        providerDialog.putStringArray("items_array", itemsProviders);
+                        providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+                        providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+                        providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
+                        providerDialog.putString("mode", "single_option");
+                        providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
+                        list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                     }
+                }
+            });
 
 
-            //Exchange Rate Provider
 
-            if (cryptoWallet.getExchangeProvider()!=null)
-                exchangeProviderId=  cryptoWallet.getExchangeProvider();
-
-            List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
-
-            //Get providers list
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
-
-            int position = 11;
-            for (CurrencyExchangeRateProviderManager provider :  providers)
-            {
-                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderId)) ? true : false));
-                position++;
-            }
-
-            list.add(new PreferenceSettingsOpenDialogText(10,"Exchange Rate Providers",stringsProviders));
+            list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -157,33 +211,41 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         try {
 
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
                 e.printStackTrace();
             }
-            bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-
-
-                //Exchange Rate provider settings
-                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+            if(preferenceSettingsItem.getId() == 10){
                 //Get providers list
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletManager.getExchangeRateProviderManagers());
 
-                cryptoWallet.setExchangeProvider(providers.get(0).getProviderId());
-
+                String stringsProviders[] = new String[providers.size()];
+                int i = 0;
                 for (CurrencyExchangeRateProviderManager provider :  providers)
                 {
-                    if(provider.getProviderName().equals(preferenceSettingsTextPlusRadioItem.getText()))
-                        cryptoWallet.setExchangeProvider(provider.getProviderId());
+                    if(lossProtectedWalletManager.getExchangeProvider().equals(provider.getProviderId()))
+                        previousSelectedItem = provider.getProviderName();
+
+                    stringsProviders[i] = provider.getProviderName();
+
+                    i++;
                 }
+            }
 
+            if (preferenceSettingsItem.getId() == 11){
+                //receive Regtest test bitcoins
+                Runnable _longPressed = new Runnable() {
+                    public void run() {
+                        Log.i("info", "LongPress");
+                        Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
+                        GET("", getActivity());
+                    }
+                };
 
-            try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-            } catch (CantPersistSettingsException e) {
-                e.printStackTrace();
+                _longPressed.run();
+
             }
         } catch (Exception e){
         }
@@ -191,13 +253,16 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     }
 
     @Override
-    public void onSettingsTouched(String item, int position) {}
+    public void onSettingsTouched(String item, int position) {
+
+
+    }
 
     @Override
     public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
         try {
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -207,16 +272,18 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             if (preferenceSettingsItem.getId() == 1){
                 //enable notifications settings
-                bitcoinWalletSettings.setNotificationEnabled(isChecked);
+                lossProtectedWalletSettings.setNotificationEnabled(isChecked);
             }
 
             if (preferenceSettingsItem.getId() == 2){
                 //enable Loss Protected
-                bitcoinWalletSettings.setLossProtectedEnabled(isChecked);
+                lossProtectedWalletSettings.setLossProtectedEnabled(isChecked);
             }
 
+
+
             try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                lossProtectedWalletManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -231,7 +298,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
         BlockchainNetworkType blockchainNetworkType;
-
+        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         switch (item) {
 
             case "MainNet":
@@ -248,26 +315,44 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 break;
 
             default:
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                //provider exchange
+                // Exchange Rate Provider
+                try {
+                    UUID exchangeProviderId = null;
+                    List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
+
+                    for (int i=0; i<providers.size(); i++) {
+                        ExchangeRateProvider provider = providers.get(i);
+
+                        if(provider.getProviderName().equals(item))
+
+                                exchangeProviderId = provider.getProviderId();
+
+                    }
+
+                    lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
         if (blockchainNetworkType == null) {
-            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            if (lossProtectedWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } else {
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             }
         }
 
-        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+        lossProtectedWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
 
         try {
-            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            lossProtectedWalletManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
@@ -280,6 +365,110 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     public int getBackgroundAlpha() {
-        return 95;
+        return 70;
+    }
+
+
+    public void GET(String url, final Context context){
+        final Handler mHandler = new Handler();
+        try {
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String receivedAddress = "";
+                        final HttpClient Client = new DefaultHttpClient();
+                        try {
+                            String SetServerString = "";
+
+                            // Create Request to server and get response
+
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+                            // Show response on activity
+
+                            receivedAddress = SetServerString;
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        final String finalReceivedAddress = receivedAddress;
+
+                        String response = "";
+                        try {
+
+
+                            String SetServerString = "";
+                            CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
+                            LossProtectedWalletContact cryptoWalletWalletContact = null;
+                            try {
+                                cryptoWalletWalletContact = lossProtectedWalletManager.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
+
+                            } catch (Exception e) {
+
+                            }
+
+                            assert cryptoWalletWalletContact != null;
+                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+
+                            response = SetServerString;
+                        } catch (IOException e) {
+
+                        }
+
+
+                        final String finalResponse = response;
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (!finalResponse.equals("transaccion fallida")) {
+                                    Toast.makeText(context, "Regtest bitcoin arrived", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+                    }
+                });
+                thread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getWalletAddress(String actorPublicKey) {
+        String walletAddres="";
+        try {
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = lossProtectedWalletManager.requestAddressToKnownUser(
+                    lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
+                    Actors.INTRA_USER,
+                    actorPublicKey,
+                    Actors.EXTRA_USER,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
+                    appSession.getAppPublicKey(),
+                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                    blockchainNetworkType
+            );
+            walletAddres = cryptoAddress.getAddress();
+        } catch (CantRequestLossProtectedAddressException e) {
+            //errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        } catch (CantGetCryptoLossProtectedWalletException e) {
+            e.printStackTrace();
+        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            e.printStackTrace();
+        }
+        return walletAddres;
     }
 }

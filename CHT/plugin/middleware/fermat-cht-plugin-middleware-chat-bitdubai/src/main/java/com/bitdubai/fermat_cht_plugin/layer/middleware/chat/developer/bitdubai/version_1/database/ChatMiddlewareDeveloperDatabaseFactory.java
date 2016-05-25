@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatMiddlewareDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +123,8 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE);
         /**
          * Table Chats addition.
          */
@@ -141,6 +143,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
         /**
          * Table Message addition.
          */

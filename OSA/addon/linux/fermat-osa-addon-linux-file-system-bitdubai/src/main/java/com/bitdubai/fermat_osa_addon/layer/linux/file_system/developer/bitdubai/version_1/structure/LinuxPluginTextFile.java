@@ -147,12 +147,13 @@ public class LinuxPluginTextFile implements PluginTextFile {
              */
             
             File storagePath = new File(path);
-            if (!storagePath.exists() && storagePath.mkdirs()) {storagePath=null;}
+            if (!storagePath.exists() && !storagePath.mkdirs())
+                throw new CantPersistFileException("path: "+path+" - fileName: "+fileName, "Can't create the path to the file.");
 
             /**
              * Then we create the file.
              */
-            File file = new File(storagePath, fileName);
+            File file = new File(path, fileName);
 
             OutputStream outputStream;
 
@@ -209,21 +210,15 @@ public class LinuxPluginTextFile implements PluginTextFile {
             inputStream.close();
             
             /**
-             * Now we decrypt it.
+             * Now we decrypt it and I load it into memory.
              */
-            String decryptedContent = "";
-            
             try {
-                decryptedContent = this.decrypt(stringBuilder.toString());
+                this.content = this.decrypt(stringBuilder.toString());
 
             } catch (CantDecryptException e) {
+                e.printStackTrace();
                 throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
             }
-
-            /**
-             * Finally, I load it into memory.
-             */
-            this.content = decryptedContent;
             
         } catch (Exception e) {
             throw new CantLoadFileException(e.getMessage());

@@ -8,12 +8,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerUpdatePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantCancelPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantUpdatePurchaseNegotiationTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -29,8 +29,8 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
     /*Represent the Transaction database DAO */
     private CustomerBrokerUpdateNegotiationTransactionDatabaseDao   customerBrokerUpdateNegotiationTransactionDatabaseDao;
 
-    /*Represent the Error Manager*/
-    private ErrorManager                                            errorManager;
+    /*Represent the NegotiationTransactionCustomerBrokerNewPluginRoot*/
+    private NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot;
 
     /*Represent the Plugins Version*/
     private PluginVersionReference                                  pluginVersionReference;
@@ -39,13 +39,11 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
     public CustomerBrokerUpdatePurchaseNegotiationTransaction(
         CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
         CustomerBrokerUpdateNegotiationTransactionDatabaseDao   customerBrokerUpdateNegotiationTransactionDatabaseDao,
-        ErrorManager                                            errorManager,
-        PluginVersionReference                                  pluginVersionReference
+        NegotiationTransactionCustomerBrokerUpdatePluginRoot    pluginRoot
     ) {
         this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerUpdateNegotiationTransactionDatabaseDao  = customerBrokerUpdateNegotiationTransactionDatabaseDao;
-        this.errorManager                                           = errorManager;
-        this.pluginVersionReference                                 = pluginVersionReference;
+        this.pluginRoot                                             = pluginRoot;
     }
 
     // SEND PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
@@ -76,13 +74,13 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR UPDATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
 
@@ -129,13 +127,13 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR UPDATE CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(),e, CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdatePurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantUpdatePurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER UPDATE PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
 
@@ -169,13 +167,13 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(),e, CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CANCEL CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(),e, CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER CANCEL PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER CANCEL PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
@@ -206,13 +204,13 @@ public class CustomerBrokerUpdatePurchaseNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerPurchaseNegotiationException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(),e, CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CANCEL CUSTOMER BROKER PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(),e, CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER CANCEL PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancelPurchaseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCancelPurchaseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER CANCEL PURCHASE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }

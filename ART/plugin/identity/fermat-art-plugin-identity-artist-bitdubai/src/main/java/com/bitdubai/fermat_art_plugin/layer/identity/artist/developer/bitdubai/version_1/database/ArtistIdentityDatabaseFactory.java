@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -61,8 +61,10 @@ public class ArtistIdentityDatabaseFactory implements DealsWithErrors, DealsWith
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
-
-
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME, DatabaseDataType.STRING,100,false);
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME, DatabaseDataType.STRING,10,false);
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME,DatabaseDataType.STRING,10,false);
             table.addIndex(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(table);

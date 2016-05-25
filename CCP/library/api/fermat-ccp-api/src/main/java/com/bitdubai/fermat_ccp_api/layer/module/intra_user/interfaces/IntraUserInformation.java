@@ -54,4 +54,6 @@ public interface IntraUserInformation extends IdentityUserInformation {
     ConnectionState getConnectionState();
 
     public String getState();
+
+    void setProfileImageNull();
 }

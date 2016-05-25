@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation;
 
+import android.content.Context;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -8,9 +9,10 @@ import android.view.animation.TranslateAnimation;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 
 /**
- * Created by mati on 2015.11.23..
+ * Created by mati on 2015.11.23
  */
-public class AnimationManager implements ElementsWithAnimation{
+
+public class AnimationManager implements ElementsWithAnimation {
 
     View rootView;
     View emptyListViewsContainer;
@@ -31,6 +33,16 @@ public class AnimationManager implements ElementsWithAnimation{
     @Override
     public void startExpandAnimation(int verticalOffSet) {
         moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startCollapseAnimation(Context context, int verticalOffset) {
+        // no-op
+    }
+
+    @Override
+    public void startExpandAnimation(Context context, int verticalOffset) {
+        // no-op
     }
 
     private void moveViewToOriginalPosition(View view) {
@@ -60,6 +72,7 @@ public class AnimationManager implements ElementsWithAnimation{
             }
         }
     }
+
 
     public void setEmptyOriginalPos(int[] emptyOriginalPos) {
         this.emptyOriginalPos = emptyOriginalPos;

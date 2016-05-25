@@ -9,10 +9,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
@@ -20,26 +25,33 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDao;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.event_handler.ChatP2PCompletedConnectionRegistrationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure.ChatActorNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
  * Edited by Miguel Rincon on 19/04/2016
  */
+@PluginInfo(createdBy = "José D. Vilchez A", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
 public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
 
     /**
@@ -48,6 +60,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
     private ChatActorNetworkServiceDao chatActorNetworkServiceDao;
 
     private ChatActorNetworkServiceManager fermatManager;
+
+    private ExecutorService executor;
 
     public ChatActorNetworkServicePluginRoot() {
 
@@ -61,6 +75,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
         );
     }
 
+    private List<FermatEventListener> listenersAdded;
+
     @Override
     public FermatManager getManager() {
         return fermatManager;
@@ -71,6 +87,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         try {
 
+            listenersAdded = new ArrayList<>();
             chatActorNetworkServiceDao = new ChatActorNetworkServiceDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             chatActorNetworkServiceDao.initialize();
@@ -79,15 +96,21 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     getCommunicationsClientConnection(),
                     chatActorNetworkServiceDao,
                     this,
-                    errorManager,
                     getPluginVersionReference()
             );
+
+            executor = Executors.newSingleThreadExecutor();
+
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new ChatP2PCompletedConnectionRegistrationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             System.out.println("******* Init Chat Actor Network Service ******");
 
         } catch (final CantInitializeDatabaseException e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing chat ans dao.");
         }
     }
@@ -122,6 +145,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
     @Override
     protected void onNetworkServiceRegistered() {
         fermatManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        runExposeIdentityThread();
     }
 
     @Override
@@ -161,8 +185,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    @Override
+    protected void onClientSuccessfulReconnect() {
+        runExposeIdentityThread();
     }
 
     @Override
@@ -212,13 +241,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -271,14 +300,54 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
+
+
+
+    public final void runExposeIdentityThread(){
+
+        final PluginVersionReference pluginReference = getPluginVersionReference();
+
+        if(fermatManager.areIdentitiesToExpose()){
+
+            executor.submit(new Runnable() {
+
+                @Override
+
+                public void run() {
+
+                    try {
+
+                        Thread.sleep(3000);
+
+                        fermatManager.exposeIdentitiesInWait();
+
+                    } catch (CantExposeIdentityException | InterruptedException e) {
+
+                        errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                    }
+
+                }
+
+            });
+
+        }
+
+    }
+
+
 
 
     /**
@@ -320,11 +389,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch(CantRequestConnectionException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }

@@ -2,6 +2,9 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.account_manage
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,16 +19,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.structure.BankAccountNumberImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.holders.AccountListViewHolder;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
@@ -40,6 +42,9 @@ import static android.widget.Toast.makeText;
  * Created by Alejandro Bicelis on 12/05/16.
  */
 public class EditAccountFragment extends AbstractFermatFragment implements Spinner.OnItemSelectedListener {
+
+    private static int MAX_LENGHT_ALIAS = 10;
+    private static int MAX_LENGHT_ACCOUNT = 25;
 
     List<BankAccountNumber> bankAccounts = new ArrayList<>();
 
@@ -56,6 +61,30 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
     ArrayAdapter<String> imagesSpinnerAdapter;
     Spinner accountImageSpinner;
 
+    FermatTextView accountNumberCount;
+    FermatTextView accountAliasCount;
+
+
+
+    private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_ACCOUNT - s.length()));
+        }
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    };
+    private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_ALIAS - s.length()));
+        }
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    };
+
     public static EditAccountFragment newInstance() {
         return new EditAccountFragment();
     }
@@ -67,7 +96,7 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
 
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
-            bankAccounts = moduleManager.getBankingWallet().getAccounts();
+            bankAccounts = moduleManager.getAccounts();
 
             //Get old account data from session
             oldData = (BankAccountNumber) appSession.getData("account_data");
@@ -93,7 +122,9 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
         View layout = inflater.inflate(R.layout.bw_edit_account, container, false);
 
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
+        accountNumberCount = (FermatTextView) layout.findViewById(R.id.account_number_count);
         accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
+        accountAliasCount = (FermatTextView) layout.findViewById(R.id.account_alias_count);
 
         accountNumberText.setText(oldData.getAccount());
         accountAliasText.setText(oldData.getAlias());
@@ -106,8 +137,16 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
         accountImageSpinner.setOnItemSelectedListener(this);
         accountImageSpinner.setSelection(accountImages.indexOf(oldData.getAccountImageId()));
 
-        //Allow only numbers and dashes
+        //Allow only numbers and dashes, limit max length, add textWatchers
         accountNumberText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        accountNumberText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ACCOUNT)});
+        accountNumberText.addTextChangedListener(accountNumberTextWatcher);
+
+        accountAliasText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ALIAS)});
+        accountAliasText.addTextChangedListener(accountAliasTextWatcher);
+
+        accountNumberCount.setText(String.valueOf(MAX_LENGHT_ACCOUNT-oldData.getAccount().length()));
+        accountAliasCount.setText(String.valueOf(MAX_LENGHT_ALIAS-oldData.getAlias().length()));
 
         configureToolbar();
         return layout;
@@ -118,7 +157,7 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
         else
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
-        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
+        //getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     private boolean editAccount(){
@@ -155,7 +194,7 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
                 || !oldData.getAccountImageId().equals(newImageId)) {
 
             try{
-                moduleManager.getBankingWallet().editAccount(oldData.getAccount(), newAlias, newAccountNumber, newImageId);
+                moduleManager.editAccount(oldData.getAccount(), newAlias, newAccountNumber, newImageId);
 
                 //Update account data in session
                 BankAccountNumber newData = new BankAccountNumberImpl(newAlias, newAccountNumber, oldData.getCurrencyType(), oldData.getAccountType(), oldData.getBankName(), newImageId);

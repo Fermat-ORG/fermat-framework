@@ -3,13 +3,14 @@ package com.bitdubai.fermat_tky_api.all_definitions.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public enum ExternalPlatform implements FermatEnum {
+public enum ExternalPlatform implements FermatEnum, Serializable {
 
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.

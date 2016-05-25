@@ -14,13 +14,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.StockTransactionsCashMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.CashTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.Date;
 import java.util.UUID;
@@ -37,20 +38,20 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final StockTransactionsCashMoneyDestockPluginRoot pluginRoot;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
     private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
     private UUID pluginId;
     public final int SLEEP_TIME = 5000;
 
-    public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
+    public StockTransactionsCashMoneyDestockMonitorAgent(StockTransactionsCashMoneyDestockPluginRoot pluginRoot,
                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                          CashUnholdTransactionManager cashUnholdTransactionManager,
                                                          PluginDatabaseSystem pluginDatabaseSystem,
                                                          UUID pluginId) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cashUnholdTransactionManager = cashUnholdTransactionManager;
         stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
@@ -232,8 +233,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                 }
             }
         } catch (FermatException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 

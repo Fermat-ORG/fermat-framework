@@ -14,9 +14,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -34,7 +34,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private BrokerAckOnlinePaymentPluginRoot pluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -43,20 +43,20 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     public BrokerAckOnlinePaymentRecorderService(
             BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            BrokerAckOnlinePaymentPluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager = errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(brokerAckOnlinePaymentBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the broker ack online payment database handler",
                     "The database handler is null");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
@@ -86,12 +86,12 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -109,12 +109,12 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch(CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -133,12 +133,12 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
 
             LOG.info("CHECK THE DATABASE");
         }catch(CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Money Notification CantSaveException","");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -157,12 +157,12 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                     event.getContractHash());
             //LOG.info("CHECK THE DATABASE");
         }catch(CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"new Contract Opened Event Handler CantSaveException","");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -211,7 +211,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(
@@ -219,7 +219,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
                     "Starting the BrokerAckOnlinePaymentRecorderService",
                     "The BrokerAckOnlinePaymentRecorderService is probably null");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
@@ -235,7 +235,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }

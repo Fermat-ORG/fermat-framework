@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -27,11 +28,9 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -63,7 +62,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
     private LossProtectedWalletSession referenceWalletSession;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    private LossProtectedWallet lossProtectedWalletmanager;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -112,10 +111,11 @@ public class CreateContactFragmentDialog extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
-        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+        lossProtectedWalletmanager = referenceWalletSession.getModuleManager();
+
         LossProtectedWalletSettings bitcoinWalletSettings = null;
         try {
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            bitcoinWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -128,20 +128,16 @@ public class CreateContactFragmentDialog extends Dialog implements
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
             try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                lossProtectedWalletmanager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
 
         }
 
-        try {
-            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
+
+            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
 
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
@@ -154,7 +150,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_contact_dialog);
+            setContentView(R.layout.loss_create_contact_dialog);
 
 
             save_contact_btn = (Button) findViewById(R.id.save_contact_btn);
@@ -226,7 +222,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     private void saveContact() {
         try {
 
-            LossProtectedWallet cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            LossProtectedWallet cryptoWallet = referenceWalletSession.getModuleManager();
 
             CryptoAddress validAddress = WalletUtils.validateAddress(txt_address.getText().toString(), cryptoWallet);
 
@@ -298,11 +294,11 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = WalletUtils.validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager().getCryptoWallet());
+                CryptoAddress validAddress = WalletUtils.validateAddress(item.getText().toString(),lossProtectedWalletmanager);
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
-                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.\n\n" + item.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // This enables the paste menu item, since the clipboard contains plain text.

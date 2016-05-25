@@ -9,8 +9,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -29,12 +29,12 @@ import java.util.UUID;
  */
 public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements TransactionExecutor {
 
-    private BitcoinWalletWallet      bitcoinWallet;
+    private CryptoWalletWallet bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private EventManager             eventManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final EventManager eventManager, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
+    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final EventManager eventManager, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
         this.bitcoinWallet            = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.eventManager             = eventManager;
@@ -75,7 +75,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private void processOnCryptoNetworkTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException {
         try {
-            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+            CryptoWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
             bitcoinWallet.getBalance(BalanceType.BOOK).credit(record);
 
             //notified to Transmission NS that transaction Credit in Wallet
@@ -91,8 +91,12 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private void processOnBlockChainTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException {
         try {
-            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+            CryptoWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
+
+
+          //  broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, cryptoAddressBookRecord.getWalletPublicKey(), "TRANSACTIONARRIVE_" + transaction.getTransactionID().toString());
+
 
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
@@ -113,7 +117,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private void processReversedOnCryptoNetworkTransaction(TransactionCompleteInformation transaction) throws CantRegisterDebitException {
         try {
-            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+            CryptoWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
             bitcoinWallet.getBalance(BalanceType.BOOK).debit(record);
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
@@ -122,7 +126,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
     private void processReversedOnBlockchainTransaction(TransactionCompleteInformation transaction) throws CantRegisterDebitException {
         try {
-            BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
+            CryptoWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).debit(record);
 
 

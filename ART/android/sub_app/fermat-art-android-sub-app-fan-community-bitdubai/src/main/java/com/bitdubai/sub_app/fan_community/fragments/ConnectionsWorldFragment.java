@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.fan_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,14 +26,17 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.fan_community.commons.popups.ListIdentitiesDialog;
@@ -60,13 +64,13 @@ public class ConnectionsWorldFragment extends
     //Managers
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<FanCommunitySettings> settingsManager;
+    //private SettingsManager<FanCommunitySettings> settingsManager;
 
     //Data
     private FanCommunitySettings appSettings;
     private int offset = 0;
     private int mNotificationsCount = 0;
-    private ArrayList<FanCommunityInformation> cryptoCustomerCommunityInformationList;
+    private ArrayList<FanCommunityInformation> fanCommunityInformationArrayList;
 
     //Flags
     private boolean isRefreshing = false;
@@ -77,7 +81,7 @@ public class ConnectionsWorldFragment extends
     private View rootView;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -98,23 +102,32 @@ public class ConnectionsWorldFragment extends
             //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
-                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch (Exception e){ appSettings = null; }
+                if (appSession.getAppPublicKey()!= null){
+                    appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                }else{
+                    appSettings = moduleManager.loadAndGetSettings("123456789");
+                }
 
-            if(appSettings == null){
+            } catch (Exception e) {
+                appSettings = null;
+            }
+
+            if (appSettings == null) {
                 appSettings = new FanCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                }catch (Exception e){
-                    e.printStackTrace();
+                appSettings.setIsPresentationHelpEnabled(false);
+                if(moduleManager != null){
+                    if (appSession.getAppPublicKey()!=null){
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                    }else{
+                        moduleManager.persistSettings("123456789", appSettings);
+                    }
                 }
             }
 
@@ -139,11 +152,11 @@ public class ConnectionsWorldFragment extends
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
         try {
-            rootView = inflater.inflate(R.layout.afc_row_connections_world, container, false);
+            rootView = inflater.inflate(R.layout.afc_fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            adapter = new AppListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
+            layoutManager  = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            adapter = new AppListAdapter(getActivity(), fanCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
             recyclerView.setHasFixedSize(true);
@@ -155,19 +168,16 @@ public class ConnectionsWorldFragment extends
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
+            emptyView = (LinearLayout) rootView.findViewById(R.id.afc_empty_view);
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.banner_fan_community)
                         .setIconRes(R.drawable.fan)
                         .setSubTitle(R.string.art_afc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.art_afc_launch_action_creation_dialog_body)
-                        .setTextFooter(R.string.art_afc_launch_action_creation_dialog_footer)
-                        .setTextNameLeft(R.string.art_afc_launch_action_creation_name_left)
-                        .setTextNameRight(R.string.art_afc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -195,6 +205,23 @@ public class ConnectionsWorldFragment extends
             {
                 invalidate();
                 onRefresh();
+            }
+
+            if(moduleManager!=null){
+                FanCommunitySelectableIdentity fanCommunitySelectableIdentity=
+                        moduleManager.getSelectedActorIdentity();
+                //Get notification requests count
+                if(fanCommunitySelectableIdentity!=null){
+                    List<LinkedFanIdentity> fanCommunityInformation =
+                            moduleManager.listFansPendingLocalAction(fanCommunitySelectableIdentity,
+                                    MAX,
+                                    offset);
+                    if(fanCommunityInformation!=null){
+                        mNotificationsCount = fanCommunityInformation.size();
+                        //mNotificationsCount = 4;
+                        new FetchCountTask().execute();
+                    }
+                }
             }
 
         } catch (Exception ex) {
@@ -235,9 +262,9 @@ public class ConnectionsWorldFragment extends
                             result.length > 0) {
                         progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
-                            cryptoCustomerCommunityInformationList = (ArrayList<FanCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoCustomerCommunityInformationList);
-                            if (cryptoCustomerCommunityInformationList.isEmpty()) {
+                            fanCommunityInformationArrayList = (ArrayList<FanCommunityInformation>) result[0];
+                            adapter.changeDataSet(fanCommunityInformationArrayList);
+                            if (fanCommunityInformationArrayList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -282,12 +309,20 @@ public class ConnectionsWorldFragment extends
         List<FanCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            List<FanCommunityInformation> result = moduleManager.listWorldFan(
-                    moduleManager.getSelectedActorIdentity(), MAX, offset);
-            dataSet.addAll(result);
-            offset = dataSet.size();
+            FanCommunitySelectableIdentity fanCommunitySelectableIdentity =  moduleManager.getSelectedActorIdentity();
+            if(!Validate.isObjectNull(fanCommunitySelectableIdentity)){
+                List<FanCommunityInformation> result = moduleManager.listWorldFan(
+                        fanCommunitySelectableIdentity, MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
+
+        }catch (CantGetSelectedActorIdentityException e){
+            //There are no identities in device
+            //Nothing to do here.
         } catch (Exception e) {
             e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
         }
 
         return dataSet;
@@ -302,6 +337,29 @@ public class ConnectionsWorldFragment extends
 
     @Override
     public void onLongItemClickListener(FanCommunityInformation data, int position) {}
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
 
 }
 

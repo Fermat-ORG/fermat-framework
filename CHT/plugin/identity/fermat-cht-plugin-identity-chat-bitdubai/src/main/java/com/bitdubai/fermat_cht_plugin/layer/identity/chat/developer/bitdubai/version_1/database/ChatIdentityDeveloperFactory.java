@@ -18,8 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatIdentityDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +143,7 @@ import java.util.UUID;
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME);
 
         DeveloperDatabaseTable chatIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME, projectColumns);
         tables.add(chatIdentityTable);

@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -16,12 +19,8 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -31,22 +30,18 @@ import java.util.UUID;
 /**
  * Created by alexander on 3/15/16.
  */
-public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,Serializable {
+public class ModuleArtistIdentityManager
+        extends ModuleManagerImpl<ArtistIdentitySettings>
+        implements ArtistIdentityManagerModule,Serializable {
+
     private final ArtistIdentityManager artistIdentityManager;
-    private final ErrorManager errorManager;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
 
-    private SettingsManager<ArtistIdentitySettings> settingsManager;
-
-    public ModuleArtistIdentityManager(ErrorManager errorManager,
+    public ModuleArtistIdentityManager(
                                        ArtistIdentityManager artistIdentityManager,
                                        PluginFileSystem pluginFileSystem,
                                        UUID pluginId) {
-        this.errorManager = errorManager;
+        super(pluginFileSystem, pluginId);
         this.artistIdentityManager = artistIdentityManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
 
     }
 
@@ -56,7 +51,7 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,
     }
 
     @Override
-    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+    public HashMap<ArtExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
         return artistIdentityManager.listExternalIdentitiesFromCurrentDeviceUser();
     }
 
@@ -66,13 +61,43 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,
     }
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] imageBytes, UUID externalIdentityID) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
-        return artistIdentityManager.createArtistIdentity(alias,imageBytes,externalIdentityID);
+    public Artist createArtistIdentity(
+            final String alias,
+            final byte[] imageBytes,
+            final String externalUsername,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType, final UUID externalIdentityID,
+            final ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+        return artistIdentityManager.createArtistIdentity(
+                alias,
+                imageBytes,
+                externalUsername,
+                exposureLevel,
+                acceptConnectionsType,
+                externalIdentityID,
+                artExternalPlatform);
     }
 
     @Override
-    public void updateArtistIdentity(String alias, String publicKey, byte[] profileImage,UUID externalIdentityID) throws CantUpdateArtistIdentityException {
-        artistIdentityManager.updateArtistIdentity(alias, publicKey, profileImage,externalIdentityID);
+    public void updateArtistIdentity(
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUserName) throws CantUpdateArtistIdentityException {
+        artistIdentityManager.updateArtistIdentity(
+                alias,
+                publicKey,
+                profileImage,
+                exposureLevel,
+                acceptConnectionsType,
+                externalIdentityID,
+                artExternalPlatform,
+                externalUserName);
+
     }
 
     @Override
@@ -90,8 +115,7 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,
         artistIdentityManager.hideIdentity(publicKey);
     }
 
-
-    @Override
+    /*@Override
     public SettingsManager<ArtistIdentitySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -102,11 +126,30 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,
         );
 
         return this.settingsManager;
-    }
+    }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Artist> artistList = artistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Artist fanatic;
+            if(artistList!=null||!artistList.isEmpty()){
+                fanatic = artistList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListArtistIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

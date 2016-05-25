@@ -7,6 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.W
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantApproveLossProtectedRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantDeleteLossProtectedWalletContactException;
@@ -65,19 +69,8 @@ import java.util.concurrent.BlockingDeque;
  * Created by Natalia Cortez 03/14/2016
  * @version 1.0
  */
-public interface LossProtectedWallet extends Serializable {
+public interface LossProtectedWallet  extends Serializable,ModuleManager<LossProtectedWalletSettings,ActiveActorIdentityInformation>,ModuleSettingsImpl<LossProtectedWalletSettings> {
 
-    /**
-     * Calculate Earnings or Losts.
-     *
-     * @param walletPublicKey public key of the wallet in which we are working.
-     *
-     * @return a double with Losts or Earnings
-     *
-     * @throws
-     */
-
-    double getEarningOrLostsWallet(String walletPublicKey);
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -331,14 +324,16 @@ public interface LossProtectedWallet extends Serializable {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType
+              ) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     void sendToWallet (long cryptoAmount,
                        String sendWalletPublicKey,
                        String receivedWalletPublicKey,
                        String notes,
-                       Actors deliveredToActorType,
+                       Actors actortypeFrom,
+                       Actors actortypeTo,
                        ReferenceWallet sendingWallet,
                        ReferenceWallet receivingWallet,
                        BlockchainNetworkType blockchainNetworkType)throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
@@ -490,6 +485,14 @@ public interface LossProtectedWallet extends Serializable {
     List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
+     * Throw the method <code>listAllWalletSpendingValue</code> you can list all  btc spending value.
+     * @param walletPublicKey
+     * @return
+     * @throws CantListLossProtectedSpendingException
+     */
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey,BlockchainNetworkType blockchainNetworkType) throws CantListLossProtectedSpendingException, CantLoadWalletException;
+
+    /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
      * @param walletPublicKey public key of the wallet in where you're working.
@@ -623,7 +626,7 @@ public interface LossProtectedWallet extends Serializable {
      * @return
      * @throws CantGetCurrencyExchangeProviderException
      */
-    Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
+    List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
 
     /**
      * Through the method <code>getInstalledWallets</code> you can get the list of wallets installed on platform
@@ -635,4 +638,24 @@ public interface LossProtectedWallet extends Serializable {
     UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
 
     void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
+
+    /**
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListLossProtectedTransactionsException
+     */
+    List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                   final TransactionType transactionType,
+                                                                                   String walletPublicKey,
+                                                                                   String intraUserLoggedInPublicKey,
+                                                                                   BlockchainNetworkType blockchainNetworkType,
+                                                                                   int max,
+                                                                                   int offset) throws CantListLossProtectedTransactionsException;
 }

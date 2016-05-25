@@ -22,11 +22,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppFriendsListAdapter;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -81,7 +82,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
             adapter = new AppFriendsListAdapter(getActivity(), artistCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             onRefresh();
@@ -153,8 +154,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
         }
     }
 
-    private synchronized List<ArtistCommunityInformation> getMoreData() {
-        List<ArtistCommunityInformation> dataSet = new ArrayList<>();
+    private synchronized List<ArtCommunityInformation> getMoreData() {
+        List<ArtCommunityInformation> dataSet = new ArrayList<>();
         try {
             dataSet.addAll(moduleManager.listAllConnectedArtists(moduleManager.getSelectedActorIdentity(), MAX, offset));
         } catch (CantListArtistsException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {

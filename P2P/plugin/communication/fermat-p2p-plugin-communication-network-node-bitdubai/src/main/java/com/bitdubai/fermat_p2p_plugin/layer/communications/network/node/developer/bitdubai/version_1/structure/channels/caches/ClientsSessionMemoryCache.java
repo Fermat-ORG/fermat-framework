@@ -1,9 +1,3 @@
-/*
- * @#ClientsSessionMemoryCache.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches;
 
 import java.util.Collections;
@@ -30,14 +24,16 @@ public class ClientsSessionMemoryCache {
     /**
      * Holds all client sessions
      */
-    private final Map<String, Session> clientSessions;
+    private final Map<String , Session> clientSessionsByPk;
+    private final Map<Session, String > clientSessionsBySession;
 
     /**
      * Constructor
      */
     private ClientsSessionMemoryCache(){
         super();
-        clientSessions = Collections.synchronizedMap(new HashMap<String, Session>());
+        clientSessionsByPk      = Collections.synchronizedMap(new HashMap<String , Session>());
+        clientSessionsBySession = Collections.synchronizedMap(new HashMap<Session, String >());
     }
 
     /**
@@ -68,7 +64,21 @@ public class ClientsSessionMemoryCache {
         /*
          * Return the session of this client
          */
-        return instance.clientSessions.get(clientPublicKeyIdentity);
+        return instance.clientSessionsByPk.get(clientPublicKeyIdentity);
+    }
+
+    /**
+     * Get the session client
+     *
+     * @param session the session of the connection
+     * @return the session of the client
+     */
+    public String get(Session session){
+
+        /*
+         * Return the session of this client
+         */
+        return instance.clientSessionsBySession.get(session);
     }
 
     /**
@@ -77,12 +87,14 @@ public class ClientsSessionMemoryCache {
      * @param clientPublicKeyIdentity the client identity
      * @param session the client session
      */
-    public void add(String clientPublicKeyIdentity, Session session){
+    public void add(final String  clientPublicKeyIdentity,
+                    final Session session                ){
 
         /*
          * Add to the cache
          */
-        instance.clientSessions.put(clientPublicKeyIdentity, session);
+        instance.clientSessionsByPk     .put(clientPublicKeyIdentity, session);
+        instance.clientSessionsBySession.put(session                , clientPublicKeyIdentity);
     }
 
     /**
@@ -96,7 +108,29 @@ public class ClientsSessionMemoryCache {
         /*
          * remove the session of this client
          */
-        return instance.clientSessions.remove(clientPublicKeyIdentity);
+        Session session = instance.clientSessionsByPk.remove(clientPublicKeyIdentity);
+
+        instance.clientSessionsBySession.remove(session);
+
+        return session;
+    }
+
+    /**
+     * Remove the session client
+     *
+     * @param session the session of the connection
+     * @return the public key of the client
+     */
+    public String remove(Session session){
+
+        /*
+         * remove the session of this client
+         */
+        String clientPublicKeyIdentity = instance.clientSessionsBySession.remove(session);
+
+        instance.clientSessionsByPk.remove(clientPublicKeyIdentity);
+
+        return clientPublicKeyIdentity;
     }
 
     /**
@@ -107,6 +141,25 @@ public class ClientsSessionMemoryCache {
      */
     public boolean exist(String clientPublicKeyIdentity){
 
-        return instance.clientSessions.containsKey(clientPublicKeyIdentity);
+        return instance.clientSessionsByPk.containsKey(clientPublicKeyIdentity);
+    }
+
+    /**
+     * Verify is exist a session for a client
+     *
+     * @param session the session of the connection
+     * @return (TRUE or FALSE)
+     */
+    public boolean exist(Session session){
+
+        return instance.clientSessionsBySession.containsKey(session);
+    }
+
+    /**
+     * Get Client Sessions By Pk
+     * @return Map<String, Session>
+     */
+    public static Map<String, Session> getClientSessionsByPk() {
+        return instance.clientSessionsByPk;
     }
 }

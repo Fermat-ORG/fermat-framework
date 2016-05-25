@@ -34,8 +34,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
@@ -304,7 +304,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "loss_protected_wallet_icon", // ICOIN
                 "Loss Protected Wallet", // WALLET NAME
-                WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
+                WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
                 ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
