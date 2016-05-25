@@ -74,12 +74,13 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
         //return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getFullyLoadedSession());
-        getChtActiveIdentity();
+        if (activeIdentity==null)
+            getChtActiveIdentity();
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        if(navPainter!=null)
+        //if(activeIdentity!=null)
             return new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
-        else
-            return navPainter;
+//        else
+//            return navPainter;
 //        try {
 //
 //            new Thread(new Runnable() {
@@ -173,7 +174,8 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
                         progressDialog.dismiss();
                         if (getContext() != null && navPainter==null && activeIdentity==null) {
                             activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
-                            navPainter = new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
+                            getNavigationViewPainter();
+                            //navPainter = new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
                         }
                     } else
                         activeIdentity = null;

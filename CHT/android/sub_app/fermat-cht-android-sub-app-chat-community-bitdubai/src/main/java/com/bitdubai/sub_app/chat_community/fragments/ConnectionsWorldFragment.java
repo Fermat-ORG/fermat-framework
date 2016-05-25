@@ -33,6 +33,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -365,6 +366,7 @@ public class ConnectionsWorldFragment
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
             } else {
                 showDialogHelp();
+                //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode(), SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
             }
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
         {
