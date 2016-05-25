@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 
 /**
  * @author Created by mati on 2015.11.12..
@@ -21,7 +21,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentity
  */
 public class RedeemPointCommunityFragmentsCommons {
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetRedeem) throws CantGetIdentityAssetUserException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetRedeem) throws CantGetIdentityRedeemPointException {
         /**
          * Navigation view header
          */

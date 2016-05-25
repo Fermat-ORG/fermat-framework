@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 
 /**
  * @author Created by mati on 2015.11.12..
@@ -22,7 +22,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentity
 public class IssuerCommunityFragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetIssuer) throws CantGetIdentityAssetUserException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetIssuer) throws CantGetIdentityAssetIssuerException {
         /**
          * Navigation view header
          */
