@@ -123,7 +123,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     worldActor = worldActorList.get(i);
                     for (ChatActorConnection connectedActor : actorConnections) {
                         if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId(), worldActor.getStatus()));
                     }
                 }
             }
@@ -199,14 +199,16 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType(),
                     selectedIdentity.getAlias(),
-                    selectedIdentity.getImage()
+                    selectedIdentity.getImage(),
+                    ""
             );
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
                     chatActorToContact.getPublicKey(),
                     Actors.CHAT,
                     chatActorToContact.getAlias(),
-                    chatActorToContact.getImage()
+                    chatActorToContact.getImage(),
+                    chatActorToContact.getStatus()
             );
 
             chatActorConnectionManager.requestConnection(
@@ -398,7 +400,8 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                         record.getAlias(),
                         record.getImage(),
                         record.getConnectionState(),
-                        record.getConnectionId())));
+                        record.getConnectionId(),
+                        record.getStatus())));
 
 
         } catch (CantGetChatActorWaitingException e) {
@@ -497,7 +500,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(), i.getConnectionState());
                     }
                 }
 //                if(selectedIdentity == null)

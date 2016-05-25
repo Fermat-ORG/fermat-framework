@@ -171,7 +171,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         if (i == R.id.btn_conect) {
 //            Toast.makeText(getActivity(), "Fixing for your convenience.", Toast.LENGTH_SHORT).show();
 
-            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
 //            try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(),
                         (AssetIssuerCommunitySubAppSession) appSession,
@@ -195,7 +195,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 //            }
         }
         /*if (i == R.id.btn_disconect) {
-            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
             final DisconectDialog disconectDialog;
             try {
                 disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null, actorIssuer, manager.getActiveAssetIssuerIdentity());
@@ -258,11 +258,11 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 //            }
         }
         if (i == R.id.btn_connection_request_send) {
-            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
             Toast.makeText(getActivity(), R.string.connection_request, Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-            // CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
+            // CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
             Toast.makeText(getActivity(), R.string.connection_rejected, Toast.LENGTH_SHORT).show();
         }
     }

@@ -22,6 +22,6 @@ public interface ChatActorCommunityInformation {
 
     UUID getConnectionId();
 
-
+    String getStatus();
 
 }

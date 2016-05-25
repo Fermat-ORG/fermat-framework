@@ -35,7 +35,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -504,6 +503,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.COUNTRY, chatExposingData.getCountry());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATE, chatExposingData.getState());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.CITY, chatExposingData.getCity());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATUS, chatExposingData.getStatus());
 
         return gson.toJson(jsonObjectContent);
     }
