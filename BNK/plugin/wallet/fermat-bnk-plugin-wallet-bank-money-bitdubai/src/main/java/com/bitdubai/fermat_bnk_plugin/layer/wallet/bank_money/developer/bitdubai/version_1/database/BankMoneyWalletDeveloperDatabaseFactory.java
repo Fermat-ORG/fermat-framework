@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class BankMoneyWalletDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -224,13 +224,13 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

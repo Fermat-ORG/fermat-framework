@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 17/10/15.
  */
-public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetIssuerNetworkServiceDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -288,13 +288,13 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }
