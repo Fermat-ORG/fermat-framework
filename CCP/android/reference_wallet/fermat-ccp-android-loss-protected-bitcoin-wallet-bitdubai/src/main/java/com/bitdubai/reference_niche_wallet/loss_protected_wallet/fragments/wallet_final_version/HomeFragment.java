@@ -436,6 +436,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerDragEnabled(true);
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
+            chart.fitScreen();
 
             CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),R.layout.loss_custom_marker_view);
             chart.setMarkerView(mv);
