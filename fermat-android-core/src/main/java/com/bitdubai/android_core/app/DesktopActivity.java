@@ -76,13 +76,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
-        if(bottomMenuReveal ==null){
-            findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-            bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
-            bottomMenuReveal.buildMenuSettings();
-            bottomMenuReveal.getOnClickListener().onClick(null);
-            bottomMenuReveal.getOnClickListener().onClick(null);
-        }
+
     }
     @Override
     protected void onDestroy() {
@@ -300,8 +294,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             }else{
 
 
-                if(activities.equals(Activities.DESKTOP_SETTING_FERMAT_NETWORK)){
-                    Toast.makeText(this, "toca", Toast.LENGTH_SHORT).show();
+                if(!activities.equals(Activities.CCP_DESKTOP)){
 
                     getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
                     resetThisActivity();
@@ -463,6 +456,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
                         findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                         initialisePaging();
+
+                        if(bottomMenuReveal ==null){
+                            findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+                            bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
+                            bottomMenuReveal.buildMenuSettings();
+                            try {
+                                bottomMenuReveal.getOnClickListener().onClick(null);
+                                bottomMenuReveal.getOnClickListener().onClick(null);
+                            }catch (Exception e){
+
+                            }
+                        }
                     } else {
 
                         hideBottonIcons();
