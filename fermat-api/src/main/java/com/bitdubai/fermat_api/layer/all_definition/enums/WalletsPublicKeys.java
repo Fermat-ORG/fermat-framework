@@ -17,6 +17,9 @@ public enum WalletsPublicKeys implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET      ("crypto_customer_wallet"),
     //TODO CCP Platform
     CCP_REFERENCE_WALLET            ("reference_wallet"),
+
+    CCP_FERMAT_WALLET              ("fermat_wallet"),   // TODO: temporal Fermat Wallet
+
     //TODO CWP Platform
     CWP_LOSS_PROTECTED_WALLET       ("loss_protected_wallet"),
     //TODO DAP Platform
@@ -45,6 +48,9 @@ public enum WalletsPublicKeys implements FermatEnum {
             case "crypto_customer_wallet":  return CBP_CRYPTO_CUSTOMER_WALLET   ;
             //TODO CCP Platform
             case "reference_wallet":        return CCP_REFERENCE_WALLET         ;
+
+            case "fermat_wallet":           return CCP_FERMAT_WALLET            ;  // TODO: temporal Fermat Wallet
+
             //TODO DAP Platform
             case "asset_issuer":            return DAP_ISSUER_WALLET            ;
             case "asset_user":              return DAP_USER_WALLET              ;
