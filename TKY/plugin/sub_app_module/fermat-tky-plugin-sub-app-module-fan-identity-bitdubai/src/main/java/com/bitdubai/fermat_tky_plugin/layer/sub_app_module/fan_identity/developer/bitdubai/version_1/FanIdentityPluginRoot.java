@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
@@ -36,6 +37,9 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    PluginFileSystem pluginFileSystem;
+
     FanIdentityManager fanIdentityManager;
     /**
      * Default constructor
@@ -48,7 +52,9 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
         this.fanIdentityManager = new FanIdentityManager(
                 errorManager,
                 tokenlyFanIdentityManager,
-                tokenlyApiManager);
+                tokenlyApiManager,
+                pluginFileSystem,
+                pluginId);
     }
 
     @Override

@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
 import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
 import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
@@ -140,7 +140,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
             if (fanIdentitySettings == null) {
                 fanIdentitySettings = new FanIdentitySettings();
-                fanIdentitySettings.setIsPresentationHelpEnabled(false);
+                fanIdentitySettings.setIsPresentationHelpEnabled(true);
                 if(settingsManager != null){
                     if (artFanUserIdentitySubAppSession.getAppPublicKey()!=null){
                         settingsManager.persistSettings(
@@ -165,10 +165,15 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         View rootLayout = inflater.inflate(R.layout.fragment_create_art_fan_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
+        if (fanIdentitySettings.isPresentationHelpEnabled()) {
+            setUpHelpArtFan(false);
+        }
         return rootLayout;
+
+
     }
 
-    public void showDialog(){
+    /*public void showDialog(){
         PresentationArtFanUserIdentityDialog fanUserIdentityDialog =
                 new PresentationArtFanUserIdentityDialog(
                         getActivity(),
@@ -176,7 +181,29 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         null,
                         moduleManager);
         fanUserIdentityDialog.show();
+    }*/
+    private void setUpHelpArtFan(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog;
+            presentationDialog = new PresentationDialog.Builder(getActivity(), artFanUserIdentitySubAppSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_fan_community)
+                    .setIconRes(R.drawable.fan)
+                    .setSubTitle(R.string.art_fan_identity_welcome_subTitle)
+                    .setBody(R.string.art_fan_identity_welcome_body)
+                    .setTextFooter(R.string.art_fan_identity_welcome_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    e);
+        }
     }
+
     private void setUpIdentity() {
         try {
             identitySelected = (Fanatic) artFanUserIdentitySubAppSession.getData(
@@ -695,7 +722,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == 99)
-                showDialog();
+                setUpHelpArtFan(false);
 
 
         } catch (Exception e) {
