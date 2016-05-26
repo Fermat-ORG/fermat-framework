@@ -68,6 +68,8 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -516,8 +518,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
 
+                DecimalFormatSymbols separator = new DecimalFormatSymbols();
+                separator.setDecimalSeparator('.');
+                DecimalFormat form = new DecimalFormat("##########.##",separator);
+
                 //Set entries values for the chart
-                entryList.add(new Entry((float) valueEntry, i));
+                entryList.add(new Entry(Float.parseFloat(form.format(valueEntry)), i));
                 xValues.add(String.valueOf(i));
             }
             chart.setVisibility(View.VISIBLE);
