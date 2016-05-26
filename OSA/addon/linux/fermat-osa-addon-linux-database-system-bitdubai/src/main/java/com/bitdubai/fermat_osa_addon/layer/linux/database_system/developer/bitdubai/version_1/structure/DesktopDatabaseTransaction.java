@@ -366,7 +366,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
                                          final DatabaseTable       table     ,
                                          final DatabaseTableRecord record    ) throws CantDeleteRecordException {
 
-        String SQL_QUERY = "DELETE FROM " + table.getTableName() + " WHERE " + table.makeFilter();
+        String SQL_QUERY = "DELETE FROM " + table.getTableName() + table.makeFilter();
 
         try (Statement statement = connection.createStatement()) {
 

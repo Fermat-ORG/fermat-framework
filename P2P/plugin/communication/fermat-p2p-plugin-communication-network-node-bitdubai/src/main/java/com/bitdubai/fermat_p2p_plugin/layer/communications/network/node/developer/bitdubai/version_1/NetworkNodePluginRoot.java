@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -28,6 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
@@ -208,6 +211,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
 
             /*
+             * Delete all checked in components
+             * when node starts
+             */
+            daoFactory.getCheckedInActorDao().deleteAll();
+            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+            daoFactory.getCheckedInClientDao().deleteAll();
+            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
+            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+
+            /*
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
@@ -236,9 +249,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             NodeContext.add(NodeContextItem.DAO_FACTORY, daoFactory);
             NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY, developerDatabaseFactory);
-            NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
+            NodeContext.add(NodeContextItem.EVENT_MANAGER, eventManager);
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
-            NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );
+            NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM, pluginDatabaseSystem);
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM, pluginFileSystem);
             NodeContext.add(NodeContextItem.PLUGIN_ROOT, this);
 

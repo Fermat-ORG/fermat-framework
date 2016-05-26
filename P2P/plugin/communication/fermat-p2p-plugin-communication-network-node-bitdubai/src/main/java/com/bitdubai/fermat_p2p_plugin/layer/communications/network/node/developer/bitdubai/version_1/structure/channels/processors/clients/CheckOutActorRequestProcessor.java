@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -94,15 +97,23 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
                  */
                 if (checkedInActor != null){
 
+                    // create transaction for
+                    DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInActorDao().getNewTransaction();
+                    DatabaseTransactionStatementPair pair;
+
                     /*
                      * Delete from data base
                      */
-                    deleteCheckedInActor(profileIdentity);
+                    pair = deleteCheckedInActor(profileIdentity);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
 
                     /*
                      * CheckedActorsHistory into data base
                      */
-                    insertCheckedActorsHistory(checkedInActor);
+                    pair = insertCheckedActorsHistory(checkedInActor);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                    databaseTransaction.execute();
 
                     /*
                      * If all ok, respond whit success message
@@ -155,17 +166,12 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
      * @param profileIdentity
      * @throws CantInsertRecordDataBaseException
      */
-    private void deleteCheckedInActor(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair deleteCheckedInActor(String profileIdentity) throws CantCreateTransactionStatementPairException {
 
         /*
          * validate if exists
          */
-        if(getDaoFactory().getCheckedInActorDao().exists(profileIdentity)) {
-        /*
-         * delete from the data base
-         */
-            getDaoFactory().getCheckedInActorDao().delete(profileIdentity);
-        }
+        return getDaoFactory().getCheckedInActorDao().createDeleteTransactionStatementPair(profileIdentity);
 
     }
 
@@ -175,7 +181,7 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
      * @param checkedInActor
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedActorsHistory(CheckedInActor checkedInActor) throws CantInsertRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedActorsHistory(CheckedInActor checkedInActor) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the CheckedActorsHistory
@@ -194,7 +200,7 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+        return getDaoFactory().getCheckedActorsHistoryDao().createInsertTransactionStatementPair(checkedActorsHistory);
 
     }
 

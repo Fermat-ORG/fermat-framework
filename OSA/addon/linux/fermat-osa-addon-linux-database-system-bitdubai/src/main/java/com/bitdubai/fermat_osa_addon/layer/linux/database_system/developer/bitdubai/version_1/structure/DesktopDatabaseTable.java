@@ -486,6 +486,19 @@ public class DesktopDatabaseTable implements DatabaseTable {
     }
 
     @Override
+    public void deleteAllRecord() throws CantDeleteRecordException {
+
+        try {
+            String query = "DELETE FROM " + tableName;
+            database.execSQL(query);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new CantDeleteRecordException(e);
+        }
+
+    }
+
+    @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
 
         try {

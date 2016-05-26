@@ -34,6 +34,8 @@ public interface DatabaseTable {
 
     void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
+    void deleteAllRecord() throws CantDeleteRecordException;
+
     void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
     DatabaseTableRecord getEmptyRecord();

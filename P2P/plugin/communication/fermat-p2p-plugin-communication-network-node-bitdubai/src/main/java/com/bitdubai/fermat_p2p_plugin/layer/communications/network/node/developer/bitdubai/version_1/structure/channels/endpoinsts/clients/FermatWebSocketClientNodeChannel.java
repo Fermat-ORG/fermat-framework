@@ -19,8 +19,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.PackageEncoder;
 
 import org.apache.commons.lang.ClassUtils;
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
+//import org.glassfish.tyrus.client.ClientManager;
+//import org.glassfish.tyrus.client.ClientProperties;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -104,14 +104,14 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
             URI endpointURI = new URI("ws://"+ip+":"+port+"/fermat/ws/node-channel");
             LOG.info("Trying to connect to "+endpointURI.toString());
 
-           ClientManager webSocketContainer = ClientManager.createClient();
+           //ClientManager webSocketContainer = ClientManager.createClient();
 
 
             /*
              * Create a ReconnectHandler
              * it intents only three times
              */
-           ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+          /* ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
                int i = 0;
 
                @Override
@@ -152,14 +152,14 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
                }
 
-           };
+           };*/
 
 
            /*
             * Register the ReconnectHandler
             */
-           webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
-
+           //webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+           WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
 
         } catch (Exception e) {

@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -96,15 +99,23 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                  */
                 if (checkedInClient != null) {
 
+                    // create transaction for
+                    DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInClientDao().getNewTransaction();
+                    DatabaseTransactionStatementPair pair;
+
                     /*
                      * CheckedInClient into data base
                      */
-                    deleteCheckedInClient(profileIdentity);
+                    pair = deleteCheckedInClient(profileIdentity);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
 
                     /*
                      * ClientsRegistrationHistory into data base
                      */
-                    insertClientsRegistrationHistory(checkedInClient, RegistrationResult.SUCCESS, null);
+                    pair = insertClientsRegistrationHistory(checkedInClient, RegistrationResult.SUCCESS, null);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                    databaseTransaction.execute();
 
                     /*
                      * If all ok, respond whit success message
@@ -158,17 +169,13 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteCheckedInClient(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair deleteCheckedInClient(String profileIdentity) throws CantCreateTransactionStatementPairException {
 
         /*
-         * validate if exists
+         * Create statement.
          */
-        if(getDaoFactory().getCheckedInClientDao().exists(profileIdentity)) {
-            /*
-             * Delete from the data base
-             */
-            getDaoFactory().getCheckedInClientDao().delete(profileIdentity);
-        }
+        return getDaoFactory().getCheckedInClientDao().createDeleteTransactionStatementPair(profileIdentity);
+
     }
 
     /**
@@ -180,9 +187,9 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void insertClientsRegistrationHistory(final CheckedInClient    checkedInClient,
+    private DatabaseTransactionStatementPair insertClientsRegistrationHistory(final CheckedInClient    checkedInClient,
                                                   final RegistrationResult result         ,
-                                                  final String             detail         ) throws CantInsertRecordDataBaseException {
+                                                  final String             detail         ) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the ClientsRegistrationHistory
@@ -197,7 +204,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
+        return getDaoFactory().getClientsRegistrationHistoryDao().createInsertTransactionStatementPair(clientsRegistrationHistory);
     }
 
 }

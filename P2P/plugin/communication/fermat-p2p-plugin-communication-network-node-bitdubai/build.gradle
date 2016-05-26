@@ -53,18 +53,13 @@ dependencies {
    // compile 'org.jboss.weld.servlet:weld-servlet:2.3.1.Final'
    // compile 'org.jboss.weld.se:weld-se-core:2.3.1.Final'
 
-    compile ('javax:javaee-api:7.0'){
-        exclude group:'javax.websocket', module:'javax.websocket-api'
-        exclude group:'com.sun.mail', module:'javax.mail'
-    }
+    compile ('javax:javaee-api:7.0')
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
 
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-configuration:commons-configuration:1.10'
 
-    compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12'){
-        exclude group:'javax.websocket', module:'javax.websocket-api'
-    }
+    compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12')
     compile 'org.bitlet:weupnp:0.1.4'
 
     // compile 'org.xerial:sqlite-jdbc:3.7.2'
