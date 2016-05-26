@@ -11,7 +11,7 @@
     <!--Dialog Help - Init-->
     <string name="tky_fan_identity_welcome_subTitle">Welcome to TKY Fan Identity.</string>
     <string name="tky_fan_identity_welcome_footer">Welcome to TKY Fan Identity.</string>
-    <string name="tky_fan_identity_welcome_body">"From here you can create a Artist identity\n" +
-                            "With this identity you will link your Tokenly account.</string>
+    <string name="tky_fan_identity_welcome_body">"This app helps you create your Tokenly identity in Fermat. Its main feature include:\n"
+                            "* Managing your identity.</string>
     <!--Dialog Help - End-->
 </resources>
