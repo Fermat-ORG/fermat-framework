@@ -31,12 +31,18 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
@@ -251,7 +257,6 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
-
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -366,6 +371,9 @@ public class ConnectionsWorldFragment
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
             } else {
                 showDialogHelp();
+//                InstalledApp installedApp = new InstalledApp("Chat",SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),new Version(), 0,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+//
+//                selectApp(installedApp);
                 //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode(), SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
             }
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)

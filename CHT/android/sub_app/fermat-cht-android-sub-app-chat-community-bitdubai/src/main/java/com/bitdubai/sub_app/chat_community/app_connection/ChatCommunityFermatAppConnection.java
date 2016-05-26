@@ -52,17 +52,18 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
+        //getChtActiveIdentity();
         return new ChatCommunityFragmentFactory();
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CHAT_PLATFORM,
-                Layers.SUB_APP_MODULE,
-                Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
-                Developers.BITDUBAI,
-                new Version()
+            Platforms.CHAT_PLATFORM,
+            Layers.SUB_APP_MODULE,
+            Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
+            Developers.BITDUBAI,
+            new Version()
         );
     }
 
@@ -74,11 +75,12 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
         //return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getFullyLoadedSession());
+        navPainter=new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
         if (activeIdentity==null)
             getChtActiveIdentity();
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
         //if(activeIdentity!=null)
-            return new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
+            return navPainter;
 //        else
 //            return navPainter;
 //        try {
@@ -157,7 +159,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
             progressDialog.setMessage("Please wait");
             progressDialog.setCancelable(false);
             //progressDialog.show();
-            FermatWorker worker = new FermatWorker() {
+            final FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     return getMoreData();
@@ -168,17 +170,23 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    activeIdentity = null;
-                    if (result != null &&
-                            result.length > 0) {
-                        progressDialog.dismiss();
-                        if (getContext() != null && navPainter==null && activeIdentity==null) {
-                            activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
-                            getNavigationViewPainter();
-                            //navPainter = new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
-                        }
-                    } else
+                    //try {
                         activeIdentity = null;
+                        if (result != null && result.length > 0) {
+                            progressDialog.dismiss();
+                            if (getContext() != null && navPainter == null && activeIdentity == null) {
+                                activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
+//                                getNavigationViewPainter();
+//                                navPainter = new ChatCommunityNavigationViewPainter(getContext(), activeIdentity, null);
+//                                navPainter.addNavigationViewHeader();
+                                //worker.wait();
+                            }
+                        } else
+                            activeIdentity = null;
+//                    }catch (InterruptedException e)
+//                    {
+//                        //ignore
+//                    }
                 }
 
                 @Override
