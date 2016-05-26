@@ -635,7 +635,7 @@ public class ActorConnectionEventActions {
                     );
                     if (eventSource == EventSource.ACTOR_NETWORK_SERVICE_ARTIST){
                         broadcaster.publish(
-                                BroadcasterType.NOTIFICATION_SERVICE,
+                                BroadcasterType.UPDATE_VIEW,
                                 SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                                 ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                         artistNetworkService.confirm(connectionId);
@@ -643,7 +643,7 @@ public class ActorConnectionEventActions {
                     else{
                         fanNetworkService.confirm(connectionId);
                         broadcaster.publish(
-                                BroadcasterType.NOTIFICATION_SERVICE,
+                                BroadcasterType.UPDATE_VIEW,
                                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                                 FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                     }

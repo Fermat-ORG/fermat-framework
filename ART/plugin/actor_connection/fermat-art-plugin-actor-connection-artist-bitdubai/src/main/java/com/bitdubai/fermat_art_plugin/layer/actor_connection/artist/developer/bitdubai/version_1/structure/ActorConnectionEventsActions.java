@@ -125,7 +125,7 @@ public class ActorConnectionEventsActions {
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
                         broadcaster.publish(
-                                BroadcasterType.NOTIFICATION_SERVICE,
+                                BroadcasterType.UPDATE_VIEW,
                                 SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                                 ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                         break;

@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -381,8 +382,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         {
             //update intra user list
             if(code.equals(ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
-                invalidate();
-                onRefresh();
+              getActivity().runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                      invalidate();
+                      onRefresh();
+                  }
+              });
             }
 
 
