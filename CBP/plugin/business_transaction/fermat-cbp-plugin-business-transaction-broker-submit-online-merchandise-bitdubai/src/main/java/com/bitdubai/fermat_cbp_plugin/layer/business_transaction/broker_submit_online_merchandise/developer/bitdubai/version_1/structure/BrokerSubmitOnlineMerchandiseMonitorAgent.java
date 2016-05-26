@@ -345,7 +345,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     System.out.println("BROKER_SUBMIT_ONLINE_MERCHANDISE - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
                     System.out.println("*************************************************************************************************");
                     outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
-                            //TODO pasar por parametro: businessTransactionRecord.getCryptoCurrency(),
+                            //TODO: pasar por parametro businessTransactionRecord.getCryptoCurrency(),
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
@@ -354,7 +354,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.INTRA_USER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la reference wallet adecuada para la crypto currency
                             businessTransactionRecord.getBlockchainNetworkType());
 
                     //Updating the business transaction record

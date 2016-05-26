@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -221,7 +222,6 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             this.customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(
                     customerBrokerContractPurchaseManager,
                     dao,
-                    transactionTransmissionManager,
                     customerBrokerPurchaseNegotiationManager,
                     this);
 
@@ -378,7 +378,8 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
         try {
             this.customerOnlinePaymentTransactionManager.sendPayment(
                     "testWalletPublicKey",
-                    "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+                    "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2",
+                    CryptoCurrency.BITCOIN);
         } catch (Exception e) {
             System.out.println("Exception in Customer Online Payment: " + e.getMessage());
             e.printStackTrace();

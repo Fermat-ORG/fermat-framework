@@ -148,13 +148,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNo
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -1212,24 +1212,32 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
             customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
-            CustomerBrokerSaleNegotiation saleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+            CustomerBrokerSaleNegotiation saleNegotiation = this.customerBrokerSaleNegotiationManager.
+                    getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
             final Collection<Clause> negotiationClauses = saleNegotiation.getClauses();
 
             final String deliveryMethodCode = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
+
+            if (deliveryMethodCode == null)
+                throw new CantSubmitMerchandiseException("The BROKER_PAYMENT_METHOD clause is null");
+
             MoneyType deliveryMethod = MoneyType.getByCode(deliveryMethodCode);
 
             // Case: sending crypto merchandise.
             if (deliveryMethod == MoneyType.CRYPTO) {
                 final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY);
-                final CryptoCurrency merchandiseCurrency = CryptoCurrency.getByCode(merchandiseCurrencyCode);
 
-                String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
-                BigDecimal referencePrice = BigDecimal.TEN; //TODO: this is a hardcoded reference price
+                final CryptoCurrency merchandiseCurrency = CryptoCurrency.getByCode(merchandiseCurrencyCode);
+                final String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                final BigDecimal referencePrice = BigDecimal.TEN; //TODO: this is a hardcoded reference price
+
                 this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(referencePrice, cryptoBrokerPublicKey, contractHash, merchandiseCurrency);
 
             } else {
                 String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
                 BigDecimal referencePrice = BigDecimal.TEN; //TODO: this is a hardcoded reference price
+
                 this.brokerSubmitOfflineMerchandiseManager.submitMerchandise(referencePrice, cryptoBrokerPublicKey, contractHash);
             }
         } catch (CantGetListCustomerBrokerContractSaleException e) {
