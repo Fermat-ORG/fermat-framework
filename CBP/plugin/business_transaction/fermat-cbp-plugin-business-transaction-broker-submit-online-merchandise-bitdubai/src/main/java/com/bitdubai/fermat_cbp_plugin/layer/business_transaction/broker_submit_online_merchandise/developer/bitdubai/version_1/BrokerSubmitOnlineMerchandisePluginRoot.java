@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -389,9 +390,18 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             BigDecimal referencePrice = BigDecimal.valueOf(666);
             this.brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(
                     referencePrice,
-                    "TestCBPWalletPublicKey",
-                    "TestCustomerWalletPublicKey",
+                    "TestCBPWalletPublicKey1",
+                    "TestCustomerWalletPublicKey1",
+                    CryptoCurrency.BITCOIN,
                     "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+
+            this.brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(
+                    referencePrice,
+                    "TestCBPWalletPublicKey2",
+                    "TestCustomerWalletPublicKey2",
+                    CryptoCurrency.FERMAT,
+                    "999952D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DF9999");
+
         } catch (Exception e) {
             System.out.println("Exception in Broker Submit Online Merchandise " + e);
             e.printStackTrace();
