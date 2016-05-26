@@ -16,19 +16,21 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.BitcoinWalletHeaderPainter;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class FermatWalletAppConnection extends AppConnections<ReferenceWalletSession>{
+public class FermatWalletAppConnection extends AppConnections<FermatWalletSession>{
 
-    private CryptoWallet moduleManager = null;
-    private ReferenceWalletSession referenceWalletSession;
+    private FermatWallet moduleManager = null;
+    private FermatWalletSession referenceWalletSession;
 
     public FermatWalletAppConnection(Context activity) {
         super(activity);
@@ -52,7 +54,7 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceWalletSes
 
     @Override
     public AbstractFermatSession getSession() {
-        return new ReferenceWalletSession();
+        return new FermatWalletSession();
     }
 
     @Override
@@ -60,13 +62,13 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceWalletSes
 
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
 
-        return new BitcoinWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
+        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
 
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new BitcoinWalletHeaderPainter();
+        return new FermatWalletHeaderPainter();
     }
 
     @Override
@@ -88,9 +90,9 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceWalletSes
 
 
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(),Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return FermatWalletNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(),Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
-                    return new BitcoinWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return new FermatWalletBuildNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
             }
             else

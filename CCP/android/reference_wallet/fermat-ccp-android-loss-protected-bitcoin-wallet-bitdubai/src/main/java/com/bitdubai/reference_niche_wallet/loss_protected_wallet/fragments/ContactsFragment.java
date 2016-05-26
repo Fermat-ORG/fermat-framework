@@ -234,7 +234,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
 
-        int padding = FermatScreenCalculator.getPx(getActivity(), 20);
+        int padding = FermatScreenCalculator.getPx(getActivity(), 30);
         int width = FermatScreenCalculator.getPx(getActivity(), 56);
         //noinspection SuspiciousNameCombination
         FloatingActionButton.LayoutParams actionButtonParams = new FloatingActionButton.LayoutParams(width, width);
@@ -257,7 +257,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.loss_externaluser_button))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setBackgroundDrawable( R.drawable.label)
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -268,7 +268,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setBackgroundDrawable( R.drawable.label)
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 

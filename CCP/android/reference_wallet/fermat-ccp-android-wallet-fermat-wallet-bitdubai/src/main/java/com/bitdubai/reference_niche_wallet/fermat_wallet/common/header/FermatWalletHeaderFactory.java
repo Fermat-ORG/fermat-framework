@@ -11,7 +11,7 @@ import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 /**
  * Created by Matias Furszyfer on 2015.11.16..
  */
-public class BitcoinWalletHeaderFactory extends HeaderFactory<BitcoinWalletHeaderClickListener> implements HeaderFactoryInterface{
+public class FermatWalletHeaderFactory extends HeaderFactory<FermatWalletHeaderClickListener> implements HeaderFactoryInterface{
 
 
     /**
@@ -24,7 +24,7 @@ public class BitcoinWalletHeaderFactory extends HeaderFactory<BitcoinWalletHeade
 
 
 
-    public BitcoinWalletHeaderFactory(ViewGroup mRootView) {
+    public FermatWalletHeaderFactory(ViewGroup mRootView) {
         super(mRootView);
     }
 
@@ -57,8 +57,8 @@ public class BitcoinWalletHeaderFactory extends HeaderFactory<BitcoinWalletHeade
     }
 
     @Override
-    protected BitcoinWalletHeaderClickListener setOnClickListener() {
-        return new BitcoinWalletHeaderClickListener();
+    protected FermatWalletHeaderClickListener setOnClickListener() {
+        return new FermatWalletHeaderClickListener();
     }
 
 

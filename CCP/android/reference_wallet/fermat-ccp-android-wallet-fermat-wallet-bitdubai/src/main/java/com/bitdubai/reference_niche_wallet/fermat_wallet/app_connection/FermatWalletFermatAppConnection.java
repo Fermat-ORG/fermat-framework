@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.BitcoinWalletHeaderPainter;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 
@@ -60,13 +60,13 @@ public class FermatWalletFermatAppConnection extends AppConnections<FermatWallet
 
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
 
-        return new BitcoinWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
+        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
 
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new BitcoinWalletHeaderPainter();
+        return new FermatWalletHeaderPainter();
     }
 
     @Override

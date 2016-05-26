@@ -1,112 +1,69 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection;
 
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListReceivePaymentRequestException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
+import android.widget.RemoteViews;
 
-import java.util.UUID;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+
+import java.io.Serializable;
 
 /**
- * Created by natalia on 22/02/16.
+ * Created by natalia on 12/02/16.
  */
-public class FermatWalletBuildNotificationPainter {
+public class FermatWalletBuildNotificationPainter implements NotificationPainter,Serializable {
 
-    public static NotificationPainter getNotification(FermatWallet moduleManager,String code,String walletPublicKey, String codeReurn )
-    {
-        NotificationPainter notification = null;
-        try {
+    private String title;
+    private String textBody;
+    private String image;
+    private RemoteViews remoteViews;
+    private String activityCodeToOpen;
+    private boolean showNotification;
+    private String codeReturn;
 
+    //constructor
 
+    public FermatWalletBuildNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification, String codeReturn){
+        this.title    = title;
+        this.textBody = textBody;
+        this.image    = image;
+        this.showNotification = showNotification;
+        this.codeReturn = codeReturn;
 
-                FermatWalletModuleTransaction transaction;
-                PaymentRequest paymentRequest;
-                String loggedIntraUserPublicKey;
-
-                String[] params = code.split("_");
-                String notificationType = params[0];
-                String transactionId = params[1];
-                //find last transaction
-                switch (notificationType){
-                    case "TRANSACTIONARRIVE":
-                        if(moduleManager != null){
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                            try{
-                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
-                                notification = new FermatWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReurn);
-
-                            }catch(Exception ex) {
-                                notification = new FermatWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReurn);
-                            }
-
-
-                        }else{
-                            notification = new FermatWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReurn);
-                        }
-                        break;
-                    case "TRANSACTIONREVERSE":
-                        if(moduleManager != null) {
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-
-                            try{
-                                 transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                                 notification = new FermatWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,codeReurn);
-
-                             }catch(Exception ex) {
-                                notification = new FermatWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReurn);
-                            }
-                        }else
-                        {
-                            notification = new FermatWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReurn);
-                        }
-                        break;
-
-
-                    case "PAYMENTREQUEST":
-                        if(moduleManager != null){
-
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new FermatWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,codeReurn);
-                        }
-                        else
-                        {
-                            notification = new FermatWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,codeReurn);
-                        }
-                        break;
-
-                    case "PAYMENTDENIED":
-                        if(moduleManager != null){
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new FermatWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,codeReurn);
-                        }
-                        else
-                        {
-                            notification = new FermatWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,codeReurn);
-                        }
-                        break;
-
-                    case "PAYMENTERROR":
-                        if(moduleManager != null){
-                            paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new FermatWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,codeReurn);
-                        }
-                        else
-                        {
-                            notification = new FermatWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,codeReurn);
-                        }
-                        break;
-
-                }
-
-
-        } catch (CantListReceivePaymentRequestException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return notification;
     }
+
+    @Override
+    public RemoteViews getNotificationView(String code) {
+        return this.remoteViews;
+    }
+
+    @Override
+    public String getNotificationTitle() {
+        return this.title;
+    }
+
+    @Override
+    public String getNotificationImageText() {
+        return this.image;
+    }
+
+    @Override
+    public String getNotificationTextBody() {
+        return this.textBody;
+    }
+
+    @Override
+    public int getIcon() {
+        return 0;
+    }
+
+    @Override
+    public String getActivityCodeResult() {
+        return this.codeReturn;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return this.showNotification;
+    }
+
+
 }

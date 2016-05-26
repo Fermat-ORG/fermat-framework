@@ -20,14 +20,14 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.24..
  */
-public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
     private FermatWalletSession fermatWalletSession;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, FermatWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+    public FermatWalletNavigationViewPainter(Context activity, FermatWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
         this.fermatWalletSession = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
