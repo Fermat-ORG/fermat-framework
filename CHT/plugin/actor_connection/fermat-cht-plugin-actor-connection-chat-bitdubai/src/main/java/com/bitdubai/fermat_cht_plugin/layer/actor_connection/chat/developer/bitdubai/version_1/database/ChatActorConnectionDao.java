@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -96,12 +97,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
-            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            entityRecord = buildDatabaseRecord(
-                    entityRecord,
-                    actorConnection
-            );
-
             if (oldActorConnection != null) {
                 DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
                 entityRecordOld = buildDatabaseRecord(
@@ -109,13 +104,18 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
+                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
 
                 if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
                         && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
                     isNew = false;
             }
 
-
+            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
+            entityRecord = buildDatabaseRecord(
+                    entityRecord,
+                    actorConnection
+            );
             actorConnectionsTable.insertRecord(entityRecord);
 
 //            return buildActorConnectionNewRecord(entityRecord);
@@ -133,6 +133,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 //            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
         } catch (CantDeleteRecordException e) {
             throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
+        } catch (CantPersistProfileImageException e) {
+            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
         }
     }
 

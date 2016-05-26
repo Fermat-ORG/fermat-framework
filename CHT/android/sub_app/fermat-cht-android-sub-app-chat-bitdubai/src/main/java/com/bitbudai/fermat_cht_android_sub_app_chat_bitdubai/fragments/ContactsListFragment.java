@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
@@ -101,6 +102,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     ArrayList<String> contactname=new ArrayList<>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<String> contactid=new ArrayList<>();
+    ArrayList<String> contactStatus=new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     ImageView noData;
     View layout;
@@ -130,7 +132,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             errorManager=appSession.getErrorManager();
             //toolbar = getToolbar();
             //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-            adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+            adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                     null, errorManager, chatSession, appSession, this);
             chatSettings = null;
 
@@ -228,6 +230,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             contactname.clear();
             contactid.clear();
             contacticon.clear();
+            contactStatus.clear();
             //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
             if(chatIdentity != null) {
                 List<ChatActorCommunityInformation> con = chatManager
@@ -241,6 +244,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                             ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
                             BitmapDrawable bmd = new BitmapDrawable(bytes);
                             contacticon.add(bmd.getBitmap());
+                            if(conta.getConnectionState()!=null)
+                                contactStatus.add(conta.getConnectionState().toString());
+                            else
+                                contactStatus.add("");
                         }
                         noData.setVisibility(View.GONE);
                         noDatalabel.setVisibility(View.GONE);
@@ -293,7 +300,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         layout.setBackgroundResource(R.drawable.cht_background_1);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
-        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                 null, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -332,7 +339,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                             Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
                             updateValues();
                             final ContactListAdapter adaptador =
-                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                                    new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                                             null, errorManager, chatSession, appSession, null);
                             adaptador.refreshEvents(contactname, contacticon, contactid);
                             list.invalidateViews();
@@ -360,15 +367,20 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     contactname.clear();
                     contactid.clear();
                     contacticon.clear();
+                    contactStatus.clear();
                     for (int i = 0; i < con.size(); i++) {
                         contactname.add(con.get(i).getAlias());
                         contactid.add(con.get(i).getPublicKey());
                         ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getImage());
                         BitmapDrawable bmd = new BitmapDrawable(bytes);
                         contacticon.add(bmd.getBitmap());
+                        if(con.get(i).getConnectionState()!=null)
+                            contactStatus.add(con.get(i).getConnectionState().toString());
+                        else
+                            contactStatus.add("");
                     }
                     final ContactListAdapter adaptador =
-                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
+                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                                     null, errorManager, chatSession, appSession, null);
                     adaptador.refreshEvents(contactname, contacticon, contactid);
                     list.invalidateViews();
@@ -521,6 +533,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         Contact contact=new ContactImpl();
         contact.setRemoteActorPublicKey(adapter.getContactId(position));
         contact.setAlias(adapter.getItem(position));
+        contact.setContactStatus(adapter.getContactStatus(position));
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         adapter.getContactIcon(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
