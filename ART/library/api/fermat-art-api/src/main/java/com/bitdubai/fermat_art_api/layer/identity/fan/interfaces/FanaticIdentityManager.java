@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_api.layer.identity.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -100,5 +101,9 @@ public interface FanaticIdentityManager extends FermatManager {
             CantPublishIdentityException,
             IdentityNotFoundException;
 
-
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    void checkAllConnections() throws CantHandleNewsEventException;
 }

@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -130,10 +131,11 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = appSession.getModuleManager();
+            artistIdentitySubAppSession=(ArtistIdentitySubAppSession)appSession;
+            moduleManager = artistIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
-            settingsManager = appSession.getModuleManager().
+            settingsManager = artistIdentitySubAppSession.getModuleManager().
                     getSettingsManager();
 
             try {
@@ -150,7 +152,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
             if (artArtistPreferenceSettings == null) {
                 artArtistPreferenceSettings = new ArtistIdentitySettings();
-                artArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
+                artArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
                 if (settingsManager != null) {
                     if (appSession.getAppPublicKey() != null) {
                         settingsManager.persistSettings(
@@ -181,7 +183,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
 
-
+        if (artArtistPreferenceSettings.isPresentationHelpEnabled()==true) {
+            setUpHelpTkyArtist(false);
+        }
 
 
         return rootLayout;
@@ -506,6 +510,30 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
         });
     }
+
+
+    private void setUpHelpTkyArtist(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog;
+            presentationDialog = new PresentationDialog.Builder(getActivity(), artistIdentitySubAppSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_artist_community)
+                    .setIconRes(R.drawable.artist)
+                    .setSubTitle(R.string.art_artist_identity_welcome_subTitle)
+                    .setBody(R.string.art_artist_identity_welcome_body)
+                    .setTextFooter(R.string.art_artist_identity_welcome_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    e);
+        }
+    }
+
 
     private int createNewIdentity() throws InvalidParameterException {
         UUID externalIdentityID = null;

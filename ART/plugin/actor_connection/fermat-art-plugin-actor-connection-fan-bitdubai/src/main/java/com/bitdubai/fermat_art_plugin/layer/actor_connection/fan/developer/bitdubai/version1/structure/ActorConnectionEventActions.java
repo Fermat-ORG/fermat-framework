@@ -643,7 +643,7 @@ public class ActorConnectionEventActions {
                     else{
                         fanNetworkService.confirm(connectionId);
                         broadcaster.publish(
-                                BroadcasterType.NOTIFICATION_SERVICE,
+                                BroadcasterType.UPDATE_VIEW,
                                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                                 FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                     }

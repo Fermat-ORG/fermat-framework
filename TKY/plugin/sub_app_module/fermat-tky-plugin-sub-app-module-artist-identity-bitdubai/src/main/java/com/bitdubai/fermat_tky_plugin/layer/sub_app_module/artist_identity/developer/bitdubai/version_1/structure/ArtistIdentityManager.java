@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
@@ -35,19 +36,27 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     private final ErrorManager errorManager;
     private final TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
+    private PluginFileSystem pluginFileSystem;
+    private UUID pluginId;
+    private SettingsManager settingManager;
+
 
     /**
      * Default constructor with parameters.
      * @param errorManager
      * @param tokenlyArtistIdentityManager
      * @param tokenlyApiManager
+     * @param pluginFileSystem
+     * @param pluginId
      */
     public ArtistIdentityManager(ErrorManager errorManager,
                                  TokenlyArtistIdentityManager tokenlyArtistIdentityManager,
-                                 TokenlyApiManager tokenlyApiManager) {
+                                 TokenlyApiManager tokenlyApiManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -96,7 +105,11 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
 
     @Override
     public SettingsManager<TokenlyArtistPreferenceSettings> getSettingsManager() {
-        return null;
+        if(settingManager == null) {
+            settingManager = new SettingsManager<>(pluginFileSystem, pluginId);
+        }
+        return settingManager;
+
     }
 
     @Override

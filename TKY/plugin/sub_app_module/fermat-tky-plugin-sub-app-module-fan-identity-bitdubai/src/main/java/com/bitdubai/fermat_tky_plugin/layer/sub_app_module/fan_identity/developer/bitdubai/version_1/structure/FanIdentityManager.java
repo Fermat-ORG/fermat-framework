@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
@@ -32,7 +33,9 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
-
+    private PluginFileSystem pluginFileSystem;
+    private UUID pluginId;
+    private SettingsManager settingManager;
     /**
      * Default constructor with parameters.
      * @param errorManager
@@ -42,10 +45,14 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     public FanIdentityManager(
             ErrorManager errorManager,
             TokenlyFanIdentityManager tokenlyFanIdentityManager,
-            TokenlyApiManager tokenlyApiManager) {
+            TokenlyApiManager tokenlyApiManager,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) {
         this.errorManager = errorManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -90,7 +97,10 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
 
     @Override
     public SettingsManager<TokenlyFanPreferenceSettings> getSettingsManager() {
-        return null;
+        if(settingManager == null) {
+            settingManager = new SettingsManager<>(pluginFileSystem, pluginId);
+        }
+        return settingManager;
     }
 
     @Override

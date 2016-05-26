@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -30,10 +31,18 @@ import java.util.UUID;
 public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final FanaticIdentityManager fanaticIdentityManager;
+    private PluginFileSystem pluginFileSystem;
+    private UUID pluginId;
+    private SettingsManager settingManager;
 
-    public ModuleFanIdentityManager(ErrorManager errorManager, FanaticIdentityManager fanaticIdentityManager) {
+    public ModuleFanIdentityManager(ErrorManager errorManager,
+                                    FanaticIdentityManager fanaticIdentityManager,
+                                    PluginFileSystem pluginFileSystem,
+                                    UUID pluginId) {
         this.errorManager = errorManager;
         this.fanaticIdentityManager = fanaticIdentityManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -96,7 +105,10 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
 
     @Override
     public SettingsManager<FanIdentitySettings> getSettingsManager() {
-        return null;
+        if(settingManager == null) {
+            settingManager = new SettingsManager<>(pluginFileSystem, pluginId);
+        }
+        return settingManager;
     }
 
     @Override

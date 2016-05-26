@@ -31,8 +31,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -321,9 +323,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 dataSet.addAll(result);
                 offset = dataSet.size();
             }
-        }catch (CantGetSelectedActorIdentityException e){
+            //I'll check all the connections
+            moduleManager.checkAllConnections();
+        } catch (CantGetSelectedActorIdentityException e){
             //There are no identities in device
             //Nothing to do here.
+        } catch (CantHandleNewsEventException e){
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
