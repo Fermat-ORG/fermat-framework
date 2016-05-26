@@ -264,7 +264,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     noDatalabel.setVisibility(View.VISIBLE);
                     layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
-                updateValuesNS();
+
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
@@ -337,7 +337,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     public void run() {
                         try{
                             Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
-                            updateValues();
+                            updateValuesNS();
                             final ContactListAdapter adaptador =
                                     new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                                             null, errorManager, chatSession, appSession, null);
