@@ -348,11 +348,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
+                //TODO verificar esto
                 long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
                 long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
-                //TODO:fix this
-                incomingCryptoAmount = 0;
-                contractCryptoAmount = 0;
                 if (incomingCryptoAmount != contractCryptoAmount)
                     throw new IncomingOnlineMerchandiseException(
                             "The incoming crypto amount received is " + incomingCryptoAmount +
