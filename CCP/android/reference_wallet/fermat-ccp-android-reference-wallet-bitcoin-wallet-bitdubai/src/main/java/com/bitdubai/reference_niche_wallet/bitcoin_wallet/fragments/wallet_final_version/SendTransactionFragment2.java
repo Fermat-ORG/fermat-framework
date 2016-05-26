@@ -860,7 +860,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(20);
+                txt_balance_amount.setTextSize(18);
                 break;
         }
 
