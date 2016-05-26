@@ -62,6 +62,7 @@ public class FanCommunityWalletNavigationViewAdapter extends
         switch (position) {
             case 0:
                 holder.getIcon().setImageResource(R.drawable.icon_users_inactive);
+                holder.getLine().setVisibility(View.VISIBLE);
                 break;
             case 1:
                 holder.getIcon().setImageResource(R.drawable.icon_identities_inactive);
@@ -81,7 +82,7 @@ public class FanCommunityWalletNavigationViewAdapter extends
         switch (position) {
             case 0:
                 //holder.getIcon().setImageResource(R.drawable.afc_ic_nav_friends_selected);
-
+                holder.getLine().setVisibility(View.VISIBLE);
                 holder.getIcon().setImageResource(R.drawable.icon_users_active);
                 holder.getIcon().setBackgroundColor(Color.parseColor("#DEDFDF"));
                 holder.getFullRow().setBackgroundColor(Color.parseColor("#DEDFDF"));
