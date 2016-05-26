@@ -382,13 +382,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         {
             //update intra user list
             if(code.equals(ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
-              getActivity().runOnUiThread(new Runnable() {
-                  @Override
-                  public void run() {
-                      invalidate();
-                      onRefresh();
-                  }
-              });
+                invalidate();
+                onRefresh();
             }
 
 
