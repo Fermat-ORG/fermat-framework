@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -109,7 +109,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
     private final ActorAssetUserManager             actorAssetUserManager;
     private final AssetBuyerManager                 assetBuyerManager;
     private final AssetSellerManager                assetSellerManager;
-    private final BitcoinWalletManager              bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final AssetUserWalletModulePluginRoot   assetUserWalletModulePluginRoot;
 
     private BlockchainNetworkType selectedNetwork;
@@ -141,7 +141,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
                                  ActorAssetUserManager actorAssetUserManager,
                                  AssetBuyerManager assetBuyerManager,
                                  AssetSellerManager assetSellerManager,
-                                 BitcoinWalletManager bitcoinWalletManager,
+                                 CryptoWalletManager cryptoWalletManager,
                                  AssetUserWalletModulePluginRoot assetUserWalletModulePluginRoot) {
 
         super(pluginFileSystem, pluginId);
@@ -162,7 +162,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
         this.actorAssetUserManager              = actorAssetUserManager;
         this.assetBuyerManager                  = assetBuyerManager;
         this.assetSellerManager                 = assetSellerManager;
-        this.bitcoinWalletManager               = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.assetUserWalletModulePluginRoot    = assetUserWalletModulePluginRoot;
     }
 
@@ -581,7 +581,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
 
     @Override
     public long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletsException, CantCalculateBalanceException {
-        return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(selectedNetwork);
+        return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(selectedNetwork);
     }
 
     @Override

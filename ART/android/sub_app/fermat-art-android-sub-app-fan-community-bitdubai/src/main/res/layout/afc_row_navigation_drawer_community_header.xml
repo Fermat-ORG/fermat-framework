@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0072bb">
+    android:background="#F1F2F2">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,5 +46,9 @@
                 app:typeface="ROBOTO_REGULAR"
                 tools:ignore="HardcodedText" />
         </RelativeLayout>
+
+
+
+
     </RelativeLayout>
 </RelativeLayout>

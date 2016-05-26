@@ -34,7 +34,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -72,7 +72,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
     IncomingCryptoManager incomingCryptoManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_MODULE, plugin = Plugins.CRYPTO_ADDRESS_BOOK)
     CryptoAddressBookManager cryptoAddressBookManager;
@@ -129,7 +129,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
         }
         try {
             initializeDAO();
-            transactionManager = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetIssuingTransactionManager(dao, bitcoinWalletManager);
+            transactionManager = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetIssuingTransactionManager(dao, cryptoWalletManager);
             startRecorderService();
             startMonitorAgent();
             dao.reprocessIssuingAssets();
@@ -157,7 +157,7 @@ public class AssetIssuingDigitalAssetTransactionPluginRoot extends AbstractPlugi
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (monitorAgent == null) {
-            monitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.events.AssetIssuingMonitorAgent(incomingCryptoManager, errorManager, bitcoinNetworkManager, outgoingIntraActorManager, actorAssetIssuerManager, assetVaultManager, bitcoinWalletManager, cryptoAddressBookManager, intraWalletUserIdentityManager, assetIssuerWalletManager, dao);
+            monitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.events.AssetIssuingMonitorAgent(incomingCryptoManager, errorManager, bitcoinNetworkManager, outgoingIntraActorManager, actorAssetIssuerManager, assetVaultManager, cryptoWalletManager, cryptoAddressBookManager, intraWalletUserIdentityManager, assetIssuerWalletManager, dao);
         }
         monitorAgent.start();
     }

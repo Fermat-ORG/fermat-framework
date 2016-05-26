@@ -3,8 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_a
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
@@ -17,7 +17,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -27,15 +26,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 public class OutgoingIntraActorBitcoinWalletTransactionHandler implements OutgoingIntraActorTransactionHandler {
 
     private EventManager         eventManager;
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private OutgoingIntraActorDao dao;
-    private BitcoinWalletWallet  bitcoinWallet;
+    private CryptoWalletWallet bitcoinWallet;
 
     public OutgoingIntraActorBitcoinWalletTransactionHandler(EventManager eventManager,
-                                                             BitcoinWalletManager bitcoinWalletManager,
+                                                             CryptoWalletManager cryptoWalletManager,
                                                              OutgoingIntraActorDao outgoingIntraActorDao) {
         this.eventManager         = eventManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.dao                  = outgoingIntraActorDao;
     }
     
@@ -43,7 +42,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
     public void handleTransaction(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorCantHandleTransactionException {
         try {
             CryptoStatus oldStatus = transaction.getCryptoStatus();
-            this.bitcoinWallet = this.bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
+            this.bitcoinWallet = this.cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
 
             if (oldStatus.equals(CryptoStatus.PENDING_SUBMIT))
                 handleOldCryptoStatusIsPendingSubmit(transaction, newCryptoStatus);
