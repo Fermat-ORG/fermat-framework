@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -150,9 +151,11 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
+            bankAccountNumber.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
 
         }
 
