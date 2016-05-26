@@ -149,6 +149,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.cbpInstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -758,6 +759,43 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public List<InstalledWallet> getInstallWallets() throws CantListWalletsException {
         return walletManagerManager.getInstalledWallets();
+    }
+
+    /**
+     * This method list all wallet installed in device, start the transaction
+     */
+    @Override
+    public List<cbpInstalledWallet> getCbpInstallWallets() throws CantListWalletsException {
+        cbpInstalledWallet cbpWallet;
+        List<cbpInstalledWallet> cbpInstalledWallet = new ArrayList<>();;
+        List<InstalledWallet> wallets =  walletManagerManager.getInstalledWallets();
+
+        for (InstalledWallet installedWallet: wallets) {
+
+            cbpWallet = new cbpInstalledWalletImpl(
+                    installedWallet.getLanguagesId(),
+                    installedWallet.getSkinsId(),
+                    installedWallet.getWalletCategory(),
+                    installedWallet.getWalletType(),
+                    installedWallet.getWalletScreenSize(),
+                    installedWallet.getWalletNavigationStructureVersion(),
+                    installedWallet.getWalletPlatformIdentifier(),
+                    installedWallet.getWalletIcon(),
+                    installedWallet.getWalletPublicKey(),
+                    installedWallet.getWalletName(),
+                    installedWallet.getWalletVersion(),
+                    installedWallet.getWalletCatalogId(),
+                    installedWallet.getWalletDeveloperName(),
+                    installedWallet.getWalletDeviceUserPublicKey(),
+                    installedWallet.getPlatform(),
+                    installedWallet.getActorType(),
+                    installedWallet.getCryptoCurrency()
+            );
+
+            cbpInstalledWallet.add(cbpWallet);
+        }
+
+        return cbpInstalledWallet;
     }
 
     @Override
