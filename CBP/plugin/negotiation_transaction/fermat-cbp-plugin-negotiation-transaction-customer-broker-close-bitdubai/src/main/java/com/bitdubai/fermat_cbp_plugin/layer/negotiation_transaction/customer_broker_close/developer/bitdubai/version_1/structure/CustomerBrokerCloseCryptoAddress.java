@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -25,10 +26,12 @@ public class CustomerBrokerCloseCryptoAddress extends AbstractCryptoAddress{
         final CryptoAddressBookManager                              cryptoAddressBookManager,
         final CryptoVaultSelector                                   cryptoVaultSelector,
         final WalletManagerSelector                                 walletManagerSelector,
-        final NegotiationTransactionCustomerBrokerClosePluginRoot   pluginRoot
+        final NegotiationTransactionCustomerBrokerClosePluginRoot   pluginRoot,
+        final CryptoCurrencyVault                                   currencyVault
     ){
-        super(cryptoAddressBookManager, cryptoVaultSelector, walletManagerSelector);
-        this.pluginRoot = pluginRoot;
+        //TODO YORDIN: ADAPTATION TO FERMATS. ADD PARAMETER currencyVault
+        super(cryptoAddressBookManager, cryptoVaultSelector, walletManagerSelector, currencyVault);
+        this.pluginRoot     = pluginRoot;
     }
 
     @Override
