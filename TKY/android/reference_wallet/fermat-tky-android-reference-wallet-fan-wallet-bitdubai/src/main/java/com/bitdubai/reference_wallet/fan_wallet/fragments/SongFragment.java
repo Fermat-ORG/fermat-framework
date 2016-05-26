@@ -119,6 +119,7 @@ public class SongFragment extends AbstractFermatFragment  {
             System.out.println("HERE START SONG");
 
             if(fanwalletSession.getDownloading()!=null){
+
                 System.out.println("MUSIC IS BEEN DOWNLOADING");
                 swipeContainer=fanwalletSession.getSwipeRefreshLayout();
                 downloadThread=fanwalletSession.getDownloadThreadClass();
@@ -250,9 +251,7 @@ public class SongFragment extends AbstractFermatFragment  {
             swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
             swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-            if(noBackground) {
-                backgroundImage = (ImageView) view.findViewById(R.id.no_songs_imageView);
-            }
+
             headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
             headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
             lManager = new LinearLayoutManager(view.getContext());
@@ -321,6 +320,15 @@ public class SongFragment extends AbstractFermatFragment  {
                         initValues();
                     }
                 }
+            }
+            backgroundImage = (ImageView) view.findViewById(R.id.no_songs_imageView);
+
+        System.out.println("TKYBG"+noBackground+" - "+items.isEmpty());
+
+            if(noBackground && items.isEmpty()) {
+                backgroundImage.setVisibility(View.VISIBLE);
+            }else{
+                backgroundImage.setVisibility(View.GONE);
             }
 
             swipeEffect();
@@ -541,6 +549,9 @@ public class SongFragment extends AbstractFermatFragment  {
             e.printStackTrace();
         }
 
+        if(!songsInDatabase.isEmpty()){
+            noBackground=false;
+        }
         for(SongItems songitems : items){
             if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
              //   System.out.println("TKY_VIEW songs"+songitems.getUsername()+"@#@#"+songitems.getSong_name());

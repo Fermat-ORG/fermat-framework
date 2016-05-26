@@ -11,7 +11,7 @@
     android:layout_width="fill_parent"
     android:layout_height="130dp"
     android:scaleType="centerCrop"
-        android:src="@drawable/bannerfanwallet"
+        android:src="@drawable/tky_background_no_songs_found"
         android:paddingTop="140dp" />
 
     <TextView
