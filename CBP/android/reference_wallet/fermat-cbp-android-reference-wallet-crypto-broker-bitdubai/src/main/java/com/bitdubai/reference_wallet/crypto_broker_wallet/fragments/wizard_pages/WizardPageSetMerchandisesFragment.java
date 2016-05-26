@@ -386,7 +386,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
     private void saveSettingAndGoNextStep() {
 
-        if (stockWallets.isEmpty()) {
+        if (stockWallets.size() < 2) {
             Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
