@@ -370,7 +370,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -428,6 +427,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onUpdateViewOnUIThread(code);
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
+            chatlistview();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }
