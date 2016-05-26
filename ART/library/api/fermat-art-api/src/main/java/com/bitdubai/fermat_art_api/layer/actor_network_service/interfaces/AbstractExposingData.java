@@ -64,7 +64,7 @@ public abstract class AbstractExposingData implements ExposingData {
         }
         try{
             HashMap<ArtExternalPlatform,String> externalPlatformInformationMap =
-                    (HashMap<ArtExternalPlatform, String>) data;
+                    (HashMap) data;
             return externalPlatformInformationMap;
         } catch (ClassCastException e){
             //In this case, the data submitted is wrong

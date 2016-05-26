@@ -6,17 +6,13 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -309,7 +305,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         try {
             mysong=musicPlayermoduleManager.getAvailableSongs();
             if(mysong.size()<1){
-                Toast.makeText(view.getContext(),"Dowload Songs with the FanWallet",Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"There is no songs in the Fan wallet",Toast.LENGTH_LONG).show();
                 adapter.setFilter(null);
                 //       recyclerView.setBackgroundResource(R.drawable.nomusic);
                 noMusicFound.setVisibility(View.VISIBLE);

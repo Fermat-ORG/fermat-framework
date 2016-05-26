@@ -281,7 +281,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     void refreshAdapter(boolean noFollowing){
         if(noFollowing){
-            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(),"Your are not following any artist",Toast.LENGTH_SHORT).show();
         }else {
             adapter.setFilter(items);
         }

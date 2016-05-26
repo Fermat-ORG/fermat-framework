@@ -107,7 +107,7 @@ public class AcceptDialog extends
                     getSession().getModuleManager().acceptFan(
                             connectionId);
                     Toast.makeText(getContext(),
-                            " Accepted connection request from " + alias,
+                            "Accepted connection request from " + alias,
                             Toast.LENGTH_SHORT).show();
                     getSession().setData("connectionresult", 3);
                 } else {
