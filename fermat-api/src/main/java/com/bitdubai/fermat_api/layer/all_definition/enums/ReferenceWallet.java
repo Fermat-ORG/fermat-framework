@@ -17,6 +17,9 @@ public enum ReferenceWallet implements FermatWalletEnum {
     BASIC_WALLET_BITCOIN_WALLET("BWBW"),
     BASIC_WALLET_DISCOUNT_WALLET("BWDW"),
     BASIC_WALLET_FIAT_WALLET("BWFW"),
+
+    BASIC_WALLET_FERMAT_WALLET("BWFERW"), // TODO: temporal Fermat Wallet
+
     BASIC_WALLET_LOSS_PROTECTED_WALLET("BWLP"),
     BNK_BANKING_WALLET("BNKW"),
     CASH_MONEY_WALLET("CASH"),
@@ -39,6 +42,7 @@ public enum ReferenceWallet implements FermatWalletEnum {
             case "BWBW": return BASIC_WALLET_BITCOIN_WALLET;
             case "BWDW": return BASIC_WALLET_DISCOUNT_WALLET;
             case "BWFW": return BASIC_WALLET_FIAT_WALLET;
+            case "BWFERW": return BASIC_WALLET_FERMAT_WALLET;
             case "BWLP": return BASIC_WALLET_LOSS_PROTECTED_WALLET;
             case "BNKW": return BNK_BANKING_WALLET;
             case "CASH": return CASH_MONEY_WALLET;
