@@ -205,7 +205,6 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      */
     private DatabaseTransactionStatementPair insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException, CantCreateTransactionStatementPairException {
 
-        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) {
             LOG.info("Executing method insertNodesCatalog");
 
             /*
@@ -227,9 +226,6 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
              */
             return getDaoFactory().getNodesCatalogDao().createInsertTransactionStatementPair(nodeCatalog);
 
-        }else{
-            return null;
-        }
     }
 
     /**
