@@ -313,7 +313,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             Actors.CBP_CRYPTO_CUSTOMER,
                             Actors.INTRA_USER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la reference wallet adecuada para la crypto currency
-                            businessTransactionRecord.getBlockchainNetworkType());
+                            businessTransactionRecord.getBlockchainNetworkType(),
+                            CryptoCurrency.BITCOIN);
 
                     dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                     dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);

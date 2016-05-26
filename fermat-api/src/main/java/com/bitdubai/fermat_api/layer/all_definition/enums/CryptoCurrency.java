@@ -17,6 +17,7 @@ public enum CryptoCurrency implements Currency {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITCOIN     ("BTC", "Bitcoin"),
+    FERMAT     ("FRM", "Fermat"),
     DOGECOIN    ("DOGE", "Dogecoin"),
     ETHEREUM    ("ETH", "Ethereum"),
     FERMAT      ("FER", "Fermat"),
@@ -44,6 +45,7 @@ public enum CryptoCurrency implements Currency {
             case "ETH": return CryptoCurrency.ETHEREUM;
             case "FER": return CryptoCurrency.FERMAT;
             case "LTC": return CryptoCurrency.LITECOIN;
+            case "FRM": return CryptoCurrency.FERMAT;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

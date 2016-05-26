@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,19 +15,29 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -35,9 +46,13 @@ import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.ReferenceWalletSettings;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -318,44 +333,33 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         }
                     }
                     if (wallet != null){
-//                        Bitmap bitmap = null;
-//
-//                        switch (wallet.getWalletName()){
-//                            case "Loss Protected Wallet":
-//                                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bitcoin_wallet_2);
-//                                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-//                                break;
-//
-//                        }
-//
-//                        byte[] walletImage = toByteArray(bitmap);
-//
-//
-//                        CryptoAddress cryptoAddress = new CryptoAddress("", CryptoCurrency.BITCOIN);
-//                        walletContact =  cryptoWallet.createWalletContactWithPhoto(
-//                                cryptoAddress,
-//                                wallet.getWalletName(),
-//                                null,
-//                                null,
-//                                Actors.DEVICE_USER,
-//                                appSession.getAppPublicKey(),
-//                                walletImage,
-//                                blockchainNetworkType
-//                        );
+                        Actors actor = Actors.LOSS_PROTECTED_USER;
 
+                        switch (wallet.getWalletName()){
+
+                            case "Bitcoin Wallet":
+                                actor = Actors.BITCOIN_BASIC_USER;
+                                break;
+                            case "Loss Protected Wallet":
+                                actor = Actors.LOSS_PROTECTED_USER;
+                                break;
+
+                            default:
+                                actor = Actors.DEVICE_USER;
+                        }
 
                         if (operator.compareTo(minSatoshis) == 1) {
-                            //todo: method not found
-//                            cryptoWallet.sendToWallet(
-//                                    operator.longValueExact(),
-//                                    walletContact.getActorPublicKey(),
-//                                    wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
-//                                    notes,
-//                                    Actors.DEVICE_USER,
-//                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-//                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-//                                    blockchainNetworkType
-//                            );
+                            cryptoWallet.sendToWallet(
+                                    operator.longValueExact(),
+                                    appSession.getAppPublicKey(),
+                                    wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
+                                    notes,
+                                    Actors.BITCOIN_BASIC_USER,
+                                    actor,
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                                    blockchainNetworkType,CryptoCurrency.BITCOIN
+                            );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
                             dismiss();
                         } else {
@@ -369,14 +373,14 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                     }
 
 
-//                } catch (LossProtectedInsufficientFundsException e) {
-//                    Toast.makeText(activity, "Insufficient funds", Toast.LENGTH_LONG).show();
-//                    e.printStackTrace();
-//                    dismiss();
-//                } catch (CantSendLossProtectedCryptoException e) {
-//                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                    Toast.makeText(activity, "Error Send not Complete", Toast.LENGTH_LONG).show();
-//                    dismiss();
+                } catch (LossProtectedInsufficientFundsException e) {
+                    Toast.makeText(activity, "Insufficient funds", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                    dismiss();
+                } catch (CantSendLossProtectedCryptoException e) {
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    Toast.makeText(activity, "Error Send not Complete", Toast.LENGTH_LONG).show();
+                    dismiss();
                 } catch (Exception e) {
                     appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     Toast.makeText(activity, "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@ import android.view.View;
 //import android.widget.Button;
 import android.widget.EditText;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 //import com.bitdubai.fermat.R;
 
 /**

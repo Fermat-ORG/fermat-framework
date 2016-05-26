@@ -45,7 +45,7 @@ public class ExecuteTransactionTest {
 
     private Transaction<CryptoTransaction> testTransaction;
 
-    private BitcoinBasicWalletTransactionExecutor testExecutor;
+    private CryptoBasicWalletTransactionExecutor testExecutor;
 
     @Before
     public void setUpBalanceMockitoRules() throws Exception{
@@ -57,7 +57,7 @@ public class ExecuteTransactionTest {
 
     @Test
     public void ExecuteTransaction_OnCryptoNetwork_InvocationSuccessfull() throws Exception {
-        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
+        testExecutor = new CryptoBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
         testTransaction = setUpTransaction(CryptoStatus.ON_CRYPTO_NETWORK);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException()).isNull();
@@ -65,7 +65,7 @@ public class ExecuteTransactionTest {
 
     @Test
     public void ExecuteTransaction_OnBlockChain_InvocationSuccessfull() throws Exception {
-        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
+        testExecutor = new CryptoBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
         testTransaction = setUpTransaction(CryptoStatus.ON_BLOCKCHAIN);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException()).isNull();
@@ -73,7 +73,7 @@ public class ExecuteTransactionTest {
 
     @Test
     public void ExecuteTransaction_ReverseOnCryptoNetwork_InvocationSuccessfull() throws Exception {
-        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
+        testExecutor = new CryptoBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
         testTransaction = setUpTransaction(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException()).isNull();
@@ -81,7 +81,7 @@ public class ExecuteTransactionTest {
 
     @Test
     public void ExecuteTransaction_ReverseOnBlockChain_InvocationSuccessfull() throws Exception {
-        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
+        testExecutor = new CryptoBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
         testTransaction = setUpTransaction(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException()).isNull();
@@ -89,7 +89,7 @@ public class ExecuteTransactionTest {
 
     @Test
     public void ExecuteTransaction_UnsupportedCryptoStatus_InvocationSuccessfull() throws Exception {
-        testExecutor = new BitcoinBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
+        testExecutor = new CryptoBasicWalletTransactionExecutor(mockBitcoinWallet, mockActorAddressBookManager);
         testTransaction = setUpTransaction(CryptoStatus.PENDING_SUBMIT);
         catchException(testExecutor).executeTransaction(testTransaction);
         assertThat(caughtException())

@@ -354,8 +354,10 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.INTRA_USER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la reference wallet adecuada para la crypto currency
-                            businessTransactionRecord.getBlockchainNetworkType());
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                            businessTransactionRecord.getBlockchainNetworkType(),
+                            CryptoCurrency.BITCOIN
+                            );
 
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(outgoingCryptoTransactionId.toString());

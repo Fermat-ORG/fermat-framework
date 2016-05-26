@@ -72,7 +72,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             ReferenceWallet reference_wallet_receiving,
             String wallet_public_key_sending,
             String wallet_public_key_receiving,
-            BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException {
+            BlockchainNetworkType blockchainNetworkType,
+            CryptoCurrency cryptoCurrency) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException {
 
         Long initialBalance = null;
 
@@ -128,7 +129,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 wallet_public_key_receiving,
                                 actortypeTo,
                                 actortypeFrom,
-                                blockchainNetworkType);
+                                blockchainNetworkType,
+                                cryptoCurrency);
 
 
 
@@ -148,7 +150,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 reference_wallet_receiving,
                                 wallet_public_key_sending,
                                 wallet_public_key_receiving,
-                                blockchainNetworkType);
+                                blockchainNetworkType,
+                                cryptoCurrency);
                         } catch (CantReceiveWalletTransactionException e){
                             //change transaction state to reversed and update balance to revert
                             cryptoWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
@@ -200,7 +203,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 "",
                                 actortypeTo,
                                 actortypeFrom,
-                                blockchainNetworkType);
+                                blockchainNetworkType,
+                                cryptoCurrency);
 
 
                         bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).debit(bitcoinLossProtectedWalletTransactionWalletRecord2);
@@ -217,7 +221,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                         reference_wallet_receiving,
                                         wallet_public_key_sending,
                                         wallet_public_key_receiving,
-                                        blockchainNetworkType);
+                                        blockchainNetworkType,
+                                        cryptoCurrency);
 
                             } catch (CantReceiveWalletTransactionException e){
 
@@ -286,7 +291,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                  ReferenceWallet reference_wallet_receiving,
                                  String wallet_public_key_sending,
                                  String wallet_public_key_receiving,
-                                 BlockchainNetworkType blockchainNetworkType) throws CantReceiveWalletTransactionException {
+                                 BlockchainNetworkType blockchainNetworkType,
+                                  CryptoCurrency cryptoCurrency) throws CantReceiveWalletTransactionException {
 
         try {
             TransferIntraWalletUsersWrapper transactionWrapper = dao.getTransaction(id);
@@ -310,7 +316,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             wallet_public_key_receiving,
                             actortypeTo,
                             actortypeFrom,
-                            blockchainNetworkType);
+                            blockchainNetworkType,
+                            cryptoCurrency);
 
                     CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(wallet_public_key_receiving);
 
@@ -346,7 +353,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             wallet_public_key_receiving,
                             actortypeTo,
                             actortypeFrom,
-                            blockchainNetworkType);
+                            blockchainNetworkType,
+                            cryptoCurrency);
 
                  try {
                      bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
@@ -392,7 +400,9 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                                    String actorToPublicKey,
                                                                                    Actors actorToType,
                                                                                    Actors actorFromType,
-                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
+                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
+                                                                                    CryptoCurrency cryptoCurrency
+                                                                            ) {
 
 
 
@@ -409,7 +419,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorToType,
                 actorFromType,
                 blockchainNetworkType,
-                0);
+                0,
+                cryptoCurrency);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 
@@ -428,7 +439,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                          String actorToPublicKey,
                                                                          Actors actorToType,
                                                                          Actors actorFromType,
-                                                                         com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
+                                                                         com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
+                                                                        CryptoCurrency cryptoCurrency) {
 
 
         CryptoWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new CryptoWalletTransactionWalletRecord(transactionId,
@@ -443,7 +455,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorToPublicKey,
                 actorToType,
                 actorFromType,
-                blockchainNetworkType);
+                blockchainNetworkType,
+                cryptoCurrency);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 

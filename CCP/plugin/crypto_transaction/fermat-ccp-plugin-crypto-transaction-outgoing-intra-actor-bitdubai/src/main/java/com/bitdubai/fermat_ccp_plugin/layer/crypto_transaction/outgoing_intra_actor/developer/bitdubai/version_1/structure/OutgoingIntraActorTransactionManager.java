@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_a
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -53,7 +54,12 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
     }
 
     @Override
-    public void payCryptoRequest(UUID requestId, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+    public void payCryptoRequest(UUID requestId, String walletPublicKey, CryptoAddress destinationAddress,
+                                 long cryptoAmount, String description, String senderPublicKey,
+                                 String receptorPublicKey, Actors senderActorType,
+                                 Actors receptorActorType,ReferenceWallet referenceWallet,
+                                 BlockchainNetworkType blockchainNetworkType,
+                                 CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         try {
             long funds = 0;
@@ -78,7 +84,10 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             dao.initialize(this.pluginId);
             UUID transactionId = UUID.randomUUID();
 
-            dao.registerNewTransaction(transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false, blockchainNetworkType);
+            dao.registerNewTransaction(transactionId, requestId, walletPublicKey,
+                    destinationAddress, cryptoAmount, null, description, senderPublicKey,
+                    senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false, blockchainNetworkType,
+                    cryptoCurrency);
 
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -115,16 +124,22 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            Actors          senderActorType,
                            Actors          receptorActorType,
                            ReferenceWallet referenceWallet,
-                           BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                           BlockchainNetworkType blockchainNetworkType,
+                           CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
 
             long funds = 0;
+            CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                      funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                 break;
 
+                case BASIC_WALLET_FERMAT_WALLET:
+                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
                     funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
@@ -136,7 +151,11 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
             dao.initialize(this.pluginId);
             UUID transactionId = UUID.randomUUID();
-            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, null, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, false,blockchainNetworkType);
+            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, null,
+                    description, senderPublicKey, senderActorType, receptorPublicKey,
+                    receptorActorType, referenceWallet, false,blockchainNetworkType,
+                    cryptoCurrency);
+
             return transactionId;
         } catch (OutgoingIntraActorInsufficientFundsException e) {
             throw e;
@@ -161,7 +180,8 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            Actors           receptorActorType,
                            ReferenceWallet referenceWallet,
                            boolean sendFromSameDevice,
-                           BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+                           BlockchainNetworkType blockchainNetworkType,
+                           CryptoCurrency cryptoCurrency) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
 
         CryptoWalletWallet cryptoWalletWallet = null;
         try {
@@ -191,7 +211,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
         try {
             UUID transactionId = UUID.randomUUID();
             dao.initialize(this.pluginId);
-            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, sendFromSameDevice, blockchainNetworkType);
+            dao.registerNewTransaction(transactionId, null, walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet, sendFromSameDevice, blockchainNetworkType,cryptoCurrency);
             return transactionId;
         } catch (CantInitializeOutgoingIntraActorDaoException | OutgoingIntraActorCantInsertRecordException e) {
             throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
