@@ -1,12 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.wrappers.NetworkNodeCommunicationDeviceLocation;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.UUID;
 
 
