@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -18,12 +19,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
  * Created by jorgegonzalez on 2015.07.08..
  *
  */
-public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor {
+public class CryptoBasicWalletTransactionExecutor implements com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor {
 
     private CryptoWalletWallet bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    public BitcoinBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
+    public CryptoBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWallet = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
@@ -105,22 +106,23 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
 
             //long timestamp = transaction.getTimestamp();
             long timestamp = System.currentTimeMillis();
-            com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper bitcoinWalletTransactionRecord = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper();
+            com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper cryptoWalletTransactionRecord = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper();
 
-            bitcoinWalletTransactionRecord.setIdTransaction(transaction.getTransactionID());
-            bitcoinWalletTransactionRecord.setTransactionHash(cryptoTransaction.getTransactionHash());
-            bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
-            bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
-            bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
-            bitcoinWalletTransactionRecord.setTimestamp(timestamp);
-            bitcoinWalletTransactionRecord.setMemo("No information");
+            cryptoWalletTransactionRecord.setIdTransaction(transaction.getTransactionID());
+            cryptoWalletTransactionRecord.setTransactionHash(cryptoTransaction.getTransactionHash());
+            cryptoWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
+            cryptoWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
+            cryptoWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
+            cryptoWalletTransactionRecord.setTimestamp(timestamp);
+            cryptoWalletTransactionRecord.setMemo("No information");
 
-            bitcoinWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
-            bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
-            bitcoinWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
-            return bitcoinWalletTransactionRecord;
+            cryptoWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+            cryptoWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
+            cryptoWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
+            cryptoWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
+            cryptoWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
+            cryptoWalletTransactionRecord.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            return cryptoWalletTransactionRecord;
 
         } catch (CantGetCryptoAddressBookRecordException e) {
             throw new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException("I couldn't get crypto address book record",e,"","");

@@ -1010,18 +1010,20 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet,
+                     BlockchainNetworkType blockchainNetworkType,
+                     CryptoCurrency cryptoCurrency) throws CantSendCryptoException, InsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType, cryptoCurrency);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,cryptoCurrency);
                     break;
             }
 
@@ -1393,6 +1395,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
             switch (cryptoWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
+
                         if(cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER){
                             involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
                             walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
@@ -1400,6 +1403,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                             {
                                 involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
                                 walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
                             }
                         }else {
                             involvedActor = null;
@@ -1426,12 +1430,14 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                     break;
                 case DEBIT:
                     try {
+
                         if (cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
                             involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
                             walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             if (involvedActor == null) {
                                 involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
                                 walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+
                             }
                         }else {
                             involvedActor = null;
@@ -1487,7 +1493,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                                final String                description      ,
                                                final long                  amount           ,
                                                final BlockchainNetworkType networkType      ,
-                                               final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException {
+                                               final ReferenceWallet       referenceWallet,
+                                               final CryptoCurrency         cryptoCurrency) throws CantSendCryptoPaymentRequestException {
 
         try {
 
@@ -1501,7 +1508,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                     description,
                     amount,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    cryptoCurrency
             );
         } catch (CantGenerateCryptoPaymentRequestException e) {
 
@@ -1563,10 +1571,10 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    public void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes,  Actors actortypeFrom, Actors actortypeTo, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+    public void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes,  Actors actortypeFrom, Actors actortypeTo, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType,CryptoCurrency cryptoCurrency) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
 
         try {
-            transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("",cryptoAmount,notes,actortypeFrom,actortypeTo,sendingWallet,receivingWallet,sendingWalletPublicKey,receivingWalletPublicKey,blockchainNetworkType);
+            transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("",cryptoAmount,notes,actortypeFrom,actortypeTo,sendingWallet,receivingWallet,sendingWalletPublicKey,receivingWalletPublicKey,blockchainNetworkType,cryptoCurrency);
         } catch (CantSendTransactionException e) {
             throw new CantSendLossProtectedCryptoException("CAN'T SEND CRYPTO TO WALLET EXCEPTION", e);
 

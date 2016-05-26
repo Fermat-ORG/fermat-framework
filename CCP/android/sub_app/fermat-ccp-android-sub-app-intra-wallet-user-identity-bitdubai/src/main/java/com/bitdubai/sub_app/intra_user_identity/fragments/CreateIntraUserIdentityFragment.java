@@ -170,7 +170,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
                     }
                 }
             }
-        }, 5000);
+        }, 1000);
 
 
         return rootLayout;

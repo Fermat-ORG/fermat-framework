@@ -62,20 +62,23 @@
 
                         <AutoCompleteTextView
                             android:id="@+id/contact_name"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.2"
-                            android:background="@null"
+                            android:gravity="left"
+                            android:paddingBottom="7dip"
+                            android:paddingLeft="14dip"
+                            android:paddingRight="14dip"
+                            android:paddingTop="20dip"
                             android:ems="10"
                             android:hint="@string/enter_name_here_text"
-                            android:paddingBottom="7dip"
-                            android:paddingLeft="21dip"
-                            android:paddingRight="14dip"
-                            android:paddingTop="25dip"
                             android:textColor="#1d1d26"
                             android:textColorHint="#9a9a9c"
-                            android:textSize="16sp"
-                            android:textStyle="normal" />
+                            android:textSize="14sp"
+                            android:textStyle="normal"
+                            android:contextClickable="false"
+                            android:textIsSelectable="false"
+                            android:background="@null"
+                            />
                     </FrameLayout>
                 </LinearLayout>
 
@@ -225,7 +228,7 @@
                         android:layout_height="40dp"
                         android:layout_gravity="end"
                         android:background="@null"
-                        android:gravity="center_vertical"
+                        android:gravity="left"
                         android:hint="@string/notes_text"
                         android:paddingBottom="7dip"
                         android:paddingLeft="14dip"
