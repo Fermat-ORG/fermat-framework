@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
@@ -229,4 +230,10 @@ public interface FanCommunityModuleManager extends
 
     @Override
     int[] getMenuNotifications();
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    void checkAllConnections() throws CantHandleNewsEventException;
 }

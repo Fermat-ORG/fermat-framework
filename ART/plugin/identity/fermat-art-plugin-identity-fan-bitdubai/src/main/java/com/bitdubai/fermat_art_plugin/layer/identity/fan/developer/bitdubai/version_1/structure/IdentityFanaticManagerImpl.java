@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -54,7 +55,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
     ErrorManager errorManager;
 
     /**
-     * DealsWithLogger interface mmeber variables
+     * DealsWithLogger interface member variables
      */
     LogManager logManager;
 
@@ -77,6 +78,8 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
     private FanManager fanManager;
 
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
+
+    private FanIdentityEventActions fanIdentityEventActions;
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -106,7 +109,15 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityFanaticManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, FanManager fanManager, TokenlyFanIdentityManager tokenlyFanIdentityManager){
+    public IdentityFanaticManagerImpl(
+            ErrorManager errorManager,
+            LogManager logManager,
+            PluginDatabaseSystem pluginDatabaseSystem,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            DeviceUserManager deviceUserManager,
+            FanManager fanManager,
+            TokenlyFanIdentityManager tokenlyFanIdentityManager){
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -410,5 +421,22 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
     public void publishIdentity(String publicKey)
             throws CantPublishIdentityException, IdentityNotFoundException {
         registerIdentitiesANS(publicKey);
+    }
+
+    /**
+     * this method sets the Fan Identity Event Actions
+     * @param fanIdentityEventActions
+     */
+    public void setFanIdentityEventActions(final FanIdentityEventActions fanIdentityEventActions){
+        this.fanIdentityEventActions = fanIdentityEventActions;
+    }
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    @Override
+    public void checkAllConnections()throws CantHandleNewsEventException {
+        this.fanIdentityEventActions.checkAllConnections();
     }
 }
