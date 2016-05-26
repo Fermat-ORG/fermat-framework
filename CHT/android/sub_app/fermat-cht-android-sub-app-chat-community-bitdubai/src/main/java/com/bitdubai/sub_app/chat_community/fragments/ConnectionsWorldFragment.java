@@ -143,6 +143,7 @@ public class ConnectionsWorldFragment
             appSettings = null;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
@@ -150,6 +151,7 @@ public class ConnectionsWorldFragment
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                    //settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

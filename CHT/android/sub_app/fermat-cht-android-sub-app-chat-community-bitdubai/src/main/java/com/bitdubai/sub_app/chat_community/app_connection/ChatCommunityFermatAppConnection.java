@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySelectableIdentityImpl;
 import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
 import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.chat_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 import java.util.ArrayList;
@@ -137,19 +138,24 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
-        try
-        {
-            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
-            if(chatUserSubAppSession!=  null)
-                moduleManager = chatUserSubAppSession.getModuleManager();
-            return ChatCommunityBuildNotification.getNotification(moduleManager,code);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+//        try
+//        {
+//            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
+//            if(chatUserSubAppSession!=  null)
+//                moduleManager = chatUserSubAppSession.getModuleManager();
+//            return ChatCommunityBuildNotification.getNotification(moduleManager,code);
+//        }
+//        catch(Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        return null;
+//    }
 
-        return null;
+        return CommunityNotificationPainterBuilder.getNotification(
+                code
+        );
     }
 
     public void getChtActiveIdentity() {

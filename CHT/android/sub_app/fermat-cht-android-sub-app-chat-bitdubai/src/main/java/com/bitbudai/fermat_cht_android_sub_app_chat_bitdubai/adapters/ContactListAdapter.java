@@ -30,8 +30,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+import java.util.List;
 
 /**
  * Contact List Adapter
