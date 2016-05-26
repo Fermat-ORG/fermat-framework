@@ -209,7 +209,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         List<String> data = new ArrayList<>();
 
         for (int i = 0; i < countries.length; i++)
-            data.add(countries[i].getCountry());
+            if(countries[i] != Country.NONE)
+                data.add(countries[i].getCountry());
 
         return data;
     }

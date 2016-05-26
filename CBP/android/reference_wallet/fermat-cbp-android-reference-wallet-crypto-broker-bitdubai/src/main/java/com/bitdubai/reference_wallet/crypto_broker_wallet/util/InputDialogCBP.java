@@ -80,31 +80,19 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     List<String> bankAccountTypes =  new ArrayList<>();
 
     private final TextWatcher bankNameTextWatcher = new TextWatcher() {
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));}
         public void afterTextChanged(Editable s) {}
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
     };
     private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));}
         public void afterTextChanged(Editable s) {}
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
     };
     private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
-
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));}
         public void afterTextChanged(Editable s) {}
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
     };
 
     public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
@@ -152,10 +140,10 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             buttonActionBank = (FermatTextView) findViewById(R.id.idcbp_button_action_bank);
             buttonActionBank.setOnClickListener(this);
 
+
             //Allow only numbers and dashes, limit max length, add textWatchers
             bankAccountBankName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_NAME)});
             bankAccountBankName.addTextChangedListener(bankNameTextWatcher);
-
 
             bankAccountNumber.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
             bankAccountNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ACCOUNT)});
