@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="180dp">
@@ -9,24 +8,36 @@
         android:id="@+id/image_view_profile"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:layout_gravity="center"
         android:scaleType="centerCrop"
-        tools:ignore="contentDescription"
-        tools:src="@drawable/profile_image_standard"/>
+        tools:background="@drawable/banner_asset_user_wallet" />
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/txt_name"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:background="#7d000000"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText"
-        android:text="Unknown"
-        />
+        android:layout_centerHorizontal="true">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/txt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black_overlay"
+            android:gravity="start"
+            android:paddingBottom="10dip"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dip"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/imageView_change_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

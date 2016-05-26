@@ -35,11 +35,10 @@ public class RedeemPointCommunityFragmentsCommons {
                 if (identityAssetRedeem.getImage().length > 0) {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), 0, false);
                     bitmapWorkerTask.execute(identityAssetRedeem.getImage());
-//                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetIssuer.getImage(), 0, identityAssetIssuer.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
+                    Picasso.with(activity).load(R.drawable.banner_redeem_point).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
+                Picasso.with(activity).load(R.drawable.banner_redeem_point).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identityAssetRedeem.getAlias());
         }
