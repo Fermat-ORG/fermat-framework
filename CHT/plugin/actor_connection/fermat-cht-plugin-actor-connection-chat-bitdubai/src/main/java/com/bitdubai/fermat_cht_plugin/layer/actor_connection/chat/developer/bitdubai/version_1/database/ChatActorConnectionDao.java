@@ -103,8 +103,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         entityRecordOld,
                         oldActorConnection
                 );
-                actorConnectionsTable.deleteRecord(entityRecordOld);
                 deleteNewUserProfileImage(oldActorConnection.getPublicKey());
+                actorConnectionsTable.deleteRecord(entityRecordOld);
 
                 if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
                         && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
@@ -116,6 +116,9 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                     entityRecord,
                     actorConnection
             );
+            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
+                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
+
             actorConnectionsTable.insertRecord(entityRecord);
 
 //            return buildActorConnectionNewRecord(entityRecord);
@@ -255,9 +258,6 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATE_LOCALITY_COLUMN_NAME, actorConnection.getState());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CITY_COLUMN_NAME, actorConnection.getCity());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, actorConnection.getStatus());
-
-            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
-                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
 
             return record;
         } catch (final Exception e) {
