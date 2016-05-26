@@ -31,7 +31,7 @@ public class Confirm_Send_Payment_Dialog extends Dialog implements
 
 
 
-public Activity activity;
+public Context context;
 public Dialog d;
 
 private BlockchainNetworkType blockchainNetworkType;
@@ -62,6 +62,7 @@ public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
     this.cryptoAmount = cryptoAmount;
     this.blockchainNetworkType = blockchainNetworkType;
     this.lossProtectedWallet = lossProtectedWallet;
+    this.context = a;
  }
 
 
@@ -102,11 +103,11 @@ private void setUpScreenComponents(){
                 {
                     lossProtectedWallet.approveRequest(this.requestId
                             , appSession.getIntraUserModuleManager().getPublicKey());
-                    Toast.makeText(this.activity, "Request accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.context, "Request accepted", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(this.activity, "Action not allowed, Insufficient Funds.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.context, "Action not allowed, Insufficient Funds.", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -123,7 +124,10 @@ private void setUpScreenComponents(){
             } catch (CantGetCryptoLossProtectedWalletException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this.activity, "Sending...", Toast.LENGTH_SHORT).show();
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }

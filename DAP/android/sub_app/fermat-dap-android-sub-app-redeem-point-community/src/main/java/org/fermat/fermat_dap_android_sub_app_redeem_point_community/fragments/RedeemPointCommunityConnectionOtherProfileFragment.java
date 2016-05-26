@@ -192,7 +192,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
-            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
 //            try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(),
                         (AssetRedeemPointCommunitySubAppSession) appSession,
@@ -217,7 +217,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         }
 
         if (i == R.id.btn_disconect) {
-            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
 //            try {
                 final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
                         (AssetRedeemPointCommunitySubAppSession) appSession,
@@ -285,11 +285,11 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         }
 
         if (i == R.id.btn_connection_request_send) {
-            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
             Toast.makeText(getActivity(), R.string.dap_other_profile_request_send_toast, Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-            // CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
+            // CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
             Toast.makeText(getActivity(), R.string.dap_other_profile_request_reject_toast, Toast.LENGTH_SHORT).show();
         }
     }

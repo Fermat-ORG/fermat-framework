@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -116,35 +118,36 @@ public class ChatListFragment extends AbstractFermatFragment{
                 noReadMsgs.clear();
                 imgId.clear();
                 for (Chat chat : chats) {
+                    if(chat.getStatus()!= ChatStatus.INVISSIBLE){
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
                         noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                         contactId.add(chat.getRemoteActorPublicKey());
-                        if(chatIdentity!= null) {
-                            for (ChatActorCommunityInformation cont : chatManager
-                                    .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
+                        if (chatIdentity != null) {
+                            List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
+                            for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
                                 String pk1 = cont.getPublicKey();
                                 String pk2 = chat.getRemoteActorPublicKey();
                                 if (pk2.equals(pk1)) {
                                     contactName.add(cont.getAlias());
-                                    Message mess=null;
+                                    Message mess = null;
                                     try {
                                         mess = chatManager.getMessageByChatId(chatidtemp);
-                                    }catch (Exception e){
-                                        mess=null;
+                                    } catch (Exception e) {
+                                        mess = null;
                                     }
                                     if (mess != null) {
-                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                        if (chatManager.checkWritingStatus(chatidtemp)) {
                                             message.add("Typing...");
-                                        }else{
+                                        } else {
                                             message.add(mess.getMessage());
                                         }
                                         status.add(mess.getStatus().toString());
                                         typeMessage.add(mess.getType().toString());
-                                    }else{
-                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                    } else {
+                                        if (chatManager.checkWritingStatus(chatidtemp)) {
                                             message.add("Typing...");
-                                        }else {
+                                        } else {
                                             message.add("");
                                         }
                                         status.add("");
@@ -165,14 +168,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                                                 } else {
                                                     formatter = new SimpleDateFormat("hh:mm aa");
                                                 }
-                                            }else{
+                                            } else {
                                                 if (android.text.format.DateFormat.is24HourFormat(getContext())) {
                                                     formatter = new SimpleDateFormat("HH:mm");
                                                 } else {
                                                     formatter = new SimpleDateFormat("hh:mm aa");
                                                 }
                                             }
-
                                         }
                                         formatter.setTimeZone(TimeZone.getDefault());
                                         datef = formatter.format(new java.util.Date(milliseconds));
@@ -193,7 +195,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     break;
                                 }
                             }
-                        }else setUpHelpChat(false);
+                        } else setUpHelpChat(false);
+                    }
                     }
                 }
                 if (chatscounter==0)
@@ -240,7 +243,9 @@ public class ChatListFragment extends AbstractFermatFragment{
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
+            chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -250,6 +255,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
                 chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -487,22 +493,25 @@ public class ChatListFragment extends AbstractFermatFragment{
 //        }
         if (id == R.id.menu_delete_all_chats) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
-                alert.setTextTitle("Delete All Chats");
-                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-                alert.setType("delete-chats");
-                alert.show();
-                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        }catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                if(chatId!= null && chatId.size()>0){
+                    final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                    alert.setTextTitle("Delete All Chats");
+                    alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+                    alert.setType("delete-chats");
+                    alert.show();
+                    alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            try {
+                                updatevalues();
+                                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            }catch (Exception e) {
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }
                         }
-                    }
-                });
+                    });
+                }else
+                    Toast.makeText(getActivity(), "No chats now", Toast.LENGTH_SHORT).show();
             }catch (Exception e){
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }

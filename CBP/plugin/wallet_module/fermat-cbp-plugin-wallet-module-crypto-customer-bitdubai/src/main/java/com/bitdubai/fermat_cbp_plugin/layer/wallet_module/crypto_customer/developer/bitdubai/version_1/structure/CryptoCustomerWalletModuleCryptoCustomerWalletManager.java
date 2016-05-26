@@ -118,7 +118,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -169,7 +169,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final PluginVersionReference pluginVersionReference;
     private final ErrorManager errorManager;
 
@@ -199,7 +199,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                                                                  BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
-                                                                 BitcoinWalletManager bitcoinWalletManager,
+                                                                 CryptoWalletManager cryptoWalletManager,
                                                                  final ErrorManager errorManager,
                                                                  final PluginVersionReference pluginVersionReference,
                                                                  PluginFileSystem pluginFileSystem,
@@ -224,7 +224,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
     }
@@ -535,7 +535,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     @Override
     public long getBalanceBitcoinWallet(String walletPublicKey) {
         try {
-            return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
         } catch (CantCalculateBalanceException | CantLoadWalletsException ignore) {
             return 0;
         }

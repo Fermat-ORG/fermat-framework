@@ -61,7 +61,17 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
         try {
 
-//            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+
+            fermatManager  = new ChatActorCommunityManager(
+                    chatIdentityManager,
+                    chatActorConnectionManager,
+                    chatActorNetworkServiceManager,
+                    this,
+                    pluginFileSystem,
+                    pluginId,
+                    getPluginVersionReference()
+            );
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -80,12 +90,16 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
                     chatIdentityManager,
                     chatActorConnectionManager,
                     chatActorNetworkServiceManager,
-                    errorManager,
+                    this,
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference()
             );
         }
+        return fermatManager;
+    }
+
+    public ChatActorCommunityManager getChatActorCommunityManager(){
         return fermatManager;
     }
 

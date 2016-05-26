@@ -19,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -32,9 +31,9 @@ public class SideMenuBuilder {
     /**
      * Set navigation header
      */
-    public static FrameLayout setHeader(Activity activity,NavigationViewPainter viewPainter,ActiveActorIdentityInformation activeIdentity) {
+    public static FrameLayout setHeader(Activity activity,NavigationViewPainter viewPainter) {
         if (viewPainter != null) {
-            final View view = viewPainter.addNavigationViewHeader(activeIdentity);
+            final View view = viewPainter.addNavigationViewHeader();
             FrameLayout frameLayout = (FrameLayout) activity.findViewById(R.id.navigation_view_header);
             frameLayout.setVisibility(View.VISIBLE);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

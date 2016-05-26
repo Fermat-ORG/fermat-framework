@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,10 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader() {
         try {
+            //todo: a menos que cargues este intrauseridentity del module va a ser siempre null
+            if (intraUserLoginIdentity==null) Log.e("APP","intra user null in app connection, please check this");
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity);
         } catch (CantGetActiveLoginIdentityException e) {

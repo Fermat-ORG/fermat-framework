@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanDisconnectingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +34,7 @@ import java.util.UUID;
 public interface FanCommunityModuleManager extends
         ModuleManager<
                 FanCommunitySettings,
-                FanCommunitySelectableIdentity>, ModuleSettingsImpl<FanCommunitySettings> {
+                FanCommunitySelectableIdentity>, ModuleSettingsImpl<FanCommunitySettings>, Serializable {
 
     /**
      * The method <code>listWorldFanatics</code> returns the list of all fans in the world,
@@ -209,6 +211,32 @@ public interface FanCommunityModuleManager extends
      * @throws CantGetActorConnectionException
      */
     List<FanActorConnection> getRequestActorConnections(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method returns the ConnectionState from an actor connection.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method returns the connection Id
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    UUID getConnectionId(
             String linkedIdentityPublicKey,
             Actors linkedIdentityActorType,
             String actorPublicKey) throws CantGetActorConnectionException;

@@ -701,7 +701,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
-    private boolean isActorOnline(final ActorProfile actorProfile) {
+    private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
 
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
@@ -717,7 +717,38 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
+                if (respondJsonObject.get("isOnline").getAsBoolean())
+                    return respondJsonObject.get("sameNode").getAsBoolean();
+                else
+                    return false;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public final Boolean isActorOnline(final String publicKey) {
+
+        try {
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + publicKey);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
                 return respondJsonObject.get("isOnline").getAsBoolean();
+
             } else {
                 return false;
             }
@@ -732,7 +763,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            if (isActorOnline(actorProfile)) {
+            if (isActorOnlineInTheSameNode(actorProfile)) {
 
                 NetworkClientCommunicationCall actorCall = new NetworkClientCommunicationCall(
                         networkServiceProfile.getNetworkServiceType(),

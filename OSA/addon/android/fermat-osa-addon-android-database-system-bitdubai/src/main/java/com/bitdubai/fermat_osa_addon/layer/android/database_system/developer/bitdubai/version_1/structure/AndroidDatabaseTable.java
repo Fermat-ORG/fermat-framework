@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 import java.util.ArrayList;
@@ -222,6 +223,23 @@ public class AndroidDatabaseTable implements DatabaseTable {
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
         } finally {
             if (database != null) database.close();
+        }
+    }
+
+    @Override
+    public void truncate() throws CantTruncateTableException {
+
+        try (SQLiteDatabase database = this.database.getWritableDatabase()) {
+
+            database.execSQL("DELETE FROM " + tableName);
+
+        } catch (Exception exception) {
+
+            throw new CantTruncateTableException(
+                    exception,
+                    null,
+                    "Check the cause for this error"
+            );
         }
     }
 

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.UUID;
 public interface DatabaseTable {
 
     void loadToMemory() throws CantLoadTableToMemoryException;
+
+    void truncate() throws CantTruncateTableException;
 
     long getCount() throws CantLoadTableToMemoryException;
 

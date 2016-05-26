@@ -18,7 +18,9 @@ public class SongItems {
     private boolean progressbarvissible;
     private boolean isItemSelected;
     private String description;
-    public SongItems(Bitmap imagen, String song_name, String artist_name, String status,UUID song_id, int progress, boolean progressbarvissible,String description){
+    public SongItems(Bitmap imagen, String song_name, String artist_name,
+                     String status,UUID song_id, int progress, boolean progressbarvissible,
+                     String description,boolean isItemSelected){
 
         this.imagen = imagen;
         this.song_name = song_name;
@@ -28,6 +30,7 @@ public class SongItems {
         this.progress=progress;
         this.progressbarvissible=progressbarvissible;
         this.description=description;
+        this.isItemSelected=false;
     }
 
     // getters & setters

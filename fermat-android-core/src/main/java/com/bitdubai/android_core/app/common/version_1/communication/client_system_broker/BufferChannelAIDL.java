@@ -35,7 +35,7 @@ public class BufferChannelAIDL {
                 lock.notify();
             }
         }else{
-            Log.e(TAG,"lOCK IS NULL, PLEASE CHECK THIS.class: "+getClass().getName()+" line:"+new Throwable().getStackTrace()[0].getLineNumber());
+            Log.e(TAG,"lOCK IS NULL,FOR ID:"+id+" DATA ARRIVED: "+((data!=null)?data.getClass()+" "+data.toString():"null")+" PLEASE TALK WITH FURSZY .class: "+getClass().getName()+" line:"+new Throwable().getStackTrace()[0].getLineNumber());
         }
     }
 

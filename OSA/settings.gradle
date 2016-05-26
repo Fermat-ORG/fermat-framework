@@ -47,7 +47,7 @@ project(':bitcoin_exchange_widget').projectDir = new File('OSA/addon/android/wid
 
 /*
  * linux osa core and addons
- *//**/
+ */
 include ':fermat-osa-linux-core'
 project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
 

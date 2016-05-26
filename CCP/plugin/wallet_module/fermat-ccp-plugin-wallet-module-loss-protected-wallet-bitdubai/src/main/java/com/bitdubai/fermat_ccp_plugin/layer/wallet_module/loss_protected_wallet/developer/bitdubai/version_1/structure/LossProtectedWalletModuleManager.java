@@ -1053,7 +1053,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                         blockchainNetworkType
                 );
 
-                List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
 
         //get actor to data
                 for (BitcoinLossProtectedWalletTransaction bwt : bitcoinWalletTransactionList) {

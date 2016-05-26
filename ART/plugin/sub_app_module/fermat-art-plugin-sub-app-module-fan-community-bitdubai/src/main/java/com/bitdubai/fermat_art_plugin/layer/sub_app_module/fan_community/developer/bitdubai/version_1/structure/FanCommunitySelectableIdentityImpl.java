@@ -6,10 +6,12 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 
+import java.io.Serializable;
+
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/5/16.
  */
-public class FanCommunitySelectableIdentityImpl implements FanCommunitySelectableIdentity {
+public class FanCommunitySelectableIdentityImpl implements FanCommunitySelectableIdentity, Serializable {
 
     private final String publicKey;
     private final Actors actorType;

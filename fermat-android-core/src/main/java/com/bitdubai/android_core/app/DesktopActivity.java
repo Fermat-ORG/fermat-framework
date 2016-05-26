@@ -13,13 +13,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
@@ -67,8 +66,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
-
         try {
             loadUI();
         } catch (Exception e) {
@@ -78,6 +75,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
              getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+
 
     }
     @Override
@@ -296,8 +294,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             }else{
 
 
-                if(activities.equals(Activities.DESKTOP_SETTING_FERMAT_NETWORK)){
-                    Toast.makeText(this, "toca", Toast.LENGTH_SHORT).show();
+                if(!activities.equals(Activities.CCP_DESKTOP)){
 
                     getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
                     resetThisActivity();
@@ -353,12 +350,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         try {
 
             if(installedSubApp.getSubAppType() == SubApps.SETTINGS){
-
-                if(bottomMenuReveal ==null){
-                    findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                    bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
-                    bottomMenuReveal.buildMenuSettings();
-                }
 
                 bottomMenuReveal.getOnClickListener().onClick(null);
 
@@ -465,6 +456,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
                         findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                         initialisePaging();
+
+                        if(bottomMenuReveal ==null){
+                            findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+                            bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
+                            bottomMenuReveal.buildMenuSettings();
+                            try {
+                                bottomMenuReveal.getOnClickListener().onClick(null);
+                                bottomMenuReveal.getOnClickListener().onClick(null);
+                            }catch (Exception e){
+
+                            }
+                        }
                     } else {
 
                         hideBottonIcons();

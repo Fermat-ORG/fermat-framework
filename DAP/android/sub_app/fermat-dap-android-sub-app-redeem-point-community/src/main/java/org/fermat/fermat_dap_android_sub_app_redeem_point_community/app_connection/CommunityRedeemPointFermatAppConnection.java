@@ -57,7 +57,8 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointCommunityNavigationViewPainter(getContext(), getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new RedeemPointCommunityNavigationViewPainter(getContext(), null);
     }
 
     @Override

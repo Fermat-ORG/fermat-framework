@@ -215,7 +215,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-        getSuggestionCache();
+        //getSuggestionCache();
 
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
@@ -297,6 +297,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
+                                //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
                                 try {
                                     List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
                                     if(list!=null) {

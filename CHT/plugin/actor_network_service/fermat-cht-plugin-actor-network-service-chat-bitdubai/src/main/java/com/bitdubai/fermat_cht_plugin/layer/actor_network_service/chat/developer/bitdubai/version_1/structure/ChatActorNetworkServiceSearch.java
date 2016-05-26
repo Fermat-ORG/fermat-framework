@@ -81,6 +81,8 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
+                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
                 String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
 
                 if(imageString != null && !imageString.equals(""))
@@ -88,7 +90,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                 else
                     imageByte = null;
 
-                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city));
+                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city,status));
             }
 
             return chatExposingDataArrayList;
@@ -156,6 +158,8 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 
+            String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
                 String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
 
                 if(imageString != null && !imageString.equals(""))
@@ -163,7 +167,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                 else
                     imageByte = null;
 
-            ChatExposingData chatExposingData = new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city);
+            ChatExposingData chatExposingData = new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city, status);
 
             return chatExposingData;
 
