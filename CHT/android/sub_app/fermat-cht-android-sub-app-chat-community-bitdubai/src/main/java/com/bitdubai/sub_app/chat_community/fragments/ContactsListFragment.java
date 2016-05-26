@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -47,6 +48,7 @@ import java.util.List;
  * ContactsListFragment
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
+ * Updated by Lozadaa 26/05/2016
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -167,7 +169,7 @@ public class ContactsListFragment
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
-            connectionsProgressDialog.setMessage("Loading Connections");
+            connectionsProgressDialog.setMessage("Loading Contacts");
             connectionsProgressDialog.setCancelable(false);
             connectionsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
@@ -224,13 +226,29 @@ public class ContactsListFragment
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.listAllConnectedChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantListChatActorException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
+            moduleManager.exposeIdentityInWat();
+            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            for(ChatActorCommunityInformation chat: result){
+                if(chat.getConnectionState()!= null){
+                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
+                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
+                        dataSet.add(chat);
+                    }else dataSet.add(chat);
+                }
+                else dataSet.add(chat);
+
+            }
+            //dataSet.addAll(result);
+            offset = dataSet.size();
+        } catch (Exception e) {
+            //Toast.makeText(getActivity(), "No Chat Identity Created",
+            //        Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-
         return dataSet;
     }
+
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
