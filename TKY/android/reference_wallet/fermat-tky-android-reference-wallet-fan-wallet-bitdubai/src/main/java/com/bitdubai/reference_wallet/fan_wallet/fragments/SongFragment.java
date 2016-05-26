@@ -957,7 +957,7 @@ public class SongFragment extends AbstractFermatFragment  {
                 //We don't get the identity, we're gonna notify to user.
                 Toast.makeText(
                         view.getContext(),
-                        "Cannot load a Fan identity",
+                        "Cannot load a Tokenly Fan identity",
                         Toast.LENGTH_SHORT)
                         .show();
             }
@@ -1058,7 +1058,7 @@ public class SongFragment extends AbstractFermatFragment  {
                 //We don't get the identity, we're gonna notify to user.
                 Toast.makeText(
                         view.getContext(),
-                        "Cannot load a Fan identity",
+                        "Cannot load a Tokenly Fan identity",
                         Toast.LENGTH_SHORT)
                         .show();
                 //TODO: Miguel, we need to study if we gonna launch the Fan Identity Fragment.

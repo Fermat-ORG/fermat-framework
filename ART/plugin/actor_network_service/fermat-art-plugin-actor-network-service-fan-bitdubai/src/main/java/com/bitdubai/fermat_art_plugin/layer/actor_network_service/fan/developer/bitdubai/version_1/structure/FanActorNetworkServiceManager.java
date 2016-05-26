@@ -22,6 +22,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -360,7 +362,34 @@ public final class FanActorNetworkServiceManager implements FanManager {
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
             ConnectionRequestNotFoundException  {
+        try {
 
+            final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+
+            fanActorNetworkServiceDao.cancelConnection(
+                    requestId,
+                    protocolState
+            );
+
+            FanConnectionRequest connectionRequest = fanActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(connectionRequest),
+                    connectionRequest.getSenderPublicKey(),
+                    connectionRequest.getSenderActorType(),
+                    connectionRequest.getDestinationPublicKey(),
+                    connectionRequest.getDestinationActorType()
+            );
+
+        } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException e){
+            // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionRequestException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.commons.popups.AcceptDialog;
+import com.bitdubai.sub_app.fan_community.commons.popups.CancelDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
@@ -209,7 +211,7 @@ public class ConnectionOtherProfileFragment extends
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
                         (FanCommunityInformation)fanCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setDescription("Do you want to send to");
                 connectDialog.setUsername(fanCommunityInformation.getAlias());
                 connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(this);
@@ -232,7 +234,21 @@ public class ConnectionOtherProfileFragment extends
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
-        } else if(i == R.id.afc_btn_accept) {
+        } else if(i == R.id.afc_btn_cancel) {
+
+            try {
+                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
+                        (FanCommunityInformation)fanCommunityInformation, moduleManager.getSelectedActorIdentity());
+                cancelDialog.setTitle("Cancel");
+                cancelDialog.setDescription("Want to cancel connection with");
+                cancelDialog.setUsername(fanCommunityInformation.getAlias() + "?");
+                cancelDialog.setOnDismissListener(this);
+                cancelDialog.show();
+            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            }
+        }else if(i == R.id.afc_btn_accept) {
             try {
                 UUID connectionId=null;
                 String alias="";

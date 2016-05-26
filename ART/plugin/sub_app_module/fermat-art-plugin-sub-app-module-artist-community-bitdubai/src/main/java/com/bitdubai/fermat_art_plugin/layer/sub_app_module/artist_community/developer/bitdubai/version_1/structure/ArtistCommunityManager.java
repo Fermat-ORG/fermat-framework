@@ -166,30 +166,40 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         }
 
         ArtistCommunityInformation worldArtist;
+        ArtistCommunityInformation artistCommunityInformation;
         for(int i = 0; i < worldArtistList.size(); i++)
         {
             worldArtist = worldArtistList.get(i);
             //Check connection from Artist Actor connections
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
-                if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey())){
+                    artistCommunityInformation = new ArtistCommunityInformationImpl(
                             worldArtist.getPublicKey(),
                             worldArtist.getAlias(),
                             worldArtist.getImage(),
                             connectedArtist.getConnectionState(),
-                            connectedArtist.getConnectionId()));
+                            connectedArtist.getConnectionId());
+                    artistCommunityInformation.setArtExternalPlatform(
+                            worldArtist.getArtExternalPlatform());
+                    worldArtistList.set(i, artistCommunityInformation);
+                }
+
             }
             //Check connections from Fan Actor Connection
             for(FanActorConnection connectedFan : fanActorConnections)
             {
-                if(worldArtist.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                if(worldArtist.getPublicKey().equals(connectedFan.getPublicKey())){
+                    artistCommunityInformation = new ArtistCommunityInformationImpl(
                             worldArtist.getPublicKey(),
                             worldArtist.getAlias(),
                             worldArtist.getImage(),
                             connectedFan.getConnectionState(),
-                            connectedFan.getConnectionId()));
+                            connectedFan.getConnectionId());
+                    artistCommunityInformation.setArtExternalPlatform(worldArtist.getArtExternalPlatform());
+                    worldArtistList.set(i, artistCommunityInformation);
+                }
+
             }
         }
         return worldArtistList;
