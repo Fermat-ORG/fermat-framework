@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.fan_community.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +69,7 @@ public class ListUserIdentiesFragment extends AbstractFermatFragment<FanCommunit
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             rootView = inflater.inflate(R.layout.afc_fragment_list_identities, container, false);
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
             try {
                 fanCommunitySelectableIdentities = moduleManager.listSelectableIdentities();
             } catch (final CantListIdentitiesToSelectException cantListIdentitiesToSelectException) {
