@@ -28,13 +28,11 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
  */
 public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSession> {
 
-    IdentityAssetUser identityAssetUser;
     AssetUserWalletSubAppModuleManager moduleManager;
     AssetUserSession assetUserSession;
 
     public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
-        this.identityAssetUser = identityAssetUser;
     }
 
     @Override
@@ -54,20 +52,19 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetUserSession getSession() {
         return new AssetUserSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new UserWalletNavigationViewPainter(getContext(), null);
+        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new WalletAssetUserHeaderPainter();
+        return new WalletAssetUserHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
