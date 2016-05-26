@@ -11,6 +11,7 @@ import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.params.Networks;
 import org.bitcoinj.utils.ContextPropagatingThreadFactory;
 
 /**
@@ -25,5 +26,9 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
     @Override
     public void start() throws CantStartPluginException {
         System.out.println("****FermatNetwork*** started");
+
+        NetworkParameters fermatParams = new FermatNetworkParameters();
+        Networks.register(fermatParams);
+
     }
 }
