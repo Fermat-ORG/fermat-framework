@@ -216,8 +216,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
             nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
             nodeCatalog.setName(nodesCatalogTransaction.getName());
             nodeCatalog.setOfflineCounter(0);
-            nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-            nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+            nodeCatalog.setLastLocation(nodesCatalogTransaction.getLastLocation());
             nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
             nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
@@ -247,8 +246,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
         nodeCatalog.setName(nodesCatalogTransaction.getName());
         nodeCatalog.setOfflineCounter(0);
-        nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+        nodeCatalog.setLastLocation(nodesCatalogTransaction.getLastLocation());
         nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
         nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 

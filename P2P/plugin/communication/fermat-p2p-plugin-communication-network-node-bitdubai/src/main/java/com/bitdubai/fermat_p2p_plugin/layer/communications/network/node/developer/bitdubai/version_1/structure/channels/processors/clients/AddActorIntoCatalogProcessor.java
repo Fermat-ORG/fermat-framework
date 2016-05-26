@@ -192,11 +192,9 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
-            actorsCatalog.setLastLatitude(actorProfile.getLocation().getLatitude());
-            actorsCatalog.setLastLongitude(actorProfile.getLocation().getLongitude());
+            actorsCatalog.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
         }else{
-            actorsCatalog.setLastLatitude(0.0);
-            actorsCatalog.setLastLongitude(0.0);
+            actorsCatalog.setLastLocation(0.0, 0.0);
         }
 
         /*
@@ -230,11 +228,9 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
-            actorsCatalog.setLastLatitude(actorProfile.getLocation().getLatitude());
-            actorsCatalog.setLastLongitude(actorProfile.getLocation().getLongitude());
+            actorsCatalog.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
         }else{
-            actorsCatalog.setLastLatitude(0.0);
-            actorsCatalog.setLastLongitude(0.0);
+            actorsCatalog.setLastLocation(0.0, 0.0);
         }
 
         /*
@@ -268,11 +264,9 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
-            transaction.setLastLatitude(actorProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(actorProfile.getLocation().getLongitude());
+            transaction.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
         }else{
-            transaction.setLastLatitude(0.0);
-            transaction.setLastLongitude(0.0);
+            transaction.setLastLocation(0.0, 0.0);
         }
 
         /*
@@ -307,11 +301,9 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
-            transaction.setLastLatitude(actorProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(actorProfile.getLocation().getLongitude());
+            transaction.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
         }else{
-            transaction.setLastLatitude(0.0);
-            transaction.setLastLongitude(0.0);
+            transaction.setLastLocation(0.0, 0.0);
         }
 
         /*
@@ -363,13 +355,10 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
-            actorsCatalog.setLastLatitude(actorProfile.getLocation().getLatitude());
-            actorsCatalog.setLastLongitude(actorProfile.getLocation().getLongitude());
+            actorsCatalog.setLastLocation(actorProfile.getLocation().getLatitude(), actorProfile.getLocation().getLongitude());
         }else{
-            actorsCatalog.setLastLatitude(0.0);
-            actorsCatalog.setLastLongitude(0.0);
+            actorsCatalog.setLastLocation(0.0, 0.0);
         }
-
 
         ActorsCatalog actorsCatalogRegister = getDaoFactory().getActorsCatalogDao().findById(actorProfile.getIdentityPublicKey());
 

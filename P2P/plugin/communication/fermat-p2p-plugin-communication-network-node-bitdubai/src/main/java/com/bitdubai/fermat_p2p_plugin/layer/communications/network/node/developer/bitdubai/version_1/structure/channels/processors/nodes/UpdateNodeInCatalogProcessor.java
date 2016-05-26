@@ -199,11 +199,9 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         nodeCatalog.setOfflineCounter(0);
         nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
-
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
-            nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
-            nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
         }
 
         /*
@@ -235,8 +233,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
-            transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
         }
 
         /*
@@ -267,8 +264,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
-            transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
         }
 
         /*

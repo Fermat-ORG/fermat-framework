@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.wrappers.NetworkNodeCommunicationDeviceLocation;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -20,13 +21,11 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String ip;
 
-	private Double lastLatitude;
+    private NetworkNodeCommunicationDeviceLocation lastLocation;
 
 	private Timestamp lastConnectionTimestamp;
 
 	private Integer lateNotificationsCounter;
-
-	private Double lastLongitude;
 
 	private String name;
 
@@ -66,14 +65,6 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.ip = ip;
 	}
 
-	public Double getLastLatitude() {
-		return this.lastLatitude;
-	}
-
-	public void setLastLatitude(Double lastLatitude) {
-		this.lastLatitude = lastLatitude;
-	}
-
 	public Timestamp getLastConnectionTimestamp() {
 		return this.lastConnectionTimestamp;
 	}
@@ -88,14 +79,6 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	public void setLateNotificationsCounter(Integer lateNotificationsCounter) {
 		this.lateNotificationsCounter = lateNotificationsCounter;
-	}
-
-	public Double getLastLongitude() {
-		return this.lastLongitude;
-	}
-
-	public void setLastLongitude(Double lastLongitude) {
-		this.lastLongitude = lastLongitude;
 	}
 
 	public String getName() {
@@ -122,16 +105,27 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
-	public void setLocation(Location location) {
+    public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+        return lastLocation;
+    }
 
-		if(location != null) {
+    public void setLastLocation(double latitude, double longitude){
+        lastLocation = new NetworkNodeCommunicationDeviceLocation(
+                latitude,
+                longitude,
+                null     ,
+                null     ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN);
+    }
 
-			this.lastLatitude  = location.getLatitude() ;
-			this.lastLongitude = location.getLongitude();
-		}
-	}
 
-	@Override
+    public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
+    @Override
 	public String getId() {
 		return identityPublicKey;
 	}

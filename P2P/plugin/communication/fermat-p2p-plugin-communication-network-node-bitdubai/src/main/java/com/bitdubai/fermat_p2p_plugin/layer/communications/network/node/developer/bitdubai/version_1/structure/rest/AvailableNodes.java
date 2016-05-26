@@ -6,15 +6,12 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.wrappers.NetworkNodeCommunicationDeviceLocation;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -85,24 +82,7 @@ public class AvailableNodes implements RestFulServices {
                     nodeProfile.setIp(nodesCatalog.getIp());
                     nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
                     nodeProfile.setIdentityPublicKey(nodesCatalog.getIdentityPublicKey());
-
-                    if(nodesCatalog.getLastLatitude() != null && nodesCatalog.getLastLongitude() != null &&
-                            nodesCatalog.getLastLatitude() != 0 && nodesCatalog.getLastLongitude() != 0){
-
-                        Location location = new NetworkNodeCommunicationDeviceLocation(
-                                nodesCatalog.getLastLatitude() ,
-                                nodesCatalog.getLastLongitude(),
-                                null     ,
-                                null     ,
-                                null     ,
-                                System.currentTimeMillis(),
-                                LocationSource.UNKNOWN
-                        );
-
-                        nodeProfile.setLocation(location);
-
-                    }
-
+                    nodeProfile.setLocation(nodesCatalog.getLastLocation());
                     listNodeProfile.add(nodeProfile);
 
                 }

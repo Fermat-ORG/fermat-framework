@@ -98,4 +98,40 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
                 ", source=" + source +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NetworkNodeCommunicationDeviceLocation)) return false;
+
+        NetworkNodeCommunicationDeviceLocation that = (NetworkNodeCommunicationDeviceLocation) o;
+
+        if (Double.compare(that.getLatitude(), getLatitude()) != 0) return false;
+        if (Double.compare(that.getLongitude(), getLongitude()) != 0) return false;
+        if (getTime() != that.getTime()) return false;
+        if (getAltitude() != null ? !getAltitude().equals(that.getAltitude()) : that.getAltitude() != null)
+            return false;
+        if (getAccuracy() != null ? !getAccuracy().equals(that.getAccuracy()) : that.getAccuracy() != null)
+            return false;
+        if (getAltitudeAccuracy() != null ? !getAltitudeAccuracy().equals(that.getAltitudeAccuracy()) : that.getAltitudeAccuracy() != null)
+            return false;
+        return getSource() == that.getSource();
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(getLatitude());
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(getLongitude());
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (getAltitude() != null ? getAltitude().hashCode() : 0);
+        result = 31 * result + (getAccuracy() != null ? getAccuracy().hashCode() : 0);
+        result = 31 * result + (getAltitudeAccuracy() != null ? getAltitudeAccuracy().hashCode() : 0);
+        result = 31 * result + (int) (getTime() ^ (getTime() >>> 32));
+        result = 31 * result + (getSource() != null ? getSource().hashCode() : 0);
+        return result;
+    }
 }

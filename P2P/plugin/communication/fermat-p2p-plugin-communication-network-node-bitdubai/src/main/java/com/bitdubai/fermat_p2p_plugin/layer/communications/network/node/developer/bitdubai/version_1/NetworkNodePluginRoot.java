@@ -751,7 +751,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            nodeCatalog.setLocation(nodeProfile.getLocation());
+            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalog into data base
@@ -768,7 +768,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            transaction.setLocation(nodeProfile.getLocation());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalogTransaction into data base
@@ -819,7 +819,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            nodeCatalog.setLocation(nodeProfile.getLocation());
+            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalog into data base
@@ -836,7 +836,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            transaction.setLocation(nodeProfile.getLocation());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalogTransaction into data base

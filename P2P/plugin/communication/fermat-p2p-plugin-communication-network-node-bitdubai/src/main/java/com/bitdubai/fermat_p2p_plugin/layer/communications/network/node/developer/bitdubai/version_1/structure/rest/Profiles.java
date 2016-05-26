@@ -142,15 +142,7 @@ public class Profiles implements RestFulServices {
                 actorProfile.setActorType(actorsCatalog.getActorType());
                 actorProfile.setPhoto(actorsCatalog.getPhoto());
                 actorProfile.setExtraData(actorsCatalog.getExtraData());
-
-                Location location = new DeviceLocation(
-                        actorsCatalog.getLastLatitude(),
-                        actorsCatalog.getLastLongitude(),
-                        null,
-                        null,
-                        null
-                );
-                actorProfile.setLocation(location);
+                actorProfile.setLocation(actorsCatalog.getLastLocation());
 
                 profileList.add(actorProfile);
             }

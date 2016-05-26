@@ -197,8 +197,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
         actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
         actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-        actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-        actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
+        actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
         actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
@@ -230,8 +229,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
         actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
         actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
         actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-        actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-        actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
+        actorsCatalog.setLastLocation(actorsCatalogTransaction.getLastLocation());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
