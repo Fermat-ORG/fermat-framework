@@ -21,8 +21,8 @@
     <string name="ccw_add_bank_account">+ Add Bank Account</string>
     <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
     <string name="ccw_automatic_restock">Automatic Restock</string>
-    <string name="ccw_address_line_1">Address line 1</string>
-    <string name="ccw_address_line_2">Address line 2</string>
+    <string name="ccw_address_line_1">Enter an address</string>
+    <string name="ccw_address_line_2">Enter an address</string>
     <string name="ccw_add_location">+ Add a Location</string>
     <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
     <string name="ccw_amount_to_buy">Amount to Buy</string>
@@ -44,7 +44,7 @@
     <string name="ccw_date_to_delivery_broker">Broker\'s Delivery Date</string>
     <string name="ccw_date_to_delivery_customer">Customer\'s Delivery Date</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
-    <string name="ccw_city">City</string>
+    <string name="ccw_city">Enter a City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
     <string name="ccw_contract_details_last_update_date">At Date: %1$s</string>
     <string name="ccw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
@@ -93,7 +93,7 @@
     <string name="ccw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="ccw_settings_locations_title">Manage Your Locations</string>
     <string name="ccw_start_selling_details">Selling %1$s</string>
-    <string name="ccw_state_province">State/Province</string>
+    <string name="ccw_state_province">Enter a State/Province</string>
     <string name="ccw_unit_number">1</string>
     <string name="ccw_value">Value</string>
     <string name="ccw_wanted_to_buy">Wanted To Buy</string>
@@ -117,7 +117,7 @@
     <string name="ccw_you_bought">You Bought</string>
     <string name="ccw_your_location">Your Locations</string>
     <string name="ccw_your_providers">Your Providers</string>
-    <string name="ccw_zip_postal_code">Zip/Postal Code</string>
+    <string name="ccw_zip_postal_code">Enter a Zip Code</string>
     <string name="contract_cancelled">Cancelled</string>
     <string name="contract_closed">Close</string>
     <string name="customer_locations_title">Customer Locations</string>
