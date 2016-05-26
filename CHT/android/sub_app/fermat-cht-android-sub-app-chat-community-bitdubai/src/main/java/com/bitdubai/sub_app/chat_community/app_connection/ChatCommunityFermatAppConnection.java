@@ -182,9 +182,9 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
                             progressDialog.dismiss();
                             if (getContext() != null && navPainter == null && activeIdentity == null) {
                                 activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
-//                                getNavigationViewPainter();
-//                                navPainter = new ChatCommunityNavigationViewPainter(getContext(), activeIdentity, null);
-//                                navPainter.addNavigationViewHeader();
+                                getNavigationViewPainter();
+                                navPainter = new ChatCommunityNavigationViewPainter(getContext(), activeIdentity, null);
+                                navPainter.addNavigationViewHeader();
                                 //worker.wait();
                             }
                         } else
