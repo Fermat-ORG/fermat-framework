@@ -584,8 +584,12 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             if (childItemList != null) {
                 int childListItemCount = childItemList.size();
                 for (int i = 0; i < childListItemCount; i++) {
-                    mItemList.add(parentIndex + i + 1, childItemList.get(i));
-                    notifyItemInserted(parentIndex + i + 1);
+                    try {
+                        mItemList.add(parentIndex + i + 1, childItemList.get(i));
+                        notifyItemInserted(parentIndex + i + 1);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }
