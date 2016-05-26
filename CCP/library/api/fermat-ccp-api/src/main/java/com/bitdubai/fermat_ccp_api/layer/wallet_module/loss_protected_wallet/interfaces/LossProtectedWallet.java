@@ -337,7 +337,8 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
                        Actors actortypeTo,
                        ReferenceWallet sendingWallet,
                        ReferenceWallet receivingWallet,
-                       BlockchainNetworkType blockchainNetworkType
+                       BlockchainNetworkType blockchainNetworkType,
+                       CryptoCurrency cryptoCurrency
                        )throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 

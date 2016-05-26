@@ -20,7 +20,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface FermatWalletTransaction extends Serializable {
+public interface FermatWalletModuleTransaction extends Serializable {
 
     Actor getInvolvedActor();
 

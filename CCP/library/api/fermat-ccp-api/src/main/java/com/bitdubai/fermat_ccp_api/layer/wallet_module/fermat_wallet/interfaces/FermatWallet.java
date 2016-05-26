@@ -349,7 +349,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<FermatWalletTransaction> getTransactions(String intraUserLoggedInPublicKey, BalanceType balanceType,
+    List<FermatWalletModuleTransaction> getTransactions(String intraUserLoggedInPublicKey, BalanceType balanceType,
                                                   TransactionType transactionType,
                                                   String walletPublicKey,
                                                   int max,
@@ -368,7 +368,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<FermatWalletTransaction> listTransactionsByActor(BalanceType balanceType,
+    List<FermatWalletModuleTransaction> listTransactionsByActor(BalanceType balanceType,
                                                           String walletPublicKey,
                                                           String actorPublicKey,
                                                           String intraUserLoggedInPublicKey,
@@ -405,7 +405,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @throws CantListTransactionsException if something goes wrong.
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
-    List<FermatWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
+    List<FermatWalletModuleTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
                                                                              String actorPublicKey,
@@ -427,7 +427,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @return
      * @throws CantListTransactionsException
      */
-    List<FermatWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+    List<FermatWalletModuleTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                  TransactionType transactionType,
                                                                  String walletPublicKey,
                                                                  String actorPublicKey,
@@ -538,7 +538,7 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
      * @return
      * @throws CantListTransactionsException
      */
-    FermatWalletTransaction getTransaction(UUID transactionId, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantListTransactionsException;
+    FermatWalletModuleTransaction getTransaction(UUID transactionId, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantListTransactionsException;
 
 
     /**

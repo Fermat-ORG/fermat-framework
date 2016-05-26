@@ -41,6 +41,8 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
 
     com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType BlockchainNetworkType;
 
+    CryptoCurrency cryptoCurrency;
+
 
     public CryptoWalletTransactionWalletRecord(UUID transactionId,
                                                CryptoAddress addressFrom,
@@ -54,7 +56,8 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
                                                String actorToPublicKey,
                                                Actors actorToType,
                                                Actors actorFromType,
-                                               com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
+                                               com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
+                                               CryptoCurrency cryptoCurrency) {
         TransactionId = transactionId;
         AddressFrom = addressFrom;
         RequestId = requestId;
@@ -68,6 +71,7 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
         ActorToType = actorToType;
         ActorFromType = actorFromType;
         BlockchainNetworkType = blockchainNetworkType;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
