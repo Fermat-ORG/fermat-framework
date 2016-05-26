@@ -105,13 +105,13 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
                 try {
                     getSession().getModuleManager().acceptArtist(connectionId);
                 } catch (CantAcceptRequestException e) {
-                    Toast.makeText(getContext(), alias + " Can not accept the request.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Can not accept the request from "+alias+".", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 } catch (ConnectionRequestNotFoundException e) {
-                    Toast.makeText(getContext(), alias + "Request ID not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Request ID not found.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), alias + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Accepted connection with "+alias, Toast.LENGTH_SHORT).show();
                 getSession().setData("connectionresult", 3);
             } else {
                 Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();

@@ -211,7 +211,7 @@ public class ConnectionOtherProfileFragment extends
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
                         (FanCommunityInformation)fanCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setDescription("Do you want to send to");
                 connectDialog.setUsername(fanCommunityInformation.getAlias());
                 connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(this);

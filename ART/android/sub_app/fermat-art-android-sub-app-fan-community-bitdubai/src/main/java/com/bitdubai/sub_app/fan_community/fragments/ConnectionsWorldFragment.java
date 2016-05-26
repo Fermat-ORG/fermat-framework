@@ -366,8 +366,13 @@ public class ConnectionsWorldFragment extends
         {
             //update intra user list
             if(code.equals(FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
-                invalidate();
-                onRefresh();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
             }
         }
         catch(Exception e)

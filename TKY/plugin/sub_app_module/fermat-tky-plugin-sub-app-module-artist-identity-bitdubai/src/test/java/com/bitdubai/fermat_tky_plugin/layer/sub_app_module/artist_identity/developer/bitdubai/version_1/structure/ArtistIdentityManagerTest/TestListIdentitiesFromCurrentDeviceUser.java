@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure.ArtistIdentityManagerTest;
 
-import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure.ArtistIdentityManager;
 
@@ -25,7 +24,7 @@ public class TestListIdentitiesFromCurrentDeviceUser {
     public void setUp() throws Exception {
         System.out.println("initializing");
         Assert.assertNull(artistIdentityManager);
-        artistIdentityManager = new ArtistIdentityManager(null,null,null);
+        artistIdentityManager = new ArtistIdentityManager(null,null,null, pluginFileSystem, pluginId);
         Assert.assertNotNull(artistIdentityManager);
 
     }
