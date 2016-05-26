@@ -2,7 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.develop
 
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 2015.09.17..
  */
-public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest,Serializable {
+public class FermatWalletWalletModulePaymentRequest implements PaymentRequest,Serializable {
 
     private String date;
 
@@ -18,7 +19,7 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest,Se
 
     private long amount;
 
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+    private FermatWalletWalletContact fermatWalletWalletContact;
 
     private int type;
 
@@ -26,13 +27,13 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest,Se
 
     private UUID requestId;
 
-    public CryptoWalletWalletModulePaymentRequest(UUID requestId,String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,CryptoPaymentState state) {
+    public FermatWalletWalletModulePaymentRequest(UUID requestId, String date, String reason, long amount, FermatWalletWalletContact cryptoWalletWalletContact, int type, CryptoPaymentState state) {
         this.requestId = requestId;
 
         this.date = date;
         this.reason = reason;
         this.amount = amount;
-        this.cryptoWalletWalletContact = cryptoWalletWalletContact;
+        this.fermatWalletWalletContact = cryptoWalletWalletContact;
         this.type=type;
         this.state=state;
     }
@@ -59,8 +60,8 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest,Se
     }
 
     @Override
-    public CryptoWalletWalletContact getContact() {
-        return cryptoWalletWalletContact;
+    public FermatWalletWalletContact getContact() {
+        return fermatWalletWalletContact;
     }
 
     @Override

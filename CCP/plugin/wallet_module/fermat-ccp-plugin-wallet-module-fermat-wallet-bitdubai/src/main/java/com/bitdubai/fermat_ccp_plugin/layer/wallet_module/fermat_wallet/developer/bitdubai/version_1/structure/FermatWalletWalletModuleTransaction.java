@@ -7,20 +7,20 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * The interface <code>CryptoWalletWalletModuleTransaction</code>
+ * The interface <code>FermatWalletWalletModuleTransaction</code>
  * TODO add detail
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 11/07/15.
  * @version 1.0
  */
-public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction,Serializable {
+public class FermatWalletWalletModuleTransaction implements FermatWalletModuleTransaction,Serializable {
 
     private final UUID                     contactId;
     private final Actor                    involvedActor;
@@ -44,31 +44,31 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
 
-    public CryptoWalletWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
-                                               final UUID                     contactId,
-                                               final Actor                    involvedActor) {
+    public FermatWalletWalletModuleTransaction(final FermatWalletTransaction fermatWalletTransaction,
+                                               final UUID contactId,
+                                               final Actor involvedActor) {
 
         this.contactId = contactId;
         this.involvedActor = involvedActor;
 
         // bitcoin wallet transaction fields
-        this.transactionId = bitcoinWalletTransaction.getTransactionId();
-        this.transactionHash = bitcoinWalletTransaction.getTransactionHash();
-        this.transactionType = bitcoinWalletTransaction.getTransactionType();
-        this.addressFrom = bitcoinWalletTransaction.getAddressFrom();
-        this.addressTo = bitcoinWalletTransaction.getAddressTo();
-        this.actorFromPublicKey = bitcoinWalletTransaction.getActorFromPublicKey();
-        this.actorToPublicKey = bitcoinWalletTransaction.getActorToPublicKey();
-        this.actorFromType = bitcoinWalletTransaction.getActorFromType();
-        this.actorToType = bitcoinWalletTransaction.getActorToType();
-        this.balanceType = bitcoinWalletTransaction.getBalanceType();
-        this.amount = bitcoinWalletTransaction.getAmount();
-        this.runningBookBalance = bitcoinWalletTransaction.getRunningBookBalance();
-        this.runningAvailableBalance = bitcoinWalletTransaction.getRunningAvailableBalance();
-        this.timeStamp = bitcoinWalletTransaction.getTimestamp();
-        this.memo = bitcoinWalletTransaction.getMemo();
-        this.blockchainNetworkType = bitcoinWalletTransaction.getBlockchainNetworkType();
-        this.transactionState = bitcoinWalletTransaction.getTransactionState();
+        this.transactionId = fermatWalletTransaction.getTransactionId();
+        this.transactionHash = fermatWalletTransaction.getTransactionHash();
+        this.transactionType = fermatWalletTransaction.getTransactionType();
+        this.addressFrom = fermatWalletTransaction.getAddressFrom();
+        this.addressTo = fermatWalletTransaction.getAddressTo();
+        this.actorFromPublicKey = fermatWalletTransaction.getActorFromPublicKey();
+        this.actorToPublicKey = fermatWalletTransaction.getActorToPublicKey();
+        this.actorFromType = fermatWalletTransaction.getActorFromType();
+        this.actorToType = fermatWalletTransaction.getActorToType();
+        this.balanceType = fermatWalletTransaction.getBalanceType();
+        this.amount = fermatWalletTransaction.getAmount();
+        this.runningBookBalance = fermatWalletTransaction.getRunningBookBalance();
+        this.runningAvailableBalance = fermatWalletTransaction.getRunningAvailableBalance();
+        this.timeStamp = fermatWalletTransaction.getTimestamp();
+        this.memo = fermatWalletTransaction.getMemo();
+        this.blockchainNetworkType = fermatWalletTransaction.getBlockchainNetworkType();
+        this.transactionState = fermatWalletTransaction.getTransactionState();
     }
 
     @Override
