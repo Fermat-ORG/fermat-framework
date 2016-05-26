@@ -635,7 +635,7 @@ public class ActorConnectionEventActions {
                     );
                     if (eventSource == EventSource.ACTOR_NETWORK_SERVICE_ARTIST){
                         broadcaster.publish(
-                                BroadcasterType.UPDATE_VIEW,
+                                BroadcasterType.NOTIFICATION_SERVICE,
                                 SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                                 ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                         artistNetworkService.confirm(connectionId);
