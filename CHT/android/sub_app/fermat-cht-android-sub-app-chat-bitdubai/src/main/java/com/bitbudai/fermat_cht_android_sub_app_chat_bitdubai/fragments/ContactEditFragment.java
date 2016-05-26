@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -187,9 +188,10 @@ public class ContactEditFragment extends AbstractFermatFragment {
         try {
             //Contact cont= chatSession.getSelectedContact();
             //TODO: metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-             for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
-                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
+            List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(
+                    chatManager.newInstanceChatActorCommunitySelectableIdentity((ChatIdentity) chatManager.
+                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0);
+             for (ChatActorCommunityInformation cont: chatActorCommunityInformations) {
                 if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
                     contactname.add(cont.getAlias());
                     contactid.add(cont.getPublicKey());

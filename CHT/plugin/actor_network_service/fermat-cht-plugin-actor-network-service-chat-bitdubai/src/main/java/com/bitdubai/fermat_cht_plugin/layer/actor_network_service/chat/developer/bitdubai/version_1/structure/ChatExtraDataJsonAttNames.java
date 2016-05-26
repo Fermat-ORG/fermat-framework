@@ -12,4 +12,6 @@ public class ChatExtraDataJsonAttNames {
     public final static String STATE = "state";
 
     public final static String CITY = "city";
+
+    public final static String STATUS = "status";
 }

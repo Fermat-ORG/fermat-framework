@@ -30,8 +30,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+import java.util.List;
 
 /**
  * Contact List Adapter
@@ -45,6 +44,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     ArrayList<String> contactInfo=new ArrayList<>();
     ArrayList<Bitmap> contactIcon=new ArrayList<>();
+    ArrayList<String> contactStatus=new ArrayList<>();
     ArrayList<String> contactId=new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
@@ -61,12 +61,13 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     ArrayList<String> filteredData;
     private String filterString;
 
-    public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId,
+    public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId, ArrayList contactStatus,
                               ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactInfo);
         this.contactInfo = contactInfo;
         this.contactIcon = contactIcon;
+        this.contactStatus = contactStatus;
         this.contactId = contactId;
         this.chatManager=chatManager;
         this.moduleManager=moduleManager;
@@ -164,6 +165,10 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     public String getContactId(int position) {
         return contactId.get(position);
+    }
+
+    public String getContactStatus(int position) {
+        return contactStatus.get(position);
     }
 
     @Override

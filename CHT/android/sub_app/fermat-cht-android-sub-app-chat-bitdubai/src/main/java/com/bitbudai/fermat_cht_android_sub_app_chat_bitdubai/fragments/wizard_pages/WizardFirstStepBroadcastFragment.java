@@ -68,6 +68,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      chatSettings = null;
      try {
          chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+         //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+         //chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
      } catch (Exception e) {
          chatSettings = null;
      }
@@ -159,7 +161,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      @Override
      public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
          menu.clear();
-         menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+         menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
                  .setVisible(true)
                  .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
      }

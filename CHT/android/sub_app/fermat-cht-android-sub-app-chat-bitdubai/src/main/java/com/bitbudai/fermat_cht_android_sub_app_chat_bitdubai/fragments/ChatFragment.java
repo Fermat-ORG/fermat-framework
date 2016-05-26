@@ -75,6 +75,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatSettings = null;
             try {
                 chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatSettings = null;
             }
@@ -173,8 +175,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         searchView = (SearchView) searchItem.getActionView();
-        //todo: no la encuentra
-        //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
