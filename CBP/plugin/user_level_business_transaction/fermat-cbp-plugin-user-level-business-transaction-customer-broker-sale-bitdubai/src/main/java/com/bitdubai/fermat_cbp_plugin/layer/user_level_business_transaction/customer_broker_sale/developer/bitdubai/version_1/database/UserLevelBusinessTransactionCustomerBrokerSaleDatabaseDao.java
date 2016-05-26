@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchaseEventRecord;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -168,16 +168,25 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
 
     private CustomerBrokerSale getCustomerBrokerSale(final DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
     {
-        CustomerBrokerSaleImpl customerBrokerSale = new CustomerBrokerSaleImpl(record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME),
-                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_CONTRACT_TRANSACTION_ID_COLUMN_NAME),
-                record.getLongValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TIMESTAMP_COLUMN_NAME),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        return customerBrokerSale;
+        return new CustomerBrokerSaleImpl(
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_CONTRACT_TRANSACTION_ID_COLUMN_NAME),
+                record.getLongValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_TIMESTAMP_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_PURCHASE_STATUS_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_CONTRACT_STATUS_COLUMN_NAME),
+                TransactionStatus.getByCode(record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME)),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_CURRENCY_TYPE_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_TRANSACTION_TYPE_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                        CUSTOMER_BROKER_SALE_MEMO_COLUMN_NAME));
     }
 
     private DatabaseTableRecord getCustomerBrokerSaleRecord(CustomerBrokerSale customerBrokerSale

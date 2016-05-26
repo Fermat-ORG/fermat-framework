@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorExtraDataInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CustomerIdentityWalletRelationshipInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.QuotesExtraDataInformation;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.helpers.AdapterPlatformsSupported;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -275,6 +276,7 @@ public class CryptoCustomerActorDao {
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
                     record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, quote.getPrice());
+                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME, AdapterPlatformsSupported.getPlatformsSupported(quote.getPlatformsSupported()));
                     table.insertRecord(record);
                 }
             } catch (CantInsertRecordException e) {
@@ -420,43 +422,108 @@ public class CryptoCustomerActorDao {
         }
 
         private Collection<QuotesExtraData> getQuotesByIdentity(String brokerPublicKey, String customerPublicKey) throws CantGetListActorExtraDataException {
+
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
             table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
             table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+
             try {
+
                 table.loadToMemory();
+
             } catch (CantLoadTableToMemoryException e) {
+
                 throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             }
+
             List<DatabaseTableRecord> records = table.getRecords();
             table.clearAllFilters();
             Collection<QuotesExtraData> quotes = new ArrayList<>();
+
             for (DatabaseTableRecord record : records) {
+
                 Currency mer = null;
                 Currency pay = null;
+
                 try {
+
                     mer = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
+
                 } catch (InvalidParameterException e) {
+
                     try {
+
                         mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
+
                     } catch (InvalidParameterException e1) {
+
                         throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                     }
+
                 }
+
                 try {
+
                     pay = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
+
                 } catch (InvalidParameterException e) {
+
                     try {
+
                         pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
+
                     } catch (InvalidParameterException e1) {
+
                         throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                     }
                 }
+
                 Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
-                QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), mer, pay, pri);
-                quotes.add(quote);
+
+                String platforms = record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME);
+
+                try{
+
+                    QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), mer, pay, pri, AdapterPlatformsSupported.getPlatformsSupported(platforms));
+
+                    quotes.add(quote);
+                } catch (InvalidParameterException e) {
+
+                    throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                }
+
             }
+
             return quotes;
+        }
+
+        public Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException{
+
+            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, paymentCurrency, DatabaseFilterType.EQUAL);
+
+            try {
+
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+
+                if( records.size() > 0 ){
+                    return AdapterPlatformsSupported.getPlatformsSupported( records.get(0).getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME));
+                }else{
+
+                    return new ArrayList<>();
+                }
+
+            } catch (CantLoadTableToMemoryException e) {
+
+                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+
+                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+
         }
 
         public boolean existBrokerExtraData(final String brokerPublicKey  ,

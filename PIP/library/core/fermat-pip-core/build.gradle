@@ -25,7 +25,6 @@ dependencies {
 
     compile project(':fermat-pip-plugin-agent-timeout-notifier-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
-    compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
     compile project(':fermat-pip-plugin-module-developer-bitdubai')
     compile project(':fermat-pip-plugin-module-notification-bitdubai')

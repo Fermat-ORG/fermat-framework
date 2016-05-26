@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_tky_api.all_definitions.exceptions;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 25/03/16.
  */
@@ -19,6 +21,11 @@ public class HTTPErrorResponseException extends TKYException {
      * Represents the error code.
      */
     public int errorCode;
+
+    /**
+     * Represents the HTTPErrorResponse value.
+     */
+    HTTPErrorResponse httpErrorResponse;
 
     /**
      * Constructor with parameters
@@ -55,11 +62,13 @@ public class HTTPErrorResponseException extends TKYException {
      */
     public HTTPErrorResponseException(
             int errorCode,
-            String errorMessage
+            String errorMessage,
+            HTTPErrorResponse httpErrorResponse
             ) {
         super(DEFAULT_MESSAGE);
-        this.errorMessage=errorMessage;
-        this.errorCode=errorCode;
+        this.errorMessage = errorMessage;
+        this.errorCode = errorCode;
+        this.httpErrorResponse = httpErrorResponse;
     }
 
     /**
@@ -112,6 +121,17 @@ public class HTTPErrorResponseException extends TKYException {
      */
     public int getErrorCode() {
         return errorCode;
+    }
+
+    /**
+     * This method returns the HTTPErrorResponse.
+     * @return
+     */
+    public HTTPErrorResponse getHttpErrorResponse() {
+        if(httpErrorResponse ==null){
+            return HTTPErrorResponse.getDefaultHTTPErrorResponse();
+        }
+        return httpErrorResponse;
     }
 }
 

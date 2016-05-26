@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.fan_community.navigation_drawer;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,11 +11,8 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.commons.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.fan_community.commons.utils.FragmentsCommons;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
 import java.lang.ref.WeakReference;
@@ -43,30 +39,44 @@ public class FanCommunityNavigationViewPainter implements NavigationViewPainter 
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
+    public View addNavigationViewHeader() {
         View headerView = null;
-        try {
-            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
-            headerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
-                        listIdentitiesDialog.setTitle("Connection Request");
-                        listIdentitiesDialog.show();
-                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                            }
-                        });
-                        listIdentitiesDialog.show();
-                    }catch(Exception e){ }
-                }
-            });
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+//        try {
+//            //If the actor is not set yet, I'll try to find it.
+//            if(actorIdentityInformation==null&&moduleManager!=null){
+//                try{
+//                    //I'll set the app public cas just in case.
+//                    String subAppPublicKey = subAppSession.getAppPublicKey();
+//                    if(subAppPublicKey!=null&&!subAppPublicKey.isEmpty()){
+//                        moduleManager.setAppPublicKey(subAppPublicKey);
+//                    }
+//                    actorIdentityInformation = moduleManager.getSelectedActorIdentity();
+//                } catch (Exception e) {
+//                    //Cannot find the selected identity in any form... I'll let the identity in null
+//                }
+//            }
+//            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
+//            headerView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try{
+//                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
+//                        listIdentitiesDialog.setTitle("Connection Request");
+//                        listIdentitiesDialog.show();
+//                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                            @Override
+//                            public void onDismiss(DialogInterface dialog) {
+//                            }
+//                        });
+//                        listIdentitiesDialog.show();
+//                    }catch(Exception e){ }
+//                }
+//            });
+//        } catch (CantGetActiveLoginIdentityException e) {
+//            e.printStackTrace();
+//        }
         return headerView;
     }
 

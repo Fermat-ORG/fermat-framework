@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckOutProfileMsjRespond;
@@ -11,9 +12,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedClientsHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsRegistrationHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationResult;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationType;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -35,7 +40,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(CheckOutClientRequestProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(CheckOutClientRequestProcessor.class));
 
     /**
      * Constructor whit parameter
@@ -43,11 +48,12 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
      * @param fermatWebSocketChannelEndpoint register
      */
     public CheckOutClientRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
-        super(fermatWebSocketChannelEndpoint, PackageType.CHECK_IN_CLIENT_REQUEST);
+        super(fermatWebSocketChannelEndpoint, PackageType.CHECK_OUT_CLIENT_REQUEST);
     }
 
     /**
      * (non-javadoc)
+     *
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
@@ -71,7 +77,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.TEXT){
+            if (messageContent.getMessageContentType() == MessageContentType.JSON) {
 
                 /*
                 * Obtain the profile identity
@@ -81,12 +87,14 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                 /*
                  * Load from Database
                  */
-                CheckedInClient checkedInClient = getDaoFactory().getCheckedInClientDao().findById(profileIdentity);
+                CheckedInClient checkedInClient = getDaoFactory().getCheckedInClientDao().findEntityByFilter(
+                        CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                        profileIdentity);
 
                 /*
                  * Validate if exist
                  */
-                if (checkedInClient != null){
+                if (checkedInClient != null) {
 
                     /*
                      * CheckedInClient into data base
@@ -94,28 +102,28 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                     deleteCheckedInClient(profileIdentity);
 
                     /*
-                     * CheckedClientsHistory into data base
+                     * ClientsRegistrationHistory into data base
                      */
-                    insertCheckedClientsHistory(checkedInClient);
+                    insertClientsRegistrationHistory(checkedInClient, RegistrationResult.SUCCESS, null);
 
                     /*
                      * If all ok, respond whit success message
                      */
-                    CheckOutProfileMsjRespond checkOutProfileMsjRespond = new CheckOutProfileMsjRespond(CheckOutProfileMsjRespond.STATUS.SUCCESS,  CheckOutProfileMsjRespond.STATUS.SUCCESS.toString(), profileIdentity);
-                    Package packageRespond = Package.createInstance(checkOutProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                    CheckOutProfileMsjRespond checkOutProfileMsjRespond = new CheckOutProfileMsjRespond(CheckOutProfileMsjRespond.STATUS.SUCCESS, CheckOutProfileMsjRespond.STATUS.SUCCESS.toString(), profileIdentity);
+                    Package packageRespond = Package.createInstance(checkOutProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_OUT_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                     /*
                      * Send the respond
                      */
                     session.getBasicRemote().sendObject(packageRespond);
 
-                }else{
+                } else {
                     throw new Exception("The Profile is no actually check in");
                 }
 
             }
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
 
             try {
 
@@ -125,7 +133,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 CheckOutProfileMsjRespond checkOutProfileMsjRespond = new CheckOutProfileMsjRespond(CheckOutProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileIdentity);
-                Package packageRespond = Package.createInstance(checkOutProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(checkOutProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_OUT_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -146,40 +154,50 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
      * Delete a row from the data base
      *
      * @param profileIdentity
+     *
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteCheckedInClient(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteCheckedInClient(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
         /*
-         * Delete from the data base
+         * validate if exists
          */
-        getDaoFactory().getCheckedInClientDao().delete(profileIdentity);
+        if(getDaoFactory().getCheckedInClientDao().exists(profileIdentity)) {
+            /*
+             * Delete from the data base
+             */
+            getDaoFactory().getCheckedInClientDao().delete(profileIdentity);
+        }
     }
 
     /**
      * Create a new row into the data base
      *
-     * @param checkedInClient
-     * @throws CantInsertRecordDataBaseException
+     * @param checkedInClient data of the client.
+     * @param result          of the registration.
+     * @param detail          of the registration.
+     *
+     * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void insertCheckedClientsHistory(CheckedInClient checkedInClient) throws CantInsertRecordDataBaseException {
+    private void insertClientsRegistrationHistory(final CheckedInClient    checkedInClient,
+                                                  final RegistrationResult result         ,
+                                                  final String             detail         ) throws CantInsertRecordDataBaseException {
 
         /*
-         * Create the CheckedClientsHistory
+         * Create the ClientsRegistrationHistory
          */
-        CheckedClientsHistory checkedClientsHistory = new CheckedClientsHistory();
-        checkedClientsHistory.setIdentityPublicKey(checkedInClient.getIdentityPublicKey());
-        checkedClientsHistory.setDeviceType(checkedInClient.getDeviceType());
-        checkedClientsHistory.setLastLatitude(checkedInClient.getLatitude());
-        checkedClientsHistory.setLastLongitude(checkedInClient.getLongitude());
-        checkedClientsHistory.setCheckType(CheckedClientsHistory.CHECK_TYPE_OUT);
+        ClientsRegistrationHistory clientsRegistrationHistory = new ClientsRegistrationHistory();
+        clientsRegistrationHistory.setIdentityPublicKey(checkedInClient.getIdentityPublicKey());
+        clientsRegistrationHistory.setDeviceType(checkedInClient.getDeviceType());
+        clientsRegistrationHistory.setType(RegistrationType.CHECK_OUT);
+        clientsRegistrationHistory.setResult(result);
+        clientsRegistrationHistory.setDetail(detail);
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedClientsHistoryDao().create(checkedClientsHistory);
-
+        getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
     }
 
 }

@@ -11,17 +11,18 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
+import com.melnykov.fab.FloatingActionButton;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.common.adapters.IssuerIdentityAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.common.views.DividerItemDecoration;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.melnykov.fab.FloatingActionButton;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.interfaces.AssetIssuerIdentityModuleManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer
         implements FermatListItemListeners<IdentityAssetIssuer> {
 
 
-    private IdentityAssetIssuerManager moduleManager;
+    private AssetIssuerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<IdentityAssetIssuer> identityInformationList;
 

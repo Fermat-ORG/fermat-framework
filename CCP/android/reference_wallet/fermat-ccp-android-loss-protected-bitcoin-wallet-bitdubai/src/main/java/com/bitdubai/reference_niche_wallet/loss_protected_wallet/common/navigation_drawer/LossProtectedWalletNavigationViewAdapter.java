@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
@@ -9,8 +8,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;
-import com.mati.fermat_navigator.drawer.holders.NavigationItemMenuViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

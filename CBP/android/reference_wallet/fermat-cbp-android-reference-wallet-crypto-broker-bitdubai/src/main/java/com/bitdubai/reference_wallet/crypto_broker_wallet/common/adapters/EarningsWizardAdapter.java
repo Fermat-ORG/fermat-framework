@@ -5,8 +5,6 @@ import android.view.View;
 
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.EarningsWizardViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ProviderViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 
 import java.util.List;

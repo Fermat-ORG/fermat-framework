@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 
 import java.lang.ref.WeakReference;
 
@@ -31,14 +31,16 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetIssuer) {
-        try {
-            return IssuerCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
-        } catch (CantGetIdentityAssetUserException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public View addNavigationViewHeader() {
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+//        try {
+//            return IssuerCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
+//        } catch (CantGetIdentityAssetUserException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+        return null;
     }
 
     @Override

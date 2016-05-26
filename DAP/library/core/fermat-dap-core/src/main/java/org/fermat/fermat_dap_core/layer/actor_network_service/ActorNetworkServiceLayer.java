@@ -1,9 +1,10 @@
 package org.fermat.fermat_dap_core.layer.actor_network_service;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+
 import org.fermat.fermat_dap_core.layer.actor_network_service.asset_issuer.AssetIssuerPluginSubsystem;
 import org.fermat.fermat_dap_core.layer.actor_network_service.asset_user.AssetUserPluginSubsystem;
 import org.fermat.fermat_dap_core.layer.actor_network_service.redeem_point.RedeemPointPluginSubsystem;

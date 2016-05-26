@@ -252,6 +252,7 @@
     <string name="see_your_loss_balance_text">* Checking your available balance based on the actual exchange rate.\n* See the quote dollar today.\n* Sending/receiving bitcoins.</string>
 
     <!-- Custom Dialog Fragment -->
+    <string name="exchange_rate_error_connection">Can not get Exchange Rate Provider,\n please check your internet connection.</string>
     <string name="title_label">Network Settings</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>

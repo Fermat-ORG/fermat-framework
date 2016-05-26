@@ -12,6 +12,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
 
+    compile project(':fermat-osa-addon-linux-broadcaster-system')
     compile project(':fermat-osa-addon-linux-database-system-bitdubai')
     compile project(':fermat-osa-addon-linux-device-location-bitdubai')
     compile project(':fermat-osa-addon-linux-file-system-bitdubai')

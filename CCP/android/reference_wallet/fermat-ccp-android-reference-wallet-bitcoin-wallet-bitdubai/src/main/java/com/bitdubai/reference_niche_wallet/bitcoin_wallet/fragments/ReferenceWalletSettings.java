@@ -1,14 +1,16 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -16,14 +18,11 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-
-
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -34,6 +33,7 @@ import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenD
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -119,6 +119,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
 
+            list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
+
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -171,6 +173,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                         blockchainNetworkType);
                 sendToLossProtectedWalletDialog.show();
 
+            } else if(preferenceSettingsItem.getId() == 12){
+
+                openImportMnemonicScreen();
+
             }
 
 
@@ -183,6 +189,52 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         } catch (Exception e) {
         }
 
+    }
+
+    String m_Text;
+
+    private void openImportMnemonicScreen() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Title");
+
+// Set up the input
+        final EditText input = new EditText(getActivity());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+// Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                m_Text = input.getText().toString();
+                final List<String> mnemonicCodePlusDate = Arrays.asList(m_Text.split(" "));
+                final long date = Long.parseLong(mnemonicCodePlusDate.get(mnemonicCodePlusDate.size()-1));
+                ArrayList<String> mnemonicCode = new ArrayList<String>(mnemonicCodePlusDate);
+                mnemonicCode.remove(mnemonicCode.size() - 1);
+                final List<String> tempList = new ArrayList<String>(mnemonicCode);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            cryptoWallet.importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+                            cantLoadExistingVaultSeed.printStackTrace();
+                        }
+                    }
+                }).start();
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void sendCrypto() {

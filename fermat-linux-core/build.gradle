@@ -1,0 +1,52 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'gradle-one-jar'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '1.6.1'
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+        classpath fileTree(dir: 'libs', include: '*.jar')
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':fermat-api')
+    compile project(':fermat-core')
+    compile project(':fermat-osa-linux-core')
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+
+ext.sharedManifest = manifest {
+    attributes 'One-Jar-URL-Factory': 'com.simontuffs.onejar.JarClassLoader$FileURLFactory',
+               'One-Jar-Show-Expand': 'true'
+}
+
+task linuxCoreJar(type: OneJar) {
+
+    manifest = project.manifest {
+        from sharedManifest
+    }
+    mainClass = 'com.bitdubai.linux.core.app.FermatLinuxAppMain'
+    mainClassName = 'com.bitdubai.linux.core.app.FermatLinuxAppMain'
+    archiveName = project.name + '-with-dependencies-' + version + ".jar"
+    additionalDir = file('src/main/resources/one-jar.properties')
+
+}

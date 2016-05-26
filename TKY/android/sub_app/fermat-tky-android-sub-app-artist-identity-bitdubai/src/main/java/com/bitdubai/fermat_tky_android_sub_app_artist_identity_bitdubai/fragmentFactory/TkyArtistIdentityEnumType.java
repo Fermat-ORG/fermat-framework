@@ -9,9 +9,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum TkyArtistIdentityEnumType implements FermatFragmentsEnumType<TkyArtistIdentityEnumType> {
 
     TKY_ARTIST_IDENTITY_HOME("TAIH"),
-    TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE("TACACP")
-
-
+    TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE("TACACP"),
     ;
 
 

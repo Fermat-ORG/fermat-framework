@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.custom
 
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 
+
 /**
  * Created by franklin on 13/12/15.
  */
@@ -54,6 +55,13 @@ public interface CustomerBrokerPurchase {
      * @return an String of the contract status
      */
     String getContractStatus();
+
+    /**
+     * Set the contract status
+     *
+     * @param contractStatus the contract status code
+     */
+    void setContractStatus(String contractStatus);
 
     /**
      * The method <code>getTransactionStatus</code> returns the transaction status of the customer broker purchase

@@ -48,6 +48,9 @@ public class FermatTestNetwork {
         networkNodes.add(node10);
         networkNodes.add(node11);
         networkNodes.add(node12);
+
+//        FermatTestNetworkNode node1 = new FermatTestNetworkNode("localhost", 18333); //bitcoinNode 1
+//        networkNodes.add(node1);
     }
 
     /**

@@ -235,7 +235,7 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,customerBrokerPurchaseNegotiationManager);
             customerAckOfflineMerchandiseMonitorAgent.start();
 
             /**

@@ -57,7 +57,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
-    enum ScreenSize{
+    public enum ScreenSize{
         LARGE,NORMAL, UNDEFINED, SMALL
     }
 
@@ -190,8 +190,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return getPaintActivtyFeactures().getToolbar();
     }
 
-    protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
-        getFermatScreenSwapper().connectWithOtherApp(emgine, fermatAppToConnectPublicKey, objects);
+    protected void changeApp(String fermatAppToConnectPublicKey, Object[] objects) {
+        getFermatScreenSwapper().connectWithOtherApp(fermatAppToConnectPublicKey, objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
@@ -346,7 +346,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    private ScreenSize getScreenSize(){
+    public ScreenSize getScreenSize(){
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
         ScreenSize screenSizeType = null;

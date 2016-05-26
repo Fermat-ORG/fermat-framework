@@ -53,12 +53,12 @@
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
-            <EditText
-                android:id="@+id/crypto_broker_name"
+            <EditText android:id="@+id/crypto_broker_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/crypto_broker_name_title"
                 android:layout_marginTop="4dp"
+                android:maxLength="24"
                 android:hint="Username"
                 android:padding="8dp"
                 android:singleLine="true"

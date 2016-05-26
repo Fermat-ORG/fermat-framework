@@ -4,10 +4,12 @@ import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 
+import java.io.Serializable;
+
 /**
  * Created by Nerio on 12/03/16.
  */
-public class WalletAssetUserNotificationPainter implements NotificationPainter {
+public class WalletAssetUserNotificationPainter implements NotificationPainter, Serializable {
 
     private String title;
     private String textBody;
@@ -56,5 +58,4 @@ public class WalletAssetUserNotificationPainter implements NotificationPainter {
     public boolean showNotification() {
         return true;
     }
-
 }

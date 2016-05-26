@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -34,8 +36,10 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	public NodesCatalog() {
 		super();
-		this.registeredTimestamp     = new Timestamp(System.currentTimeMillis());
-		this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
+		this.registeredTimestamp      = new Timestamp(System.currentTimeMillis());
+		this.lastConnectionTimestamp  = new Timestamp(System.currentTimeMillis());
+		this.offlineCounter           = null;
+		this.lateNotificationsCounter = null;
 	}
 
 	public String getIdentityPublicKey() {
@@ -118,6 +122,15 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.registeredTimestamp = registeredTimestamp;
 	}
 
+	public void setLocation(Location location) {
+
+		if(location != null) {
+
+			this.lastLatitude  = location.getLatitude() ;
+			this.lastLongitude = location.getLongitude();
+		}
+	}
+
 	@Override
 	public String getId() {
 		return identityPublicKey;
@@ -128,21 +141,12 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof NodesCatalog)) return false;
         NodesCatalog that = (NodesCatalog) o;
-        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
-                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
-                Objects.equals(getIp(), that.getIp()) &&
-                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
-                Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
-                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLastLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLastLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
+        return Objects.hash(getIdentityPublicKey());
     }
 
     @Override
