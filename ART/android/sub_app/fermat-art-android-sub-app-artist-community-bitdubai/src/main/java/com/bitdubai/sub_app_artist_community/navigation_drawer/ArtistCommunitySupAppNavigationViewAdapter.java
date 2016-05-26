@@ -57,13 +57,16 @@ public class ArtistCommunitySupAppNavigationViewAdapter extends FermatAdapter<Me
     private void bindMenuItem(NavigationItemMenuViewHolder holder, int position) {
         switch (position) {
             case 0:
-                holder.getIcon().setImageResource(R.drawable.users_icon);
+                holder.getIcon().setImageResource(R.drawable.users_off);
+                break;
+            case 1:
+                holder.getIcon().setImageResource(R.drawable.myidentities_off);
                 break;
             case 2:
-                holder.getIcon().setImageResource(R.drawable.connections_icon);
+                holder.getIcon().setImageResource(R.drawable.connections_off);
                 break;
             case 3:
-                holder.getIcon().setImageResource(R.drawable.notifications_icon);
+                holder.getIcon().setImageResource(R.drawable.notifications_off);
                 break;
         }
     }
@@ -73,13 +76,16 @@ public class ArtistCommunitySupAppNavigationViewAdapter extends FermatAdapter<Me
 
         switch (position) {
             case 0:
-                holder.getIcon().setImageResource(R.drawable.users_icon);
+                holder.getIcon().setImageResource(R.drawable.users_on);
+                break;
+            case 1:
+                holder.getIcon().setImageResource(R.drawable.myidentities_on);
                 break;
             case 2:
-                holder.getIcon().setImageResource(R.drawable.connections_icon);
+                holder.getIcon().setImageResource(R.drawable.connections_on);
                 break;
             case 3:
-                holder.getIcon().setImageResource(R.drawable.notifications_icon);
+                holder.getIcon().setImageResource(R.drawable.notifications_on);
                 break;
         }
     }
