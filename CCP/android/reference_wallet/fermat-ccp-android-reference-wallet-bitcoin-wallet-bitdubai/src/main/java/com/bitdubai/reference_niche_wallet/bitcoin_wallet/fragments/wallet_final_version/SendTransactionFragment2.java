@@ -223,14 +223,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
+            //check blockchain progress
 
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                //get Blockchain Download Progress status
                                 try {
                                     int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
                                     final Toolbar toolBar = getToolbar();
@@ -254,13 +248,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     e.printStackTrace();
                                 }
 
-                            }
-                        }, 1000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+
 
 
         } catch (Exception ex) {

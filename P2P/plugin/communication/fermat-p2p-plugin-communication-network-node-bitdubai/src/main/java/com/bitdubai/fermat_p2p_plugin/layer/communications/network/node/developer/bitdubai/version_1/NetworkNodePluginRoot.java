@@ -59,13 +59,22 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.UPNPService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NetworkNodePluginRoot</code> is
@@ -667,7 +676,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+        Boolean isRegister = isRegisterInNodeCatalog();
 
         LOG.info("Is Register? = " + isRegister);
         LOG.info("Am i a Seed Node? = " + isSeedServer);
@@ -854,6 +863,67 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
     }
 
+    /**
+     * Validate is register in the catalog
+     * @return boolean
+     */
+    private boolean isRegisterInNodeCatalog(){
+
+        HttpURLConnection httpURLConnection = null;
+
+        try {
+
+            /*
+             * Get from configuration file
+             */
+            Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+
+            /*
+             * If the configuration file says that is registered, validate against seed node
+             */
+            if (isRegister){
+
+                URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/node/registered/"+getIdentity());
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestProperty("Accept", "application/json");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                String respond = reader.readLine();
+
+                if (httpURLConnection.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+
+                   /*
+                    * Decode into a json Object
+                    */
+                    JsonParser parser = new JsonParser();
+                    JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                    LOG.info(respondJsonObject);
+
+                    if (respondJsonObject.get("success").getAsBoolean()){
+                        return respondJsonObject.get("isRegistered").getAsBoolean();
+                    }else {
+                        return Boolean.FALSE;
+                    }
+
+                }else{
+                    return Boolean.FALSE;
+                }
+
+
+            } else {
+              return isRegister;
+            }
+
+        }catch (Exception e){
+            return Boolean.FALSE;
+        }finally {
+            if (httpURLConnection != null)
+                httpURLConnection.disconnect();
+        }
+
+    }
 
     /**
      * Get the identity

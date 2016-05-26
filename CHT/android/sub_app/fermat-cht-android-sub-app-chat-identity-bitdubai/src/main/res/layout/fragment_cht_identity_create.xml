@@ -66,6 +66,7 @@
         android:textColorHint="#808080"
         android:drawableTint="#808080"
         android:layout_marginTop="38dp"
+        android:maxLength="25"
         android:layout_centerHorizontal="true"
         android:textAlignment="center" />
 

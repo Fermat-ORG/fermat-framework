@@ -23,6 +23,7 @@ public interface ChatActorCommunityInformation extends Serializable {
 
     UUID getConnectionId();
 
+    String getStatus();
 
 
 }

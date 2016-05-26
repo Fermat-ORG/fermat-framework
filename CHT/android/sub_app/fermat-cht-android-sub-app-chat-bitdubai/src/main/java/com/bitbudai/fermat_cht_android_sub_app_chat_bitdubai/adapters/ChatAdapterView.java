@@ -52,6 +52,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -241,9 +243,9 @@ public class ChatAdapterView extends LinearLayout {
                         Date dated = new java.util.Date(milliseconds);
                         DateFormat formatter = DateFormat.getDateTimeInstance();
                         if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-                        } else {
                             formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                        } else {
+                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
                         }
                         if (Validate.isDateToday(dated)) {
                             if (android.text.format.DateFormat.is24HourFormat(getContext())) {
@@ -535,6 +537,19 @@ public class ChatAdapterView extends LinearLayout {
 
                 messageText = messageText.trim();
 
+//                String text = "";
+//                char c = 39; // char ' in ASCII code
+//                for (int i = 0; i < messageText.length(); i++){
+//                    if(messageText.charAt(i) == c){
+//                        text = (String) text.concat("''");
+//                    }
+//                    else {
+//                        text = text + Character.toString(messageText.charAt(i));
+//                    }
+//                }
+//
+//                messageText = text;
+
                 try {
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();
@@ -552,6 +567,7 @@ public class ChatAdapterView extends LinearLayout {
                             newChatId = chatId;
                         }
                         chat.setChatId(newChatId);
+                        chat.setStatus(ChatStatus.VISSIBLE);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -591,16 +607,17 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
+                        List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
                         try {
                             String pKey = chatSettings.getLocalPublicKey();
                             if (pKey != null) {
                                 chat.setLocalActorPublicKey(pKey);
                             } else {
-                                chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
+                                chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             }
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         } catch (Exception e) {
-                            chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
+                            chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         }
                         chatManager.saveChat(chat);
@@ -691,7 +708,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void checkStatus(){
         try {
-           if(chatSession.getData("whocallme").equals("chatlist")) {
+           if(chatId != null) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
                } else if(chatManager.checkOnlineStatus(remotePk)){
@@ -700,13 +717,15 @@ public class ChatAdapterView extends LinearLayout {
                    String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
                }
-           }else {
-               if(chatManager.checkOnlineStatus(remotePk)){
-                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-               }else{
-                   String date = chatManager.checkLastConnection(remotePk);
+           }
+           else {
+                   if (chatManager.checkOnlineStatus(remotePk)) {
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+                   } else {
+                       String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-               }
+                   }
+
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();

@@ -75,6 +75,7 @@ public class ChatActorConnectionDatabaseFactory {
             table.addColumn(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_COUNTRY_COLUMN_NAME               , DatabaseDataType.STRING      , 130, Boolean.FALSE);
             table.addColumn(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATE_LOCALITY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
             table.addColumn(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CITY_COLUMN_NAME                  , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME                  , DatabaseDataType.STRING      , 130, Boolean.FALSE);
 
             table.addIndex(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_FIRST_KEY_COLUMN);
 

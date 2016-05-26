@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,9 +20,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
@@ -426,7 +429,8 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     connectionInformation,
                     state,
                     type,
-                    requestMessage.getRequestAction()
+                    requestMessage.getRequestAction(),
+                    1
             );
 
             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ARTIST_CONNECTION_REQUEST_NEWS);
@@ -442,6 +446,45 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
+    }
+
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
+
+            List<ArtistConnectionRequest> actorNetworkServiceRecordList = artistActorNetworkServiceDao.getConnectionRequestByDestinationPublicKey(destinationPublicKey);
+
+            //if I try to send more than 5 times I put it on hold
+            for (ArtistConnectionRequest record : actorNetworkServiceRecordList) {
+
+                if(!record.getProtocolState().getCode().equals(ProtocolState.WAITING_RECEIPT_CONFIRMATION.getCode()))
+                {
+                    if(record.getSentCount() > 10 )
+                    {
+                        //  if(record.getSentCount() > 20)
+                        //  {
+                        //reprocess at two hours
+                        //  reprocessTimer =  2 * 3600 * 1000;
+                        // }
+
+                        artistActorNetworkServiceDao.delete(record.getRequestId());
+                    }
+                    else
+                    {
+                        record.setSentCount(record.getSentCount() + 1);
+                        artistActorNetworkServiceDao.updateConnectionRequest(record);
+                    }
+                }
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+
     }
     @Override
     protected void onNetworkServiceRegistered() {
@@ -476,6 +519,47 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     @Override
     protected void onClientSuccessfulReconnect() {
         runExposeIdentityThread();
+    }
+
+
+    @Override
+    protected void onFailureComponentConnectionRequest(final PlatformComponentProfile remoteParticipant) {
+
+        if(isRegister()){
+            final PluginVersionReference pluginVersionReference = getPluginVersionReference();
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(90000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+                    try {
+                        ArtistConnectionRequest artistConnectionRequest = artistActorNetworkServiceDao.getConnectionRequestByDestinationPublicKey(remoteParticipant.getIdentityPublicKey()).get(0);
+                        final ArtistConnectionInformation connectionInformation = new ArtistConnectionInformation(
+                                artistConnectionRequest.getRequestId(),
+                                artistConnectionRequest.getSenderPublicKey(),
+                                artistConnectionRequest.getSenderActorType(),
+                                artistConnectionRequest.getSenderAlias(),
+                                artistConnectionRequest.getSenderImage(),
+                                artistConnectionRequest.getDestinationPublicKey(),
+                                artistConnectionRequest.getDestinationActorType(),
+                                artistConnectionRequest.getSentTime()
+                        );
+                        if(connectionInformation.getConnectionId() != null)
+                            artistActorNetworkServiceManager.sendFailedMessage(connectionInformation);
+                    } catch (CantFindRequestException e) {
+                        e.printStackTrace();
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    } catch (ConnectionRequestNotFoundException e) {
+                        e.printStackTrace();
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+                }
+            });
+        }
     }
 
     private void testCreateAndList(){

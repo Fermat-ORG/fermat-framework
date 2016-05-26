@@ -929,7 +929,7 @@ public class ChatNetworkServicePluginRootTest extends AbstractNetworkService imp
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Timestamp timestamp = new Timestamp(parsedDate.getTime());
+                    Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
                     Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataRecord.getTransactionId(),
                             (ChatMetadata) chatMetadataRecord,
                             Action.APPLY,

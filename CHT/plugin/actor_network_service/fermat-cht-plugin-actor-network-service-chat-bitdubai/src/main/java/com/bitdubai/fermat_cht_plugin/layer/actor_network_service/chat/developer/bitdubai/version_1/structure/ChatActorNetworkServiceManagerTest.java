@@ -396,8 +396,13 @@ public class ChatActorNetworkServiceManagerTest implements ChatManager {
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.COUNTRY, chatExposingData.getCountry());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATE, chatExposingData.getState());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.CITY, chatExposingData.getCity());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATUS, chatExposingData.getStatus());
 
         return gson.toJson(jsonObjectContent);
     }
 
+    @Override
+    public void exposeIdentitiesInWait() throws CantExposeIdentityException {
+
+    }
 }

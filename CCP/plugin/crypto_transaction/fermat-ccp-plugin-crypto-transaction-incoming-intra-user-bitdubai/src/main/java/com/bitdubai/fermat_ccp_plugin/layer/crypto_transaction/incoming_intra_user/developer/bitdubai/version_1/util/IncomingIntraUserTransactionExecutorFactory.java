@@ -3,14 +3,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -18,15 +15,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  * Created by eze on 2015.09.11..
  */
 public class IncomingIntraUserTransactionExecutorFactory {
-    private BitcoinWalletManager     bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private EventManager eventManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
 
-    public IncomingIntraUserTransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager,EventManager eventManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,BitcoinLossProtectedWalletManager lossProtectedWalletManager){
-        this.bitcoinWalletManager     = bitcoinWalletManager;
+    public IncomingIntraUserTransactionExecutorFactory(final CryptoWalletManager cryptoWalletManager, final CryptoAddressBookManager cryptoAddressBookManager,EventManager eventManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,BitcoinLossProtectedWalletManager lossProtectedWalletManager){
+        this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.eventManager             = eventManager;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
@@ -53,7 +50,7 @@ public class IncomingIntraUserTransactionExecutorFactory {
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletsException {
-        return new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.executors.IncomingIntraUserBitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.
+        return new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.executors.IncomingIntraUserBitcoinBasicWalletTransactionExecutor(cryptoWalletManager.
                 loadWallet(walletPublicKey),
                 this.cryptoAddressBookManager,
                 this.eventManager,

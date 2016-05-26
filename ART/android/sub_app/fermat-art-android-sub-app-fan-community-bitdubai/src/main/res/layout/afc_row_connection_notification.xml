@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#010c12"
+    android:background="#F1F2F2"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -27,14 +27,14 @@
             android:id="@+id/afc_userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#010c12"
+            android:background="#F1F2F2"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
             android:singleLine="true"
             android:text="UserName"
-            android:textColor="#0072bb"
+            android:textColor="#6D6F71"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
@@ -42,14 +42,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#010c12"
+            android:background="#F1F2F2"
             android:drawableRight="@drawable/ic_profile_connect"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"
             android:text="wants to connect with you"
-            android:textColor="#ffffff"
+            android:textColor="#6D6F71"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 
@@ -59,6 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
-        android:background="#ffffff" />
+        android:background="@drawable/line_coloured" />
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.AbstractBaseEntity;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
@@ -677,16 +678,12 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         try {
 
             final DatabaseTable table = this.getDatabaseTable();
-            table.loadToMemory();
-            if (table.getRecords() != null && !table.getRecords().isEmpty())
-                table.deleteAllRecord();
 
-        } catch (CantDeleteRecordException e) {
+            table.truncate();
 
-            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
-        } catch (final CantLoadTableToMemoryException e) {
+        } catch (CantTruncateTableException e) {
 
-            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and I cannot delete all records.");
         }
     }
 

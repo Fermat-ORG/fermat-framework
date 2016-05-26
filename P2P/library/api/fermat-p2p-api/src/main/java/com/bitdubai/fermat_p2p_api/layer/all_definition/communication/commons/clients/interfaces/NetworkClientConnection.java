@@ -95,6 +95,15 @@ public interface NetworkClientConnection {
     void callActor(NetworkServiceProfile networkServiceProfile, ActorProfile actorProfile);
 
     /**
+     * Through the method <code>isActorOnline</code> we can know if an actor is connected to the fermat network.
+     *
+     * @param publicKey of the actor
+     *
+     * @return a boolean value indicating if the actor is online.
+     */
+    Boolean isActorOnline(final String publicKey);
+
+    /**
      * Through the method <code>isConnected</code> we can verify if the connection object is
      * connected with the server.
      *

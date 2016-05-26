@@ -2,8 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 
 import android.content.Context;
 
-import com.bitdubai.fermat_android_api.engine.ApplicationManager;
-import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -61,9 +59,10 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
        // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity(), null); //
+
+        return new LossProtectedWalletNavigationViewPainter(getContext(),null, null); //getApplicationManager()
     }
 
     @Override
