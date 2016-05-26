@@ -35,6 +35,7 @@ public class NodeConnectionHistory extends AbstractBaseEntity implements Seriali
         super();
         this.uuid = UUID.randomUUID();
         this.connectionTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
     public Timestamp getConnectionTimestamp() {

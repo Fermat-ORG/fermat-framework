@@ -40,6 +40,7 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 	public ActorsCatalog() {
 		super();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public String getActorType() {

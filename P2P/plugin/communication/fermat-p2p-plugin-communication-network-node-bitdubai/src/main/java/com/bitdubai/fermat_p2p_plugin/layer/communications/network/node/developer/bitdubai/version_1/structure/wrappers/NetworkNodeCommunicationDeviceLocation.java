@@ -24,6 +24,21 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     private final long           time            ;
     private final LocationSource source          ;
 
+
+    /**
+     * Constructor
+     */
+    public NetworkNodeCommunicationDeviceLocation(){
+        super();
+        this.latitude         = 0;
+        this.longitude        = 0;
+        this.altitude         = new Double(0);
+        this.accuracy         = new Double(0);
+        this.altitudeAccuracy = new Double(0);
+        this.time             = 0;
+        this.source           = LocationSource.UNKNOWN;
+    }
+
     /**
      * Constructor with params:
      *

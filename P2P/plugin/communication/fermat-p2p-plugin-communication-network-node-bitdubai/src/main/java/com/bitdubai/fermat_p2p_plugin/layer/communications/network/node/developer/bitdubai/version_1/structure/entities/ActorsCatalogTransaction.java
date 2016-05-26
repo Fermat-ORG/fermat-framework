@@ -52,6 +52,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		super();
 		this.hashId = UUID.randomUUID().toString();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public String getTransactionType() {

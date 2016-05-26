@@ -47,6 +47,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
         this.hashId = UUID.randomUUID().toString();
         this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
     public Timestamp getLastConnectionTimestamp() {
