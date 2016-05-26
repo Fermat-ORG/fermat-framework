@@ -250,9 +250,7 @@ public class SongFragment extends AbstractFermatFragment  {
             swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
             swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-            if(noBackground) {
-                backgroundImage = (ImageView) view.findViewById(R.id.no_songs_imageView);
-            }
+
             headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
             headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
             lManager = new LinearLayoutManager(view.getContext());
@@ -321,6 +319,15 @@ public class SongFragment extends AbstractFermatFragment  {
                         initValues();
                     }
                 }
+            }
+            backgroundImage = (ImageView) view.findViewById(R.id.no_songs_imageView);
+
+        System.out.println("TKYBG"+noBackground+" - "+items.isEmpty());
+
+            if(noBackground && items.isEmpty()) {
+                backgroundImage.setVisibility(View.VISIBLE);
+            }else{
+                backgroundImage.setVisibility(View.GONE);
             }
 
             swipeEffect();
