@@ -15,8 +15,8 @@
     <string name="paying_text">Paying: </string>
     <string name="buy_text_and_price">Buy: %1$s</string>
 
-    <string name="ccw_account_alias">Account Alias</string>
-    <string name="ccw_account_number">Account Number</string>
+    <string name="ccw_account_alias">Enter an account alias</string>
+    <string name="ccw_account_number">Enter an account number</string>
     <string name="ccw_action_filter">Filter</string>
     <string name="ccw_add_bank_account">+ Add Bank Account</string>
     <string name="ccw_add_location_warning_msg">Need to Add at least ONE Location</string>
@@ -28,7 +28,7 @@
     <string name="ccw_amount_to_buy">Amount to Buy</string>
     <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
-    <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_bank_name">Enter a bank name</string>
     <string name="ccw_bank_account_customer">Customer\'s Bank Account</string>
     <string name="ccw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="ccw_bank_account_title">Bank Account:</string>
