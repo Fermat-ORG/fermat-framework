@@ -28,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:background="@android:color/transparent"
         android:src="@drawable/tky_no_songs_found"
+        android:visibility="gone"
 
         android:scaleType="center" />
 

@@ -119,6 +119,7 @@ public class SongFragment extends AbstractFermatFragment  {
             System.out.println("HERE START SONG");
 
             if(fanwalletSession.getDownloading()!=null){
+
                 System.out.println("MUSIC IS BEEN DOWNLOADING");
                 swipeContainer=fanwalletSession.getSwipeRefreshLayout();
                 downloadThread=fanwalletSession.getDownloadThreadClass();
@@ -548,6 +549,9 @@ public class SongFragment extends AbstractFermatFragment  {
             e.printStackTrace();
         }
 
+        if(!songsInDatabase.isEmpty()){
+            noBackground=false;
+        }
         for(SongItems songitems : items){
             if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
              //   System.out.println("TKY_VIEW songs"+songitems.getUsername()+"@#@#"+songitems.getSong_name());
