@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
@@ -38,6 +39,9 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    PluginFileSystem pluginFileSystem;
+
     /**
      * Represents the plugin manager.
      */
@@ -53,7 +57,7 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
         this.artistIdentityManager = new ArtistIdentityManager(
                 errorManager,
                 tokenlyArtistIdentityManager,
-                tokenlyApiManager);
+                tokenlyApiManager, pluginFileSystem, pluginId);
     }
 
     public ArtistIdentityManager getFanIdentityManager() throws TKYException {
@@ -62,7 +66,7 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
                 artistIdentityManager = new ArtistIdentityManager(
                         errorManager,
                         tokenlyArtistIdentityManager,
-                        tokenlyApiManager);
+                        tokenlyApiManager, pluginFileSystem, pluginId);
             }
             return artistIdentityManager;
         }catch (Exception e){
