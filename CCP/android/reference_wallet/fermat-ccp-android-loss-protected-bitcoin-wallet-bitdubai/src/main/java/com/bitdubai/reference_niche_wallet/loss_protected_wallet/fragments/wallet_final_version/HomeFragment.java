@@ -511,6 +511,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
                 }
+
                 //get the entry value for chart with getEarnOrLostOfSpending method
                 final double valueEntry = getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
@@ -734,6 +735,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     private void getAndShowMarketExchangeRateData(final View container) {
 
+        final int MAX_DECIMAL_FOR_RATE = 2;
+        final int MIN_DECIMAL_FOR_RATE = 2;
+
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
@@ -773,11 +777,19 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                     ExchangeRate rate = (ExchangeRate) result[0];
                     // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)) + " USD");
 
                     //get available balance to actual exchange rate
 
-                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
+                    lossProtectedWalletSession.setActualExchangeRate(Double.parseDouble(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                            rate.getPurchasePrice(),
+                            MAX_DECIMAL_FOR_RATE,
+                            MIN_DECIMAL_FOR_RATE)));
 
                     updateBalances();
 
