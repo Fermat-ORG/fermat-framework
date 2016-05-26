@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -105,6 +107,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     ImageView noData;
     View layout;
     TextView noDatalabel;
+    List<ChatActorCommunityInformation> con;
     private static final int MAX = 20;
     private int offset = 0;
     private SearchView searchView;
@@ -125,6 +128,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             chatSession=((ChatSession) appSession);
             chatManager= chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
+            chatManager.setAppPublicKey(appSession.getAppPublicKey());
             errorManager=appSession.getErrorManager();
             //toolbar = getToolbar();
             //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -164,8 +168,61 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
+        if(chatIdentity != null){
+            BackgroundAsyncTaskList batl = new BackgroundAsyncTaskList(chatIdentity,MAX,offset);
+            batl.execute();
+        }
+
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
+    }
+    public class BackgroundAsyncTaskList extends
+            AsyncTask<Void, Integer, Void> {
+
+        ChatActorCommunitySelectableIdentity identity;
+        int MAX, offset;
+        public BackgroundAsyncTaskList(ChatActorCommunitySelectableIdentity identity, int MAX, int offset){
+            this.identity = identity;
+            this.MAX = MAX;
+            this.offset = offset;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            //this.cancel(true);
+
+
+            return;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+               con = chatManager.listWorldChatActor(identity, MAX, offset);
+                contactname.clear();
+                contactid.clear();
+                contacticon.clear();
+                for (ChatActorCommunityInformation conta:con) {
+                    if (conta.getConnectionState() != null) {
+                        if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                            try {
+                                chatManager.requestConnectionToChatActor(chatIdentity, conta);
+                            } catch (Exception e) {
+                                if (errorManager != null)
+                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }
+                            contactname.add(conta.getAlias());
+                            contactid.add(conta.getPublicKey());
+                            ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
+                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+                            contacticon.add(bmd.getBitmap());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     void updateValues(){
@@ -207,10 +264,24 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     noDatalabel.setVisibility(View.VISIBLE);
                     layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
+
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 layout.setBackgroundResource(R.drawable.cht_background_1);
+            }
+        }catch (Exception e){
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
+
+    void updateValuesNS(){
+        try {
+            if(chatIdentity != null) {
+                BackgroundAsyncTaskList back = new BackgroundAsyncTaskList(chatIdentity,MAX,offset);
+                back.execute();
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -266,7 +337,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     public void run() {
                         try{
                             Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
-                            updateValues();
+                            updateValuesNS();
                             final ContactListAdapter adaptador =
                                     new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                                             null, errorManager, chatSession, appSession, null);
