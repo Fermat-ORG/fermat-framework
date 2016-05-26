@@ -8,6 +8,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relative1"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:paddingBottom="20dp"
@@ -26,6 +27,7 @@
             tools:ignore="ContentDescription" />
 
         <RelativeLayout
+            android:id="@+id/namefield"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -45,10 +47,14 @@
                 android:textSize="18sp"
                 app:typeface="ROBOTO_REGULAR"
                 tools:ignore="HardcodedText" />
+
+
+
+
         </RelativeLayout>
 
 
-
-
     </RelativeLayout>
+
+
 </RelativeLayout>
