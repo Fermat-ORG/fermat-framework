@@ -153,30 +153,40 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
 
         FanCommunityInformation worldFanatic;
+        FanCommunityInformation fanCommunityInformation;
         for(int i = 0; i < worldFanaticList.size(); i++)
         {
             worldFanatic = worldFanaticList.get(i);
             //Check connections from Fan Actor Connection
             for(FanActorConnection connectedFan : actorConnections)
             {
-                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey())){
+                    fanCommunityInformation =  new FanCommunityInformationImpl(
                             worldFanatic.getPublicKey(),
                             worldFanatic.getAlias(),
                             worldFanatic.getImage(),
                             connectedFan.getConnectionState(),
-                            connectedFan.getConnectionId()));
+                            connectedFan.getConnectionId());
+                    fanCommunityInformation.setArtExternalPlatform(
+                            worldFanatic.getArtExternalPlatform());
+                    worldFanaticList.set(i,fanCommunityInformation);
+                }
+
             }
             //Check connection from Artist Actor connections
             for(ArtistActorConnection connectedFan : artistActorConnections)
             {
-                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey())){
+                    fanCommunityInformation =  new FanCommunityInformationImpl(
                             worldFanatic.getPublicKey(),
                             worldFanatic.getAlias(),
                             worldFanatic.getImage(),
                             connectedFan.getConnectionState(),
-                            connectedFan.getConnectionId()));
+                            connectedFan.getConnectionId());
+                    fanCommunityInformation.setArtExternalPlatform(
+                            worldFanatic.getArtExternalPlatform());
+                    worldFanaticList.set(i,fanCommunityInformation);
+                }
             }
         }
 
