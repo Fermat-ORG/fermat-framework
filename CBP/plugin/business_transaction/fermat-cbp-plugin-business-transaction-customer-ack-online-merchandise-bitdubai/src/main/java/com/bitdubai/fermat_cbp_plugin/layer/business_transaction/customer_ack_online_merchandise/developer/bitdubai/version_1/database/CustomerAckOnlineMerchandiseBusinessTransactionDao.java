@@ -959,12 +959,14 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             ContractTransactionStatus status = getByCode(record.getStringValue(ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(status);
 
-            String currencyCode = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME);
-            businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(currencyCode));
+            String cryptoCurrencyCode = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME);
+            if(cryptoCurrencyCode != null){
+                businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(cryptoCurrencyCode));
 
-            String cryptoAddressString = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME);
-            CryptoAddress brokerCryptoAddress = new CryptoAddress(cryptoAddressString, businessTransactionRecord.getCryptoCurrency());
-            businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+                String cryptoAddressString = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME);
+                CryptoAddress brokerCryptoAddress = new CryptoAddress(cryptoAddressString, businessTransactionRecord.getCryptoCurrency());
+                businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+            }
 
             return businessTransactionRecord;
 

@@ -511,19 +511,24 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setActorPublicKey(record.getStringValue(ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME));
             businessTransactionRecord.setExternalWalletPublicKey(record.getStringValue(ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
             businessTransactionRecord.setCryptoAmount(record.getLongValue(ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
-            businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME)));
 
             final ContractTransactionStatus status = getByCode(record.getStringValue(ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(status);
 
-            final String cryptoAddressString = record.getStringValue(ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
-            final CryptoAddress brokerCryptoAddress = new CryptoAddress(cryptoAddressString, businessTransactionRecord.getCryptoCurrency());
-            businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+            final String cryptoCurrencyCode = record.getStringValue(ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME);
+            if(cryptoCurrencyCode != null){
+                businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(cryptoCurrencyCode));
+
+                final String cryptoAddress = record.getStringValue(ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
+                final CryptoAddress brokerCryptoAddress = new CryptoAddress(cryptoAddress, businessTransactionRecord.getCryptoCurrency());
+                businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+            }
 
             final String blockchainNetworkTypeString = record.getStringValue(ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
             final BlockchainNetworkType blockchainNetworkType = (blockchainNetworkTypeString == null || blockchainNetworkTypeString.isEmpty()) ?
                     BlockchainNetworkType.getDefaultBlockchainNetworkType() :
                     BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
 
             return businessTransactionRecord;
