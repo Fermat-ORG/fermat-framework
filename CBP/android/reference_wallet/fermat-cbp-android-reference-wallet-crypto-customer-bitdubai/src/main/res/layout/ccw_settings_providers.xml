@@ -151,8 +151,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/black"
-                android:drawSelectorOnTop="true"/>
-            <!-- tools:listitem="@layout/ccw_spinner_item" -->
+                android:drawSelectorOnTop="true"
+                tools:listitem="@layout/ccw_spinner_item"/>
 
             <Spinner
                 android:id="@+id/currency_to_spinner"
@@ -163,8 +163,8 @@
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/black"
-                android:drawSelectorOnTop="true"/>
-            <!-- tools:listitem="@layout/ccw_spinner_item" -->
+                android:drawSelectorOnTop="true"
+                tools:listitem="@layout/ccw_spinner_item"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/ccw_select_providers_button"
