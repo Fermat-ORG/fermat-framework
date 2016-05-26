@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -94,15 +97,23 @@ public class CheckOutNetworkServiceRequestProcessor extends PackageProcessor {
                  */
                 if (checkedInNetworkService != null){
 
+                    // create transaction for
+                    DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInNetworkServiceDao().getNewTransaction();
+                    DatabaseTransactionStatementPair pair;
+
                     /*
                      * Delete from data base
                      */
-                    deleteCheckedInNetworkService(profileIdentity);
+                    pair = deleteCheckedInNetworkService(profileIdentity);
+                    databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
 
                     /*
                      * CheckedInNetworkServiceHistory into data base
                      */
-                    insertCheckedInNetworkServiceHistory(checkedInNetworkService);
+                    pair = insertCheckedInNetworkServiceHistory(checkedInNetworkService);
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                    databaseTransaction.execute();
 
                     /*
                      * If all ok, respond whit success message
@@ -156,17 +167,13 @@ public class CheckOutNetworkServiceRequestProcessor extends PackageProcessor {
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteCheckedInNetworkService(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair deleteCheckedInNetworkService(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException, CantCreateTransactionStatementPairException {
 
         /*
          * validate if exists
          */
-        if(getDaoFactory().getCheckedInNetworkServiceDao().exists(profileIdentity)) {
-            /*
-             * Delete from database
-             */
-            getDaoFactory().getCheckedInNetworkServiceDao().delete(profileIdentity);
-        }
+        return getDaoFactory().getCheckedInNetworkServiceDao().createDeleteTransactionStatementPair(profileIdentity);
+
     }
 
     /**
@@ -175,7 +182,7 @@ public class CheckOutNetworkServiceRequestProcessor extends PackageProcessor {
      * @param checkedInNetworkService
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInNetworkServiceHistory(CheckedInNetworkService checkedInNetworkService) throws CantInsertRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedInNetworkServiceHistory(CheckedInNetworkService checkedInNetworkService) throws CantInsertRecordDataBaseException, CantCreateTransactionStatementPairException {
 
         /*
          * Create the ClientsRegistrationHistory
@@ -191,7 +198,7 @@ public class CheckOutNetworkServiceRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedNetworkServicesHistoryDao().create(checkedNetworkServicesHistory);
+        return getDaoFactory().getCheckedNetworkServicesHistoryDao().createInsertTransactionStatementPair(checkedNetworkServicesHistory);
 
     }
 

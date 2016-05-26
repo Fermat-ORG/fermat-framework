@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -80,15 +83,23 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  */
                 actorProfile = (ActorProfile) messageContent.getProfileToRegister();
 
+                // create transaction for
+                DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInActorDao().getNewTransaction();
+                DatabaseTransactionStatementPair pair;
+
                 /*
                  * CheckedInActor into data base
                  */
-                insertCheckedInActor(actorProfile);
+                pair = insertCheckedInActor(actorProfile);
+                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
                 /*
                  * CheckedActorsHistory into data base
                  */
-                insertCheckedActorsHistory(actorProfile);
+                pair = insertCheckedActorsHistory(actorProfile);
+                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                databaseTransaction.execute();
 
                 /*
                  * If all ok, respond whit success message
@@ -138,9 +149,9 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInActor(final ActorProfile actorProfile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws  CantCreateTransactionStatementPairException {
 
-        if (!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
+
 
             /*
              * Create the CheckedInActor
@@ -167,8 +178,8 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
             /*
              * Save into the data base
              */
-            getDaoFactory().getCheckedInActorDao().create(checkedInActor);
-        }
+            return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+
     }
 
     /**
@@ -177,7 +188,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedActorsHistory(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedActorsHistory(ActorProfile actorProfile) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the CheckedActorsHistory
@@ -204,7 +215,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+        return getDaoFactory().getCheckedActorsHistoryDao().createInsertTransactionStatementPair(checkedActorsHistory);
 
     }
 

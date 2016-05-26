@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -143,37 +147,42 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void checkInClient(final ClientProfile profile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
+    private void checkInClient(final ClientProfile profile) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
 
-        if (!getDaoFactory().getCheckedInClientDao().exists(profile.getIdentityPublicKey())) {
-            /*
-             * Create the CheckedInClient
-             */
-            CheckedInClient checkedInClient = new CheckedInClient();
-            checkedInClient.setIdentityPublicKey(profile.getIdentityPublicKey());
-            checkedInClient.setDeviceType(profile.getDeviceType());
+        // create transaction for
+        DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInClientDao().getNewTransaction();
+        DatabaseTransactionStatementPair pair;
+
+        /*
+         * Create the CheckedInClient
+         */
+        CheckedInClient checkedInClient = new CheckedInClient();
+        checkedInClient.setIdentityPublicKey(profile.getIdentityPublicKey());
+        checkedInClient.setDeviceType(profile.getDeviceType());
 
             //Validate if location are available
-            if (profile.getLocation() != null) {
-                checkedInClient.setLatitude(profile.getLocation().getLatitude());
-                checkedInClient.setLongitude(profile.getLocation().getLongitude());
-            }else{
-                checkedInClient.setLatitude(0.0);
-                checkedInClient.setLongitude(0.0);
-            }
-
-            /*
-             * Save into the data base
-             */
-            getDaoFactory().getCheckedInClientDao().create(checkedInClient);
-
-            /*
-             * ClientsRegistrationHistory into data base
-             */
-            insertClientsRegistrationHistory(profile, RegistrationResult.SUCCESS, null);
-        } else {
-            insertClientsRegistrationHistory(profile, RegistrationResult.IGNORED, "The client was already checked-in.");
+        if (profile.getLocation() != null) {
+              checkedInClient.setLatitude(profile.getLocation().getLatitude());
+              checkedInClient.setLongitude(profile.getLocation().getLongitude());
+        }else{
+              checkedInClient.setLatitude(0.0);
+              checkedInClient.setLongitude(0.0);
         }
+
+        /*
+         * Save into the data base
+         */
+        pair = getDaoFactory().getCheckedInClientDao().createInsertTransactionStatementPair(checkedInClient);
+        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+        /*
+         * ClientsRegistrationHistory into data base
+         */
+        pair = insertClientsRegistrationHistory(profile, RegistrationResult.SUCCESS, null);
+        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+        databaseTransaction.execute();
+
     }
 
     /**
@@ -185,9 +194,9 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void insertClientsRegistrationHistory(final ClientProfile      profile,
+    private DatabaseTransactionStatementPair insertClientsRegistrationHistory(final ClientProfile      profile,
                                                   final RegistrationResult result ,
-                                                  final String             detail ) throws CantInsertRecordDataBaseException {
+                                                  final String             detail ) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the ClientsRegistrationHistory
@@ -211,6 +220,6 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
+        return getDaoFactory().getClientsRegistrationHistoryDao().createInsertTransactionStatementPair(clientsRegistrationHistory);
     }
 }
