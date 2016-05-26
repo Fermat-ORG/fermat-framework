@@ -19,13 +19,13 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
@@ -41,15 +41,15 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by mati on 2016.02.09..
  */
-public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceWalletSession,WalletResourcesProviderManager> implements FermatSettings {
+public class ReferenceWalletSettings extends FermatPreferenceFragment<FermatWalletSession,WalletResourcesProviderManager> implements FermatSettings {
 
-    private ReferenceWalletSession referenceWalletSession;
-    private BitcoinWalletSettings bitcoinWalletSettings = null;
+    private FermatWalletSession fermatWalletSession;
+    private FermatWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
 
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+    private FermatWalletWalletContact cryptoWalletWalletContact;
     private BlockchainNetworkType blockchainNetworkType;
-    private CryptoWallet cryptoWallet;
+    private FermatWallet cryptoWallet;
 
     public static ReferenceWalletSettings newInstance() {
         return new ReferenceWalletSettings();
@@ -58,12 +58,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = appSession;
+        fermatWalletSession = appSession;
         try {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             //noinspection unchecked
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            fermatWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }
     }
@@ -80,8 +80,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         //noinspection TryWithIdenticalCatches
         try {
-            bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-            cryptoWallet = referenceWalletSession.getModuleManager();
+            bitcoinWalletSettings = fermatWalletSession.getModuleManager().loadAndGetSettings(fermatWalletSession.getAppPublicKey());
+            cryptoWallet = fermatWalletSession.getModuleManager();
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
 
@@ -145,7 +145,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         try {
 
             try {
-                bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = fermatWalletSession.getModuleManager().loadAndGetSettings(fermatWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -157,19 +157,19 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             if (preferenceSettingsItem.getId() == 10) {
                 //export key show fragment
 
-                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, fermatWalletSession.getAppPublicKey());
 
             } else if (preferenceSettingsItem.getId() == 9) {
                 //export key show fragment
 
-                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, referenceWalletSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, fermatWalletSession.getAppPublicKey());
 
             }else if (preferenceSettingsItem.getId() == 11){
                 //send btc to loss protected
                 SendToLossProtectedWalletDialog sendToLossProtectedWalletDialog = new SendToLossProtectedWalletDialog(
                         getActivity(),
                         cryptoWallet,
-                        referenceWalletSession,
+                        fermatWalletSession,
                         blockchainNetworkType);
                 sendToLossProtectedWalletDialog.show();
 
@@ -182,7 +182,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
 
             try {
-                referenceWalletSession.getModuleManager().persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                fermatWalletSession.getModuleManager().persistSettings(fermatWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -261,7 +261,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         try {
 
             try {
-                bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = fermatWalletSession.getModuleManager().loadAndGetSettings(fermatWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -276,7 +276,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
 
             try {
-                referenceWalletSession.getModuleManager().persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                fermatWalletSession.getModuleManager().persistSettings(fermatWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -342,7 +342,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
 
         try {
-            referenceWalletSession.getModuleManager().persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            fermatWalletSession.getModuleManager().persistSettings(fermatWalletSession.getAppPublicKey(), bitcoinWalletSettings);
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }

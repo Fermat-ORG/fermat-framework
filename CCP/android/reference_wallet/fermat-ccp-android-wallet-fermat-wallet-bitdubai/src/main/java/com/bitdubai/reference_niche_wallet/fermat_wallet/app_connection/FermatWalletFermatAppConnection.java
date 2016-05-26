@@ -16,21 +16,21 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWalletSession>{
+public class FermatWalletFermatAppConnection extends AppConnections<FermatWalletSession>{
 
-    private CryptoWallet moduleManager = null;
-    private ReferenceWalletSession referenceWalletSession;
+    private FermatWallet moduleManager = null;
+    private FermatWalletSession referenceWalletSession;
 
-    public BitcoinWalletFermatAppConnection(Context activity) {
+    public FermatWalletFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -52,7 +52,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
 
     @Override
     public AbstractFermatSession getSession() {
-        return new ReferenceWalletSession();
+        return new FermatWalletSession();
     }
 
     @Override
@@ -88,9 +88,9 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
 
 
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(),Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return FermatWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
-                    return new BitcoinWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return new FermatWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
             }
             else

@@ -11,9 +11,9 @@ import android.widget.RelativeLayout;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 
 import java.lang.ref.WeakReference;
 
@@ -25,11 +25,11 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
-    private ReferenceWalletSession referenceWalletSession;
+    private FermatWalletSession fermatWalletSession;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, ReferenceWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+    public BitcoinWalletNavigationViewPainter(Context activity, FermatWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
-        this.referenceWalletSession = referenceWalletSession;
+        this.fermatWalletSession = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
@@ -37,7 +37,7 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),referenceWalletSession,applicationsHelper.get());
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),fermatWalletSession,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

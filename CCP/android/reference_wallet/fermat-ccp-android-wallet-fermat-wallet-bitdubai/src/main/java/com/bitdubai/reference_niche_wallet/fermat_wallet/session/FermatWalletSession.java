@@ -8,12 +8,12 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetFermatWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListFermatWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
@@ -22,7 +22,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyT
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWallet,WalletResourcesProviderManager>  {
+public class FermatWalletSession extends AbstractFermatSession<InstalledWallet,FermatWallet,WalletResourcesProviderManager>  {
 
 
 
@@ -52,19 +52,19 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
 
     public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
-    private CryptoWalletWalletContact lastContactSelected;
+    private FermatWalletWalletContact lastContactSelected;
 
     private PaymentRequest paymentRequest;
     private String communityConnection;
 
 
-    public ReferenceWalletSession() {
+    public FermatWalletSession() {
     }
 
 
 
 
-    public ReferenceWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, CryptoWallet moduleManager, WalletResourcesProviderManager resourceProviderManager) {
+    public FermatWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, FermatWallet moduleManager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
@@ -76,7 +76,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
     public void setAccountName(String accountName){
         this.accountName=accountName;
     }
-    public void setLastContactSelected(CryptoWalletWalletContact walletContact){
+    public void setLastContactSelected(FermatWalletWalletContact walletContact){
         this.lastContactSelected=walletContact;
     }
 
@@ -102,7 +102,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReferenceWalletSession that = (ReferenceWalletSession) o;
+        FermatWalletSession that = (FermatWalletSession) o;
 
         return getFermatApp() == that.getFermatApp();
 
@@ -117,7 +117,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         typeBalanceSelected=balaceType.getCode();
     }
 
-    public CryptoWalletWalletContact getLastContactSelected() {
+    public FermatWalletWalletContact getLastContactSelected() {
         return lastContactSelected;
     }
 
@@ -125,7 +125,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         return this.paymentRequest;
     }
 
-    public ActiveActorIdentityInformation getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
+    public ActiveActorIdentityInformation getIntraUserModuleManager() throws CantListFermatWalletIntraUserIdentityException, CantGetFermatWalletException {
         ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
         try {
             cryptoWalletIntraUserIdentity = getModuleManager().getSelectedActorIdentity();

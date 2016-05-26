@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by natalia on 12/02/16.
  */
-public class BitcoinWalletNotificationPainter implements NotificationPainter,Serializable {
+public class FermatWalletNotificationPainter implements NotificationPainter,Serializable {
 
     private String title;
     private String textBody;
@@ -21,7 +21,7 @@ public class BitcoinWalletNotificationPainter implements NotificationPainter,Ser
 
     //constructor
 
-    public BitcoinWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification,String codeReturn){
+    public FermatWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification, String codeReturn){
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;

@@ -12,12 +12,12 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
     private int childCount;
     private boolean initiallyExpanded;
 
-    private ITEM cryptoWalletTransaction;
+    private ITEM fermatWalletTransaction;
 
-    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM cryptoWalletTransaction) {
+    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM fermatWalletTransaction) {
         this.initiallyExpanded = initiallyExpanded;
         this.childItemList = childItemList;
-        this.cryptoWalletTransaction = cryptoWalletTransaction;
+        this.fermatWalletTransaction = fermatWalletTransaction;
     }
 
     public GrouperItem(String text, boolean initiallyExpanded) {
@@ -66,7 +66,7 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public ITEM getCryptoWalletTransaction() {
-        return cryptoWalletTransaction;
+    public ITEM getFermatWalletTransaction() {
+        return fermatWalletTransaction;
     }
 }
