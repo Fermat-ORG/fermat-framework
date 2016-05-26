@@ -303,7 +303,6 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     System.out.println("***************************************************************************************");
 
                     UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
-                            //TODO: pasar por parametro businessTransactionRecord.getCryptoCurrency(),
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
@@ -314,7 +313,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             Actors.INTRA_USER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la reference wallet adecuada para la crypto currency
                             businessTransactionRecord.getBlockchainNetworkType(),
-                            CryptoCurrency.BITCOIN);
+                            businessTransactionRecord.getCryptoCurrency());
 
                     dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                     dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
