@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.chat_community.fragments;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,12 +24,15 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
@@ -222,27 +226,69 @@ public class ContactsListFragment
             worker.execute();
         }
     }
+    public class BackgroundAsyncTaskList extends
+            AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected void onPostExecute(Void result) {
+            //this.cancel(true);
+
+
+            return;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+//               con = chatManager.listWorldChatActor(identity, MAX, offset);
+//                contactname.clear();
+//                contactid.clear();
+//                contacticon.clear();
+//                contactStatus.clear();
+
+                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+                    if (con != null) {
+                        int size = con.size();
+                        if (size > 0) {
+                            for (ChatActorCommunityInformation conta:con) {
+                                if (conta.getConnectionState() != null) {
+                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                                        try {
+                                            moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
+                                        } catch (Exception e) {
+                                            if (errorManager != null)
+                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                        }
+                                    }
+                                }
+//                                        contactname.add(conta.getAlias());
+//                                        contactid.add(conta.getPublicKey());
+//                                        ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
+//                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                                        contacticon.add(bmd.getBitmap());
+//                                        contactStatus.add(conta.getStatus());
+                                //}
+                                //}
+                            }
+                        }
+                    }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
+        BackgroundAsyncTaskList backWorldList = new BackgroundAsyncTaskList();
+        backWorldList.execute();
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            moduleManager.exposeIdentityInWat();
-            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
-            for(ChatActorCommunityInformation chat: result){
-                if(chat.getConnectionState()!= null){
-                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
-                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
-                        dataSet.add(chat);
-                    }//else dataSet.add(chat);
-                }//else dataSet.add(chat);                ​
-            }
-            //dataSet.addAll(result);
-            offset = dataSet.size();
-        } catch (Exception e) {
-            //Toast.makeText(getActivity(), "No Chat Identity Created",
-            //        Toast.LENGTH_LONG).show();
+            dataSet.addAll(moduleManager.listAllConnectedChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset));
+        } catch (CantListChatActorException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
+
         return dataSet;
     }
 
