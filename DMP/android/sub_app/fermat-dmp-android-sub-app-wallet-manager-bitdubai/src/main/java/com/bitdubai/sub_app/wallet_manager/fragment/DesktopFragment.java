@@ -346,6 +346,14 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);
                 }
+
+                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
+                    Item item = new Item(installedWallet);
+                    item.setIconResource(R.drawable.bitcoin_wallet);
+                    item.setPosition(9);
+                    installedWallet.setAppStatus(AppsStatus.DEV);
+                    lstItemsWithIcon.add(item);
+                }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(

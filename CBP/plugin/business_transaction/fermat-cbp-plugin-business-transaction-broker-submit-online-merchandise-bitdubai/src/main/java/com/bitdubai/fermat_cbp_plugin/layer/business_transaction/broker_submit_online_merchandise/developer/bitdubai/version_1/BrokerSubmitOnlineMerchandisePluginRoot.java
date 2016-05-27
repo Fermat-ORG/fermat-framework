@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
@@ -96,6 +97,9 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
+    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
@@ -262,7 +266,8 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                     customerBrokerContractSaleManager,
                     outgoingIntraActorManager,
                     cryptoMoneyDeStockManager,
-                    intraWalletUserIdentityManager);
+                    intraWalletUserIdentityManager,
+                    customerBrokerPurchaseNegotiationManager);
 
             brokerSubmitOnlineMerchandiseMonitorAgent.start();
 

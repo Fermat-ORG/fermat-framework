@@ -17,10 +17,8 @@ public enum ReferenceWallet implements FermatWalletEnum {
     BASIC_WALLET_BITCOIN_WALLET("BWBW"),
     BASIC_WALLET_DISCOUNT_WALLET("BWDW"),
     BASIC_WALLET_FIAT_WALLET("BWFW"),
-
-    BASIC_WALLET_FERMAT_WALLET("BWFERW"), // TODO: temporal Fermat Wallet
-
     BASIC_WALLET_LOSS_PROTECTED_WALLET("BWLP"),
+    BASIC_WALLET_FERMAT_WALLET("BWFMW"),
     BNK_BANKING_WALLET("BNKW"),
     CASH_MONEY_WALLET("CASH"),
     COMPOSITE_WALLET_MULTI_ACCOUNT("CWMA"),
@@ -52,6 +50,7 @@ public enum ReferenceWallet implements FermatWalletEnum {
             case "DAIW": return DAP_ASSET_ISSUER_WALLET;
             case "DAUW": return DAP_ASSET_USER_WALLET;
             case "DARW": return DAP_REDEEM_POINT_WALLET;
+            case "BWFMW": return BASIC_WALLET_FERMAT_WALLET;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReferenceWallet enum");
         }

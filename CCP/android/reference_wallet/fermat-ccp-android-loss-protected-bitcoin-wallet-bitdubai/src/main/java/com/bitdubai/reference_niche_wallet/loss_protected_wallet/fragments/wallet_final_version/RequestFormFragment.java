@@ -178,7 +178,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             } else {
@@ -188,6 +188,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                 setUpUIData();
 
             }
+
+            setUpContactAddapter();
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -649,7 +651,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 notes,
                                 operator.longValueExact(),
                                 blockchainNetworkType,
-                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET
+                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                                CryptoCurrency.BITCOIN
 
                         );
                         Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();

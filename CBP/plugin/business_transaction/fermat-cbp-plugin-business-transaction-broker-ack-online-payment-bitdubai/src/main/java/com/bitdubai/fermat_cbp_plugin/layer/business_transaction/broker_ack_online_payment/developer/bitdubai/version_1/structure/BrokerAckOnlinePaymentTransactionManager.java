@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
@@ -10,97 +9,55 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database.BrokerAckOnlinePaymentBusinessTransactionDao;
 
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
+
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/12/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/12/2015.
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 26/05/2016
  */
 public class BrokerAckOnlinePaymentTransactionManager implements BrokerAckOnlinePaymentManager {
 
-    /**
-     * Represents the plugin database DAO
-     */
-    BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao;
-
-    /**
-     * Represents the error manager
-     */
+    BrokerAckOnlinePaymentBusinessTransactionDao dao;
     BrokerAckOnlinePaymentPluginRoot pluginRoot;
 
-    public BrokerAckOnlinePaymentTransactionManager(
-            BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao,
-            BrokerAckOnlinePaymentPluginRoot pluginRoot) {
-        this.brokerAckOnlinePaymentBusinessTransactionDao = brokerAckOnlinePaymentBusinessTransactionDao;
-        this.pluginRoot = pluginRoot;
 
+    public BrokerAckOnlinePaymentTransactionManager(BrokerAckOnlinePaymentBusinessTransactionDao dao,
+                                                    BrokerAckOnlinePaymentPluginRoot pluginRoot) {
+        this.dao = dao;
+        this.pluginRoot = pluginRoot;
     }
 
-    /**
-     * This method returns the actual ContractTransactionStatus from a Broker Ack Online Payment
-     * Business Transaction by a contract hash/Id.
-     *
-     * @param contractHash
-     *
-     * @return
-     *
-     * @throws UnexpectedResultReturnedFromDatabaseException
-     */
     @Override
-    public ContractTransactionStatus getContractTransactionStatus(
-            String contractHash) throws
-            UnexpectedResultReturnedFromDatabaseException {
+    public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
-            return this.brokerAckOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(
-                    contractHash);
+
+            return dao.getContractTransactionStatus(contractHash);
+
         } catch (ObjectNotSetException e) {
-            pluginRoot.reportError(
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    "Cannot check a null contractHash/Id");
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException("Cannot check a null contractHash/Id");
         } catch (Exception e) {
-            pluginRoot.reportError(
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new UnexpectedResultReturnedFromDatabaseException(e,
-                    "Unexpected Result",
-                    "Check the cause");
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Unexpected Result", "Check the cause");
         }
     }
 
-    /**
-     * This method returns the transaction completion date.
-     * If returns 0 the transaction is processing.
-     *
-     * @param contractHash
-     *
-     * @return
-     *
-     * @throws CantGetCompletionDateException
-     */
     @Override
     public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
-
         try {
             ObjectChecker.checkArgument(contractHash, "The contract hash argument is null");
-            return this.brokerAckOnlinePaymentBusinessTransactionDao.getCompletionDateByContractHash(
-                    contractHash);
+
+            return dao.getCompletionDateByContractHash(contractHash);
+
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            pluginRoot.reportError(
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetCompletionDateException(
-                    e,
-                    "Getting completion date",
-                    "Unexpected exception from database");
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCompletionDateException(e, "Getting completion date", "Unexpected exception from database");
+
         } catch (ObjectNotSetException e) {
-            pluginRoot.reportError(
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetCompletionDateException(
-                    e,
-                    "Getting completion date",
-                    "The contract hash argument is null");
+            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCompletionDateException(e, "Getting completion date", "The contract hash argument is null");
         }
     }
 }

@@ -435,8 +435,6 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
         }
     }
 
-
-
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings

@@ -10,6 +10,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 
 /**
  * Created by memo on 11/01/16.
@@ -36,15 +39,15 @@ public class StockDestockViewHolder extends FermatViewHolder {
         try {
             if (data.getPlatform() == Platforms.BANKING_PLATFORM) {
                 //subTitle2.setText("balance: "+moduleManager.getAvailableBalance(data.getMerchandise(),"walletPublicKeyTest"));
-                subTitle2.setText("" + moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount()));
+                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())));
             }
             if (data.getPlatform() == Platforms.CASH_PLATFORM) {
-                subTitle2.setText("" + moduleManager.getBalanceCashWallet(data.getWalletPublicKey()));
+                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceCashWallet(data.getWalletPublicKey())));
             }
             if (data.getPlatform() == Platforms.CRYPTO_CURRENCY_PLATFORM) {
                 long balanceBitcoinWallet = moduleManager.getBalanceBitcoinWallet(data.getWalletPublicKey());
                 double availableBalance = BitcoinConverter.convert(balanceBitcoinWallet, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-                subTitle2.setText("" + availableBalance);
+                subTitle2.setText("" + getDecimalFormat(new BigDecimal(availableBalance)));
             }
 
         } catch (Exception e) {
@@ -59,5 +62,9 @@ public class StockDestockViewHolder extends FermatViewHolder {
             return "Cash";
 
         return "Crypto";
+    }
+
+    private String getDecimalFormat(BigDecimal value) {
+        return DecimalFormat.getInstance().format(value.doubleValue());
     }
 }

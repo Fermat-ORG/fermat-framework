@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_u
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -62,7 +63,8 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
                      final String        deliveredToActorPublicKey,
                      final Actors        deliveredToActorType     ,
                      ReferenceWallet referenceWallet,
-                     BlockchainNetworkType blockchainNetworkType) throws InsufficientFundsException,
+                     BlockchainNetworkType blockchainNetworkType,
+                     final CryptoCurrency cryptoCurrency) throws InsufficientFundsException,
                                                                            CantSendFundsException    {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
@@ -76,10 +78,14 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
         long funds = 0;
         try {
             dao.initialize();
-
+            CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
+                case BASIC_WALLET_FERMAT_WALLET:
+                     cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
 
@@ -101,7 +107,9 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
 
             } else {
 
-                dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, blockchainNetworkType );
+                dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey,
+                        deliveredToActorType, blockchainNetworkType,
+                        cryptoCurrency);
             }
         } catch (InsufficientFundsException exception) {
 

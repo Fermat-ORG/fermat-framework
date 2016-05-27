@@ -67,7 +67,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
      */
 
     public DeveloperSubAppSession developerSubAppSession;
-
+    ToolManager toolManager;
     View rootView;
 
     private DatabaseTool databaseTools;
@@ -97,7 +97,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
         errorManager = developerSubAppSession.getErrorManager();
         try {
 
-            ToolManager toolManager = developerSubAppSession.getModuleManager();
+            toolManager = developerSubAppSession.getModuleManager();
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

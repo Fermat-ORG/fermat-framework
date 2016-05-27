@@ -4,7 +4,7 @@ import android.widget.ImageButton;
 
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
@@ -29,9 +29,9 @@ public class AppStatusListener implements AppStatusCallbackChanges {
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
         activityWeakReference.get().setAppStatus(appsStatus);
-        for (AbstractFermatFragment fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
+        for (AbstractFermatFragmentInterface fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
             try {
-                fragment.onUpdateViewUIThred(appsStatus.getCode());
+                fragment.onUpdateViewOnUIThread(appsStatus.getCode());
             }catch (Exception e){
 
             }

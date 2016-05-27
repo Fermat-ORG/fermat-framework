@@ -71,21 +71,38 @@
             android:paddingTop="7dp"
             />
 
-        <AutoCompleteTextView
-            android:id="@+id/csh_ctd_memo"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="@string/csh_ctd_memo_hint"
-            android:textColorHint="#9a9a9c"
-            android:maxLength="100"
-            android:paddingLeft="15dp"
-            android:textColor="@color/csh_text_black"
-            android:textSize="@dimen/csh_regular_plus_text_size"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:inputType="textAutoComplete"
-            />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
 
+            <AutoCompleteTextView
+                android:id="@+id/csh_ctd_memo"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_toLeftOf="@+id/csh_ctd_memo_count"
+                android:hint="@string/csh_ctd_memo_hint"
+                android:textColorHint="#9a9a9c"
+                android:paddingLeft="15dp"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/csh_text_black"
+                android:textSize="@dimen/csh_regular_plus_text_size"
+                android:inputType="textAutoComplete"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/csh_ctd_memo_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="100"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
 
 
         <LinearLayout

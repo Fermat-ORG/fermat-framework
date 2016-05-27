@@ -58,9 +58,10 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
 
-       // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new BitcoinWalletNavigationViewPainter(getContext(),null);
+        return new BitcoinWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
+
     }
 
     @Override
@@ -82,7 +83,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
             if(referenceWalletSession!=  null) {
                 if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager();
-                    enabledNotification = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
+                    enabledNotification = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
                 }
 
 

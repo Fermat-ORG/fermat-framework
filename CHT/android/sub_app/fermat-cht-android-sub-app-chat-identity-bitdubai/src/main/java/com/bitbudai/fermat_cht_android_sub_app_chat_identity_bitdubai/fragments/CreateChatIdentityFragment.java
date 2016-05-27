@@ -132,7 +132,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
+                //chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch(Exception e){
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {
@@ -179,6 +180,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
+
         if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
             setUpDialog();
         }
@@ -206,6 +208,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
                                     loadImageFromGallery();
+//                                } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+//                                    try {
+//                                        if (cryptoBrokerBitmap != null)
+//                                            rotateImage();
+//                                        else
+//                                            Toast.makeText(getActivity(), "Please select a image", Toast.LENGTH_SHORT).show();
+//                                    } catch (Exception e) {
+//                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//                                    }
+//                                } else {
+//                                    //Nothing
                                 }
                             }
                         });
@@ -247,6 +260,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
                                     loadImageFromGallery();
+//                                } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+//                                    try {
+//                                        rotateImage();
+//                                    } catch (CHTException e) {
+//                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//
+//                                    }
+//                                } else {
+//                                    //Nothing...
                                 }
                             }
                         });
@@ -341,12 +363,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             if(checkWriteExternalPermission()) {
                                 if (cryptoBrokerBitmap != null) {
                                     if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                                        //cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
+//                                                    cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
+//                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                                    //cryptoBrokerBitmap = rotateBitmap(dialogCropImage.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
                                                     cryptoBrokerBitmap =  getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
                                                     Picasso.with(getActivity()).load(getImageUri(getActivity(),  cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                                 }else{
@@ -393,6 +419,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
+//                                            cryptoBrokerBitmap = dialogCropImagee.getCroppedImage();
+//                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImagee.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                            //cryptoBrokerBitmap =  rotateBitmap(dialogCropImagee.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
                                             cryptoBrokerBitmap =  getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         } else {
@@ -443,6 +472,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if(dialogCropImagee.getCroppedImage() != null){
+//                                            cryptoBrokerBitmap = dialogCropImagee.getCroppedImage();
+//                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImagee.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                            //cryptoBrokerBitmap =  rotateBitmap(dialogCropImagee.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
                                             cryptoBrokerBitmap =  getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL),230,230);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         }else{
@@ -478,6 +510,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 matrix, false);
         return resizedBitmap;
     }
+
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -539,8 +572,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-//                            textViewChtTitle.setText(mBrokerName.getText());
-//                            statusView.setText(mChatConnectionState.getText());
+                            //textViewChtTitle.setText(mBrokerName.getText());
+                            //statusView.setText(mChatConnectionState.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
@@ -744,12 +777,71 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
     }
 
+//    private void rotateImage() throws CHTException {
+//        Bitmap thissbitmap = null;
+//        if(cryptoBrokerBitmap != null){
+//            thissbitmap = cryptoBrokerBitmap;
+//        }else if(ExistIdentity() == true){
+//            try {
+//                thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+//            } catch (CantGetChatIdentityException e) {
+//                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            }
+//        }
+//            if (thissbitmap != null) {
+//                //NEW LOGIC
+//                if(ROTATE_VALUE == 0){
+//                        ROTATE_VALUE = 90;
+//                   }else if(ROTATE_VALUE == 90) {
+//                    ROTATE_VALUE = 180;
+//                    }else if(ROTATE_VALUE == 180) {
+//                        ROTATE_VALUE = 270;
+//                    }else if(ROTATE_VALUE == 270){
+//                        ROTATE_VALUE = 0;
+//                    }
+//                    cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
+//                    cryptoBrokerBitmap = getRoundedShape(cryptoBrokerBitmap);
+//                    mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
+//            }else{
+//                Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
+//            }
+//    }
+//
+//    public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
+//        int targetWidth = 200;
+//        int targetHeight = 200;
+//        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+//                targetHeight,Bitmap.Config.ARGB_8888);
+//
+//        Canvas canvas = new Canvas(targetBitmap);
+//        Path path = new Path();
+//        path.addCircle(((float) targetWidth - 1) / 2,
+//                ((float) targetHeight - 1) / 2,
+//                (Math.min(((float) targetWidth),
+//                        ((float) targetHeight)) / 2),
+//                Path.Direction.CCW);
+//
+//        canvas.clipPath(path);
+//        Bitmap sourceBitmap = scaleBitmapImage;
+//        canvas.drawBitmap(sourceBitmap,
+//                new Rect(0, 0, sourceBitmap.getWidth(),
+//                        sourceBitmap.getHeight()),
+//                new Rect(0, 0, targetWidth, targetHeight), null);
+//        return targetBitmap;
+//    }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
+//    public static Bitmap RotateBitmap(Bitmap source, float angle){
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(angle);
+//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+//    }
 
     private boolean checkWriteExternalPermission()
     {

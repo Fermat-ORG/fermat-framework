@@ -78,7 +78,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        this.emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+
+        emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        showOrHideNoAccountListView(accountsList.isEmpty());
+
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
@@ -87,13 +90,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                .build();
-        showOrHideNoAccountListView(accountsList.isEmpty());
-        /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                System.out.println("presentation dialog dismiss");
-            }
-        });*/
+
         boolean showDialog;
         try{
             showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
@@ -240,6 +237,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 accountsList = (ArrayList) result[0];
                 if (adapter != null)

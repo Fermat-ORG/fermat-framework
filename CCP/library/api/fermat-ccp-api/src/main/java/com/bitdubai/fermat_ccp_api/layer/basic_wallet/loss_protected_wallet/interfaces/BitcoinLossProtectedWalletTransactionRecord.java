@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.int
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import java.util.UUID;
@@ -38,6 +39,8 @@ public interface BitcoinLossProtectedWalletTransactionRecord {
     BlockchainNetworkType getBlockchainNetworkType();
 
     long getExchangRate();
+
+    CryptoCurrency getCryptoCurrency();
 
 
 
