@@ -233,10 +233,8 @@ public class ContactsListFragment
                     if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
                         moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
                         dataSet.add(chat);
-                    }else dataSet.add(chat);
-                }
-                else dataSet.add(chat);
-
+                    }//else dataSet.add(chat);
+                }//else dataSet.add(chat);                ​
             }
             //dataSet.addAll(result);
             offset = dataSet.size();

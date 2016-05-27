@@ -201,6 +201,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 contactname.clear();
                 contactid.clear();
                 contacticon.clear();
+                contactStatus.clear();
                 for (ChatActorCommunityInformation conta:con) {
                     if (conta.getConnectionState() != null) {
                         if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
@@ -215,6 +216,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                             ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
                             BitmapDrawable bmd = new BitmapDrawable(bytes);
                             contacticon.add(bmd.getBitmap());
+                            contactStatus.add(conta.getStatus());
                         }
                     }
                 }
