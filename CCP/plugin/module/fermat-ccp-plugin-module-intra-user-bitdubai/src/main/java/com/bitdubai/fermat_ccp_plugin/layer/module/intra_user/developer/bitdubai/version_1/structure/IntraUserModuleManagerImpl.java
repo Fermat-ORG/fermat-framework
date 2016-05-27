@@ -222,8 +222,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         try {
 
-           //     TimeUnit.SECONDS.sleep(15);
-
                 //verifico la cache para mostrar los que tenia antes y los nuevos
                 List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try {
