@@ -231,6 +231,13 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
             throws CantListWalletsException;
 
     /**
+     * This method list all wallet installed in device, start the transaction
+     */
+//    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()
+    List<cbpInstalledWallet> getCbpInstallWallets()
+            throws CantListWalletsException;
+
+    /**
      * @return
      *
      * @throws CantNewEmptyCryptoBrokerWalletSettingException
