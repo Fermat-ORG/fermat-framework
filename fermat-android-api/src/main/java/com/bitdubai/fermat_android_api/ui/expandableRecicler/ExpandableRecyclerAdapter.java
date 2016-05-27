@@ -39,7 +39,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
     private static final int TYPE_CHILD_LAST = 2;
-    private static final String TAG = "ExpandableRecyclerAdapter";
+    private static final String TAG = "ExpandableRecyclerAdap";
     /**
      * A {@link List} of all currently expanded {@link ParentListItem} objects
      * and their children, in order. Changes to this list should be made through the add/remove methods
@@ -591,7 +591,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                         notifyItemInserted(parentIndex + i + 1);
                     }catch (Exception e){
                         Log.e(TAG,"Error: expandParentListItem.");
-                        e.printStackTrace();
+                       // e.printStackTrace();
                     }
                 }
             }
