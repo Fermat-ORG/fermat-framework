@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:text="alias"
-            android:textColor="@color/text_color_blue"
+            android:textColor="#12B09F"
             android:textSize="@dimen/text_size" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -67,7 +67,7 @@
                 android:layout_gravity="right"
                 android:layout_marginTop="8dp"
                 android:text="Balance"
-                android:textColor="@color/text_color_soft_blue"
+                android:textColor="#12B09F"
                 android:textSize="@dimen/text_size"
                 android:visibility="visible" />
 
