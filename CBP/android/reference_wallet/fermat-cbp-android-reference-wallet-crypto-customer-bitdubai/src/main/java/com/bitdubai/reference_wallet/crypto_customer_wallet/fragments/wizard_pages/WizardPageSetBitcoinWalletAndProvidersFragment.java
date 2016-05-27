@@ -86,7 +86,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private ProvidersAdapter adapter;
-    private ProvidersAdapter adapter2;
 
 
     public static WizardPageSetBitcoinWalletAndProvidersFragment newInstance() {
