@@ -12,9 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 
 import java.security.MessageDigest;
@@ -126,7 +125,7 @@ public class WalletUtils {
      * @param strToValidate
      * @return
      */
-    public static CryptoAddress validateAddress(String strToValidate,CryptoWallet cryptoWallet) {
+    public static CryptoAddress validateAddress(String strToValidate,FermatWallet cryptoWallet) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
         CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
