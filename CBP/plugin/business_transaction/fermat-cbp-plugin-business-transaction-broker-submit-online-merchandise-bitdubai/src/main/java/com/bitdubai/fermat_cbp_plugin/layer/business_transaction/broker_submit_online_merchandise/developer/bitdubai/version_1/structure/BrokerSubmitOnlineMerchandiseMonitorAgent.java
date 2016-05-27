@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -71,11 +72,13 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -313,11 +316,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
 
             try {
                 dao = new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
-
-                UUID outgoingCryptoTransactionId;
-                BusinessTransactionRecord businessTransactionRecord;
                 String contractHash;
-                CryptoStatus cryptoStatus;
 
                 /**
                  * Check if there is some transaction to crypto De-stock
@@ -338,7 +337,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getPriceReference(),
                             cryptoMoneyDeStockRecord.getOriginTransaction(),
                             pendingToDeStockTransaction.getContractHash(),
-                            cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO: Manuel debemos de ver como nos llega esto desde android
+                            cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO de Manuel: crear un setting para configuar esto
 
                     pendingToDeStockTransaction.setContractTransactionStatus(PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     dao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
@@ -349,22 +348,25 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                  */
                 List<String> pendingToSubmitCrypto = dao.getPendingToSubmitCryptoList();
                 for (String pendingContractHash : pendingToSubmitCrypto) {
-                    businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
+                    BusinessTransactionRecord businessTransactionRecord = dao.getBrokerBusinessTransactionRecord(pendingContractHash);
+
+                    ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                    IntraWalletUserIdentity intraUser = intraUsers.get(0);
 
                     System.out.println("*************************************************************************************************");
                     System.out.println("BROKER_SUBMIT_ONLINE_MERCHANDISE - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
                     System.out.println("*************************************************************************************************");
-                    outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
+                    UUID outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
-                            intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                            intraUser.getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.INTRA_USER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la ReferenceWallet adecuada para la crypto currency
-                            businessTransactionRecord.getBlockchainNetworkType(),
+                            getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
+                            businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
                             businessTransactionRecord.getCryptoCurrency());
 
                     //Updating the business transaction record
@@ -432,7 +434,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                  */
                 List<BusinessTransactionRecord> pendingSubmitContractList = dao.getPendingToSubmitCryptoStatusList();
                 for (BusinessTransactionRecord pendingSubmitContractRecord : pendingSubmitContractList) {
-                    cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
+                    CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(pendingSubmitContractRecord.getTransactionHash());
                     pendingSubmitContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(pendingSubmitContractRecord);
                 }
@@ -442,7 +444,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                  */
                 List<BusinessTransactionRecord> pendingOnCryptoNetworkContractList = dao.getOnCryptoNetworkCryptoStatusList();
                 for (BusinessTransactionRecord onCryptoNetworkContractRecord : pendingOnCryptoNetworkContractList) {
-                    cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
+                    CryptoStatus cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onCryptoNetworkContractRecord.getTransactionHash());
                     onCryptoNetworkContractRecord.setCryptoStatus(cryptoStatus);
                     dao.updateBusinessTransactionRecord(onCryptoNetworkContractRecord);
                 }
@@ -663,6 +665,15 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             } catch (CantGetListPurchaseNegotiationsException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the negotiation clauses");
             }
+        }
+
+        private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {
+            if (cryptoCurrency == CryptoCurrency.BITCOIN)
+                return ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
+            if (cryptoCurrency == CryptoCurrency.FERMAT)
+                return ReferenceWallet.BASIC_WALLET_FERMAT_WALLET;
+
+            return null;
         }
     }
 }
