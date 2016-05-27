@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.app_connection.ArtArtistIdentityAppConnection;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.app_connection.FermatWalletAppConnection;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
@@ -64,6 +65,9 @@ public class FermatAppConnectionManager {
                 break;
             case "loss_protected_wallet":
                 fermatAppConnection = new LossProtectedWalletFermatAppConnection(activity);
+                break;
+            case "fermat_wallet":
+                fermatAppConnection = new FermatWalletAppConnection(activity);
                 break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":

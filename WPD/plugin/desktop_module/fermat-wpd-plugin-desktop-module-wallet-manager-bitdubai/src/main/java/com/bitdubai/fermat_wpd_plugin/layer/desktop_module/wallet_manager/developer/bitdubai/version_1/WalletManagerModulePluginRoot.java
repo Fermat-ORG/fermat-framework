@@ -690,12 +690,12 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletType.REFERENCE,
                         new ArrayList<InstalledSkin>(),
                         new ArrayList<InstalledLanguage>(),
-                        "reference_wallet_icon",
+                        "fermat_wallet_icon",
                         "Fermat Wallet",
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.ALPHA);
+                        AppsStatus.DEV);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);

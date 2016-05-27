@@ -665,17 +665,42 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             getActivity().onBackPressed();
         }else{
             invalidate();
-        }if (dataSet.isEmpty()) {
-            showEmpty(true, emptyView);
-            swipeRefresh.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefresh.setRefreshing(true);
-                    onRefresh();
-                }
+        }
+        if(dataSet !=null)
+        {
+            if (dataSet.isEmpty()) {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        showEmpty(true, emptyView);
+                        swipeRefresh.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefresh.setRefreshing(true);
+                                onRefresh();
+                            }
 
-            });
-        } else {
+                        });
+                    }
+                });
+
+            } else {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        adapter.changeDataSet(dataSet);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onRefresh();
+                            }
+                        }, 500);
+                    }
+                });
+
+            }
+        }
+        else {
 
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -686,12 +711,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         public void run() {
                             onRefresh();
                         }
-                    }, 800);
+                    }, 500);
                 }
             });
 
-
         }
+
     }
 
     public void showEmpty(boolean show, View emptyView) {

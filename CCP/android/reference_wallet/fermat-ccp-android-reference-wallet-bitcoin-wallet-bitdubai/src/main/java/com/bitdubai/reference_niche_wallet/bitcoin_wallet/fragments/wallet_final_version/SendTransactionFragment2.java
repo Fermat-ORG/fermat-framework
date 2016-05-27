@@ -218,32 +218,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             //list transaction on background
 
-            getExecutor().submit(new Runnable() {
-                @Override
-                public void run() {
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                            adapter.changeDataSet(openNegotiationList);
-                            adapter.notifyDataSetChanged();
-
-
-                            if(openNegotiationList!=null) {
-                                if (openNegotiationList.isEmpty()) {
-                                    recyclerView.setVisibility(View.GONE);
-                                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                                }
-                            }else{
-                                recyclerView.setVisibility(View.GONE);
-                                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                                emptyListViewsContainer.setVisibility(View.GONE);
-                            }
-                        }
-                    });
-
-                }
-            });
+            onRefresh();
 
             //check blockchain progress
 
@@ -737,7 +712,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-            emptyListViewsContainer.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -812,7 +787,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
 
                 if(!data.isEmpty())
-                    FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                        }
+                    });
             }
         } catch (CantListTransactionsException e) {
             e.printStackTrace();
@@ -848,9 +827,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     adapter.changeDataSet(openNegotiationList);
 
                 if(openNegotiationList.size() > 0)
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                }
             }
             else {
+                recyclerView.setVisibility(View.GONE);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
             }
         }
@@ -873,11 +856,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
-                txt_balance_amount.setTextSize(28);
+                if(txt_balance_amount.getText().length() >= 7)
+                    txt_balance_amount.setTextSize(25);
+                else
+                    txt_balance_amount.setTextSize(28);
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(20);
+                txt_balance_amount.setTextSize(18);
                 break;
         }
 
