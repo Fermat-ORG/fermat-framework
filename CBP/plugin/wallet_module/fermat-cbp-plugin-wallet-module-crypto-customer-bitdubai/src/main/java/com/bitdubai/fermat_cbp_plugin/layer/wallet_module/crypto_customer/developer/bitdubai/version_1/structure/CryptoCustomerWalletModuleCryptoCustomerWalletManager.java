@@ -1096,7 +1096,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             MoneyType paymentMethod = MoneyType.getByCode(paymentMethodCode);
 
             if (paymentMethod == MoneyType.CRYPTO) {
-                final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
+                final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY);
                 final CryptoCurrency paymentCurrency = CryptoCurrency.getByCode(merchandiseCurrencyCode);
 
                 String cryptoBrokerPublicKey = "reference_wallet"; //TODO: this is a hardcoded public key
