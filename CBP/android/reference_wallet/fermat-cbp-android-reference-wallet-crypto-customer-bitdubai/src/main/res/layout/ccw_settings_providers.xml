@@ -82,6 +82,39 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ccw_selected_fermat_wallet_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOUR FERMAT WALLET"
+            android:textColor="#E5007E"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/ccw_wizard_color"/>
+
+        <Spinner
+            android:id="@+id/fermat_wallets_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/black"
+            android:drawSelectorOnTop="true"
+            tools:listitem="@layout/ccw_spinner_item"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/ccw_selected_stock_wallets_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
