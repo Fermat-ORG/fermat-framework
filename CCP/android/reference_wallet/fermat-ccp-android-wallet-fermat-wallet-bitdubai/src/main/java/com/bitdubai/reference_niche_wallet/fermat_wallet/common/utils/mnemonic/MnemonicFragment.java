@@ -14,20 +14,19 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
-
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 
 
 /**
  * Created by mati on 2016.02.20..
  */
-public class MnemonicFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> {
+public class MnemonicFragment extends AbstractFermatFragment<FermatWalletSession,ResourceProviderManager> {
 
     /**
      * Platform
      */
-    private CryptoWallet cryptoWallet;
+    private FermatWallet fermatWallet;
     private ErrorManager errorManager;
 
     //constuctor
@@ -42,7 +41,7 @@ public class MnemonicFragment extends AbstractFermatFragment<ReferenceWalletSess
         super.onCreate(savedInstanceState);
         try {
 
-            cryptoWallet = appSession.getModuleManager();
+            fermatWallet = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {
@@ -68,7 +67,7 @@ public class MnemonicFragment extends AbstractFermatFragment<ReferenceWalletSess
         try {
             //get mnemonic text from Crypto Wallet Module
             txt_mnemonic.setText("");
-            for (String s : cryptoWallet.getMnemonicText()) {
+            for (String s : fermatWallet.getMnemonicText()) {
                 txt_mnemonic.append(s+" ");
             }
 
