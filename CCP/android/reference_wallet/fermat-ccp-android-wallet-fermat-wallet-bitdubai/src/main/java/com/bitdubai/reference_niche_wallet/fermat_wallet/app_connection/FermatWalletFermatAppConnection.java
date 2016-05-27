@@ -88,9 +88,9 @@ public class FermatWalletFermatAppConnection extends AppConnections<FermatWallet
 
 
                 if (enabledNotification)
-                    return FermatWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return FermatWalletNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey(), Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
-                    return new FermatWalletNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
+                    return new FermatWalletBuildNotificationPainter("", "", "", "", false,Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
 
             }
             else

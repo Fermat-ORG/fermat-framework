@@ -65,8 +65,7 @@ public class FragmentsCommons {
                 Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
             } catch (CantGetFermatWalletException e) {
                 e.printStackTrace();
-            } catch (CantGetFermatWalletException e) {
-                e.printStackTrace();
+
             } catch (CantListFermatWalletIntraUserIdentityException e) {
                 e.printStackTrace();
             }

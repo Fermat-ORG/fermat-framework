@@ -257,7 +257,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.loss_externaluser_button))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
-                .setBackgroundDrawable( R.drawable.label)
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -268,7 +268,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
-                .setBackgroundDrawable( R.drawable.label)
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
