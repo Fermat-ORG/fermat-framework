@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -64,11 +65,13 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -310,6 +313,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 for (String pendingContractHash : pendingToSubmitCrypto) {
                     BusinessTransactionRecord businessTransactionRecord = dao.getCustomerOnlinePaymentRecord(pendingContractHash);
 
+                    ArrayList<IntraWalletUserIdentity> intraUsers = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+                    IntraWalletUserIdentity intraUser = intraUsers.get(0);
+
                     System.out.println("***************************************************************************************");
                     System.out.println("CUSTOMER_ONLINE_PAYMENT - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
                     System.out.println("***************************************************************************************");
@@ -319,18 +325,17 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
-                            intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                            intraUser.getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_CUSTOMER,
                             Actors.INTRA_USER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, //TODO: pasar la reference wallet adecuada para la crypto currency
-                            businessTransactionRecord.getBlockchainNetworkType(),
+                            getReferenceWallet(businessTransactionRecord.getCryptoCurrency()),
+                            businessTransactionRecord.getBlockchainNetworkType(), //TODO de Manuel: crear un setting para configuar esto
                             businessTransactionRecord.getCryptoCurrency());
 
                     dao.persistsCryptoTransactionUUID(pendingContractHash, outgoingCryptoTransactionId);
                     dao.updateContractTransactionStatus(pendingContractHash, ONLINE_PAYMENT_SUBMITTED);
                 }
-                //TODO: finish this
 
                 /**
                  * Check contract status to send - Customer Side
@@ -604,6 +609,15 @@ public class CustomerOnlinePaymentMonitorAgent implements
             } catch (CantGetListClauseException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the negotiation clauses");
             }
+        }
+
+        private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {
+            if (cryptoCurrency == CryptoCurrency.BITCOIN)
+                return ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
+            if (cryptoCurrency == CryptoCurrency.FERMAT)
+                return ReferenceWallet.BASIC_WALLET_FERMAT_WALLET;
+
+            return null;
         }
     }
 }
