@@ -211,7 +211,7 @@ public class SendTransactionHistoryFragment
                         blockchainNetworkType,
                         MAX_TRANSACTIONS,0);
 
-                offset += MAX_TRANSACTIONS;
+                //offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

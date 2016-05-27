@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -557,7 +558,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                             actor,
                                             ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                            blockchainNetworkType
+                                            blockchainNetworkType,
+                                            CryptoCurrency.BITCOIN
 
                                            );
                                     Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();

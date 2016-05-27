@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -58,6 +59,7 @@ import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +88,7 @@ public class ConnectionsWorldFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     private ChatUserSubAppSession chatUserSubAppSession;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     //Data
     private ChatActorCommunitySettings appSettings;
@@ -232,7 +235,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                                    applicationsHelper.get(), 0);
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -372,11 +376,7 @@ public class ConnectionsWorldFragment
                 appSession.setData(CHAT_USER_SELECTED, data);
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
             } else {
-                showDialogHelp();
-//                InstalledApp installedApp = new InstalledApp("Chat",SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),new Version(), 0,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
-//
-//                selectApp(installedApp);
-                //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode(), SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                showDialogHelp(1);
             }
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
         {
@@ -541,7 +541,7 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
 
             if (id == R.id.action_help)
-                showDialogHelp();
+                showDialogHelp(0);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -552,7 +552,7 @@ public class ConnectionsWorldFragment
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialogHelp() {
+    private void showDialogHelp(int showIdentity) {
         try {
             moduleManager = appSession.getModuleManager();
             if (moduleManager.getSelectedActorIdentity() != null) {
@@ -562,7 +562,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                                    applicationsHelper.get(), showIdentity);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -576,7 +577,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                                    PresentationChatCommunityDialog.TYPE_PRESENTATION);
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION,
+                                    applicationsHelper.get(), showIdentity);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -599,7 +601,8 @@ public class ConnectionsWorldFragment
                         chatUserSubAppSession,
                         null,
                         moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                                applicationsHelper.get(), showIdentity);
                 presentationChatCommunityDialog.show();
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -619,7 +622,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                            applicationsHelper.get(), showIdentity);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -634,7 +638,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                            applicationsHelper.get(), showIdentity);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

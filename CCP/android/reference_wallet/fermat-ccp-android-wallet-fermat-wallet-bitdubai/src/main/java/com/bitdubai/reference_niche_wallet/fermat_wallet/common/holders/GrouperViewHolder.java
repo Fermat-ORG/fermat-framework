@@ -10,7 +10,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -79,28 +79,42 @@ public class GrouperViewHolder extends ParentViewHolder {
         String contactName = "Uninformed";
 
         //involved actor is not a wallet contact
-        if(cryptoWalletTransaction.getInvolvedActor() != null)
-            {
+        if(cryptoWalletTransaction.getInvolvedActor() != null){
                 photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
-            }else{
-            if (cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
-                contactName = "Intra Wallet Transaction";
-            }
-        }
+            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
+                contactName = "Bitcoin Wallet";
+            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
+                    contactName = "Loss Protected Wallet";
 
-        //TODO Ver porque se cae cuando el contacto tiene algunos bytes
+            }
+
+
         try {
             if (photo != null) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
+            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
+
+                    Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
+
+            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
+
+                //cannot find symbol variable loss_protected
+                //Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
+
             } else
                 Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
         }catch (Exception e){
             Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
 
         }
+
+
+
+
+
 
         txt_contactName.setText(contactName);
         txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");

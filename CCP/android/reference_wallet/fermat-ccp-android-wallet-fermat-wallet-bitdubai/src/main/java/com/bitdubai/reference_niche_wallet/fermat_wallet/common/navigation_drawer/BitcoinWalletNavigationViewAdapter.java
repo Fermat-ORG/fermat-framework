@@ -3,7 +3,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_draw
 import android.app.Activity;
 import android.graphics.Typeface;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;

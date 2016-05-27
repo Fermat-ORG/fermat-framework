@@ -51,8 +51,10 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
+
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new IntraUserCommunityNavigationViewPainter(getContext(),null,getApplicationManager());
+        return new IntraUserCommunityNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -26,16 +27,14 @@ import java.lang.ref.WeakReference;
 public class ChatCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    private final ActiveActorIdentityInformation chatUserLoginIdentity;
-    ChatUserSubAppSession subAppSession;
-    private ChatActorCommunitySubAppModuleManager moduleManager;
+    private ChatUserSubAppSession subAppSession;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public ChatCommunityNavigationViewPainter(Context activity,
-                                              ActiveActorIdentityInformation chatUserLoginIdentity, ChatUserSubAppSession subAppSession) {
+    public ChatCommunityNavigationViewPainter(Context activity, ChatUserSubAppSession subAppSession,
+                                              FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
-        this.chatUserLoginIdentity = chatUserLoginIdentity;
         this.subAppSession = subAppSession;
-        //this.moduleManager = subAppSession.getModuleManager();
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
     @Override
@@ -44,7 +43,8 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
         View headerView = null;
         try {
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), chatUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),subAppSession,
+                    applicationsHelper.get());
         } catch (Exception e) {
             e.printStackTrace();
             return null;

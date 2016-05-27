@@ -27,12 +27,11 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactLis
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -46,6 +45,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorComm
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -198,24 +199,36 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         @Override
         protected Void doInBackground(Void... params) {
             try {
-               con = chatManager.listWorldChatActor(identity, MAX, offset);
-                contactname.clear();
-                contactid.clear();
-                contacticon.clear();
-                for (ChatActorCommunityInformation conta:con) {
-                    if (conta.getConnectionState() != null) {
-                        if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
-                            try {
-                                chatManager.requestConnectionToChatActor(chatIdentity, conta);
-                            } catch (Exception e) {
-                                if (errorManager != null)
-                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
-                            contactname.add(conta.getAlias());
-                            contactid.add(conta.getPublicKey());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            contacticon.add(bmd.getBitmap());
+//               con = chatManager.listWorldChatActor(identity, MAX, offset);
+//                contactname.clear();
+//                contactid.clear();
+//                contacticon.clear();
+//                contactStatus.clear();
+                if(identity != null) {
+                    con = chatManager.listWorldChatActor(identity, MAX, offset);
+                    if (con != null) {
+                        int size = con.size();
+                        if (size > 0) {
+                            for (ChatActorCommunityInformation conta:con) {
+                                if (conta.getConnectionState() != null) {
+                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                                        try {
+                                            chatManager.requestConnectionToChatActor(identity, conta);
+                                        } catch (Exception e) {
+                                            if (errorManager != null)
+                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                        }
+                                    }
+                                }
+//                                        contactname.add(conta.getAlias());
+//                                        contactid.add(conta.getPublicKey());
+//                                        ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
+//                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                                        contacticon.add(bmd.getBitmap());
+//                                        contactStatus.add(conta.getStatus());
+                                    //}
+                                //}
+                           }
                         }
                     }
                 }
@@ -245,9 +258,11 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                             ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
                             BitmapDrawable bmd = new BitmapDrawable(bytes);
                             contacticon.add(bmd.getBitmap());
-                            if(conta.getConnectionState()!=null)
-                                contactStatus.add(conta.getConnectionState().toString());
-                            else contactStatus.add("");
+                            contactStatus.add(conta.getStatus());
+//                            if(conta.getConnectionState()!=null)
+//                                contactStatus.add(conta.getConnectionState().toString());
+//                            else
+//                                contactStatus.add("");
                         }
                         noData.setVisibility(View.GONE);
                         noDatalabel.setVisibility(View.GONE);
@@ -337,6 +352,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                         try{
                             Toast.makeText(getActivity(), "Contacts Updated", Toast.LENGTH_SHORT).show();
                             updateValuesNS();
+                            updateValues();
                             final ContactListAdapter adaptador =
                                     new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                                             null, errorManager, chatSession, appSession, null);

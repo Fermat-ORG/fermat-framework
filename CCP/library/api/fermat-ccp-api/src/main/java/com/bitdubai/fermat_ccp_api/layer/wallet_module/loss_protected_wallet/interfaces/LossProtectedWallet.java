@@ -324,7 +324,8 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType
+              BlockchainNetworkType blockchainNetworkType,
+              CryptoCurrency cryptoCurrency
               ) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
@@ -336,7 +337,9 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
                        Actors actortypeTo,
                        ReferenceWallet sendingWallet,
                        ReferenceWallet receivingWallet,
-                       BlockchainNetworkType blockchainNetworkType)throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+                       BlockchainNetworkType blockchainNetworkType,
+                       CryptoCurrency cryptoCurrency
+                       )throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     /**
@@ -578,7 +581,8 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
                                    final String                description      ,
                                    final long                  amount           ,
                                    final BlockchainNetworkType networkType      ,
-                                   final ReferenceWallet       referenceWallet) throws CantSendLossProtectedPaymentRequestException;
+                                   final ReferenceWallet       referenceWallet,
+                                   final CryptoCurrency         cryptoCurrency) throws CantSendLossProtectedPaymentRequestException;
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
