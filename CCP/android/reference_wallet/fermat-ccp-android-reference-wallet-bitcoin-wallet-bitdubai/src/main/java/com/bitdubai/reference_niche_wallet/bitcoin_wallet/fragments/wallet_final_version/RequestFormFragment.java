@@ -653,7 +653,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   CryptoCurrency.BITCOIN
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();

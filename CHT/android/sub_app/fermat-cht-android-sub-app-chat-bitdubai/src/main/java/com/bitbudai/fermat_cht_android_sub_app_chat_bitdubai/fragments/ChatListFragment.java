@@ -254,6 +254,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
                 chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -371,7 +372,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -429,6 +429,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onUpdateViewOnUIThread(code);
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
+            chatlistview();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }

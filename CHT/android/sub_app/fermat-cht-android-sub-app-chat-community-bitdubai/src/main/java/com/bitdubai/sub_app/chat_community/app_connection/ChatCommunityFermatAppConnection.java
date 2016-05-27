@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySelectableIdentityImpl;
 import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
 import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.chat_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 import java.util.ArrayList;
@@ -52,17 +53,18 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
+        //getChtActiveIdentity();
         return new ChatCommunityFragmentFactory();
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CHAT_PLATFORM,
-                Layers.SUB_APP_MODULE,
-                Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
-                Developers.BITDUBAI,
-                new Version()
+            Platforms.CHAT_PLATFORM,
+            Layers.SUB_APP_MODULE,
+            Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
+            Developers.BITDUBAI,
+            new Version()
         );
     }
 
@@ -73,53 +75,8 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getFullyLoadedSession());
-        getChtActiveIdentity();
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        if(navPainter!=null)
-            return new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
-        else
-            return navPainter;
-//        try {
-//
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    ChatActorCommunitySelectableIdentity result = null;
-//                    try {
-//                        this.chatUserSubAppSession = getFullyLoadedSession();
-//                        if(chatUserSubAppSession!=  null)
-//                            moduleManager = chatUserSubAppSession.getModuleManager();
-//                        result = moduleManager.getSelectedActorIdentity();
-//                    }catch (CantGetSelectedActorIdentityException e){
-//                        //There are no identities in device
-//                        e.printStackTrace();
-//                    }catch (ActorIdentityNotSelectedException e){
-//                        //There are identities in device, but none selected
-//                        e.printStackTrace();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    if(result!=null){
-//                        activeIdentity = result;
-//                    }
-//                    getContext().runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        if (activeIdentity != null) {
-//                                                            navPainter= new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
-//                                                        }
-//                                                    }
-//                                                }
-//                    );
-//
-//                }
-//            }).start();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return navPainter;
+        navPainter=new ChatCommunityNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
+        return navPainter;
     }
 
     @Override
@@ -134,79 +91,6 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
-        try
-        {
-            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
-            if(chatUserSubAppSession!=  null)
-                moduleManager = chatUserSubAppSession.getModuleManager();
-            return ChatCommunityBuildNotification.getNotification(moduleManager,code);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public void getChtActiveIdentity() {
-
-        if (activeIdentity == null) {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            //progressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getContext());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    activeIdentity = null;
-                    if (result != null &&
-                            result.length > 0) {
-                        progressDialog.dismiss();
-                        if (getContext() != null && navPainter==null && activeIdentity==null) {
-                            activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
-                            navPainter = new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
-                        }
-                    } else
-                        activeIdentity = null;
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
-                    activeIdentity = null;
-                    if (getContext() != null)
-                        ex.printStackTrace();
-                }
-            });
-            worker.execute();
-        }
-    }
-
-    private synchronized ChatActorCommunitySelectableIdentity getMoreData() {
-        ChatActorCommunitySelectableIdentity result = null;
-        try {
-            this.chatUserSubAppSession = getFullyLoadedSession();
-            if(chatUserSubAppSession!=  null)
-                moduleManager = chatUserSubAppSession.getModuleManager();
-            result = moduleManager.getSelectedActorIdentity();
-        }catch (CantGetSelectedActorIdentityException e){
-            //There are no identities in device
-            e.printStackTrace();
-        }catch (ActorIdentityNotSelectedException e){
-            //There are identities in device, but none selected
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
+        return CommunityNotificationPainterBuilder.getNotification(code);
     }
 }

@@ -402,22 +402,24 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     }
 
     @Override
-    public void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
-                                             final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException {
+    public void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
+                                             final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException {
         try {
 
             final ActorIdentityInformation actorSending = new ActorIdentityInformation(
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType(),
                     selectedIdentity.getAlias(),
-                    selectedIdentity.getImage()
+                    selectedIdentity.getImage(),
+                    ""
             );
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
                     chatActorToContact.getPublicKey(),
                     Actors.CHAT,
                     chatActorToContact.getAlias(),
-                    chatActorToContact.getImage()
+                    chatActorToContact.getImage(),
+                    chatActorToContact.getStatus()
             );
 
             chatActorConnectionManager.requestConnection(
@@ -432,8 +434,6 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

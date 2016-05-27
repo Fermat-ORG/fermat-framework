@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
@@ -54,7 +55,8 @@ public interface CryptoPaymentRequestManager extends FermatManager {
                                   long                  startTimeStamp   ,
                                   BlockchainNetworkType networkType      ,
                                   ReferenceWallet       referenceWallet,
-                                  String walletPublicKey) throws CantSendRequestException;
+                                  String walletPublicKey,
+                                  CryptoCurrency cryptoCurrency) throws CantSendRequestException;
 
     /**
      * Throw the method <code>informRefusal</code> you can inform the rejection of a request to its requester.

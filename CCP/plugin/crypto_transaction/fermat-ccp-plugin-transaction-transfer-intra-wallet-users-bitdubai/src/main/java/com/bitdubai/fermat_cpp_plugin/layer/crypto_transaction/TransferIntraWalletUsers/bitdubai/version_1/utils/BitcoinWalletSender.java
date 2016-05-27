@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWal
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
@@ -232,7 +233,8 @@ public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord()
                 "",
                 actorType,
                 actorType,
-                blockchainNetworkType);
+                blockchainNetworkType,
+                CryptoCurrency.BITCOIN);
 
 
         return bitcoinLossProtectedWalletTransactionRecord;

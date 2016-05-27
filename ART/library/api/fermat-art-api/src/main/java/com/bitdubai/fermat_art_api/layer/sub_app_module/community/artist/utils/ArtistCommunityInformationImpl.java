@@ -9,6 +9,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.AbstractArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +20,12 @@ import java.util.UUID;
  */
 public class ArtistCommunityInformationImpl
         extends AbstractArtCommunityInformation
-        implements ArtistCommunityInformation {
+        implements ArtistCommunityInformation, Serializable {
 
-    public ArtistCommunityInformationImpl(final String publicKey,
-                                                        final String alias,
-                                                        final byte[] image) {
+    public ArtistCommunityInformationImpl(
+            final String publicKey,
+            final String alias,
+            final byte[] image) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -32,11 +34,12 @@ public class ArtistCommunityInformationImpl
         this.connectionId = null;
     }
 
-    public ArtistCommunityInformationImpl(final String publicKey,
-                                                        final String alias,
-                                                        final byte[] image,
-                                                        final ConnectionState connectionState,
-                                                        final UUID connectionId) {
+    public ArtistCommunityInformationImpl(
+            final String publicKey,
+            final String alias,
+            final byte[] image,
+            final ConnectionState connectionState,
+            final UUID connectionId) {
 
         this.publicKey          = publicKey      ;
         this.alias              = alias          ;

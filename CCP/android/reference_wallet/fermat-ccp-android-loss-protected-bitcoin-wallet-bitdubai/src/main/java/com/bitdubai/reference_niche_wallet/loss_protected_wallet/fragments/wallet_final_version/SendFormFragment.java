@@ -133,6 +133,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private BlockchainNetworkType blockchainNetworkType;
 
     boolean lossProtectedEnabled;
+    private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
 
@@ -208,14 +209,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             }
 
-            _executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    setUpContactAddapter();
 
-                }
-            });
-
+            setUpContactAddapter();
 
 
 
@@ -485,7 +480,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private void setUpContactAddapter() {
 
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);
@@ -721,7 +716,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     lossProtectedWalletContact.getActorPublicKey(),
                                                     lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                    blockchainNetworkType
+                                                    blockchainNetworkType,
+                                                    CryptoCurrency.BITCOIN
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);

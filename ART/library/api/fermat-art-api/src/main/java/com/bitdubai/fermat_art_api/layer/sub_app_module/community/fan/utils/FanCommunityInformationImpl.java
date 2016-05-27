@@ -10,6 +10,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.AbstractArtCom
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +20,7 @@ import java.util.UUID;
  */
 public class FanCommunityInformationImpl
         extends AbstractArtCommunityInformation
-        implements FanCommunityInformation {
+        implements FanCommunityInformation, Serializable {
 
     public FanCommunityInformationImpl(final String publicKey,
                                                           final String alias,

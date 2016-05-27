@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_u
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
@@ -30,22 +31,23 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     private final TransactionState state             ;
     private final CryptoStatus     cryptoStatus      ;
     private final BlockchainNetworkType blockchainNetworkType;
+    private final CryptoCurrency cryptoCurrency;
 
-    public TransactionWrapper(final UUID             transactionId     ,
-                              final String           actorFromPublicKey,
-                              final String           actorToPublicKey  ,
-                              final Actors           actorFromType     ,
-                              final Actors           actorToType       ,
-                              final String           transactionHash   ,
-                              final CryptoAddress    addressFrom       ,
-                              final CryptoAddress    addressTo         ,
-                              final long             amount            ,
-                              final long             timestamp         ,
-                              final String           memo              ,
-                              final String           walletPublicKey   ,
-                              final TransactionState state             ,
-                              final CryptoStatus     cryptoStatus      ,
-                              final BlockchainNetworkType blockchainNetworkType) {
+    public TransactionWrapper(final UUID transactionId,
+                              final String actorFromPublicKey,
+                              final String actorToPublicKey,
+                              final Actors actorFromType,
+                              final Actors actorToType,
+                              final String transactionHash,
+                              final CryptoAddress addressFrom,
+                              final CryptoAddress addressTo,
+                              final long amount,
+                              final long timestamp,
+                              final String memo,
+                              final String walletPublicKey,
+                              final TransactionState state,
+                              final CryptoStatus cryptoStatus,
+                              final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency) {
 
         this.transactionId      = transactionId     ;
         this.actorFromPublicKey = actorFromPublicKey;
@@ -62,6 +64,7 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
         this.state              = state             ;
         this.cryptoStatus       = cryptoStatus      ;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -96,6 +99,11 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
+    }
 
     @Override
     public String getTransactionHash() {

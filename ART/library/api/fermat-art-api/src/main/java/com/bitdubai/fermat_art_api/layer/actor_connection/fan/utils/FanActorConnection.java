@@ -3,12 +3,15 @@ package com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public final class FanActorConnection extends ActorConnection<FanLinkedActorIdentity> {
+public final class FanActorConnection
+        extends ActorConnection<FanLinkedActorIdentity>
+        implements Serializable {
 
     /**
      * Constructor with parameters.

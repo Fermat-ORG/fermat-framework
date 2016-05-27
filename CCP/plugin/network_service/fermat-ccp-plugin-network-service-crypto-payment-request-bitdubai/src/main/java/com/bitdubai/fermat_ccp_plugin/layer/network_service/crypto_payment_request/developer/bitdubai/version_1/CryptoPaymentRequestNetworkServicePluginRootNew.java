@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -323,7 +324,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
                     0, PaymentConstants.OUTGOING_MESSAGE,
-                    requestMessage.getWalletPublicKey()
+                    requestMessage.getWalletPublicKey(),
+                    requestMessage.getCryptoCurrency()
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -591,7 +593,12 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
      * - Type          : SENT.
      */
     @Override
-    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType, CryptoAddress cryptoAddress, String description, long amount, long startTimeStamp, BlockchainNetworkType networkType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantSendRequestException {
+    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType,
+                                         CryptoAddress cryptoAddress, String description,
+                                         long amount, long startTimeStamp,
+                                         BlockchainNetworkType networkType,
+                                         ReferenceWallet referenceWallet, String walletPublicKey,
+                                         CryptoCurrency cryptoCurrency) throws CantSendRequestException {
 
         System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT.");
 
@@ -617,7 +624,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     networkType,
                     referenceWallet,
                     0, PaymentConstants.OUTGOING_MESSAGE,
-                    walletPublicKey
+                    walletPublicKey,
+                    cryptoCurrency
             );
 
 
@@ -1062,9 +1070,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 cpr.getReferenceWallet(),
                 cpr.getIdentityPublicKey(),
                 cpr.getActorPublicKey(),
-                cpr.getWalletPublicKey()
-
-        ).toJson();
+                cpr.getWalletPublicKey(),
+                cpr.getCryptoCurrency()).toJson();
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeRequestProtocolStateException,
