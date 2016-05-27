@@ -188,7 +188,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         setUpPresentation(false);
                     }
 
-
                 }}, 500);
 
         } catch (Exception ex) {
@@ -349,7 +348,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             long balance = 0;
             if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
-                balance = lossProtectedWalletmanager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+                balance =  lossProtectedWalletmanager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
                 balance = lossProtectedWalletmanager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
@@ -422,9 +421,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             data.setValueTextSize(12f);
             data.setValueTextColor(Color.WHITE);
 
-            chart.setData(data);
-
-
 
             chart.setData(data);
             chart.setDescription("");
@@ -439,7 +435,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
 
-            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),R.layout.loss_custom_marker_view);
+            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
+                    R.layout.loss_custom_marker_view,
+                    allWalletSpendingList,
+                    lossProtectedWalletSession,
+                    errorManager,
+                    lossProtectedWalletmanager);
             chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
@@ -518,12 +519,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
 
-                DecimalFormatSymbols separator = new DecimalFormatSymbols();
-                separator.setDecimalSeparator('.');
-                DecimalFormat form = new DecimalFormat("##########.##",separator);
+
 
                 //Set entries values for the chart
-                entryList.add(new Entry(Float.parseFloat(form.format(valueEntry)), i));
+                entryList.add(new Entry((float)valueEntry, i));
                 xValues.add(String.valueOf(i));
             }
             chart.setVisibility(View.VISIBLE);
@@ -568,8 +567,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
 
+            DecimalFormatSymbols separator = new DecimalFormatSymbols();
+            separator.setDecimalSeparator('.');
+            DecimalFormat form = new DecimalFormat("##########.######",separator);
+
             //convert satoshis to bitcoin
-            final double amount = Double.parseDouble(WalletUtils.formatBalanceString(spendingAmount, ShowMoneyType.BITCOIN.getCode()));
+            final double amount = Double.parseDouble(WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount)), ShowMoneyType.BITCOIN.getCode()));
 
             //calculate the Earned/Lost in dollars of the spending value
             totalInDollars = (amount * spendingExchangeRate)-(amount * transaction.getExchangeRate());
