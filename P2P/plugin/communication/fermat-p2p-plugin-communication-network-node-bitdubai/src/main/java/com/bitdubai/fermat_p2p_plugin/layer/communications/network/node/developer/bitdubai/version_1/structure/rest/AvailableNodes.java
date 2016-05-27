@@ -6,16 +6,20 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -30,6 +34,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.AvailableNodes</code>
@@ -67,7 +72,7 @@ public class AvailableNodes implements RestFulServices {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String listAvailableNodesProfile(@FormParam("latitude") String latitudeString, @FormParam("longitude") String longitudeString){
+    public Response listAvailableNodesProfile(@FormParam("latitude") String latitudeString, @FormParam("longitude") String longitudeString){
 
         JsonObject jsonObject = new JsonObject();
 
@@ -110,7 +115,7 @@ public class AvailableNodes implements RestFulServices {
 
                 List<NodeProfile> listNodeProfile = new ArrayList<>();
 
-                for (NodesCatalog nodesCatalog : nodesCatalogsFiltered.subList(0,50)) {
+                for (NodesCatalog nodesCatalog : nodesCatalogsFiltered.subList(0,5)) {
 
                     NodeProfile nodeProfile = new NodeProfile();
                     nodeProfile.setName((nodesCatalog.getName() != null ? nodesCatalog.getName() : null));
@@ -124,9 +129,9 @@ public class AvailableNodes implements RestFulServices {
                         Location location = new NetworkNodeCommunicationDeviceLocation(
                                 nodesCatalog.getLastLatitude() ,
                                 nodesCatalog.getLastLongitude(),
-                                null     ,
-                                null     ,
-                                null     ,
+                                0.0     ,
+                                0.0     ,
+                                0.0     ,
                                 System.currentTimeMillis(),
                                 LocationSource.UNKNOWN
                         );
@@ -154,7 +159,7 @@ public class AvailableNodes implements RestFulServices {
             jsonObject.addProperty("message", gson.toJson(e));
         }
 
-       return gson.toJson(jsonObject);
+       return Response.status(200).entity(gson.toJson(jsonObject)).build();
     }
 
 

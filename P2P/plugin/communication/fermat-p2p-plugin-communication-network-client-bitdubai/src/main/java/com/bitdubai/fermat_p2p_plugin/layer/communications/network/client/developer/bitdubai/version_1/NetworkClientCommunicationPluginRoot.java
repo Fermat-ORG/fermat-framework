@@ -491,7 +491,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;
-        List<NodeProfile> listServer = null;
+        List<NodeProfile> listServer = new ArrayList<>();
 
         System.out.println("CALLING getNodesProfileList");
 
@@ -517,6 +517,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
+            System.out.println(respond);
 
             if (respond.contains("data")) {
 
@@ -524,20 +525,21 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 * Decode into a json Object
                 */
                 JsonParser parser = new JsonParser();
-                JsonObject respondJsonObject = (JsonObject) parser.parse(respond);
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                listServer = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                listServer = new Gson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
                 }.getType());
 
                 System.out.println("NetworkClientCommunicationPluginRoot - resultList.size() = " + listServer.size());
                 System.out.println(respondJsonObject);
 
             }else{
-                System.out.println("NetworkClientCommunicationPluginRoot - Requested list is not available, listServer.size() = " + listServer.size());
+                System.out.println("NetworkClientCommunicationConnection - Requested list is not available, resultList.size() = " + listServer.size());
             }
 
         }catch (Exception e){
             e.printStackTrace();
+            return null;
         }finally {
             if (conn != null)
                 conn.disconnect();

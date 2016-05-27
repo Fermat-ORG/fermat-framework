@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.model;
+package com.bitdubai.fermat_api.layer.all_definition.location_system;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
@@ -23,6 +23,20 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     private final Double         altitudeAccuracy;
     private final long           time            ;
     private final LocationSource source          ;
+
+
+    /*
+     * Constructor without params
+     */
+    public NetworkNodeCommunicationDeviceLocation(){
+        this.latitude  = 0;
+        this.longitude = 0;
+        this.altitude  = null;
+        this.accuracy = null;
+        this.altitudeAccuracy = null;
+        this.source = null;
+        this.time = 0;
+    }
 
     /**
      * Constructor with params:
