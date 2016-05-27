@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -837,7 +838,6 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getBrokerPublicKey());
         //For the business transaction this value represents the contract hash.
         record.setStringValue(ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME, businessTransactionRecord.getContractHash());
-        record.setStringValue(ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, businessTransactionRecord.getContractTransactionStatus().getCode());
         record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME, businessTransactionRecord.getCryptoAddress().getAddress());
         record.setLongValue(ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME, businessTransactionRecord.getCryptoAmount());
         record.setStringValue(ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getCustomerPublicKey());
@@ -846,11 +846,17 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, businessTransactionRecord.getTransactionId());
         record.setStringValue(ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getExternalWalletPublicKey());
 
-        if (businessTransactionRecord.getCryptoCurrency() != null)
-            record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME, businessTransactionRecord.getCryptoCurrency().getCode());
+        final CryptoCurrency cryptoCurrency = businessTransactionRecord.getCryptoCurrency();
+        if (cryptoCurrency != null)
+            record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
 
-        if (businessTransactionRecord.getCryptoStatus() != null)
-            record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME, businessTransactionRecord.getCryptoStatus().getCode());
+        final CryptoStatus cryptoStatus = businessTransactionRecord.getCryptoStatus();
+        if (cryptoStatus != null)
+            record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+
+        final ContractTransactionStatus contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
+        if (contractTransactionStatus != null)
+            record.setStringValue(ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, contractTransactionStatus.getCode());
 
         return record;
     }
@@ -868,12 +874,14 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME, incomingMoneyEvent.getEventId());
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME, incomingMoneyEvent.getReceiverPublicKey());
         record.setLongValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME, incomingMoneyEvent.getCryptoAmount());
-        record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME, incomingMoneyEvent.getCryptoCurrency().getCode());
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME, incomingMoneyEvent.getSenderPublicKey());
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME, incomingMoneyEvent.getWalletPublicKey());
         record.setLongValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME, incomingMoneyEvent.getTimestamp());
         record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME, incomingMoneyEvent.getTransactionHash());
+
+        if (incomingMoneyEvent.getCryptoCurrency() != null)
+            record.setStringValue(ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME, incomingMoneyEvent.getCryptoCurrency().getCode());
 
         return record;
     }

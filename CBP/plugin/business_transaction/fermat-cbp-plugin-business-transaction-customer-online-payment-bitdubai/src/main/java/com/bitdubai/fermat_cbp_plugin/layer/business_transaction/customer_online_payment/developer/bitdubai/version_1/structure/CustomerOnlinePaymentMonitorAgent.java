@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
@@ -45,6 +47,10 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -99,6 +105,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
     TransactionTransmissionManager transactionTransmissionManager;
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    CustomerBrokerSaleNegotiationManager saleNegotiationManager;
     IntraActorCryptoTransactionManager intraActorCryptoTransactionManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     IntraWalletUserIdentityManager intraWalletUserIdentityManager;
@@ -112,7 +119,10 @@ public class CustomerOnlinePaymentMonitorAgent implements
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            OutgoingIntraActorManager outgoingIntraActorManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
+            OutgoingIntraActorManager outgoingIntraActorManager,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager,
+            CustomerBrokerSaleNegotiationManager saleNegotiationManager) throws CantSetObjectException {
+
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginRoot = pluginRoot;
@@ -123,6 +133,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
         this.outgoingIntraActorManager = outgoingIntraActorManager;
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.saleNegotiationManager = saleNegotiationManager;
+
         setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
     }
 
@@ -521,8 +533,11 @@ public class CustomerOnlinePaymentMonitorAgent implements
                                 CustomerBrokerContractSale saleContract = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                                 ObjectChecker.checkArgument(saleContract); //If the contract is null, I cannot handle with this situation
 
+                                CustomerBrokerSaleNegotiation saleNegotiation = saleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(saleContract.getNegotiatiotId()));
+                                String paymentCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiation.getClauses(), ClauseType.BROKER_CURRENCY);
+
                                 if (saleContract.getStatus() != COMPLETED) {
-                                    dao.persistContractInDatabase(saleContract);
+                                    dao.persistContractInDatabase(saleContract, paymentCurrencyCode);
                                     dao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                     dao.updateContractTransactionStatus(contractHash, PENDING_ONLINE_PAYMENT_CONFIRMATION);
                                     customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, PAYMENT_SUBMIT);
@@ -582,6 +597,10 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cannot update the contract purchase status");
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "The customerBrokerContractSale is null");
+            } catch (CantGetListSaleNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the sale negotiation reference");
+            } catch (CantGetListClauseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the negotiation clauses");
             }
         }
     }

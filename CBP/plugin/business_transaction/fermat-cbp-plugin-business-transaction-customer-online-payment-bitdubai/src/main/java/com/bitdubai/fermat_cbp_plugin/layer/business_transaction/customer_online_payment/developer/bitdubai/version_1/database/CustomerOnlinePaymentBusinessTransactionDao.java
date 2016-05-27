@@ -589,17 +589,17 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
-     * @param contractSale the sale contract with the information to persist
+     * @param saleContract the sale contract with the information to persist
      *
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(CustomerBrokerContractSale contractSale)
+    public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode)
             throws CantInsertRecordException, UnexpectedResultReturnedFromDatabaseException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
-            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractSale);
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, saleContract, currencyCode);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -849,14 +849,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return the filled database record
      */
-    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractSale contractSale) {
+    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractSale contractSale, String currencyCode) {
         UUID transactionId = UUID.randomUUID();
+
         record.setUUIDValue(ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         //For the business transaction this value represents the contract hash.
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME, contractSale.getContractId());
         record.setStringValue(ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, contractSale.getPublicKeyCustomer());
         record.setStringValue(ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME, contractSale.getPublicKeyBroker());
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
+        record.setStringValue(ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME, currencyCode);
 
         return record;
     }
