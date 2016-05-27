@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +39,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
     private static final int TYPE_CHILD_LAST = 2;
+    private static final String TAG = "ExpandableRecyclerAdapter";
     /**
      * A {@link List} of all currently expanded {@link ParentListItem} objects
      * and their children, in order. Changes to this list should be made through the add/remove methods
@@ -588,6 +590,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
                         mItemList.add(parentIndex + i + 1, childItemList.get(i));
                         notifyItemInserted(parentIndex + i + 1);
                     }catch (Exception e){
+                        Log.e(TAG,"Error: expandParentListItem.");
                         e.printStackTrace();
                     }
                 }

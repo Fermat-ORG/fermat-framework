@@ -13,7 +13,9 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -23,38 +25,50 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation intraUserLoginIdentity,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, IntraUserSubAppSession intraUserSubAppSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
+         *
          */
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        if (intraUserLoginIdentity != null) {
-            if (intraUserLoginIdentity.getImage() != null) {
-                if (intraUserLoginIdentity.getImage().length > 0) {
-                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),0,false);
-                    bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
+        try
+        {
+            IntraUserLoginIdentity identity = intraUserSubAppSession.getModuleManager().getActiveIntraUserIdentity();
+
+
+            if (identity != null) {
+                if (identity.getProfileImage() != null) {
+                    if (identity.getProfileImage().length > 0) {
+                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),0,false);
+                        bitmapWorkerTask.execute(identity.getProfileImage());
+                    } else
+                        Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
                 } else
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
-            } else
-                Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
-            FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-            fermatTextView.setText(intraUserLoginIdentity.getAlias());
+                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
+                fermatTextView.setText(identity.getAlias());
+            }
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        catch(Exception e)
+        {
+
         }
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    applicationsHelper.openFermatApp(SubAppsPublicKeys.CCP_IDENTITY.getCode());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         return view;
     }
 }

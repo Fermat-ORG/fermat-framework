@@ -7,7 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -49,6 +49,5 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
             else
                 Picasso.with(imageView.getContext()).load(R.drawable.ic_profile_male).into(imageView);
         }
-        imageViewReference.clear();
     }
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;

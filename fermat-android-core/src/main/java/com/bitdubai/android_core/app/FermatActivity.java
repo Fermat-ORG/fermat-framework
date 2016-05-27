@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -82,6 +83,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -596,7 +598,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Method used from app to paint tabs
      */
     protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setVisibility(View.VISIBLE);
         pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
@@ -628,7 +630,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (fermatFragmentFactory != null) {
 
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+                //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
                 tabLayout.setVisibility(View.GONE);
 
                 pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -825,41 +827,43 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param activity
      */
     protected void paintTabs(TabStrip tabs, Activity activity) {
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        if(tabLayout!=null){
+            if (tabs == null )
+                tabLayout.setVisibility(View.GONE);
+            else {
+                Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
+                for (int position = 0; position < tabLayout.getTabCount(); position++) {
+                    ((TextView) tabLayout.getTabAt(position).getCustomView()).setTypeface(tf);
+                }
+                tabLayout.setVisibility(View.VISIBLE);
+                if (tabs.getTabsColor() != null) {
+                    tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
+                }
+                if (tabs.getTabsTextColor() != null) {
+                    if (tabs.getSelectedTabTextColor() != null) {
+                        tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.parseColor(activity.getTabStrip().getSelectedTabTextColor()));
+                    } else {
+                        tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                    }
 
-        if (tabs == null)
-            tabLayout.setVisibility(View.GONE);
-        else {
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Roboto-Regular.ttf");
-            for (int position = 0; position < tabLayout.getTabCount(); position++) {
-                ((TextView) tabLayout.getTabAt(position).getCustomView()).setTypeface(tf);
-            }
-            tabLayout.setVisibility(View.VISIBLE);
-            if (tabs.getTabsColor() != null) {
-                tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
-            }
-            if (tabs.getTabsTextColor() != null) {
-                if(tabs.getSelectedTabTextColor()!=null){
-                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.parseColor(activity.getTabStrip().getSelectedTabTextColor()));
-                }else{
-                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                }
+                if (tabs.getTabsIndicateColor() != null) {
+                    tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
+                }
+                if (tabs.getIndicatorHeight() != -1) {
+                    tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
+                }
+                if (tabs.isReduceTabHeight()) {
+                    float heightDp = getResources().getDisplayMetrics().heightPixels * 0.32F;
+                    CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+                    //  System.out.println("TOOLBARTAMANO:"+heightDp);
+                    lp.height = (int) heightDp;
                 }
 
             }
-            if (tabs.getTabsIndicateColor() != null) {
-                tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));
-            }
-            if (tabs.getIndicatorHeight() != -1) {
-                tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
-            }
-            if(tabs.isReduceTabHeight()){
-                float heightDp = getResources().getDisplayMetrics().heightPixels *0.32F;
-                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
-              //  System.out.println("TOOLBARTAMANO:"+heightDp);
-                lp.height = (int)heightDp;
-            }
-
-
+        }else{
+            Log.e(TAG,"TablLayout null");
         }
     }
 
@@ -1025,7 +1029,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
             System.gc();
 
-            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+            //TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             if (tabLayout != null) {
                 tabLayout.removeAllTabs();
                 tabLayout.removeAllViews();
@@ -1064,7 +1068,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             }
 
-            List<AbstractFermatFragment> fragments = new Vector<AbstractFermatFragment>();
+            List<Fragment> fragments = new Vector<>();
 
             elementsWithAnimation = new ArrayList<>();
             if(bottomNavigation!=null) {
@@ -1102,10 +1106,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void initialisePaging() {
 
         try {
-            List<AbstractFermatFragment> fragments = new Vector<>();
+            List<Fragment> fragments = new Vector<>();
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
-            AbstractFermatFragment[] fragmentsArray = new AbstractFermatFragment[3];
+            Fragment[] fragmentsArray = new AbstractFermatFragment[3];
 
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops().values()) {
@@ -1469,11 +1473,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     protected void onBackPressedNotificate(){
         if(getAdapter()!=null) {
-            for (AbstractFermatFragment abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
+            for (AbstractFermatFragmentInterface abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
                 abstractFermatFragment.onBackPressed();
             }
         }else if(getScreenAdapter()!=null){
-            for (AbstractFermatFragment abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
+            for (AbstractFermatFragmentInterface abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
                 abstractFermatFragment.onBackPressed();
             }
         }

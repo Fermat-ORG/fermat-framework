@@ -6,7 +6,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
 /**
  * Created by mati on 2016.02.08..

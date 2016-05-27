@@ -27,14 +27,14 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.09.15..
  */
-public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements TransactionExecutor {
+public class IncomingIntraUserCryptoBasicWalletTransactionExecutor implements TransactionExecutor {
 
     private CryptoWalletWallet bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private EventManager             eventManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    public IncomingIntraUserBitcoinBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final EventManager eventManager, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
+    public IncomingIntraUserCryptoBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager, final EventManager eventManager, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
         this.bitcoinWallet            = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.eventManager             = eventManager;

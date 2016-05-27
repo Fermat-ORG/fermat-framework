@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
 import java.util.ArrayList;
 
@@ -108,7 +108,7 @@ public class CustomAdapter extends BaseAdapter implements View.OnClickListener {
                   holder.txtViewDetailTransaction.setText( tempValues.getDetailTransaction() );
                   /*holder.imageView_transaction.setImageResource(
                                res.getIdentifier(
-                               "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/"+tempValues.getImageUrl()
+                               "com.bitdubai.reference_niche_wallet.fermat_wallet:drawable/"+tempValues.getImageUrl()
                                ,null,null));
                    */
                    

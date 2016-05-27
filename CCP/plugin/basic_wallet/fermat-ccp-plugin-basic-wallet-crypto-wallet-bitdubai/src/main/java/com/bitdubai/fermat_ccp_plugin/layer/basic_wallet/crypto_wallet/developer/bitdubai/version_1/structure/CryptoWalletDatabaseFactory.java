@@ -70,25 +70,26 @@ public class CryptoWalletDatabaseFactory implements DealsWithPluginDatabaseSyste
     }
 
     private DatabaseTableFactory createBitcoinWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
-        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
-        table.addColumn(CryptoWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_NAME);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING,36,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
 
         return table;
     }
@@ -103,16 +104,16 @@ public class CryptoWalletDatabaseFactory implements DealsWithPluginDatabaseSyste
     }
 
     private DatabaseTableFactory createBitcoinWalletBalancesTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
-        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 36,false);
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_NAME);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 36,false);
         return table;
     }
 
     private void insertInitialBalancesRecord(final Database database) throws CantInsertRecordException{
-        DatabaseTable balancesTable = database.getTable(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_NAME);
+        DatabaseTable balancesTable = database.getTable(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_NAME);
         List<DatabaseTableRecord> initialListRecord = constructBalanceInitialRecord(balancesTable);
         for(DatabaseTableRecord initalRecord : initialListRecord) {
             balancesTable.insertRecord(initalRecord);
@@ -124,24 +125,24 @@ public class CryptoWalletDatabaseFactory implements DealsWithPluginDatabaseSyste
         List<DatabaseTableRecord> list = new ArrayList<>();
         DatabaseTableRecord balancesRecord1 = balancesTable.getEmptyRecord();
         UUID balanceRecordId = UUID.randomUUID();
-        balancesRecord1.setUUIDValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
-        balancesRecord1.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord1.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord1.setStringValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.PRODUCTION.getCode());
+        balancesRecord1.setUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId);
+        balancesRecord1.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord1.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord1.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.PRODUCTION.getCode());
 
         DatabaseTableRecord balancesRecord2 = balancesTable.getEmptyRecord();
         UUID balanceRecordId2 = UUID.randomUUID();
-        balancesRecord2.setUUIDValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId2);
-        balancesRecord2.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord2.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord2.setStringValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.REG_TEST.getCode());
+        balancesRecord2.setUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId2);
+        balancesRecord2.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord2.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord2.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.REG_TEST.getCode());
 
         DatabaseTableRecord balancesRecord3 = balancesTable.getEmptyRecord();
         UUID balanceRecordId3 = UUID.randomUUID();
-        balancesRecord3.setUUIDValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId3);
-        balancesRecord3.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
-        balancesRecord3.setLongValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
-        balancesRecord3.setStringValue(CryptoWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.TEST_NET.getCode());
+        balancesRecord3.setUUIDValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_ID_COLUMN_NAME, balanceRecordId3);
+        balancesRecord3.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, 0);
+        balancesRecord3.setLongValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
+        balancesRecord3.setStringValue(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, BlockchainNetworkType.TEST_NET.getCode());
 
        list.add(balancesRecord1);
         list.add(balancesRecord2);

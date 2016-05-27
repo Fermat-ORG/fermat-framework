@@ -109,7 +109,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                                                  final ReferenceWallet              referenceWallet,
                                                  final int                          sentNumber,
                                                  final String                       messageType,
-                                                 final String                       walletPublicKey) throws CantCreateCryptoPaymentRequestException {
+                                                 final String                       walletPublicKey,
+                                                 final CryptoCurrency               cryptoCurrency) throws CantCreateCryptoPaymentRequestException {
 
         try {
 
@@ -136,8 +137,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                         referenceWallet,
                         sentNumber,
                         messageType,
-                        walletPublicKey
-                );
+                        walletPublicKey,
+                        cryptoCurrency);
 
                 cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
             }
@@ -633,6 +634,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         String   messageType        = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME);
         String   walletpublickey   = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
 
+        CryptoCurrency   cryptoCurrency   = CryptoCurrency.getByCode(record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME));
 
         CryptoAddress        cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
 
@@ -661,8 +663,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                 ReferenceWallet.getByCode(referenceWallet),
                 sentNumber,
                 messageType,
-                walletpublickey
-        );
+                walletpublickey,
+                cryptoCurrency);
     }
 
 }

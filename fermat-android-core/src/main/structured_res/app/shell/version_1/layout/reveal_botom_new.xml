@@ -97,6 +97,24 @@
                         android:background="#666666"
                         android:layout_gravity="center_vertical"/>
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/txt_more_settings"
+                        >
+
+                        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center_horizontal"
+                            android:text="More Settings"
+                            />
+
+
+                    </LinearLayout>
+
                     <ImageButton
                         android:layout_width="48dp"
                         android:layout_height="48dp"
