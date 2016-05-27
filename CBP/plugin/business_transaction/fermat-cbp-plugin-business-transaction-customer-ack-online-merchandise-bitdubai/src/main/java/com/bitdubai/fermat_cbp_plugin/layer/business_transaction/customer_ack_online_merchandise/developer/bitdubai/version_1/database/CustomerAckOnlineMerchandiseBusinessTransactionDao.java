@@ -442,7 +442,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             return new IncomingMoneyEventWrapper(
                     record.getStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_EVENT_ID_COLUMN_NAME),
                     record.getStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME),
-                    record.getLongValue(ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME),
+                    record.getLongValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME),
                     CryptoCurrency.getByCode(record.getStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME)),
                     record.getStringValue(ACK_ONLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
