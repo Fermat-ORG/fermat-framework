@@ -12,7 +12,6 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
-import com.bitdubai.sub_app.developer.preference_settings.DeveloperPreferenceSettings;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 /**

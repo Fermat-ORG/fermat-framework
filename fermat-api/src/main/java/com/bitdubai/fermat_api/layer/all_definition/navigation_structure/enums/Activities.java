@@ -374,6 +374,7 @@ public enum Activities implements FermatEnum {
     CCP_DESKTOP_P2P("DP2P"),
     CCP_DESKTOP_SOCIAL("DSOCIAL"),
     DESKTOP_COMMUNITY_ACTIVITY("DESCA"),
+    DESKTOP_MORE_SETTINGS("DMS"),
 
 
     DESKTOP_WIZZARD_WELCOME("DWW")
@@ -969,6 +970,8 @@ public enum Activities implements FermatEnum {
                 return DESKTOP_SETTING_EXPORT_KEY;
             case "DSIK":
                 return DESKTOP_SETTING_IMPORT_KEY;
+            case "DMS":
+                return DESKTOP_MORE_SETTINGS;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

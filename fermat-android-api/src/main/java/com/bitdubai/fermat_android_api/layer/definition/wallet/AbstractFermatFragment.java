@@ -319,6 +319,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
+
+    @Override
+    public void onUpdateViewOnUIThread(FermatBundle code) {
+
+    }
+
     /**
      * This method will be called when the user press the back button
      */

@@ -360,7 +360,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERSS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
+                        Log.i("DATA PROVIDERS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
@@ -380,8 +380,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
         if (selectedProviders.isEmpty()) {
             Toast.makeText(getActivity(), R.string.ccw_select_providers_warning_msg, Toast.LENGTH_SHORT).show();
-            // TODO descomentar cuando pueda agregar un proveedor en la lista
-            // return;
         }
 
         try {
@@ -519,7 +517,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             if (installedWallets != null)
                 for (InstalledWallet wallet : installedWallets)
                     if (wallet.getPlatform().equals(Platforms.CRYPTO_CURRENCY_PLATFORM))
-                        if (wallet.getCryptoCurrency().equals(CryptoCurrency.BITCOIN))
+                        if (wallet.getCryptoCurrency() == CryptoCurrency.BITCOIN)
                             data.add(wallet);
 
         } catch (CantListWalletsException ex) {

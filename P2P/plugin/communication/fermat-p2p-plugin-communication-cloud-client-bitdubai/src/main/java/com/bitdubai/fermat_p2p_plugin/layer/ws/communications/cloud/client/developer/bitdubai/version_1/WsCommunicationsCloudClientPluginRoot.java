@@ -248,7 +248,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                          * Initialize Credentials to Connection to backup Connection AWS
                          */
                         wsCommunicationsTyrusCloudClientConnectionBackup = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity, (WsCommunicationsCloudClientPluginRoot)getInstance(),ServerConf.SERVER_IP_PRODUCTION,ServerConf.DEFAULT_PORT, NetworkServiceType.UNDEFINED);
-                        listServerConfByPlatform = listserverconfbyplatform();
+                        listServerConfByPlatform = null;//listserverconfbyplatform();
 
                         /*
                          * Try to connect whit the cloud server

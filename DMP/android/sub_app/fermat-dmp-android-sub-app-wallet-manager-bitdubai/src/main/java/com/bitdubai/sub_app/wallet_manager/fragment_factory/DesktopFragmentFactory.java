@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.wallet_manager.fragment_factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -11,6 +11,7 @@ import com.bitdubai.sub_app.wallet_manager.fragment.DesktopP2PApssFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopSocialApssFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 import com.bitdubai.sub_app.wallet_manager.fragment.settings.ExportImportSeedFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.settings.MoreSettingsFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.welcome_wizard.WelcomeWizardFragment;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 
@@ -22,9 +23,9 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
 
 
     @Override
-    public AbstractFermatFragment getFermatFragment(DesktopFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragmentInterface getFermatFragment(DesktopFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        AbstractFermatFragment abstractFermatFragment = null;
+        AbstractFermatFragmentInterface abstractFermatFragment = null;
 
         switch (fragments){
             case DESKTOP_MAIN:
@@ -54,6 +55,9 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
                 break;
             case SETTINGS_EXPORT_KEY:
                 abstractFermatFragment = ExportImportSeedFragment.newInstance(0);
+                break;
+            case MORE_SETTINGS:
+                abstractFermatFragment = MoreSettingsFragment.newInstance();
                 break;
             default:
                 abstractFermatFragment = DesktopFragment.newInstance();
