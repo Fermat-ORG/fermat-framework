@@ -20,7 +20,6 @@ public enum CryptoCurrency implements Currency {
     FERMAT     ("FRM", "Fermat"),
     DOGECOIN    ("DOGE", "Dogecoin"),
     ETHEREUM    ("ETH", "Ethereum"),
-    FERMAT      ("FER", "Fermat"),
     LITECOIN    ("LTC", "Litecoin")
 
     ;
@@ -43,7 +42,6 @@ public enum CryptoCurrency implements Currency {
             case "BTC": return CryptoCurrency.BITCOIN;
             case "DOGE": return CryptoCurrency.DOGECOIN;
             case "ETH": return CryptoCurrency.ETHEREUM;
-            case "FER": return CryptoCurrency.FERMAT;
             case "LTC": return CryptoCurrency.LITECOIN;
             case "FRM": return CryptoCurrency.FERMAT;
             default:
