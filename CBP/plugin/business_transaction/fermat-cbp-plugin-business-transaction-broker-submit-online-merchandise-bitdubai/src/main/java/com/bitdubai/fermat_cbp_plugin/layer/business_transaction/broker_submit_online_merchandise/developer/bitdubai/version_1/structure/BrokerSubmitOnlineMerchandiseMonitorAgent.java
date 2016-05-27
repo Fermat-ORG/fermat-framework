@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -47,6 +49,10 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -106,6 +112,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
     TransactionTransmissionManager transactionTransmissionManager;
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    CustomerBrokerPurchaseNegotiationManager purchaseNegotiationManager;
     IntraActorCryptoTransactionManager intraActorCryptoTransactionManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     CryptoMoneyDestockManager cryptoMoneyDeStockManager;
@@ -121,7 +128,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             OutgoingIntraActorManager outgoingIntraActorManager,
-            CryptoMoneyDestockManager cryptoMoneyDeStockManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
+            CryptoMoneyDestockManager cryptoMoneyDeStockManager,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager,
+            CustomerBrokerPurchaseNegotiationManager purchaseNegotiationManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginRoot = pluginRoot;
@@ -132,12 +141,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
         this.outgoingIntraActorManager = outgoingIntraActorManager;
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
         this.cryptoMoneyDeStockManager = cryptoMoneyDeStockManager;
-        setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.purchaseNegotiationManager = purchaseNegotiationManager;
+
+        setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
     }
 
-    private void setIntraActorCryptoTransactionManager(
-            OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
+    private void setIntraActorCryptoTransactionManager(OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
         if (outgoingIntraActorManager == null) {
             throw new CantSetObjectException("outgoingIntraActorManager is null");
         }
@@ -575,11 +585,14 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
 
                         if (businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE) {
                             if (!dao.isContractHashInDatabase(contractHash)) {
-                                CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
-                                ObjectChecker.checkArgument(contractPurchase); //If the contract is null, I cannot handle with this situation
+                                CustomerBrokerContractPurchase purchaseContract = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+                                ObjectChecker.checkArgument(purchaseContract); //If the contract is null, I cannot handle with this situation
 
-                                if (contractPurchase.getStatus() != COMPLETED) {
-                                    dao.persistContractInDatabase(contractPurchase);
+                                CustomerBrokerPurchaseNegotiation purchaseNegotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(purchaseContract.getNegotiatiotId()));
+                                String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(purchaseNegotiation.getClauses(), ClauseType.CUSTOMER_CURRENCY);
+
+                                if (purchaseContract.getStatus() != COMPLETED) {
+                                    dao.persistContractInDatabase(purchaseContract, merchandiseCurrencyCode);
                                     dao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, MERCHANDISE_SUBMIT);
 
@@ -643,6 +656,10 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cannot update the contract purchase status");
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "The customerBrokerContractPurchase is null");
+            } catch (CantGetListClauseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the purchase negotiation reference");
+            } catch (CantGetListPurchaseNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cant get the negotiation clauses");
             }
         }
     }

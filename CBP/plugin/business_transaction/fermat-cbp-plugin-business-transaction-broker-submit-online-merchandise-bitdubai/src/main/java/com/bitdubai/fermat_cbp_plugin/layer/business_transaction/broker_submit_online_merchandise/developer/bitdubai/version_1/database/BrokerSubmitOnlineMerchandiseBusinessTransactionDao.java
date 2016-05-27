@@ -239,14 +239,16 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractPurchase in crypto broker side, only for backup
      *
      * @param purchaseContract the object with the purchase contract information to persist
+     * @param currencyCode     the code of the sent crypto currency
      *
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(CustomerBrokerContractPurchase purchaseContract) throws CantInsertRecordException {
+    public void persistContractInDatabase(CustomerBrokerContractPurchase purchaseContract, String currencyCode) throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseSubmitTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
-            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, purchaseContract);
+
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, purchaseContract, currencyCode);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -881,17 +883,20 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param record           the database record to fill
      * @param purchaseContract the purchase contract object
+     * @param currencyCode     the code of the sent crypto currency
      *
      * @return the filled database record
      */
-    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractPurchase purchaseContract) {
+    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractPurchase purchaseContract, String currencyCode) {
         UUID transactionId = UUID.randomUUID();
+
         record.setUUIDValue(SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, transactionId);
         //For the business transaction this value represents the contract hash.
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME, purchaseContract.getContractId());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, purchaseContract.getPublicKeyCustomer());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME, purchaseContract.getPublicKeyBroker());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_SUBMIT_ONLINE_MERCHANDISE_CONFIRMATION.getCode());
+        record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME, currencyCode);
 
         return record;
     }

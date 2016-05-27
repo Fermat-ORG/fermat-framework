@@ -857,7 +857,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getBrokerPublicKey());
         //For the business transaction this value represents the contract hash.
         record.setStringValue(ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME, businessTransactionRecord.getContractHash());
-        record.setStringValue(ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, businessTransactionRecord.getContractTransactionStatus().getCode());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME, businessTransactionRecord.getCryptoAddress().getAddress());
         record.setLongValue(ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME, businessTransactionRecord.getCryptoAmount());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getCustomerPublicKey());
@@ -866,8 +865,12 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, businessTransactionRecord.getTransactionId());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME, businessTransactionRecord.getExternalWalletPublicKey());
 
+        final ContractTransactionStatus contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
+        if (contractTransactionStatus != null)
+            record.setStringValue(ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, contractTransactionStatus.getCode());
+
         final CryptoCurrency cryptoCurrency = businessTransactionRecord.getCryptoCurrency();
-        if(cryptoCurrency != null)
+        if (cryptoCurrency != null)
             record.setStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
 
         final CryptoStatus cryptoStatus = businessTransactionRecord.getCryptoStatus();
@@ -890,11 +893,14 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_EVENT_ID_COLUMN_NAME, incomingMoneyEventWrapper.getEventId());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME, incomingMoneyEventWrapper.getReceiverPublicKey());
         record.setLongValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME, incomingMoneyEventWrapper.getCryptoAmount());
-        record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME, incomingMoneyEventWrapper.getCryptoCurrency().getCode());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME, incomingMoneyEventWrapper.getSenderPublicKey());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
         record.setLongValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME, incomingMoneyEventWrapper.getTimestamp());
         record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME, incomingMoneyEventWrapper.getTransactionHash());
+
+        CryptoCurrency cryptoCurrency = incomingMoneyEventWrapper.getCryptoCurrency();
+        if (cryptoCurrency != null)
+            record.setStringValue(ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
 
         return record;
 
@@ -960,7 +966,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setContractTransactionStatus(status);
 
             String cryptoCurrencyCode = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME);
-            if(cryptoCurrencyCode != null){
+            if (cryptoCurrencyCode != null) {
                 businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(cryptoCurrencyCode));
 
                 String cryptoAddressString = record.getStringValue(ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME);
