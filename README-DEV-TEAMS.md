@@ -398,17 +398,10 @@ We are responsible of only one thing, making fermat a successfully project, shar
 We don't mean to make fun of everything, just about the serious things.
 <br>
 
-### Code Butchers Team:
+### Purple Haze Team:
 -----------------------------------
 ### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/c07467a01e3de3093890fd26cf4f1d1fd3df5c6f/MediaKit/Logotype/Fermat%20Teams/logo_purple_haze_team.jpg "Logo Purple Haze Team")
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
-
-* In the Fermat Core we are responsible for the enhancements and maintenance.
-* In the OSA Platform we do our best.
-* In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
-* In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
-
-In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
 
 #### Team Members:
 
@@ -419,13 +412,6 @@ In each platform mentioned, we are involved in the development of Network Servic
     Skype:   leon.acosta
     Github:  https://github.com/lnacosta
     
-    
-* **Patricio Gesualdi**<br/>
----
-      Email:   pmgesualdi@hotmail.com
-      Skype:   pmgesualdi
-      Github:  https://github.com/pmgesualdi
-
 We love music and we do music, we love movies (fanatics), we are also amateur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
