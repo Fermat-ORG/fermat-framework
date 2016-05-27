@@ -240,7 +240,7 @@ public interface CryptoBrokerWalletModuleManager
      * This method list all wallet installed in device, start the transaction
      */
 //    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()
-    List<cbpInstalledWallet> getCbpInstallWallets()
+    List<CBPInstalledWallet> getCbpInstallWallets()
             throws CantListWalletsException;
 
     /**

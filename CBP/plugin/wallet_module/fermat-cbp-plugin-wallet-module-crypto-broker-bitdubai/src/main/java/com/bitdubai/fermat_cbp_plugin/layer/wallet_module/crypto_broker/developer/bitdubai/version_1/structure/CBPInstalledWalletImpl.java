@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.cbpInstalledWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CBPInstalledWallet;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 26.05.16.
  */
-public class cbpInstalledWalletImpl implements cbpInstalledWallet {
+public class CBPInstalledWalletImpl implements CBPInstalledWallet {
 
     private List<InstalledLanguage> languagesId;
     private List<InstalledSkin>     skinsId;
@@ -38,24 +38,24 @@ public class cbpInstalledWalletImpl implements cbpInstalledWallet {
     private CryptoCurrency          cryptoCurrency;
     private Currency                currency;
     
-    public cbpInstalledWalletImpl(
-        List<InstalledLanguage> languagesId,
-        List<InstalledSkin>     skinsId,
-        WalletCategory          walletCategory,
-        WalletType              walletType,
-        String                  walletScreenSize,
-        String                  walletNavigationStructureVersion,
-        String                  walletPlatformIdentifier,
-        String                  walletIcon,
-        String                  walletPublicKey,
-        String                  walletName,
-        Version                 walletVersion,
-        UUID                    walletCatalogId,
-        String                  walletDeveloperName,
-        String                  walletDeviceUserPublicKey,
-        Platforms               platform,
-        Actors                  actorType,
-        CryptoCurrency          cryptoCurrency
+    public CBPInstalledWalletImpl(
+            List<InstalledLanguage> languagesId,
+            List<InstalledSkin> skinsId,
+            WalletCategory walletCategory,
+            WalletType walletType,
+            String walletScreenSize,
+            String walletNavigationStructureVersion,
+            String walletPlatformIdentifier,
+            String walletIcon,
+            String walletPublicKey,
+            String walletName,
+            Version walletVersion,
+            UUID walletCatalogId,
+            String walletDeveloperName,
+            String walletDeviceUserPublicKey,
+            Platforms platform,
+            Actors actorType,
+            CryptoCurrency cryptoCurrency
     ){
         this.languagesId                        = languagesId;
         this.skinsId                            = skinsId;
