@@ -296,6 +296,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try {
             super.onStop();
 
+            if(updateViewReceiver!=null){
+                try {
+                    unregisterReceiver(updateViewReceiver);
+                }catch (Exception e){
+                    //nothing
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -817,6 +825,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     protected void onResume() {
+        if(updateViewReceiver==null){
+            updateViewReceiver = new UpdateViewReceiver(this);
+            IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
+            registerReceiver(updateViewReceiver, intentFilter);
+        }
         super.onResume();
 
     }
