@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -50,8 +51,10 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -64,6 +67,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -445,69 +450,80 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
                     //the eventId from this event is the contractId - Customer side
-                    try {
-                        CustomerBrokerContractPurchase purchaseContract = customerBrokerContractPurchaseManager.
-                                getCustomerBrokerContractPurchaseForContractId(eventId);
+                    CustomerBrokerContractPurchase purchaseContract = customerBrokerContractPurchaseManager.
+                            getCustomerBrokerContractPurchaseForContractId(eventId);
 
-                        String negotiationId = purchaseContract.getNegotiatiotId();
-                        CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                    String negotiationId = purchaseContract.getNegotiatiotId();
+                    CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                        Collection<Clause> clauses = purchaseNegotiation.getClauses();
-                        String receptionMethodCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
-                        String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
+                    Collection<Clause> clauses = purchaseNegotiation.getClauses();
+                    String receptionMethodCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
 
-                        if (MoneyType.CRYPTO.getCode().equals(receptionMethodCode))
-                            dao.persistContractInDatabase(
-                                    purchaseContract,
-                                    purchaseNegotiation,
-                                    merchandiseCurrencyCode);
+                    String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
 
-                    } catch (Exception e) {
-                        System.out.println("an error has occurred (BROKER_ACK_PAYMENT_CONFIRMED) this must show on the broker side ");
+                    String amountStr = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+                    long cryptoAmount = getCryptoAmount(amountStr, merchandiseCurrencyCode);
+
+                    if (MoneyType.CRYPTO.getCode().equals(receptionMethodCode)) {
+                        dao.persistContractInDatabase(purchaseContract, cryptoAmount, merchandiseCurrencyCode);
                     }
+
                     dao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
             } catch (CantGetListCustomerBrokerContractPurchaseException | CantUpdateRecordException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot update the database");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot update the database");
             } catch (CantConfirmTransactionException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot confirm the transaction");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot confirm the transaction");
             } catch (CantUpdateCustomerBrokerContractSaleException | CantGetListCustomerBrokerContractSaleException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot update the contract sale status");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot update the contract sale status");
             } catch (CantDeliverPendingTransactionsException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot get the pending transactions from transaction transmission plugin");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot get the pending transactions from transaction transmission plugin");
             } catch (CantInsertRecordException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot insert a record in database");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot insert a record in database");
             } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot update the contract purchase status");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot update the contract purchase status");
             } catch (ObjectNotSetException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "The customerBrokerContractSale is null");
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "The customerBrokerContractSale is null");
+            } catch (CantGetListClauseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot get clause list");
+            } catch (CantGetListPurchaseNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                        "Checking pending events", "Cannot get purchase negotiations list");
             }
-
         }
 
+        /**
+         * Return a Satoshi representation of the given String amount for the given currency
+         *
+         * @param cryptoAmountString the crypto amount in String
+         * @param currencyCode       the crypto currency code
+         *
+         * @return the crypto amount in satoshi
+         */
+        private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
+            try {
+                Number number = DecimalFormat.getInstance().parse(cryptoAmountString);
+
+                if (CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+                if (CryptoCurrency.FERMAT.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
+
+            } catch (ParseException ignore) {
+            }
+
+            return 0;
+        }
     }
 
 }

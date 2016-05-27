@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -78,6 +79,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -516,6 +519,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
          */
         private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record) {
             System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoCurrency() = " + record.getCryptoCurrency());
+            System.out.println("SUBMIT_ONLINE_MERCHANDISE - raiseIncomingMoneyNotificationEvent - record.getCryptoAmount() = " + record.getCryptoAmount());
 
             FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
             IncomingMoneyNotificationEvent event = (IncomingMoneyNotificationEvent) fermatEvent;
@@ -595,8 +599,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                                 CustomerBrokerPurchaseNegotiation purchaseNegotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(purchaseContract.getNegotiatiotId()));
                                 String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(purchaseNegotiation.getClauses(), ClauseType.CUSTOMER_CURRENCY);
 
+                                String amountStr = NegotiationClauseHelper.getNegotiationClauseValue(purchaseNegotiation.getClauses(), ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+                                long cryptoAmount = getCryptoAmount(amountStr, merchandiseCurrencyCode);
+
                                 if (purchaseContract.getStatus() != COMPLETED) {
-                                    dao.persistContractInDatabase(purchaseContract, merchandiseCurrencyCode);
+                                    dao.persistContractInDatabase(purchaseContract, merchandiseCurrencyCode, cryptoAmount);
                                     dao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, MERCHANDISE_SUBMIT);
 
@@ -667,6 +674,36 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             }
         }
 
+        /**
+         * Return a Satoshi representation of the given String amount for the given currency
+         *
+         * @param cryptoAmountString the crypto amount in String
+         * @param currencyCode       the crypto currency code
+         *
+         * @return the crypto amount in satoshi
+         */
+        private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
+            try {
+                Number number = DecimalFormat.getInstance().parse(cryptoAmountString);
+
+                if (CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+                if (CryptoCurrency.FERMAT.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
+
+            } catch (ParseException ignore) {
+            }
+
+            return 0;
+        }
+
+        /**
+         * Return the reference wallet associated with the crypto currency
+         *
+         * @param cryptoCurrency the crypto currency
+         *
+         * @return the reference wallet or null
+         */
         private ReferenceWallet getReferenceWallet(CryptoCurrency cryptoCurrency) {
             if (cryptoCurrency == CryptoCurrency.BITCOIN)
                 return ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;

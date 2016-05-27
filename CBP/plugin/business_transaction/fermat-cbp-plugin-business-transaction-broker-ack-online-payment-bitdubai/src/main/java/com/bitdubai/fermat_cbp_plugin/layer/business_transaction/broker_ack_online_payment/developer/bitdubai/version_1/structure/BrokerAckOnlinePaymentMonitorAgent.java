@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -67,6 +68,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_onli
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -459,11 +462,17 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
                     Collection<Clause> clauses = saleNegotiation.getClauses();
+
                     String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+
                     String paymentCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY);
+                    CryptoCurrency paymentCurrency = CryptoCurrency.getByCode(paymentCurrencyCode);
+
+                    String amountStr = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY_QUANTITY);
+                    long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
 
                     if (MoneyType.CRYPTO.getCode().equals(clauseValue)) {
-                        dao.persistContractInDatabase(saleContract, CryptoCurrency.getByCode(paymentCurrencyCode));
+                        dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
                     }
 
                     dao.updateEventStatus(eventId, EventStatus.NOTIFIED);
@@ -506,6 +515,29 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(exception,
                         "Checking pending events", "Cant get the payment crypto currency");
             }
+        }
+
+        /**
+         * Return a Satoshi representation of the given String amount for the given currency
+         *
+         * @param cryptoAmountString the crypto amount in String
+         * @param currencyCode       the crypto currency code
+         *
+         * @return the crypto amount in satoshi
+         */
+        private long getCryptoAmount(String cryptoAmountString, String currencyCode) {
+            try {
+                Number number = DecimalFormat.getInstance().parse(cryptoAmountString);
+
+                if (CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+                if (CryptoCurrency.FERMAT.getCode().equals(currencyCode))
+                    return (long) BitcoinConverter.convert(number.doubleValue(), BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
+
+            } catch (ParseException ignore) {
+            }
+
+            return 0;
         }
     }
 }

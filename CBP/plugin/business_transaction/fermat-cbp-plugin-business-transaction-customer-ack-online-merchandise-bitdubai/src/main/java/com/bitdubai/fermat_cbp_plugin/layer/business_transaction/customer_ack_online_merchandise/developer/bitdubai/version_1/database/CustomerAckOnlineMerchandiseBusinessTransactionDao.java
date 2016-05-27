@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -17,28 +16,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetCryptoAmountException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.CustomerAckOnlineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -656,38 +649,21 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param contractPurchase        the contract purchase object
+     * @param cryptoAmount            the merchandise crypto amount
      * @param merchandiseCurrencyCode the merchandise currency code
      *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(CustomerBrokerContractPurchase contractPurchase,
-                                          CustomerBrokerPurchaseNegotiation purchaseNegotiation,
+                                          long cryptoAmount,
                                           String merchandiseCurrencyCode) throws CantInsertRecordException {
 
         try {
             //Get information from negotiation clauses.
-            Collection<Clause> negotiationClauses = purchaseNegotiation.getClauses();
-            String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-
-            double cryptoAmount = 0;
-            if (clauseValue != null) {
-                cryptoAmount = DecimalFormat.getInstance().parse(clauseValue).doubleValue();
-            }
-
-            if (CryptoCurrency.BITCOIN.getCode().equals(merchandiseCurrencyCode))
-                cryptoAmount = BitcoinConverter.convert(cryptoAmount, BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
-
-            else if (CryptoCurrency.FERMAT.getCode().equals(merchandiseCurrencyCode))
-                cryptoAmount = BitcoinConverter.convert(cryptoAmount, BitcoinConverter.Currency.FERMAT, BitcoinConverter.Currency.SATOSHI);
-
             DatabaseTable databaseTable = getAckMerchandiseTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
-            databaseTableRecord = buildDatabaseTableRecord(
-                    databaseTableRecord,
-                    contractPurchase,
-                    merchandiseCurrencyCode,
-                    (long) cryptoAmount);
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractPurchase, merchandiseCurrencyCode, cryptoAmount);
 
             databaseTable.insertRecord(databaseTableRecord);
 
