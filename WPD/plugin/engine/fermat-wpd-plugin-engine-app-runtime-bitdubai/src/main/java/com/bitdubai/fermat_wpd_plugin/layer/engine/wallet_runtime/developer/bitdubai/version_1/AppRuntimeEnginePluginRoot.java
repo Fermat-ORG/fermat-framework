@@ -5769,12 +5769,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND);
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE);
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
         runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -5783,19 +5783,19 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_BALANCE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
 
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
+        runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(), runtimeFragment);
 
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(), runtimeFragment);
 
 
         //Side Menu
@@ -5866,12 +5866,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY);
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -5880,14 +5880,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey(), runtimeFragment);
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey(), runtimeFragment);
 //Navigation
 
         //Side Menu
@@ -5933,12 +5933,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY);
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY);
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -5947,14 +5947,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY.getKey(), runtimeFragment);
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY.getKey(), runtimeFragment);
 
         //Navigation
 
@@ -5999,11 +5999,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CONTACTS.getKey());
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
 
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
@@ -6050,11 +6050,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT.getKey(), runtimeFragment);
 
         /**
          * Request form Activity
@@ -6093,11 +6093,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT.getKey(), runtimeFragment);
 
         /**
          * No identity Activity
@@ -6117,11 +6117,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
 
         /**
          * Contact detail Activity
@@ -6159,11 +6159,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
 
         /**
          * Contacts Activity
@@ -6201,11 +6201,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
 
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
@@ -6243,11 +6243,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK.getKey(), runtimeFragment);
 
 
         runtimeActivity = new Activity();
@@ -6283,11 +6283,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS.getKey(), runtimeFragment);
 
         //fin navigation
 
@@ -6329,11 +6329,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey(), runtimeFragment);
 
         /**
          * Add connection Activity
@@ -6371,11 +6371,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey(), runtimeFragment);
 
         //Export Mnemonic key activity
 
@@ -6412,11 +6412,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
 
         /**
          * Send Error Activity
@@ -6455,11 +6455,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
 
 
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
