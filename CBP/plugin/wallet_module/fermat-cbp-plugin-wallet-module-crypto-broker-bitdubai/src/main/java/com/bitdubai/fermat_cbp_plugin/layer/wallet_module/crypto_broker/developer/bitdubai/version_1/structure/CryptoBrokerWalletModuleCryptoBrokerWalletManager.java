@@ -765,6 +765,43 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         return walletManagerManager.getInstalledWallets();
     }
 
+    /**
+     * This method list all wallet installed in device, start the transaction
+     */
+    @Override
+    public List<cbpInstalledWallet> getCbpInstallWallets() throws CantListWalletsException {
+        cbpInstalledWallet cbpWallet;
+        List<cbpInstalledWallet> cbpInstalledWallet = new ArrayList<>();;
+        List<InstalledWallet> wallets =  walletManagerManager.getInstalledWallets();
+
+        for (InstalledWallet installedWallet: wallets) {
+
+            cbpWallet = new cbpInstalledWalletImpl(
+                    installedWallet.getLanguagesId(),
+                    installedWallet.getSkinsId(),
+                    installedWallet.getWalletCategory(),
+                    installedWallet.getWalletType(),
+                    installedWallet.getWalletScreenSize(),
+                    installedWallet.getWalletNavigationStructureVersion(),
+                    installedWallet.getWalletPlatformIdentifier(),
+                    installedWallet.getWalletIcon(),
+                    installedWallet.getWalletPublicKey(),
+                    installedWallet.getWalletName(),
+                    installedWallet.getWalletVersion(),
+                    installedWallet.getWalletCatalogId(),
+                    installedWallet.getWalletDeveloperName(),
+                    installedWallet.getWalletDeviceUserPublicKey(),
+                    installedWallet.getPlatform(),
+                    installedWallet.getActorType(),
+                    installedWallet.getCryptoCurrency()
+            );
+
+            cbpInstalledWallet.add(cbpWallet);
+        }
+
+        return cbpInstalledWallet;
+    }
+
     @Override
     public CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting() throws CantNewEmptyCryptoBrokerWalletSettingException {
         return new CryptoBrokerWalletSettingSpreadImpl();
