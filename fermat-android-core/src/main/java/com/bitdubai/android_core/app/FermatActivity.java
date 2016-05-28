@@ -299,6 +299,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if(updateViewReceiver!=null){
                 try {
                     unregisterReceiver(updateViewReceiver);
+                    updateViewReceiver.clear();
                 }catch (Exception e){
                     //nothing
                 }
@@ -1386,7 +1387,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 unregisterReceiver(updateViewReceiver);
                 updateViewReceiver.clear();
             }catch (Exception e){
-                e.printStackTrace();
+                //nothing
             }
             executor.shutdownNow();
             super.onDestroy();
