@@ -234,7 +234,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
 
-        int padding = FermatScreenCalculator.getPx(getActivity(), 20);
+        int padding = FermatScreenCalculator.getPx(getActivity(), 30);
         int width = FermatScreenCalculator.getPx(getActivity(), 56);
         //noinspection SuspiciousNameCombination
         FloatingActionButton.LayoutParams actionButtonParams = new FloatingActionButton.LayoutParams(width, width);

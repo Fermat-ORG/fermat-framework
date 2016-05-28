@@ -669,15 +669,20 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if(dataSet !=null)
         {
             if (dataSet.isEmpty()) {
-                showEmpty(true, emptyView);
-                swipeRefresh.post(new Runnable() {
-                    @Override
+                getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        swipeRefresh.setRefreshing(true);
-                        onRefresh();
-                    }
+                        showEmpty(true, emptyView);
+                        swipeRefresh.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefresh.setRefreshing(true);
+                                onRefresh();
+                            }
 
+                        });
+                    }
                 });
+
             } else {
 
                 getActivity().runOnUiThread(new Runnable() {
