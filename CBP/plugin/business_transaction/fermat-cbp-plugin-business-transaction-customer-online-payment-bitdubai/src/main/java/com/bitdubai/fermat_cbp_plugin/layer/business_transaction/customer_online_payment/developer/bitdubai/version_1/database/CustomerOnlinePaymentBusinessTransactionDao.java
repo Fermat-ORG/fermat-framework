@@ -516,7 +516,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setContractTransactionStatus(status);
 
             final String cryptoCurrencyCode = record.getStringValue(ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME);
-            if(cryptoCurrencyCode != null){
+            if (cryptoCurrencyCode != null) {
                 businessTransactionRecord.setCryptoCurrency(CryptoCurrency.getByCode(cryptoCurrencyCode));
 
                 final String cryptoAddress = record.getStringValue(ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
@@ -590,16 +590,18 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param saleContract the sale contract with the information to persist
+     * @param currencyCode the crypto currency to send to the broker
+     * @param cryptoAmount the crypto amount to send to the broker
      *
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode)
+    public void persistContractInDatabase(CustomerBrokerContractSale saleContract, String currencyCode, long cryptoAmount)
             throws CantInsertRecordException, UnexpectedResultReturnedFromDatabaseException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
-            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, saleContract, currencyCode);
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, saleContract, currencyCode, cryptoAmount);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -846,10 +848,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param record       the record to fill
      * @param contractSale the sale contract where to extract the information
+     * @param cryptoAmount the crypto amount to send to the broker
      *
      * @return the filled database record
      */
-    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractSale contractSale, String currencyCode) {
+    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
+                                                         CustomerBrokerContractSale contractSale,
+                                                         String currencyCode,
+                                                         long cryptoAmount) {
         UUID transactionId = UUID.randomUUID();
 
         record.setUUIDValue(ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -859,6 +865,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME, contractSale.getPublicKeyBroker());
         record.setStringValue(ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_ONLINE_PAYMENT_CONFIRMATION.getCode());
         record.setStringValue(ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME, currencyCode);
+        record.setLongValue(ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
 
         return record;
     }
