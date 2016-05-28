@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
@@ -90,16 +91,12 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
         long satoshisBTC = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         double bitcoins = BitcoinConverter.convert(satoshisBTC, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-        String textBTC = bitcoins + " BTC";
-
 
         long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
         double fermats = BitcoinConverter.convert(satoshisFER, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.FERMAT);
-        String textFER = fermats + " FER";
 
-
-        bitcoinBalance.setText(textBTC);
-        fermatBalance.setText(textFER);
+        bitcoinBalance.setText(String.format("%1$s %2$s", bitcoins, CryptoCurrency.BITCOIN.getCode()));
+        fermatBalance.setText(String.format("%1$s %2$s", fermats, CryptoCurrency.FERMAT.getCode()));
 
         return layout;
     }
