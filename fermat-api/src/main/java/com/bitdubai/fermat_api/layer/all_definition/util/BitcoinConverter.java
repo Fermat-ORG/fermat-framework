@@ -45,7 +45,7 @@ public class BitcoinConverter {
                 convertAmount = amountInternal.multiply(rateToInternal);
                 break;
             default:
-                BigDecimal btcAmount = amountInternal.divide(rateFromInternal, BigDecimal.ROUND_UNNECESSARY);
+                BigDecimal btcAmount = amountInternal.divide(rateFromInternal, BigDecimal.ROUND_UP);
                 convertAmount = btcAmount.multiply(rateToInternal);
         }
 

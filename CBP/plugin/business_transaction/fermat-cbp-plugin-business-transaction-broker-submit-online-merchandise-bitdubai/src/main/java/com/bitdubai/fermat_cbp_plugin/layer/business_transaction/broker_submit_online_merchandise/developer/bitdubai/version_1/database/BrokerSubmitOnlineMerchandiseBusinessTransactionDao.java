@@ -240,15 +240,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      *
      * @param purchaseContract the object with the purchase contract information to persist
      * @param currencyCode     the code of the sent crypto currency
+     * @param cryptoAmount     the amount of crypto currency
      *
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(CustomerBrokerContractPurchase purchaseContract, String currencyCode) throws CantInsertRecordException {
+    public void persistContractInDatabase(CustomerBrokerContractPurchase purchaseContract,
+                                          String currencyCode,
+                                          long cryptoAmount) throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseSubmitTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
-            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, purchaseContract, currencyCode);
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, purchaseContract, currencyCode, cryptoAmount);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -884,10 +887,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @param record           the database record to fill
      * @param purchaseContract the purchase contract object
      * @param currencyCode     the code of the sent crypto currency
+     * @param cryptoAmount     the amount of crypto currency
      *
      * @return the filled database record
      */
-    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record, CustomerBrokerContractPurchase purchaseContract, String currencyCode) {
+    private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
+                                                         CustomerBrokerContractPurchase purchaseContract,
+                                                         String currencyCode,
+                                                         long cryptoAmount) {
         UUID transactionId = UUID.randomUUID();
 
         record.setUUIDValue(SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -897,6 +904,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME, purchaseContract.getPublicKeyBroker());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_SUBMIT_ONLINE_MERCHANDISE_CONFIRMATION.getCode());
         record.setStringValue(SUBMIT_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME, currencyCode);
+        record.setLongValue(SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
 
         return record;
     }

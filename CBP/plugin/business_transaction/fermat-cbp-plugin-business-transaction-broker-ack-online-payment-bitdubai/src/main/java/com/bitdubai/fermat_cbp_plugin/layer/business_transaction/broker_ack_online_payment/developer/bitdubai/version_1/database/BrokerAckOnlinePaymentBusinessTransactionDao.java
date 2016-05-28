@@ -324,12 +324,14 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      *
      * @throws CantInsertRecordException
      */
-    public void persistContractInDatabase(CustomerBrokerContractSale contractSale, CryptoCurrency paymentCurrency) throws CantInsertRecordException {
+    public void persistContractInDatabase(CustomerBrokerContractSale contractSale,
+                                          long cryptoAmount,
+                                          CryptoCurrency paymentCurrency) throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
 
-            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractSale, paymentCurrency);
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, contractSale, cryptoAmount, paymentCurrency);
 
             databaseTable.insertRecord(databaseTableRecord);
 
@@ -440,6 +442,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setTransactionHash(record.getStringValue(ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
             businessTransactionRecord.setTransactionId(record.getStringValue(ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             businessTransactionRecord.setExternalWalletPublicKey(record.getStringValue(ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setCryptoAmount(record.getLongValue(ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
 
             String cryptoCurrencyCode = record.getStringValue(ACK_ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME);
             if (cryptoCurrencyCode != null) {
@@ -791,6 +794,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseTableRecord(DatabaseTableRecord record,
                                                          CustomerBrokerContractSale contractSale,
+                                                         long cryptoAmount,
                                                          CryptoCurrency paymentCurrency) {
         UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
@@ -799,6 +803,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setStringValue(ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, contractSale.getPublicKeyCustomer());
         record.setStringValue(ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME, contractSale.getPublicKeyBroker());
         record.setStringValue(ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, PENDING_ACK_ONLINE_PAYMENT.getCode());
+        record.setLongValue(ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
 
         if (paymentCurrency != null)
             record.setStringValue(ACK_ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME, paymentCurrency.getCode());
