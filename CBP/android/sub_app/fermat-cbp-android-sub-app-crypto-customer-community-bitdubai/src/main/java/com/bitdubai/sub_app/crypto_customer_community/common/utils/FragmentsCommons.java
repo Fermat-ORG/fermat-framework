@@ -22,15 +22,11 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
+    public static void setUpHeaderScreen(View headerView, Context activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
         /**
          * Navigation view header
          */
-        RelativeLayout relativeLayout = new RelativeLayout(activity);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
-        relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
-        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.image_view_profile);
         if (identity != null) {
             if (identity.getImage() != null) {
                 if (identity.getImage().length > 0) {
@@ -39,12 +35,11 @@ public class FragmentsCommons {
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else
                 Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
-            FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
+            FermatTextView fermatTextView = (FermatTextView) headerView.findViewById(R.id.txt_name);
             fermatTextView.setText(identity.getAlias());
+
+            headerView.findViewById(R.id.image_view_profile_container).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.image_view_profile_circular_progress_bar).setVisibility(View.GONE);
         }
-
-        return view;
-
-
     }
 }

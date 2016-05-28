@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.lang.ref.WeakReference;
 
@@ -23,19 +25,23 @@ import java.lang.ref.WeakReference;
  */
 public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
-    private final ActiveActorIdentityInformation intraUserLoginIdentity;
+    //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    private LossProtectedWalletSession lossWalletSession;
 
-    public LossProtectedWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public LossProtectedWalletNavigationViewPainter(Context activity, LossProtectedWalletSession lossWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.lossWalletSession = lossWalletSession;
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader() {
         try {
+
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),lossWalletSession, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -95,4 +101,6 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     public boolean hasClickListener() {
         return true;
     }
+
+
 }

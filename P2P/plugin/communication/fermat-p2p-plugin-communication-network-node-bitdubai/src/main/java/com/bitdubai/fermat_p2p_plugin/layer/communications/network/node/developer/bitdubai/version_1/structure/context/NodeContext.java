@@ -1,9 +1,3 @@
-/*
- * @#NodeContext.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context;
 
 import java.util.concurrent.ConcurrentHashMap;

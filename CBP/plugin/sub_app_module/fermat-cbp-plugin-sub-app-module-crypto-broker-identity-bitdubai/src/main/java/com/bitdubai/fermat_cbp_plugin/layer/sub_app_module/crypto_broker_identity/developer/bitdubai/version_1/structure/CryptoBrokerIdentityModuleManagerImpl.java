@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.u
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,13 +35,12 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.04.16.
  */
-
-public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdentityModuleManager {
+public class CryptoBrokerIdentityModuleManagerImpl
+        extends ModuleManagerImpl<IdentityBrokerPreferenceSettings> implements CryptoBrokerIdentityModuleManager, Serializable {
 
     private CryptoBrokerIdentityManager identityManager;
-    private PluginFileSystem            pluginFileSystem;
-    private UUID                        pluginId;
     private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
+    private PluginVersionReference      pluginVersionReference;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
@@ -47,10 +48,10 @@ public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdenti
             UUID                        pluginId,
             CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot
     ){
+        super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
-        this.pluginFileSystem       = pluginFileSystem;
-        this.pluginId               = pluginId;
         this.pluginRoot           = pluginRoot;
+        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
@@ -132,19 +133,6 @@ public class CryptoBrokerIdentityModuleManagerImpl implements CryptoBrokerIdenti
         return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel());
     }
 
-    private SettingsManager<IdentityBrokerPreferenceSettings> settingsManager;
-
-    @Override
-    public SettingsManager<IdentityBrokerPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-        return this.settingsManager;
-    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

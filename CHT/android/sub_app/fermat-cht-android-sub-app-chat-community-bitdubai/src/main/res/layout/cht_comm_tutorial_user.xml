@@ -177,7 +177,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="You need to establish connections to other users first in order to add them as contacts."
+                    android:text="You need to establish connections to other users first in order to add them as contacts. If you do not have an identity or profile, please create one to manage the community."
                     android:textColor="#1d1d26"
                     android:textSize="12sp"
                     tools:ignore="HardcodedText" />

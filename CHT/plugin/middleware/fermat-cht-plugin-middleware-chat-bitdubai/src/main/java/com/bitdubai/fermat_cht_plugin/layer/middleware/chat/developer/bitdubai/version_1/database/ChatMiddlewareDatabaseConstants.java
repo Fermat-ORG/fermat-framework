@@ -31,6 +31,8 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_CONTACT_ASSOCIATED_LIST = "contact_associated_list";
     public static final String CHATS_TYPE_CHAT = "type_chat";
     public static final String CHATS_SCHEDULED_DELIVERY = "scheduled_delivery";
+    public static final String CHATS_IS_WRITING = "is_Writing";
+    public static final String CHATS_IS_ONLINE = "is_Online";
 
     public static final String CHATS_FIRST_KEY_COLUMN = "id_chat";
 
@@ -49,6 +51,33 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String MESSAGE_COUNT = "message_count";
 
     public static final String MESSAGE_FIRST_KEY_COLUMN = "id_message";
+
+    /**
+     * actions writing database table definition.
+     */
+    public static final String ACTIONS_WRITING_TABLE_NAME = "actions";
+
+    public static final String ACTIONS_WRITING_ID_CHAT_COLUMN_NAME = "id_chat";
+    public static final String ACTIONS_WRITING_STATE = "writing_state";
+    public static final String ACTIONS_WRITING_VALUE = "writing_state";
+
+    public static final String ACTIONS_WRITING_FIRST_KEY_COLUMN = "id_chat";
+
+    /**
+     * actions writing database table definition.
+     */
+    public static final String ACTIONS_ONLINE_TABLE_NAME = "actions_online";
+
+    public static final String ACTIONS_ONLINE_ID_COLUMN_NAME = "id_action";
+    public static final String ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME = "publik_key";
+    public static final String ACTIONS_ONLINE_STATE = "online_state";
+    public static final String ACTIONS_ONLINE_VALUE = "online_value";
+    public static final String ACTIONS_ONLINE_LAST_ON = "last_on";
+    public static final String ACTIONS_LAST_CONNECTION = "lats_connection";
+
+    public static final String ACTIONS_ONLINE_FIRST_KEY_COLUMN = "id_action";
+
+//    De acá a abajo tengo que revisar
 
     /**
      * Contacts database table definition.
@@ -106,19 +135,6 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME = "platform_component_type";
 
     public static final String IDENTITY_FIRST_KEY_COLUMN = "identity_public_key";
-
-
-    //TODO:Eliminar
-//    /**
-//     * Chat Actor GROUP REGISTERED database table definition.
-//     */
-//    public static final String GROUP_TABLE_NAME = "group_contact";
-//
-//    public static final String GROUP_ID_COLUMN_NAME = "group_id";
-//    public static final String GROUP_NAME_COLUMN_NAME = "group_name";
-//    public static final String GROUP_TYPE_CHAT_COLUMN_NAME = "type_chat";
-//
-//    public static final String GROUP_FIRST_KEY_COLUMN = GROUP_ID_COLUMN_NAME;
 
     /**
      * Chat Actor GROUP MEMBER REGISTERED database table definition.

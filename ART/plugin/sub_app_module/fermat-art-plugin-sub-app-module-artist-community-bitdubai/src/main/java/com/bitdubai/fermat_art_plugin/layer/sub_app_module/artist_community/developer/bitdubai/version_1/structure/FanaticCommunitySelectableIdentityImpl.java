@@ -4,10 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 
+import java.io.Serializable;
+
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/6/16.
  */
-public class FanaticCommunitySelectableIdentityImpl implements FanCommunitySelectableIdentity {
+public class FanaticCommunitySelectableIdentityImpl implements FanCommunitySelectableIdentity, Serializable {
 
     String publicKey;
     Actors actorType;

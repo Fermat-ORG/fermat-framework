@@ -20,15 +20,14 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
-import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
+
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
+import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
 import static android.widget.Toast.makeText;
 
@@ -42,9 +41,10 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
     private Switch notificationSwitch;
 
     // Fermat Managers
-    private AssetFactoryModuleManager manager;
+    private AssetFactoryModuleManager moduleManager;
     private ErrorManager errorManager;
-    SettingsManager<AssetFactorySettings> settingsManager;
+    AssetFactorySession assetFactorySession;
+//    SettingsManager<AssetFactorySettings> settingsManager;
 
 
     public static SettingsFactoryNotificationFragment newInstance() {
@@ -56,10 +56,10 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        manager = ((AssetFactorySession) appSession).getModuleManager();
-//        try {
+        assetFactorySession = ((AssetFactorySession) appSession);
+        moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -98,7 +98,7 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NOTIFICATIONS) {
-                setUpFactorySettingsNotifications(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpFactorySettingsNotifications(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

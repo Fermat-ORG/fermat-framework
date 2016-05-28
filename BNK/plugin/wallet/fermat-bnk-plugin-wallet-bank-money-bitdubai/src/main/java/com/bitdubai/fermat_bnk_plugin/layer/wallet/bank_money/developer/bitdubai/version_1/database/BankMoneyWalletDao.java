@@ -455,7 +455,6 @@ public class BankMoneyWalletDao {
 
 
         return new BankMoneyTransactionRecordImpl(
-                pluginRoot,
                 bankTransactionId,
                 balanceType,
                 transactionType,

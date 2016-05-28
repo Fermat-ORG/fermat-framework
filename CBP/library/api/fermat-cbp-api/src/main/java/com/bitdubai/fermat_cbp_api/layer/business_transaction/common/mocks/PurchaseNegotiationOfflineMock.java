@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
  * This object is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/12/15.
  */
-public class PurchaseNegotiationOfflineMock implements CustomerBrokerPurchaseNegotiation {
+public class PurchaseNegotiationOfflineMock implements CustomerBrokerPurchaseNegotiation, Serializable {
     @Override
     public String getCustomerPublicKey() {
         return "CustomerPublicKey";

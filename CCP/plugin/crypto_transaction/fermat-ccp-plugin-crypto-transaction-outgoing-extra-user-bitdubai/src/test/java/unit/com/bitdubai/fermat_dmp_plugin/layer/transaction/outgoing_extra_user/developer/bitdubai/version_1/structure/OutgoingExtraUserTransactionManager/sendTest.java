@@ -11,9 +11,9 @@
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2:DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/transaction/outgoing_extra_user/developer/bitdubai/version_1/structure/OutgoingExtraUserTransactionManager/sendTest.java
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+//import CryptoWalletBalance;
+//import CryptoWalletManager;
+//import CryptoWalletWallet;
 //
 //import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.exceptions.CantSendFundsException;
 //import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.exceptions.InsufficientFundsException;
@@ -56,13 +56,13 @@
 //public class sendTest {
 //
 //    @Mock
-//    private BitcoinWalletManager mockBitcoinWalletManager;
+//    private CryptoWalletManager mockBitcoinWalletManager;
 //
 //    @Mock
-//    private BitcoinWalletWallet mockBitcoinWalletWallet;
+//    private CryptoWalletWallet mockBitcoinWalletWallet;
 //
 //    @Mock
-//    private BitcoinWalletBalance mockBitcoinWalletBalance;
+//    private CryptoWalletBalance mockBitcoinWalletBalance;
 //
 //    @Mock
 //    private CryptoVaultManager mockCryptoVaultManager;

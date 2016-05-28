@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
-import com.google.gson.Gson;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -25,6 +24,7 @@ public abstract class PackageContent {
      */
     public PackageContent() {
         super();
+        this.messageContentType = MessageContentType.OBJECT;
     }
 
     /**
@@ -53,14 +53,22 @@ public abstract class PackageContent {
         this.messageContentType = messageContentType;
     }
 
-    public String toJson() {
+    /**
+     * Generate the json representation
+     * @return String
+     */
 
-        Gson gson = new Gson();
-        return gson.toJson(this, getClass());
+    public String toJson() {
+        throw  new NotImplementedException();
     }
 
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
     public static PackageContent parseContent(String content) {
-
-        throw new NotImplementedException("You must override this method.");
+        throw  new NotImplementedException();
     }
 }

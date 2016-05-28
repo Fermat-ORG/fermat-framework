@@ -2,10 +2,12 @@ package com.bitdubai.fermat_cht_api.layer.identity.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 29/03/16.
  */
-public interface ChatIdentity  extends ActiveActorIdentityInformation {
+public interface ChatIdentity  extends ActiveActorIdentityInformation, Serializable {
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image
      *

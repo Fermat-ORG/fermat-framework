@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#0072bb">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="220dp"
+             android:background="#0072bb"
+             android:paddingBottom="20dp"
+             android:paddingLeft="24dp"
+             android:paddingRight="24dp"
+             android:paddingTop="24dp">
 
     <RelativeLayout
+        android:id="@+id/image_view_profile_container"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingTop="24dp">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/image_view_profile"
@@ -22,7 +24,7 @@
             android:background="#33ffffff"
             android:scaleType="centerCrop"
             android:src="@drawable/profile_image"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,7 +45,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:typeface="ROBOTO_REGULAR"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"/>
         </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar
+        android:id="@+id/image_view_profile_circular_progress_bar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:visibility="visible"/>
+</FrameLayout>

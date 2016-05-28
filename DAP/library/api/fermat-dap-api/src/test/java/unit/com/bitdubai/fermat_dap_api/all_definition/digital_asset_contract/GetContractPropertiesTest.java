@@ -4,7 +4,6 @@ import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-
 import org.junit.Test;
 
 import java.util.List;

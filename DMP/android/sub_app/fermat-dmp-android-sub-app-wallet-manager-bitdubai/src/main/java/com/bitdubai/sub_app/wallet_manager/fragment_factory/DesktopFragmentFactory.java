@@ -10,7 +10,7 @@ import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopP2PApssFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopSocialApssFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
-import com.bitdubai.sub_app.wallet_manager.fragment.welcome_wizard.WelcomeWizardFirstFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.settings.ExportImportSeedFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.welcome_wizard.WelcomeWizardFragment;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 
@@ -49,7 +49,12 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
             case WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT:
                 abstractFermatFragment = WelcomeWizardFragment.newInstance();
                 break;
-
+            case SETTINGS_IMPORT_KEY:
+                abstractFermatFragment = ExportImportSeedFragment.newInstance(1);
+                break;
+            case SETTINGS_EXPORT_KEY:
+                abstractFermatFragment = ExportImportSeedFragment.newInstance(0);
+                break;
             default:
                 abstractFermatFragment = DesktopFragment.newInstance();
         }

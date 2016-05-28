@@ -11,12 +11,13 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.WithdrawBankMoneyTransactionPluginRoot;
 
 import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by memo on 23/11/15.
  */
-public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
+public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
     UUID bankTransactionId;
     String balanceType;

@@ -86,7 +86,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by mati on 2016.02.05..
  */
-@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
 
 public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements IntraUserManager,
         LogManagerForDevelopers,

@@ -2,18 +2,17 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
-
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
@@ -138,7 +137,8 @@ public class Confirm_send_dialog extends Dialog implements
                             this.deliveredToActorPublicKey,
                             this.deliveredToActorType,
                             this.referenceWallet,
-                            blockchainNetworkType
+                            blockchainNetworkType,
+                            CryptoCurrency.BITCOIN
 
                     );
                 }

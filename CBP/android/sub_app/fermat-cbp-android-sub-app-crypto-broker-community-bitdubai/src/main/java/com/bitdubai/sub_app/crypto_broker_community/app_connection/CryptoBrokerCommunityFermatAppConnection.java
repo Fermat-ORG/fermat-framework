@@ -55,7 +55,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Cry
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
         return new BrokerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 

@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -91,20 +92,20 @@ public class ContactsListFragment
             chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+           // settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-        lstChatUserInformations = new ArrayList<>();
+            lstChatUserInformations = new ArrayList<>();
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
-                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
                 appSettings = new ChatActorCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -148,7 +149,9 @@ public class ContactsListFragment
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
+            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -205,7 +208,9 @@ public class ContactsListFragment
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
                         if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
+                        //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -234,11 +239,11 @@ public class ContactsListFragment
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            emptyView.setBackgroundResource(R.drawable.fondo);
+            emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            rootView.setBackgroundResource(R.drawable.fondo);
+            rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {

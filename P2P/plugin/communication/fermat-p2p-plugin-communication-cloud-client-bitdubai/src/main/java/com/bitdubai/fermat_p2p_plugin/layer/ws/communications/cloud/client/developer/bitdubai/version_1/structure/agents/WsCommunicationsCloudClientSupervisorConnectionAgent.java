@@ -64,6 +64,9 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
                     } catch (Exception ex) {
                         System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
+                        System.out.println(" ERROR: "+ex.getMessage());
+                        System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent -  closeConnection()");
+
                         getWsCommunicationsTyrusCloudClientChannel(networkServiceType).closeConnection();
                         ((WsCommunicationsTyrusCloudClientConnection) wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.FALSE);
                         ((WsCommunicationsTyrusCloudClientConnection) wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel().raiseClientConnectionLooseNotificationEvent();

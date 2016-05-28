@@ -8,13 +8,14 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 26.09.15.
  * Modified by abicelis on 17/05/2016
  */
-public interface BankMoneyTransactionRecord {
+public interface BankMoneyTransactionRecord extends Serializable{
 
     UUID getBankTransactionId();
 

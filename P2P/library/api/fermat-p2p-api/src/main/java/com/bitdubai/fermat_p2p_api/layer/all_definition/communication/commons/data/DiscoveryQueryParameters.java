@@ -1,13 +1,8 @@
-/*
- * @#DiscoveryQueryParameters.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters</code>
@@ -50,6 +45,11 @@ public class DiscoveryQueryParameters {
     private NetworkServiceType networkServiceType;
 
     /**
+     * Represent the networkServiceTypeIntermediate
+     */
+    private NetworkServiceType networkServiceTypeIntermediate;
+
+    /**
      * Represent the extraData
      */
     private String extraData;
@@ -82,18 +82,31 @@ public class DiscoveryQueryParameters {
      * @param name
      * @param networkServiceType
      * @param offset
+     * @param networkServiceTypeIntermediate
      */
-    public DiscoveryQueryParameters(String actorType, String alias, Double distance, String extraData, String identityPublicKey, DeviceLocation location, Integer max, String name, NetworkServiceType networkServiceType, Integer offset) {
-        this.actorType = actorType;
-        this.alias = alias;
-        this.distance = distance;
-        this.extraData = extraData;
-        this.identityPublicKey = identityPublicKey;
-        this.location = location;
-        this.max = max;
-        this.name = name;
+    public DiscoveryQueryParameters(final String             actorType         ,
+                                    final String             alias             ,
+                                    final Double             distance          ,
+                                    final String             extraData         ,
+                                    final String             identityPublicKey ,
+                                    final DeviceLocation     location          ,
+                                    final Integer            max               ,
+                                    final String             name              ,
+                                    final NetworkServiceType networkServiceType,
+                                    final Integer            offset            ,
+                                    final NetworkServiceType networkServiceTypeIntermediate) {
+
+        this.actorType          = actorType         ;
+        this.alias              = alias             ;
+        this.distance           = distance          ;
+        this.extraData          = extraData         ;
+        this.identityPublicKey  = identityPublicKey ;
+        this.location           = location          ;
+        this.max                = max               ;
+        this.name               = name              ;
         this.networkServiceType = networkServiceType;
-        this.offset = offset;
+        this.offset             = offset            ;
+        this.networkServiceTypeIntermediate = networkServiceTypeIntermediate;
     }
 
     /**
@@ -184,5 +197,47 @@ public class DiscoveryQueryParameters {
      */
     public Integer getOffset() {
         return offset;
+    }
+
+    /**
+     * Gets the value of networkServiceTypeIntermediate
+     * @return networkServiceTypeIntermediate
+     */
+    public NetworkServiceType getNetworkServiceTypeIntermediate() {
+        return networkServiceTypeIntermediate;
+    }
+
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return DiscoveryQueryParameters
+     */
+    public static DiscoveryQueryParameters parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, DiscoveryQueryParameters.class);
+    }
+
+    @Override
+    public String toString() {
+        return "DiscoveryQueryParameters{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                ", location=" + location +
+                ", distance=" + distance +
+                ", networkServiceType=" + networkServiceType +
+                ", extraData='" + extraData + '\'' +
+                ", offset=" + offset +
+                ", max=" + max +
+                ", actorType='" + actorType + '\'' +
+                '}';
     }
 }

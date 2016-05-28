@@ -3,7 +3,7 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfac
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
@@ -62,6 +62,6 @@ public interface WalletFactoryProject {
     void setLanguages (List<Language> languages);
 
     //Navigation Structure
-    WalletNavigationStructure getNavigationStructure();
-    void setNavigationStructure (WalletNavigationStructure navigationStructure);
+    AppNavigationStructure getNavigationStructure();
+    void setNavigationStructure (AppNavigationStructure navigationStructure);
 }

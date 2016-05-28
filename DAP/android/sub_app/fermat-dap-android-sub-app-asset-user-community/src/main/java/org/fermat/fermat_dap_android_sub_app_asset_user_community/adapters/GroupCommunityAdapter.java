@@ -5,11 +5,12 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.squareup.picasso.Picasso;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.GroupViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.PopupMenu;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

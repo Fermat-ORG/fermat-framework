@@ -96,7 +96,7 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
 
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
-            bankAccounts = moduleManager.getBankingWallet().getAccounts();
+            bankAccounts = moduleManager.getAccounts();
 
             //Get old account data from session
             oldData = (BankAccountNumber) appSession.getData("account_data");
@@ -194,7 +194,7 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
                 || !oldData.getAccountImageId().equals(newImageId)) {
 
             try{
-                moduleManager.getBankingWallet().editAccount(oldData.getAccount(), newAlias, newAccountNumber, newImageId);
+                moduleManager.editAccount(oldData.getAccount(), newAlias, newAccountNumber, newImageId);
 
                 //Update account data in session
                 BankAccountNumber newData = new BankAccountNumberImpl(newAlias, newAccountNumber, oldData.getCurrencyType(), oldData.getAccountType(), oldData.getBankName(), newImageId);

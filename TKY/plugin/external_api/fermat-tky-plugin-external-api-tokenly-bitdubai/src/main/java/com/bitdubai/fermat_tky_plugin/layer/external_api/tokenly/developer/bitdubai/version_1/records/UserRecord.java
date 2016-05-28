@@ -2,10 +2,12 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 
+import java.io.Serializable;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public class UserRecord implements User{
+public class UserRecord implements User, Serializable{
 
     String id;
     String username;

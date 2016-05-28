@@ -437,35 +437,6 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
     *   Private Methods
     * */
 
-    private CustomerBrokerPurchaseNegotiation newCustomerBrokerPurchaseNegotiation(
-            UUID   negotiationId,
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Long startDateTime,
-            Long negotiationExpirationDate,
-            NegotiationStatus statusNegotiation,
-            Collection<Clause> clauses,
-            Boolean nearExpirationDatetime,
-            String cancelReason,
-            String memo,
-            Long   lastNegotiationUpdateDate
-    ){
-        return new CustomerBrokerPurchaseNegotiationInformation(
-                negotiationId,
-                publicKeyCustomer,
-                publicKeyBroker,
-                startDateTime,
-                negotiationExpirationDate,
-                statusNegotiation,
-                clauses,
-                nearExpirationDatetime,
-
-                cancelReason,
-                memo,
-                lastNegotiationUpdateDate
-        );
-    }
-
     private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
 
         UUID    negotiationId               = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
@@ -485,7 +456,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
 
         NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME));
 
-        return newCustomerBrokerPurchaseNegotiation(
+        return new CustomerBrokerPurchaseNegotiationInformation(
             negotiationId,
             publicKeyCustomer,
             publicKeyBroker,
@@ -518,7 +489,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             _NearExpirationDatetime = false;
         }
 
-        return newCustomerBrokerPurchaseNegotiation(
+        return new CustomerBrokerPurchaseNegotiationInformation(
                 negotiationId,
                 publicKeyCustomer,
                 publicKeyBroker,

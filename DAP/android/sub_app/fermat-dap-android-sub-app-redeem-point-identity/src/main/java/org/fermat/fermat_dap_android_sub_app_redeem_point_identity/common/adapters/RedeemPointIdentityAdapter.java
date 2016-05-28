@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.common.holders.RedeemPointIdentityViewHolder;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.UtilsFuncs;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;

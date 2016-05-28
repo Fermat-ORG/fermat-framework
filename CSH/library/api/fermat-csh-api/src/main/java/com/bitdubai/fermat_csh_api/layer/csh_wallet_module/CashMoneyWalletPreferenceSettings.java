@@ -6,12 +6,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletPreferenceSettings implements WalletSettings {
+public class CashMoneyWalletPreferenceSettings implements WalletSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
 

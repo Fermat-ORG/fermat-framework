@@ -100,4 +100,9 @@ public class TokenlyBotJSonAttNames {
      */
     public static final String HASH = "hash";
 
+    /**
+     * Represents the bot url.
+     */
+    public static final String BOT_URL = "botUrl";
+
 }

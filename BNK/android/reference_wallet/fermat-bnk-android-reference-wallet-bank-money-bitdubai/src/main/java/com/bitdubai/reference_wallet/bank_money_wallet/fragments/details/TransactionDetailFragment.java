@@ -162,13 +162,31 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
     private void reapplyTransaction() {
         if(transactionRecord.getTransactionType() == TransactionType.DEBIT) {
-            BankTransactionParameters t = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet",
-                    transactionRecord.getAmount(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getMemo(), TransactionType.DEBIT);
-            moduleManager.getBankingWallet().makeAsyncWithdraw(t);
+            BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
+                    UUID.randomUUID(),
+                    null,
+                    WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
+                    "pkeyActorRefWallet",
+                    transactionRecord.getAmount(),
+                    bankAccountNumber.getAccount(),
+                    bankAccountNumber.getCurrencyType(),
+                    transactionRecord.getMemo(),
+                    TransactionType.DEBIT);
+
+            moduleManager.makeAsyncWithdraw(transactionParameters);
         } else {
-            BankTransactionParameters t = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet",
-                    transactionRecord.getAmount(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getMemo(), TransactionType.CREDIT);
-            moduleManager.getBankingWallet().makeAsyncDeposit(t);
+            BankTransactionParameters transactionParameters = new BankTransactionParametersImpl(
+                    UUID.randomUUID(),
+                    null,
+                    WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
+                    "pkeyActorRefWallet",
+                    transactionRecord.getAmount(),
+                    bankAccountNumber.getAccount(),
+                    bankAccountNumber.getCurrencyType(),
+                    transactionRecord.getMemo(),
+                    TransactionType.CREDIT);
+
+            moduleManager.makeAsyncDeposit(transactionParameters);
         }
     }
 

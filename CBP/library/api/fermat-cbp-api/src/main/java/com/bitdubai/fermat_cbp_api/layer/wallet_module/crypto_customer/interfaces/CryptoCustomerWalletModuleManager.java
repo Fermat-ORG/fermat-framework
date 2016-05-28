@@ -58,11 +58,11 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +73,8 @@ import java.util.UUID;
  * Created by nelson on 22/09/15.
  * Updated by Manuel Perez on 24/01/2016
  */
-public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManager<CryptoCustomerWalletPreferenceSettings, ActiveActorIdentityInformation> {
+public interface CryptoCustomerWalletModuleManager
+        extends CBPWalletsModuleManager<CryptoCustomerWalletPreferenceSettings, ActiveActorIdentityInformation>, Serializable {
 
     /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
@@ -207,17 +208,6 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
     void clearLocations() throws CantDeleteLocationPurchaseException;
 
     /**
-     * @param bankAccount  the bank account
-     * @param currencyType the currency of the account
-     *
-     * @return the {@link NegotiationBankAccount} with the bank account and its currency
-     *
-     * @throws CantCreateBankAccountPurchaseException
-     */
-    NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType)
-            throws CantCreateBankAccountPurchaseException;
-
-    /**
      * @return a empty {@link CustomerBrokerNegotiationInformation} to fill
      *
      * @throws CantNewEmptyCustomerBrokerNegotiationInformationException
@@ -232,7 +222,7 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      *
      * @throws CantCreateBankAccountPurchaseException
      */
-    void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
+    void createNewBankAccount(String bankAccount, FiatCurrency currency) throws CantCreateBankAccountPurchaseException;
 
     /**
      * Update a bank account in the database
@@ -309,18 +299,10 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      *
      * @return a Map of name/provider reference pairs
      */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
+    Map<String, UUID> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
             throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
-     * Returns a CER provider given its providerId
-     *
-     * @param providerId the provider's ID
-     *
-     * @return a CurrencyExchangeRateProviderManager reference
-     */
-    CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId)
-            throws CantGetProviderException;
 
     /**
      * Create a empty {@link CryptoCustomerWalletProviderSetting} object to fill and can be used

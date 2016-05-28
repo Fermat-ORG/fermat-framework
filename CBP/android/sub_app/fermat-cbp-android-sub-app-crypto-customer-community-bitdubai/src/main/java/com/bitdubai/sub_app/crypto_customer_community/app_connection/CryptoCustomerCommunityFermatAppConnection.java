@@ -55,7 +55,6 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<C
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
         return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
 
     }

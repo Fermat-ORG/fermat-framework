@@ -31,6 +31,8 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	private String nodeIdentityPublicKey;
 
+	private String clientIdentityPublicKey;
+
 	private byte[] photo;
 
 	public ActorsCatalog() {
@@ -108,6 +110,14 @@ public class ActorsCatalog extends AbstractBaseEntity implements Serializable {
 
 	public void setNodeIdentityPublicKey(String nodeIdentityPublicKey) {
 		this.nodeIdentityPublicKey = nodeIdentityPublicKey;
+	}
+
+	public String getClientIdentityPublicKey() {
+		return clientIdentityPublicKey;
+	}
+
+	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+		this.clientIdentityPublicKey = clientIdentityPublicKey;
 	}
 
 	public byte[] getPhoto() {

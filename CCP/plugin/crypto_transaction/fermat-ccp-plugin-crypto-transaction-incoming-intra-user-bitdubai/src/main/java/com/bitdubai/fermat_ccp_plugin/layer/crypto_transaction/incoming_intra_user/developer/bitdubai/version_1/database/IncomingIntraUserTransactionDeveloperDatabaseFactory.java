@@ -132,6 +132,7 @@ public class IncomingIntraUserTransactionDeveloperDatabaseFactory implements Dea
         incomingIntraUserRegistryColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME);
         incomingIntraUserRegistryColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME);
         incomingIntraUserRegistryColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TIMESTAMP_COLUMN_NAME);
+        incomingIntraUserRegistryColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE);
         /**
          * Table Incoming Intra User Registry addition.
          */

@@ -85,4 +85,9 @@ public class IntraUserModuleInformation implements IntraUserInformation,Serializ
     public String getState() {
         return this.state ;
     }
+
+    @Override
+    public void setProfileImageNull() {
+        profileImage = new byte[0];
+    }
 }

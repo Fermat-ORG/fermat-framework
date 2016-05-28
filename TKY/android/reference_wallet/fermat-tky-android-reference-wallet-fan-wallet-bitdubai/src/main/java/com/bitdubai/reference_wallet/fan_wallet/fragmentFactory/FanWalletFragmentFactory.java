@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.fan_wallet.fragmentFactory;
 
-
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;

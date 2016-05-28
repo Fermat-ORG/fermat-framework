@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -25,13 +26,16 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
-import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.DesktopManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantEnableWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
@@ -54,7 +58,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
@@ -94,15 +100,15 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
-public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSettings,ActiveActorIdentityInformation> implements
+public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManagerSettings,ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
         WalletManagerModule,
         WalletManager {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
@@ -125,6 +131,13 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
+//    private BitcoinNetworkManager bitcoinNetworkManager;
+
+
     /**
      * WalletManager Interface member variables.
      */
@@ -138,7 +151,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
-    private SettingsManager<AppManagerSettings> settingsManager;
+    private SettingsManager<DesktopManagerSettings> settingsManager;
 
 
     public WalletManagerModulePluginRoot() {
@@ -163,7 +176,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
         boolean existWalletLoss = false;
         try {
 
-             //load user's wallets ids
+            //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
 
             Iterator iterator = walletIds.entrySet().iterator();
@@ -182,7 +195,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
 
                 try {
 
-                    bitcoinWalletManager.createWallet(walletPublicKey);
+                    cryptoWalletManager.createWallet(walletPublicKey);
                     walletIds.put(UUID.randomUUID().toString(), walletPublicKey);
 
 
@@ -205,11 +218,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
 
 
             if (!existWalletLoss) {
-                  try {
+                try {
 
 
                     bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
-                      walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
                     //Save wallet id on file
 
                     try {
@@ -224,6 +237,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
 
                 }
             }
+
+
             this.serviceStatus = ServiceStatus.STARTED;
 
 
@@ -365,6 +380,20 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
         return lstInstalledWallet;
     }
 
+    @Override
+    public List<String> getMnemonicCode() throws Exception {
+        try {
+            return cryptoVaultManager.getMnemonicCode();
+        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            throw new Exception(cantLoadExistingVaultSeed);
+        }
+    }
+
+    @Override
+    public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,blockchainNetworkType);
+    }
+
     /**
      * This method removes a wallet created by a user. <p>
      * Note that this won't uninstall the wallet type. It is used to delete a copy of a wallet created
@@ -454,7 +483,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
 
         //fileContent+= deviceUserPublicKey + "," + walletId + ";";
 
-       StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
+        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
         Iterator iterator = walletIds.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -485,7 +514,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-           intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
 
         }
         catch( CantCreateNewIntraWalletUserException e)
@@ -651,7 +680,19 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
                         new ArrayList<InstalledLanguage>(),
                         "loss_protected_wallet_icon",
                         "Loss Protected Wallet",
-                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.DEV);
+                break;
+            case "fermat_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "fermat_wallet_icon",
+                        "Fermat Wallet",
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.DEV);
@@ -742,8 +783,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
                         String[] idPair = stringWalletId.split(",", -1);
 
                         //put wallets of this user
-                      //  if (idPair[0].equals(deviceUserPublicKey))
-                            walletIds.put(idPair[0], idPair[1]);
+                        //  if (idPair[0].equals(deviceUserPublicKey))
+                        walletIds.put(idPair[0], idPair[1]);
 
                         /**
                          * Great, now the wallet list is in memory.
@@ -838,7 +879,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     }
 
     @Override
-    public SettingsManager<AppManagerSettings> getSettingsManager() {
+    public SettingsManager<DesktopManagerSettings> getSettingsManager() {
         System.out.println("Settings manager 1: "+ String.valueOf(settingsManager!=null) );
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -881,8 +922,18 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     }
 
     @Override
-    public ModuleManager<AppManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<DesktopManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         return this;
+    }
+
+    @Override
+    public void persistSettings(String publicKey, DesktopManagerSettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey,settings);
+    }
+
+    @Override
+    public DesktopManagerSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }
 
