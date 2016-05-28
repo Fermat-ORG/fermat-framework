@@ -56,7 +56,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             if (errorManager == null)
                 Log.e(TAG, ex.getMessage(), ex);
             else
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
@@ -86,13 +86,20 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
         RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.ccw_navigation_view_bottom, base, true);
         FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
+        FermatTextView fermatBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_fermat_balance);
 
-        long satoshis = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+        long satoshisBTC = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
+        double bitcoins = BitcoinConverter.convert(satoshisBTC, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+        String textBTC = bitcoins + " BTC";
 
-        double bitcoins = BitcoinConverter.convert(satoshis, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-        String text = bitcoins + " BTC";
 
-        bitcoinBalance.setText(text);
+        long satoshisFER = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
+        double fermats = BitcoinConverter.convert(satoshisFER, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.FERMAT);
+        String textFER = fermats + " FER";
+
+
+        bitcoinBalance.setText(textBTC);
+        fermatBalance.setText(textFER);
 
         return layout;
     }
