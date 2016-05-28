@@ -299,6 +299,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if(updateViewReceiver!=null){
                 try {
                     unregisterReceiver(updateViewReceiver);
+                    updateViewReceiver.clear();
                 }catch (Exception e){
                     //nothing
                 }
@@ -1386,7 +1387,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 unregisterReceiver(updateViewReceiver);
                 updateViewReceiver.clear();
             }catch (Exception e){
-                e.printStackTrace();
+                //nothing
             }
             executor.shutdownNow();
             super.onDestroy();
@@ -1735,13 +1736,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     try {
                         reportError(email.getText().toString());
                     } catch (Exception e) {
-                        Toast.makeText(FermatActivity.this,"Error sending the report",LENGTH_SHORT).show();
+                        Toast.makeText(FermatActivity.this, "Error sending the report", LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             });
-            alert.setNegativeButton("Cancel", null);
-            alert.show();
+
+            try {
+                alert.setNegativeButton("Cancel", null);
+                alert.show();
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
         }
         Intent intent = new Intent(this,StartActivity.class);
         startActivity(intent);

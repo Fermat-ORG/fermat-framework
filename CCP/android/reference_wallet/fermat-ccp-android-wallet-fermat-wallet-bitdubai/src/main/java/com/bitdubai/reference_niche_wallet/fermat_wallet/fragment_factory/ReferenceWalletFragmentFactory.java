@@ -21,13 +21,14 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.WalletErrorReportFragment;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<FermatWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
 
 
     @Override

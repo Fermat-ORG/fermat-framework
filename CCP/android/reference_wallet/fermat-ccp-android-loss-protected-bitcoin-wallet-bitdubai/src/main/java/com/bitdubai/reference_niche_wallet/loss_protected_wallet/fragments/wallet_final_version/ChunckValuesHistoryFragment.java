@@ -557,6 +557,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     }
     private void getAndShowMarketExchangeRateData(final View container) {
 
+        final int MAX_DECIMAL_FOR_RATE = 2;
+        final int MIN_DECIMAL_FOR_RATE = 2;
+
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {
@@ -586,12 +589,19 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
                     ExchangeRate rate = (ExchangeRate) result[0];
                     // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)) + " USD");
 
                     //get available balance to actual exchange rate
 
-                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
-
+                    lossProtectedWalletSession.setActualExchangeRate(Double.parseDouble(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)));
                     updateBalances();
                     onRefresh();
 
