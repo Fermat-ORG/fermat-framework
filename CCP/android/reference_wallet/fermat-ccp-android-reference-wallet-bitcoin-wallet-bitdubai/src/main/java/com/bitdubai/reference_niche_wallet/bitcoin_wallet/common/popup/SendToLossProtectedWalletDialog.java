@@ -358,7 +358,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                                     actor,
                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                    blockchainNetworkType
+                                    blockchainNetworkType,CryptoCurrency.BITCOIN
                             );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
                             dismiss();

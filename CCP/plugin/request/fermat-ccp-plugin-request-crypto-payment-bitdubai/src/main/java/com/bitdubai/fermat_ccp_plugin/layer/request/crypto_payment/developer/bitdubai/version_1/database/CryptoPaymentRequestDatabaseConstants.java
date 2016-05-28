@@ -33,6 +33,7 @@ public class CryptoPaymentRequestDatabaseConstants {
     public static final String CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME               = "state"                 ;
     public static final String CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME        = "network_type"          ;
     public static final String CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME = "reference_wallet";
+    public static final String CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_TYPE_COLUMN_NAME = "cryptoCurrencyType";
 
     public static final String CRYPTO_PAYMENT_REQUEST_FIRST_KEY_COLUMN                = "request_id"            ;
 

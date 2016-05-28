@@ -11,20 +11,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,8 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 public class SettingsMainNetworkFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private ReferenceWalletSession referenceWalletSession;
-    private CryptoWallet cryptoWallet;
+    private FermatWalletSession referenceWalletSession;
+    private FermatWallet cryptoWallet;
     private FermatEditText port;
     private FermatEditText ipAdress;
     private Spinner spinner;
@@ -53,7 +54,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = (FermatWalletSession) appSession;
         try {
             cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -114,10 +115,10 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
                     System.out.println("NETWORK TYPE SELECTED IS "+text);
                     System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
-                    BitcoinWalletSettings bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                    bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                    cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+                    FermatWalletSettings fermatWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                    fermatWalletSettings.setIsPresentationHelpEnabled(false);
+                    fermatWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                    cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(),fermatWalletSettings);
                 } catch (CantGetSettingsException e) {
                     e.printStackTrace();
                 } catch (SettingsNotFoundException e) {

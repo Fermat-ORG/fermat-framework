@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broke
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -34,15 +35,19 @@ public abstract class AbstractCryptoAddress {
     private final CryptoAddressBookManager  cryptoAddressBookManager;
     private final CryptoVaultSelector       cryptoVaultSelector;
     private final WalletManagerSelector     walletManagerSelector;
+    private final CryptoCurrencyVault       currencyVault;
 
+    //TODO YORDIN: ADAPTATION TO FERMATS. ADD PARAMETER currencyVault. SEE WHAT TO DO WITH currencyVault
     public AbstractCryptoAddress (
         final CryptoAddressBookManager  cryptoAddressBookManager,
-        final CryptoVaultSelector       cryptoVaultSelector     ,
-        final WalletManagerSelector     walletManagerSelector
+        final CryptoVaultSelector       cryptoVaultSelector,
+        final WalletManagerSelector     walletManagerSelector,
+        final CryptoCurrencyVault       currencyVault
     ){
         this.cryptoAddressBookManager   = cryptoAddressBookManager;
         this.cryptoVaultSelector        = cryptoVaultSelector;
         this.walletManagerSelector      = walletManagerSelector;
+        this.currencyVault              = currencyVault;
     }
 
     /*GET THE CRYPTO ADDRESS*/
@@ -86,10 +91,10 @@ public abstract class AbstractCryptoAddress {
 
     /*REGISTER THE CRYPTO ADDRESS*/
     protected final void registerCryptoAddress(
-        final CryptoAddress        cryptoAddress,
-        final CustomerBrokerCloseCryptoAddressRequest request,
-        final InstalledWallet      installedWallet,
-        final VaultType            vaultType
+        final CryptoAddress                             cryptoAddress,
+        final CustomerBrokerCloseCryptoAddressRequest   request,
+        final InstalledWallet                           installedWallet,
+        final VaultType                                 vaultType
     ) throws CantRegisterCryptoAddressBookException{
 
         try {
@@ -120,10 +125,11 @@ public abstract class AbstractCryptoAddress {
     }
 
     /*GENERATE AND REGISTER THE CRYPTO ADDRESS*/
+    //TODO YORDIN: ADAPTATION TO FERMATS. ADD PARAMETER currencyVault
     protected final CryptoAddress generateAndRegisterCryptoAddress(
-        final Platforms            platform ,
-        final VaultType            vaultType,
-        final CustomerBrokerCloseCryptoAddressRequest request
+        final Platforms                                 platform ,
+        final VaultType                                 vaultType,
+        final CustomerBrokerCloseCryptoAddressRequest   request
     ) throws CantGenerateAndRegisterCryptoAddressException{
 
         try {
@@ -136,6 +142,7 @@ public abstract class AbstractCryptoAddress {
             );
 
             final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency());
+
 
             this.registerCryptoAddress(
                     cryptoAddress,

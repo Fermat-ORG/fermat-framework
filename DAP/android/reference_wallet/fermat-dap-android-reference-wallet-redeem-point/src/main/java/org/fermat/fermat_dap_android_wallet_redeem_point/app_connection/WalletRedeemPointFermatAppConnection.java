@@ -28,13 +28,11 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
  */
 public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemPointSession> {
 
-    RedeemPointIdentity redeemPointIdentity;
     AssetRedeemPointWalletSubAppModule moduleManager;
     RedeemPointSession redeemPointSession;
 
     public WalletRedeemPointFermatAppConnection(Context activity) {
         super(activity);
-        this.redeemPointIdentity = redeemPointIdentity;
     }
 
     @Override
@@ -54,20 +52,19 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public RedeemPointSession getSession() {
         return new RedeemPointSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new RedeemPointWalletNavigationViewPainter(getContext() ,null);
+        return new RedeemPointWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new WalletRedeemPointHeaderPainter();
+        return new WalletRedeemPointHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

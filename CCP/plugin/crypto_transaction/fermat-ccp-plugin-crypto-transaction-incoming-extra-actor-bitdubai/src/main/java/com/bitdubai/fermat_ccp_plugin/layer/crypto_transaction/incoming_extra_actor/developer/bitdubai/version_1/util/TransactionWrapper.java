@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_a
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
@@ -40,6 +41,8 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
     private String memo;
 
     private BlockchainNetworkType blockchainNetworkType;
+
+    private CryptoCurrency cryptoCurrency;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -112,6 +115,15 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
+    }
 
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
         this.blockchainNetworkType = blockchainNetworkType;

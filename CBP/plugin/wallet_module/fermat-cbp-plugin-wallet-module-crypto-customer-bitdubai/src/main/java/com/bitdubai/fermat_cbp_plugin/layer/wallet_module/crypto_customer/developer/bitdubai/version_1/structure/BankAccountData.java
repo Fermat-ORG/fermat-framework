@@ -15,14 +15,16 @@ public class BankAccountData implements BankAccountNumber {
     private String bankName;
     private String account;
     private String alias;
+    private String imageId;
 
 
-    public BankAccountData(FiatCurrency currencyType, BankAccountType accountType, String bankName, String accountNumber, String alias) {
+    public BankAccountData(FiatCurrency currencyType, BankAccountType accountType, String bankName, String accountNumber, String alias, String imageId) {
         this.currencyType = currencyType;
         this.accountType = accountType;
         this.bankName = bankName;
         this.account = accountNumber;
         this.alias = alias;
+        this.imageId = imageId;
     }
 
     @Override
@@ -48,6 +50,11 @@ public class BankAccountData implements BankAccountNumber {
     @Override
     public FiatCurrency getCurrencyType() {
         return currencyType;
+    }
+
+    @Override
+    public String getAccountImageId() {
+        return imageId;
     }
 
     public boolean isAllDataFilled() {

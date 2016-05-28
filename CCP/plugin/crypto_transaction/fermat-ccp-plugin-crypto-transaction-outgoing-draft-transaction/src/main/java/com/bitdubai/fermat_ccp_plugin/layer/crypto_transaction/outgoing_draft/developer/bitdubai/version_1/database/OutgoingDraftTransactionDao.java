@@ -398,7 +398,11 @@ public class OutgoingDraftTransactionDao {
         }
         BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE));
 
-        return new OutgoingDraftTransactionWrapper(transactionId, walletPublicKey, amount, cryptoAddressTo, referenceWallet, blockchainNetworkType, actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, memo, timestamp, transactionHash);
+        CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(OutgoingDraftTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME));
+
+        return new OutgoingDraftTransactionWrapper(transactionId, walletPublicKey, amount, cryptoAddressTo, referenceWallet, blockchainNetworkType,
+                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, memo, timestamp, transactionHash,
+                cryptoCurrency);
     }
 
     // Apply convertToBT to all the elements in a list

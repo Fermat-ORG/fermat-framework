@@ -71,7 +71,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     RedeemPointSettings settings = null;
     private ErrorManager errorManager;
     private List<Actor> actors;
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     public static RedeemPointCommunityConnectionsListFragment newInstance() {
         return new RedeemPointCommunityConnectionsListFragment();
@@ -171,7 +171,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
 
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(assetRedeemPointCommunitySubAppSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

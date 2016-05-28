@@ -44,7 +44,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  * Modified by Matias Furszyfer, todo: tenemos que sacar esos concurrentMaps leon, no sirve que esten así.
  */
-public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
+public abstract class
+        AbstractPlugin implements FermatManager, Plugin, Service {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
