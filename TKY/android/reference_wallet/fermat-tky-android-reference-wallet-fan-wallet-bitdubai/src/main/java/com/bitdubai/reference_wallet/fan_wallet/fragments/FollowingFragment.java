@@ -446,15 +446,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                     fanList= fanWalletModuleManager.listIdentitiesFromCurrentDeviceUser();
                     if(fanList.size()==0){
                         noFollowing =true;
-                    }else{
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("TKY_NO_BG");
-                                no_artist_found.setVisibility(View.GONE);
-
-                            }
-                        });
                     }
                     for(Fan artistUsername:fanList){
                         List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
@@ -469,6 +460,18 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                                     artistBot.getDescriptionHtml()));
 
                         }
+
+                        if(!connectedArtistTKYUsername.isEmpty()){
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    System.out.println("TKY_NO_BG");
+                                    no_artist_found.setVisibility(View.GONE);
+
+                                }
+                            });
+                        }
+
                     }
 
                     } catch (CantGetBotException e) {
