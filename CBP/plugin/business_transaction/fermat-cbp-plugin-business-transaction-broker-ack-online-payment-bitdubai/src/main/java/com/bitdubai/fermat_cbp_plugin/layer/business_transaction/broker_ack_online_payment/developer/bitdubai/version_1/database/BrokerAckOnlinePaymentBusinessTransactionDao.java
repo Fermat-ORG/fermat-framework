@@ -442,6 +442,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setTransactionHash(record.getStringValue(ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
             businessTransactionRecord.setTransactionId(record.getStringValue(ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             businessTransactionRecord.setExternalWalletPublicKey(record.getStringValue(ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setCryptoAmount(record.getLongValue(ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
 
             String cryptoCurrencyCode = record.getStringValue(ACK_ONLINE_PAYMENT_CRYPTO_CURRENCY_COLUMN_NAME);
             if (cryptoCurrencyCode != null) {
