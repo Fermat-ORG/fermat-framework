@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -52,10 +51,8 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -284,6 +281,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList = dao.getPendingToSubmitNotificationList();
                 for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - getting Pending To Submit Notification Record");
+
                     contractHash = pendingToSubmitNotificationRecord.getContractHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
@@ -295,7 +294,10 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             PlatformComponentType.ACTOR_CRYPTO_BROKER,
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - sent Contract Status Notification Message");
+
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.ONLINE_PAYMENT_ACK);
+                    System.out.println("ACK_ONLINE_PAYMENT [Broker] - ContractTransactionStatus updated to ONLINE_PAYMENT_ACK");
                 }
 
                 /**
@@ -303,6 +305,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                  */
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList = dao.getPendingToSubmitConfirmList();
                 for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - getting Pending To Submit Confirmation Record");
                     contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
@@ -314,7 +317,10 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                             PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - sent Confirm Notification Reception Message");
+
                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
+                    System.out.println("ACK_ONLINE_PAYMENT [Customer] - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
                 }
 
                 /**
@@ -347,6 +353,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         }
 
         private void checkPendingIncomingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
+            System.out.println("ACK_ONLINE_PAYMENT - checkPendingIncomingMoneyEvents");
 
             try {
                 IncomingMoneyEventWrapper incomingMoneyEventWrapper = dao.getIncomingMoneyEventWrapper(eventId);
@@ -381,7 +388,10 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION);
                 dao.updateBusinessTransactionRecord(businessTransactionRecord);
+                System.out.println("ACK_ONLINE_PAYMENT - checkPendingIncomingMoneyEvents - ContractTransactionStatus updated to PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION");
+
                 dao.updateIncomingMoneyEventStatus(eventId, EventStatus.NOTIFIED);
+                System.out.println("ACK_ONLINE_PAYMENT - checkPendingIncomingMoneyEvents - Incoming Money EventStatus updated to NOTIFIED");
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlinePaymentException(e, "Checking the incoming payment", "The database return an unexpected result");
@@ -398,6 +408,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                 //This will happen in customer side
                 if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Customer] - INCOMING_NEW_CONTRACT_STATUS_UPDATE");
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
 
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
@@ -410,10 +421,16 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                             if (contractPurchase.getStatus() != ContractStatus.COMPLETED) {
                                 dao.persistContractInDatabase(contractPurchase);
+                                System.out.println("BROKER_ACK_ONLINE_PAYMENT [Customer] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - persisted contractPurchase");
+
                                 dao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                System.out.println("BROKER_ACK_ONLINE_PAYMENT [Customer] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - settled completion date");
+
                                 contractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
+                                System.out.println("BROKER_ACK_ONLINE_PAYMENT [Customer] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - ContractStatus Updated to PENDING_MERCHANDISE");
 
                                 raiseAckConfirmationEvent(contractHash);
+                                System.out.println("BROKER_ACK_ONLINE_PAYMENT [Customer] - INCOMING_NEW_CONTRACT_STATUS_UPDATE - raise Ack Confirmation Event");
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -423,6 +440,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                 //This will happen in broker side
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE");
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
 
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
@@ -439,51 +457,58 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
                                 if (customerBrokerContractSale.getStatus() != ContractStatus.COMPLETED) {
                                     contractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
+                                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - ContractStatus updated to PENDING_MERCHANDISE");
+
                                     dao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
+                                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - ContractTransactionStatus updated to CONFIRM_ONLINE_ACK_PAYMENT");
+
                                     dao.setCompletionDateByContractHash(contractHash, new Date().getTime());
+                                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - settled Completion Date");
 
                                     raiseAckConfirmationEvent(contractHash);
+                                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - raise Ack Confirmation Event");
                                 }
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+                        System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Reception Confirmed");
                     }
                     dao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - EventStatus updated to NOTIFIED");
                 }
 
                 if (eventTypeCode.equals(EventType.NEW_CONTRACT_OPENED.getCode())) {
-                    System.out.println("\n CBP - BROKER ACK ONLINE PAYMENT - NEW CONTRACT OPENED");
+                    System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED");
 
-                    //the eventId from this event is the contractId - Broker side
-                    CustomerBrokerContractSale saleContract = contractSaleManager.getCustomerBrokerContractSaleForContractId(eventId);
+                    try {
+                        //the eventId from this event is the contractId - Broker side
+                        CustomerBrokerContractSale saleContract = contractSaleManager.getCustomerBrokerContractSaleForContractId(eventId);
 
-                    String negotiationId = saleContract.getNegotiatiotId();
-                    CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
-                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        String negotiationId = saleContract.getNegotiatiotId();
+                        CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
+                                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                    Collection<Clause> clauses = saleNegotiation.getClauses();
+                        Collection<Clause> clauses = saleNegotiation.getClauses();
 
-                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                        String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
 
-                    String paymentCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY);
-                    CryptoCurrency paymentCurrency = CryptoCurrency.getByCode(paymentCurrencyCode);
+                        if (MoneyType.CRYPTO.getCode().equals(clauseValue)) {
+                            String paymentCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY);
+                            CryptoCurrency paymentCurrency = CryptoCurrency.getByCode(paymentCurrencyCode);
 
-                    String amountStr = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY_QUANTITY);
-                    long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
+                            String amountStr = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY_QUANTITY);
+                            long cryptoAmount = getCryptoAmount(amountStr, paymentCurrencyCode);
 
-                    if (MoneyType.CRYPTO.getCode().equals(clauseValue)) {
-                        dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
+                            dao.persistContractInDatabase(saleContract, cryptoAmount, paymentCurrency);
+                            System.out.println("BROKER_ACK_ONLINE_PAYMENT [Broker] - NEW_CONTRACT_OPENED - persisted sale contract. cryptoAmount = " + cryptoAmount + " - paymentCurrency = " + paymentCurrency);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("BROKER_ACK_ONLINE_PAYMENT - NEW_CONTRACT_OPENED - EXCEPTION!! Probably this is been executed in the Customer Side");
                     }
 
                     dao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
-            } catch (CantGetListClauseException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                        "Checking pending events", "Cannot get clause list");
-            } catch (CantGetListSaleNegotiationsException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                        "Checking pending events", "Cannot get sale negotiations list");
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception,
                         "Checking pending events", "Cannot update the database");
@@ -511,9 +536,6 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception,
                         "Checking pending events", "The customerBrokerContractPurchase is null");
-            } catch (InvalidParameterException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                        "Checking pending events", "Cant get the payment crypto currency");
             }
         }
 
