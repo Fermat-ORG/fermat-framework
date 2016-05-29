@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -47,7 +48,7 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
     //ErrorManager errorManager;
 
     /**
-     * DealsWithLogger interface mmeber variables
+     * DealsWithLogger interface member variables
      */
     LogManager logManager;
 
@@ -71,6 +72,12 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
 
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
+    private FanIdentityEventActions fanIdentityEventActions;
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 
     /**
      * Constructor
@@ -391,5 +398,22 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
     public void publishIdentity(String publicKey)
             throws CantPublishIdentityException, IdentityNotFoundException {
         registerIdentitiesANS(publicKey);
+    }
+
+    /**
+     * this method sets the Fan Identity Event Actions
+     * @param fanIdentityEventActions
+     */
+    public void setFanIdentityEventActions(final FanIdentityEventActions fanIdentityEventActions){
+        this.fanIdentityEventActions = fanIdentityEventActions;
+    }
+
+    /**
+     * This method check if any new connection to add to the Identities.
+     * @throws CantHandleNewsEventException
+     */
+    @Override
+    public void checkAllConnections()throws CantHandleNewsEventException {
+        this.fanIdentityEventActions.checkAllConnections();
     }
 }

@@ -34,10 +34,13 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -46,7 +49,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.popup.PresentationTokenlyArtistUserIdentityDialog;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSession;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
@@ -119,6 +121,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
 
 
+
     public static TokenlyArtistIdentityCreateProfile newInstance() {
         return new TokenlyArtistIdentityCreateProfile();
     }
@@ -140,6 +143,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 }else{
                     //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
+                    tokenlyArtistPreferenceSettings = settingsManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
                 }
 
             } catch (Exception e) {
@@ -150,10 +154,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 tokenlyArtistPreferenceSettings = new TokenlyArtistPreferenceSettings();
                 tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
+                tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
+                  if(settingsManager != null){
                     if (tkyIdentitySubAppSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }else{
                         moduleManager.persistSettings("123456789", tokenlyArtistPreferenceSettings);
+                        settingsManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }
                 }
             }
@@ -187,10 +194,11 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 //            presentationIntraUserCommunityDialog.show();
 //        }
 
-//        if (tokenlyFanPreferenceSettings.isHomeTutorialDialogEnabled()) {
-//            PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
-//            presentationTokenlyFanUserIdentityDialog.show();
-//        }
+
+
+          if (tokenlyArtistPreferenceSettings.isHomeTutorialDialogEnabled()==true) {
+              setUpHelpTkyArtist(false);
+          }
 
 
           return rootLayout;
@@ -412,6 +420,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             if (pictureView != null && imageBitmap != null)
                 pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+            contextMenuInUse = false;
 
         }
     }
@@ -730,13 +739,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             CantUpdateArtistIdentityException,
             WrongTokenlyUserCredentialsException {
        return moduleManager.updateArtistIdentity(
-                fanExternalName,
-                fanPassword, identitySelected.getId(),
-                identitySelected.getPublicKey(),
-                identitySelected.getProfileImage(),
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType);
+               fanExternalName,
+               fanPassword, identitySelected.getId(),
+               identitySelected.getPublicKey(),
+               identitySelected.getProfileImage(),
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType);
     }
 
     private Artist updateIdentityImage(
@@ -766,9 +775,31 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         return stream.toByteArray();
     }
 
-    public void showDialog(){
+   /* public void showDialog(){
         PresentationTokenlyArtistUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyArtistUserIdentityDialog(getActivity(),tkyIdentitySubAppSession, null,moduleManager);
         presentationTokenlyFanUserIdentityDialog.show();
+    }*/
+
+    private void setUpHelpTkyArtist(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog;
+            presentationDialog = new PresentationDialog.Builder(getActivity(), tkyIdentitySubAppSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.ic_profile_tokenly)
+                    .setIconRes(R.drawable.avatar_icon2)
+                    .setSubTitle(R.string.tky_artist_identity_welcome_subTitle)
+                    .setBody(R.string.tky_artist_identity_welcome_body)
+                    .setTextFooter(R.string.tky_artist_identity_welcome_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    e);
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -844,7 +875,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == 99)
-                showDialog();
+                setUpHelpTkyArtist(false);
+              //  showDialog();
 
 
         } catch (Exception e) {

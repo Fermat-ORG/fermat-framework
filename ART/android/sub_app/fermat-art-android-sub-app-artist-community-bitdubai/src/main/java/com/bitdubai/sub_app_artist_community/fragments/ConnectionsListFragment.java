@@ -2,10 +2,12 @@ package com.bitdubai.sub_app_artist_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubAppSession, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ArtistCommunityInformation> {
+public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubAppSession, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ArtCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
@@ -55,7 +56,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
     private LinearLayout emptyView;
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<ArtistCommunityInformation> artistCommunityInformationArrayList;
+    private ArrayList<ArtCommunityInformation> artistCommunityInformationArrayList;
 
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
@@ -90,6 +91,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+        configureToolbar();
         return rootView;
     }
 
@@ -123,7 +125,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            artistCommunityInformationArrayList = (ArrayList<ArtistCommunityInformation>) result[0];
+                            artistCommunityInformationArrayList = (ArrayList<ArtCommunityInformation>) result[0];
                             adapter.changeDataSet(artistCommunityInformationArrayList);
                             if (artistCommunityInformationArrayList.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -180,13 +182,26 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
     }
 
     @Override
-    public void onItemClickListener(ArtistCommunityInformation data, int position) {
+    public void onItemClickListener(ArtCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(ArtistCommunityInformation data, int position) {
+    public void onLongItemClickListener(ArtCommunityInformation data, int position) {
 
+    }
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 }

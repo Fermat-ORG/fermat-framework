@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -79,7 +85,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
     private View rootView;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -112,7 +118,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = moduleManager.loadAndGetSettings("123456789");
+                    appSettings = settingsManager.loadAndGetSettings("sub_app_art_artist_community");
                 }
 
             } catch (Exception e) {
@@ -127,6 +133,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                         moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
                         moduleManager.persistSettings("123456789", appSettings);
+                        settingsManager.persistSettings("sub_app_art_artist_community", appSettings);
                     }
                 }
             }
@@ -175,7 +182,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             rootView = inflater.inflate(R.layout.aac_fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager  = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), artistCommunityInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_gridView);
@@ -188,7 +195,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#363636"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
 
 
@@ -233,6 +240,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
+        configureToolbar();
         return rootView;
     }
 
@@ -316,9 +324,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 dataSet.addAll(result);
                 offset = dataSet.size();
             }
-        }catch (CantGetSelectedActorIdentityException e){
+            //I'll check all the connections
+            moduleManager.checkAllConnections();
+        } catch (CantGetSelectedActorIdentityException e){
             //There are no identities in device
             //Nothing to do here.
+        } catch (CantHandleNewsEventException e){
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -359,6 +371,35 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         getActivity().invalidateOptionsMenu();
     }
 
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals(ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
+                invalidate();
+                onRefresh();
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 }
 
 

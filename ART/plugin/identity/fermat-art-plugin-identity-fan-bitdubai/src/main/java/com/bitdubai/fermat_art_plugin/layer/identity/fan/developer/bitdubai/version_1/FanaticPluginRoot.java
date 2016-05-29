@@ -126,6 +126,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
+
             identityFanaticManager = new IdentityFanaticManagerImpl(
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -137,6 +138,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
 
             //Initialize the fan identity event actions.
             initializeFanIdentityEventActions();
+
+            //Set the FanIdentityEventActions to Plugin manager
+            identityFanaticManager.setFanIdentityEventActions(fanIdentityEventActions);
 
             //Initialize event handlers
             FermatEventListener updatesListener = eventManager.getNewListener(

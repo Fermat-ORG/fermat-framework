@@ -123,7 +123,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                 externalInformation.put(artist.getExternalPlatform(), artist.getExternalUsername());
                 List extraData = new ArrayList();
                 extraData.add(artist.getProfileImage());
-                extraData.add(new ArtistExternalPlatformInformation(externalInformation));
+                extraData.add(new ArtistExternalPlatformInformation(externalInformation).getExternalPlatformInformationMap());
                 String xmlExtraData = XMLParser.parseObject(extraData);
                 artistExposingDatas.add(new ArtistExposingData(
                         artist.getPublicKey(),

@@ -82,8 +82,8 @@ public class AcceptDialog extends
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(alias);
+        description.setText("Do you want to accept the connection request from");
+        userName.setText(alias+"?");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class AcceptDialog extends
                     getSession().getModuleManager().acceptFan(
                             connectionId);
                     Toast.makeText(getContext(),
-                            " Accepted connection request from " + alias,
+                            "Accepted connection request from " + alias,
                             Toast.LENGTH_SHORT).show();
                     getSession().setData("connectionresult", 3);
                 } else {

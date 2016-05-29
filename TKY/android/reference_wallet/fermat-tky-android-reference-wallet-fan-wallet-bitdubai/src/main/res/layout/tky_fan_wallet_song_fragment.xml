@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:alpha="0.8">
@@ -19,4 +19,17 @@
         android:alpha="0.8" />
         <!--android:visibility="gone"/> to avoid null when recycler view is empty-->
     </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_songs_imageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/tky_no_songs_found"
+        android:visibility="gone"
+
+        android:scaleType="center" />
+
+</RelativeLayout>

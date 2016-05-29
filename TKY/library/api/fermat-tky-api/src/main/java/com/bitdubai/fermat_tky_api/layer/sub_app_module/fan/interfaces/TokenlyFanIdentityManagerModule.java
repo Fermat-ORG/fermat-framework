@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIden
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistPreferenceSettings;
 
 import java.io.Serializable;
 import java.util.List;
@@ -89,5 +91,6 @@ public interface TokenlyFanIdentityManagerModule extends
      * @throws TokenlyAPINotAvailableException
      */
     TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException;
+
 
 }

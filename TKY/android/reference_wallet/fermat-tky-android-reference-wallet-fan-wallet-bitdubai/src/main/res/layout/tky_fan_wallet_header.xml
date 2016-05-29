@@ -11,12 +11,12 @@
     android:layout_width="fill_parent"
     android:layout_height="130dp"
     android:scaleType="centerCrop"
-        android:src="@drawable/bannerfanwallet"
+        android:src="@drawable/tky_background_no_songs_found"
         android:paddingTop="140dp" />
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
         android:id="@+id/tky_header_TextView"
         android:layout_below="@+id/tky_header_image"
         android:layout_centerHorizontal="true"

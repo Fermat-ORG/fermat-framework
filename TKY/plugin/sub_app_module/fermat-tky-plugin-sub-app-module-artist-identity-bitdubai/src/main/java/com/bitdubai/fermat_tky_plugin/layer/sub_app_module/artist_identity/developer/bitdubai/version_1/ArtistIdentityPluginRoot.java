@@ -42,6 +42,9 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon  = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    PluginFileSystem pluginFileSystem;
+
     /**
      * Represents the plugin manager.
      */

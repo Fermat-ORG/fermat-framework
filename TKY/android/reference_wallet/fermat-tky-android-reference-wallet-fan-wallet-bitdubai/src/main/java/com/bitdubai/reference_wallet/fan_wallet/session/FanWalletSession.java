@@ -27,6 +27,7 @@ public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanW
     RecyclerView recyclerView=null;
     Boolean downloading=null;
     List<SongItems> items=null;
+    boolean noBackground=false;
 
     public void setDownloadThreadClass(SongFragment.DownloadThreadClass downloadThreadClass){this.downloadThreadClass=downloadThreadClass;}
     public SongFragment.DownloadThreadClass getDownloadThreadClass(){return downloadThreadClass;}
@@ -51,5 +52,8 @@ public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanW
 
     public void setItems( List<SongItems> items){this.items=items;}
     public  List<SongItems> getItems(){return items;}
+
+    public void setNobackground(Boolean noBackground){this.noBackground=noBackground;}
+    public boolean getNobackground(){return noBackground;}
 
 }

@@ -21,7 +21,8 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
@@ -38,7 +39,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -236,12 +236,13 @@ public final class FanActorNetworkServiceManager implements FanManager {
             final ProtocolState state  = ProtocolState          .PROCESSING_SEND;
             final RequestType type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
-
+            final int sentCount = 1;
             fanActorNetworkServiceDao.createConnectionRequest(
                     fanConnectionInformation,
                     state,
                     type,
-                    action
+                    action,
+                    sentCount
             );
 
             sendMessage(
@@ -361,7 +362,34 @@ public final class FanActorNetworkServiceManager implements FanManager {
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
             ConnectionRequestNotFoundException  {
+        try {
 
+            final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+
+            fanActorNetworkServiceDao.cancelConnection(
+                    requestId,
+                    protocolState
+            );
+
+            FanConnectionRequest connectionRequest = fanActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(connectionRequest),
+                    connectionRequest.getSenderPublicKey(),
+                    connectionRequest.getSenderActorType(),
+                    connectionRequest.getDestinationPublicKey(),
+                    connectionRequest.getDestinationActorType()
+            );
+
+        } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException e){
+            // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionRequestException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**
@@ -538,4 +566,17 @@ public final class FanActorNetworkServiceManager implements FanManager {
         return fanActorNetworkServiceDao.listAllRequest();
     }
 
+    /**
+     *
+     * @param fanConnectionInformation
+     */
+    public final void sendFailedMessage(FanConnectionInformation fanConnectionInformation){
+        sendMessage(
+                buildJsonRequestMessage(fanConnectionInformation),
+                fanConnectionInformation.getSenderPublicKey(),
+                fanConnectionInformation.getSenderActorType(),
+                fanConnectionInformation.getDestinationPublicKey(),
+                fanConnectionInformation.getDestinationActorType()
+        );
+    }
 }
