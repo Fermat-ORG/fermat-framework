@@ -502,14 +502,14 @@ public class FanCommunityManager
         try {
             fanActorConnectionManager.cancelConnection(connectionID);
         } catch (CantCancelActorConnectionRequestException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new FanCancellingFailedException("", e, "", "Error trying to cancel the actor connection.");
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Error trying to cancel the actor connection.");
         } catch (ActorConnectionNotFoundException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new FanCancellingFailedException("", e, "", "Connection request not found.");
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Connection request not found.");
         } catch (UnexpectedConnectionStateException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new FanCancellingFailedException("", e, "", "Unhandled Exception.");
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //throw new FanCancellingFailedException("", e, "", "Unhandled Exception.");
         }
     }
 

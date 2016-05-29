@@ -74,11 +74,6 @@ public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
 
     private FanIdentityEventActions fanIdentityEventActions;
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
     /**
      * Constructor
      *

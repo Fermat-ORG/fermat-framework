@@ -155,7 +155,6 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 artArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if (moduleManager != null) {
                 artArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
-                if (settingsManager != null) {
                     if (appSession.getAppPublicKey() != null) {
                         moduleManager.persistSettings(
                                 appSession.getAppPublicKey(), artArtistPreferenceSettings);

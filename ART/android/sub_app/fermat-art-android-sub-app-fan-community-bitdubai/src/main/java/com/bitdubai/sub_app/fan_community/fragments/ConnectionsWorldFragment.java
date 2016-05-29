@@ -114,8 +114,8 @@ public class ConnectionsWorldFragment extends
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = moduleManager.loadAndGetSettings("123456789");
-                    appSettings = settingsManager.loadAndGetSettings("public_key_art_fan_community");
+                    appSettings = moduleManager.loadAndGetSettings("public_key_art_fan_community");
+                    //appSettings = settingsManager.loadAndGetSettings("public_key_art_fan_community");
                 }
 
             } catch (Exception e) {
@@ -129,8 +129,8 @@ public class ConnectionsWorldFragment extends
                     if (appSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        moduleManager.persistSettings("123456789", appSettings);
-                        settingsManager.persistSettings("public_key_art_fan_community", appSettings);
+                        moduleManager.persistSettings("public_key_art_fan_community", appSettings);
+                        //settingsManager.persistSettings("public_key_art_fan_community", appSettings);
                     }
                 }
             }

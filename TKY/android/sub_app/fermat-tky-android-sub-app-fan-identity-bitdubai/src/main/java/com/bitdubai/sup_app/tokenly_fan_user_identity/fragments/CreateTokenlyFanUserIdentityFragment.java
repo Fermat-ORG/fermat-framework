@@ -137,7 +137,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 }
 
                 if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!= null)
-                    tokenlyFanPreferenceSettings = settingsManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
+                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
             } catch (Exception e) {
                 tokenlyFanPreferenceSettings = null;
             }
@@ -145,9 +145,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             if (tokenlyFanPreferenceSettings == null) {
                 tokenlyFanPreferenceSettings = new TokenlyFanPreferenceSettings();
                 tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(true);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!=null)
-                        settingsManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
+                        moduleManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
                 tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
                     if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!=null){
@@ -156,7 +156,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         moduleManager.persistSettings("123456789", tokenlyFanPreferenceSettings);
                     }
                 }
-            }
+            }}
 
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);

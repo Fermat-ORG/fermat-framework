@@ -41,10 +41,7 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon  = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    TokenlyFanIdentityManagerModule fanIdentityManager;
+    //TokenlyFanIdentityManagerModule fanIdentityManager;
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
 

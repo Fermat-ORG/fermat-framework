@@ -141,9 +141,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 if (tkyIdentitySubAppSession.getAppPublicKey()!= null){
                     tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
-                    tokenlyArtistPreferenceSettings = settingsManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
+                    //tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
                 }
 
             } catch (Exception e) {
@@ -152,18 +151,16 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             if (tokenlyArtistPreferenceSettings == null) {
                 tokenlyArtistPreferenceSettings = new TokenlyArtistPreferenceSettings();
-                tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
                 tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(true);
-                  if(settingsManager != null){
+
                     if (tkyIdentitySubAppSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }else{
-                        moduleManager.persistSettings("123456789", tokenlyArtistPreferenceSettings);
-                        settingsManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }
-                }
-            }
+
+            }}
 
 //            if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
 //                moduleManager.createNewIntraWalletUser("John Doe", null);
@@ -185,7 +182,6 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
           View rootLayout = inflater.inflate(R.layout.fragment_tky_artist_create_identity, container, false);
           initViews(rootLayout);
           setUpIdentity();
-
 
 
 // SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
@@ -876,7 +872,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             if (id == 99)
                 setUpHelpTkyArtist(false);
-              //  showDialog();
+            //  showDialog();
 
 
         } catch (Exception e) {

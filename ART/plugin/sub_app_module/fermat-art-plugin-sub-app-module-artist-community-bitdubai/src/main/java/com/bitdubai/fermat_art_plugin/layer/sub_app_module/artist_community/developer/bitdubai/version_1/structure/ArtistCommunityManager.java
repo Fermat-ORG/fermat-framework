@@ -140,7 +140,7 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
         try{
             worldArtistList = getArtistSearch().getResult(artistActorNetworkServiceManager.getSearch());
         } catch (CantGetArtistSearchResult e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Error in listWorldArtists trying to list world Artists");
         }
 
@@ -151,7 +151,7 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType());
             //Artist connections
-            final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            //final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final ArtistActorConnectionSearch search = artistActorConnectionManager.getSearch(linkedActorIdentity);
             //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);

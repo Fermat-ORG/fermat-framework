@@ -118,7 +118,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("sub_app_art_artist_community");
+                    appSettings = moduleManager.loadAndGetSettings("sub_app_art_artist_community");
                 }
 
             } catch (Exception e) {
@@ -132,8 +132,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                     if (appSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        moduleManager.persistSettings("123456789", appSettings);
-                        settingsManager.persistSettings("sub_app_art_artist_community", appSettings);
+                        moduleManager.persistSettings("sub_app_art_artist_community", appSettings);
                     }
                 }
             }

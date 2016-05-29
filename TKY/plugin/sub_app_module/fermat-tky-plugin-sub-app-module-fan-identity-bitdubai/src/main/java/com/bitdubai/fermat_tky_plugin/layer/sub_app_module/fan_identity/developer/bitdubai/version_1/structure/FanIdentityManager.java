@@ -111,7 +111,7 @@ public class FanIdentityManager
     /*@Override
     public SettingsManager<TokenlyFanPreferenceSettings> getSettingsManager() {
         return null;
-    }
+    }*/
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws

@@ -150,7 +150,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanIdentitySettings.setIsPresentationHelpEnabled(false);
                 if(moduleManager != null){
                 fanIdentitySettings.setIsPresentationHelpEnabled(true);
-                if(settingsManager != null){
                     if (artFanUserIdentitySubAppSession.getAppPublicKey()!=null){
                         moduleManager.persistSettings(
                                 artFanUserIdentitySubAppSession.getAppPublicKey(), fanIdentitySettings);
