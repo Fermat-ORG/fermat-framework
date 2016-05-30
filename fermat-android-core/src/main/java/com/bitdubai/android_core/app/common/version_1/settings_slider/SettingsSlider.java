@@ -29,8 +29,8 @@ public class SettingsSlider {
     }
 
     private void setUp() {
-        txt_more_settings = activity.findViewById(R.id.txt_more_settings);
-        recyclerView = (RecyclerView) activity.findViewById(com.bitdubai.fermat.R.id.settings_recycler_view);
+        txt_more_settings = activity.findViewById(R.id.more_settings);
+        recyclerView = (RecyclerView) activity.findViewById(R.id.settings_recycler_view);
         if(recyclerView!=null) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(activity);
