@@ -2,12 +2,9 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
 import android.content.ClipboardManager;
 
-<<<<<<< HEAD
-=======
+
 import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.ClipboardManager;
->>>>>>> 6918bd98ead0a38dcf55593b89dbd17628f3a774
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -72,7 +69,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      * Fragment UI controls
      */
-    private ImageView img_copy;
+
     private ImageView image_view_profile;
     private EditText edit_text_name;
     private TextView text_view_address;

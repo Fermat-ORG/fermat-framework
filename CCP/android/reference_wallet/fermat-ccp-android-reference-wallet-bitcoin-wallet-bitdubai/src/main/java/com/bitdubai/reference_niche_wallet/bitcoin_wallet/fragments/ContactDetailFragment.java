@@ -288,7 +288,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
 
     }
 
-    }
+
 
 
     /**

@@ -574,7 +574,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             DecimalFormat form = new DecimalFormat("##########.######",separator);
 
             //convert satoshis to bitcoin
-            final double amount = Double.parseDouble(WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount)), ShowMoneyType.BITCOIN.getCode()));
+            String monto = WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount)), ShowMoneyType.BITCOIN.getCode());
+
+
+            final double amount = Double.parseDouble(monto.replace(',','.'));
 
             //calculate the Earned/Lost in dollars of the spending value
             totalInDollars = (amount * spendingExchangeRate)-(amount * transaction.getExchangeRate());
