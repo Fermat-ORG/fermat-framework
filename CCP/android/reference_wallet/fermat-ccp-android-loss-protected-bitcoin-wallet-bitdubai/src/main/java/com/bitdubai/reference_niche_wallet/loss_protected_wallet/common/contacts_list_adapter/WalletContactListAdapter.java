@@ -70,7 +70,6 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                     contact_name.setTextSize(14);
                     contact_profile_image.setMaxHeight(40);
                     contact_profile_image.setMaxWidth(40);
-
                 }
                }catch (Exception e){
                 Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
