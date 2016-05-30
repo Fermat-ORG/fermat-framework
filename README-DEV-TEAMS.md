@@ -417,7 +417,7 @@ We are a developer team with different experience levels; we give our best to de
 
 #### Team Members:
 
-* **Nelson Ramirez [Full Team Leader]**<br/>
+* **Nelson Ramirez [Team Leader]**<br/>
 ---
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
@@ -432,13 +432,6 @@ We are a developer team with different experience levels; we give our best to de
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
-    
-
-* **Guillermo Gutierrez [New Developer]**
----
-      Email:   guillermo20@gmail.com
-      Skype:   guillermo20
-      Github:  https://github.com/guillermo20
 
 * **Yordin Alayn [New Developer]**
 ---
