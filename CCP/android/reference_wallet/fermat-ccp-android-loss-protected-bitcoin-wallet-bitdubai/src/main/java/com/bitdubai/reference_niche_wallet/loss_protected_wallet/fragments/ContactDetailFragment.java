@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -59,6 +61,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      * Fragment UI controls
      */
+    private ImageView img_copy;
     private ImageView image_view_profile;
     private EditText edit_text_name;
     private TextView text_view_address;
@@ -153,7 +156,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             setUpContact();
             return mFragmentView;
         }catch (Exception e){
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return container;
@@ -212,6 +215,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
             img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
+            img_copy = (ImageView) mFragmentView.findViewById(R.id.img_copy);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
             linear_layout_extra_user_receive.setOnClickListener(this);
@@ -248,6 +252,21 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                             Toast.makeText(getActivity(),"Address exchange sent, wait 2 minutes please",Toast.LENGTH_SHORT).show();
                         }
                     } catch (CantGetCryptoLossProtectedWalletException | CantListCryptoWalletIntraUserIdentityException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+            img_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+
+                        setClipboard(getActivity(), text_view_address.getText().toString());
+                            Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -398,5 +417,21 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             e.printStackTrace();
         }
 
+    }
+
+    // copy text to clipboard
+    private void setClipboard(Context context,String text) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                    .newPlainText("Address", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

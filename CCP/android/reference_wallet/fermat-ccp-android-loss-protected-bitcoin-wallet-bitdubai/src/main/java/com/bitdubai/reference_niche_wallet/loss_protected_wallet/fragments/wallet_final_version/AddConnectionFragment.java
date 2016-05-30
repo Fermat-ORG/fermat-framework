@@ -55,7 +55,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private int offset = 0;
     private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList;
+    private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList = new ArrayList<>();
     private LossProtectedWalletSession lossProtectedWalletSession;
     private Menu menu;
     private boolean isMenuVisible;

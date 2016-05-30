@@ -283,6 +283,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

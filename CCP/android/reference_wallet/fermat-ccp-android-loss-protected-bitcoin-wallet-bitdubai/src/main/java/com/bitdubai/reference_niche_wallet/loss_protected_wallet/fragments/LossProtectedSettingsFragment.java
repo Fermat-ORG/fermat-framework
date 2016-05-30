@@ -376,7 +376,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     public int getBackgroundAlpha() {
-        return null;
+        return 0;
     }
 
 
