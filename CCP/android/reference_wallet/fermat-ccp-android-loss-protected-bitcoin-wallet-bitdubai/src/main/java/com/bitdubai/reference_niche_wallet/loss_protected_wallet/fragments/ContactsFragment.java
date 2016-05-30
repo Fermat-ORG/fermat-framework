@@ -233,6 +233,12 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         FrameLayout frameLayout = new FrameLayout(getActivity());
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
+        int buttonSize = 70;
+
+        ///button size
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            buttonSize = 82;
+        }
 
         int padding = FermatScreenCalculator.getPx(getActivity(), 30);
         int width = FermatScreenCalculator.getPx(getActivity(), 56);
@@ -252,7 +258,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         padding = FermatScreenCalculator.getPx(getActivity(), 50);
         button1 = itemBuilder
-                .setSize(82)
+                .setSize(buttonSize)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.loss_externaluser_button))
                 .setText("External User")
@@ -263,7 +269,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         padding = FermatScreenCalculator.getPx(getActivity(), 80);
         button2 = itemBuilder
-                .setSize(82)
+                .setSize(buttonSize)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
