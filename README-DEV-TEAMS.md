@@ -28,7 +28,6 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
-* Yayo
 * Navi Charlie
 * Navi Sierra
 * Fsociety
@@ -43,7 +42,6 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | | Kabuto | | |
 | | Mordor | | |
 | | Skynet | | |
-| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -276,6 +274,12 @@ We are putting together a team of talented developers, especially passionate abo
 ---
     Email:   andyaacm@gmail.com
     Github:  https://github.com/macuare
+
+* **Luis Torres [New Developer]** <br/>
+---
+      Email:   lutor1106@gmail.com
+      Skype:   luis.fernando.torres.leon
+      Github:  https://github.com/iLutor
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
@@ -337,29 +341,35 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 #### Skynet Team Members:
 
-* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+* **Nerio Enrique Indriago Ortega [Full Team Leader]** <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Penelope Quintero [New Developer]** <br/>
+* **Penelope Quintero [Veteran Developer]** <br/>
 ---
       Email:   pennyxz@gmail.com
       Skype:   pennyxz
       Github:  https://github.com/pennyxz
 
-* **Jinmy Bohorquez [New Developer]** <br/>
+* **Jinmy Bohorquez [Veteran Developer]** <br/>
 ---
       Email:   jinmybohorquez@gmail.com
       Skype:   jinmyb22
       Github:  https://github.com/jinmyjbv
 
-* **Frank Contreras [New Developer]** <br/>
+* **Frank Contreras [Veteran Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
       Github:  https://github.com/javafrank
+
+* **José Briceño [New Developer]** <br/>
+---
+      Email:   josebricenor@gmail.com
+      Skype:   josebricenor
+      Github:  https://github.com/josebricenor
 <br/>
 
 ### Team Yayo:
@@ -376,23 +386,6 @@ We are responsible of only one thing, making fermat a successfully project, shar
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
-* **José Briceño [New Developer]** <br/>
----
-      Email:   josebricenor@gmail.com
-      Skype:   josebricenor
-      Github:  https://github.com/josebricenor
-
-* **Luis Torres [New Developer]** <br/>
----
-      Email:   lutor1106@gmail.com
-      Skype:   luis.fernando.torres.leon
-      Github:  https://github.com/iLutor
-
-* **Eduardo Guerere [New Developer]** <br/>
----
-      Email:   eduardoguerere@gmail.com
-      Skype:   eduardo.guerere
-      Github:  https://github.com/eduardoguerere
 
 <br>
 We don't mean to make fun of everything, just about the serious things.
