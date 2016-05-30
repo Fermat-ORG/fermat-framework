@@ -142,7 +142,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
                         loadCheckpoint("2016-05-29 15:22:16");
                         break;
                     case PRODUCTION:
-                        loadCheckpoint("2016-04-27 00:00:01");
+                        loadCheckpoint("2016-05-29 15:29:57");
                         break;
                 }
             }
