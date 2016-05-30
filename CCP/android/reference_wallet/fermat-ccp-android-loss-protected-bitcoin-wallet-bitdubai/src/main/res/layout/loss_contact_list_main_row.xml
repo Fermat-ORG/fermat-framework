@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#e1e1e1">
@@ -23,7 +23,7 @@
             android:id="@+id/contact_profile_image"
             android:layout_gravity="center_vertical" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:id="@+id/contact_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
