@@ -23,9 +23,7 @@
                 android:id="@+id/reveal_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-
-                >
+                android:orientation="vertical">
 
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -98,11 +96,6 @@
                         android:layout_gravity="center_vertical"/>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/txt_more_settings"
-                        >
 
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="match_parent"
@@ -110,10 +103,9 @@
                             android:layout_gravity="bottom"
                             android:gravity="center_horizontal"
                             android:text="More Settings"
+                            android:id="@+id/more_settings"
                             />
 
-
-                    </LinearLayout>
 
                     <ImageButton
                         android:layout_width="48dp"
