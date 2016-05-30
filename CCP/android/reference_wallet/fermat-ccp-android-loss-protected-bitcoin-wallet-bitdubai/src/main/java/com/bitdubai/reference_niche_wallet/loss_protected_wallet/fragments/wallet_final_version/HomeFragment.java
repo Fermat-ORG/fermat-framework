@@ -1,7 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
-import android.content.DialogInterface;
+import  android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -202,7 +202,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     }
 
     private void setUpPresentation(boolean checkButton) {
-         try {
+         try{
                 PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
                         new PresentationBitcoinWalletDialog(
                                 getActivity(),
