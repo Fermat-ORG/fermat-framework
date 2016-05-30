@@ -10,6 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.inte
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesDetailItemViewHolder;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
@@ -47,13 +48,18 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
 
     @Override
     protected void bindHolder(ChunckValuesDetailItemViewHolder holder, BitcoinLossProtectedWalletSpend data, int position) {
+
+        final int MAX_DECIMAL = 2;
+        final int MIN_DECIMAL = 2;
         //Get date and set a FormatDate for Data value
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
         holder.getAmountBalance().setText(formatBalanceString(data.getAmount(),ShowMoneyType.BITCOIN.getCode())+" BTC");
 
-        holder.getExchangeRate().setText("1 BTC = U$D "+data.getExchangeRate());
+        holder.getExchangeRate().setText("1 BTC = U$D "+
+                WalletUtils.formatAmountStringWithDecimalEntry(
+                        data.getExchangeRate(),MAX_DECIMAL,MIN_DECIMAL));
 
 
 

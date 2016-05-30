@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -72,6 +73,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
@@ -281,6 +283,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -437,7 +440,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         /**
          *  Amount observer
          */
-        editTextAmount.addTextChangedListener(new TextWatcher() {
+        /*editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
 
@@ -452,6 +455,10 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+        */
+
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
+
 
         /**
          * Selector
