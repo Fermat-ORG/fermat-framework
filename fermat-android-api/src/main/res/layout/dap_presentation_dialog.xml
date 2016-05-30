@@ -72,10 +72,9 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog" />
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="130dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
@@ -83,9 +82,8 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitCenter" />
             </RelativeLayout>
-
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/txt_sub_title"
@@ -158,7 +156,7 @@
                     android:paddingRight="30dp"
                     android:text="To begin, choose an avatar below. You might change later it with any picture and your own alias."
                     android:textColor="#1d1d26"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
 
             </LinearLayout>
@@ -192,7 +190,7 @@
                     android:gravity="center_vertical"
                     android:text="Don´t show this again"
                     android:textColor="#7c7c7c"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
 
 
