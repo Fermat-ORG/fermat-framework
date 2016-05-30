@@ -86,6 +86,8 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
      */
     @Override
     protected void bindHolder(final ChunckValuesHistoryItemViewHolder holder, final LossProtectedWalletTransaction data, int position) {
+        final int MAX_DECIMAL = 2;
+        final int MIN_DECIMAL = 2;
 
         LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
         try {
@@ -120,7 +122,9 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         else
             holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
 
-        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
+        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " +
+                WalletUtils.formatAmountStringWithDecimalEntry(data.getExchangeRate(),
+                        MAX_DECIMAL,MIN_DECIMAL));
 
     }
 

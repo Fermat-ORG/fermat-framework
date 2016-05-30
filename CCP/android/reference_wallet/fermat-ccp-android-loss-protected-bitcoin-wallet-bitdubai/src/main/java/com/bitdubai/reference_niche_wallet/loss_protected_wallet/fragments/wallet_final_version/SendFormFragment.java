@@ -456,7 +456,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         });
         */
 
-        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(10,8)});
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
+
 
         /**
          * Selector
