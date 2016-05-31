@@ -20,7 +20,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:paddingRight="9dp"
-            android:indeterminateDrawable="@drawable/circle_progress" >
+             >
+            <!-- No resource found android:indeterminateDrawable="@drawable/circle_progress" -->
         </ProgressBar>
 
     </FrameLayout>
