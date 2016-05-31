@@ -7,11 +7,13 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
+import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 26.09.15.
+ * Modified by abicelis on 17/05/2016
  */
 public interface BankMoneyTransactionRecord extends Serializable{
 
@@ -23,11 +25,7 @@ public interface BankMoneyTransactionRecord extends Serializable{
 
     TransactionType getTransactionType();
 
-    /*String getPublicKeyActorFrom();
-
-    String getPublicKeyActorTo();*/
-
-    float getAmount();
+    BigDecimal getAmount();
 
     FiatCurrency getCurrencyType();
 
@@ -43,10 +41,9 @@ public interface BankMoneyTransactionRecord extends Serializable{
 
     long getTimestamp();
 
-    long getRunningBookBalance();
+    BigDecimal getRunningBookBalance();
 
-    long getRunningAvailableBalance();
+    BigDecimal getRunningAvailableBalance();
 
     String getMemo();
-
 }

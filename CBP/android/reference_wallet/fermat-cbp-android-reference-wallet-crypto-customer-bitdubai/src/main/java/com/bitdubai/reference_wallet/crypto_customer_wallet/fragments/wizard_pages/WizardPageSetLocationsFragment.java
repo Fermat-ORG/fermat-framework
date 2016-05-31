@@ -178,6 +178,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     }
 
     private void saveSettingAndGoNextStep() {
+
         try {
             for (String location : locationList) {
                 moduleManager.createNewLocation(location, appSession.getAppPublicKey());
@@ -192,6 +193,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         }
+
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT, appSession.getAppPublicKey());
     }

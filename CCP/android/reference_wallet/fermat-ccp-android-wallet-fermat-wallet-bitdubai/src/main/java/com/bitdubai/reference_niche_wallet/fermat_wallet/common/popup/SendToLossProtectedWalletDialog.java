@@ -43,15 +43,15 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.ReferenceWalletSettings;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -74,12 +74,12 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
     /**
      * wallet selected
      */
-    private CryptoWalletWalletContact walletContact;
+    private FermatWalletWalletContact walletContact;
     /**
      *  Deals with crypto wallet interface
      */
-    private CryptoWallet cryptoWallet;
-    private ReferenceWalletSession appSession;
+    private FermatWallet fermatWallet;
+    private FermatWalletSession appSession;
 
     /**
      * Deals with error manager interface
@@ -98,7 +98,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
     private FermatTextView txt_type;
     private Spinner spinner;
     private BitcoinConverter bitcoinConverter;
-    private BitcoinWalletSettings bitcoinWalletSettings = null;
+    private FermatWalletSettings bitcoinWalletSettings = null;
 
     private Typeface tf;
     /**
@@ -109,13 +109,13 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      */
 
     public SendToLossProtectedWalletDialog(Activity activity,
-                                           CryptoWallet cryptoWallet,
-                                           ReferenceWalletSession appSession,
+                                           FermatWallet fermatWallet,
+                                           FermatWalletSession appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);
         this.activity = activity;
-        this.cryptoWallet = cryptoWallet;
+        this.fermatWallet = fermatWallet;
         this.appSession = appSession;
         this.blockchainNetworkType = blockchainNetworkType;
     }
@@ -128,7 +128,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
 
         try {
-            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
+            bitcoinWalletSettings = fermatWallet.loadAndGetSettings(appSession.getAppPublicKey());
             if (bitcoinWalletSettings.getBlockchainNetworkType() == null)
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             else
@@ -325,7 +325,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
                     BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                     BigDecimal operator = new BigDecimal(newAmount);
-                    List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
+                    List<InstalledWallet> list= fermatWallet.getInstalledWallets();
                     InstalledWallet wallet = null;
                     for (int i = 0; i < list.size() ; i++) {
                         if (list.get(i).getWalletName().equals("Loss Protected Wallet")){
@@ -349,7 +349,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         }
 
                         if (operator.compareTo(minSatoshis) == 1) {
-                            cryptoWallet.sendToWallet(
+                            fermatWallet.sendToWallet(
                                     operator.longValueExact(),
                                     appSession.getAppPublicKey(),
                                     wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
@@ -358,7 +358,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                                     actor,
                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                    blockchainNetworkType,CryptoCurrency.BITCOIN
+                                    blockchainNetworkType
                             );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
                             dismiss();

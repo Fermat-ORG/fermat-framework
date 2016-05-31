@@ -3,10 +3,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -26,7 +25,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -38,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
@@ -118,9 +117,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.CryptoCustomerWalletModulePluginRoot;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -170,12 +170,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final CryptoWalletManager cryptoWalletManager;
-    private final PluginVersionReference pluginVersionReference;
-    private final ErrorManager errorManager;
 
     private String merchandise = null;
     private String typeOfPayment = null;
     private String paymentCurrency = null;
+
+    private final CryptoCustomerWalletModulePluginRoot pluginRoot;
 
 
     /*
@@ -200,8 +200,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
                                                                  CryptoWalletManager cryptoWalletManager,
-                                                                 final ErrorManager errorManager,
-                                                                 final PluginVersionReference pluginVersionReference,
+                                                                 final CryptoCustomerWalletModulePluginRoot pluginRoot,
                                                                  PluginFileSystem pluginFileSystem,
                                                                  UUID pluginId) {
         super(pluginFileSystem, pluginId);
@@ -225,8 +224,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.cryptoWalletManager = cryptoWalletManager;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -607,19 +605,19 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             throw identityAssociatedNotFoundException;
         } catch (RelationshipNotFoundException relationshipNotFoundException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
             throw new IdentityAssociatedNotFoundException(relationshipNotFoundException, "walletPublicKey: " + walletPublicKey, "There's no relationship for this wallet.");
         } catch (CantGetCryptoCustomerIdentityException cantGetCryptoCustomerIdentityException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
             throw new CantGetAssociatedIdentityException(cantGetCryptoCustomerIdentityException, "walletPublicKey: " + walletPublicKey, "There was a problem trying to get a crypto customer identity.");
         } catch (CantGetCustomerIdentityWalletRelationshipException cantGetCustomerIdentityWalletRelationshipException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
             throw new CantGetAssociatedIdentityException(cantGetCustomerIdentityWalletRelationshipException, "walletPublicKey: " + walletPublicKey, "There was a problem listing the relationship between the wallet and the crypto customers.");
         } catch (Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantGetAssociatedIdentityException(exception, "walletPublicKey: " + walletPublicKey, "Unhandled Error.");
         }
     }
@@ -879,23 +877,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
             String bankAccountInfo = ba.getBankAccount();
             String bank, accountNumber;
-            BankAccountType bankAccountType = null;
+            BankAccountType accountType;
 
             bank = bankAccountInfo.substring(bankAccountInfo.indexOf("Bank: ") + 6, bankAccountInfo.indexOf("\n"));
             bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
 
-            try {
-                String accountType = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ") + 14, bankAccountInfo.indexOf("\n"));
-                bankAccountType = BankAccountType.getByCode(accountType);
-            } catch (FermatException ignore) {
-            }
-            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
+            String accountTypeString = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ") + 14, bankAccountInfo.indexOf("\n"));
 
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
             accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ") + 8);
 
-            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "");
+            if (accountTypeString.equalsIgnoreCase("Checking")) {
+                accountTypeString = "CHC";
+            } else {
+                accountTypeString = "SAV";
+            }
 
-            bankAccounts.add(ban);
+            try {
+                accountType = BankAccountType.getByCode(accountTypeString);
+                BankAccountData ban = new BankAccountData(ba.getCurrencyType(), accountType, bank, accountNumber, "", "");
+                bankAccounts.add(ban);
+            } catch (InvalidParameterException ignore) {
+
+            }
 
         }
         return bankAccounts;
@@ -1076,20 +1080,28 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     public void sendPayment(String contractHash) throws CantSendPaymentException {
         try {
             CustomerBrokerContractPurchase customerBrokerContractPurchase;
-            //TODO: This is the real implementation
             customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
 
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-            CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ContractClauseType contractClauseType = getContractClauseType(negotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+            CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.
+                    getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-            if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
-                //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
+            final Collection<Clause> clauses = negotiation.getClauses();
+            String paymentMethodCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+
+            if (paymentMethodCode == null)
+                throw new CantSendPaymentException("The CUSTOMER_PAYMENT_METHOD clause is null");
+
+            MoneyType paymentMethod = MoneyType.getByCode(paymentMethodCode);
+
+            if (paymentMethod == MoneyType.CRYPTO) {
+                final String merchandiseCurrencyCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_CURRENCY);
+                final CryptoCurrency paymentCurrency = CryptoCurrency.getByCode(merchandiseCurrencyCode);
+
                 String cryptoBrokerPublicKey = "reference_wallet"; //TODO: this is a hardcoded public key
-                customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash);
-
-            } else {  // Case: sending offline payment.
+                customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash, paymentCurrency);
+            } else {
                 customerOfflinePaymentManager.sendPayment(contractHash);
             }
 
@@ -1099,6 +1111,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             throw new CantSendPaymentException(e, "Sending the payment", "Cannot get the negotiation list");
         } catch (CantGetListClauseException e) {
             throw new CantSendPaymentException(e, "Sending the payment", "Cannot get the clauses list");
+        } catch (InvalidParameterException e) {
+            throw new CantSendPaymentException(e, "Sending the payment", "Cannot get payment method");
         }
 
     }
@@ -1110,46 +1124,25 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
 
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
-                    this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
-                            UUID.fromString(negotiationId));
+            CustomerBrokerPurchaseNegotiation purchaseNegotiation = this.customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+            MoneyType contractClauseType = getContractClauseType(purchaseNegotiation, ClauseType.BROKER_PAYMENT_METHOD);
 
-            ContractClauseType contractClauseType = getContractClauseType(
-                    customerBrokerPurchaseNegotiation, ClauseType.BROKER_PAYMENT_METHOD);
-            /**
-             * Case: ack crypto merchandise.
-             */
-            if (contractClauseType == ContractClauseType.CRYPTO_TRANSFER) {
+            if (contractClauseType == null)
+                throw new CantAckMerchandiseException("Cannot find the contract clause");
+
+            if (contractClauseType == MoneyType.CRYPTO) {
                 return customerBrokerContractPurchase.getStatus();
-            }
-            /**
-             * Case: ack offline merchandise.
-             */
-            if (contractClauseType == ContractClauseType.BANK_TRANSFER ||
-                    contractClauseType == ContractClauseType.CASH_DELIVERY ||
-                    contractClauseType == ContractClauseType.CASH_ON_HAND) {
-
+            } else {
                 this.customerAckOfflineMerchandiseManager.ackMerchandise(contractHash);
                 return customerBrokerContractPurchase.getStatus();
             }
 
-            throw new CantAckMerchandiseException("Cannot find the contract clause");
-
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-            throw new CantAckMerchandiseException(
-                    e,
-                    "Cannot ack the merchandise",
-                    "Cannot get the contract");
+            throw new CantAckMerchandiseException(e, "Cannot ack the merchandise", "Cannot get the contract");
         } catch (CantGetListClauseException e) {
-            throw new CantAckMerchandiseException(
-                    e,
-                    "Cannot ack the merchandise",
-                    "Cannot get the clauses list");
+            throw new CantAckMerchandiseException(e, "Cannot ack the merchandise", "Cannot get the clauses list");
         } catch (CantGetListPurchaseNegotiationsException e) {
-            throw new CantAckMerchandiseException(
-                    e,
-                    "Cannot ack the merchandise",
-                    "Cannot get the negotiation list");
+            throw new CantAckMerchandiseException(e, "Cannot ack the merchandise", "Cannot get the negotiation list");
         }
     }
 
@@ -1338,7 +1331,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         return clauses;
     }
 
-    private ContractClauseType getContractClauseType(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation, ClauseType paramClauseType) throws
+    private MoneyType getContractClauseType(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation, ClauseType paramClauseType) throws
             CantGetListClauseException {
         try {
             //I will check if customerBrokerPurchaseNegotiation is null
@@ -1350,7 +1343,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
                 if (clauseType.equals(paramClauseType)) {
-                    return ContractClauseType.getByCode(clause.getValue());
+                    return MoneyType.getByCode(clause.getValue());
                 }
             }
             throw new CantGetListClauseException("Cannot find the proper clause");

@@ -49,13 +49,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.CreateContactDialogCallback;
@@ -69,7 +68,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.HeaderType
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -93,7 +92,7 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -115,9 +114,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     /**
      * Wallet session
      */
-    ReferenceWalletSession referenceWalletSession;
+    FermatWalletSession referenceWalletSession;
     // unsorted list items
-    List<CryptoWalletWalletContact> mItems;
+    List<FermatWalletWalletContact> mItems;
     // array list to store section positions
     ArrayList<Integer> mListSectionPos;
     // array list to store listView data
@@ -140,11 +139,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
-    List<CryptoWalletWalletContact> walletContactRecords = new ArrayList<>();
+    List<FermatWalletWalletContact> walletContactRecords = new ArrayList<>();
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
-    private CryptoWallet cryptoWallet;
+    private FermatWallet fermatWallet;
     private ErrorManager errorManager;
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
@@ -165,14 +164,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = (FermatWalletSession) appSession;
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);
         try {
-        cryptoWallet = (CryptoWallet) appSession.getModuleManager();
+        fermatWallet = (FermatWallet) appSession.getModuleManager();
 
 
         } catch (Exception e) {
@@ -368,7 +367,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                            walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                            if (walletContactRecords.isEmpty()) {
                                 mEmptyView.setVisibility(View.VISIBLE);
                                 mListView.setVisibility(View.GONE);
@@ -429,7 +428,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         } else {
             mItems = walletContactRecords;
             isScrolled = false;
-            new Populate().execute((ArrayList<CryptoWalletWalletContact>) mItems);
+            new Populate().execute((ArrayList<FermatWalletWalletContact>) mItems);
         }
 
     }
@@ -527,9 +526,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
 
                     if (position == 1)
-                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact) adapterView.getItemAtPosition(position));
+                        referenceWalletSession.setLastContactSelected((FermatWalletWalletContact) adapterView.getItemAtPosition(position));
                     else
-                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact) adapterView.getItemAtPosition(position));
+                        referenceWalletSession.setLastContactSelected((FermatWalletWalletContact) adapterView.getItemAtPosition(position));
 
 
                     Boolean isFromActionBarSend = (Boolean) referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
@@ -582,7 +581,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(ReferenceWalletSession appSession) {
+    public void setWalletSession(FermatWalletSession appSession) {
         this.appSession = appSession;
     }
 
@@ -730,7 +729,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     /**
      * Sort array and extract sections f background Thread here we use AsyncTask
      */
-    private class Populate extends AsyncTask<ArrayList<CryptoWalletWalletContact>, Void, Void> {
+    private class Populate extends AsyncTask<ArrayList<FermatWalletWalletContact>, Void, Void> {
         private final int TOTAL_CONTACTS_SECTION_POSITION = 0;
         private String constrainStr;
 
@@ -760,13 +759,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
         @Override
         @SafeVarargs
-        protected final Void doInBackground(ArrayList<CryptoWalletWalletContact>... params) {
+        protected final Void doInBackground(ArrayList<FermatWalletWalletContact>... params) {
             mListItems.clear();
             mListSectionPos.clear();
 
-            ArrayList<CryptoWalletWalletContact> items = params[0];
+            ArrayList<FermatWalletWalletContact> items = params[0];
 
-            Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
+            Map<Integer, FermatWalletWalletContact> positions = new HashMap<>();
 
             if (items != null)
                 if (items.size() > 0) {
@@ -801,7 +800,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
                         // for each item in the list look if is number, symbol o letter and put it in the corresponding list
                         for (int i = 0; i < items.size(); i++) {//) {
-                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            FermatWalletWalletContact cryptoWalletWalletContact = items.get(i);
                             String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
                             if (currentSection.matches(numberRegex))
                                 // is Digit
@@ -903,10 +902,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
             if (constraint != null && constraint.toString().length() > 0) {
                 String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
-                ArrayList<CryptoWalletWalletContact> filterItems = new ArrayList<>();
+                ArrayList<FermatWalletWalletContact> filterItems = new ArrayList<>();
 
                 synchronized (this) {
-                    for (CryptoWalletWalletContact item : mItems) {
+                    for (FermatWalletWalletContact item : mItems) {
                         if (item.getActorName().toLowerCase(Locale.getDefault()).contains(constraintStr)) {
                             filterItems.add(item);
                         }
@@ -927,7 +926,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<CryptoWalletWalletContact> filtered = (ArrayList<CryptoWalletWalletContact>) results.values;
+            ArrayList<FermatWalletWalletContact> filtered = (ArrayList<FermatWalletWalletContact>) results.values;
             final String constrainStr = constraint.toString();
             setIndexBarViewVisibility(constrainStr);
 

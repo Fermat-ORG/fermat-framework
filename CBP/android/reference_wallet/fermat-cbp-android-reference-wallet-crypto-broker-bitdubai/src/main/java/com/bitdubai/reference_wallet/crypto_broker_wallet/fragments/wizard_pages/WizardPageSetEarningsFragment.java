@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -24,8 +25,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsWizardAdapter;
@@ -38,6 +37,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 
 
 /**
@@ -55,7 +57,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     //Data
     private List<EarningsWizardData> earningDataList;
     private List<EarningsWizardData> earningDataListSelected;
-    private Map<String,EarningsWizardData> currencyEarningWallet;
+    private Map<String, EarningsWizardData> currencyEarningWallet;
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -105,7 +107,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(
                         Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                        DISABLES_THIS_FRAGMENT,
                         ex
                 );
             }
@@ -182,11 +184,17 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 Platforms platform = wallet.getPlatform();
                 switch (platform) {
                     case BANKING_PLATFORM:
-                        List<BankAccountNumber> accounts = moduleManager.getAccounts(wallet.getWalletPublicKey());
+                        List<BankAccountNumber> accounts;
+                        try {
+                            accounts = moduleManager.getAccounts(wallet.getWalletPublicKey());
+                        } catch (Exception e) {
+                            accounts = new ArrayList<>();
+                        }
+
                         for (BankAccountNumber account : accounts) {
                             FiatCurrency currencyType = account.getCurrencyType();
                             if (currencyType.equals(earningCurrency) || currencyType.equals(linkedCurrency)) {
-                                if (isWalletAssociated(wallet.getWalletPublicKey(),currencyType.getCode(),account.getAccount())) {
+                                if (isWalletAssociated(wallet.getWalletPublicKey(), currencyType.getCode(), account.getAccount())) {
                                     filteredList.add(wallet);
                                     setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, currencyType);
                                     break;
@@ -195,9 +203,15 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         }
                         break;
                     case CASH_PLATFORM:
-                        FiatCurrency cashCurrency = moduleManager.getCashCurrency(wallet.getWalletPublicKey());
-                        if (cashCurrency.equals(earningCurrency) || cashCurrency.equals(linkedCurrency)) {
-                            if (isWalletAssociated(wallet.getWalletPublicKey(),cashCurrency.getCode())) {
+                        FiatCurrency cashCurrency;
+                        try {
+                            cashCurrency = moduleManager.getCashCurrency(wallet.getWalletPublicKey());
+                        } catch (Exception ignore) {
+                            cashCurrency = null;
+                        }
+
+                        if (earningCurrency.equals(cashCurrency) || linkedCurrency.equals(cashCurrency)) {
+                            if (isWalletAssociated(wallet.getWalletPublicKey(), cashCurrency.getCode())) {
                                 filteredList.add(wallet);
                                 setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, cashCurrency);
                                 break;
@@ -207,7 +221,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     case CRYPTO_CURRENCY_PLATFORM:
                         CryptoCurrency cryptoCurrency = wallet.getCryptoCurrency();
                         if (cryptoCurrency.equals(earningCurrency) || cryptoCurrency.equals(linkedCurrency)) {
-                            if (isWalletAssociated(wallet.getWalletPublicKey(),cryptoCurrency.getCode())){
+                            if (isWalletAssociated(wallet.getWalletPublicKey(), cryptoCurrency.getCode())) {
                                 filteredList.add(wallet);
                                 setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, cryptoCurrency);
                                 break;
@@ -240,7 +254,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         }
     }
@@ -259,7 +273,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
                     if (errorManager != null)
                         errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                                DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                     else
                         Log.e(TAG, ex.getMessage(), ex);
                 }
@@ -293,7 +307,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         } catch (FermatException ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
@@ -301,64 +315,62 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         return list;
     }
 
-    private boolean isWalletAssociated(String walletPublicKey, String FiatCurrencyCode){
+    private boolean isWalletAssociated(String walletPublicKey, String fiatCurrencyCode) {
         try {
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(walletPublicKey);
 
-            List<CryptoBrokerWalletAssociatedSetting> walletAssociated = moduleManager.getCryptoBrokerWalletAssociatedSettings(walletPublicKey);
-            for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+                final String associatedWalletPublicKey = associatedWallet.getWalletPublicKey();
+                final String merchandiseCode = associatedWallet.getMerchandise().getCode();
 
-                if (    walletPublicKey.equals(walletAssociatedItem.getWalletPublicKey()) &&
-                        FiatCurrencyCode.equals(walletAssociatedItem.getMerchandise().getCode())
-                ) {
-                    return Boolean.TRUE;
+                if (associatedWalletPublicKey.equals(walletPublicKey) && merchandiseCode.equals(fiatCurrencyCode)) {
+                    return true;
                 }
             }
 
         } catch (CantGetCryptoBrokerWalletSettingException | CryptoBrokerWalletNotFoundException ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
 
-        return Boolean.FALSE;
+        return false;
 
     }
 
-    private boolean isWalletAssociated(String walletPublicKey, String FiatCurrencyCode, String account){
+    private boolean isWalletAssociated(String walletPublicKey, String currencyCode, String account) {
         try {
-
             List<CryptoBrokerWalletAssociatedSetting> walletAssociated = moduleManager.getCryptoBrokerWalletAssociatedSettings(walletPublicKey);
-            for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
 
-                if (    walletPublicKey.equals(walletAssociatedItem.getWalletPublicKey()) &&
-                        FiatCurrencyCode.equals(walletAssociatedItem.getMerchandise().getCode()) &&
-                        account.equals(walletAssociatedItem.getBankAccount())) {
-                    return Boolean.TRUE;
+            for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
+                final String associatedWalletPublicKey = walletAssociatedItem.getWalletPublicKey();
+                final String merchandiseCode = walletAssociatedItem.getMerchandise().getCode();
+                final String associatedAccount = walletAssociatedItem.getBankAccount();
+
+                if (walletPublicKey.equals(associatedWalletPublicKey) && merchandiseCode.equals(currencyCode) && account.equals(associatedAccount)) {
+                    return true;
                 }
             }
 
         } catch (CantGetCryptoBrokerWalletSettingException | CryptoBrokerWalletNotFoundException ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
 
-        return Boolean.FALSE;
-
+        return false;
     }
 
-    private void setCurrencyEarningWallet(String walletPublicKey,EarningsWizardData dataEarning,Currency currencyEarning){
+    private void setCurrencyEarningWallet(String walletPublicKey, EarningsWizardData dataEarning, Currency currencyEarning) {
 
-        Currency earningCurrency    = dataEarning.getEarningCurrency();
-        Currency linkedCurrency     = dataEarning.getLinkedCurrency();
+        Currency earningCurrency = dataEarning.getEarningCurrency();
+        Currency linkedCurrency = dataEarning.getLinkedCurrency();
 
-        if(!currencyEarning.getCode().equals(dataEarning.getEarningCurrency().getCode())){
+        if (!currencyEarning.getCode().equals(dataEarning.getEarningCurrency().getCode())) {
             earningCurrency = dataEarning.getLinkedCurrency();
-            linkedCurrency  = dataEarning.getEarningCurrency();
+            linkedCurrency = dataEarning.getEarningCurrency();
         }
 
         EarningsWizardData earningsWizardData = new EarningsWizardData(earningCurrency, linkedCurrency);

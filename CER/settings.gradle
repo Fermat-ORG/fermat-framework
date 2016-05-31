@@ -39,6 +39,8 @@ include ':fermat-cer-plugin-provider-elcronista-bitdubai'
 project(':fermat-cer-plugin-provider-elcronista-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-elcronista-bitdubai')
 include ':fermat-cer-plugin-provider-europeancentralbank-bitdubai'
 project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-europeancentralbank-bitdubai')
+include ':fermat-cer-plugin-provider-fermatexchange-bitdubai'
+project(':fermat-cer-plugin-provider-fermatexchange-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-fermatexchange-bitdubai')
 include ':fermat-cer-plugin-provider-lanacion-bitdubai'
 project(':fermat-cer-plugin-provider-lanacion-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-lanacion-bitdubai')
 include ':fermat-cer-plugin-provider-yahoo-bitdubai'

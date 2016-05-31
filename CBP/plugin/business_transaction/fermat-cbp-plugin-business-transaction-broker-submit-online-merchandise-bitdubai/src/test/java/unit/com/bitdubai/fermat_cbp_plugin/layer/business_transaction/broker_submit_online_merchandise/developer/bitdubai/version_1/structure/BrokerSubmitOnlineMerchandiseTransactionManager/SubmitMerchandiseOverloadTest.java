@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseTransactionManager;
 
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CryptoBrokerWalletMock;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -46,7 +45,7 @@ public class SubmitMerchandiseOverloadTest {
         BrokerSubmitOnlineMerchandiseTransactionManager brokerSubmitOnlineMerchandiseTransactionManager=
                 new BrokerSubmitOnlineMerchandiseTransactionManager(null,null,null,cryptoBrokerWalletManagerMock,null);
         BigDecimal referencePrice=BigDecimal.TEN;
-        brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(referencePrice,"CBPWalletPublicKey","ContractHash");
+        brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(referencePrice,"CBPWalletPublicKey","ContractHash", merchandiseCurrency);
 
     }
 

@@ -28,9 +28,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_ident
 @PluginInfo(createdBy = "vlzangel", maintainerMail = "vlzangel91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_CUSTOMER_IDENTITY)
 public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractModule<IdentityCustomerPreferenceSettings, ActiveActorIdentityInformation>{
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER)
     private CryptoCustomerIdentityManager identityManager;
 
@@ -51,8 +48,7 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractModule
                     identityManager,
                     pluginFileSystem,
                     pluginId,
-                    errorManager,
-                    this.getPluginVersionReference());
+                    this);
 
         return moduleManager;
     }
