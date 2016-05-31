@@ -608,7 +608,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
         });
     }
