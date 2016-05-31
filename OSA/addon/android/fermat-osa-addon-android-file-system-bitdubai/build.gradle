@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
-apply plugin: 'jacoco'
+//apply plugin: 'maven'
+//apply plugin: 'findbugs'
+//apply plugin: 'checkstyle'
+//apply plugin: 'pmd'
+//apply plugin: 'jacoco'
 
 //group = "com.bitdubai.fermat.osa"
 sourceCompatibility = 1.7
@@ -54,51 +54,51 @@ dependencies {
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
 }
 
-pmd {
-    toolVersion = '5.1.3'
-}
-
-tasks.withType (FindBugs) {
-    reports {
-        xml.enabled = true
-        html.enabled = false
-    }
-}
-
-def coverageSourceDirs = [
-        'src/main/java'
-]
-def jacocoHtmlReport = ""
-
-
-task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
-    group = "Reporting"
-
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/*$ViewInjector*.*',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebug.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
-    }
-}
-
-task testCoverage(dependsOn: jacocoTestReport) << {
-    println jacocoHtmlReport
-}
-
-tasks.assemble.dependsOn clean
-tasks.assemble.mustRunAfter clean
+//pmd {
+//    toolVersion = '5.1.3'
+//}
+//
+//tasks.withType (FindBugs) {
+//    reports {
+//        xml.enabled = true
+//        html.enabled = false
+//    }
+//}
+//
+//def coverageSourceDirs = [
+//        'src/main/java'
+//]
+//def jacocoHtmlReport = ""
+//
+//
+//task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
+//    group = "Reporting"
+//
+//    description = "Generate Jacoco coverage reports"
+//
+//    classDirectories = fileTree(
+//            dir: 'build/intermediates/classes/debug',
+//            excludes: ['**/R.class',
+//                       '**/R$*.class',
+//                       '**/*$ViewInjector*.*',
+//                       '**/BuildConfig.*',
+//                       '**/Manifest*.*']
+//    )
+//
+//    additionalSourceDirs = files(coverageSourceDirs)
+//    sourceDirectories = files(coverageSourceDirs)
+//    executionData = files('build/jacoco/testDebug.exec')
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+//    }
+//}
+//
+//task testCoverage(dependsOn: jacocoTestReport) << {
+//    println jacocoHtmlReport
+//}
+//
+//tasks.assemble.dependsOn clean
+//tasks.assemble.mustRunAfter clean

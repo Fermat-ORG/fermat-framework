@@ -145,17 +145,17 @@
 
 
 
-        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
-            android:label="CommService"
-            android:exported="true"
-            >
-            <intent-filter>
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!-- Service name -->
-                <action android:name="org.fermat.COMM_SERVICE" />
-            </intent-filter>
-        </service>
+        <!--<service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"-->
+            <!--android:label="CommService"-->
+            <!--android:exported="true"-->
+            <!-->-->
+            <!--<intent-filter>-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
+                <!--&lt;!&ndash; Service name &ndash;&gt;-->
+                <!--<action android:name="org.fermat.COMM_SERVICE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
         <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
             android:theme="@style/AppThemeDesktop"
@@ -166,7 +166,15 @@
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL"/>
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService"
             android:process=":commerverSerice"
-            android:exported="true"/>
+            android:exported="true">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- Service name -->
+                <action android:name="org.fermat.COMM_SERVICE" />
+            </intent-filter>
+
+        </service>
 
     </application>
 </manifest>
