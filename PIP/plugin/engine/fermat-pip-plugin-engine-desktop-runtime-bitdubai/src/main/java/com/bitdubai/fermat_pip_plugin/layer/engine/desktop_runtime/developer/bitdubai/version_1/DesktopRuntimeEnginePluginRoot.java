@@ -519,6 +519,30 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.addFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
+        //more settings
+        activity = new Activity();
+        activity.setBackgroundColor("#000000");
+        activity.setActivityType(Activities.DESKTOP_MORE_SETTINGS.getCode());
+        activity.setType(Activities.DESKTOP_MORE_SETTINGS);
+        activity.setStartFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setLabel("Export Key");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        activity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
         // community
         activity = new Activity();
         activity.setActivityType(Activities.DESKTOP_COMMUNITY_ACTIVITY.getCode());

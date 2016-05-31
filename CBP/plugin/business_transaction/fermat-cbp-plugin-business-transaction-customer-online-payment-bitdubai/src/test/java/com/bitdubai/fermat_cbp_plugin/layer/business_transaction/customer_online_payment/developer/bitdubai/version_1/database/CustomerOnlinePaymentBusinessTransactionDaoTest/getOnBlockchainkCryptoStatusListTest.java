@@ -67,7 +67,7 @@ public class getOnBlockchainkCryptoStatusListTest {
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)
         ).thenReturn(databaseTable);
         assertEquals(ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION,
-                customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList().
+                customerOnlinePaymentBusinessTransactionDao.getOnBlockchainCryptoStatusList().
                         get(0).getContractTransactionStatus());
     }
     //Generic Exception
@@ -75,6 +75,6 @@ public class getOnBlockchainkCryptoStatusListTest {
     public void getOnBlockchainkCryptoStatusListTest_Should_Throw_Exception()throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
                 mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
-        customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
+        customerOnlinePaymentBusinessTransactionDao.getOnBlockchainCryptoStatusList();
     }
 }

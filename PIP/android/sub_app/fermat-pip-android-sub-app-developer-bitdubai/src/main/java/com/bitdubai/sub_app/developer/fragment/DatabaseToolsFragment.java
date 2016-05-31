@@ -26,16 +26,15 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
@@ -46,8 +45,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static android.widget.Toast.makeText;
-
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.DatabaseToolsFragment</code>
  * haves all methods for the database tools activity of a developer
@@ -57,20 +54,16 @@ import static android.widget.Toast.makeText;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends AbstractFermatFragment {
+public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession,ResourceProviderManager> {
 
 
     private ErrorManager errorManager;
 
-    /**
-     * SubApp session
-     */
+  
 
-    public DeveloperSubAppSession developerSubAppSession;
     ToolManager toolManager;
     View rootView;
 
-    private DatabaseTool databaseTools;
 
 
     private ArrayList<Resource> mlist;
@@ -90,18 +83,11 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (super.appSession != null) {
-            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
-        }
-
-        errorManager = developerSubAppSession.getErrorManager();
+  
+        errorManager = appSession.getErrorManager();
         try {
 
-            toolManager = developerSubAppSession.getModuleManager();
-            databaseTools = toolManager.getDatabaseTool();
-        } catch (CantGetDataBaseToolException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            toolManager = appSession.getModuleManager();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -124,8 +110,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
 
         try {
 
-            List<PluginVersionReference> plugins = databaseTools.listAvailablePlugins();
-            List<AddonVersionReference> addons = databaseTools.listAvailableAddons();
+            List<PluginVersionReference> plugins = appSession.getModuleManager().listAvailablePlugins();
+            List<AddonVersionReference> addons = appSession.getModuleManager().listAvailableAddons();
 
             mlist = new ArrayList<>();
 
@@ -173,8 +159,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
                                         int position, long id) {
 
                     Resource item = (Resource) listView.getItemAtPosition(position);
-                    developerSubAppSession.setData("resource", item);
-                    developerSubAppSession.setData("filterString", adapter.getFilterString());
+                    appSession.setData("resource", item);
+                    appSession.setData("filterString", adapter.getFilterString());
 //                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
                     changeActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE, appSession.getAppPublicKey());
 
@@ -324,8 +310,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
                 return false;
             }
         });
-        if (developerSubAppSession.getData("filterString") != null) {
-            String filterString = (String) developerSubAppSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+            String filterString = (String) appSession.getData("filterString");
             if (filterString.length() > 0) {
                 searchView.setQuery(filterString, true);
                 searchView.setIconified(false);

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -72,6 +73,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
@@ -133,6 +135,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private BlockchainNetworkType blockchainNetworkType;
 
     boolean lossProtectedEnabled;
+    private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
 
@@ -208,14 +211,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             }
 
-            _executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    setUpContactAddapter();
 
-                }
-            });
-
+            setUpContactAddapter();
 
 
 
@@ -442,7 +439,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         /**
          *  Amount observer
          */
-        editTextAmount.addTextChangedListener(new TextWatcher() {
+        /*editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
 
@@ -457,6 +454,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+        */
+
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(10,4)});
 
         /**
          * Selector
@@ -485,7 +485,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private void setUpContactAddapter() {
 
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);
@@ -721,7 +721,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     lossProtectedWalletContact.getActorPublicKey(),
                                                     lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                    blockchainNetworkType
+                                                    blockchainNetworkType,
+                                                    CryptoCurrency.BITCOIN
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);

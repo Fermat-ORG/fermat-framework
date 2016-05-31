@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -171,7 +172,17 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                         providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
                         providerDialog.putString("mode", "single_option");
                         providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
-                        list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+
+                                adapter.changeDataSet(list);
+                                adapter.notifyDataSetChanged();
+                                recyclerView.setAdapter(adapter);
+                            }
+                        });
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -365,7 +376,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     public int getBackgroundAlpha() {
-        return 70;
+        return 0;
     }
 
 

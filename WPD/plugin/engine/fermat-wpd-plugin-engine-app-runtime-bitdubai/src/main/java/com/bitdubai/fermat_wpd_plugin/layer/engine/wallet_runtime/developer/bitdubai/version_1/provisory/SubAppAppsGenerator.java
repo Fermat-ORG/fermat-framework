@@ -2654,7 +2654,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#1189a5");
-        //runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2745,7 +2745,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#9A12B09F");
-        //runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();

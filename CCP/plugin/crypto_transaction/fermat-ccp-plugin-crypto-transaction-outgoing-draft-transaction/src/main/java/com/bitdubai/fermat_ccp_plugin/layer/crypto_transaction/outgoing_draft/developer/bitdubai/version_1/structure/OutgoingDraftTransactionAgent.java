@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -371,7 +372,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                     transaction.getValueToSend(),
                     transaction.getTimestamp(),
                     transaction.getMemo(),
-                    transaction.getBlockchainNetworkType()
+                    transaction.getBlockchainNetworkType(),
+                    transaction.getCryptoCurrency()
             );
         }
 
@@ -385,7 +387,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                                        final long amount,
                                                                        final long timeStamp,
                                                                        final String memo,
-                                                                       final BlockchainNetworkType blockchainNetworkType) {
+                                                                       final BlockchainNetworkType blockchainNetworkType,
+                                                                       final CryptoCurrency cryptoCurrency) {
             return new CryptoWalletTransactionRecord() {
                 @Override
                 public CryptoAddress getAddressFrom() {
@@ -450,6 +453,11 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 @Override
                 public BlockchainNetworkType getBlockchainNetworkType() {
                     return blockchainNetworkType;
+                }
+
+                @Override
+                public CryptoCurrency getCryptoCurrency() {
+                    return cryptoCurrency;
                 }
             };
         }
