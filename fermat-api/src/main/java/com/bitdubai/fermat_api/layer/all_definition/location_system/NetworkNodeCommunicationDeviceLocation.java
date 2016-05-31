@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.wrappers;
+package com.bitdubai.fermat_api.layer.all_definition.location_system;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
@@ -16,8 +16,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
  */
 public final class NetworkNodeCommunicationDeviceLocation implements Location {
 
-    private final double         latitude        ;
-    private final double         longitude       ;
+    private final Double         latitude        ;
+    private final Double         longitude       ;
     private final Double         altitude        ;
     private final Double         accuracy        ;
     private final Double         altitudeAccuracy;
@@ -25,18 +25,17 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     private final LocationSource source          ;
 
 
-    /**
-     * Constructor
+    /*
+     * Constructor without params
      */
     public NetworkNodeCommunicationDeviceLocation(){
-        super();
-        this.latitude         = 0;
-        this.longitude        = 0;
-        this.altitude         = new Double(0);
-        this.accuracy         = new Double(0);
-        this.altitudeAccuracy = new Double(0);
-        this.time             = 0;
-        this.source           = LocationSource.UNKNOWN;
+        this.altitude  = null;
+        this.accuracy = null;
+        this.altitudeAccuracy = null;
+        this.source = null;
+        this.time = 0;
+        latitude = null;
+        longitude = null;
     }
 
     /**
@@ -112,41 +111,5 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
                 ", time=" + time +
                 ", source=" + source +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof NetworkNodeCommunicationDeviceLocation)) return false;
-
-        NetworkNodeCommunicationDeviceLocation that = (NetworkNodeCommunicationDeviceLocation) o;
-
-        if (Double.compare(that.getLatitude(), getLatitude()) != 0) return false;
-        if (Double.compare(that.getLongitude(), getLongitude()) != 0) return false;
-        if (getTime() != that.getTime()) return false;
-        if (getAltitude() != null ? !getAltitude().equals(that.getAltitude()) : that.getAltitude() != null)
-            return false;
-        if (getAccuracy() != null ? !getAccuracy().equals(that.getAccuracy()) : that.getAccuracy() != null)
-            return false;
-        if (getAltitudeAccuracy() != null ? !getAltitudeAccuracy().equals(that.getAltitudeAccuracy()) : that.getAltitudeAccuracy() != null)
-            return false;
-        return getSource() == that.getSource();
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(getLatitude());
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getLongitude());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (getAltitude() != null ? getAltitude().hashCode() : 0);
-        result = 31 * result + (getAccuracy() != null ? getAccuracy().hashCode() : 0);
-        result = 31 * result + (getAltitudeAccuracy() != null ? getAltitudeAccuracy().hashCode() : 0);
-        result = 31 * result + (int) (getTime() ^ (getTime() >>> 32));
-        result = 31 * result + (getSource() != null ? getSource().hashCode() : 0);
-        return result;
     }
 }

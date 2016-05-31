@@ -27,7 +27,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
@@ -45,8 +47,11 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -173,7 +178,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
 
-            //nodesProfileList = getNodesProfileList();
+           // nodesProfileList = getNodesProfileList();
 
             if(nodesProfileList != null && nodesProfileList.size() > 0){
 
@@ -484,18 +489,34 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;
+        List<NodeProfile> listServer = new ArrayList<>();
+
+        System.out.println("CALLING getNodesProfileList");
 
         try {
 
+            Double latitudeSource = ((locationManager.getLocation() != null && locationManager.getLocation().getLatitude() != null )? locationManager.getLocation().getLatitude() : 0.0);
+            Double longitudeSource = ((locationManager.getLocation() != null && locationManager.getLocation().getLongitude() != null )? locationManager.getLocation().getLongitude() : 0.0);
+
+            String formParameters = "latitude=" + latitudeSource + "&longitude=" + longitudeSource;
+
+
             URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/available/nodes");
             conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
             conn.setRequestProperty("Accept", "application/json");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(formParameters.getBytes());
+            os.flush();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
-            if (conn.getResponseCode() == 200 && respond != null && respond.contains("data")) {
+            if (respond.contains("data")) {
 
                /*
                 * Decode into a json Object
@@ -503,16 +524,14 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                Gson gson = new Gson();
-                List<NodeProfile> listServer = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                listServer = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
                 }.getType());
 
+                System.out.println("NetworkClientCommunicationPluginRoot - resultList.size() = " + listServer.size());
                 System.out.println(respondJsonObject);
 
-                return listServer;
-
             }else{
-                return null;
+                System.out.println("NetworkClientCommunicationConnection - Requested list is not available, resultList.size() = " + listServer.size());
             }
 
         }catch (Exception e){
@@ -522,6 +541,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             if (conn != null)
                 conn.disconnect();
         }
+
+        return listServer;
 
     }
 
