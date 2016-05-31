@@ -40,7 +40,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem> {
 
     private final String TAG = "ApplicationSession";
 

@@ -368,27 +368,34 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     }
 
     private void onRefresh() {
-        try {
-            isRefreshing = true;
-            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (Exception e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "ulnknown error- " + e.getMessage());
-        }
 
-        if (walletContactRecords.isEmpty()) {
-            mEmptyView.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-        } else {
-            mListView.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.GONE);
-        }
-        refreshAdapter();
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+                            if (walletContactRecords.isEmpty()) {
+                                mEmptyView.setVisibility(View.VISIBLE);
+                                mListView.setVisibility(View.GONE);
+                            } else {
+                                mListView.setVisibility(View.VISIBLE);
+                                mEmptyView.setVisibility(View.GONE);
+                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
+                            }
+                            refreshAdapter();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+            }
+        });
+
     }
-
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
         //if (isHelpEnabled) {
             ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), lossWalletSession, null, checkButton);

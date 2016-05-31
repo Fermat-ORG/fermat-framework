@@ -672,6 +672,12 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                    newAmount = WalletUtils.formatBalanceStringWithDecimalEntry(
+                                            Long.parseLong((newAmount),
+                                            0,
+                                            0,
+                                            ShowMoneyType.BITCOIN.getCode());
+
                                     msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                                 } else if (txtType.equals("[satoshis]")) {
                                     newAmount = amount;
@@ -682,6 +688,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                 }
 
                                 BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+
+
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
 
                                 if (amountDecimal.compareTo(minSatoshis) == 1) {
