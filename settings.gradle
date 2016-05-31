@@ -1,6 +1,7 @@
 /*
  * Please keep the elements ordered alphabetically.
  */
+rootProject.name = 'Fermat'
 
 apply from: 'ART/settings.gradle'
 apply from: 'BCH/settings.gradle'
