@@ -269,7 +269,8 @@ public class TransactionTransmissionNetworkServicePluginRoot extends AbstractNet
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionNetworkServicePluginRoot");
+        returnedClasses.add("TransactionTransmissionNetworkServicePluginRoot");
+
         return returnedClasses;
     }
 
