@@ -19,8 +19,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.PackageEncoder;
 
 import org.apache.commons.lang.ClassUtils;
-//import org.glassfish.tyrus.client.ClientManager;
-//import org.glassfish.tyrus.client.ClientProperties;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -35,6 +33,9 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+
+//import org.glassfish.tyrus.client.ClientManager;
+//import org.glassfish.tyrus.client.ClientProperties;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.FermatWebSocketClientNodeChannel.FermatWebSocketClientNodeChannel</code>

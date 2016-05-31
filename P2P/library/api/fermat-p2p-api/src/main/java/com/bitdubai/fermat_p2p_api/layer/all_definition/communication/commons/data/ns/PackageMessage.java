@@ -2,9 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 
 import java.security.InvalidParameterException;
 
