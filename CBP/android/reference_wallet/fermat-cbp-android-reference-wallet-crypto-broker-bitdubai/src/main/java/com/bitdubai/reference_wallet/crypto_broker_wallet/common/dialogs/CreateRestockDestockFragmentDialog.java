@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.FERMAT;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
 
 
@@ -218,7 +219,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 moduleManager.createTransactionRestockBank(
                         setting.getBrokerPublicKey(),
                         (FiatCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        session.getAppPublicKey(),
                         setting.getWalletPublicKey(),
                         setting.getBankAccount(),
                         amount,
@@ -232,7 +233,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 moduleManager.createTransactionRestockCash(
                         setting.getBrokerPublicKey(),
                         (FiatCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        session.getAppPublicKey(),
                         setting.getWalletPublicKey(),
                         "Cash Restock in Broker Wallet",
                         amount,
@@ -243,25 +244,38 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                 break;
 
             case CRYPTO_CURRENCY_PLATFORM:
-                double doubleValue = amount.doubleValue();
-                doubleValue = BitcoinConverter.convert(doubleValue, BITCOIN, SATOSHI);
+                CryptoCurrency merchandise = (CryptoCurrency) setting.getMerchandise();
+                long satoshi = getCryptoAmountInSatoshi(amount, merchandise);
 
                 moduleManager.createTransactionRestockCrypto(
                         setting.getBrokerPublicKey(),
-                        (CryptoCurrency) setting.getMerchandise(),
-                        setting.getBrokerPublicKey(),
+                        merchandise,
+                        session.getAppPublicKey(),
                         setting.getWalletPublicKey(),
-                        new BigDecimal(doubleValue),
+                        new BigDecimal(satoshi),
                         memo,
                         BigDecimal.ZERO,
                         OriginTransaction.RESTOCK,
                         setting.getBrokerPublicKey(),
-                        //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 break;
         }
 
         return true;
+    }
+
+    private long getCryptoAmountInSatoshi(BigDecimal amount, CryptoCurrency merchandise) {
+        double doubleValue = amount.doubleValue();
+        switch (merchandise) {
+            case BITCOIN:
+                doubleValue = BitcoinConverter.convert(doubleValue, BITCOIN, SATOSHI);
+                break;
+            case FERMAT:
+                doubleValue = BitcoinConverter.convert(doubleValue, FERMAT, SATOSHI);
+                break;
+        }
+
+        return (long) doubleValue;
     }
 
     private double getStockWalletBalance(Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {

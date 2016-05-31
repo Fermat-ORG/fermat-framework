@@ -87,6 +87,7 @@ public class IncomingIntraUserTransactionDatabaseFactory implements DealsWithPlu
             table.addColumn(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
+
             table.addIndex(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_FIRST_KEY_COLUMN);
 
             try {

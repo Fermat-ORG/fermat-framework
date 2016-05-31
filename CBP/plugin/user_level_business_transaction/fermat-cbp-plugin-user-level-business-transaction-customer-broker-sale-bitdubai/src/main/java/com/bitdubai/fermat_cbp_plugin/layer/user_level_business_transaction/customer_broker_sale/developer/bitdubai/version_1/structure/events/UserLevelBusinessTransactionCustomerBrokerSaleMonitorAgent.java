@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -689,12 +690,30 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         //Ejecuto el restock dependiendo del tipo de transferencia a realizar
         switch (paymentMethod) {
             case CRYPTO:
-                amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI));
+                CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(currencyCode);
+                String cryptoWalletPublicKey;
+
+                switch (cryptoCurrency) {
+                    case BITCOIN:
+                        amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.BITCOIN,
+                                BitcoinConverter.Currency.SATOSHI));
+                        cryptoWalletPublicKey = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
+                        break;
+                    case FERMAT:
+                        amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.FERMAT,
+                                BitcoinConverter.Currency.SATOSHI));
+                        cryptoWalletPublicKey = WalletsPublicKeys.CCP_FERMAT_WALLET.getCode();
+                        break;
+                    default:
+                        throw new UnsupportedOperationException("The Crypto Restock operation is not supported for the currency " +
+                                cryptoCurrency.getFriendlyName());
+                }
+
                 cryptoMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
-                        CryptoCurrency.getByCode(currencyCode),
+                        cryptoCurrency,
                         brokerWalletPublicKey,
-                        "reference_wallet", // TODO: obtenerlo de installed wallets
+                        cryptoWalletPublicKey,
                         amount,
                         "Payment from a Customer",
                         priceReference,
@@ -707,7 +726,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         contractSale.getPublicKeyBroker(),
                         FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
-                        "banking_wallet", // TODO: obtenerlo de installed wallets
+                        WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), // TODO: obtenerlo de installed wallets
                         bankAccount,
                         amount,
                         "Payment from a Customer",
@@ -720,7 +739,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         contractSale.getPublicKeyBroker(),
                         FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
-                        "cash_wallet",  // TODO: obtenerlo de installed wallets
+                        WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),  // TODO: obtenerlo de installed wallets
                         "cashReference",
                         amount,
                         "Cash on Hand Payment from a Customer",
@@ -733,7 +752,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         contractSale.getPublicKeyBroker(),
                         FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
-                        "cash_wallet",  // TODO: obtenerlo de installed wallets
+                        WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),  // TODO: obtenerlo de installed wallets
                         "cashReference",
                         amount,
                         "Cash Delivery Payment from a Customer",

@@ -216,12 +216,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
-            getExecutor().submit(new Runnable() {
-                @Override
-                public void run() {
-                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                }
-            });
+            //list transaction on background
+
+            onRefresh();
 
             //check blockchain progress
 
@@ -673,7 +670,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_menu_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
@@ -706,15 +703,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         if(openNegotiationList!=null) {
             if (openNegotiationList.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
+               recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                //emptyListViewsContainer.setVisibility(View.VISIBLE);
+                emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }else{
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -789,7 +787,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
 
                 if(!data.isEmpty())
-                    FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                        }
+                    });
             }
         } catch (CantListTransactionsException e) {
             e.printStackTrace();
@@ -825,9 +827,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     adapter.changeDataSet(openNegotiationList);
 
                 if(openNegotiationList.size() > 0)
+                {
+                    recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                }
             }
             else {
+                recyclerView.setVisibility(View.GONE);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
             }
         }
@@ -854,7 +860,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 break;
             case BITS:
                 moneyTpe = "bits";
-                txt_balance_amount.setTextSize(20);
+                txt_balance_amount.setTextSize(18);
                 break;
         }
 

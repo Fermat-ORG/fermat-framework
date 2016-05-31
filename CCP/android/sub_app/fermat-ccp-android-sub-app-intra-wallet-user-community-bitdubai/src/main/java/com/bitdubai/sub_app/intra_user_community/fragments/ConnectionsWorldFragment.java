@@ -58,6 +58,8 @@ import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -110,7 +112,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
-    List<IntraUserInformation> userCacheList = new ArrayList<>();
+    List<IntraUserInformation> userList = new ArrayList<>();
+
+
+
+    private ExecutorService _executor;
     /**
      * Create a new instance of this fragment
      *
@@ -124,6 +130,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
+            _executor = Executors.newFixedThreadPool(2);
 
             setHasOptionsMenu(true);
             // setting up  module
@@ -215,13 +223,26 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-        //getSuggestionCache();
-
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
-            showCriptoUsersCache();
+            isRefreshing = true;
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        dataSet = getSuggestionCache();
+
+                        showCriptoUsersCache();
+                        isRefreshing = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
         }
     }
 
@@ -299,10 +320,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             if (lstIntraUserInformations.isEmpty()) {
                                 //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
                                 try {
-                                    List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-                                    if(list!=null) {
-                                        if (!list.isEmpty()) {
-                                            lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                     if(dataSet!=null) {
+                                        if (!dataSet.isEmpty()) {
+                                            lstIntraUserInformations.addAll(dataSet);
                                             showEmpty(false, emptyView);
                                             showEmpty(false, searchEmptyView);
                                         } else {
@@ -310,7 +330,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                             showEmpty(false, searchEmptyView);
                                         }
                                     }
-                                } catch (CantGetIntraUsersListException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -320,13 +340,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             }
                         }
                     } else {
-                        try {
                             showEmpty(false, emptyView);
                             showEmpty(false, searchEmptyView);
-                            lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-                        } catch (CantGetIntraUsersListException e) {
-                            e.printStackTrace();
-                        }
+                            lstIntraUserInformations.addAll(dataSet);
+
                     }
                 }
 
@@ -542,12 +559,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
 
-    private void getSuggestionCache() {
-
-
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
-            @Override
-            protected Object doInBackground()  {
+    private List<IntraUserInformation> getSuggestionCache() {
                 List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try{
 
@@ -556,48 +568,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return userCacheList;
-            }
-        };
-
-        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                if (result != null && result.length > 0) {
-                        dataSet.addAll((List<IntraUserInformation>) result[0]);
-                        if(dataSet!=null){
-                            if(!dataSet.isEmpty()){
-                                showEmpty(false, emptyView);
-                                adapter.changeDataSet(dataSet);
-                            }else{
-                                showEmpty(true, emptyView);
-                            }
-                        }else{
-                            showEmpty(true, emptyView);
-                        }
-
-                }
-                else {
-                    makeText(getActivity(), "Cant't Get suggestion cache list.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-
-
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                else
-                    Log.e("Get Suggestion Contact", ex.getMessage(), ex);
-            }
-        });
-
-        fermatWorker.execute();
-
-
     }
 
     @Override
@@ -694,26 +665,53 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             getActivity().onBackPressed();
         }else{
             invalidate();
-        }if (dataSet.isEmpty()) {
-            showEmpty(true, emptyView);
-            swipeRefresh.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefresh.setRefreshing(true);
-                    onRefresh();
-                }
-
-            });
-        } else {
-            adapter.changeDataSet(dataSet);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onRefresh();
-                }
-            }, 1500);
         }
+        if(dataSet !=null)
+        {
+            if (dataSet.isEmpty()) {
+                showEmpty(true, emptyView);
+                swipeRefresh.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefresh.setRefreshing(true);
+                        onRefresh();
+                    }
+
+                });
+            } else {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        adapter.changeDataSet(dataSet);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onRefresh();
+                            }
+                        }, 500);
+                    }
+                });
+
+            }
+        }
+        else {
+
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    adapter.changeDataSet(dataSet);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    }, 500);
+                }
+            });
+
+        }
+
     }
 
     public void showEmpty(boolean show, View emptyView) {

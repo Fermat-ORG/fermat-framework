@@ -17,7 +17,10 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -25,31 +28,23 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
-        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ActiveActorIdentityInformation intraUserLoginIdentity,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceWalletSession referenceWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
             View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {
+               ActiveActorIdentityInformation identityInformation= referenceWalletSession.getIntraUserModuleManager();
                 ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-                if (intraUserLoginIdentity != null) {
-                    if (intraUserLoginIdentity.getImage() != null) {
-                        if (intraUserLoginIdentity.getImage().length > 0) {
-                            //BitmapFactory.Options options = new BitmapFactory.Options();
-                            //options.inScaled = true;
-                            //options.inSampleSize = 2;
+                if (identityInformation != null) {
+                    if (identityInformation.getImage() != null) {
+                        if (identityInformation.getImage().length > 0) {
 
                             BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
-                            bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
+                            bitmapWorkerTask.execute(identityInformation.getImage());
 
-                            //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
-                            //options.inBitmap = bitmap;
-                            //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
-                            //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
-                            //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
-                            //imageView.setImageBitmap(bitmap);
                         } else
                             Picasso.with(activity).load(R.drawable.ic_profile_male).into(imageView);
                     }
-                    fermatTextView.setText(intraUserLoginIdentity.getAlias());
+                    fermatTextView.setText(identityInformation.getAlias());
                 }else{
                     fermatTextView.setText("Loading..");
                 }
@@ -68,6 +63,10 @@ public class FragmentsCommons {
                 return view;
             }catch (OutOfMemoryError outOfMemoryError){
                 Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
+            } catch (CantGetCryptoWalletException e) {
+                e.printStackTrace();
+            } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                e.printStackTrace();
             }
             return view;
         }

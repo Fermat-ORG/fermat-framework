@@ -401,6 +401,30 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
         );
         lstInstalledWallet.add(installedWallet);
 
+
+        // TODO: temporal Fermat Wallet
+            installedWallet = new AppManagerMiddlewareInstalledWallet(
+                    WalletCategory.REFERENCE_WALLET, // CATEGORY
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "reference_wallet_icon", // ICOIN
+                    "Fermat Wallet", // WALLET NAME
+                    WalletsPublicKeys.CCP_FERMAT_WALLET.getCode(), // PUBLIC KEY
+                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+                    new Version(1,0,0), //VERSION
+                    WalletType.REFERENCE, // WALLET TYPE
+                    "medium",
+                    "1.0.0",
+                    null,
+                    "bitDubai",
+                    "",
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType(),
+                    CryptoCurrency.FERMAT
+            );
+
+            lstInstalledWallet.add(installedWallet);
+
         return lstInstalledWallet;
 
     }

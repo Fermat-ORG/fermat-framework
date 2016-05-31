@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 import java.lang.ref.WeakReference;
 
@@ -23,12 +24,13 @@ import java.lang.ref.WeakReference;
 public class IntraUserCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    private final ActiveActorIdentityInformation intraUserLoginIdentity;
+   // private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
+    private IntraUserSubAppSession intraUserSubAppSession;
 
-    public IntraUserCommunityNavigationViewPainter(Context activity,ActiveActorIdentityInformation intraUserLoginIdentity,FermatApplicationCaller applicationsHelper) {
+    public IntraUserCommunityNavigationViewPainter(Context activity,IntraUserSubAppSession intraUserSubAppSession,FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.intraUserSubAppSession = intraUserSubAppSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
@@ -37,7 +39,7 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
         try {
 
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserLoginIdentity,applicationsHelper.get());
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserSubAppSession,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
             return null;

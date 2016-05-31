@@ -4,6 +4,27 @@
     android:layout_height="180dp"
     xmlns:tools="http://schemas.android.com/tools">
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        >
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="30dp"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="9dp"
+            android:indeterminateDrawable="@drawable/circle_progress" >
+        </ProgressBar>
+
+    </FrameLayout>
+
     <ImageView
         android:id="@+id/image_view_profile"
         android:layout_width="match_parent"
