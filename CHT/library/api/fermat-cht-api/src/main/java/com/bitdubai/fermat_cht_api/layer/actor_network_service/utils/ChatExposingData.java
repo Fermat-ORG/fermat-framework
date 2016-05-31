@@ -13,13 +13,15 @@ public class ChatExposingData {
     private final String country  ;
     private final String state    ;
     private final String city     ;
+    private final String status;
 
     public ChatExposingData(final String publicKey,
                                     final String alias    ,
                                     final byte[] image,
                                     final String country,
                                     final String state,
-                                    final String city    ) {
+                                    final String city,
+                            final String status) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -27,6 +29,7 @@ public class ChatExposingData {
         this.country   = country;
         this.state     = state;
         this.city      = city;
+        this.status = status;
     }
 
     /**
@@ -60,6 +63,10 @@ public class ChatExposingData {
 
     public String getCity() {
         return this.city;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     @Override

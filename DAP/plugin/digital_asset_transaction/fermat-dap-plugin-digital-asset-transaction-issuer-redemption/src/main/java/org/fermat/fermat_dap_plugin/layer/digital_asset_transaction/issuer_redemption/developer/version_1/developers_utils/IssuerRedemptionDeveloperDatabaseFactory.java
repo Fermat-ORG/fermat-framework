@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/11/15.
  */
-public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class IssuerRedemptionDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -189,13 +189,13 @@ public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPlugin
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

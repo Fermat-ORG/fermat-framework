@@ -4,14 +4,12 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -3587,14 +3585,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Update Record Activity
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD);
-        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD.getCode());
+        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL);
+        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Cancel");
+        runtimeTitleBar.setLabel("Back");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3606,9 +3604,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_UPDATE_RECORD.getKey());
-        runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_UPDATE_RECORD.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_UPDATE_RECORD.getKey());
+        runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
 
         //add account activity
         runtimeActivity = new Activity();
@@ -3634,6 +3632,31 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getKey());
         runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT.getKey());
+
+        //Edit account activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT);
+        runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getCode());
+        runtimeActivity.setBackActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS);
+        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Back");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setIconName("back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getKey());
+        runtimeActivity.addFragment(Fragments.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT.getKey());
 
 
         return runtimeAppNavigationStructure;

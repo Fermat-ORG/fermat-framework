@@ -131,7 +131,7 @@ public class AssetsOverBitcoinCryptoVaultDatabaseFactory implements DealsWithPlu
              */
             table = databaseFactory.newTableFactory(ownerId, AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
 
-            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.TRUE);
+            table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);

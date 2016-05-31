@@ -55,8 +55,7 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<C
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new CustomerCommunityNavigationViewPainter(getContext(), null, getFullyLoadedSession());
+        return new CustomerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
 
     }
 

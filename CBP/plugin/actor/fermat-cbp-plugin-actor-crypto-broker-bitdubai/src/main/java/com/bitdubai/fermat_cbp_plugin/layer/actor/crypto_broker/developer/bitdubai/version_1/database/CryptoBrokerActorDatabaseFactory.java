@@ -74,9 +74,9 @@ public class CryptoBrokerActorDatabaseFactory implements DealsWithPluginDatabase
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
 
             table.addIndex(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_FIRST_KEY_COLUMN);
 
@@ -90,8 +90,8 @@ public class CryptoBrokerActorDatabaseFactory implements DealsWithPluginDatabase
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
 
             table.addIndex(CryptoBrokerActorDatabaseConstants.ACTOR_EXTRA_DATA_FIRST_KEY_COLUMN);
 
@@ -105,10 +105,10 @@ public class CryptoBrokerActorDatabaseFactory implements DealsWithPluginDatabase
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 20, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, DatabaseDataType.REAL, 100, Boolean.FALSE);
 
             table.addIndex(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_FIRST_KEY_COLUMN);

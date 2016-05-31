@@ -175,11 +175,8 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
+        /*
         try {
-
-            //Save locationList to appSession
-            appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
-
             //Clear previous locations from settings
             moduleManager.clearLocations();
 
@@ -199,6 +196,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                         ex);
             }
         }
+        */
 
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }

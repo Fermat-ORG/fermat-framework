@@ -25,7 +25,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.i
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.CryptoBrokerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,19 +39,18 @@ public class CryptoBrokerIdentityModuleManagerImpl
         extends ModuleManagerImpl<IdentityBrokerPreferenceSettings> implements CryptoBrokerIdentityModuleManager, Serializable {
 
     private CryptoBrokerIdentityManager identityManager;
-    private ErrorManager                errorManager;
+    private CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot;
     private PluginVersionReference      pluginVersionReference;
 
     public CryptoBrokerIdentityModuleManagerImpl(
             CryptoBrokerIdentityManager identityManager,
             PluginFileSystem            pluginFileSystem,
             UUID                        pluginId,
-            ErrorManager                errorManager,
-            PluginVersionReference      pluginVersionReference
+            CryptoBrokerIdentitySubAppModulePluginRoot pluginRoot
     ){
         super(pluginFileSystem, pluginId);
         this.identityManager        = identityManager;
-        this.errorManager           = errorManager;
+        this.pluginRoot           = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -83,13 +82,14 @@ public class CryptoBrokerIdentityModuleManagerImpl
             this.identityManager.publishIdentity(publicKey);
 
         } catch (CantPublishIdentityException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            
             throw new CantPublishCryptoBrokerException(e, "", "Problem publishing the identity.");
         } catch (IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantPublishCryptoBrokerException(e, "", "Cannot find the identity.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantPublishCryptoBrokerException(e, "", "Unhandled Exception.");
         }
     }
@@ -103,15 +103,15 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
         } catch (CantHideIdentityException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Problem hiding the identity.");
         } catch (IdentityNotFoundException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Cannot find the identity.");
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideCryptoBrokerException(e, "", "Unhandled Exception.");
         }
     }

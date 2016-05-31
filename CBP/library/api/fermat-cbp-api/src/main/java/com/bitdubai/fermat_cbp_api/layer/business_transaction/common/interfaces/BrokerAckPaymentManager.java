@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 
 /**
  * This interface must be used to create manager interface in BrokerAckOnlinePayment and
@@ -13,16 +11,13 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 public interface BrokerAckPaymentManager extends BusinessTransactionManager {
 
     /**
-     * This method send a payment according the contract elements.
-     * @param contractHash
-     * @throws CantAckPaymentException
-     */
-    //void ackPayment(String walletPublicKey, String contractHash)throws CantAckPaymentException;
-
-    /**
-     * This method returns the ContractTransactionStatus by contractHash
-     * @param contractHash
-     * @return
+     * This method returns the actual ContractTransactionStatus from a Broker Ack Online Payment Business Transaction by a contract hash/Id.
+     *
+     * @param contractHash the contract Hash/ID
+     *
+     * @return the Contract Transaction Status
+     *
+     * @throws UnexpectedResultReturnedFromDatabaseException
      */
     ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException;
 

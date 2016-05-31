@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -216,13 +216,13 @@ public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements D
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

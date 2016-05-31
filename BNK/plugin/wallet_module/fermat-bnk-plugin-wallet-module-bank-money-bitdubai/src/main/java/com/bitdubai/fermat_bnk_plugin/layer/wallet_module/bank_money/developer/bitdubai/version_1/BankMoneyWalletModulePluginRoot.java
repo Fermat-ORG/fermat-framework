@@ -31,15 +31,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Created by memo on 04/12/15.
  */
 @PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE)
 public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
-        LogManagerForDevelopers{
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+        LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;

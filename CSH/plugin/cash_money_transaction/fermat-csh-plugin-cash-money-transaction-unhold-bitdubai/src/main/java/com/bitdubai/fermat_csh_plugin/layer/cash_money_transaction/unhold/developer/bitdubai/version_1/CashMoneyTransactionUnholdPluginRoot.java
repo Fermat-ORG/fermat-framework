@@ -55,9 +55,6 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -126,14 +123,14 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
         System.out.println("CASHUNHOLD - PluginRoot START");
 
         try {
-            unholdTransactionManager = new CashMoneyTransactionUnholdManager(cashMoneyWalletManager, pluginDatabaseSystem, pluginId, errorManager);
+            unholdTransactionManager = new CashMoneyTransactionUnholdManager(cashMoneyWalletManager, pluginDatabaseSystem, pluginId, this);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
-        processorAgent = new CashMoneyTransactionUnholdProcessorAgent(errorManager, unholdTransactionManager, cashMoneyWalletManager);
+        processorAgent = new CashMoneyTransactionUnholdProcessorAgent(this, unholdTransactionManager, cashMoneyWalletManager);
         processorAgent.start();
 
         serviceStatus = ServiceStatus.STARTED;
@@ -174,7 +171,7 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch(CantInitializeUnholdCashMoneyTransactionDatabaseException cantInitializeException) {
             FermatException e = new CantInitializeUnholdCashMoneyTransactionDatabaseException("Database cannot be initialized", cantInitializeException, "CashMoneyTransactionUnholdPluginRoot", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

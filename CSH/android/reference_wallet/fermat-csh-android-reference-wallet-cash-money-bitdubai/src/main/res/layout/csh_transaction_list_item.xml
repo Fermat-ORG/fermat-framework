@@ -35,7 +35,7 @@
         android:singleLine="true"
         android:textColor="@color/csh_text_black"
         android:textSize="@dimen/csh_regular_plus_text_size"
-        android:text="1.293,82"/>
+        android:text="1,293.82"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/csh_list_item_memo"

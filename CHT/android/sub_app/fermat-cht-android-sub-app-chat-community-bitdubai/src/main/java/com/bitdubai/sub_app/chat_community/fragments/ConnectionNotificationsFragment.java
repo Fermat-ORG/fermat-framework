@@ -106,6 +106,7 @@ public class ConnectionNotificationsFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
             lstChatUserInformations = new ArrayList<>();
@@ -114,6 +115,7 @@ public class ConnectionNotificationsFragment
             appSettings = null;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
@@ -121,6 +123,7 @@ public class ConnectionNotificationsFragment
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                    //settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -260,7 +263,7 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            Toast.makeText(getActivity(), "Connection Accepted", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Connection Accepted ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);

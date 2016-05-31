@@ -30,7 +30,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
@@ -131,10 +130,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    protected void selectApp(InstalledApp installedSubApp) throws Exception {
+    protected void selectApp(String appPublicKey) throws Exception {
         destroy();
-        getDesktopAppSelector().selectApp(installedSubApp);
+        ((FermatActivityManager)getActivity()).selectApp(appPublicKey);
     }
+
 
     private DesktopAppSelector getDesktopAppSelector() throws Exception {
         if(getActivity() instanceof DesktopAppSelector){
@@ -319,6 +319,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     public void onUpdateViewUIThred(FermatBundle bundle) {
 
     }
+
+    @Override
+    public void onUpdateViewOnUIThread(FermatBundle code) {
+
+    }
+
     /**
      * This method will be called when the user press the back button
      */

@@ -31,10 +31,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_communi
 @PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_COMMUNITY)
 public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER)
@@ -63,10 +60,9 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
                     cryptoBrokerActorConnectionManager,
                     cryptoBrokerNetworkServiceManager,
                     cryptoCustomerIdentityManager,
-                    errorManager,
+                    this,
                     pluginFileSystem,
-                    pluginId,
-                    this.getPluginVersionReference());
+                    pluginId);
 
         return moduleManager;
     }
