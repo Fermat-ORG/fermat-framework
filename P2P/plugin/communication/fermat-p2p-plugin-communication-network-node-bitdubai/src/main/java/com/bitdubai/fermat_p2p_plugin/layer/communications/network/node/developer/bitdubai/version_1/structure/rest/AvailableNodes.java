@@ -9,7 +9,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -123,12 +122,11 @@ public class AvailableNodes implements RestFulServices {
                     nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
                     nodeProfile.setIdentityPublicKey(nodesCatalog.getIdentityPublicKey());
 
-                    if(nodesCatalog.getLastLatitude() != null && nodesCatalog.getLastLongitude() != null &&
-                            nodesCatalog.getLastLatitude() != 0 && nodesCatalog.getLastLongitude() != 0){
+                    if(nodesCatalog.getLastLocation() != null ){
 
                         Location location = new NetworkNodeCommunicationDeviceLocation(
-                                nodesCatalog.getLastLatitude() ,
-                                nodesCatalog.getLastLongitude(),
+                                nodesCatalog.getLastLocation().getLatitude() ,
+                                nodesCatalog.getLastLocation().getLongitude(),
                                 0.0     ,
                                 0.0     ,
                                 0.0     ,
@@ -145,7 +143,7 @@ public class AvailableNodes implements RestFulServices {
                 }
 
                 jsonObject.addProperty("success", Boolean.TRUE);
-                jsonObject.addProperty("data", gson.toJson(listNodeProfile));
+                jsonObject.addProperty("data", GsonProvider.getGson().toJson(listNodeProfile));
 
             }else{
 
@@ -185,8 +183,8 @@ public class AvailableNodes implements RestFulServices {
             /*
              * If component has a geo location
              */
-            if (node.getLastLatitude() != null &&
-                    node.getLastLongitude() != null){
+            if (node.getLastLocation().getLatitude() != null &&
+                    node.getLastLocation().getLongitude() != null){
 
 
                 Location nodeLocation = new Location() {
@@ -202,12 +200,12 @@ public class AvailableNodes implements RestFulServices {
 
                     @Override
                     public Double getLatitude() {
-                        return node.getLastLatitude();
+                        return node.getLastLocation().getLatitude();
                     }
 
                     @Override
                     public Double getLongitude() {
-                        return node.getLastLongitude();
+                        return node.getLastLocation().getLongitude();
                     }
 
                     @Override
