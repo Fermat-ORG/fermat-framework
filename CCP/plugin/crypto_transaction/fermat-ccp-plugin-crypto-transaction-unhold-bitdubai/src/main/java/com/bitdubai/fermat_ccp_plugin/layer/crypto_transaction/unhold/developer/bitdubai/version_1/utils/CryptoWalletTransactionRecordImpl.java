@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
@@ -24,6 +25,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
     private final long          timestamp         ;
     private final String        memo              ;
     private final BlockchainNetworkType blockchainNetworkType;
+    private final CryptoCurrency cryptoCurrency;
 
     public CryptoWalletTransactionRecordImpl(final UUID transactionId,
                                              final UUID requestId,
@@ -37,7 +39,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
                                              final long amount,
                                              final long timestamp,
                                              final String memo,
-                                             final BlockchainNetworkType blockchainNetworkType) {
+                                             final BlockchainNetworkType blockchainNetworkType, CryptoCurrency cryptoCurrency) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -52,6 +54,7 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
         this.timestamp          = timestamp         ;
         this.memo               = memo              ;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -116,5 +119,10 @@ public class CryptoWalletTransactionRecordImpl implements CryptoWalletTransactio
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
+    }
 
 }

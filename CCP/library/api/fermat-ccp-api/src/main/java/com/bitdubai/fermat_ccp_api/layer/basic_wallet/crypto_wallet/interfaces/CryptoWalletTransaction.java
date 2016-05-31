@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
@@ -46,5 +47,7 @@ public interface CryptoWalletTransaction {
     TransactionState getTransactionState();
 
     BlockchainNetworkType getBlockchainNetworkType();
+
+    CryptoCurrency getCryptoCurrency();
 
 }

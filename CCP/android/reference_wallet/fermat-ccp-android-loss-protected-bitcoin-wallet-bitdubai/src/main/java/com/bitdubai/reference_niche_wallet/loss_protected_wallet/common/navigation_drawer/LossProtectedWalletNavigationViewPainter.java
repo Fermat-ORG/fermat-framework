@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.lang.ref.WeakReference;
 
@@ -24,13 +25,14 @@ import java.lang.ref.WeakReference;
  */
 public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
-    private final ActiveActorIdentityInformation intraUserLoginIdentity;
+    //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
+    private LossProtectedWalletSession lossWalletSession;
 
-    public LossProtectedWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity, FermatApplicationCaller applicationsHelper) {
+    public LossProtectedWalletNavigationViewPainter(Context activity, LossProtectedWalletSession lossWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
-        this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.lossWalletSession = lossWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
@@ -39,7 +41,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
         try {
 
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity, applicationsHelper.get());
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),lossWalletSession, applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

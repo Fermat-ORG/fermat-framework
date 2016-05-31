@@ -74,18 +74,18 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseFactory implements
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME         , DatabaseDataType.STRING       , 100, Boolean.TRUE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME         , DatabaseDataType.STRING       , 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_BROKER_COLUMN_NAME      , DatabaseDataType.STRING       , 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME    , DatabaseDataType.STRING       , 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME                 , DatabaseDataType.STRING       , 50, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_NEGOTIATION_COLUMN_NAME     , DatabaseDataType.STRING       , 50, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATE_TRANSACTION_COLUMN_NAME      , DatabaseDataType.STRING       , 100, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME       , DatabaseDataType.STRING       , 50, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME        , DatabaseDataType.STRING       , 4000, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TRANSACTION_ID_COLUMN_NAME         , DatabaseDataType.TEXT       , 100, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_ID_COLUMN_NAME         , DatabaseDataType.TEXT       , 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_BROKER_COLUMN_NAME      , DatabaseDataType.TEXT       , 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_PUBLIC_KEY_CUSTOMER_COLUMN_NAME    , DatabaseDataType.TEXT       , 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_COLUMN_NAME                 , DatabaseDataType.TEXT       , 50, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATUS_NEGOTIATION_COLUMN_NAME     , DatabaseDataType.TEXT       , 50, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_STATE_TRANSACTION_COLUMN_NAME      , DatabaseDataType.TEXT       , 100, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME       , DatabaseDataType.TEXT       , 50, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME        , DatabaseDataType.TEXT       , 4000, Boolean.FALSE);
             table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME              , DatabaseDataType.LONG_INTEGER , 0, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_SEND_TRANSACTION_COLUMN_NAME       , DatabaseDataType.STRING       , 10, Boolean.FALSE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_CONFIRM_TRANSACTION_COLUMN_NAME    , DatabaseDataType.STRING       , 10, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_SEND_TRANSACTION_COLUMN_NAME       , DatabaseDataType.TEXT       , 10, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_CONFIRM_TRANSACTION_COLUMN_NAME    , DatabaseDataType.TEXT       , 10, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_FIRST_KEY_COLUMN);
 
@@ -99,11 +99,11 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseFactory implements
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
 
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME       , DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME     , DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_SOURCE_COLUMN_NAME   , DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME   , DatabaseDataType.STRING, 10, Boolean.TRUE);
-            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 0, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME       , DatabaseDataType.TEXT, 36, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME     , DatabaseDataType.TEXT, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_SOURCE_COLUMN_NAME   , DatabaseDataType.TEXT, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME   , DatabaseDataType.TEXT, 10, Boolean.TRUE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TIMESTAMP_COLUMN_NAME, DatabaseDataType.TEXT, 0, Boolean.TRUE);
 
             table.addIndex(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_FIRST_KEY_COLUMN);
 
