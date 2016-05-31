@@ -180,7 +180,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
 
-            //nodesProfileList = getNodesProfileList();
+           // nodesProfileList = getNodesProfileList();
 
             if(nodesProfileList != null && nodesProfileList.size() > 0){
 
@@ -517,7 +517,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
-            System.out.println(respond);
 
             if (respond.contains("data")) {
 
@@ -527,7 +526,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                listServer = new Gson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                listServer = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
                 }.getType());
 
                 System.out.println("NetworkClientCommunicationPluginRoot - resultList.size() = " + listServer.size());
@@ -538,7 +537,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             }
 
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }finally {
             if (conn != null)
