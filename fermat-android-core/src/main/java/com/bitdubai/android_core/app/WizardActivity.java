@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import com.bitdubai.android_core.app.common.version_1.fragments.DepthPageTransfo
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -59,7 +59,7 @@ public class WizardActivity extends FermatActivity
      * DATA
      */
     private Map<String, Object> dataHash;
-    private List<AbstractFermatFragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
      * UI
@@ -167,7 +167,7 @@ public class WizardActivity extends FermatActivity
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    AbstractFermatFragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), fermatSession, null);
+                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), fermatSession, null);
                     fragments.add(abstractFermatFragment);
                 }
             } catch (FragmentNotFoundException e) {

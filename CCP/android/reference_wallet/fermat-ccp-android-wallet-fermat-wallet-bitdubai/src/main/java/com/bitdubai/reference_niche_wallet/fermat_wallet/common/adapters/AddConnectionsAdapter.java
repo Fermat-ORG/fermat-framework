@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.IntraUserInfoViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
 import com.squareup.picasso.Picasso;
@@ -25,12 +25,12 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserActor, IntraUserInfoViewHolder> {
+public class AddConnectionsAdapter extends FermatAdapter<FermatWalletIntraUserActor, IntraUserInfoViewHolder> {
 
 
     private final AddConnectionCallback addConnectionCallback;
 
-    public AddConnectionsAdapter(Context context, ArrayList<CryptoWalletIntraUserActor> dataSet,AddConnectionCallback addConnectionCallback) {
+    public AddConnectionsAdapter(Context context, ArrayList<FermatWalletIntraUserActor> dataSet,AddConnectionCallback addConnectionCallback) {
         super(context, dataSet);
         this.addConnectionCallback = addConnectionCallback;
     }
@@ -46,7 +46,7 @@ public class AddConnectionsAdapter extends FermatAdapter<CryptoWalletIntraUserAc
     }
 
     @Override
-    protected void bindHolder(final IntraUserInfoViewHolder holder, final CryptoWalletIntraUserActor data, final int position) {
+    protected void bindHolder(final IntraUserInfoViewHolder holder, final FermatWalletIntraUserActor data, final int position) {
         holder.thumbnail.setVisibility(View.VISIBLE);
         holder.container_data.setVisibility(View.VISIBLE);
         holder.checkbox_connection.setVisibility(View.VISIBLE);

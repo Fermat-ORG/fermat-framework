@@ -560,15 +560,25 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
 
         public void createNewLocation(String location, String uri) throws CantCreateLocationSaleException {
             try {
-                DatabaseTable SaleLocationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
-                DatabaseTableRecord recordToInsert   = SaleLocationTable.getEmptyRecord();
+                DatabaseTable SaleLocationsTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
+                SaleLocationsTable.addStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, location, DatabaseFilterType.EQUAL);
+                SaleLocationsTable.loadToMemory();
 
-                recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, UUID.randomUUID());
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, location);
-                recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME, uri);
+                if( SaleLocationsTable.getRecords().size() == 0){
 
-                SaleLocationTable.insertRecord(recordToInsert);
+                    DatabaseTable SaleLocationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME);
+                    DatabaseTableRecord recordToInsert   = SaleLocationTable.getEmptyRecord();
+
+                    recordToInsert.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, UUID.randomUUID());
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_COLUMN_NAME, location);
+                    recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_URI_COLUMN_NAME, uri);
+
+                    SaleLocationTable.insertRecord(recordToInsert);
+
+                }
             } catch (CantInsertRecordException e) {
+                throw new CantCreateLocationSaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantLoadTableToMemoryException e) {
                 throw new CantCreateLocationSaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }

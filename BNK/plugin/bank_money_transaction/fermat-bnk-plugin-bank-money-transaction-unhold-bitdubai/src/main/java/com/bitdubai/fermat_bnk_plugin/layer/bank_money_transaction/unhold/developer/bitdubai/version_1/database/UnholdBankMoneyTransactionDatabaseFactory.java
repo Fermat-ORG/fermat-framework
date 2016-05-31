@@ -74,17 +74,17 @@ public class UnholdBankMoneyTransactionDatabaseFactory implements DealsWithPlugi
              */
             table = databaseFactory.newTableFactory(ownerId, UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
 
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 1000, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
 
             table.addIndex(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_FIRST_KEY_COLUMN);
 

@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#fff">
 
     <ImageView
         android:layout_marginTop="12dp"
@@ -44,6 +45,8 @@
             android:singleLine="true"
             android:paddingLeft="5dp"
             android:layout_weight="0.1"
+            android:textColor="#000"
+
 
 
             />
@@ -85,6 +88,8 @@
         android:paddingRight="12dp"
         android:textSize="20sp"
         android:paddingTop="28dp"
+        android:textColor="#000"
+        android:hint="Your Mnemonic code will appair here"
         tools:text="This is a technique used by me to prove that i'm am working really really good"
         />
 
