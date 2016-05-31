@@ -47,7 +47,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWal
 
     @Override
     protected int setLayoutId() {
-        return R.layout.connection_with_community_dialog;
+        return R.layout.loss_connection_with_community_dialog;
     }
 
     @Override
