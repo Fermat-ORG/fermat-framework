@@ -28,6 +28,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
+* Monogatari
 * Navi Charlie
 * Navi Sierra
 * Fsociety
@@ -41,6 +42,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | Thunder | | | |
 | | Kabuto | | |
 | | Mordor | | |
+| | | Monogatari | |
 | | Skynet | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
@@ -135,7 +137,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
 
-* **Manuel Perez [Team Leader]**<br/>
+* **Manuel Perez [New Parent Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -239,14 +241,14 @@ We are putting together a team of talented developers, especially passionate abo
 #### Team Members:
 
 
-* **Manuel Perez [Full Team Leader]**<br/>
+* **Manuel Perez [New Parent Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo [Veteran Developer]**<br/>
+* **Gabriel Araujo [New Team Leader]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
@@ -275,11 +277,6 @@ We are putting together a team of talented developers, especially passionate abo
     Email:   andyaacm@gmail.com
     Github:  https://github.com/macuare
 
-* **Luis Torres [New Developer]** <br/>
----
-      Email:   lutor1106@gmail.com
-      Skype:   luis.fernando.torres.leon
-      Github:  https://github.com/iLutor
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
