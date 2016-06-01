@@ -310,7 +310,8 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.CloseContractPluginRoot");
+        returnedClasses.add("CloseContractPluginRoot");
+
         return returnedClasses;
     }
 

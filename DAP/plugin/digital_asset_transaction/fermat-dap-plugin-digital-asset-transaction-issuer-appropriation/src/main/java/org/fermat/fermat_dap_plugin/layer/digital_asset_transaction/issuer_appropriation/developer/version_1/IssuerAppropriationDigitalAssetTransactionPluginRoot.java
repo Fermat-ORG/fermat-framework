@@ -228,7 +228,7 @@ public class IssuerAppropriationDigitalAssetTransactionPluginRoot extends Abstra
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot");
+        returnedClasses.add("IssuerAppropriationDigitalAssetTransactionPluginRoot");
         return returnedClasses;
     }
 

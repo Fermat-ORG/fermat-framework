@@ -54,17 +54,11 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession,ResourceProviderManager> {
-
+public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
 
     private ErrorManager errorManager;
-
-  
-
     ToolManager toolManager;
     View rootView;
-
-
 
     private ArrayList<Resource> mlist;
 
@@ -78,12 +72,11 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
         return new DatabaseToolsFragment();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-  
+
         errorManager = appSession.getErrorManager();
         try {
 
@@ -91,12 +84,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,7 +93,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
         rootView = inflater.inflate(R.layout.start_init, container, false);
         rootView.setTag(1);
 
-        listView =(ListView) rootView.findViewById(R.id.gridView);
+        listView = (ListView) rootView.findViewById(R.id.gridView);
 
         configureToolbar();
 
@@ -119,9 +108,9 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
 
                 PluginVersionReference pvr = plugins.get(i);
 
-                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode()+" "+
-                        pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name()+" "+
-                        ((Plugins)pvr.getPluginDeveloperReference().getPluginReference().getPlugin()).name();
+                String label = pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getPlatformReference().getPlatform().getCode() + " " +
+                        pvr.getPluginDeveloperReference().getPluginReference().getLayerReference().getLayer().name() + " " +
+                        ((Plugins) pvr.getPluginDeveloperReference().getPluginReference().getPlugin()).name();
 
                 mlist.add(
                         new Resource(
@@ -235,7 +224,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAp
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                TextView textView = (TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;

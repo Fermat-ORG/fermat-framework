@@ -120,7 +120,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.UserLevelBusinessTransactionCustomerBrokerSalePluginRoot");
+        returnedClasses.add("UserLevelBusinessTransactionCustomerBrokerSalePluginRoot");
+
         return returnedClasses;
     }
 
