@@ -281,6 +281,39 @@ We are putting together a team of talented developers, especially passionate abo
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
+### Monogatari Team:
+-----------------------------------
+
+This is a team raised from Mordor Team, some of us has been around fermat for a while, and we're looking forward to reach new developers. We feel comfortable working at the back-end but also we do Android Job when required.
+
+* In the Chat Platform We were involved in the back end development.
+* We helpéd in Tokenly and Artist development.
+* And now we're taking over P2P TAXI and P2P Dating development.
+
+#### Team Members:
+
+* **Gabriel Araujo [New Team Leader]**<br/>
+---
+      Email:   gabe_512@hotmail.com
+      Skype:   gabee512
+      Github:  https://github.com/GaboHub
+
+* **Luis Torres [New Developer]**<br/>
+---
+    Email:   lutor1106@gmail.com
+    Skype:   
+    Github:  https://github.com/ilutor
+
+* **Gianfranco Ciafardone [New Developer]**<br/>
+---
+    Email:   gciafardone@gmail.com
+    Skype:   giankor
+    Github:  https://github.com/Giankor
+
+    
+This is a Team of young and skillful developers, we like anime, music but specially progressive. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+<br/>
 ### Kabuto Team:
 -----------------------------------
 ### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_kabuto_team.jpg "Logo Kabuto Team")
