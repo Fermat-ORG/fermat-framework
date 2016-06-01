@@ -195,7 +195,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     }
 
     /**
-     * @return the
+     * @return the instantiated event manager for this plugin
      */
     public EventManager getEventManager() {
         return eventManager;

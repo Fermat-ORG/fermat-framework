@@ -203,6 +203,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
         } else agent.start();
     }
 
+    /**
+     * @return the instantiated event manager for this plugin
+     */
     public EventManager getEventManager() {
         return eventManager;
     }
