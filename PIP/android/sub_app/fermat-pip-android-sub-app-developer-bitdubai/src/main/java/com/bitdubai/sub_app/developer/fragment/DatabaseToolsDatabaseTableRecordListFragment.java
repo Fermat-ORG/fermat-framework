@@ -16,16 +16,15 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -44,11 +43,10 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment {
+public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment<DeveloperSubAppSession,ResourceProviderManager> {
 
     View rootView;
     private ErrorManager errorManager;
-    private DatabaseTool databaseTools;
 
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
@@ -59,10 +57,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
     private Resource resource;
     LinearLayout base;
 
-    /**
-     * SubApp session
-     */
-    DeveloperSubAppSession developerSubAppSession;
+
 
     public static DatabaseToolsDatabaseTableRecordListFragment newInstance() {
         return new DatabaseToolsDatabaseTableRecordListFragment();
@@ -73,20 +68,15 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         if(super.appSession !=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
 
-            resource = (Resource)developerSubAppSession.getData("resource");
-            developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");
-            developerDatabase = (DeveloperDatabase)developerSubAppSession.getData("developerDataBase");
+            resource = (Resource)appSession.getData("resource");
+            developerDatabaseTable = (DeveloperDatabaseTable)appSession.getData("databaseTable");
+            developerDatabase = (DeveloperDatabase)appSession.getData("developerDataBase");
         }
 
-        errorManager = developerSubAppSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         try {
-            ToolManager toolManager = developerSubAppSession.getModuleManager();
-            databaseTools = toolManager.getDatabaseTool();
-        } catch (CantGetDataBaseToolException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            ToolManager toolManager = appSession.getModuleManager();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -103,9 +93,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
         try {
             if (resource.type== Databases.TYPE_ADDON) {
                 AddonVersionReference addon = AddonVersionReference.getByKey(resource.code);
-                this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
+                this.developerDatabaseTableRecordList = appSession.getModuleManager().getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
             } else if (resource.type== Databases.TYPE_PLUGIN) {
-                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(resource.pluginVersionReference, developerDatabase, developerDatabaseTable);
+                this.developerDatabaseTableRecordList = appSession.getModuleManager().getPluginTableContent(resource.pluginVersionReference, developerDatabase, developerDatabaseTable);
             }
 
             columnNames = developerDatabaseTable.getFieldNames();
@@ -215,7 +205,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
         this.resource = resource;
     }
 
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
+    public void setDeveloperSubAppSession(DeveloperSubAppSession appSession) {
+        this.appSession = appSession;
     }
 }

@@ -194,7 +194,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
-            //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(),
                         (AssetUserCommunitySubAppSession) appSession,
@@ -219,7 +219,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         }
 
         if (i == R.id.btn_disconect) {
-            //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
                 final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
                         (AssetUserCommunitySubAppSession) appSession,
@@ -287,11 +287,11 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             }
         }
         if (i == R.id.btn_connection_request_send) {
-            //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
+            //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-            // CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
+            // CommonLogger.info(TAG, "User connection state " + actor.getStatus());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }

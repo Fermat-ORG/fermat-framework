@@ -77,44 +77,69 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSess
     private View initImportView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.import_seed_layour,container,false);
         editText_mnemonic = (EditText) view.findViewById(R.id.editText_mnemonic);
+//        Animation fadeIn = new AlphaAnimation(0, 1);
+//        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+//        fadeIn.setDuration(1000);
+//
+//        Animation fadeOut = new AlphaAnimation(1, 0);
+//        fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+//        fadeOut.setStartOffset(1000);
+//        fadeOut.setDuration(1000);
+//
+//        AnimationSet animation = new AnimationSet(false); //change to false
+//        animation.addAnimation(fadeIn);
+//        animation.addAnimation(fadeOut);
+//        editText_mnemonic.setAnimation(animation);
+
         btn_import = (Button) view.findViewById(R.id.btn_import);
         btn_import.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] input = editText_mnemonic.getText().toString().split(" ");
-                final long date = Long.parseLong(input[input.length - 1]);
-                final List<String> mnemonic = Arrays.asList(input);
-                mnemonic.remove(mnemonic.size()-1);
-                final List<String> temp = mnemonic;
-                final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                        "Importing. Please wait...", true);
-                FermatWorker fermatWorker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        try {
-                            dialog.show();
-                            appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                };
-                fermatWorker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(),"Import completed, the money will be confirmed in a few minutes :)",Toast.LENGTH_SHORT).show();
+                if(input.length>0) {
+                    try {
+                        final long date = Long.parseLong(input[input.length - 1]);
+                        final List<String> mnemonic = Arrays.asList(input);
+                        mnemonic.remove(mnemonic.size() - 1);
+                        final List<String> temp = mnemonic;
+                        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
+                                "Importing. Please wait...", true);
+                        FermatWorker fermatWorker = new FermatWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
+                                try {
+                                    dialog.show();
+                                    appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
+                            }
+                        };
+                        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+                            @Override
+                            public void onPostExecute(Object... result) {
+                                dialog.dismiss();
+                                Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onErrorOccurred(Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+
+                        fermatWorker.start();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        editText_mnemonic.animate();
+                        Toast.makeText(getActivity(),"Import failed, Please fill this box",Toast.LENGTH_SHORT).show();
                     }
 
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
-
-                fermatWorker.start();
-
+                }else {
+                    editText_mnemonic.animate();
+                    Toast.makeText(getActivity(),"Import failed, Please fill this box",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return view;

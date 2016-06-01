@@ -3,12 +3,14 @@ package com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetBankMoneyWalletTransactionsException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetHeldFundsException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterHoldException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterUnholdException;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ public interface BankMoneyWalletManager extends FermatManager, Serializable {
 
     List<BankMoneyTransactionRecord> getTransactions(TransactionType type, int max, int offset,String account)throws CantGetBankMoneyWalletTransactionsException;
 
-    double getHeldFunds(String account) throws  CantGetHeldFundsException;
+    BigDecimal getHeldFunds(String account) throws  CantGetHeldFundsException;
 
     void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException;
 
@@ -34,6 +36,8 @@ public interface BankMoneyWalletManager extends FermatManager, Serializable {
     List<BankAccountNumber> getAccounts() ;
 
     void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException;
+
+    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException;
 
     void createBankName(String bankName);
 

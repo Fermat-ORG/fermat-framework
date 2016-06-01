@@ -1,8 +1,10 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.ClipboardManager;
+
+
+import android.content.ClipData;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -66,6 +69,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      * Fragment UI controls
      */
+
     private ImageView image_view_profile;
     private EditText edit_text_name;
     private TextView text_view_address;
@@ -266,9 +270,19 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             img_copy.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    copyFromClipboard();
+
+                    try {
+
+                        setClipboard(getActivity(), text_view_address.getText().toString());
+                            Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             });
+
         }
 
     }
@@ -292,6 +306,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -437,5 +452,21 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             e.printStackTrace();
         }
 
+    }
+
+    // copy text to clipboard
+    private void setClipboard(Context context,String text) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                    .newPlainText("Address", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

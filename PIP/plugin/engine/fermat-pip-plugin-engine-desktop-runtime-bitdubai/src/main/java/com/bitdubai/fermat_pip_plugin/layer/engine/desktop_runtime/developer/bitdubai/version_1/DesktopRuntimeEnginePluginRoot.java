@@ -497,7 +497,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
         //settings export key
         activity = new Activity();
-        activity.setBackgroundColor("#000000");
+        activity.setBackgroundColor("#011000");
         activity.setActivityType(Activities.DESKTOP_SETTING_EXPORT_KEY.getCode());
         activity.setType(Activities.DESKTOP_SETTING_EXPORT_KEY);
         activity.setStartFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
@@ -505,7 +505,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setBackPublicKey(publicKey);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setColor("#011000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setLabel("Export Key");
         runtimeTitleBar.setLabelSize(18);
@@ -517,6 +517,30 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeFragment.setType(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
         runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
+        //more settings
+        activity = new Activity();
+        activity.setBackgroundColor("#011000");
+        activity.setActivityType(Activities.DESKTOP_MORE_SETTINGS.getCode());
+        activity.setType(Activities.DESKTOP_MORE_SETTINGS);
+        activity.setStartFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setColor("#011000");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setLabel("Export Key");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        activity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
         // community

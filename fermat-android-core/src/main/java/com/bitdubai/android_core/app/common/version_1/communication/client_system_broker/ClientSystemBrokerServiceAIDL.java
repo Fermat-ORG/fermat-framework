@@ -117,7 +117,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
                 }catch (TimeoutException e){
                     objectFuture.cancel(true);
-                    Log.i(TAG,"Timeout lauched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3());
+                    Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
                     objectArrived = null;
                 }
             }else{
@@ -143,7 +143,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             isDataChuncked = objectArrived.isLargeData();
         }else{
             if (!method.getReturnType().equals(Void.TYPE))
-                Log.e(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module, please check your module and contact furszy if the error persist,");
+                Log.i(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.");
             return null;
         }
         Object o = null;

@@ -561,6 +561,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     moduleManager = ((AbstractModule) fermatManager).getModuleManager();
                     clazz = moduleManager.getClass();
                 } else {
+                    Log.e(TAG,"Error: No extends AbstractModule class, Plugin: "+pluginVersionReference);
                     clazz = fermatManager.getClass();
                 }
                 Method m = null;
@@ -575,14 +576,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         paramsTypes[i] = parameters[i].getParameterType();
                     }
                 }
-//                if(parameters!=null) {
-//                    classes = new Class[params.length];
-//                    for (int pos = 0; pos < params.length; pos++) {
-////                        if(params[pos]!=null) classes[pos] = params[pos].getClass();
-////                        else Log.e(TAG,"Null parameter on method: "+method);
-////                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
-//                    }
-//                }
                 try {
                     if (paramsTypes == null) {
                         m = clazz.getDeclaredMethod(method, null);
@@ -653,7 +646,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         try {
             s = future.get();
 
-//            Log.i(TAG,"Invoque method return: "+ s);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -661,13 +653,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        if(s!=null) {
-//            Log.i(TAG, "Data to send: "+ s.toString());
-//        }else{
-//            Log.i(TAG, "Data to send: null, check this");
-//        }
-
         return s;
     }
 

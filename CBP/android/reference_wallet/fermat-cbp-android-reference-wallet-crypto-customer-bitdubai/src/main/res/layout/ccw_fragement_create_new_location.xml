@@ -16,6 +16,31 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawSelectorOnTop="true"
+                android:text="Country:"
+                android:textColor="#DD0A7D"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawSelectorOnTop="true"
+                android:text="Zip Code:"
+                android:textColor="#DD0A7D"
+                />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,80 +53,192 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:drawSelectorOnTop="true"
                 android:backgroundTint="@color/black"
                 tools:listitem="@layout/ccw_spinner_item"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/ccw_city_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:hint="@string/ccw_city"
-                android:textColor="@color/black"
-                android:textColorHint="#AAA"
-                android:textSize="16sp"
-                android:backgroundTint="@color/black"
-                app:typeface="ROBOTO_REGULAR"
-                tools:text="Maracaibo"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-                android:id="@+id/ccw_state_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
-                android:hint="@string/ccw_state_province"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/black"
-                android:textColorHint="#AAA"
-                android:textSize="16sp"
-                app:typeface="ROBOTO_REGULAR"/>
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
                 android:id="@+id/ccw_zip_code_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
                 android:layout_weight="1"
+                android:maxLength="15"
+                android:inputType="number"
                 android:hint="@string/ccw_zip_postal_code"
                 android:textColor="@color/black"
                 android:textColorHint="#AAA"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:backgroundTint="@color/black"
-                app:typeface="ROBOTO_REGULAR"/>
+                />
+
         </LinearLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-            android:id="@+id/ccw_address_line_1_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="16dp"
-            android:hint="@string/ccw_address_line_1"
-            android:textColor="@color/black"
-            android:textColorHint="#AAA"
-            android:textSize="16sp"
-            android:backgroundTint="@color/black"
-            app:typeface="ROBOTO_REGULAR"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-            android:id="@+id/ccw_address_line_2_edit_text"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="State/Province:"
+            android:textColor="#DD0A7D"
+            />
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="@string/ccw_address_line_2"
-            android:textColor="@color/black"
-            android:textColorHint="#AAA"
-            android:textSize="16sp"
-            android:backgroundTint="@color/black"
-            app:typeface="ROBOTO_REGULAR"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/ccw_state_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/ccw_state_edit_text_count"
+                android:hint="@string/ccw_state_province"
+                android:backgroundTint="@color/black"
+                android:textColorHint="#AAA"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_state_edit_text_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="100"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="City:"
+            android:textColor="#DD0A7D"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/ccw_city_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/ccw_city_edit_text_count"
+                android:hint="@string/ccw_city"
+                android:backgroundTint="@color/black"
+                android:textColorHint="#AAA"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_city_edit_text_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="100"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address Line 1:"
+            android:textColor="#DD0A7D"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/ccw_address_line_1_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/ccw_address_line_1_edit_text_count"
+                android:hint="@string/ccw_address_line_1"
+                android:backgroundTint="@color/black"
+                android:textColorHint="#AAA"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_address_line_1_edit_text_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="100"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address Line 2:"
+            android:textColor="#DD0A7D"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/ccw_address_line_2_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/ccw_address_line_2_edit_text_count"
+                android:hint="@string/ccw_address_line_2"
+                android:backgroundTint="@color/black"
+                android:textColorHint="#AAA"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:maxLength="10"
+                android:paddingLeft="15dp"
+
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_address_line_2_edit_text_count"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="100"
+                android:textColor="#bbb"
+                android:textSize="12dp" />
+        </RelativeLayout>
+
+
     </LinearLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton

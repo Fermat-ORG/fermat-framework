@@ -65,7 +65,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
             final String copiedMessage = holder.txtMessage.getText().toString();
-            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.content.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -126,6 +126,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
+            holder.tickstatusimage.setVisibility(View.VISIBLE);
             if(data.getStatus() != null) {
                 if (data.getStatus().equals(MessageStatus.SEND.toString()) /*|| data.getStatus().equals(MessageStatus.CREATED.toString())*/)
                     holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
@@ -154,6 +155,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.LEFT;
             holder.txtInfo.setLayoutParams(layoutParams);
+            //holder.txtInfo.setPadding(20,0,20,7);
+            holder.tickstatusimage.setVisibility(View.GONE);
         }
     }
 

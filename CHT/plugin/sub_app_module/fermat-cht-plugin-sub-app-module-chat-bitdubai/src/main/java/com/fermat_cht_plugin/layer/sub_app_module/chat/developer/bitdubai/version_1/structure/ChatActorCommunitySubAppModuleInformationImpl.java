@@ -20,6 +20,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
+    private String status = "";
 
     public ChatActorCommunitySubAppModuleInformationImpl(final String publicKey,
                                                          final String alias,
@@ -42,6 +43,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image     = exposingData.getImage()    ;
         this.connectionState = exposingData.getConnectionState();
         this.connectionId = exposingData.getConnectionId();
+        this.status = exposingData.getStatus();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
@@ -50,6 +52,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image = ced.getImage();
         this.connectionState= null;
         this.connectionId=null;
+        this.status=ced.getStatus();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatActorCommunityInformation record) {
@@ -89,6 +92,11 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     @Override
     public UUID getConnectionId() {
         return this.connectionId;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
     }
 
     @Override

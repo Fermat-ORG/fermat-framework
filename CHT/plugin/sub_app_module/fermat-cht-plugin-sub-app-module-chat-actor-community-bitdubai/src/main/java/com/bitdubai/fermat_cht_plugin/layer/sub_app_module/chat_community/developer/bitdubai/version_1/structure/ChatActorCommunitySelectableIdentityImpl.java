@@ -16,12 +16,14 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     public final Actors actorType;
     public final String alias;
     public final byte[] image;
+    public final String status;
 
-    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image){
+    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image, String status){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
         this.image = image;
+        this.status= status;
     }
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
@@ -30,6 +32,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.publicKey = chatIdentity.getPublicKey()   ;
         this.actorType = Actors.CHAT         ;
         this.image     = chatIdentity.getImage();
+        this.status    = chatIdentity.getConnectionState();
     }
 
 
@@ -59,6 +62,10 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     @Override
     public byte[] getImage() {
         return this.image;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     @Override

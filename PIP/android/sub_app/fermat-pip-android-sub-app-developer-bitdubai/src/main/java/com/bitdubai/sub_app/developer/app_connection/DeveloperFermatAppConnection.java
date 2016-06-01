@@ -19,7 +19,7 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DeveloperFermatAppConnection extends AppConnections{
+public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubAppSession> {
 
     public DeveloperFermatAppConnection(Context activity) {
         super(activity);

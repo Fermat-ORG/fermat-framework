@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -100,6 +101,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
         }
     };
     private BlockchainNetworkType blockchainNetworkType;
+    private ImageView img_copy;
 
 
     public static ContactDetailFragment newInstance() {
@@ -223,6 +225,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
             text_view_address = (TextView) mFragmentView.findViewById(R.id.text_view_address);
             receive_button = (FermatButton) mFragmentView.findViewById(R.id.receive_button);
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
+            img_copy = (ImageView) mFragmentView.findViewById(R.id.img_copy);
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
             img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
             send_button.setOnClickListener(this);
@@ -266,9 +269,26 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
 
                 }
             });
+
+            img_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+
+                        setClipboard(getActivity(), text_view_address.getText().toString());
+                        Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
         }
 
     }
+
+
 
 
     /**
@@ -424,5 +444,21 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
             e.printStackTrace();
         }
 
+    }
+
+    // copy text to clipboard
+    private void setClipboard(Context context,String text) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                    .newPlainText("Address", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

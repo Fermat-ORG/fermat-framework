@@ -27,6 +27,8 @@ public class CryptoCustomerWalletSession extends AbstractFermatSession<Installed
     public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
     public static final String NEGOTIATION_ID = "NEGOTIATION_ID";
 
+    public static final String NEGOTIATION_MANAGER = "NEGOTIATION_MANAGER";
+
 
     public CryptoCustomerWalletSession() {
     }

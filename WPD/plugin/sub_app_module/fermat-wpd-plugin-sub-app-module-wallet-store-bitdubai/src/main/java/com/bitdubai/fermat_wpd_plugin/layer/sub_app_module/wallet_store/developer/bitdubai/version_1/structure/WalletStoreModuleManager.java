@@ -7,6 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -15,6 +20,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.basic_classes.BasicWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.exceptions.CantGetItemInformationException;
@@ -61,7 +67,8 @@ import java.util.logging.Logger;
 /**
  * Created by rodrigo on 7/29/15.
  */
-public class WalletStoreModuleManager {
+
+public class WalletStoreModuleManager extends ModuleManagerImpl<BasicWalletSettings> implements com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager {
 
     /**
      * DealsWithErrors interface member variables
@@ -104,7 +111,12 @@ public class WalletStoreModuleManager {
      */
     public WalletStoreModuleManager(ErrorManager errorManager, LogManager logManager, WalletStoreManager walletStoreManagerMiddleware,
                                     com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService,
-                                    WalletManagerManager walletManagerManager) {
+                                    WalletManagerManager walletManagerManager,
+                                    PluginFileSystem pluginFileSystem,
+                                    UUID pluginId) {
+
+        super(pluginFileSystem, pluginId);
+
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.walletStoreManagerMiddleware = walletStoreManagerMiddleware;
@@ -394,6 +406,7 @@ public class WalletStoreModuleManager {
      * @param languageId
      * @throws CantStartLanguageInstallationException
      */
+    @Override
     public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.INSTALLING);
@@ -421,6 +434,7 @@ public class WalletStoreModuleManager {
      * @param skinId
      * @throws CantStartSkinInstallationException
      */
+    @Override
     public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.INSTALLING);
@@ -494,6 +508,7 @@ public class WalletStoreModuleManager {
      * @param version
      * @throws CantStartInstallationException
      */
+    @Override
     public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
             Logger LOG = Logger.getGlobal();
@@ -565,6 +580,7 @@ public class WalletStoreModuleManager {
      * @param languageId
      * @throws CantStartUninstallLanguageException
      */
+    @Override
     public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.LANGUAGE, languageId, InstallationStatus.UNINSTALLING);
@@ -591,6 +607,7 @@ public class WalletStoreModuleManager {
      * @param skinId
      * @throws CantStartUninstallSkinException
      */
+    @Override
     public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.SKIN, skinId, InstallationStatus.UNINSTALLING);
@@ -616,6 +633,7 @@ public class WalletStoreModuleManager {
      * @param walletCatalogueId
      * @throws CantStartUninstallWalletException
      */
+    @Override
     public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException {
         try {
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.UNINSTALLING);
@@ -679,6 +697,7 @@ public class WalletStoreModuleManager {
      * @return
      * @throws CantGetWalletsCatalogException
      */
+    @Override
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
         try {
             return getWalletStoreDetailedCatalogItem(walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId));
@@ -686,6 +705,35 @@ public class WalletStoreModuleManager {
             throw new CantGetWalletsCatalogException(CantGetWalletsCatalogException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
+//    OLD METHOD IN PLUGIN-ROOT
+//    public DetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException {
+//        try {
+//            return walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId);
+//        } catch (Exception e) {
+//            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(e));
 
+//            return null;
+//        }
+//    }º
 
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        return null;
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }

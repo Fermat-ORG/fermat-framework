@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
@@ -532,6 +534,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
         });
 
         setUpContactAddapter();
+
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
         /**
          * Selector
          */
@@ -626,11 +630,10 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                     }
 
-                    BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                    BigDecimal operator = new BigDecimal(newAmount);
+                    long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                    BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                    if(operator.compareTo(minSatoshis) == 1 )
-                    {
+                    if (amountDecimal.longValueExact() > minSatoshis) {
 
                         String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
@@ -654,7 +657,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 lossProtectedWalletContact.getActorType(),
                                 cryptoAddress,
                                 notes,
-                                operator.longValueExact(),
+                                amountDecimal.longValueExact(),
                                 blockchainNetworkType,
                                 ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                 CryptoCurrency.BITCOIN
