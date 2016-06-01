@@ -2,7 +2,6 @@
 package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl;
 
 // Declare any non-default types here with import statements
-import com.bitdubai.android_core.app.common.version_1.communication.structure.AIDLObject;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 

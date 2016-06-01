@@ -1,9 +1,11 @@
-package com.bitdubai.android_core.app;
+package com.bitdubai.android_core.app.common.version_1.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.bitdubai.android_core.app.ApplicationSession;
 
 /**
  * Created by mati on 2016.04.22..
@@ -11,7 +13,7 @@ import android.util.Log;
 public class FermatSystemRunningReceiver extends BroadcastReceiver{
 
 
-    private static final String TAG = "FermatSystemRunningReceiver";
+    private static final String TAG = "FermatSystemReceiver";
 
     public FermatSystemRunningReceiver() {
     }

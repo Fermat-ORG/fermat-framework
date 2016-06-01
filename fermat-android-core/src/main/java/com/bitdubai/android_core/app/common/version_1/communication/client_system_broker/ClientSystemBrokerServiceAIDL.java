@@ -69,7 +69,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(final PluginVersionReference pluginVersionReference,String responseStr, final Object proxy, final Method method, Object[] args) throws Exception {
+    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, Object[] args) throws Exception {
         //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
@@ -541,7 +541,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference) throws CantCreateProxyException {
         //Log.i(TAG,"creating proxy");
-        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,"key",pluginVersionReference);
+        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }
 

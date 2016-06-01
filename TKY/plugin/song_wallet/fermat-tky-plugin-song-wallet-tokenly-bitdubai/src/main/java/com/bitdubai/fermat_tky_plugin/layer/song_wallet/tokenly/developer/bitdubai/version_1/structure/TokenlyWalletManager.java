@@ -263,7 +263,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager, Serializa
                     fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
                             BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
                     try {
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle,"acá va el chanell en un futuro o reestructuralo para la pk de la app");
                     }catch (Exception ex){
                         System.out.println("TKY_BROADCAST_SONG:"+ex);
                     }
@@ -285,7 +285,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager, Serializa
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode(),song);
                     fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
                             BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle,"acá va el chanell en un futuro o reestructuralo para la pk de la app");
                 }
             }
             /**
