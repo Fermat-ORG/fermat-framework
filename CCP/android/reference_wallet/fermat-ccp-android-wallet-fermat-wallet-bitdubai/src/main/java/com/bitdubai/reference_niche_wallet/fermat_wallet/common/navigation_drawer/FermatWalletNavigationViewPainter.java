@@ -47,7 +47,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity.get());
+            FermatWalletNavigationViewAdapter navigationViewAdapter = new FermatWalletNavigationViewAdapter(activity.get());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();

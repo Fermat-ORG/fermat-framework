@@ -41,7 +41,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalle
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperItem;
@@ -114,7 +114,11 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                         fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
                 moduleManager.persistSettings(fermatWalletSession.getAppPublicKey(), fermatWalletSettings);
+
+                blockchainNetworkType = fermatWalletSettings.getBlockchainNetworkType();
             }
+
+
 
             } catch (Exception ex) {
             if (errorManager != null)
@@ -122,16 +126,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        //noinspection TryWithIdenticalCatches
-        try {
-            blockchainNetworkType = (moduleManager!=null) ?
-                    moduleManager.loadAndGetSettings(fermatWalletSession.getAppPublicKey()).getBlockchainNetworkType() :
-                    BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
 
         //list transaction on background
        onRefresh();
@@ -170,11 +164,11 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send")
+        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
                 .setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
+        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
                 .setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
@@ -183,10 +177,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
+            if(id == FermatWalletConstants.IC_ACTION_SEND){
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,fermatWalletSession.getAppPublicKey());
                 return true;
-            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+            }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
                 setUpPresentation();
                 return true;
             }

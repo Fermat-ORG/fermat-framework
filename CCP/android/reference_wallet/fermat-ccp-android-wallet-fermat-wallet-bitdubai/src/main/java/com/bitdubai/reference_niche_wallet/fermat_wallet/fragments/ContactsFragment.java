@@ -15,7 +15,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,10 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -56,7 +52,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.SubActionButton;
@@ -166,7 +162,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
         super.onCreate(savedInstanceState);
         referenceWalletSession = (FermatWalletSession) appSession;
         setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);
@@ -334,7 +330,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -345,7 +341,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
 
             int id = item.getItemId();
 
-            if (id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == FermatWalletConstants.IC_ACTION_HELP_CONTACT) {
                 setUpTutorial(true);
                 return true;
             }

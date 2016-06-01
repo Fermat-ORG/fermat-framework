@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserActor;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
@@ -272,7 +272,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         super.onCreateOptionsMenu(menu, inflater);
         this.menu = menu;
         if(isMenuVisible){
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -285,7 +285,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
             int id = item.getItemId();
 
-            if(id == BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION){
+            if(id == FermatWalletConstants.IC_ACTION_ADD_CONNECTION){
                 for(FermatWalletIntraUserActor fermatWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (fermatWalletIntraUserActor.isSelected()) {
@@ -380,7 +380,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         connectionPickCounter++;
         if(!isMenuVisible){
             isMenuVisible = true;
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setIcon(R.drawable.button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
