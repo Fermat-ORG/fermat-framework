@@ -79,6 +79,8 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossPro
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -283,6 +285,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -456,7 +459,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         });
         */
 
-        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(10,4)});
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
+
 
         /**
          * Selector
@@ -606,7 +610,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
         });
     }
@@ -670,7 +674,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                    msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+                                     msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+
+                                   // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
                                 } else if (txtType.equals("[satoshis]")) {
                                     newAmount = amount;
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
@@ -679,10 +685,10 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
-                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                                if (amountDecimal.compareTo(minSatoshis) == 1) {
+                                if (amountDecimal.longValueExact() > minSatoshis) {
 
                                     long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 

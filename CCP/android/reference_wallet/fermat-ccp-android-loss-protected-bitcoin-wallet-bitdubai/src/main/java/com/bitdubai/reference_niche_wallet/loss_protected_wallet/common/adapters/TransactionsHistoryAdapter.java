@@ -64,8 +64,15 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
     @Override
     protected void bindHolder(TransactionListItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
 
+        final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
+        final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
         //set Amount transaction
-        holder.getTransaction_amount().setText(WalletUtils.formatBalanceString(data.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
+        holder.getTransaction_amount().setText(
+                WalletUtils.formatBalanceStringWithDecimalEntry(
+                        data.getAmount(),
+                        MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         //formatter for date transaction
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);

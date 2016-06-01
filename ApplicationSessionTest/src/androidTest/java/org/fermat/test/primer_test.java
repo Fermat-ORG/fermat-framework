@@ -1,3 +1,4 @@
+/*
 package org.fermat.test;
 
 import android.test.ActivityInstrumentationTestCase2;
@@ -82,3 +83,4 @@ public class primer_test extends ActivityInstrumentationTestCase2 {
 		//solo.clickOnView(solo.getView(android.widget.ImageButton.class, 0));
 	}
 }
+*/

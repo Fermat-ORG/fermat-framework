@@ -7,16 +7,22 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.basic_classes.BasicSubAppSettings;
+import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyAddonsException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyPluginsException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppSettings> implements ToolManager {
 
     private final DeveloperModuleDatabaseTool developerDatabaseTools;
+    private final DeveloperModuleLogTool developerModuleLogTool;
+
     private ConcurrentHashMap<PluginVersionReference, Plugin> databaseManagersOnPlugins;
     private ConcurrentHashMap<AddonVersionReference, Addon> databaseManagersOnAddons ;
 
@@ -54,6 +62,11 @@ public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppS
         developerDatabaseTools = new DeveloperModuleDatabaseTool(
                 this.databaseManagersOnPlugins,
                 this.databaseManagersOnAddons
+        );
+
+        developerModuleLogTool = new DeveloperModuleLogTool(
+                this.logManagersOnPlugins,
+                this.logManagersOnAddons
         );
     }
 
@@ -105,6 +118,31 @@ public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppS
     @Override
     public List<DeveloperDatabaseTableRecord> getAddonTableContent(AddonVersionReference addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return developerDatabaseTools.getAddonTableContent(addon,developerDatabase,developerDatabaseTable);
+    }
+
+    @Override
+    public List<PluginVersionReference> getAvailablePluginList() {
+        return developerModuleLogTool.getAvailablePluginList();
+    }
+
+    @Override
+    public List<AddonVersionReference> getAvailableAddonList() {
+        return developerModuleLogTool.getAvailableAddonList();
+    }
+
+    @Override
+    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(PluginVersionReference plugin) throws CantGetClasessHierarchyPluginsException {
+        return developerModuleLogTool.getClassesHierarchyPlugins(plugin);
+    }
+
+    @Override
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException {
+        return developerModuleLogTool.getClassesHierarchyAddons(addon);
+    }
+
+    @Override
+    public void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass) {
+        developerModuleLogTool.setNewLogLevelInClass(plugin, newLogLevelInClass);
     }
 
     @Override
