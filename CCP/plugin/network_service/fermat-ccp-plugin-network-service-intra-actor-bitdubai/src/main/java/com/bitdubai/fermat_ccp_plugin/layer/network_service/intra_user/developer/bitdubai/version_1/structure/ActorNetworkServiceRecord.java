@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
-import android.util.Base64;
+
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
@@ -9,6 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 
 import java.util.UUID;
 

@@ -228,21 +228,69 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             showDialogHelp();
         } else {
             isRefreshing = true;
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        dataSet = getSuggestionCache();
 
-                        showCriptoUsersCache();
-                        isRefreshing = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return getSuggestionCache();
+
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (result != null &&
+                            result.length > 0) {
+                        if (getActivity() != null && adapter != null) {
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            if (lstIntraUserInformations.isEmpty()) {
+                                //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
+                                try {
+                                    if(dataSet!=null) {
+                                        if (!dataSet.isEmpty()) {
+                                            lstIntraUserInformations.addAll(dataSet);
+                                            showEmpty(false, emptyView);
+                                            showEmpty(false, searchEmptyView);
+                                        } else {
+                                            showEmpty(true, emptyView);
+                                            showEmpty(false, searchEmptyView);
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                showEmpty(false, emptyView);
+                                showEmpty(false, searchEmptyView);
+                            }
+                        }
+                    } else {
+                        showEmpty(false, emptyView);
+                        showEmpty(false, searchEmptyView);
+                        lstIntraUserInformations.addAll(dataSet);
+
                     }
                 }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+
+                }
             });
-
-
+            worker.execute();
         }
     }
 
@@ -548,7 +596,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-            dataSet.addAll(userList);
+             if(userList != null)
+                dataSet.addAll(userList);
+             else
+                 Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
