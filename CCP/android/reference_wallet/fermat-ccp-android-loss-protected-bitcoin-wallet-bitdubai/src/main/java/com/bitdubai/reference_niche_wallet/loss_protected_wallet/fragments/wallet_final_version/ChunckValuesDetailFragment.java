@@ -78,20 +78,21 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     /**
      * Manager
      * */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      * */
     private List<BitcoinLossProtectedWalletSpend> listBitcoinLossProtectedWalletSpend;
     private BitcoinLossProtectedWalletSpend bitcoinLossProtectedWalletSpend;
-    private LossProtectedWalletManager moduleManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
     private LossProtectedWalletTransaction transaction;
-    private LossProtectedWalletModuleManager lossProtectedWalletModuleManager;
 
     private String chunckAmount = "";
     private double chunckExchangeRate = 0;
     private double chunckAmountSpent = 0;
     private int chunckPercentageSpent =0;
+
+    private ErrorManager errorManager;
 
     private View rootView;
     private LinearLayout empty;
@@ -109,9 +110,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
     private int MAX_PERCENTAGE = 100;
 
-    private ErrorManager errorManager;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -135,9 +134,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
         listBitcoinLossProtectedWalletSpend = new ArrayList<>();
         try {
-            moduleManager = lossProtectedWalletSession.getModuleManager();
-
-            lossProtectedWallet = moduleManager.getCryptoWallet();
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
 
             getExecutor().execute(new Runnable() {
                 @Override
@@ -158,13 +155,10 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
                 }
             });
 
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
 
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
             }
@@ -215,7 +209,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             }
 
             //Get transaction data
-            transaction = lossProtectedWallet.getTransaction(
+            transaction = lossProtectedWalletManager.getTransaction(
                     lossProtectedWalletSession.getTransactionDetailId(),
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
@@ -344,7 +338,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             adapter = new ChunckValuesDetailAdapter(
                     getActivity(),
                     listBitcoinLossProtectedWalletSpend,
-                    lossProtectedWallet,
+                    lossProtectedWalletManager,
                     lossProtectedWalletSession,
                     this);
             adapter.setFermatListEventListener(this);
@@ -391,7 +385,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            listBitcoinLossProtectedWalletSpend = lossProtectedWallet.listSpendingBlocksValue(
+            listBitcoinLossProtectedWalletSpend = lossProtectedWalletManager.listSpendingBlocksValue(
                     lossProtectedWalletSession.getAppPublicKey(),
                     lossProtectedWalletSession.getTransactionDetailId());
         } catch (Exception e) {

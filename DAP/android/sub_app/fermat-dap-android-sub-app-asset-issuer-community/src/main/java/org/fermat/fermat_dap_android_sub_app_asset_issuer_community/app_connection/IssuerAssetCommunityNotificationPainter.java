@@ -4,10 +4,12 @@ import android.widget.RemoteViews;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 11/02/16.
  */
-public class IssuerAssetCommunityNotificationPainter implements NotificationPainter {
+public class IssuerAssetCommunityNotificationPainter implements NotificationPainter, Serializable {
 
     private String title;
     private String textBody;

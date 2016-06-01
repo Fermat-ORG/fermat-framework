@@ -21,6 +21,7 @@ public interface ModuleManager<Z extends FermatSettings, Y extends ActiveActorId
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
+    @Deprecated
     SettingsManager<Z> getSettingsManager();
 
     /**

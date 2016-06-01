@@ -20,8 +20,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment3;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**
@@ -95,10 +93,10 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     currentFragment = LossProtectedSettingsFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
-                    currentFragment = SettingsNotificationsFragment.newInstance();
+                    //currentFragment = SettingsNotificationsFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
-                    currentFragment = SettingsMainNetworkFragment.newInstance();
+                    //currentFragment = SettingsMainNetworkFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_FRAGMENT:
                     currentFragment = AddConnectionFragment.newInstance();

@@ -5,8 +5,9 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.holders.IssuerListItentitiesDrawerHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.holders.IssuerListItentitiesDrawerHolder;
 
 import java.util.List;
 

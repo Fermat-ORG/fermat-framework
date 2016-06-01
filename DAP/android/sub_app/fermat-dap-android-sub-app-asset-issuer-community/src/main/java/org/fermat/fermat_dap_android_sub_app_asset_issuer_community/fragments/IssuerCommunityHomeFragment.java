@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,11 +29,13 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerCommunityAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
@@ -43,11 +47,10 @@ import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,11 +65,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         AdapterView.OnItemClickListener,
         FermatListItemListeners<ActorIssuer> {
 
+    protected final String TAG = "IssuerCommunityFragment";
+
     public static final String ISSUER_SELECTED = "issuer";
-    private static AssetIssuerCommunitySubAppModuleManager manager;
+    private static AssetIssuerCommunitySubAppModuleManager moduleManager;
+    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
 
-    ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     // recycler
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -87,7 +94,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
      * Flags
@@ -101,19 +108,34 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
-            manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
+            setHasOptionsMenu(true);
+
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
+            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            issuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            try {
+                settings = assetIssuerCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+
+            if (assetIssuerCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (settings == null) {
+                    settings = new AssetIssuerSettings();
+                    settings.setIsPresentationHelpEnabled(true);
+                    assetIssuerCommunitySubAppSession.getModuleManager().persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
+                }
+            }
+
+            issuerNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetIssuerCount();
             new FetchCountTask().execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -122,7 +144,6 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         rootView = inflater.inflate(R.layout.home_dap_issuer_community_fragment, container, false);
 //        initViews(rootView);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -134,7 +155,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                 actors = dataSet;
                 boolean someSelected = false;
-                int selectedActors=0;
+                int selectedActors = 0;
                 int cheackeableActors = 0;
                 List<ActorIssuer> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
@@ -146,11 +167,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     if (actor.selected) {
 
                         actorsSelected.add(actor);
-                        if (actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))
-                        {
+                        if (actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING)) {
                             actorsConnecting.add(actor);
                         }
-                        if (!(actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                        if (!(actor.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
                             actorsToConnect.add(actor.getRecord());
                         }
 
@@ -159,36 +179,30 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                     }
                 }
-                if (actorsConnecting.size() > 0)
-                {
+                if (actorsConnecting.size() > 0) {
                     menuItemCancel.setVisible(true);
-                }
-                else {
+                } else {
                     menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
                         menuItemConnect.setVisible(false);
-                    }else if(actorsConnecting.size() == 0){
+                    } else if (actorsConnecting.size() == 0) {
                         menuItemConnect.setVisible(true);
                     }
-                    if (selectedActors > actorsConnecting.size()){
+                    if (selectedActors > actorsConnecting.size()) {
                         menuItemConnect.setVisible(true);
                     }
                     menuItemUnselect.setVisible(true);
-                    if (selectedActors == cheackeableActors)
-                    {
+                    if (selectedActors == cheackeableActors) {
                         menuItemSelect.setVisible(false);
                     } else {
                         menuItemSelect.setVisible(true);
                     }
-                }
-                else
-                {
+                } else {
                     restartButtons();
                 }
-
 
 
             }
@@ -205,10 +219,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetIssuerSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -216,32 +229,36 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             settings = new AssetIssuerSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(assetIssuerCommunitySubAppSession.getAppPublicKey());
+                }
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         }
 
-//        final AssetIssuerSettings assetIssuerSettingsTemp = settings;
-//
-//
-//        Handler handlerTimer = new Handler();
-//        handlerTimer.postDelayed(new Runnable() {
-//            public void run() {
-//                if (assetIssuerSettingsTemp.isPresentationHelpEnabled()) {
-//                    setUpPresentation(false);
-//                }
-//            }
-//        }, 500);
+        final AssetIssuerSettings assetIssuerSettingsTemp = settings;
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (assetIssuerSettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
 
         return rootView;
     }
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), assetIssuerCommunitySubAppSession)
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
@@ -302,7 +319,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 //                                toConnect.add(actorIssuer.getRecord());
 //                        }
 //                        //// TODO: 20/11/15 get Actor asset issuer
-//                        manager.connectToActorAssetIssuer(null, toConnect);
+//                        moduleManager.connectToActorAssetIssuer(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -369,16 +386,16 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 1, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 0, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 2, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 0, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 3, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 4, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 
@@ -394,10 +411,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         int id = item.getItemId();
 
-        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL){
+        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL) {
 
-            for (ActorIssuer actorIssuer : actors)
-            {
+            for (ActorIssuer actorIssuer : actors) {
                 if (actorIssuer.getRecord().getExtendedPublicKey() == null)
                     actorIssuer.selected = true;
             }
@@ -409,10 +425,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         }
 
-        if(id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL){
+        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL) {
 
-            for (ActorIssuer actorIssuer : actors)
-            {
+            for (ActorIssuer actorIssuer : actors) {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
@@ -427,10 +442,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     toConnect.add(actorIssuer.getRecord());
             }
 
-            if (toConnect.size() > 0)
-            {
+            if (toConnect.size() > 0) {
                 ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null){
+                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -444,18 +458,18 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetIssuer> toConnect = new ArrayList<>();
                                     for (ActorIssuer actorIssuer : actors) {
-                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
                                             toConnect.add(actorIssuer.getRecord());
                                         }
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
-                                    manager.askActorAssetIssuerForConnection(toConnect);
+                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
 
                                     Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);
 
-//                                    manager.connectToActorAssetIssuer(null, toConnect);
+//                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
                             };
@@ -497,8 +511,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
                 connectDialog.show();
                 return true;
-            }
-            else{
+            } else {
                 Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -507,7 +520,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null){
+            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();
@@ -522,9 +535,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                             protected Object doInBackground() throws Exception {
 
 
-                                for(ActorIssuer actor: actorsConnecting) {
+                                for (ActorIssuer actor : actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetIssuer(actor.getRecord());
+                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -578,7 +591,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         try {
 
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -591,7 +604,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private void updateNotificationsBadge(int count) {
         issuerNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -684,13 +701,20 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private synchronized List<ActorIssuer> getMoreData() throws Exception {
         List<ActorIssuer> dataSet = new ArrayList<>();
         List<AssetIssuerActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetIssuerRegistered();
-        if (result != null && result.size() > 0) {
-            for (AssetIssuerActorRecord record : result) {
-                dataSet.add((new ActorIssuer(record)));
+
+        try {
+            result = moduleManager.getAllActorAssetIssuerRegistered();
+            if (result != null && result.size() > 0) {
+                for (AssetIssuerActorRecord record : result) {
+                    dataSet.add((new ActorIssuer(record)));
+                }
             }
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dataSet;
     }
@@ -698,7 +722,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onItemClickListener(ActorIssuer data, int position) {
         appSession.setData(ISSUER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetIssuerCommunitySubAppSession.getAppPublicKey());
     }
 
     @Override
@@ -721,16 +745,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
-    
-    private void restartButtons()
-    {
+
+    private void restartButtons() {
         menuItemCancel.setVisible(false);
         menuItemSelect.setVisible(true);
         menuItemUnselect.setVisible(false);
         menuItemConnect.setVisible(false);
-        
     }
-
-
-
 }

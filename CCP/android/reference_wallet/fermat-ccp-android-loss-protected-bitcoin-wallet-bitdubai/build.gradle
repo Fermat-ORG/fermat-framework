@@ -1,4 +1,9 @@
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.android.library'
+
+
+
 android {
 
     lintOptions {
@@ -11,7 +16,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -73,3 +78,8 @@ dependencies {
 repositories {
     maven { url 'https://jitpack.io' }
 }
+
+def packageName = 'org.fermat.ccp.android.loss.protected.wallet'
+def libraryVersion = '1.0.0'
+
+

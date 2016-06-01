@@ -7,9 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;

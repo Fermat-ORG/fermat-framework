@@ -38,11 +38,11 @@
     <string name="ccw_cancellation_negotiation">Cancellation Negotiation:</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
-    <string name="ccw_cash_place_to_delivery_broker">Payment\'s Delivery Place</string>
-    <string name="ccw_cash_place_to_delivery_customer">Merchandise\'s Reception Place</string>
+    <string name="ccw_cash_place_to_delivery_broker">Payment Delivery Place</string>
+    <string name="ccw_cash_place_to_delivery_customer">Merchandise Reception Place</string>
     <string name="ccw_cash_place_to_deliver_title">Selected Location:</string>
-    <string name="ccw_date_to_delivery_broker">Date To Deliver Broker</string>
-    <string name="ccw_date_to_delivery_customer">Date To Deliver Customer</string>
+    <string name="ccw_date_to_delivery_broker">Broker\'s Delivery Date</string>
+    <string name="ccw_date_to_delivery_customer">Customer\'s Delivery Date</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
@@ -124,7 +124,7 @@
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
     <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
 
-    <string name="delivery_date_title">Delivery Date</string>
+    <string name="ccw_delivery_date_title">Delivery Date</string>
     <string name="delivery_date_text">Date To Deliver:</string>
 
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
@@ -147,7 +147,7 @@
     <string name="no_new_open_contracts">No New\nOpen Contracts</string>
 
     <string name="payment_methods_title">Payment Methods</string>
-    <string name="reception_methods_title">Reception Methods</string>
+    <string name="reception_methods_title">Reception Method</string>
     <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="payment_date_title">PAYMENT DATE</string>
@@ -174,7 +174,7 @@
 
     <string name="you_will_have_to_pay_amount">You will have to pay: </string>
     <string name="yours">Yours:</string>
-    <string name="ccw_your_exchange_rate_title">Your Exchange Rate:</string>
+    <string name="ccw_your_exchange_rate_title">Selected Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
     <string name="ccw_currency_to_buy">Currency to Buy</string>

@@ -14,13 +14,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.reference_wallet.fan_wallet.common.header.FanWalletHeaderPainter;
 import com.bitdubai.reference_wallet.fan_wallet.fragmentFactory.FanWalletFragmentFactory;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 
 /**
  * Created by Miguel Payarez on 28/03/16.
  */
-public class FanWalletFermatAppConnection extends AppConnections {
+public class FanWalletFermatAppConnection extends AppConnections<FanWalletSession> {
 
     public FanWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -52,7 +53,7 @@ public class FanWalletFermatAppConnection extends AppConnections {
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return null;
+        return new FanWalletHeaderPainter(getContext(),getFullyLoadedSession());
     }
 
     @Override

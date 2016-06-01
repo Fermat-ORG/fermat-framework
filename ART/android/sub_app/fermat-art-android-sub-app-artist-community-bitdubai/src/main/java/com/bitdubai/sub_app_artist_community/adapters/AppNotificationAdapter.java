@@ -39,7 +39,7 @@ public class AppNotificationAdapter extends FermatAdapter<ArtistCommunityInforma
         if (data.getImage().length > 0) {
             bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
         } else {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
+            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.aac_profile_image);
         }
         bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
         holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));

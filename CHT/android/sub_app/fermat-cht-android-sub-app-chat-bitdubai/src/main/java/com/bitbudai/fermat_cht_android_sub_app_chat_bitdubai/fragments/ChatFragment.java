@@ -18,6 +18,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -29,8 +31,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
             try {
-                chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatSettings = null;
             }
@@ -83,7 +83,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 chatSettings = new ChatPreferenceSettings();
                 chatSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                    chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -173,7 +173,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+        //todo: no la encuentra
+        //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

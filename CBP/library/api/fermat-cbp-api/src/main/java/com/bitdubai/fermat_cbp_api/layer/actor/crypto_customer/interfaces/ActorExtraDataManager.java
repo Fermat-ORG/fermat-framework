@@ -65,12 +65,6 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
     ActorIdentity getActorInformationByPublicKey(String publicKeyBroker) throws CantGetListActorExtraDataException;
 
     /**
-     *
-     * @return all currencies handled with platforms that support them
-     */
-    Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException;
-
-    /**
      * Through the method <code>requestBrokerExtraData</code> we can ask a broker its extra data.
      * In this case we're requesting quotes information.
      *
@@ -80,5 +74,12 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
      */
     @Deprecated //TODO WE CAN'T USE THIS METHOD FROM OUTSIDE THE PLUG-IN, IF NEEDED DELETE FROM THE INTERFACE.
     void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantRequestBrokerExtraDataException;
+
+    /**
+     *
+     * @param paymentCurrency
+     * @return list of platforms supporteds
+     */
+    Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException;
 
 }

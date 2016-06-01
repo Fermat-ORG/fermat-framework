@@ -86,6 +86,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
+            System.out.println("******BASIC WALLET - OPEN DATA BASE ********");
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeBitcoinWalletBasicException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {

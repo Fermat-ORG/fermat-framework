@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -25,15 +27,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
@@ -48,8 +52,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
-import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -73,8 +75,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -141,6 +141,7 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
@@ -332,7 +333,13 @@ public class ChatAdapterView extends LinearLayout {
         final int actualHeight = getHeight();
         FrameLayout.LayoutParams layoutParams =
                 (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
-        layoutParams.height = 764;
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        if(dm.heightPixels < 800)
+            layoutParams.height = 764;
+        else if(dm.heightPixels < 1080 && dm.heightPixels >= 800)
+            layoutParams.height = 944;
+        else if(dm.heightPixels < 1280 && dm.heightPixels >= 1080)
+            layoutParams.height = 1244;
         messagesContainer.setLayoutParams(layoutParams);
     }
 
@@ -534,19 +541,6 @@ public class ChatAdapterView extends LinearLayout {
 
                 messageText = messageText.trim();
 
-//                String text = "";
-//                char c = 39; // char ' in ASCII code
-//                for (int i = 0; i < messageText.length(); i++){
-//                    if(messageText.charAt(i) == c){
-//                        text = (String) text.concat("''");
-//                    }
-//                    else {
-//                        text = text + Character.toString(messageText.charAt(i));
-//                    }
-//                }
-//
-//                messageText = text;
-
                 try {
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();
@@ -564,7 +558,6 @@ public class ChatAdapterView extends LinearLayout {
                             newChatId = chatId;
                         }
                         chat.setChatId(newChatId);
-                        chat.setStatus(ChatStatus.VISSIBLE);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -604,17 +597,16 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
-                        List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
                         try {
                             String pKey = chatSettings.getLocalPublicKey();
                             if (pKey != null) {
                                 chat.setLocalActorPublicKey(pKey);
                             } else {
-                                chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
+                                chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
                             }
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         } catch (Exception e) {
-                            chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
+                            chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         }
                         chatManager.saveChat(chat);
@@ -705,7 +697,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void checkStatus(){
         try {
-           if(chatId != null) {
+           if(chatSession.getData("whocallme").equals("chatlist")) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
                } else if(chatManager.checkOnlineStatus(remotePk)){
@@ -714,15 +706,13 @@ public class ChatAdapterView extends LinearLayout {
                    String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
                }
-           }
-           else {
-                   if (chatManager.checkOnlineStatus(remotePk)) {
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-                   } else {
-                       String date = chatManager.checkLastConnection(remotePk);
+           }else {
+               if(chatManager.checkOnlineStatus(remotePk)){
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+               }else{
+                   String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-                   }
-
+               }
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();

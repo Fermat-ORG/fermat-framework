@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -262,10 +262,9 @@ public class WalletFactoryMiddlewarePluginRoot extends AbstractPlugin implements
             walletFactoryProject.setLanguages(languages);
             walletFactoryProject.setLastModificationTimeststamp(new Timestamp(System.currentTimeMillis()));
 
-            WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+            AppNavigationStructure navigationStructure = new AppNavigationStructure();
             navigationStructure.setPublicKey(UUID.randomUUID().toString());
             navigationStructure.setSize(100);
-            navigationStructure.setWalletCategory("Sssd");
 
             walletFactoryProject.setNavigationStructure(navigationStructure);
 

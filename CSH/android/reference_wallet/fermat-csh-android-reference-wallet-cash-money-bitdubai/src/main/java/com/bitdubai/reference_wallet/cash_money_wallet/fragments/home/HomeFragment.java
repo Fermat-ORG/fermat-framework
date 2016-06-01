@@ -16,13 +16,13 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-
 import com.bitdubai.fermat_csh_api.all_definition.constants.CashMoneyWalletBroadcasterConstants;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -31,12 +31,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyW
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.HomeTutorialFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
@@ -57,7 +54,6 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     // Fermat Managers
     private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
@@ -91,7 +87,6 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         try {
             walletSession = ((CashMoneyWalletSession) appSession);
             moduleManager = walletSession.getModuleManager();
-            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
@@ -150,7 +145,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         boolean showHomeTutorial = false;
         try{
-            showHomeTutorial = settingsManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showHomeTutorial = moduleManager.loadAndGetSettings(walletSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
         } catch (CantGetSettingsException | SettingsNotFoundException  e){}
 
         if(showHomeTutorial)

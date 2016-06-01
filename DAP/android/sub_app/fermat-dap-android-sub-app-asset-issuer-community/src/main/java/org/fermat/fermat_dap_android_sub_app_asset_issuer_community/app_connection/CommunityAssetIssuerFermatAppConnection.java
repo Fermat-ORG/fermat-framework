@@ -1,7 +1,12 @@
 package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.app_connection;
 
 import android.content.Context;
-import com.bitdubai.fermat_android_api.engine.*;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -10,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.factory.AssetIssuerCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.navigation_drawer.IssuerCommunityNavigationViewPainter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
@@ -69,7 +75,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            this.assetIssuerCommunitySubAppSession = (AssetIssuerCommunitySubAppSession) this.getSession();
+            this.assetIssuerCommunitySubAppSession = this.getFullyLoadedSession();
             if (assetIssuerCommunitySubAppSession != null)
                 manager = assetIssuerCommunitySubAppSession.getModuleManager();
             String[] params = code.split("_");

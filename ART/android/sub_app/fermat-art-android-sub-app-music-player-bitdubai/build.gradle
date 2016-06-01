@@ -1,4 +1,7 @@
+
 apply plugin: 'com.android.library'
+
+
 apply plugin: 'jacoco'
 android {
 
@@ -12,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -101,3 +104,8 @@ tasks.assemble.mustRunAfter clean
 repositories {
     maven { url 'https://jitpack.io' }
 }
+
+def packageName = 'org.fermat.art.android.subapp.music.player'
+def libraryVersion = '1.0.0'
+
+

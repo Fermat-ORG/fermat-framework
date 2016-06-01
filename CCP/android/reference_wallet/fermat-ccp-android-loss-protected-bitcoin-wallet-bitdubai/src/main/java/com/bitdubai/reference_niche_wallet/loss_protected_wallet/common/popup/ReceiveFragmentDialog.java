@@ -123,7 +123,7 @@ public class ReceiveFragmentDialog extends Dialog implements
 
     private void setUpScreenComponents(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.popup);
+        setContentView(R.layout.loss_popup);
 
         share_btn = (Button) findViewById(R.id.share_btn);
         back_btn = (Button) findViewById(R.id.back_btn);

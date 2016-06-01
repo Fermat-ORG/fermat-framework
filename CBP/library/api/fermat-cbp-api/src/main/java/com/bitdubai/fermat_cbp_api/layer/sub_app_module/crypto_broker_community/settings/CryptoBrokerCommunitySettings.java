@@ -11,6 +11,7 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -19,7 +20,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/12/2015.
  */
-public class CryptoBrokerCommunitySettings implements SubAppSettings {
+public class CryptoBrokerCommunitySettings implements SubAppSettings, Serializable {
 
     private String lastSelectedIdentityPublicKey;
     private Actors lastSelectedActorType;

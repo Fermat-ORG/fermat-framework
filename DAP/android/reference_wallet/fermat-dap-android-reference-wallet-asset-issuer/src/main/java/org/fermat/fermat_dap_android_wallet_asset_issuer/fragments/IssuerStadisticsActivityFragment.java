@@ -26,22 +26,21 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -59,6 +58,7 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
     private static final String TAG = "IssuerStadisticsActivityFragment";
 
     // Fermat Managers
+    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -68,7 +68,7 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
     //UI
     private View noAssetsView;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerStadisticsActivityFragment newInstance() {
         return new IssuerStadisticsActivityFragment();
@@ -79,10 +79,10 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+        assetIssuerSession = ((AssetIssuerSession) appSession);
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -192,7 +192,7 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_STATISTICS) {
-                setUpHelpAssetStatistics(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetStatistics(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

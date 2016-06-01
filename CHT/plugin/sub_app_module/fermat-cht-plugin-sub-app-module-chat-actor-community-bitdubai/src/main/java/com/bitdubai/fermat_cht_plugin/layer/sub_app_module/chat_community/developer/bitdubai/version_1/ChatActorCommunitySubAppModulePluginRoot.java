@@ -33,6 +33,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 @PluginInfo(createdBy = "Eleazar Orono", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_COMMUNITY_SUP_APP_MODULE)
 public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE     , addon  = Addons.ERROR_MANAGER     )
+    private ErrorManager errorManager;
+
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -57,21 +60,22 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
     public void start() throws CantStartPluginException {
 
         try {
-            fermatManager = new ChatActorCommunityManager(
+
+            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+
+            fermatManager  = new ChatActorCommunityManager(
                     chatIdentityManager,
                     chatActorConnectionManager,
                     chatActorNetworkServiceManager,
-                    this,
+                    errorManager,
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference()
             );
 
-            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
-
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                     null,
                     null);
@@ -81,6 +85,17 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
     @Override
     public ModuleManager<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
+        if(fermatManager==null){
+            fermatManager = new ChatActorCommunityManager(
+                    chatIdentityManager,
+                    chatActorConnectionManager,
+                    chatActorNetworkServiceManager,
+                    errorManager,
+                    pluginFileSystem,
+                    pluginId,
+                    getPluginVersionReference()
+            );
+        }
         return fermatManager;
     }
 

@@ -2,10 +2,12 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 
+import java.io.Serializable;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/03/16.
  */
-public class DownloadSongRecord implements DownloadSong {
+public class DownloadSongRecord implements DownloadSong, Serializable {
 
     private String id;
     private String name;

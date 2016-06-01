@@ -11,14 +11,17 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity {
+public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serializable {
+
     private String alias;
     private String publicKey;
     private byte[] profileImage;
@@ -45,19 +48,18 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
     /**
      * DealWithPluginFileSystem Interface implementation.
      */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-
-    }
+//    @Override
+//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+//        this.pluginFileSystem = pluginFileSystem;
+//    }
 
     /**
      * DealsWithPluginIdentity Interface implementation.
      */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 
     @Override
     public String getContactInformation() {
@@ -107,21 +109,21 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         this.pluginId = pluginId;
     }
 
-    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage) {
-        this.alias = alias;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage;
-    }
+//    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage) {
+//        this.alias = alias;
+//        this.publicKey = publicKey;
+//        this.profileImage = profileImage;
+//    }
+
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,
-                                        PluginFileSystem pluginFileSystem, UUID pluginId,String contactInformation,
-                                         String countryName, String provinceName, String cityName,
+                                        String contactInformation,
+                                        String countryName, String provinceName, String cityName,
                                         String postalCode, String streetName, String houseNumber) {
+
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
         this.contactInformation = contactInformation;
         this.countryName = countryName;
         this.provinceName = provinceName;
@@ -129,9 +131,8 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
         this.postalCode = postalCode;
         this.streetName = streetName;
         this.houseNumber = houseNumber;
-
-
     }
+
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage, String contactInformation,
                                         String countryName, String provinceName, String cityName,
                                         String postalCode, String streetName, String houseNumber) {

@@ -34,7 +34,6 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     public ChatCommunityFermatAppConnection(Context activity) {
         super(activity);
-
     }
 
     @Override
@@ -60,7 +59,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity());
+        return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getFullyLoadedSession());
     }
 
     @Override

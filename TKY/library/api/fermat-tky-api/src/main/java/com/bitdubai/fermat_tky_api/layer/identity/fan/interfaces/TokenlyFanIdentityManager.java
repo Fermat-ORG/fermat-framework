@@ -3,19 +3,21 @@ package com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public interface TokenlyFanIdentityManager extends FermatManager {
+public interface TokenlyFanIdentityManager extends  FermatManager, Serializable {
 
 
     /**
@@ -39,7 +41,7 @@ public interface TokenlyFanIdentityManager extends FermatManager {
     Fan createFanIdentity(
             String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws
             CantCreateFanIdentityException,
-            FanIdentityAlreadyExistsException;
+            FanIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException;
 
     /**
      *
@@ -50,9 +52,9 @@ public interface TokenlyFanIdentityManager extends FermatManager {
      * @param externalPlatform
      * @throws CantUpdateFanIdentityException
      */
-    void updateFanIdentity(
-            String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws
-            CantUpdateFanIdentityException;
+    Fan updateFanIdentity(
+            String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException;
 
     /**
      * This method returns a Fan identity

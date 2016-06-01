@@ -3,34 +3,89 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_my_identity">
+    android:background="@drawable/gradient_background"
+    >
 
 
-    <RelativeLayout
+
+    <FrameLayout
         android:id="@+id/user_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/bg_circular_other_profile"
+        android:layout_marginTop="18dp"
+
         android:gravity="center">
+
+
+
+        <View
+            android:id="@+id/frame_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ilustration_background"/>
+
+
+        <View
+            android:id="@+id/cirlcle"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circle_photo_artist"/>
+
 
         <ImageView
             android:id="@+id/tokenly_Artist_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            tools:ignore="ContentDescription" />
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="11dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/avatar_icon2"
+            tools:ignore="ContentDescription"
+            />
 
-    </RelativeLayout>
+
+
+        <View
+            android:id="@+id/warning_cirlcle"
+            android:layout_width="550dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/warnning_circle"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/boton_cam"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="70dp"
+            android:layout_marginLeft="87dp"
+
+            android:layout_gravity="center_horizontal|center_vertical"
+
+            android:background="@drawable/boton_cam"/>
+
+
+        <TextView
+            android:id="@+id/warning_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="missing picture"
+            android:textStyle="bold"
+            android:textColor="#DF0101"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:visibility="gone"
+            />
+    </FrameLayout>
+
+
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_image"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:id="@+id/linearLayout"
         android:weightSum="1">
@@ -38,19 +93,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:background="@android:color/transparent">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/external_username_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginLeft="15dp"
                 android:background="@android:color/transparent"
                 android:text="Username"
-                android:textColor="#919090"
+                android:textColor="#23056A"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
@@ -59,12 +111,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/external_username_label"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+
+
                 android:layout_marginTop="4dp"
 
                 android:lines="1"
                 android:padding="8dp"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
+                android:textColor="#4D4D4D"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
@@ -75,73 +131,108 @@
         <RelativeLayout
             android:id="@+id/relativepassword"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_weight="0.29">
+            android:layout_height="85dp"
+            android:layout_weight="0.47"
+            android:textColor="#4D4D4D"
+            >
+
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/tokenly_acces_password_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginLeft="15dp"
                 android:background="@android:color/transparent"
                 android:text="Password"
-                android:textColor="#919090"
+                android:textColor="#23056A"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
-
-
             <EditText
-                android:paddingTop="15dp"
                 android:id="@+id/tokenly_access_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#4D4D4D"
 
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:inputType="textPassword"
+                android:layout_below="@+id/tokenly_acces_password_label"
+                 />
 
-                android:inputType="textPassword" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:paddingTop="30dp"
-            android:layout_width="349dp"
-            android:layout_height="104dp"
-            android:layout_gravity="center_horizontal">
+            android:visibility="gone"
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="349dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp">
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/external_platform_label"
+              android:text="External Platform"
+              android:textStyle="bold"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/external_platform_label"
-                android:text="External Platform"
-                android:textColor="#000000"
-                tools:ignore="HardcodedText"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="114dp" />
+                android:id="@+id/exposure_level_label"
+                android:text="Exposure Level"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/external_platform_label"
+                android:paddingLeft="15dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_accept_connections_type_label"
+                android:text="Connections Type"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/exposure_level_label"
+
+                android:paddingLeft="15dp"/>
 
             <LinearLayout
                 android:paddingTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+
+                >
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/external_platform"
+                android:textColor="#000000"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+
                 android:spinnerMode="dropdown"
                 />
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/exposureLevel"
+                android:textColor="#000000"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+
+                android:paddingLeft="15dp"
+
                 android:spinnerMode="dropdown"
                 />
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/artistAcceptConnectionsType"
+                android:textColor="#000000"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+                android:paddingStart="30dp"
+                android:layout_alignParentRight="true"
+
                 android:spinnerMode="dropdown"
                />
             <!--android:entries="@array/externalPlatforms"/>-->
@@ -153,12 +244,14 @@
     <Button
         android:id="@+id/create_tokenly_Artist_identity"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="#0072bc"
+        android:background="#23056A"
         android:text="@string/create"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="82dp"/>
 
 </RelativeLayout>

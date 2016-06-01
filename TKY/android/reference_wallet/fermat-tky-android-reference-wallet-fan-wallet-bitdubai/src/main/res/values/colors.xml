@@ -5,4 +5,10 @@
     <color name="colortablayaouttext">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="textviewcolor">#000000</color>
+
+    <color name="songtabsongnamecolor">#FF187C</color>
+    <color name="songtabartistnamecolor">#FFFFFF</color>
+    <color name="songtabstatuscolor">#FFFFFF</color>
+    <color name="followingtabartistnamecolor">#FF187C</color>
+    <color name="followingtabdescriptioncolor">#FFFFFF</color>
 </resources>

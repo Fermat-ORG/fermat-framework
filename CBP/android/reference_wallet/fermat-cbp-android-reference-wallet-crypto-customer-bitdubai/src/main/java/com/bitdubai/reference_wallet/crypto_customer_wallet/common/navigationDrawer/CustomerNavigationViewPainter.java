@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -87,11 +88,10 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
         RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.ccw_navigation_view_bottom, base, true);
         FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
 
-        long balance = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
-//        long balance = moduleManager.getBalanceBitcoinWallet(session.getAppPublicKey());
+        long satoshis = moduleManager.getBalanceBitcoinWallet(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
 
-        balance /= 1000000;
-        String text = balance + " BTC";
+        double bitcoins = BitcoinConverter.convert(satoshis, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+        String text = bitcoins + " BTC";
 
         bitcoinBalance.setText(text);
 
