@@ -630,11 +630,10 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                     }
 
-                    BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                    BigDecimal operator = new BigDecimal(newAmount);
+                    long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                    BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                    if(operator.compareTo(minSatoshis) == 1 )
-                    {
+                    if (amountDecimal.longValueExact() > minSatoshis) {
 
                         String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
