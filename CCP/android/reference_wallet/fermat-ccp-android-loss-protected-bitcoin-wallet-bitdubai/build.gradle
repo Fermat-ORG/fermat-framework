@@ -27,7 +27,7 @@ android {
 
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.3'
 
 
     defaultConfig {
@@ -85,7 +85,7 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     //compile 'com.google.guava:guava:r05'
     //compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.google.android:android:4.1.1.4'
+   // compile 'com.google.android:android:4.1.1.4'
 //    compile 'org.apache.httpcomponents:httpclient:4.5'
 
 }

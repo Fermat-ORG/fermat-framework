@@ -18,6 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_Send_Payment_Dialog;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
@@ -95,14 +96,30 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     @Override
     protected void bindHolder(final PaymentHistoryItemViewHolder holder, final LossProtectedPaymentRequest data, int position) {
 
+        final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
+        final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
+
         try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
         }catch (Exception e){
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), ShowMoneyType.BITCOIN.getCode())+" BTC");
-        holder.getTxt_amount().setTypeface(tf) ;
+        try {
+            //set Amount transaction
+            holder.getTxt_amount().setText(
+                    WalletUtils.formatBalanceStringWithDecimalEntry(
+                            data.getAmount(),
+                            MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
+                            MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
+                            ShowMoneyType.BITCOIN.getCode())+ " BTC");
+
+            holder.getTxt_amount().setTypeface(tf) ;
+        }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
 
         if(data.getContact() != null)
             holder.getTxt_contactName().setText(data.getContact().getActorName());

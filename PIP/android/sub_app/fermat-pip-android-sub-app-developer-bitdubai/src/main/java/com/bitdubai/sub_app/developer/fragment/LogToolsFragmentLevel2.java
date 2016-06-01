@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
@@ -57,7 +58,7 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
+public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
 
     private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getKey();
 
@@ -66,19 +67,18 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
     private static final String ARG_POSITION = "position";
     View rootView;
 
-    private LogTool logTool;
+    //    private LogTool logTool;
     private ErrorManager errorManager;
-
+    ToolManager toolManager;
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
 
-    private int loggerLevel=2;
+    private int loggerLevel = 2;
 
     /**
      * SubApp Session
      */
-    private DeveloperSubAppSession developerSubAppSession;
-
+//    private DeveloperSubAppSession developerSubAppSession;
     public static LogToolsFragmentLevel2 newInstance() {
         return new LogToolsFragmentLevel2();
     }
@@ -87,29 +87,29 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.appSession !=null){
-            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
-            lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
-        }
-        errorManager = developerSubAppSession.getErrorManager();
-        try {
-            ToolManager toolManager = developerSubAppSession.getModuleManager();
-            logTool = toolManager.getLogTool();
+//        if(super.appSession !=null){
+//            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
 
-        } catch (CantGetLogToolException e) {
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        lstLoggers = (ArrayListLoggers) appSession.getData("list");
+//        }
+        errorManager = appSession.getErrorManager();
+        try {
+            toolManager = appSession.getModuleManager();
+//            logTool = toolManager.getLogTool();
+
+//        } catch (CantGetLogToolException e) {
+//                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+//                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
-        pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
+        pluginClasses = new HashMap<String, List<ClassHierarchyLevels>>();
     }
 
 
-
-    private void changeLogLevel(PluginVersionReference pluginKey,LogLevel logLevel, String resource) {
+    private void changeLogLevel(PluginVersionReference pluginKey, LogLevel logLevel, String resource) {
         try {
 
             /**
@@ -117,7 +117,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             data.put(resource, logLevel);
-            logTool.setNewLogLevelInClass(pluginKey, data);
+            appSession.getModuleManager().setNewLogLevelInClass(pluginKey, data);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -132,7 +132,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
-        try{
+        try {
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -141,23 +141,23 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 gridView.setNumColumns(3);
             }
 
-            ArrayListLoggers lstLoggersToShow=new ArrayListLoggers();
-            for(Loggers loggers:lstLoggers){
+            ArrayListLoggers lstLoggersToShow = new ArrayListLoggers();
+            for (Loggers loggers : lstLoggers) {
                 //String level_0 = loggers.level0;
-                switch (loggerLevel){
-                    case ArrayListLoggers.LEVEL_1:{
-                        if(!lstLoggersToShow.containsLevel1(loggers)){
+                switch (loggerLevel) {
+                    case ArrayListLoggers.LEVEL_1: {
+                        if (!lstLoggersToShow.containsLevel1(loggers)) {
                             lstLoggersToShow.add(loggers);
                         }
                         break;
                     }
                     case ArrayListLoggers.LEVEL_2:
-                        if(!lstLoggersToShow.containsLevel2(loggers)){
+                        if (!lstLoggersToShow.containsLevel2(loggers)) {
                             lstLoggersToShow.add(loggers);
                         }
                         break;
                     case ArrayListLoggers.LEVEL_3:
-                        if(!lstLoggersToShow.containsLevel3(loggers)){
+                        if (!lstLoggersToShow.containsLevel3(loggers)) {
                             lstLoggersToShow.add(loggers);
                         }
                         break;
@@ -170,7 +170,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
@@ -179,8 +179,6 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         //registerForContextMenu(gridView);
         return rootView;
     }
-
-
 
 
     //show alert
@@ -196,15 +194,17 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
-    public void setLoggerLevel(int level){
-        loggerLevel=level;
+
+    public void setLoggerLevel(int level) {
+        loggerLevel = level;
     }
-    public int getLoggerLevel(){
+
+    public int getLoggerLevel() {
         return loggerLevel;
     }
 
-    public void setLoggers(ArrayListLoggers lstLoggers){
-        this.lstLoggers=lstLoggers;
+    public void setLoggers(ArrayListLoggers lstLoggers) {
+        this.lstLoggers = lstLoggers;
     }
 
     public class AppListAdapter extends ArrayAdapter<Loggers> {
@@ -228,15 +228,13 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 holder = new ViewHolder();
 
 
-
-
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
-                        Loggers item=(Loggers) gridView.getItemAtPosition(position);
+                        Loggers item = (Loggers) gridView.getItemAtPosition(position);
 
                         // Reload current fragment
                         //   LogToolsFragmentLevel2 frg = null;
@@ -245,13 +243,13 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                         ArrayListLoggers lst = null;
                         int level = 0;
 
-                        if(loggerLevel==ArrayListLoggers.LEVEL_1){
+                        if (loggerLevel == ArrayListLoggers.LEVEL_1) {
 
                             lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_1);
                             // frg.setLoggers(lst);
                             // frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
                             level = ArrayListLoggers.LEVEL_2;
-                        }else if(loggerLevel==ArrayListLoggers.LEVEL_2){
+                        } else if (loggerLevel == ArrayListLoggers.LEVEL_2) {
                             lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
                             //frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
                             //frg.setLoggers(lst);
@@ -260,10 +258,10 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                         }
 
                         //set the next fragment and params
-                        developerSubAppSession.setData("list",lst);
-                        developerSubAppSession.setData("level",level);
+                        appSession.setData("list", lst);
+                        appSession.setData("level", level);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(),R.id.logContainer,null);
+                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), R.id.logContainer, null);
 
 
                     }
@@ -317,7 +315,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
 
                         //popupMenu.show();
 
-                        CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginVersionReference);
+                        CustomDialogClass cdd = new CustomDialogClass(getActivity(), item, item.pluginVersionReference);
                         cdd.show();
 
                         return true;
@@ -325,7 +323,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
-                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                TextView textView = (TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 textView.setGravity(Gravity.CENTER);
@@ -338,41 +336,40 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
             }
 
 
-
-            String stringToShowLevel="Nada cargado";
-            switch (loggerLevel){
-                case ArrayListLoggers.LEVEL_1:{
+            String stringToShowLevel = "Nada cargado";
+            switch (loggerLevel) {
+                case ArrayListLoggers.LEVEL_1: {
                     //String[] level1_splitted=item.level1.split(".");
                     //tringToShowLevel=level1_splitted[level1_splitted.length-1];
                     //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
 
 
-                    stringToShowLevel=item.classHierarchyLevels.getLevel1();
-                    if(item.classHierarchyLevels.getLevel2()==null){
-                        stringToShowLevel=StringUtils.splitCamelCase(stringToShowLevel);
-                        item.picture="java_class";
+                    stringToShowLevel = item.classHierarchyLevels.getLevel1();
+                    if (item.classHierarchyLevels.getLevel2() == null) {
+                        stringToShowLevel = StringUtils.splitCamelCase(stringToShowLevel);
+                        item.picture = "java_class";
                         holder.imageView.setOnClickListener(null);
-                    }else{
-                        String[] stringToFormat=item.classHierarchyLevels.getLevel1().split("\\.");
-                        stringToShowLevel=stringToFormat[stringToFormat.length-1];
-                        stringToShowLevel=StringUtils.replaceStringByPoint(stringToShowLevel);
-                        stringToShowLevel=StringUtils.replaceStringByUnderScore(stringToShowLevel);
+                    } else {
+                        String[] stringToFormat = item.classHierarchyLevels.getLevel1().split("\\.");
+                        stringToShowLevel = stringToFormat[stringToFormat.length - 1];
+                        stringToShowLevel = StringUtils.replaceStringByPoint(stringToShowLevel);
+                        stringToShowLevel = StringUtils.replaceStringByUnderScore(stringToShowLevel);
                     }
                     //stringToShowLevel=item.level1;
                     break;
                 }
-                case ArrayListLoggers.LEVEL_2:{
-                    stringToShowLevel= StringUtils.splitCamelCase(item.classHierarchyLevels.getLevel2());
-                    if(item.classHierarchyLevels.getLevel3()==null){
-                        item.picture="java_class";
+                case ArrayListLoggers.LEVEL_2: {
+                    stringToShowLevel = StringUtils.splitCamelCase(item.classHierarchyLevels.getLevel2());
+                    if (item.classHierarchyLevels.getLevel3() == null) {
+                        item.picture = "java_class";
                         holder.imageView.setOnClickListener(null);
 
                     }
                     break;
                 }
-                case ArrayListLoggers.LEVEL_3:{
-                    stringToShowLevel=item.classHierarchyLevels.getLevel3();
-                    item.picture="java_class";
+                case ArrayListLoggers.LEVEL_3: {
+                    stringToShowLevel = item.classHierarchyLevels.getLevel3();
+                    item.picture = "java_class";
                     holder.imageView.setOnClickListener(null);
                     break;
                 }
@@ -383,8 +380,6 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
             holder.companyTextView.setText(stringToShowLevel);
 
             // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
-
-
 
 
             switch (item.picture) {
@@ -411,11 +406,11 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         }
 
     }
+
     /**
      * ViewHolder.
      */
     private class ViewHolder {
-
 
 
         public ImageView imageView;
@@ -439,21 +434,21 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 "Minimal logging",
                 "Moderate logging",
                 "Agressive logging"
-        } ;
+        };
 
         List<String> lstEnum;
 
-        Integer[] img ={
+        Integer[] img = {
                 R.drawable.ic_action_accept_grey,
                 0,
                 0,
                 0
         };
 
-        public CustomDialogClass(Activity a,Loggers loggers,PluginVersionReference pluginKey) {
+        public CustomDialogClass(Activity a, Loggers loggers, PluginVersionReference pluginKey) {
             super(a);
-            this.logger=loggers;
-            this.pluginKey=pluginKey;
+            this.logger = loggers;
+            this.pluginKey = pluginKey;
             testing();
             //loadEnumsLogger();
             // TODO Auto-generated constructor stub
@@ -463,14 +458,15 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
             logger.logLevel = LogLevel.NOT_LOGGING;
         }
 
-        private void testing(){
-            lstEnum=new ArrayList<>();
-            for(int i=0;i<LogLevel.values().length;i++){
+        private void testing() {
+            lstEnum = new ArrayList<>();
+            for (int i = 0; i < LogLevel.values().length; i++) {
                 lstEnum.add(LogLevel.values()[i].getDisplayName());
             }
         }
-        private void setLogLevelImage(){
-            if(logger.logLevel!=null) {
+
+        private void setLogLevelImage() {
+            if (logger.logLevel != null) {
                 switch (logger.logLevel) {
                     case NOT_LOGGING:
                         img = new Integer[]{
@@ -493,8 +489,8 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                         };
                         break;
                 }
-            }else{
-                logger.logLevel= LogLevel.NOT_LOGGING;
+            } else {
+                logger.logLevel = LogLevel.NOT_LOGGING;
             }
         }
 
@@ -515,13 +511,11 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         }*/
 
 
-
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.popup);
-
 
 
             CustomList adapter = new
@@ -533,18 +527,18 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Toast.makeText(c,web[+ position]+" activated", Toast.LENGTH_SHORT).show();
-                    String item =list.getItemAtPosition(position).toString();
-                    if(item.compareTo(LogLevel.NOT_LOGGING.toString())==0) {
+                    Toast.makeText(c, web[+position] + " activated", Toast.LENGTH_SHORT).show();
+                    String item = list.getItemAtPosition(position).toString();
+                    if (item.compareTo(LogLevel.NOT_LOGGING.toString()) == 0) {
                         changeLogLevel(pluginKey, LogLevel.NOT_LOGGING, logger.classHierarchyLevels.getFullPath());
                         logger.logLevel = LogLevel.NOT_LOGGING;
-                    }else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString())==0){
+                    } else if (item.compareTo(LogLevel.MINIMAL_LOGGING.toString()) == 0) {
                         changeLogLevel(pluginKey, LogLevel.MINIMAL_LOGGING, logger.classHierarchyLevels.getFullPath());
                         logger.logLevel = LogLevel.MINIMAL_LOGGING;
-                    }else if(item.compareTo(LogLevel.MODERATE_LOGGING.toString())==0){
+                    } else if (item.compareTo(LogLevel.MODERATE_LOGGING.toString()) == 0) {
                         changeLogLevel(pluginKey, LogLevel.MODERATE_LOGGING, logger.classHierarchyLevels.getFullPath());
                         logger.logLevel = LogLevel.MODERATE_LOGGING;
-                    }else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString())==0){
+                    } else if (item.compareTo(LogLevel.AGGRESSIVE_LOGGING.toString()) == 0) {
                         changeLogLevel(pluginKey, LogLevel.AGGRESSIVE_LOGGING, logger.classHierarchyLevels.getFullPath());
                         logger.logLevel = LogLevel.AGGRESSIVE_LOGGING;
                     }
@@ -568,11 +562,12 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
             dismiss();
         }
 
-        public class CustomList extends ArrayAdapter<String>{
+        public class CustomList extends ArrayAdapter<String> {
 
             private final Activity context;
             private final List<String> listEnumsToDisplay;
             private final Integer[] imageId;
+
             public CustomList(Activity context,
                               List<String> listEnumsToDisplay, Integer[] imageId) {
                 super(context, R.layout.list_single, listEnumsToDisplay);
@@ -581,10 +576,11 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 this.imageId = imageId;
 
             }
+
             @Override
             public View getView(int position, View view, ViewGroup parent) {
                 LayoutInflater inflater = context.getLayoutInflater();
-                View rowView= inflater.inflate(R.layout.list_single, null, true);
+                View rowView = inflater.inflate(R.layout.list_single, null, true);
                 TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
                 ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
@@ -593,7 +589,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
                 //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
 
                 setLogLevelImage();
-                if(imageId[position]!=0){
+                if (imageId[position] != 0) {
                     imageView.setImageResource(R.drawable.ic_action_accept_grey);
                 }
 
@@ -602,7 +598,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment {
         }
 
     }
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
-    }
+//    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+//        this.developerSubAppSession = developerSubAppSession;
+//    }
 }

@@ -68,10 +68,8 @@ public class IntraUserIdentityModulePluginRoot extends AbstractModule implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.IntraUserIdentityModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule");
-
-
+        returnedClasses.add("IntraUserIdentityModulePluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule");
         /**
          * I return the values.
          */

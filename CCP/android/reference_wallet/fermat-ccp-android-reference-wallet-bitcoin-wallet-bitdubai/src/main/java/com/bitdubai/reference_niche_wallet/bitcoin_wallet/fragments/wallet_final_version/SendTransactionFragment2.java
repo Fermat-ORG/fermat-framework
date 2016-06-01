@@ -299,21 +299,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
-                        new BlockchainDownloadInfoDialog(
-                                getActivity(),
-                                referenceWalletSession,
-                                null,
-                                type,
-                                checkButton);
+                try {
+                    BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
+                            new BlockchainDownloadInfoDialog(
+                                    getActivity(),
+                                    referenceWalletSession,
+                                    null,
+                                    type,
+                                    checkButton);
 
 
-                blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                    }
-                });
-                blockchainDownloadInfoDialog.show();
+                    blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    blockchainDownloadInfoDialog.show();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 

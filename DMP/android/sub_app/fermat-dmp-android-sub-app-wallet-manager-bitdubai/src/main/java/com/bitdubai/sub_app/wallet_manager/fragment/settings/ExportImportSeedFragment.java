@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.wallet_manager.fragment.settings;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -79,9 +77,20 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSess
     private View initImportView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.import_seed_layour,container,false);
         editText_mnemonic = (EditText) view.findViewById(R.id.editText_mnemonic);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0,1);
-        alphaAnimation.setBackgroundColor(Color.GREEN);
-        editText_mnemonic.setAnimation(alphaAnimation);
+//        Animation fadeIn = new AlphaAnimation(0, 1);
+//        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+//        fadeIn.setDuration(1000);
+//
+//        Animation fadeOut = new AlphaAnimation(1, 0);
+//        fadeOut.setInterpolator(new AccelerateInterpolator()); //and this
+//        fadeOut.setStartOffset(1000);
+//        fadeOut.setDuration(1000);
+//
+//        AnimationSet animation = new AnimationSet(false); //change to false
+//        animation.addAnimation(fadeIn);
+//        animation.addAnimation(fadeOut);
+//        editText_mnemonic.setAnimation(animation);
+
         btn_import = (Button) view.findViewById(R.id.btn_import);
         btn_import.setOnClickListener(new View.OnClickListener() {
             @Override
