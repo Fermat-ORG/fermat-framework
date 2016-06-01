@@ -51,19 +51,18 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetIssuerSession getSession() {
         return new AssetIssuerSession();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new IssuerWalletNavigationViewPainter(getContext(), null);
+        return new IssuerWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new WalletAssetIssuerHeaderPainter();
+        return new WalletAssetIssuerHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

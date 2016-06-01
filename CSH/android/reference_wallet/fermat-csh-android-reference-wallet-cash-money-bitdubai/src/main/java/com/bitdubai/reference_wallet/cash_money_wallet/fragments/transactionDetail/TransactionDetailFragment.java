@@ -6,7 +6,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -17,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
@@ -27,6 +27,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionPar
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 /**
@@ -38,6 +39,8 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     //Data
     private CashMoneyWalletTransaction transaction;
@@ -51,8 +54,6 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     FermatTextView date;
     FermatTextView transactionType;
     CreateTransactionFragmentDialog transactionFragmentDialog;
-    Button deleteButton;
-    Button updateButton;
 
 
     public TransactionDetailFragment() {}
@@ -99,7 +100,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     @Override
     public void onBackPressed() {
 
-        //If transaction is editable, was stopped before completing and user presses the device's back button
+        //If transaction is editable, was stopped before completing and user pressed the device's back button
         //Create and apply the same transaction again.
         if(transactionIsEditable)
             reapplyTransaction();
@@ -118,14 +119,14 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         date = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_date);
         transactionType = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_transaction_type);
 
-
         if(transactionIsEditable)
             buttonContainer.setVisibility(View.VISIBLE);
 
-        amount.setText(transaction.getAmount().toPlainString());
+        amount.setText(moneyFormat.format(transaction.getAmount()));
         memo.setText(transaction.getMemo());
-        //date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
+        date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
         transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
+
         layout.findViewById(R.id.csh_transaction_detail_back_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_delete_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_update_btn).setOnClickListener(this);

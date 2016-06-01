@@ -68,7 +68,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
     private List<ActorIssuer> lstActorIssuers;
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerCommunityConnectionsListFragment newInstance() {
         return new IssuerCommunityConnectionsListFragment();
@@ -81,7 +81,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
         actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
         manager = actorIssuerSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         lstActorIssuers = new ArrayList<>();
     }
 
@@ -230,7 +230,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
         try {
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(actorIssuerSubAppSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

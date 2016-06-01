@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_custom
 
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -10,9 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
@@ -27,16 +26,13 @@ import java.util.List;
 public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustomerSearch {
 
     private final CommunicationsClientConnection communicationsClientConnection;
-    private final ErrorManager                   errorManager                  ;
-    private final PluginVersionReference         pluginVersionReference        ;
+    private final CryptoCustomerActorNetworkServicePluginRoot pluginRoot;
 
     public CryptoCustomerActorNetworkServiceSearch(final CommunicationsClientConnection communicationsClientConnection,
-                                                   final ErrorManager                   errorManager                  ,
-                                                   final PluginVersionReference         pluginVersionReference        ) {
+                                                   final CryptoCustomerActorNetworkServicePluginRoot pluginRoot     ) {
 
         this.communicationsClientConnection = communicationsClientConnection;
-        this.errorManager                   = errorManager                  ;
-        this.pluginVersionReference         = pluginVersionReference        ;
+        this.pluginRoot = pluginRoot                  ;
     }
 
     @Override
@@ -73,12 +69,12 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
 
         } catch (final CantRequestListException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
         }
     }

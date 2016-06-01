@@ -11,15 +11,16 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
+import com.bitdubai.android_core.app.common.version_1.helpers.ApplicationsHelper;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.helpers.ApplicationsHelper;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
+import com.github.anrwatchdog.ANRWatchDog;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -39,7 +40,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem> {
 
     private final String TAG = "ApplicationSession";
 
@@ -170,7 +171,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 //        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
 //        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
 
-        //new ANRWatchDog().start();
+        new ANRWatchDog().start();
 
         super.onCreate();
     }

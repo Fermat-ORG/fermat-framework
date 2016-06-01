@@ -361,33 +361,53 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
     private void onRefresh() {
 
-        _executor.submit(new Runnable() {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            public void run() {
+            protected Object doInBackground()  {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                           if (walletContactRecords.isEmpty()) {
-                                mEmptyView.setVisibility(View.VISIBLE);
-                                mListView.setVisibility(View.GONE);
-                            } else {
-                                mListView.setVisibility(View.VISIBLE);
-                                mEmptyView.setVisibility(View.GONE);
-                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
-                            }
-                            refreshAdapter();
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+                try {
+                    walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return walletContactRecords;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    if (walletContactRecords.isEmpty()) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    } else {
+                        mListView.setVisibility(View.VISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                });
+                    refreshAdapter();
+
+                }
+                else {
+                    makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
+
+        fermatWorker.execute();
+
+
 
     }
 

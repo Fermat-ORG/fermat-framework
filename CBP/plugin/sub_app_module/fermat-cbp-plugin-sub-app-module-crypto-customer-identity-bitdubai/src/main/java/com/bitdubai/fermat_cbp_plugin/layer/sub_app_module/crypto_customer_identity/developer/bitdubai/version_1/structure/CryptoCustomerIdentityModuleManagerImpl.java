@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -19,8 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.CryptoCustomerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,20 +34,17 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
         implements CryptoCustomerIdentityModuleManager, Serializable {
 
     private CryptoCustomerIdentityManager identityManager;
-    private ErrorManager errorManager;
-    private PluginVersionReference pluginVersionReference;
+    private CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot;
+
 
     public CryptoCustomerIdentityModuleManagerImpl(CryptoCustomerIdentityManager identityManager,
                                                    PluginFileSystem pluginFileSystem,
                                                    UUID pluginId,
-                                                   ErrorManager errorManager,
-                                                   PluginVersionReference pluginVersionReference) {
-
+                                                   CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot) {
         super(pluginFileSystem, pluginId);
 
         this.identityManager = identityManager;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -57,7 +53,7 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
             CryptoCustomerIdentity identity = this.identityManager.createCryptoCustomerIdentity(cryptoCustomerName, profileImage);
             return converIdentityToInformation(identity);
         } catch (CantCreateCryptoCustomerIdentityException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CouldNotCreateCryptoCustomerException(e, "Crypto Customer Identity Module Manager", "Cant Create Crypto Customer Identity");
         }
     }
@@ -67,7 +63,7 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
         try {
             this.identityManager.updateCryptoCustomerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage());
         } catch (CantUpdateCustomerIdentityException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException(e, "Crypto Customer Identity Module Manager", "Cant Update Crypto Customer Identity");
         }
     }
@@ -79,7 +75,7 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
             System.out.println("************* voy al identity manager publicar la identidad");
             this.identityManager.publishIdentity(cryptoCustomerPublicKey);
         } catch (CantPublishIdentityException | IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CouldNotPublishCryptoCustomerException(e, "Crypto Customer Identity Module Manager", "Cant Publish Crypto Customer Identity");
         }
     }
@@ -98,7 +94,7 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
             }
             return cryptoCustomers;
         } catch (CantListCryptoCustomerIdentityException e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException(CantGetCryptoCustomerListException.DEFAULT_MESSAGE, e, "Crypto Customer Identity Module Manager", "Cant Get List All Crypto Customer Identity");
         }
     }

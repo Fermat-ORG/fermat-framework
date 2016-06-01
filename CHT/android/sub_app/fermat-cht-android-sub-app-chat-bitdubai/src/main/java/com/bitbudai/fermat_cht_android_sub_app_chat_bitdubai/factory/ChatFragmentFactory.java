@@ -3,7 +3,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatErrorReportFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatListFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ConnectionsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactEditFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
@@ -49,11 +48,6 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
             return ChatErrorReportFragment.newInstance();
         }
 
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT))
-        {
-            return ConnectionsListFragment.newInstance();
-        }
-
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
         {
             return ContactsListFragment.newInstance();
@@ -72,11 +66,6 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT))
         {
             return ContactEditFragment.newInstance();
-        }
-
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT))
-        {
-            return ConnectionsListFragment.newInstance();
         }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT))

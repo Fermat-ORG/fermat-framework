@@ -15,6 +15,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exce
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -81,23 +82,23 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
     }
 
     @Override
-    public List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException{
+    public List<BankAccountNumber> getAccounts() throws CantLoadBankMoneyWalletException {
         return bankMoneyWalletManager.getAccounts();
     }
 
     @Override
-    public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency) {
+    public void addNewAccount(BankAccountType bankAccountType, String alias, String account, FiatCurrency fiatCurrency, String imageId) {
         try {
-            bankMoneyWalletManager.addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
-        }catch (Exception e){
+            bankMoneyWalletManager.addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency, imageId));
+        } catch (Exception e) {
 
         }
     }
 
     @Override
-    public List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException{
+    public List<BankMoneyTransactionRecord> getTransactions(String account) throws CantLoadBankMoneyWalletException {
         List<BankMoneyTransactionRecord> transactionRecords = new ArrayList<>();
-        try{
+        try {
             transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.CREDIT, 100, 0, account));
             transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.DEBIT, 100, 0, account));
             transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.HOLD, 100, 0, account));
@@ -115,8 +116,8 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
                     return 0;
                 }
             });
-        }catch (Exception e){
-            System.out.println("module error cargando transacciones  "+e.getMessage() );
+        } catch (Exception e) {
+            System.out.println("module error cargando transacciones  " + e.getMessage());
         }
 
         return transactionRecords;
@@ -128,28 +129,28 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
     }
 
     @Override
-    public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException{
+    public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException {
         withdrawManager.makeWithdraw(bankTransactionParameters);
     }
 
     @Override
-    public float getBookBalance(String account) {
-        float balance =0;
+    public BigDecimal getBookBalance(String account) {
+        BigDecimal balance = BigDecimal.ZERO;
         try {
-            balance = (float)bankMoneyWalletManager.getBookBalance().getBalance(account);
-        }catch (Exception e){
-            System.out.println("execption "+e.getMessage());
+            balance = bankMoneyWalletManager.getBookBalance().getBalance(account);
+        } catch (Exception e) {
+            System.out.println("execption " + e.getMessage());
         }
         return balance;
     }
 
     @Override
-    public float getAvailableBalance(String account) {
-        float balance =0;
+    public BigDecimal getAvailableBalance(String account) {
+        BigDecimal balance = BigDecimal.ZERO;
         try {
-            balance = (float)bankMoneyWalletManager.getAvailableBalance().getBalance(account);
-        }catch (Exception e){
-            System.out.println("exception "+e.getMessage());
+            balance = bankMoneyWalletManager.getAvailableBalance().getBalance(account);
+        } catch (Exception e) {
+            System.out.println("exception " + e.getMessage());
         }
         return balance;
     }
@@ -161,12 +162,12 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public String getBankName() {
-        return  bankMoneyWalletManager.getBankName();
+        return bankMoneyWalletManager.getBankName();
     }
 
 
     @Override
-    public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters)  {
+    public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters) {
         tempLastParameter = new BankTransactionParametersImpl(
                 bankTransactionParameters.getTransactionId(),
                 bankTransactionParameters.getPublicKeyPlugin(),
@@ -191,7 +192,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
                 bankTransactionParameters.getAmount(),
                 bankTransactionParameters.getAccount(),
                 bankTransactionParameters.getCurrency(),
-                bankTransactionParameters.getMemo(),TransactionType.DEBIT);
+                bankTransactionParameters.getMemo(), TransactionType.DEBIT);
 
         agent.queueNewTransaction(bankTransactionParameters);
     }
@@ -201,9 +202,9 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
         List<BankMoneyTransactionRecord> list = new ArrayList<>();
         final List<BankTransactionParameters> queuedTransactions = agent.getQueuedTransactions();
 
-        for(BankTransactionParameters data: queuedTransactions){
+        for (BankTransactionParameters data : queuedTransactions) {
             list.add(new BankTransactionRecordImpl(
-                    data.getAmount().floatValue(),
+                    data.getAmount(),
                     data.getMemo(),
                     new Date().getTime(),
                     data.getTransactionType(),
@@ -214,22 +215,27 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
-        BankTransactionParameters parameters= new BankTransactionParametersImpl(
+        BankTransactionParameters parameters = new BankTransactionParametersImpl(
                 transaction.getBankTransactionId(),
                 tempLastParameter.getPublicKeyPlugin(),
                 tempLastParameter.getPublicKeyWallet(),
                 tempLastParameter.getPublicKeyActor(),
-                new BigDecimal(transaction.getAmount()),
+                transaction.getAmount(),
                 transaction.getBankAccountNumber(),
                 transaction.getCurrencyType(),
                 transaction.getMemo(),
                 TransactionType.DEBIT);
 
-        try{
+        try {
             agent.cancelTransaction(parameters);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(" exception trying to cancel async transaction");
         }
 
+    }
+
+    @Override
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException {
+        bankMoneyWalletManager.editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
     }
 }

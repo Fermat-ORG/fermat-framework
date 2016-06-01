@@ -35,11 +35,10 @@ public class UserCommunityFragmentsCommons {
                 if (identityAssetUser.getImage().length > 0) {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), 0, false);
                     bitmapWorkerTask.execute(identityAssetUser.getImage());
-//                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetUser.getImage(), 0, identityAssetUser.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.asset_user_comunity).into(imageView);
+                    Picasso.with(activity).load(R.drawable.banner_asset_user_community).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.asset_user_comunity).into(imageView);
+                Picasso.with(activity).load(R.drawable.banner_asset_user_community).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identityAssetUser.getAlias());
         }

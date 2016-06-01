@@ -17,9 +17,10 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
     private String actorId;
     private Actors actorType;
     private String intraUserIdentityPublicKey;
+    private String transactionHash;
 
 
-    public IncomingMoneyNotificationEvent(EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
+    public IncomingMoneyNotificationEvent(EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType, String transactionHash) {
         super(eventType);
         this.walletPublicKey = walletPublicKey;
         this.amount = amount;
@@ -27,6 +28,7 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
         this.actorId = actorId;
         this.actorType = actorType;
         this.intraUserIdentityPublicKey = intraUserIdentityPublicKey;
+        this.transactionHash = transactionHash;
     }
 
     public IncomingMoneyNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
@@ -81,6 +83,10 @@ public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
     public void setActorType(Actors actorType) {
         this.actorType = actorType;
     }
+
+    public String getTransactionHash(){ return transactionHash; }
+
+    public void setTransactionHash(String transactionHash){ this.transactionHash = transactionHash; }
 
 
 }
