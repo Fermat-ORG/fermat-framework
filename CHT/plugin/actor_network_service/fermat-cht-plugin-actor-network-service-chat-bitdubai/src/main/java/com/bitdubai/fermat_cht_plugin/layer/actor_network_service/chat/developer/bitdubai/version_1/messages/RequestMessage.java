@@ -109,14 +109,14 @@ public class RequestMessage extends NetworkServiceMessage {
     }
 
     /**
-     * @return a string representing the alias of the crypto broker.
+     * @return a string representing the alias of sender.
      */
     public final String getSenderAlias() {
         return senderAlias;
     }
 
     /**
-     * @return an array of bytes with the image exposed by the Crypto Broker.
+     * @return an array of bytes with the image exposed by the sender.
      */
     public final byte[] getSenderImage() {
         return senderImage;
