@@ -51,15 +51,14 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetIssuerCommunitySubAppSession getSession() {
         return new AssetIssuerCommunitySubAppSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new IssuerCommunityNavigationViewPainter(getContext(), null);
+        return new IssuerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

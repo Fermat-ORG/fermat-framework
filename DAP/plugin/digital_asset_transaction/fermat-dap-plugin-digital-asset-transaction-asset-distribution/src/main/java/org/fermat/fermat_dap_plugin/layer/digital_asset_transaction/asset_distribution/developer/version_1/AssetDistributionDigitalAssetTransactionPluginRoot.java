@@ -261,16 +261,16 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("AssetDistributionDeveloperDatabaseFactory");
-        returnedClasses.add("CantCheckAssetDistributionProgressException");
-        returnedClasses.add("CantDeliverDigitalAssetException");
-        returnedClasses.add("CantGetActorAssetIssuerException");
-        returnedClasses.add("AssetDistributionDao");
-        returnedClasses.add("AssetDistributionDatabaseConstants");
-        returnedClasses.add("AssetDistributionDatabaseFactory");
-        returnedClasses.add("AssetDistributionMonitorAgent");
-        returnedClasses.add("AssetDistributionTransactionManager");
-        returnedClasses.add("DigitalAssetDistributor");
+//        returnedClasses.add("AssetDistributionDeveloperDatabaseFactory");
+//        returnedClasses.add("CantCheckAssetDistributionProgressException");
+//        returnedClasses.add("CantDeliverDigitalAssetException");
+//        returnedClasses.add("CantGetActorAssetIssuerException");
+//        returnedClasses.add("AssetDistributionDao");
+//        returnedClasses.add("AssetDistributionDatabaseConstants");
+//        returnedClasses.add("AssetDistributionDatabaseFactory");
+//        returnedClasses.add("AssetDistributionMonitorAgent");
+//        returnedClasses.add("AssetDistributionTransactionManager");
+//        returnedClasses.add("DigitalAssetDistributor");
         returnedClasses.add("AssetDistributionDigitalAssetTransactionPluginRoot");
         /**
          * I return the values.

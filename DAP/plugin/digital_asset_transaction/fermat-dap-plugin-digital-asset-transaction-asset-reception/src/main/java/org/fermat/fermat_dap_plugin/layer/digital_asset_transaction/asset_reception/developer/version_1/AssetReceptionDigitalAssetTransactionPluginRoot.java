@@ -156,7 +156,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent");
+//        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent");
         returnedClasses.add("AssetReceptionDigitalAssetTransactionPluginRoot");
         /**
          * I return the values.

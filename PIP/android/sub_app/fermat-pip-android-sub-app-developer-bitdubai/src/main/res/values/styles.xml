@@ -18,10 +18,9 @@
         <item name="android:paddingBottom">0dp</item>
     </style>
 
-<style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Light">
 
-</style>
-
+    </style>
 
 
 </resources>

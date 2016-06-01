@@ -8,9 +8,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.basic_classes.BasicSubAppSettings;
+import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyAddonsException;
+import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyPluginsException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,7 +25,6 @@ public interface ToolManager extends ModuleManager<BasicSubAppSettings, ActiveAc
 
 
     LogTool getLogTool() throws CantGetLogToolException;
-
 
     /**
      * Through the method <code>listAvailablePlugins</code> you can get a list of available plug-ins where you can use the developer tool.
@@ -54,4 +58,14 @@ public interface ToolManager extends ModuleManager<BasicSubAppSettings, ActiveAc
                                                             DeveloperDatabase      developerDatabase     ,
                                                             DeveloperDatabaseTable developerDatabaseTable);
 
+
+    List<PluginVersionReference> getAvailablePluginList();
+
+    List<AddonVersionReference> getAvailableAddonList();
+
+    List<ClassHierarchyLevels> getClassesHierarchyPlugins(PluginVersionReference plugin) throws CantGetClasessHierarchyPluginsException;
+
+    List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException;
+
+    void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass);
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.developer.app_connection;
 
 import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -32,7 +33,7 @@ public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubApp
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.PLUG_INS_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.DEVELOPER,
