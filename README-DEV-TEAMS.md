@@ -335,7 +335,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   josejcb89
       Github:  https://github.com/josejcb
 
-* **Jose Vilchez [New Developer]**<br/>
+* **Jose Vilchez [Veteran Developer]**<br/>
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
@@ -347,7 +347,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
-* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+* **Rodrigo Guzman [New Developer]**<br/>
 ---
       Email:   roygufo@gmail.com
       Skype:   roy-epps
