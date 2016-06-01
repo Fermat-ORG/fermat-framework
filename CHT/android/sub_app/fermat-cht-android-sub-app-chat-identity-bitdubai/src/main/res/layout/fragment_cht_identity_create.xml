@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f7f7">
+    android:background="#F9F9F9">
 
     <RelativeLayout
         android:id="@+id/cht_image_background"
@@ -49,7 +49,7 @@
         android:text="User Name"
         android:layout_marginTop="24dp"
         android:id="@+id/textViewChtTitle"
-        android:textColor="#47BF73"
+        android:textColor="#09D261"
         android:fontFamily="h"
         android:layout_below="@+id/cht_image_background"
         android:layout_centerHorizontal="true" />
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Status"
-        android:textColor="#47BF73"
+        android:textColor="#09D261"
         android:id="@+id/statusView"
         android:layout_below="@+id/cht_image_background"
         android:layout_marginTop="94dp"

@@ -909,20 +909,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
-            runtimeActivity.setColor("#47BF73");
+            runtimeActivity.setColor("#075e53");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Profile");
-            runtimeTitleBar.setColor("#47BF73");
+            runtimeTitleBar.setLabel("P2P Chat Profile");
+            runtimeTitleBar.setColor("#075e53");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#47BF73");
+            statusBar.setColor("#075e53");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
