@@ -189,7 +189,7 @@ public enum Fragments implements FermatFragments {
     CCP_BITCOIN_FERMAT_WALLET_SEND_ERROR_REPORT_FRAGMENT("CCPFWSER"),
 
     /**
-     * FERMAT PROTECTED
+     * FERMAT WALLET
      */
 
 

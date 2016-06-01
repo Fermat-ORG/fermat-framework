@@ -54,6 +54,8 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         if (contact != null) {
             TextView contact_name = (TextView) v.findViewById(R.id.contact_name);
             contact_name.setText(contact.name);
+
+
             ImageView contact_profile_image = (ImageView) v.findViewById(R.id.contact_profile_image);
             try {
                 if (contact.profileImage != null) {
@@ -63,6 +65,12 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
                     Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
                 } else
                     Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+
+                if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP){
+                    contact_name.setTextSize(14);
+                    contact_profile_image.setMaxHeight(40);
+                    contact_profile_image.setMaxWidth(40);
+                }
                }catch (Exception e){
                 Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
         }

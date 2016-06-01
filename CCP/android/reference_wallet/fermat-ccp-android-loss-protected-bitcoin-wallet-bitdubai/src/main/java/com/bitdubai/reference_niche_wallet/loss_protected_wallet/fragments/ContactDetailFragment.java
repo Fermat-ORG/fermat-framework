@@ -1,5 +1,11 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
+import android.content.ClipboardManager;
+
+
+import android.content.ClipData;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -17,15 +23,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
@@ -34,6 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
@@ -59,6 +69,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      * Fragment UI controls
      */
+
     private ImageView image_view_profile;
     private EditText edit_text_name;
     private TextView text_view_address;
@@ -87,6 +98,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private FermatButton send_button;
     private FermatButton receive_button;
     private ImageView img_update;
+    private ImageView img_copy;
     private boolean addressIsTouch=false;
     private static final long DELAY_TIME = 2;
     private Handler delayHandler = new Handler();
@@ -153,7 +165,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             setUpContact();
             return mFragmentView;
         }catch (Exception e){
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return container;
@@ -212,6 +224,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
             img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
+            img_copy = (ImageView) mFragmentView.findViewById(R.id.img_copy);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
             linear_layout_extra_user_receive.setOnClickListener(this);
@@ -253,6 +266,47 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
                 }
             });
+
+            img_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    try {
+
+                        setClipboard(getActivity(), text_view_address.getText().toString());
+                            Toast.makeText(getActivity(),"Address copied to clipbooard",Toast.LENGTH_SHORT).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
+        }
+
+    }
+
+
+    /**
+     * Paste valid clipboard text into a view
+     *
+     * @param
+     */
+    private void copyFromClipboard() {
+        try {
+            ClipboardManager clipboard = null;
+                clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+
+            if (text_view_address.getText() != null){
+                ClipData clip = ClipData.newPlainText("copy",text_view_address.getText());
+                clipboard.setPrimaryClip(clip);
+            }
+
+        } catch (Exception e) {
+            lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
     }
@@ -398,5 +452,21 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             e.printStackTrace();
         }
 
+    }
+
+    // copy text to clipboard
+    private void setClipboard(Context context,String text) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData
+                    .newPlainText("Address", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 }

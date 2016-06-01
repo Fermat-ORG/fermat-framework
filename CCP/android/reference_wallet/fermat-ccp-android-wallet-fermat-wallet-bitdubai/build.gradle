@@ -64,6 +64,7 @@ dependencies {
     compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
     //compile 'com.google.guava:guava:r05'
     //compile 'com.getbase:floatingactionbutton:1.10.1'
+
 //    compile 'org.apache.httpcomponents:httpclient:4.5'
 
 }
