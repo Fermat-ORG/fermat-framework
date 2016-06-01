@@ -657,7 +657,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 lossProtectedWalletContact.getActorType(),
                                 cryptoAddress,
                                 notes,
-                                operator.longValueExact(),
+                                amountDecimal.longValueExact(),
                                 blockchainNetworkType,
                                 ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                 CryptoCurrency.BITCOIN
