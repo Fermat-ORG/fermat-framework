@@ -11,7 +11,7 @@
     <string name="status_canceled">Connection Canceled</string>
 
     <!--Dialog Help - Init-->
-    <string name="dap_redeem_community_welcome_subTitle">Welcome to the Redeem Point Community.</string>
+    <string name="dap_redeem_community_welcome_subTitle">Redeem Point Community.</string>
     <string name="dap_redeem_community_welcome_body">This application will help you discover and connect to Redeem Points registered in our network.!\n\nIf you are identified as an Asset User, you will need to connect to Redeem Points in order to be able to redeem your assets with them.\n\nSelect any available Redeem Point and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
     <!--Dialog Help - End-->
     <!--Connections Other Profile - Init-->

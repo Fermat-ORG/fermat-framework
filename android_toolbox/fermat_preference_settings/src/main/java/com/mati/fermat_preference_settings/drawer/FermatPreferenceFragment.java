@@ -149,7 +149,8 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
         if(getBackgroundColor() != 0) {
             LinearLayout rl = (LinearLayout) layout.findViewById(R.id.linearLayout);
             rl.setBackgroundColor(getBackgroundColor());
-            rl.getBackground().setAlpha(getBackgroundAlpha());
+            if(getBackgroundAlpha() != 0)
+                rl.getBackground().setAlpha(getBackgroundAlpha());
         }
     }
 }

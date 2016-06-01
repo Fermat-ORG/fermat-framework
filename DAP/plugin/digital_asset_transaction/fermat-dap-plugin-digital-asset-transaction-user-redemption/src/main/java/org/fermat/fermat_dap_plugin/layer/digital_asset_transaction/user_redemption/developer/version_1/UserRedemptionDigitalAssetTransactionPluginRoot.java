@@ -180,7 +180,6 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         List<String> returnedClasses = new ArrayList<>();
 
         returnedClasses.add("UserRedemptionDigitalAssetTransactionPluginRoot");
-        //TODO: finish this method
         /**
          * I return the values.
          */

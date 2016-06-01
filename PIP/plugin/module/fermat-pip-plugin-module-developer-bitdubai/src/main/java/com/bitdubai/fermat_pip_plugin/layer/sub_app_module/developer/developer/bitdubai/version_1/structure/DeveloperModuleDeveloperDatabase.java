@@ -10,9 +10,9 @@ public class DeveloperModuleDeveloperDatabase implements DeveloperDatabase {
     private String name;
     private String id;
 
-    DeveloperModuleDeveloperDatabase(String name, String id){
-        this.name=name;
-        this.id=id;
+    DeveloperModuleDeveloperDatabase(String name, String id) {
+        this.name = name;
+        this.id = id;
     }
 
     @Override
