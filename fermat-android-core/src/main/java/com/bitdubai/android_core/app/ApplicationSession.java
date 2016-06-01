@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
 import com.bitdubai.android_core.app.common.version_1.helpers.ApplicationsHelper;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
@@ -134,6 +133,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     @Override
     public void onTerminate(){
+        Log.i(TAG,"onTerminate");
         servicesHelpers.unbindServices();
         unregisterReceiver(notificationReceiver);
         super.onTerminate();
@@ -193,10 +193,6 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     public NotificationService getNotificationService(){
         return getServicesHelpers().getNotificationService();
-    }
-
-    public ClientBrokerService getClientSideBrokerService(){
-        return getServicesHelpers().getClientSideBrokerService();
     }
 
     public ServicesHelpers getServicesHelpers() {
