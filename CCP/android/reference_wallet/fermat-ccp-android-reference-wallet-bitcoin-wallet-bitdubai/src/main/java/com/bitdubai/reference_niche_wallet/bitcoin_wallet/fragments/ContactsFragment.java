@@ -255,7 +255,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -266,7 +266,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
