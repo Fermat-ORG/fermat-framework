@@ -37,7 +37,9 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -369,31 +371,53 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     private void onRefresh() {
 
-        _executor.submit(new Runnable() {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            public void run() {
+            protected Object doInBackground()  {
 
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
-                            if (walletContactRecords.isEmpty()) {
-                                mEmptyView.setVisibility(View.VISIBLE);
-                                mListView.setVisibility(View.GONE);
-                            } else {
-                                mListView.setVisibility(View.VISIBLE);
-                                mEmptyView.setVisibility(View.GONE);
-                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
-                            }
-                            refreshAdapter();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                try {
+                    walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return walletContactRecords;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    if (walletContactRecords.isEmpty()) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    } else {
+                        mListView.setVisibility(View.VISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                });
+                    refreshAdapter();
+
+                }
+                else {
+                  makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
+
+        fermatWorker.execute();
+
+
 
     }
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
@@ -810,8 +834,10 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
                             } else
-                                // Is other symbol
+
                                 symbols.add(cryptoWalletWalletContact.getActorName());
+
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();

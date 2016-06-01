@@ -105,15 +105,21 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
-        //set Amount transaction
-        holder.getTxt_amount().setText(
-                WalletUtils.formatBalanceStringWithDecimalEntry(
-                        data.getAmount(),
-                        MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        ShowMoneyType.BITCOIN.getCode())+ " BTC");
+        try {
+            //set Amount transaction
+            holder.getTxt_amount().setText(
+                    WalletUtils.formatBalanceStringWithDecimalEntry(
+                            data.getAmount(),
+                            MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
+                            MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
+                            ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
-        holder.getTxt_amount().setTypeface(tf) ;
+            holder.getTxt_amount().setTypeface(tf) ;
+        }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
 
         if(data.getContact() != null)
             holder.getTxt_contactName().setText(data.getContact().getActorName());
