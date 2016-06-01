@@ -122,6 +122,7 @@ public class NotificationService extends Service {
             }else{
                 Intent intent = new Intent(this,AppActivity.class);
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
+                intent.setAction("org.fermat.APP_LAUNCHER");
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
                         .getActivity(this, 0, intent, 0);

@@ -16,6 +16,7 @@ public abstract class AbstractAgent {
     private long sleepTime;
     private TimeUnit timeUnit;
     private long initDelayTime = 0;
+    private String threadName;
     private ScheduledExecutorService scheduledExecutorService;
 
     public AbstractAgent(long sleepTime,TimeUnit timeUnit) {
@@ -60,4 +61,6 @@ public abstract class AbstractAgent {
      * @return
      */
     protected abstract Runnable agentJob();
+
+    protected abstract void onErrorOccur();
 }
