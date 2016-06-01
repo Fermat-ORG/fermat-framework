@@ -111,9 +111,9 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
         });
 
         if(data.isSelected()){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.container_data.setBackground(ContextCompat.getDrawable(context, R.drawable.add_connection_rounded_rectangle_shape));
-            }
+           // }
         }
 
     }
