@@ -33,19 +33,20 @@ interface IServerBrokerService {
           in ModuleObjectParameterWrapper[] parameters
           );
 
-    String register();
-
-
-    FermatModuleObjectWrapper invoqueModuleMethod2(
+    // This method will be only used for runtime
+    FermatModuleObjectWrapper invoqueRuntimeMethod(
+                in String clientKey,
+                in String dataId,
                 in String platformCode,
                 in String layerCode,
                 in String pluginsCode,
                 in String developerCode,
                 in String version,
                 in String method,
-                in FermatModuleObjectWrapper[] parameters
+                in ModuleObjectParameterWrapper[] parameters
                 );
 
+    String register();
 
-     boolean isFermatSystemRunning();
+    boolean isFermatSystemRunning();
 }
