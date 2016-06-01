@@ -45,6 +45,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     ArrayList<String> contactInfo=new ArrayList<>();
     ArrayList<Bitmap> contactIcon=new ArrayList<>();
+    ArrayList<String> contactStatus=new ArrayList<>();
     ArrayList<String> contactId=new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
@@ -62,11 +63,12 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     private String filterString;
 
     public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId,
-                              ChatManager chatManager, ChatModuleManager moduleManager,
+                              ArrayList contactStatus,ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactInfo);
         this.contactInfo = contactInfo;
         this.contactIcon = contactIcon;
+        this.contactStatus = contactStatus;
         this.contactId = contactId;
         this.chatManager=chatManager;
         this.moduleManager=moduleManager;
@@ -164,6 +166,10 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     public String getContactId(int position) {
         return contactId.get(position);
+    }
+
+    public String getContactStatus(int position){
+        return contactStatus.get(position);
     }
 
     @Override

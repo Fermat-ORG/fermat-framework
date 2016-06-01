@@ -78,7 +78,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
         executor = Executors.newSingleThreadExecutor();
     }
 
-    private List<FermatEventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     @Override
     public FermatManager getManager() {
@@ -362,8 +362,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         try {
 
-            if (chatActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
-                return;
+//            if (chatActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
+//                return;
 
 
             final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;

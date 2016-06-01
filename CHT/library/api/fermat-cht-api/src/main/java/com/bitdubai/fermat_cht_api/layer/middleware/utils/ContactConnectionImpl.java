@@ -18,7 +18,7 @@ public class ContactConnectionImpl implements ContactConnection {
     private String remoteActorPublicKey;
     private long creationDate;
     private byte[] image;
-    private ContactStatus contactStatus;
+    private String contactStatus;
 
     public ContactConnectionImpl(){}
 
@@ -29,7 +29,7 @@ public class ContactConnectionImpl implements ContactConnection {
                                  String remoteActorPublicKey,
                                  long creationDate,
                                  byte[] image,
-                                 ContactStatus contactStatus)
+                                 String contactStatus)
     {
         this.contactId            = contactId;
         this.remoteName           = remoteName;
@@ -124,12 +124,12 @@ public class ContactConnectionImpl implements ContactConnection {
     }
 
     @Override
-    public ContactStatus getContactStatus() {
+    public String getContactStatus() {
         return contactStatus;
     }
 
     @Override
-    public void setContactStatus(ContactStatus contactStatus) {
+    public void setContactStatus(String contactStatus) {
         this.contactStatus = contactStatus;
     }
 }

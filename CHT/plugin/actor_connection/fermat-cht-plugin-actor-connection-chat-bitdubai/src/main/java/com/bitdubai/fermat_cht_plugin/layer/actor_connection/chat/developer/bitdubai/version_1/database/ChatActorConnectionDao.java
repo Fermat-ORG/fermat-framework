@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorCon
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRegisterActorConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -87,28 +88,14 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         }
     }
 
-    public final ChatActorConnection registerChatActorConnection(final ChatActorConnection actorConnection) throws CantRegisterActorConnectionException,
+    public final boolean registerChatActorConnection(final ChatActorConnection actorConnection, ChatActorConnection oldActorConnection) throws CantRegisterActorConnectionException,
             ActorConnectionAlreadyExistsException {
+
+        boolean isNew = true;
 
         try {
 
-            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(), actorConnection.getPublicKey());
-
-            if (oldActorConnection != null && oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) {
-
-                throw new ActorConnectionAlreadyExistsException(
-                        "actorConnection: " + actorConnection,
-                        "The connection already exists..."
-                );
-            }
-
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
-
-            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            entityRecord = buildDatabaseRecord(
-                    entityRecord,
-                    actorConnection
-            );
 
             if (oldActorConnection != null) {
                 DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
@@ -116,26 +103,41 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         entityRecordOld,
                         oldActorConnection
                 );
+                deleteNewUserProfileImage(oldActorConnection.getPublicKey());
                 actorConnectionsTable.deleteRecord(entityRecordOld);
+
+                if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
+                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
+                    isNew = false;
             }
+
+            DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
+            entityRecord = buildDatabaseRecord(
+                    entityRecord,
+                    actorConnection
+            );
+            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
+                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
+
             actorConnectionsTable.insertRecord(entityRecord);
 
-            return buildActorConnectionNewRecord(entityRecord);
+//            return buildActorConnectionNewRecord(entityRecord);
+            return isNew;
+
 
         } catch (final CantInsertRecordException e) {
 
             throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (final InvalidParameterException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to build an instance of the actor connection.");
-        } catch (final CantGetActorConnectionException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
+//        } catch (final CantGetActorConnectionException e) {
+//
+//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
 //        } catch (CantUpdateRecordException e) {
 //
 //            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
         } catch (CantDeleteRecordException e) {
             throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
+        } catch (CantPersistProfileImageException e) {
+            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor image.");
         }
     }
 
@@ -151,6 +153,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         String country = record.getStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_COUNTRY_COLUMN_NAME);
         String state = record.getStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATE_LOCALITY_COLUMN_NAME);
         String city = record.getStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CITY_COLUMN_NAME);
+        String status = record.getStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME);
 
         ConnectionState connectionState = ConnectionState.getByCode(connectionStateString);
 
@@ -187,7 +190,8 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                 updateTime,
                 country,
                 state,
-                city
+                city,
+                status
         );
     }
 
@@ -253,9 +257,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_COUNTRY_COLUMN_NAME, actorConnection.getCountry());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATE_LOCALITY_COLUMN_NAME, actorConnection.getState());
             record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CITY_COLUMN_NAME, actorConnection.getCity());
-
-            if (actorConnection.getImage() != null && actorConnection.getImage().length > 0)
-                persistNewUserProfileImage(actorConnection.getPublicKey(), actorConnection.getImage());
+            record.setStringValue(ChatActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_STATUS_COLUMN_NAME, actorConnection.getStatus());
 
             return record;
         } catch (final Exception e) {
