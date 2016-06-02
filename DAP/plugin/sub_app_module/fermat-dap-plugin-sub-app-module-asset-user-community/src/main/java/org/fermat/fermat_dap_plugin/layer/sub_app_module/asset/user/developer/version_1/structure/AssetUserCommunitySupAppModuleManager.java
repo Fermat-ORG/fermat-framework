@@ -76,7 +76,7 @@ import java.util.UUID;
         plugin = Plugins.ASSET_USER)
 public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager, Serializable {
 
-//    private final PluginFileSystem pluginFileSystem;
+    //    private final PluginFileSystem pluginFileSystem;
 //    private final UUID pluginId;
     private final LogManager logManager;
     private final ErrorManager errorManager;

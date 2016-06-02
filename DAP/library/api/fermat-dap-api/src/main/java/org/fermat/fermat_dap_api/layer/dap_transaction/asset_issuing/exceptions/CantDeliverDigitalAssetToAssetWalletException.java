@@ -9,7 +9,7 @@ public class CantDeliverDigitalAssetToAssetWalletException extends DAPException 
     static final String DEFAULT_MESSAGE = "There was an error Delivering Digital Asset to asset wallet.";
 
     public CantDeliverDigitalAssetToAssetWalletException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantDeliverDigitalAssetToAssetWalletException(final String message) {

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/09/15.
  */
-public class CantDeliverDatabaseException extends FermatException{
+public class CantDeliverDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error delivering the Asset Issuing Transaction database.";
 

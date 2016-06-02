@@ -11,7 +11,6 @@ import android.widget.ProgressBar;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
@@ -57,7 +56,7 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 holder.connect.setVisibility(View.GONE);
                 //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                switch (data.getDapConnectionState()){
+                switch (data.getDapConnectionState()) {
                     case CONNECTING:
                     case PENDING_LOCALLY:
                     case PENDING_REMOTELY:
@@ -180,11 +179,11 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
         return 0;
     }
 
-    protected void onChangeDataSet(){
+    protected void onChangeDataSet() {
         for (ProgressTask progressTask : taskList) {
             try {
                 progressTask.cancel(true);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

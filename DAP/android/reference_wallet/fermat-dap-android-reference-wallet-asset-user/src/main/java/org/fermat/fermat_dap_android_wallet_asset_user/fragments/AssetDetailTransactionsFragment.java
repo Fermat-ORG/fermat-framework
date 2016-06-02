@@ -82,7 +82,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     private FermatTextView availableText;
     private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
-//    private FermatTextView assetDetailRedeemText;
+    //    private FermatTextView assetDetailRedeemText;
     private FermatTextView assetUserDetailLockedAssets;
 
     private DigitalAsset digitalAsset;
@@ -143,7 +143,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                 }
             });
         }
-        
+
         noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_user_no_transactions);
         showOrHideNoTransactionsView(transactions.isEmpty());
     }
@@ -246,7 +246,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0 && digitalAsset.getLockedAssets() < digitalAsset.getAvailableBalanceQuantity() ) {
+        if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0 && digitalAsset.getLockedAssets() < digitalAsset.getAvailableBalanceQuantity()) {
             menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, getResources().getString(R.string.dap_user_wallet_action_redeem))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
             menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 1, getResources().getString(R.string.dap_user_wallet_action_appropriate))
@@ -298,7 +298,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                 return true;
 
             } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY , appSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
                 return true;
             }
         } catch (Exception e) {
@@ -384,11 +384,11 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
 
-        if (digitalAsset.getLockedAssets() > 0){
+        if (digitalAsset.getLockedAssets() > 0) {
             assetUserDetailLockedAssets.setVisibility(View.VISIBLE);
             assetUserDetailLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
-                    digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
-        }else{
+                    digitalAsset.getLockedAssets() + " Locked Asset" : digitalAsset.getLockedAssets() + " Locked Assets");
+        } else {
             assetUserDetailLockedAssets.setVisibility(View.GONE);
         }
     }

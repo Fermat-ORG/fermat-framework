@@ -10,6 +10,7 @@ public class CantGetIdentityAssetIssuerException extends FermatException {
     public CantGetIdentityAssetIssuerException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, null, null);
     }
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

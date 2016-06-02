@@ -11,7 +11,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUp
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -44,7 +43,7 @@ public interface AssetUserIdentityModuleManager extends ModuleManager<UserIdenti
      * @return the intra user created
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException if something goes wrong.
      */
-    IdentityAssetUser createNewIdentityAssetUser(String alias,  byte[] profileImage) throws CantCreateNewIdentityAssetUserException;
+    IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException;
 
     /**
      * The method <code>updateIdentityAssetUser</code> change a identity information data

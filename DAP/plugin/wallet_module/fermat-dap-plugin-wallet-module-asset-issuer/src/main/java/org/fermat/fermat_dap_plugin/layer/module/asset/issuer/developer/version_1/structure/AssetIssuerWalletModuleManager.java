@@ -6,11 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -78,22 +74,22 @@ import java.util.UUID;
         plugin = Plugins.ASSET_ISSUER)
 public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerWalletSupAppModuleManager, Serializable {
 
-    private final AssetIssuerWalletManager          assetIssuerWalletManager;
-    private final ActorAssetUserManager             actorAssetUserManager;
-    private final IdentityAssetIssuerManager        identityAssetIssuerManager;
-    private final AssetDistributionManager          assetDistributionManager;
-    private final IssuerAppropriationManager        issuerAppropriationManager;
-    private final AssetFactoryManager               assetFactoryManager;
-    private final WalletManagerManager              walletMiddlewareManager;
-    private final ErrorManager                      errorManager;
-//    private final PluginFileSystem                  pluginFileSystem;
+    private final AssetIssuerWalletManager assetIssuerWalletManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
+    private final AssetDistributionManager assetDistributionManager;
+    private final IssuerAppropriationManager issuerAppropriationManager;
+    private final AssetFactoryManager assetFactoryManager;
+    private final WalletManagerManager walletMiddlewareManager;
+    private final ErrorManager errorManager;
+    //    private final PluginFileSystem                  pluginFileSystem;
 //    private final UUID                              pluginId;
-    private final EventManager                      eventManager;
-    private final Broadcaster                       broadcaster;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
     private final AssetIssuerWalletModulePluginRoot assetIssuerWalletModulePluginRoot;
 
     private BlockchainNetworkType selectedNetwork;
-//    private SettingsManager<AssetIssuerSettings> settingsManager;
+    //    private SettingsManager<AssetIssuerSettings> settingsManager;
     AssetIssuerSettings settings = null;
     private boolean showUsersOutsideGroup;
     String publicKeyApp;
@@ -126,18 +122,18 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
 
         super(pluginFileSystem, pluginId);
 
-        this.assetIssuerWalletManager           = assetIssuerWalletManager;
-        this.actorAssetUserManager              = actorAssetUserManager;
-        this.assetDistributionManager           = assetDistributionManager;
-        this.issuerAppropriationManager         = issuerAppropriationManager;
-        this.identityAssetIssuerManager         = identityAssetIssuerManager;
-        this.assetFactoryManager                = assetFactoryManager;
-        this.walletMiddlewareManager            = walletMiddlewareManager;
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.assetDistributionManager = assetDistributionManager;
+        this.issuerAppropriationManager = issuerAppropriationManager;
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
+        this.assetFactoryManager = assetFactoryManager;
+        this.walletMiddlewareManager = walletMiddlewareManager;
 //        this.pluginId                           = pluginId;
 //        this.pluginFileSystem                   = pluginFileSystem;
-        this.broadcaster                        = broadcaster;
-        this.errorManager                       = errorManager;
-        this.eventManager                       = eventManager;
+        this.broadcaster = broadcaster;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
         this.assetIssuerWalletModulePluginRoot = assetIssuerWalletModulePluginRoot;
     }
 

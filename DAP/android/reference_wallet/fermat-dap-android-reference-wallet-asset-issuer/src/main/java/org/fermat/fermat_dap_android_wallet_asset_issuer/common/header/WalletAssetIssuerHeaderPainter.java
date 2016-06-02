@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 

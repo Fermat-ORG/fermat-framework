@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 
@@ -132,7 +131,7 @@ public class AssetIssuerIdentitySubAppModulePluginRoot extends AbstractModule<Is
             if (assetIssuerIdentityModuleManager == null) {
                 assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
 
-            this.serviceStatus = ServiceStatus.STARTED;
+                this.serviceStatus = ServiceStatus.STARTED;
             }
 //            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation finished successfully.", null, null);
 

@@ -12,6 +12,7 @@ public class CantSendTransactionNewStatusNotificationException extends DAPExcept
     public CantSendTransactionNewStatusNotificationException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
     public CantSendTransactionNewStatusNotificationException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

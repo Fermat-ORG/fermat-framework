@@ -54,7 +54,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     private ErrorManager errorManager;
     RedeemPointSession redeemPointSession;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
     public static SettingsMainNetworkFragment newInstance() {

@@ -22,6 +22,7 @@ import java.util.List;
 public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings>, Serializable {
     /**
      * (non-Javadoc)
+     *
      * @see List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey)
      */
     List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalances(String publicKey) throws CantLoadWalletException;

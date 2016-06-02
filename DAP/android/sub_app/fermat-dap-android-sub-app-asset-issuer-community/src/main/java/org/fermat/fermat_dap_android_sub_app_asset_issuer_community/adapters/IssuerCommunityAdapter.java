@@ -178,11 +178,11 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
         return 0;
     }
 
-    protected void onChangeDataSet(){
+    protected void onChangeDataSet() {
         for (ProgressTask progressTask : taskList) {
             try {
                 progressTask.cancel(true);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

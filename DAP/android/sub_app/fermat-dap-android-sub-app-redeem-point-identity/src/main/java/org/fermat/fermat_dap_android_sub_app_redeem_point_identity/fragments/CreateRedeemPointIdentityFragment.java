@@ -89,7 +89,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointIdentitySettings redeemPointIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -121,7 +121,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                     try {
                         if (appSession.getAppPublicKey() != null) {
                             redeemPointIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-                        }else {
+                        } else {
                             redeemPointIdentitySettings = moduleManager.loadAndGetSettings("1");
                         }
                     } catch (Exception e) {

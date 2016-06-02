@@ -138,6 +138,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     /**
      * This method get the available balance of bitcoin wallet
+     *
      * @param walletPublicKey
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException

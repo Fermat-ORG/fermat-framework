@@ -290,7 +290,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -301,8 +301,8 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -310,11 +310,11 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -351,7 +351,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
-        assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
+        assetDetailRedeemText.setText(digitalAsset.getRedeemed() + "");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
 
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {

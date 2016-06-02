@@ -32,9 +32,9 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
-        try{
-            database = this.pluginDatabaseSystem.createDatabase(ownerId,databaseName);
-        }catch (CantCreateDatabaseException exception){
+        try {
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+        } catch (CantCreateDatabaseException exception) {
             /**
              * I can not handle this situation.
              */

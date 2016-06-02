@@ -106,7 +106,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GroupCommunityAdapter(getActivity()){
+        adapter = new GroupCommunityAdapter(getActivity()) {
             @Override
             protected void bindHolder(GroupViewHolder holder, final Group data, int position) {
                 super.bindHolder(holder, data, position);
@@ -272,9 +272,9 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         return super.onOptionsItemSelected(item);
     }
 
-    private void lauchCreateGroupDialog(){
+    private void lauchCreateGroupDialog() {
         dialog = new CreateGroupFragmentDialog(
-                getActivity(), moduleManager,null);
+                getActivity(), moduleManager, null);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

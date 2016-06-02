@@ -196,23 +196,23 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (i == R.id.btn_conect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
-                ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                        (AssetUserCommunitySubAppSession) appSession,
-                        null,
-                        actor,
-                        null);
+            ConnectDialog connectDialog = new ConnectDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
 
-                connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(actor.getName());
-                connectDialog.setSecondDescription("a connection request");
-                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                connectDialog.show();
+            connectDialog.setTitle("Connection Request");
+            connectDialog.setDescription("Do you want to send ");
+            connectDialog.setUsername(actor.getName());
+            connectDialog.setSecondDescription("a connection request");
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            connectDialog.show();
 //            } catch (CantGetIdentityAssetUserException e) {
 //                e.printStackTrace();
 //            }
@@ -221,22 +221,22 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
-                final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
-                        (AssetUserCommunitySubAppSession) appSession,
-                        null,
-                        actor,
-                        null);
+            final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
 
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(actor.getName());
-                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                disconnectDialog.show();
+            disconnectDialog.setTitle("Disconnect");
+            disconnectDialog.setDescription("Want to disconnect from");
+            disconnectDialog.setUsername(actor.getName());
+            disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            disconnectDialog.show();
 //            } catch (CantGetIdentityAssetUserException e) {
 //                e.printStackTrace();
 //            }
@@ -244,22 +244,22 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 
         if (i == R.id.btn_connection_cancel) {
 //            try {
-                CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                        (AssetUserCommunitySubAppSession) appSession,
-                        null,
-                        actor,
-                        null);
+            CancelDialog cancelDialog = new CancelDialog(getActivity(),
+                    (AssetUserCommunitySubAppSession) appSession,
+                    null,
+                    actor,
+                    null);
 
-                cancelDialog.setTitle("Cancel Request");
-                cancelDialog.setDescription("Want to cancel the request to");
-                cancelDialog.setUsername(actor.getName());
-                cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                cancelDialog.show();
+            cancelDialog.setTitle("Cancel Request");
+            cancelDialog.setDescription("Want to cancel the request to");
+            cancelDialog.setUsername(actor.getName());
+            cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            cancelDialog.show();
 //            } catch (CantGetIdentityAssetUserException e) {
 //                e.printStackTrace();
 //            }

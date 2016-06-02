@@ -6,10 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -47,16 +43,16 @@ import java.util.UUID;
         plugin = Plugins.REDEEM_POINT)
 public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule, Serializable {
 
-    private final AssetRedeemPointWalletManager             assetRedeemPointWalletManager;
-    private final RedeemPointIdentityManager                redeemPointIdentityManager;
-    private final ErrorManager                              errorManager;
-    private final EventManager                              eventManager;
-    private final Broadcaster                               broadcaster;
-//    private final UUID                                      pluginId;
+    private final AssetRedeemPointWalletManager assetRedeemPointWalletManager;
+    private final RedeemPointIdentityManager redeemPointIdentityManager;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    //    private final UUID                                      pluginId;
 //    private final PluginFileSystem                          pluginFileSystem;
-    private final AssetRedeemPointWalletModulePluginRoot    assetRedeemPointWalletModulePluginRoot;
+    private final AssetRedeemPointWalletModulePluginRoot assetRedeemPointWalletModulePluginRoot;
 
-//    private SettingsManager<RedeemPointSettings> settingsManager;
+    //    private SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
     private BlockchainNetworkType selectedNetwork;
     String publicKeyApp;
@@ -72,13 +68,13 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
         super(pluginFileSystem, pluginId);
 
-        this.assetRedeemPointWalletManager          = assetRedeemPointWalletManager;
-        this.redeemPointIdentityManager             = redeemPointIdentityManager;
+        this.assetRedeemPointWalletManager = assetRedeemPointWalletManager;
+        this.redeemPointIdentityManager = redeemPointIdentityManager;
 //        this.pluginId                               = pluginId;
 //        this.pluginFileSystem                       = pluginFileSystem;
-        this.errorManager                           = errorManager;
-        this.eventManager                           = eventManager;
-        this.broadcaster                            = broadcaster;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.broadcaster = broadcaster;
         this.assetRedeemPointWalletModulePluginRoot = assetRedeemPointWalletModulePluginRoot;
     }
 
@@ -172,7 +168,7 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name,profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
     }
 
 

@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 /**
  * Created by franklin on 02/11/15.
