@@ -17,6 +17,7 @@ import android.os.TransactionTooLargeException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
@@ -306,12 +307,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mIsBound = true;
-
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
-
-
                 //running socket receiver
                 Log.i(TAG,"Starting socket receiver");
                 mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
@@ -323,16 +321,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Log.e(TAG,"Cant run socket, register to server fail");
             }
 
-
-
-
-//            Message msg = Message.obtain(null,
-//                    CommunicationMessages.MSG_REGISTER_CLIENT);
-//            msg.replyTo = mMessenger;
-//            Bundle bundle = new Bundle();
-//            bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
-//            bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED, true);
-//            msg.setData(bundle);
+            try {
+                ApplicationSession.getInstance().setFermatRunning(iServerBrokerService.isFermatSystemRunning());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
 
