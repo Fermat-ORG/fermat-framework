@@ -246,6 +246,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
                 successfulPropagateCount = 0;
             }else {
                 LOG.info("Not successfully propagated the minimum number of times, records are not erased.");
+                successfulPropagateCount = 0;
             }
 
         }else {
