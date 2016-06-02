@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 import java.lang.ref.WeakReference;
@@ -26,10 +26,10 @@ public class WalletAssetUserHeaderPainter implements HeaderViewPainter {
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation identityAssetIssuer;
     AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     private ErrorManager errorManager;
 
-    public WalletAssetUserHeaderPainter(Context activity, AssetUserSession assetUserSession) {
+    public WalletAssetUserHeaderPainter(Context activity, AssetUserSessionReferenceApp assetUserSession) {
         this.activity = new WeakReference<>(activity);
         this.assetUserSession = assetUserSession;
 

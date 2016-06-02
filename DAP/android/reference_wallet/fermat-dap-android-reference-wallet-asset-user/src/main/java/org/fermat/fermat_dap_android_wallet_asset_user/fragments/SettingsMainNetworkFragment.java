@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -45,7 +45,7 @@ import static android.widget.Toast.makeText;
 public class SettingsMainNetworkFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener {
 
     private View rootView;
-    private AssetUserSession assetUserSession;
+    private AssetUserSessionReferenceApp assetUserSession;
     private Spinner spinner;
     List<BlockchainNetworkType> listElementSpinner;
 
@@ -64,7 +64,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSession) appSession);
+        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

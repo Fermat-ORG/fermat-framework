@@ -37,7 +37,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -61,7 +61,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -81,7 +81,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         setHasOptionsMenu(true);
 
         try {
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -50,10 +50,10 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
     ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     private ChatManager chatManager;
-    private FermatSession appSession;
+    private ReferenceAppFermatSession appSession;
     private ErrorManager errorManager;
     private ChatModuleManager moduleManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ContactsListFragment contactsListFragment;
     private Context context;
     private Context mContext;
@@ -65,7 +65,7 @@ public class WizardListAdapter extends ArrayAdapter<String> {//public class Chat
 
     public WizardListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
                              ChatManager chatManager, ChatModuleManager moduleManager,
-                             ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
+                             ErrorManager errorManager, ChatSessionReferenceApp chatSession, ReferenceAppFermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
         //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;

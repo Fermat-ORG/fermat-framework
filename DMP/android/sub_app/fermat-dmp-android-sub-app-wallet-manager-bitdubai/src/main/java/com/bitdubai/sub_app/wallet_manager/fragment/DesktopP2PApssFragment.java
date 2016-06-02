@@ -41,7 +41,7 @@ import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2016.03.09..
  */
-public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
+public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessionReferenceApp,SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -111,7 +111,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) appSession);
+            //desktopSession = ((DesktopSessionReferenceApp) appSession);
             //moduleManager = desktopSession.getModuleManager();
             //errorManager = appSession.getErrorManager();
 

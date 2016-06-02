@@ -37,7 +37,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -68,7 +68,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
+    RedeemPointIdentitySubAppSessionReferenceApp redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
@@ -108,7 +108,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
+            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);

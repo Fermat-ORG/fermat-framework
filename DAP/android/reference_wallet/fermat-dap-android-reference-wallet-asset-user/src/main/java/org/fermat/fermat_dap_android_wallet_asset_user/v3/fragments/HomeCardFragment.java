@@ -36,7 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.Utils;
@@ -76,7 +76,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
     //FERMAT
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     AssetUserSettings settings = null;
     private ErrorManager errorManager;
 //    private SettingsManager<AssetUserSettings> settingsManager;
@@ -99,7 +99,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
             appSession.setData("redeem_points", null);
 
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -176,7 +176,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     private void initSettings() {
 
         try {
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
 
             try {

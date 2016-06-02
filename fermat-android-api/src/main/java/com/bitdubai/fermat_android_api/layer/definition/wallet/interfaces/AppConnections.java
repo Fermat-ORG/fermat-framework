@@ -5,7 +5,7 @@ import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public abstract class AppConnections<S extends FermatSession> implements FermatAppConnection{
+public abstract class AppConnections<S extends ReferenceAppFermatSession> implements FermatAppConnection{
 
     private WeakReference<Context> activity;
     private S fullyLoadedSession;
@@ -27,8 +27,8 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
     public abstract PluginVersionReference getPluginVersionReference();
 
-    public FermatSession buildSession(FermatApp fermatApp,ModuleManager manager,ErrorManager errorManager){
-        AbstractFermatSession session = getSession();
+    public ReferenceAppFermatSession buildSession(FermatApp fermatApp,ModuleManager manager,ErrorManager errorManager){
+        AbstractReferenceAppFermatSession session = getSession();
         session.setErrorManager(errorManager);
         session.setModuleManager(manager);
         session.setFermatApp(fermatApp);
@@ -36,7 +36,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         return session;
     }
 
-    protected abstract AbstractFermatSession getSession();
+    protected abstract AbstractReferenceAppFermatSession getSession();
 
     public Context getContext() {
         return activity.get();

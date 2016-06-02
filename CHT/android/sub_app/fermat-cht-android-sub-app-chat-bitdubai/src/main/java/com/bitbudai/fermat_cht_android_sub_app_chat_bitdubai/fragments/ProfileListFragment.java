@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -79,7 +79,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
@@ -105,7 +105,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
         super.onCreate(savedInstanceState);
 
         try{
-            chatSession=((ChatSession) appSession);
+            chatSession=((ChatSessionReferenceApp) appSession);
             chatManager= chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
@@ -202,7 +202,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 //                        appSession, errorManager, contactid.get(position));
 //            } else {
 //                appSession.setData("whocallme", "contact");
-//                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+//                appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
 //                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
 //            }
 //        }catch(CantGetContactException e) {
@@ -287,7 +287,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
                                 public void onClick(DialogInterface dialog, int id) {
                                     dialog.cancel();
                                     try {
-                                        //appSession.setData(ChatSession.PROFILE_DATA, profileSelected);
+                                        //appSession.setData(ChatSessionReferenceApp.PROFILE_DATA, profileSelected);
                                         //ChatUserIdentity profile = chatSession.getSelectedProfile();
                                         chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
                                         Toast.makeText(getActivity(), "Profile Selected: " + profileSelected.getAlias(), Toast.LENGTH_SHORT).show();
@@ -326,7 +326,7 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                    appSession.setData(ChatSession.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(position)));
+                    appSession.setData(ChatSessionReferenceApp.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL, appSession.getAppPublicKey());
                 //}catch(CantGetChatUserIdentityException e) {
                 //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -507,10 +507,10 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 */
     }
 
-//    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSession chatSession,
+//    public void goToContactDetail(ChatManager chatManager, ChatModuleManager moduleManager, ChatSessionReferenceApp chatSession,
 //                                  FermatSession appSession, ErrorManager errorManager, UUID id){
 //        try{
-//            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(id));
+//            appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, chatManager.getContactByContactId(id));
 //            changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
 //        }catch(CantGetContactException e) {
 //            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

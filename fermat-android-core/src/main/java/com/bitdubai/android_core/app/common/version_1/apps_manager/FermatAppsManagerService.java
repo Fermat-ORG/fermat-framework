@@ -15,7 +15,7 @@ import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionMana
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -103,7 +103,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     @Override
-    public FermatSession lastAppSession() {
+    public ReferenceAppFermatSession lastAppSession() {
         return fermatSessionManager.getAppsSession(findLastElement().getPublicKey());
     }
 
@@ -135,7 +135,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     @Override
-    public FermatSession getAppsSession(String appPublicKey) {
+    public ReferenceAppFermatSession getAppsSession(String appPublicKey) {
         try {
             if (fermatSessionManager.isSessionOpen(appPublicKey)) {
 //                orderStackWithThisPkLast(appPublicKey);
@@ -171,7 +171,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     @Override
-    public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) {
+    public ReferenceAppFermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) {
         if(fermatApp!=null) {
             if (recents.containsKey(fermatApp.getAppPublicKey())) {
 //            recentsAppsStack.get(fermatApp.getAppPublicKey()).setTaskStackPosition(recentsAppsStack.size());
@@ -185,10 +185,10 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         return null;
     }
 
-    private FermatSession openSession(FermatApp fermatApp,AppConnections fermatAppConnection){
-        FermatSession fermatSession = null;
+    private ReferenceAppFermatSession openSession(FermatApp fermatApp,AppConnections fermatAppConnection){
+        ReferenceAppFermatSession referenceAppFermatSession = null;
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
-            fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
+            referenceAppFermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
             ModuleManager moduleManager = null;
             try {
@@ -196,11 +196,11 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             } catch (CantCreateProxyException e) {
                 e.printStackTrace();
             }
-            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
-//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
+            referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
+//            referenceAppFermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
-        return fermatSession;
+        fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
+        return referenceAppFermatSession;
     }
 
     /**

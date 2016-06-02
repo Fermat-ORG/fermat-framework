@@ -42,7 +42,7 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.UserRedeemedPo
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.UserRedeemed;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -60,7 +60,7 @@ import static android.widget.Toast.makeText;
  */
 public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed> {
 
-    private RedeemPointSession redeemPointSession;
+    private RedeemPointSessionReferenceApp redeemPointSession;
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private Resources res;
 
@@ -95,7 +95,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         setHasOptionsMenu(true);
 
         try {
-            redeemPointSession = ((RedeemPointSession) appSession);
+            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
             moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

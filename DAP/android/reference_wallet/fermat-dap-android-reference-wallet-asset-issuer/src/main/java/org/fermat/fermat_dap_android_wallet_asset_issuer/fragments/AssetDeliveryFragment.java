@@ -40,7 +40,7 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Group;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -58,7 +58,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     private Activity activity;
     private static final int MAX_ASSET_QUANTITY = 200;
-    private AssetIssuerSession assetIssuerSession;
+    private AssetIssuerSessionReferenceApp assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -94,7 +94,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = (AssetIssuerSession) appSession;
+        assetIssuerSession = (AssetIssuerSessionReferenceApp) appSession;
         moduleManager = assetIssuerSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

@@ -35,7 +35,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserVi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -55,7 +55,7 @@ import static android.widget.Toast.makeText;
 public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
 
     private static final int MAX = 20;
@@ -93,7 +93,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         try {
             group = (Group) appSession.getData("group_selected");
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
             moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

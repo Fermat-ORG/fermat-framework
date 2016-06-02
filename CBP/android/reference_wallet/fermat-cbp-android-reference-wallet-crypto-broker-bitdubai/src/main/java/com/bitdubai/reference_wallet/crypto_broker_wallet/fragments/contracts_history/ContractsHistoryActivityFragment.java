@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Contrac
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractHistoryAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -190,7 +190,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData(CryptoBrokerWalletSession.CONTRACT_DATA, data);
+        appSession.setData(CryptoBrokerWalletSessionReferenceApp.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

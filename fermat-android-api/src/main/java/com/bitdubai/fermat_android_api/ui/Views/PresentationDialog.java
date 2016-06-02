@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.27..
  */
-public class PresentationDialog extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "PresentationDialog";
     private PresentationCallback callback;
@@ -90,11 +90,11 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
      * Constructor using Session and Resources
      *
      * @param activity
-     * @param fermatSession parent class of walletSession and SubAppSession
+     * @param referenceAppFermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    private PresentationDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
-        super(activity, fermatSession, resources);
+    private PresentationDialog(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
+        super(activity, referenceAppFermatSession, resources);
         this.activity = activity;
         this.type = type;
         this.checkButton = checkButton;
@@ -334,7 +334,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
          * Members
          */
         private final WeakReference<Activity> activity;
-        private final WeakReference<FermatSession> fermatSession;
+        private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
         private boolean isCheckEnabled = true;
         private PresentationCallback callback;
@@ -414,9 +414,9 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             return presentationDialog;
         }
 
-        public Builder(Activity activity, FermatSession fermatSession) {
+        public Builder(Activity activity, ReferenceAppFermatSession referenceAppFermatSession) {
             this.activity = new WeakReference<Activity>(activity);
-            this.fermatSession = new WeakReference<FermatSession>(fermatSession);
+            this.fermatSession = new WeakReference<ReferenceAppFermatSession>(referenceAppFermatSession);
         }
 
         public Builder setBannerRes(int bannerRes) {

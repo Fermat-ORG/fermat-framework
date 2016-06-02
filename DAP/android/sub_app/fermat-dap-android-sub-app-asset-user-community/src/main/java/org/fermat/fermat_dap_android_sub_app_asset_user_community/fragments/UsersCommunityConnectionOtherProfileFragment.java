@@ -31,7 +31,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -62,7 +62,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 
     private Resources res;
     private View rootView;
-    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     //private FermatTextView userEmail;
@@ -103,7 +103,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         // setting up  module
         actor = (Actor) appSession.getData(USER_SELECTED);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -197,7 +197,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                    (AssetUserCommunitySubAppSession) appSession,
+                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actor,
                     null);
@@ -222,7 +222,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
             final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
-                    (AssetUserCommunitySubAppSession) appSession,
+                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actor,
                     null);
@@ -245,7 +245,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (i == R.id.btn_connection_cancel) {
 //            try {
             CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                    (AssetUserCommunitySubAppSession) appSession,
+                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actor,
                     null);
@@ -270,7 +270,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 AcceptDialog notificationAcceptDialog;
 
                 notificationAcceptDialog = new AcceptDialog(getActivity(),
-                        (AssetUserCommunitySubAppSession) appSession,
+                        (AssetUserCommunitySubAppSessionReferenceApp) appSession,
                         null,
                         actor,
                         moduleManager.getActiveAssetUserIdentity());

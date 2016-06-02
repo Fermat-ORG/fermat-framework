@@ -17,17 +17,17 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.factory.AssetIssuerCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.navigation_drawer.IssuerCommunityNavigationViewPainter;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerCommunitySubAppSession> {
+public class CommunityAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerCommunitySubAppSessionReferenceApp> {
 
     private AssetIssuerCommunitySubAppModuleManager manager;
-    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    private AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
 
     public CommunityAssetIssuerFermatAppConnection(Context activity) {
         super(activity);
@@ -50,8 +50,8 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public AssetIssuerCommunitySubAppSession getSession() {
-        return new AssetIssuerCommunitySubAppSession();
+    public AssetIssuerCommunitySubAppSessionReferenceApp getSession() {
+        return new AssetIssuerCommunitySubAppSessionReferenceApp();
     }
 
 

@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -46,7 +46,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
     /**
      * Plaform reference
      */
-    private AssetUserSession assetUserSession;
+    private AssetUserSessionReferenceApp assetUserSession;
 
 
     /**
@@ -74,7 +74,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSession) appSession);
+        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

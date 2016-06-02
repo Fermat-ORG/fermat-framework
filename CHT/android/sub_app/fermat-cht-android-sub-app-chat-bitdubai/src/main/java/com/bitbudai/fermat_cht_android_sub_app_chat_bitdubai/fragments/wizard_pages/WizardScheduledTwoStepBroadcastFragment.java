@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetDatePicker;
@@ -50,7 +50,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     private ChatPreferenceSettings chatSettings;
     ArrayList<String> datelist = new ArrayList<String>();
     ArrayList<String> timelist = new ArrayList<String>();
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ChatManager chatManager;
 
     public static WizardTwoStepBroadcastFragment newInstance() {
@@ -61,9 +61,9 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        chatSession=((ChatSession) appSession);
+        chatSession=((ChatSessionReferenceApp) appSession);
         chatManager= chatSession.getModuleManager();
-        ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+        ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
         //TODO:Revisar esto
 //        try {
 //            walletManager = moduleManager.getChatManager();

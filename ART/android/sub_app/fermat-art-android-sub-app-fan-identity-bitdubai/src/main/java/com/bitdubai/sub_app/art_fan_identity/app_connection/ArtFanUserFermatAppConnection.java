@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import com.bitdubai.sub_app.art_fan_identity.fragment_factory.ArtFanUserIdentityFragmentFactory;
-import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
@@ -39,8 +39,8 @@ public class ArtFanUserFermatAppConnection extends AppConnections {
     }
 
     @Override
-    protected AbstractFermatSession getSession() {
-        return new ArtFanUserIdentitySubAppSession();
+    protected AbstractReferenceAppFermatSession getSession() {
+        return new ArtFanUserIdentitySubAppSessionReferenceApp();
     }
 
     @Override

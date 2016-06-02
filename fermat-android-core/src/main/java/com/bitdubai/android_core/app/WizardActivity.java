@@ -20,7 +20,7 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -161,13 +161,13 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 FermatStructure wallet = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
+                ReferenceAppFermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
 
-                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,fermatSession);
+                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this, referenceAppFermatSession);
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), fermatSession, null);
+                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), referenceAppFermatSession, null);
                     fragments.add(abstractFermatFragment);
                 }
             } catch (FragmentNotFoundException e) {

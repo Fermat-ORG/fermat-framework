@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by mati on 2015.11.21..
  */
-public interface AppFragmentFactory<S extends FermatSession,R extends ResourceProviderManager> {
+public interface AppFragmentFactory<S extends ReferenceAppFermatSession,R extends ResourceProviderManager> {
 
     /**
      * This method takes a reference (string) to a fragment and returns the corresponding fragment.

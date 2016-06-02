@@ -29,13 +29,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -52,7 +51,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -62,11 +60,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -93,9 +86,9 @@ public class ChatAdapterView extends LinearLayout {
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
-    private FermatSession appSession;
+    private ReferenceAppFermatSession appSession;
     private Toolbar toolbar;
     private Button sendBtn;
     private EditText messageET;
@@ -119,7 +112,7 @@ public class ChatAdapterView extends LinearLayout {
     static final int TIME_TO_REFRESH_TOOLBAR = 6000;
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
+                           ErrorManager errorManager, ChatSessionReferenceApp chatSession, ReferenceAppFermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -166,7 +159,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 if (cht != null){
                     chatId = cht.getChatId();
-                    appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                    appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId));
                 }
                 else chatId = null;
             }
@@ -776,7 +769,7 @@ public class ChatAdapterView extends LinearLayout {
         this.errorManager = errorManager;
     }
 
-    private void setChatSession(ChatSession chatSession) {
+    private void setChatSession(ChatSessionReferenceApp chatSession) {
         this.chatSession = chatSession;
     }
 
@@ -784,7 +777,7 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings = chatSettings;
     }
 
-    private void setAppSession(FermatSession appSession) {
+    private void setAppSession(ReferenceAppFermatSession appSession) {
         this.appSession = appSession;
     }
 
@@ -804,9 +797,9 @@ public class ChatAdapterView extends LinearLayout {
         private ChatManager chatManager;
         private ChatModuleManager moduleManager;
         private ErrorManager errorManager;
-        private ChatSession chatSession;
+        private ChatSessionReferenceApp chatSession;
         private ChatPreferenceSettings chatSettings;
-        private FermatSession appSession;
+        private ReferenceAppFermatSession appSession;
         private Toolbar toolbar;
         private boolean loadDummyData = false;
         private int background = -1;
@@ -871,7 +864,7 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addChatSession(ChatSession chatSession) {
+        public Builder addChatSession(ChatSessionReferenceApp chatSession) {
             this.chatSession = chatSession;
             return this;
         }
@@ -886,7 +879,7 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addAppSession(FermatSession appSession) {
+        public Builder addAppSession(ReferenceAppFermatSession appSession) {
             this.appSession = appSession;
             return this;
         }

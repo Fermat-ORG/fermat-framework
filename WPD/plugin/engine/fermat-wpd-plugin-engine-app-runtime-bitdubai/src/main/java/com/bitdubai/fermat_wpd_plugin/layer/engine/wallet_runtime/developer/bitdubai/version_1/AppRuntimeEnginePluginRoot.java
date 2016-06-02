@@ -7,9 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ComboAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -5721,6 +5723,95 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
+
+        return runtimeSideMenu;
+    }
+
+
+    private AppNavigationStructure buildChatCommunityIdentityComboApp(){
+
+        AppNavigationStructure runtimeWalletNavigationStructure = new AppNavigationStructure();
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MainMenu runtimeMainMenu;
+        MenuItem runtimeMenuItem;
+        TabStrip runtimeTabStrip;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        Footer fermatFooter;
+
+
+        final String publicKey = ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode();
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setColor("#12aca1");
+
+        // Header
+//        runtimeHeader = new Header();
+//        runtimeHeader.setLabel("Home");
+//        runtimeActivity.setHeader(runtimeHeader);
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Home");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
+
+
+        return runtimeWalletNavigationStructure;
+    }
+
+
+    private SideMenu loadSideMenuChatCombo(String publicKey) {
+        //Navigation
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#ffffff");
+        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_HOME);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Profile");
+        runtimeMenuItem.setIcon("profile");
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_PROFILE);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         return runtimeSideMenu;
     }

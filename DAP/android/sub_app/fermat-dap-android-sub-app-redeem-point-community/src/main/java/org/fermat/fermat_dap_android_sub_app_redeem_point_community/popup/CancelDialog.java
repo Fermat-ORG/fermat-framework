@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -26,7 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
  * Added by Jinmy Bohorquez 06/03/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -44,7 +44,7 @@ public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
     private final RedeemPointIdentity identity;
 
     public CancelDialog(final Activity activity,
-                        final AssetRedeemPointCommunitySubAppSession redeemPointCommunitySubAppSession,
+                        final AssetRedeemPointCommunitySubAppSessionReferenceApp redeemPointCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources,
                         final Actor actor,
                         final RedeemPointIdentity identity) {
@@ -56,7 +56,7 @@ public class CancelDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
     }
 
     public CancelDialog(Activity a,
-                        final AssetRedeemPointCommunitySubAppSession redeemPointCommunitySubAppSession,
+                        final AssetRedeemPointCommunitySubAppSessionReferenceApp redeemPointCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
         super(a, redeemPointCommunitySubAppSession, subAppResources);
         this.actor = null;

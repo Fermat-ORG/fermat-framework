@@ -56,7 +56,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.BitcoinsSpinnerAdapter;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
@@ -94,7 +94,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
     private AssetFactory asset;
 
@@ -141,7 +141,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         setHasOptionsMenu(true);
 
         try {
-            assetFactorySession = ((AssetFactorySession) appSession);
+            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
             moduleManager = assetFactorySession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

@@ -29,7 +29,7 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
 
     View rootView;
     private ErrorManager errorManager;
@@ -203,7 +203,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
         this.resource = resource;
     }
 
-    public void setDeveloperSubAppSession(DeveloperSubAppSession appSession) {
+    public void setDeveloperSubAppSession(DeveloperSubAppSessionReferenceApp appSession) {
         this.appSession = appSession;
     }
 }

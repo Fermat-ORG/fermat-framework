@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
@@ -29,11 +29,11 @@ public class RedeemPointCommunityNavigationViewPainter implements NavigationView
 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
-    AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     RedeemPointCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    public RedeemPointCommunityNavigationViewPainter(Context activity, AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession) {
+    public RedeemPointCommunityNavigationViewPainter(Context activity, AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession) {
         this.activity = new WeakReference<Context>(activity);
         this.assetRedeemPointCommunitySubAppSession = assetRedeemPointCommunitySubAppSession;
 

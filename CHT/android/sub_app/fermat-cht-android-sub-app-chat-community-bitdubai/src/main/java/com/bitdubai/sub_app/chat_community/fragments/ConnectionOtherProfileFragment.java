@@ -34,7 +34,7 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 /**
@@ -51,7 +51,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -86,7 +86,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+        chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
         chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
         moduleManager = chatUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
@@ -191,7 +191,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             ConnectDialog connectDialog;
             try {
                 connectDialog =
-                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new ConnectDialog(getActivity(), (ChatUserSubAppSessionReferenceApp) appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
@@ -215,7 +215,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             final DisconnectDialog disconnectDialog;
             try {
                 disconnectDialog =
-                        new DisconnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new DisconnectDialog(getActivity(), (ChatUserSubAppSessionReferenceApp) appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Do you want to disconnect from");
@@ -235,7 +235,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         if (i == R.id.btn_connection_accept){
             try {
                 AcceptDialog notificationAcceptDialog =
-                        new AcceptDialog(getActivity(),(ChatUserSubAppSession) appSession, null,
+                        new AcceptDialog(getActivity(),(ChatUserSubAppSessionReferenceApp) appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -257,7 +257,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             ConnectDialog connectDialog;
             try {
                 connectDialog =
-                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                        new ConnectDialog(getActivity(), (ChatUserSubAppSessionReferenceApp) appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Resend Connection Request");
                 connectDialog.setDescription("Do you want to resend ");

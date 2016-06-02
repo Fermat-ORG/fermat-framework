@@ -32,7 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
@@ -92,7 +92,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         imageAccount = (int) appSession.getData("account_image");
         try {
 
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -158,7 +158,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType) {
-        dialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionType, bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), null, null);
+        dialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSessionReferenceApp) appSession, getResources(), transactionType, bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), null, null);
         dialog.setOnDismissListener(this);
         dialog.show();
     }

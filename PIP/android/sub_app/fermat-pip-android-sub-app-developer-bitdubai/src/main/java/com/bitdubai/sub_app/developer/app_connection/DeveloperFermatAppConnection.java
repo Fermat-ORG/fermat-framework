@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -15,12 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubAppSession> {
+public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubAppSessionReferenceApp> {
 
     public DeveloperFermatAppConnection(Context activity) {
         super(activity);
@@ -43,8 +43,8 @@ public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubApp
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new DeveloperSubAppSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return new DeveloperSubAppSessionReferenceApp();
     }
 
     @Override

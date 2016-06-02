@@ -25,7 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
@@ -41,9 +41,9 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by mati on 2016.02.09..
  */
-public class ReferenceWalletSettings extends FermatPreferenceFragment<FermatWalletSession,WalletResourcesProviderManager> implements FermatSettings {
+public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceAppFermatWalletSession,WalletResourcesProviderManager> implements FermatSettings {
 
-    private FermatWalletSession fermatWalletSession;
+    private ReferenceAppFermatWalletSession fermatWalletSession;
     private FermatWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
 

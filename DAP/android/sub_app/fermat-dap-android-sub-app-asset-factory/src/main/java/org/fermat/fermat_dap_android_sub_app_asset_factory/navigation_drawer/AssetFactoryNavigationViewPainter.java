@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
@@ -29,11 +29,11 @@ public class AssetFactoryNavigationViewPainter implements NavigationViewPainter 
 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     AssetFactoryModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    public AssetFactoryNavigationViewPainter(Context activity, AssetFactorySession assetFactorySession) {
+    public AssetFactoryNavigationViewPainter(Context activity, AssetFactorySessionReferenceApp assetFactorySession) {
         this.activity = new WeakReference<Context>(activity);
         this.assetFactorySession = assetFactorySession;
 

@@ -30,7 +30,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SettingsStockManagementMerchandisesAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockDestockAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateRestockDestockFragmentDialog;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         associatedSettings = new ArrayList<>();
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {

@@ -3,25 +3,19 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -34,13 +28,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
     CryptoWallet cryptoWallet;
-    ReferenceWalletSession referenceWalletSession;
+    ReferenceWalletSessionReferenceApp referenceWalletSession;
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSession referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, CryptoWallet cryptoWallet, ReferenceWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;

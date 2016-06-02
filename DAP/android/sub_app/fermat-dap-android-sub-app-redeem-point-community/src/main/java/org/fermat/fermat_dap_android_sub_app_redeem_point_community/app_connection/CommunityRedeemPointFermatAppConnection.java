@@ -17,17 +17,17 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.factory.AssetRedeemPointCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.navigation_drawer.RedeemPointCommunityNavigationViewPainter;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityRedeemPointFermatAppConnection extends AppConnections<AssetRedeemPointCommunitySubAppSession> {
+public class CommunityRedeemPointFermatAppConnection extends AppConnections<AssetRedeemPointCommunitySubAppSessionReferenceApp> {
 
     private RedeemPointCommunitySubAppModuleManager manager;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
 
     public CommunityRedeemPointFermatAppConnection(Context activity) {
         super(activity);
@@ -50,8 +50,8 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public AssetRedeemPointCommunitySubAppSession getSession() {
-        return new AssetRedeemPointCommunitySubAppSession();
+    public AssetRedeemPointCommunitySubAppSessionReferenceApp getSession() {
+        return new AssetRedeemPointCommunitySubAppSessionReferenceApp();
     }
 
     @Override

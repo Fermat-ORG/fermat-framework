@@ -23,13 +23,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 
 /**
  * Created by Lozadaa on 20/01/16.
  */
-public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager> {
+public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> {
     private static final String TAG = "WizardPageOtherSettings";
     private int spreadValue;
     private boolean automaticRestock;
@@ -142,7 +142,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Cryp
             walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
             moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
-            appSession.setData(CryptoBrokerWalletSession.CONFIGURED_DATA, true);
+            appSession.setData(CryptoBrokerWalletSessionReferenceApp.CONFIGURED_DATA, true);
             // TODO Solo para testing, eliminar despues
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
         } catch (FermatException ex) {

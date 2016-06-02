@@ -1,8 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +45,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animatio
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     /**
      * Session
      * */
-    private LossProtectedWalletSession lossProtectedWalletSession;
+    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
     /**
      * Manager
      * */
@@ -120,7 +118,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
         super.onCreate(savedInstanceState);
 
-        lossProtectedWalletSession = (LossProtectedWalletSession)appSession;
+        lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp)appSession;
 
         listBitcoinLossProtectedWalletSpend = new ArrayList<>();
         try {
@@ -343,7 +341,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
 
 
-    public void setReferenceWalletSession(LossProtectedWalletSession lossProtectedWalletSession) {
+    public void setReferenceWalletSession(LossProtectedWalletSessionReferenceApp lossProtectedWalletSession) {
         this.lossProtectedWalletSession = lossProtectedWalletSession;
     }
 

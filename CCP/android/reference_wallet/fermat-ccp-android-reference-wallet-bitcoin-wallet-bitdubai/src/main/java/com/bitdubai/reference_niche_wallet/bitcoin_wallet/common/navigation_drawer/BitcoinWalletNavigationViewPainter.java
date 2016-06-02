@@ -11,9 +11,8 @@ import android.widget.RelativeLayout;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -25,9 +24,9 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceWalletSessionReferenceApp referenceWalletSession;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, ReferenceWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+    public BitcoinWalletNavigationViewPainter(Context activity, ReferenceWalletSessionReferenceApp referenceWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
         this.referenceWalletSession = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);

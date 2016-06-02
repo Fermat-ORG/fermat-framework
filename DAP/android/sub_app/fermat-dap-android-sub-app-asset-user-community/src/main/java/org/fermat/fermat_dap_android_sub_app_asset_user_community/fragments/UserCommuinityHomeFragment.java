@@ -42,7 +42,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -72,7 +72,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager moduleManager;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
 
@@ -123,7 +123,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
             actor = (Actor) appSession.getData(USER_SELECTED);
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
             moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -487,7 +487,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -621,7 +621,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -703,7 +703,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();

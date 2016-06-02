@@ -8,12 +8,12 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.CreateUserIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.IdentityListFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSession, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
+public class UserIdentityFragmentFactory extends FermatFragmentFactory<UserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, UserIdentityFragmentEnumType> {
 
 
     @Override

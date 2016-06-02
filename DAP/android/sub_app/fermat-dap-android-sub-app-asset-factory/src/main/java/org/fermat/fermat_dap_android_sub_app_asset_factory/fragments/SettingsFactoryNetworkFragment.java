@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
@@ -49,7 +49,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
 
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
     //    SettingsManager<AssetFactorySettings> settingsManager;
     AssetFactorySettings settings = null;
@@ -63,7 +63,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySession) appSession);
+        assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
         moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

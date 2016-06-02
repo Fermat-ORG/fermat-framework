@@ -86,7 +86,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -606,8 +606,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Method used from app to paint tabs
      */
-    protected void setPagerTabs(TabStrip tabStrip, FermatSession fermatSession,FermatFragmentFactory fermatFragmentFactory) {
+    protected void setPagerTabs(TabStrip tabStrip, ReferenceAppFermatSession referenceAppFermatSession,FermatFragmentFactory fermatFragmentFactory) throws InvalidParameterException {
         //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        if(fermatFragmentFactory == null) throw new InvalidParameterException("FragmentFactory null, App code: "+ referenceAppFermatSession.getAppPublicKey());
         tabLayout.setVisibility(View.VISIBLE);
         pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
@@ -615,7 +616,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 getApplicationContext(),
                 fermatFragmentFactory,
                 tabStrip,
-                fermatSession,
+                referenceAppFermatSession,
                 getAppResources());
         pagertabs.setAdapter(adapter);
         if(tabStrip.isHasIcon()){
@@ -632,46 +633,30 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession fermatSession,FermatStructure fermatStructure) {
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,ReferenceAppFermatSession referenceAppFermatSession, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment) {
 
         try {
-            String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
-
+//            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = fermatStructure.getLastActivity().getLastFragment();
+            String fragment = runtimeFragment.getType();
             if (fermatFragmentFactory != null) {
-
-                //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
                 tabLayout.setVisibility(View.GONE);
-
                 pagertabs = (ViewPager) findViewById(R.id.pager);
                 pagertabs.setVisibility(View.VISIBLE);
-
-
                 adapter = new TabsPagerAdapter(getFragmentManager(),
                         getApplicationContext(),
                         fermatFragmentFactory,
                         fragment,
-                        fermatSession,
+                        referenceAppFermatSession,
                         getAppResources());
                 pagertabs.setAdapter(adapter);
-
-
-                //pagertabs.setCurrentItem();
-                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                        .getDisplayMetrics());
+                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
                 pagertabs.setPageMargin(pageMargin);
-                //pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
-
-
-                //tabLayout.setupWithViewPager(pagertabs);
-                //pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
             handleExceptionAndRestart();
         }
-
     }
 
     /**
@@ -877,7 +862,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             }
         }else{
-            Log.e(TAG,"TablLayout null");
+            Log.e(TAG, "TablLayout null");
         }
     }
 
@@ -1267,7 +1252,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    protected FermatSession createOrOpenApplication() {
+    protected ReferenceAppFermatSession createOrOpenApplication() {
         try {
             Bundle bundle = getIntent().getExtras();
             FermatApp fermatApp = null;
@@ -1306,16 +1291,35 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param fermatApp
      * @return
      */
-    private FermatSession createOrOpenApp(FermatApp fermatApp){
-        FermatSession fermatSession = null;
+    private ReferenceAppFermatSession createOrOpenApp(FermatApp fermatApp){
+        ReferenceAppFermatSession referenceAppFermatSession = null;
         FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
-            fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
+            referenceAppFermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
         }else{
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
-            fermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
+            referenceAppFermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
         }
-        return fermatSession;
+        return referenceAppFermatSession;
+    }
+
+    /**
+     *  Method used to get a Session
+     *
+     * @param appPublicKey
+     * @return
+     * @throws Exception
+     */
+    protected ReferenceAppFermatSession createOrOpenSession(String appPublicKey) throws Exception {
+        ReferenceAppFermatSession referenceAppFermatSession = null;
+        FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
+        if(fermatAppsManager.isAppOpen(appPublicKey)){
+            referenceAppFermatSession = fermatAppsManager.getAppsSession(appPublicKey);
+        }else{
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
+            referenceAppFermatSession = fermatAppsManager.openApp(fermatAppsManager.getApp(appPublicKey),fermatAppConnection);
+        }
+        return referenceAppFermatSession;
     }
 
 
@@ -1424,8 +1428,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
                     final Activity activity = fermatStructure.getLastActivity();
-                    FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), fermatSession);
+                    ReferenceAppFermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), referenceAppFermatSession);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1681,7 +1685,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         try{
             ApplicationSession.getInstance().getApplicationManager().openFermatApp(appPublicKey);
         }catch (Exception e){
-            throw new Exception("Error calling openFermatApp in FermatSession");
+            throw new Exception("Error calling openFermatApp in ReferenceAppFermatSession");
         }
     }
 

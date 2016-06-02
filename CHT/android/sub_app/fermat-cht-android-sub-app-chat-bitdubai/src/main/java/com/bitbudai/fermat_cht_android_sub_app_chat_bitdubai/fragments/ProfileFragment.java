@@ -24,6 +24,7 @@ import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -80,7 +81,7 @@ public class ProfileFragment extends AbstractFermatFragment {
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
-    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
     String TAG = "CHT_ProfileFragment";
@@ -108,7 +109,7 @@ public class ProfileFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession=((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) appSession);
+            chatSession=((ChatSessionReferenceApp) appSession);
             chatManager= chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();

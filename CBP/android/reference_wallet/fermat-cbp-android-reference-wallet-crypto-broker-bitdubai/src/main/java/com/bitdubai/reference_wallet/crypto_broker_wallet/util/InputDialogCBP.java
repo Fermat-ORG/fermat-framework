@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -29,7 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.List;
  * Modified by abicelis on 06/04/16
  */
 
-public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
+public class InputDialogCBP extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
 
     //Constants
     public static final int BANK_DIALOG = 1;
@@ -54,7 +54,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
 
 
     //Managers
-    private CryptoBrokerWalletSession walletSession;
+    private CryptoBrokerWalletSessionReferenceApp walletSession;
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     CryptoBrokerWalletModuleManager walletManager;
@@ -95,8 +95,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
     };
 
-    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
-        super(activity, fermatSession, resources);
+    public InputDialogCBP(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
+        super(activity, referenceAppFermatSession, resources);
         this.activity = activity;
         this.walletManager = WalletManager;
         this.dialogType = dialogType;
@@ -106,7 +106,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            walletSession = ((CryptoBrokerWalletSession) getSession());
+            walletSession = ((CryptoBrokerWalletSessionReferenceApp) getSession());
             moduleManager = walletSession.getModuleManager();
             errorManager = getSession().getErrorManager();
 

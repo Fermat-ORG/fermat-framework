@@ -28,7 +28,7 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
@@ -72,10 +72,10 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<De
             resource = (Resource) appSession.getData("resource");
         }
 
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+        //developerSubAppSession = (DeveloperSubAppSessionReferenceApp) super.walletSession;
 
         try {
-            ToolManager toolManager = ((DeveloperSubAppSession) appSession).getModuleManager();
+            ToolManager toolManager = ((DeveloperSubAppSessionReferenceApp) appSession).getModuleManager();
 
         } catch (Exception ex) {
             appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));

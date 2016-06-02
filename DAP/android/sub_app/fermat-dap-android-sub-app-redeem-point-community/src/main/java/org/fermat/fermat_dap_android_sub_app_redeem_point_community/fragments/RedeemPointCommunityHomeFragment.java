@@ -42,7 +42,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -72,7 +72,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private static RedeemPointCommunitySubAppModuleManager moduleManager;
-    AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     RedeemPointSettings settings = null;
     private int redeemNotificationsCount = 0;
 
@@ -121,7 +121,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
             actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
-            assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+            assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
             moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -492,7 +492,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             if (actorsSelected.size() > 0) {
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -579,7 +579,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -661,7 +661,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();

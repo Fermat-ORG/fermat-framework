@@ -27,7 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     /**
      * Session
      */
-    ReferenceWalletSession referenceWalletSession;
+    ReferenceWalletSessionReferenceApp referenceWalletSession;
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
@@ -81,7 +81,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession)appSession;
+        referenceWalletSession = (ReferenceWalletSessionReferenceApp)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
 
@@ -267,7 +267,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceWalletSessionReferenceApp referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
 

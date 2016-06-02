@@ -3,9 +3,6 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
@@ -16,12 +13,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
 
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.showMessage;
@@ -34,13 +29,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
     FermatWallet cryptoWallet;
-    FermatWalletSession referenceWalletSession;
+    ReferenceAppFermatWalletSession referenceWalletSession;
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, FermatWalletSession referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, ReferenceAppFermatWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;

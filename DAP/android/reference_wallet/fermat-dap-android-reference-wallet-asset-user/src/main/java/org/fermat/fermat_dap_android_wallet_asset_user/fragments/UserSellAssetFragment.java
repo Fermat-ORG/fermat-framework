@@ -54,7 +54,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdap
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.SellInfo;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
@@ -84,7 +84,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
 
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
@@ -123,7 +123,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

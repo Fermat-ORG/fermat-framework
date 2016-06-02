@@ -33,7 +33,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager> implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
+public class SettingsBankAccountsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
     private static final String TAG = "WizardPageSetBank";

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2015.10.18..
  */
-public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
+public abstract class FermatDialog <S extends ReferenceAppFermatSession,R extends ResourceProviderManager> extends Dialog {
 
 
     private final Context activity;

@@ -10,8 +10,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -32,18 +29,11 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
@@ -56,7 +46,7 @@ import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.lang.ref.WeakReference;
@@ -74,7 +64,7 @@ import static android.widget.Toast.makeText;
  */
 
 public class ConnectionsWorldFragment
-        extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
@@ -87,7 +77,7 @@ public class ConnectionsWorldFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     //Data
@@ -134,7 +124,7 @@ public class ConnectionsWorldFragment
             setHasOptionsMenu(true);
 
             //Get managers
-            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             //@Deprecated
@@ -684,7 +674,7 @@ public class ConnectionsWorldFragment
 //    // flags
 //    private boolean isRefreshing = false;
 //    private View rootView;
-//    private ChatUserSubAppSession chatUserSubAppSession;
+//    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
 //    private String searchName;
 //    private LinearLayout emptyView;
 //    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
@@ -714,7 +704,7 @@ public class ConnectionsWorldFragment
 //
 //            setHasOptionsMenu(true);
 //            // setting up  module
-//            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+//            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
 //            moduleManager = chatUserSubAppSession.getModuleManager();
 //            errorManager = appSession.getErrorManager();
 //            settingsManager = chatUserSubAppSession.getModuleManager().getSettingsManager();

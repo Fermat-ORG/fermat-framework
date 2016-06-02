@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -44,7 +44,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
 
     private AssetUserWalletSubAppModuleManager moduleManager;
     //    SettingsManager<AssetUserSettings> settingsManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -58,7 +58,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSession) appSession);
+        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

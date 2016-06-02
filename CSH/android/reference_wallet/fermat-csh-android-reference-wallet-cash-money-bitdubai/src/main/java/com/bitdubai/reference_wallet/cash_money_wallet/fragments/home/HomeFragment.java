@@ -35,7 +35,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.adapters.TransactionsAdapter;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -51,7 +51,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     protected final String TAG = "HomeFragment";
 
     // Fermat Managers
-    private CashMoneyWalletSession walletSession;
+    private CashMoneyWalletSessionReferenceApp walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -85,7 +85,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         super.onCreate(savedInstanceState);
 
         try {
-            walletSession = ((CashMoneyWalletSession) appSession);
+            walletSession = ((CashMoneyWalletSessionReferenceApp) appSession);
             moduleManager = walletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
@@ -279,7 +279,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     /* MISC FUNCTIONS */
     private void lauchCreateTransactionDialog(TransactionType transactionType){
-        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType, null, null);
+        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSessionReferenceApp) appSession, getResources(), transactionType, null, null);
         transactionFragmentDialog.setOnDismissListener(this);
         transactionFragmentDialog.show();
     }

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.sub_app.music_player.fragmentFactory.MusicPlayerFragmentFactory;
-import com.bitdubai.sub_app.music_player.session.MusicPlayerSession;
+import com.bitdubai.sub_app.music_player.session.MusicPlayerSessionReferenceApp;
 
 /**
  * Created by Miguel Payarez on 13/04/16.
@@ -43,7 +43,7 @@ public class MusicPlayerFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public AbstractFermatSession getSession() { return new MusicPlayerSession(); }
+    public AbstractReferenceAppFermatSession getSession() { return new MusicPlayerSessionReferenceApp(); }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

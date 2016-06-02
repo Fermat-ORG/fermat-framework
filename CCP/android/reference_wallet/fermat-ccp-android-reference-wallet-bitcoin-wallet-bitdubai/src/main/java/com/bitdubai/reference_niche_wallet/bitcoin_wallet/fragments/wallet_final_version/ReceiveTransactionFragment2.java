@@ -46,7 +46,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import static android.widget.Toast.makeText;
  * @author Matias Furszyfer
  * @since 7/10/2015
  */
-public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceWalletSession,ResourceProviderManager>
+public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceWalletSessionReferenceApp,ResourceProviderManager>
         implements FermatListItemListeners<CryptoWalletTransaction> {
 
     // Fermat Managers
@@ -72,7 +72,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private ArrayList<GrouperItem> openNegotiationList;
     private View rootView;
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceWalletSessionReferenceApp referenceWalletSession;
     private View emptyListViewsContainer;
     private BlockchainNetworkType blockchainNetworkType;
 

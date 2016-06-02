@@ -32,7 +32,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -63,7 +63,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private UserCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private AssetUserCommunitySubAppModuleManager moduleManager;
-    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
     private ErrorManager errorManager;
     private int offset = 0;
@@ -88,7 +88,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
