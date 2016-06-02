@@ -205,7 +205,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage);
 
             registerIdentities();
 

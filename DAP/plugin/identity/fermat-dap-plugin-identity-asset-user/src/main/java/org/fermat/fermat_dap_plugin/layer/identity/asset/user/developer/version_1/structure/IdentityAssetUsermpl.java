@@ -21,14 +21,12 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetUsermpl implements IdentityAssetUser {
+public class IdentityAssetUsermpl implements IdentityAssetUser, Serializable {
 
     private String alias;
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
-    private PluginFileSystem pluginFileSystem;
-    private UUID pluginId;
 
     public IdentityAssetUsermpl(String alias, String publicKey, String privateKey, byte[] profileImage) {
         this.alias = alias;
@@ -41,10 +39,6 @@ public class IdentityAssetUsermpl implements IdentityAssetUser {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
-    }
-
-    public IdentityAssetUsermpl() {
-
     }
 
     @Override
@@ -69,32 +63,6 @@ public class IdentityAssetUsermpl implements IdentityAssetUser {
 
     @Override
     public void setNewProfileImage(byte[] newProfileImage) {
-        try {
-            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetUserIdentityPluginRoot.ASSET_USER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-
-            file.setContent(profileImage);
-
-
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-        //TODO: Revisar este manejo de excepciones
-//        } catch (CantPersistFileException e) {
-//            throw new CantSetAssetIssuerIdentityProfileImagenException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-//
-//        } catch (CantCreateFileException e) {
-//            throw new CantSetAssetIssuerIdentityProfileImagenException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
-//        } catch (Exception e) {
-//            throw new CantSetAssetIssuerIdentityProfileImagenException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
-//        }
         this.profileImage = newProfileImage;
     }
 
@@ -108,5 +76,15 @@ public class IdentityAssetUsermpl implements IdentityAssetUser {
             // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "IdentityAssetUsermpl{" +
+                "alias='" + alias + '\'' +
+                ", ActorType='" + getActorType() + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", privateKey='" + privateKey + '\'' +
+                '}';
     }
 }
