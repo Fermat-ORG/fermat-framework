@@ -40,7 +40,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
-import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAndroidCoreModule;
@@ -269,53 +268,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     public void changeActivity(String activityName, String appBackPublicKey, Object... objects) {
         try {
-
             Activities activities = Activities.getValueFromString(activityName);
-            if(activities.equals(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode())){
-                Intent intent;
-                try {
-
-
-                    intent = new Intent(this, EditableWalletActivity.class);
-                    intent.putExtra(EditableWalletActivity.WALLET_NAVIGATION_STRUCTURE,(AppNavigationStructure)objects[0]);
-                    intent.putExtra(EditableWalletActivity.INSTALLED_WALLET,(InstalledWallet)objects[1]);
-
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    finish();
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-
-                }catch (Exception e){
-                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
-                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-                }
-
-            }else{
-
-
                 if(!activities.equals(Activities.CCP_DESKTOP)){
-
                     getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
                     resetThisActivity();
                     loadUI();
-//                    List<AbstractFermatFragment> list = new ArrayList<>();
-//                    list.add(new FermatNetworkSettings());
-//                    getScreenAdapter().removeAllFragments();
-//                    getScreenAdapter().changeData(list);
-//                    getScreenAdapter().startUpdate(getPagertabs());
-
-//                    ScreenPagerAdapter screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(),list);
-//                    getPagertabs().setAdapter(screenPagerAdapter);
-//                    getPagertabs().invalidate();
-
-
-
-
                 }else {
                     try {
                         resetThisActivity();
-
                         getDesktopRuntimeManager().getLastApp().getActivity(activities);
 
                         Intent intent = new Intent(this, DesktopActivity.class);
@@ -323,15 +283,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         finish();
                         startActivity(intent);
-
-
                     } catch (Exception e) {
-
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
                         Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
                     }
                 }
-            }
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -456,17 +412,10 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
                         findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                         initialisePaging();
-
                         if(bottomMenuReveal ==null){
                             findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                             bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
                             bottomMenuReveal.buildMenuSettings();
-//                            try {
-//                                bottomMenuReveal.getOnClickListener().onClick(null);
-//                                bottomMenuReveal.getOnClickListener().onClick(null);
-//                            }catch (Exception e){
-//
-//                            }
                         }
                     } else {
 
@@ -484,7 +433,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     if ((activity.getBottomNavigationMenu()) != null) {
                         bottomNavigationEnabled(true);
                     }
-//                }
             } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
