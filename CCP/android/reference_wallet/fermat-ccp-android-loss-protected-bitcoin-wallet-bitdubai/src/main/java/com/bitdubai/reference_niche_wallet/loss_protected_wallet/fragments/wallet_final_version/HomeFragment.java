@@ -445,15 +445,17 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
-            yAxis.setEnabled(false);
-            yAxis.setStartAtZero(false);
-            yAxis.setAxisMaxValue(30);
-            yAxis.setAxisMinValue(-30);
+            yAxis.setEnabled(true);
+            yAxis.setTextColor(Color.WHITE);
+            yAxis.setGridColor(Color.WHITE);
+            //yAxis.setStartAtZero(false);
+            //yAxis.setAxisMaxValue(30);
+            //yAxis.setAxisMinValue(-30);
 
             YAxis yAxis1R = chart.getAxisRight();
             yAxis1R.setEnabled(false);
-            yAxis1R.setAxisMaxValue(30);
-            yAxis1R.setAxisMinValue(-30);
+            //yAxis1R.setAxisMaxValue(30);
+            //yAxis1R.setAxisMinValue(-30);
 
             XAxis xAxis = chart.getXAxis();
             xAxis.setEnabled(false);
@@ -525,11 +527,11 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 //Set entries values for the chart
                 entryList.add(new Entry((float)valueEntry, i));
-                xValues.add(String.valueOf(i));
+                xValues.add("$"+String.valueOf(valueEntry));
             }
             chart.setVisibility(View.VISIBLE);
         }else{
-            txt_earnOrLost.setText("$0.00 earned");
+            txt_earnOrLost.setText("$0.00");
             earnOrLostImage.setImageResource(R.drawable.earning_icon);
             chart.setVisibility(View.GONE);
             noDataInChart.setVisibility(View.VISIBLE);
