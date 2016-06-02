@@ -81,7 +81,6 @@ import java.sql.Timestamp;
  * @since   Java JDK 1.7
  */
 @PluginInfo(createdBy = "Roberto Requena", maintainerMail = "rart3001@gmail.com", platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_NODE)
-
 public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNodeManager {
 
     /**
@@ -926,5 +925,22 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public ECCKeyPair getIdentity() {
         return identity;
+    }
+
+
+    /**
+     * Get the Propagate Actor Catalog Agent
+     * @return PropagateActorCatalogAgent
+     */
+    public PropagateActorCatalogAgent getPropagateActorCatalogAgent() {
+        return propagateActorCatalogAgent;
+    }
+
+    /**
+     * Get Propagate Node Catalog Agent
+     * @return PropagateNodeCatalogAgent
+     */
+    public PropagateNodeCatalogAgent getPropagateNodeCatalogAgent() {
+        return propagateNodeCatalogAgent;
     }
 }

@@ -59,6 +59,11 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     private final int PROPAGATION_TIME = 3;
 
     /**
+     * Represent the MIN_SUCCESSFUL_PROPAGATION_COUNT
+     */
+    private final int MIN_SUCCESSFUL_PROPAGATION_COUNT = 3;
+
+    /**
      * Represent the scheduledThreadPool
      */
     private ScheduledExecutorService scheduledThreadPool;
@@ -84,6 +89,11 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     private NetworkNodePluginRoot networkNodePluginRoot;
 
     /**
+     * Represent the successfulPropagateCount
+     */
+    private int successfulPropagateCount;
+
+    /**
      * Constructor
      */
     public PropagateNodeCatalogAgent(NetworkNodePluginRoot networkNodePluginRoot){
@@ -92,6 +102,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
         this.scheduledFutures    = new ArrayList<>();
         this.nodesCatalogDao     = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getNodesCatalogDao();
         this.nodesCatalogTransactionsPendingForPropagationDao = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getNodesCatalogTransactionsPendingForPropagationDao();
+        this.successfulPropagateCount = 0;
     }
 
     /**
@@ -124,9 +135,20 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
                 }
             }
 
-            LOG.info("Deleting all Transactions Pending For Propagation ");
-            nodesCatalogTransactionsPendingForPropagationDao.deleteAll();
-            LOG.info("Total Transactions Pending For Propagation = " + nodesCatalogTransactionsPendingForPropagationDao.getAllCount());
+            /*
+             * If successful propagation is higher or equals to
+             * the minimum required delete all pending transactions
+             */
+            if (successfulPropagateCount >= MIN_SUCCESSFUL_PROPAGATION_COUNT) {
+
+                LOG.info("Deleting all Transactions Pending For Propagation ");
+                nodesCatalogTransactionsPendingForPropagationDao.deleteAll();
+                LOG.info("Total Transactions Pending For Propagation = " + nodesCatalogTransactionsPendingForPropagationDao.getAllCount());
+                successfulPropagateCount = 0;
+            }else {
+                LOG.info("Not successfully propagated the minimum number of times, records are not erased.");
+            }
+
 
         }else {
 
@@ -248,6 +270,22 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
 
         return  transactionsPendingForPropagation;
 
+    }
+
+    /**
+     * Get Successful Propagate Count
+     * @return int
+     */
+    public int getSuccessfulPropagateCount() {
+        return successfulPropagateCount;
+    }
+
+    /**
+     * Set Successful Propagate Count
+     * @param successfulPropagateCount
+     */
+    public void setSuccessfulPropagateCount(int successfulPropagateCount) {
+        this.successfulPropagateCount = successfulPropagateCount;
     }
 
 }

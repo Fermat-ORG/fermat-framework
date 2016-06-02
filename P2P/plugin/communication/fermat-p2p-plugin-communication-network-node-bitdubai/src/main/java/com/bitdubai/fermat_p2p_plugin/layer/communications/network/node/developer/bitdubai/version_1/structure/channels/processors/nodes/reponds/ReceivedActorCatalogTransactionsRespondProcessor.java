@@ -66,10 +66,11 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
 
                     if (messageContent.getLateNotificationsCounter() > 0) {
 
-                        LOG.info("(messageContent.getLateNotificationsCounter() = "+messageContent.getLateNotificationsCounter());
+                        LOG.info("(messageContent.getLateNotificationsCounter() = " + messageContent.getLateNotificationsCounter());
 
                         NodesCatalog remoteNodesCatalog = (NodesCatalog) session.getUserProperties().get(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE);
                         remoteNodesCatalog.setLateNotificationsCounter(remoteNodesCatalog.getLateNotificationsCounter() + messageContent.getLateNotificationsCounter());
+                        getNetworkNodePluginRoot().getPropagateActorCatalogAgent().setSuccessfulPropagateCount(getNetworkNodePluginRoot().getPropagateActorCatalogAgent().getSuccessfulPropagateCount()+1);
                         getDaoFactory().getNodesCatalogDao().update(remoteNodesCatalog);
                     }
 
