@@ -1,9 +1,14 @@
-package com.bitdubai.android_core.app;
+package com.bitdubai.android_core.app.common.version_1.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
+import com.bitdubai.android_core.app.AppActivity;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.DesktopActivity;
+import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -16,8 +21,11 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 public class AppLauncherReceiver extends BroadcastReceiver {
 
 
+    private static final String TAG = "AppLauncherReceiver";
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(TAG,"onReceive");
         String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
         FermatApp fermatApp = null;
         try {
