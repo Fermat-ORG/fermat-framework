@@ -23,9 +23,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -62,15 +62,15 @@ import java.util.UUID;
         plugin = Plugins.BITDUBAI_ASSET_FACTORY_MODULE)
 public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager, Serializable {
 
-    private final AssetFactoryManager                   assetFactoryManager;
-    private final IdentityAssetIssuerManager            identityAssetIssuerManager;
+    private final AssetFactoryManager assetFactoryManager;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
     private final CryptoWalletManager cryptoWalletManager;
-    private final ErrorManager                          errorManager;
-    private final EventManager                          eventManager;
-    private final Broadcaster                           broadcaster;
-    private final PluginFileSystem                      pluginFileSystem;
-    private final UUID                                  pluginId;
-    private final AssetFactorySubAppModulePluginRoot    assetFactorySubAppModulePluginRoot;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+    private final AssetFactorySubAppModulePluginRoot assetFactorySubAppModulePluginRoot;
 
     private SettingsManager<AssetFactorySettings> settingsManager;
     private BlockchainNetworkType selectedNetwork;
@@ -94,15 +94,15 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
 
         super(pluginFileSystem, pluginId);
 
-        this.assetFactoryManager                    = assetFactoryManager;
-        this.identityAssetIssuerManager             = identityAssetIssuerManager;
+        this.assetFactoryManager = assetFactoryManager;
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
         this.cryptoWalletManager = cryptoWalletManager;
-        this.errorManager                           = errorManager;
-        this.eventManager                           = eventManager;
-        this.broadcaster                            = broadcaster;
-        this.pluginFileSystem                       = pluginFileSystem;
-        this.pluginId                               = pluginId;
-        this.assetFactorySubAppModulePluginRoot     = assetFactorySubAppModulePluginRoot;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.broadcaster = broadcaster;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.assetFactorySubAppModulePluginRoot = assetFactorySubAppModulePluginRoot;
     }
 
     public AssetFactory getAssetFactory(String assetPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {

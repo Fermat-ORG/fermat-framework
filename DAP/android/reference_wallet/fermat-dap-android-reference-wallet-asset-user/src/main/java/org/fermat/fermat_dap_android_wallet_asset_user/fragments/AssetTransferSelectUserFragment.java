@@ -237,7 +237,7 @@ public class AssetTransferSelectUserFragment extends FermatWalletListFragment<Us
     @Override
     public void onItemClickListener(User data, int position) {
         //TODO select user
-       //appSession.setData("user_selected", data);
+        //appSession.setData("user_selected", data);
         //changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
     }
 

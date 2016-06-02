@@ -243,7 +243,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         }).start();
     }
 
-    public void setFermatRunning(boolean fermatRunning) {
+    public synchronized void setFermatRunning(boolean fermatRunning) {
         Log.i(TAG,"Fermat running");
         this.fermatRunning = fermatRunning;
     }

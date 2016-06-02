@@ -159,7 +159,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         ActiveActorIdentityInformation identity = null;
         try {
             identity = moduleManager.getSelectedActorIdentity();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (identity == null) {
@@ -189,7 +189,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -200,8 +200,8 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -209,11 +209,11 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

@@ -51,8 +51,9 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
     private AssetFactoryModuleManager moduleManager;
     AssetFactorySession assetFactorySession;
     private ErrorManager errorManager;
-//    SettingsManager<AssetFactorySettings> settingsManager;
+    //    SettingsManager<AssetFactorySettings> settingsManager;
     AssetFactorySettings settings = null;
+
     public static SettingsFactoryNetworkFragment newInstance() {
         return new SettingsFactoryNetworkFragment();
     }
@@ -109,7 +110,8 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

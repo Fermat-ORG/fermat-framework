@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 15/09/15.
  */
-public class CantInitializeAssetFactoryMiddlewareDatabaseException extends FermatException{
+public class CantInitializeAssetFactoryMiddlewareDatabaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE ASSET FACTORY MIDDLEWARE DATABASE EXCEPTION";
 

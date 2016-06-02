@@ -13,11 +13,10 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bitdubai.android_core.app.AppActivity;
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -120,7 +119,7 @@ public class NotificationService extends Service {
                     }
                 }
             }else{
-                Intent intent = new Intent(this,AppActivity.class);
+                Intent intent = new Intent();
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                 intent.setAction("org.fermat.APP_LAUNCHER");
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);

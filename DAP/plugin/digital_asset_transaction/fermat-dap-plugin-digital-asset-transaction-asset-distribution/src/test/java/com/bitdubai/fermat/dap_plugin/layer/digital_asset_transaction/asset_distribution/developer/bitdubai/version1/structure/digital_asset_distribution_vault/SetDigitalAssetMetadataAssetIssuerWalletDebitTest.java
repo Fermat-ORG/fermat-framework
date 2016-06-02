@@ -54,6 +54,7 @@ public class SetDigitalAssetMetadataAssetIssuerWalletDebitTest {
     @Mock
     private AssetIssuerWallet assetIssuerWallet;
     private BalanceType typeBalance;
+
     @Before
     public void init() throws Exception {
         pluginId = UUID.randomUUID();
@@ -66,7 +67,7 @@ public class SetDigitalAssetMetadataAssetIssuerWalletDebitTest {
         genesisTransaction = new CryptoTransaction();
         String typeCoin = CryptoCurrency.BITCOIN.getCode();
         typeBalance = BalanceType.getByCode("AVAILABLE");
-        System.out.println("Type coin: "+typeCoin);
+        System.out.println("Type coin: " + typeCoin);
         CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(typeCoin);
         CryptoAddress addressFrom = new CryptoAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv", cryptoCurrency);
         CryptoAddress addressTo = new CryptoAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv", cryptoCurrency);
@@ -92,8 +93,6 @@ public class SetDigitalAssetMetadataAssetIssuerWalletDebitTest {
 
         mockDigitalAssetDistributionVault.updateIssuerWalletBalance(digitalAssetMetadata, genesisTransaction, typeBalance);
     }
-
-
 
 
 }

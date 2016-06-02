@@ -13,7 +13,7 @@ public class CryptoWalletBalanceInsufficientException extends DAPException {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
-    public CryptoWalletBalanceInsufficientException(final String message){
+    public CryptoWalletBalanceInsufficientException(final String message) {
         this(null, DEFAULT_MESSAGE, message);
     }
 

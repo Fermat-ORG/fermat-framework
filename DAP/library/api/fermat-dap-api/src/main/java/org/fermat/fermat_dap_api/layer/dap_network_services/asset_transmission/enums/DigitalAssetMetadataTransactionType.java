@@ -21,8 +21,8 @@ public enum DigitalAssetMetadataTransactionType {
     /**
      * Definition types
      */
-    META_DATA_TRANSMIT        ("MDT"),
-    TRANSACTION_STATUS_UPDATE ("TSU");
+    META_DATA_TRANSMIT("MDT"),
+    TRANSACTION_STATUS_UPDATE("TSU");
 
     /**
      * Represent the code of the message status
@@ -43,7 +43,9 @@ public enum DigitalAssetMetadataTransactionType {
      *
      * @return String that represent of the message status
      */
-    public String getCode()   { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
     /**
      * Return the enum by the code

@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -47,7 +46,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.version_1.RedeemPointCommunitySubAppModulePluginRoot;
@@ -69,18 +67,18 @@ import java.util.UUID;
         plugin = Plugins.REDEEM_POINT)
 public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements RedeemPointCommunitySubAppModuleManager, Serializable {
 
-//    private final UUID                          pluginId;
+    //    private final UUID                          pluginId;
 //    private PluginFileSystem                    pluginFileSystem;
-    private LogManager                          logManager;
-    ErrorManager                                errorManager;
-    private EventManager                        eventManager;
-    RedeemPointIdentityManager                  redeemPointIdentityManager;
-    ActorAssetUserManager                       actorAssetUserManager;
-    ActorAssetRedeemPointManager                actorAssetRedeemPointManager;
-    AssetUserWalletManager                      assetUserWalletManager;
-    AssetRedeemPointActorNetworkServiceManager  assetRedeemPointActorNetworkServiceManager;
-    private Broadcaster                         broadcaster;
-    RedeemPointCommunitySubAppModulePluginRoot  redeemPointCommunitySubAppModulePluginRoot;
+    private LogManager logManager;
+    ErrorManager errorManager;
+    private EventManager eventManager;
+    RedeemPointIdentityManager redeemPointIdentityManager;
+    ActorAssetUserManager actorAssetUserManager;
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+    AssetUserWalletManager assetUserWalletManager;
+    AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
+    private Broadcaster broadcaster;
+    RedeemPointCommunitySubAppModulePluginRoot redeemPointCommunitySubAppModulePluginRoot;
 
     BlockchainNetworkType blockchainNetworkType;
     String appPublicKey;
@@ -102,15 +100,15 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
 
 //        this.pluginId                                   = pluginId;
 //        this.pluginFileSystem                           = pluginFileSystem;
-        this.logManager                                 = logManager;
-        this.errorManager                               = errorManager;
-        this.eventManager                               = eventManager;
-        this.redeemPointIdentityManager                 = redeemPointIdentityManager;
-        this.actorAssetUserManager                      = actorAssetUserManager;
-        this.actorAssetRedeemPointManager               = actorAssetRedeemPointManager;
-        this.assetUserWalletManager                     = assetUserWalletManager;
+        this.logManager = logManager;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.redeemPointIdentityManager = redeemPointIdentityManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
+        this.assetUserWalletManager = assetUserWalletManager;
         this.assetRedeemPointActorNetworkServiceManager = assetRedeemPointActorNetworkServiceManager;
-        this.broadcaster                                = broadcaster;
+        this.broadcaster = broadcaster;
         this.redeemPointCommunitySubAppModulePluginRoot = redeemPointCommunitySubAppModulePluginRoot;
     }
 
@@ -206,10 +204,10 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
             return actorAssetRedeemPointManager.getActorByPublicKey(actorPublicKey, assetUserWalletManager.getSelectedNetwork());
         } catch (CantGetAssetRedeemPointActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetAssetRedeemPointActorsException(CantGetAssetRedeemPointActorsException.DEFAULT_MESSAGE,e,"THERE WAS AN ERROR GETTING ACTOR REDEEM POINT",null);
+            throw new CantGetAssetRedeemPointActorsException(CantGetAssetRedeemPointActorsException.DEFAULT_MESSAGE, e, "THERE WAS AN ERROR GETTING ACTOR REDEEM POINT", null);
         } catch (CantAssetRedeemPointActorNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantAssetRedeemPointActorNotFoundException(CantAssetRedeemPointActorNotFoundException.DEFAULT_MESSAGE,e,"ACTOR REDEEM POINT NOT FOUND",null);
+            throw new CantAssetRedeemPointActorNotFoundException(CantAssetRedeemPointActorNotFoundException.DEFAULT_MESSAGE, e, "ACTOR REDEEM POINT NOT FOUND", null);
         }
     }
 
@@ -245,9 +243,7 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
                         System.out.println("The actor asset Redeem Point is connected");
                     }
                 }
-            }
-            else
-            {
+            } else {
                 throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users. No identity", null);
             }
         } catch (CantAskConnectionActorAssetException e) {
@@ -350,21 +346,21 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetRedeemPoints.add((new RedeemPointActorRecord (
+                actorAssetRedeemPoints.add((new RedeemPointActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
                         (double) 0,
                         (double) 0,
                         null,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         record.getType(),
                         null,
                         record.getProfileImage())));
             }
 
-            return  actorAssetRedeemPoints;
+            return actorAssetRedeemPoints;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR REDEEM POINT WAITING YOUR ACCEPTANCE", e, "", "");
@@ -387,21 +383,21 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetRedeemPoints.add((new RedeemPointActorRecord (
+                actorAssetRedeemPoints.add((new RedeemPointActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
                         (double) 0,
                         (double) 0,
                         null,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         record.getType(),
                         null,
                         record.getProfileImage())));
             }
 
-            return  actorAssetRedeemPoints;
+            return actorAssetRedeemPoints;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR REDEEM POINT WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR REDEEM POINT MANAGER");
