@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app;
+package com.bitdubai.android_core.app.common.version_1.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
