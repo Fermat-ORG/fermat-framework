@@ -453,20 +453,23 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     }
 
-  /*  @Override
-    public void onBackPressed(){
+    public void saveAndGoBack(){
         try {
             if(ExistIdentity()){
                 updateIdentityInBackDevice("onClick");
             }else{
                 if(mChatName.getText() != null)
-                createNewIdentityInBackDevice("onClick");
+                    createNewIdentityInBackDevice("onClick");
             }
         } catch (CHTException e) {
             //e.printStackTrace();
         }
+    }
+    @Override
+    public void onBackPressed(){
+        saveAndGoBack();
         super.onBackPressed();
-    }*/
+    }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
