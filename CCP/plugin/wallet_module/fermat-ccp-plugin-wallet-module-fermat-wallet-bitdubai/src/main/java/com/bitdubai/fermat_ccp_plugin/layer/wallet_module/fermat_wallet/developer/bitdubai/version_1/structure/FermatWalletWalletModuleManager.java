@@ -154,7 +154,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_FERMAT_WALLET)
 public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWalletSettings> implements FermatWallet,Serializable {
 
     private final FermatWalletManager bitcoinWalletManager          ;
