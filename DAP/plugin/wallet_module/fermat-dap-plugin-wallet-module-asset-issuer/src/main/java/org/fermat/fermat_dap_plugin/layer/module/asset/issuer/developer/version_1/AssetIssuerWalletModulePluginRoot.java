@@ -173,7 +173,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetIssuerWalletModuleManager.class)
-    public ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetIssuerWalletSupAppModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation started...", null, null);
 

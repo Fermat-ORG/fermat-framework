@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface AssetIssuerIdentityModuleManager extends ModuleManager, ModuleSettingsImpl<IssuerIdentitySettings>, Serializable {
+public interface AssetIssuerIdentityModuleManager extends ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IssuerIdentitySettings>, Serializable {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

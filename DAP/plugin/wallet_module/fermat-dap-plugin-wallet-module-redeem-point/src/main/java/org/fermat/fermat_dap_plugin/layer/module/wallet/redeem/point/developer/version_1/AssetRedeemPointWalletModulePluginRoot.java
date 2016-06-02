@@ -149,7 +149,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletSubAppModule.class)
-    public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetRedeemPointWalletSubAppModule getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation started...", null, null);
 

@@ -76,6 +76,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.AssetUserWalletModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager {
+public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager, Serializable {
 
     private final AssetUserWalletManager            assetUserWalletManager;
     private final AssetAppropriationManager         assetAppropriationManager;
@@ -123,7 +124,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
         selectedUsersToDeliver = new ArrayList<>();
     }
 
-    private SettingsManager<AssetUserSettings> settingsManager;
+//    private SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager,
                                  AssetAppropriationManager assetAppropriationManager,
@@ -398,21 +399,21 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-        if (selectedNetwork == null) {
-            try {
-                if (settings == null) {
-                    settingsManager = getSettingsManager();
-                }
-                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_USER_WALLET.getCode());
-                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                //TODO: Only enter while the Active Actor Wallet is not open.
-                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_USER_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException e) {
 //                e.printStackTrace();
-            }
-        }
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
         return selectedNetwork;
     }
 

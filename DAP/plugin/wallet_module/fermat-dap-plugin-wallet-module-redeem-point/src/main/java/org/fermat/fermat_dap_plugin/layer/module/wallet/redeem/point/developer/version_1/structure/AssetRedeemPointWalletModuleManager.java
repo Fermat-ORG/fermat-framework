@@ -32,6 +32,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWa
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.version_1.AssetRedeemPointWalletModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.REDEEM_POINT)
-public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule {
+public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule, Serializable {
 
     private final AssetRedeemPointWalletManager             assetRedeemPointWalletManager;
     private final RedeemPointIdentityManager                redeemPointIdentityManager;
@@ -55,7 +56,7 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 //    private final PluginFileSystem                          pluginFileSystem;
     private final AssetRedeemPointWalletModulePluginRoot    assetRedeemPointWalletModulePluginRoot;
 
-    private SettingsManager<RedeemPointSettings> settingsManager;
+//    private SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
     private BlockchainNetworkType selectedNetwork;
     String publicKeyApp;
@@ -138,22 +139,22 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-        if (selectedNetwork == null) {
-            try {
-                if (settings == null) {
-                    settingsManager = getSettingsManager();
-                }
-                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_REDEEM_WALLET.getCode());
-                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-            } catch (CantGetSettingsException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                exception.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                //TODO: Only enter while the Active Actor Wallet is not open.
-                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-//                e.printStackTrace();
-            }
-        }
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_REDEEM_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException exception) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//                exception.printStackTrace();
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
         return selectedNetwork;
     }
 

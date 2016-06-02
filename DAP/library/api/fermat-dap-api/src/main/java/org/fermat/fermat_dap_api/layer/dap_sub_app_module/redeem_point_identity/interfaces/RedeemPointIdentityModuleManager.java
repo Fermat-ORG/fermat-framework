@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface RedeemPointIdentityModuleManager extends ModuleManager, ModuleSettingsImpl<RedeemPointIdentitySettings>, Serializable {
+public interface RedeemPointIdentityModuleManager extends ModuleManager<RedeemPointIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointIdentitySettings> {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

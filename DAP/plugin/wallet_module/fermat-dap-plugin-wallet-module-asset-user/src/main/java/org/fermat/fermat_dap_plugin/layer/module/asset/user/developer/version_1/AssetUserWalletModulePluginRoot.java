@@ -183,7 +183,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractModule<AssetUserSet
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetUserWalletModule.class)
-    public ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetUserWalletSubAppModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetUserWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetUser Wallet Module instantiation started...", null, null);
 
