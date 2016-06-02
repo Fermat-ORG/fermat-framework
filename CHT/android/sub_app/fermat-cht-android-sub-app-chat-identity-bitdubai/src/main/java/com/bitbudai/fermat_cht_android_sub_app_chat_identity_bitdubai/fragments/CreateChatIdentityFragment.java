@@ -456,10 +456,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     public void saveAndGoBack(){
         try {
             if(ExistIdentity()){
-                updateIdentityInBackDevice("onClick");
+                updateIdentityInBackDevice("onBack");
             }else{
-                if(mChatName.getText() != null)
-                    createNewIdentityInBackDevice("onClick");
+                if(!mChatName.getText().toString().equals("")) {
+                    createNewIdentityInBackDevice("onBack");
+                }
             }
         } catch (CHTException e) {
             //e.printStackTrace();
@@ -551,6 +552,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -572,6 +575,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -583,7 +588,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     private void createNewIdentityInBackDevice(String donde) {
-        String brokerNameText = mChatName.getText().toString();
+        String chatNameText = mChatName.getText().toString();
         String identityConnectionNameText = mChatConnectionState.getText().toString();
         if (chatBitmap == null) {
             //Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
@@ -592,14 +597,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         if (identityConnectionNameText.length() == 0) {
             identityConnectionNameText = "Available";
         }
-        if (brokerNameText.trim().equals("")) {
+        if (chatNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
 
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             CreateChatIdentityExecutor executor = null;
             try {
-                executor = new CreateChatIdentityExecutor(Session, brokerNameText, imgInBytes, identityConnectionNameText);
+                executor = new CreateChatIdentityExecutor(Session, chatNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -608,6 +613,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
