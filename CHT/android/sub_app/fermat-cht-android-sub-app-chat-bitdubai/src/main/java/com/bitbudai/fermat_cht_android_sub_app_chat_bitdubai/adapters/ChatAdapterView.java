@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -333,8 +333,8 @@ public class ChatAdapterView extends LinearLayout {
 
     public void onBackPressed() {
         final int actualHeight = getHeight();
-        FrameLayout.LayoutParams layoutParams =
-                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         if(dm.heightPixels < 800)
             layoutParams.height = 764;
@@ -346,8 +346,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void onAdjustKeyboard() {
-        FrameLayout.LayoutParams layoutParams =
-                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
         layoutParams.height = 440;
         messagesContainer.setLayoutParams(layoutParams);
     }
@@ -384,7 +384,7 @@ public class ChatAdapterView extends LinearLayout {
         try {
             formatter.setTimeZone(TimeZone.getDefault());
 
-             formattedTime = formatter.format(new java.util.Date(date));
+            formattedTime = formatter.format(new java.util.Date(date));
             //String formattedTime = formatter.format(dater);
             if(date.length() > 16) {
                  formattedTime = formattedTime.substring(11, 19);
