@@ -28,7 +28,7 @@ import java.util.UUID;
  *
  * Created by nerio on 14/5/2016.
  */
-public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<UserIdentitySettings> implements AssetUserIdentityModuleManager, Serializable {
+public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<UserIdentitySettings> implements AssetUserIdentityModuleManager {
 
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;

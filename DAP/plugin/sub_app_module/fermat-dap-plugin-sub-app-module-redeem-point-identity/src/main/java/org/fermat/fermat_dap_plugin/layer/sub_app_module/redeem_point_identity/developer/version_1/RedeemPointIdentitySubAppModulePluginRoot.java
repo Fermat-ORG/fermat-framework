@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY)
-public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule<RedeemPointIdentitySettings, ActiveActorIdentityInformation> implements
+public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule implements
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
@@ -121,26 +121,27 @@ public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule<Re
         }
     }
 
-    @Override
-    public void start(){
-        /**
-         * Init the plugin manager
-         */
-        System.out.println("******* Init Redeem Point Sup App Module Identity ******");
-        redeemPointIdentityModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+//    @Override
+//    public void start(){
+//        /**
+//         * Init the plugin manager
+//         */
+//        System.out.println("******* Init Redeem Point Sup App Module Identity ******");
+////        redeemPointIdentityModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
+//
+//    }
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = RedeemPointIdentitySubAppModuleManager.class)
-    public ModuleManager<RedeemPointIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public RedeemPointIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation started...", null, null);
 
-            if (redeemPointIdentityModuleManager == null)
+            if (redeemPointIdentityModuleManager == null) {
                 redeemPointIdentityModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
 
+                this.serviceStatus = ServiceStatus.STARTED;
+            }
 //            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation finished successfully.", null, null);
 
             return redeemPointIdentityModuleManager;

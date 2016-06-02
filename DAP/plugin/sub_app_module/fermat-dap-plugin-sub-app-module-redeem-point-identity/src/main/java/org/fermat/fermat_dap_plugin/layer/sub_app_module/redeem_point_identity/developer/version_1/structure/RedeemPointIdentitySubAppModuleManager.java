@@ -24,7 +24,7 @@ import java.util.UUID;
  *
  * Created by nerio on 14/5/2016.
  */
-public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityModuleManager, Serializable {
+public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityModuleManager {
 
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;

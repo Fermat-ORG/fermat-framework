@@ -30,16 +30,12 @@ import java.util.UUID;
  */
 public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<IssuerIdentitySettings> implements AssetIssuerIdentityModuleManager, Serializable {
 
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
     private final IdentityAssetIssuerManager identityAssetIssuerManager;
 
     public AssetIssuerIdentitySubAppModuleManager(IdentityAssetIssuerManager identityAssetIssuerManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginFileSystem, pluginId);
 
         this.identityAssetIssuerManager = identityAssetIssuerManager;
-        this.pluginFileSystem    = pluginFileSystem;
-        this.pluginId            = pluginId;
     }
 
     @Override

@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY)
-public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule<UserIdentitySettings, ActiveActorIdentityInformation> implements
+public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule implements
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
@@ -118,26 +118,27 @@ public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule<User
         }
     }
 
-    @Override
-    public void start(){
-        /**
-         * Init the plugin manager
-         */
-        System.out.println("******* Init Asset User Sup App Module Identity ******");
-        assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+//    @Override
+//    public void start(){
+//        /**
+//         * Init the plugin manager
+//         */
+//        System.out.println("******* Init Asset User Sup App Module Identity ******");
+////        assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
+//
+//    }
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetUserIdentitySubAppModuleManager.class)
-    public ModuleManager<UserIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetUserIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetUserIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity Sup AppModule instantiation started...", null, null);
 
-            if (assetUserIdentityModuleManager == null)
+            if (assetUserIdentityModuleManager == null) {
                 assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
 
+                this.serviceStatus = ServiceStatus.STARTED;
+            }
 //            logManager.log(AssetUserIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity Sup AppModule instantiation finished successfully.", null, null);
 
             return assetUserIdentityModuleManager;

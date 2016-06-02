@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -33,6 +32,7 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.in
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.exceptions.CantGetSupAppRedeemPointModuleException;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.version_1.structure.RedeemPointCommunitySupAppModuleManager;
 
@@ -92,8 +92,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<R
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    private SettingsManager<RedeemPointSettings> settingsManager;
-    RedeemPointCommunitySupAppModuleManager redeemPointCommunitySupAppModuleManager;
+    RedeemPointCommunitySubAppModuleManager redeemPointCommunitySupAppModuleManager;
     BlockchainNetworkType blockchainNetworkType;
 
     private String appPublicKey;
@@ -157,7 +156,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<R
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = RedeemPointCommunitySupAppModuleManager.class)
-    public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public RedeemPointCommunitySubAppModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation started...", null, null);
 

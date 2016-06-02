@@ -45,12 +45,6 @@ import java.util.regex.Pattern;
 public class AssetIssuerIdentitySubAppModulePluginRoot extends AbstractModule<IssuerIdentitySettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
-//    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-//    private LogManager logManager;
-
-//    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-//    private ErrorManager errorManager;
-//
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -118,26 +112,28 @@ public class AssetIssuerIdentitySubAppModulePluginRoot extends AbstractModule<Is
         }
     }
 
-    @Override
-    public void start(){
-        /**
-         * Init the plugin manager
-         */
-        System.out.println("******* Init Asset Issuer Sup App Module Identity ******");
-        assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+//    @Override
+//    public void start(){
+//        /**
+//         * Init the plugin manager
+//         */
+//        System.out.println("******* Init Asset Issuer Sup App Module Identity ******");
+////        assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
+//
+//        this.serviceStatus = ServiceStatus.STARTED;
+//    }
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetIssuerIdentitySubAppModuleManager.class)
-    public ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetIssuerIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation started...", null, null);
 
-            if (assetIssuerIdentityModuleManager == null)
+            if (assetIssuerIdentityModuleManager == null) {
                 assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
 
+            this.serviceStatus = ServiceStatus.STARTED;
+            }
 //            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation finished successfully.", null, null);
 
             return assetIssuerIdentityModuleManager;
