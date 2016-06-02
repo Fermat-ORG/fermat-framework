@@ -23,9 +23,9 @@ public class BootupReceiver extends BroadcastReceiver {
 //        context.startActivity(i);
 
         // Explicitly start My Service
-        Intent i = new Intent(context, BoundService.class);
+//        Intent i = new Intent(context, BoundService.class);
         // TODO Add extras if required.
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startService(intent);
+//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startService(intent);
     }
 }

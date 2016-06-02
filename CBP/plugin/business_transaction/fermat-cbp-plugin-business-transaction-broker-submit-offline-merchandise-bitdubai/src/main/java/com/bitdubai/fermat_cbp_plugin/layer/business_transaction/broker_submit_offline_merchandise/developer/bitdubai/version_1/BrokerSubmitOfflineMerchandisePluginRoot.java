@@ -125,7 +125,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot");
+        returnedClasses.add("BrokerSubmitOfflineMerchandisePluginRoot");
+
         return returnedClasses;
     }
 

@@ -119,7 +119,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.BrokerAckOfflinePaymentPluginRoot");
+        returnedClasses.add("BrokerAckOfflinePaymentPluginRoot");
+
         return returnedClasses;
     }
 

@@ -335,13 +335,12 @@ public class ExtraUserActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<String> getClassesFullPath() {
-
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("ExtraUserActorPluginRoot");
-        returnedClasses.add("ExtraUserActorRecord");
-        returnedClasses.add("ExtraUserActorDeveloperDatabaseFactory");
-        returnedClasses.add("ExtraUserActorDatabaseFactory");
-        returnedClasses.add("ExtraUserActorDao");
+//        returnedClasses.add("ExtraUserActorRecord");
+//        returnedClasses.add("ExtraUserActorDeveloperDatabaseFactory");
+//        returnedClasses.add("ExtraUserActorDatabaseFactory");
+//        returnedClasses.add("ExtraUserActorDao");
 
         return returnedClasses;
     }

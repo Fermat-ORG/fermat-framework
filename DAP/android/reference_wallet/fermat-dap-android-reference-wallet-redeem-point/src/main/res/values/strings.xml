@@ -42,7 +42,7 @@
     <!-- -->
 
     <!--Dialog Help - Init-->
-    <string name="dap_redeem_wallet_welcome_subTitle">Welcome to the RedeemPoint Wallet.</string>
+    <string name="dap_redeem_wallet_welcome_subTitle">RedeemPoint Wallet.</string>
     <string name="dap_redeem_wallet_welcome_body">From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.</string>
     <string name="dap_redeem_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as a Redeem Point. You will be able to edit this information at the Redeem Point Identity application.</string>
     <string name="dap_redeem_wallet_welcome_name_left">Redeem Point</string>

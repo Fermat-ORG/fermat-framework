@@ -497,7 +497,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
         //settings export key
         activity = new Activity();
-        activity.setBackgroundColor("#000000");
+        activity.setBackgroundColor("#011000");
         activity.setActivityType(Activities.DESKTOP_SETTING_EXPORT_KEY.getCode());
         activity.setType(Activities.DESKTOP_SETTING_EXPORT_KEY);
         activity.setStartFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
@@ -505,7 +505,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setBackPublicKey(publicKey);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setColor("#011000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setLabel("Export Key");
         runtimeTitleBar.setLabelSize(18);
@@ -521,7 +521,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
         //more settings
         activity = new Activity();
-        activity.setBackgroundColor("#000000");
+        activity.setBackgroundColor("#011000");
         activity.setActivityType(Activities.DESKTOP_MORE_SETTINGS.getCode());
         activity.setType(Activities.DESKTOP_MORE_SETTINGS);
         activity.setStartFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey());
@@ -529,7 +529,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setBackPublicKey(publicKey);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setColor("#011000");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setLabel("Export Key");
         runtimeTitleBar.setLabelSize(18);

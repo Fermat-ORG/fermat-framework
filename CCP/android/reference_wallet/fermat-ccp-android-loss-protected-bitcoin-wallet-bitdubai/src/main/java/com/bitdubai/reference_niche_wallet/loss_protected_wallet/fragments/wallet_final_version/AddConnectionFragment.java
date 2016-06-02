@@ -55,7 +55,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private int offset = 0;
     private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList;
+    private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList = new ArrayList<>();
     private LossProtectedWalletSession lossProtectedWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
@@ -80,7 +80,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
             moduleManager = lossProtectedWalletSession.getModuleManager();
             errorManager = lossProtectedWalletSession.getErrorManager();
-            intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
@@ -121,7 +121,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             }
 
         } catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Init Views. " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -331,11 +331,19 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                         lossProtectedWalletSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
+
+                if(!data.isEmpty())
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
+                        }
+                    });
+
             }
 
         }
         catch(Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List. " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
