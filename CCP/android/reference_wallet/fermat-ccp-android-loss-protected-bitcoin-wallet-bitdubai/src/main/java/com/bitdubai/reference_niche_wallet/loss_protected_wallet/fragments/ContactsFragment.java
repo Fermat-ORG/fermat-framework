@@ -807,7 +807,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
-                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                       /* for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
                             String currentItem = letters.get(i);
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
@@ -820,7 +820,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                             }
 
                             mListItems.add(positions.get(i));
-                        }
+                        }*/
                     }
 
                 }
@@ -860,7 +860,13 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         private void showEmptyText(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+            try
+            {
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

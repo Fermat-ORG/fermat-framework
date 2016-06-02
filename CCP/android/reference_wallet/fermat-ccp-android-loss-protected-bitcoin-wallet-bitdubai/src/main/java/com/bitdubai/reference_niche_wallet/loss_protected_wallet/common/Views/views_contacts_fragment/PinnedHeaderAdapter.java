@@ -165,8 +165,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         text = walletContact.getActorName();
                           break;
                     case TYPE_SECTION:
-                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                        text = (String) mListItems.get(position);
+                       // convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                       // text = (String) mListItems.get(position);
                         break;
                 }
 

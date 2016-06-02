@@ -907,7 +907,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         private void showEmptyText(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+            try
+            {
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
