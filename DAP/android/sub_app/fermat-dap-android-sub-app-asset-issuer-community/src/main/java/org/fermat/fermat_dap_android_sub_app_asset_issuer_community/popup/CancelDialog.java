@@ -54,6 +54,7 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
         this.actorIssuer = actor;
         this.identity = identity;
     }
+
     public CancelDialog(Activity a,
                         final AssetIssuerCommunitySubAppSession issuerCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
@@ -115,7 +116,7 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                         actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
 
                 getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_CANCELED, Boolean.TRUE);
-                Toast.makeText(getContext(),"Connection has been cancel" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Connection has been cancel", Toast.LENGTH_SHORT).show();
 
                 dismiss();
             } catch (CantCancelConnectionActorAssetException e) {

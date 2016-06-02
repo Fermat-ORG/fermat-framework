@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/26/16.
  */
-public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
+public class GrouperItem<CHILD_TYPE, ITEM> implements ParentListItem {
 
     private List<CHILD_TYPE> assets;
     private int assetsCount;
@@ -15,7 +15,7 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
     private ITEM issuer;
 
-    public GrouperItem( List<CHILD_TYPE> assets, boolean initiallyExpanded, ITEM issuer) {
+    public GrouperItem(List<CHILD_TYPE> assets, boolean initiallyExpanded, ITEM issuer) {
         this.initiallyExpanded = initiallyExpanded;
         this.assets = assets;
         this.issuer = issuer;

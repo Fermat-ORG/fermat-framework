@@ -7,6 +7,6 @@ public class CantCreateDigitalAssetFileException extends org.fermat.fermat_dap_a
     public static final String DEFAULT_MESSAGE = "There was an error creating a Digital Asset storage file.";
 
     public CantCreateDigitalAssetFileException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

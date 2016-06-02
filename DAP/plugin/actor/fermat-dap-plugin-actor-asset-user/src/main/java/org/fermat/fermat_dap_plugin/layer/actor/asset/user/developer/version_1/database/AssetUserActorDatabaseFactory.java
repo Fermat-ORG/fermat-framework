@@ -162,8 +162,7 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "There is a problem with the ownerId of the database.");
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", exception.getMessage());
         }
 

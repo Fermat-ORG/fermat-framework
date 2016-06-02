@@ -1,7 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -18,11 +19,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
+import java.util.List;
+
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWallet,WalletResourcesProviderManager>  {
+public class ReferenceWalletSession extends AbstractReferenceAppFermatSession<InstalledWallet,CryptoWallet,WalletResourcesProviderManager> implements FermatSession{
 
 
 
@@ -148,6 +151,11 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
                 return fermatApp.getAppPublicKey();
             }
         }
+        return null;
+    }
+
+    @Override
+    public List<FermatApp> getPosibleConnections() {
         return null;
     }
 }

@@ -29,7 +29,8 @@ import java.util.List;
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings> {
+public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings,
+        ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings>, Serializable {
 
 //    List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 //    List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;

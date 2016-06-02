@@ -15,6 +15,7 @@ public class RequestActorConnectionNotificationEventListener implements FermatEv
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *

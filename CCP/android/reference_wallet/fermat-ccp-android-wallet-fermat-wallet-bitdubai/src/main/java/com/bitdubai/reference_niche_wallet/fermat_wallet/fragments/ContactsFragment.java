@@ -64,7 +64,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.HeaderType
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -88,7 +88,7 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public class ContactsFragment extends AbstractFermatFragment<FermatWalletSessionReferenceApp,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -110,7 +110,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
     /**
      * Wallet session
      */
-    FermatWalletSession referenceWalletSession;
+    FermatWalletSessionReferenceApp referenceWalletSession;
     // unsorted list items
     List<FermatWalletWalletContact> mItems;
     // array list to store section positions
@@ -160,7 +160,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (FermatWalletSession) appSession;
+        referenceWalletSession = (FermatWalletSessionReferenceApp) appSession;
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica.ttf");
         errorManager = appSession.getErrorManager();
@@ -330,9 +330,10 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
 
         super.onCreateOptionsMenu(menu, inflater);
 
+
         menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
+
     }
 
     @Override
@@ -577,7 +578,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(FermatWalletSession appSession) {
+    public void setWalletSession(FermatWalletSessionReferenceApp appSession) {
         this.appSession = appSession;
     }
 

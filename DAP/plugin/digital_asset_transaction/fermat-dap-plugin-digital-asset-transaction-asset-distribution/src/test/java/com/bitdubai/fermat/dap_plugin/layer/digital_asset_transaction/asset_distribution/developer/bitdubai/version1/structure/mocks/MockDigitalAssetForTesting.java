@@ -29,18 +29,18 @@ public class MockDigitalAssetForTesting extends DigitalAsset {
 
     public MockDigitalAssetForTesting() throws CantDefineContractPropertyException {
         //Genesis Address
-        CryptoAddress testCryptoAddress=new CryptoAddress();
+        CryptoAddress testCryptoAddress = new CryptoAddress();
         testCryptoAddress.setAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv");
         testCryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
         setGenesisAddress(testCryptoAddress);
         //Identity
-        MockIdentityAssetIssuerForTest testIdentity=new MockIdentityAssetIssuerForTest();
+        MockIdentityAssetIssuerForTest testIdentity = new MockIdentityAssetIssuerForTest();
         setIdentityAssetIssuer(testIdentity);
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
         //Expiration date - we choose 90 days from now, you can change for testing
-        Timestamp expirationDateTimestamp=getExpirationDate(90);
+        Timestamp expirationDateTimestamp = getExpirationDate(90);
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         setContract(contract);
         //Description
@@ -92,21 +92,22 @@ public class MockDigitalAssetForTesting extends DigitalAsset {
      * We will add daysFromNow to actual date and returns this new date.
      * Please, don't use negative numbers in daysFromNow, this method will use absolute value.
      * Don't use 0, because this method will set the value to 90.
+     *
      * @param daysFromNow days to add to present date.
      * @return
      */
-    private Timestamp getExpirationDate(int daysFromNow){
-        if(daysFromNow<0){
-            daysFromNow=Math.abs(daysFromNow);
+    private Timestamp getExpirationDate(int daysFromNow) {
+        if (daysFromNow < 0) {
+            daysFromNow = Math.abs(daysFromNow);
         }
-        if(daysFromNow==0){
-            daysFromNow=90;
+        if (daysFromNow == 0) {
+            daysFromNow = 90;
         }
-        Date date=new Date();
+        Date date = new Date();
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(date.getTime());
         calendar.add(calendar.DATE, daysFromNow);
-        date=new Date(calendar.getTimeInMillis());
+        date = new Date(calendar.getTimeInMillis());
         return new Timestamp(date.getTime());
     }
 

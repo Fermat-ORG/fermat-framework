@@ -27,14 +27,14 @@ public class BitcoinsSpinnerAdapter extends ArrayAdapter<Currency> {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        if(row == null) {
+        if (row == null) {
             //inflate your customlayout for the textview
             LayoutInflater inflater = context.getLayoutInflater();
             row = inflater.inflate(R.layout.asset_editor_bitcoins_spinner, parent, false);
         }
         //put the data in it
         String item = data[position].name();
-        if(item != null) {
+        if (item != null) {
             TextView text1 = (TextView) row.findViewById(R.id.textItem);
 //            text1.setTextColor(Color.WHITE);
             text1.setText(item);

@@ -27,19 +27,20 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.settings.Ass
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 import static android.widget.Toast.makeText;
+
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
 public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetIssuerCommunitySubAppSession  session;
+    private AssetIssuerCommunitySubAppSession session;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
     AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
+    //    SettingsManager<AssetIssuerSettings> settingsManager;
     private ErrorManager errorManager;
     AssetIssuerSubAppSettings settings = null;
 

@@ -16,7 +16,6 @@ public class ServicesHelpers {
 
     private AppManagerServiceHelper appManagerServiceHelper;
     private NotificationServiceHelper notificationServiceHelper;
-    private ClientSideBrokerServiceHelper clientSideBrokerServiceHelper;
     private ClientSideBrokerServiceHelperAidle clientSystemBrokerServiceAIDL;
 
     private boolean isInBackground;
@@ -27,7 +26,6 @@ public class ServicesHelpers {
         if(!isInBackground) {
             appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
             notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
-            clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
             clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
         }
     }
@@ -38,7 +36,6 @@ public class ServicesHelpers {
         if(!isInBackground) {
             appManagerServiceHelper.bindAppManagerService();
             notificationServiceHelper.bindNotificationService();
-            clientSideBrokerServiceHelper.clientSideBrokerBoundService();
             clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
         }
     }
@@ -49,7 +46,6 @@ public class ServicesHelpers {
         if(!isInBackground) {
             appManagerServiceHelper.unbindAppManagerService();
             notificationServiceHelper.unbindNotificationService();
-            clientSideBrokerServiceHelper.unbindClientSideBrokerService();
             clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
         }
     }
@@ -75,15 +71,9 @@ public class ServicesHelpers {
         return notificationServiceHelper.getNotificationService();
     }
 
-    public ClientBrokerService getClientSideBrokerService() {
-        return clientSideBrokerServiceHelper.getClientSystemBrokerService();
-//        return clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
-    }
-
     public void clear(){
         appManagerServiceHelper.clear();
         notificationServiceHelper.clear();
-        clientSideBrokerServiceHelper.clear();
     }
 
 

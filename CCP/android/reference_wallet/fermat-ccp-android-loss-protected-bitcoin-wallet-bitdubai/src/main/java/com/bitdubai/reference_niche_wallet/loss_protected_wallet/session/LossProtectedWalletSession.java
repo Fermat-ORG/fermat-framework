@@ -1,7 +1,8 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.session;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -25,7 +26,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class LossProtectedWalletSession extends AbstractFermatSession<InstalledWallet,LossProtectedWallet,WalletResourcesProviderManager>  {
+public class LossProtectedWalletSession extends AbstractReferenceAppFermatSession<InstalledWallet,LossProtectedWallet,WalletResourcesProviderManager> implements FermatSession {
 
 
 
@@ -159,6 +160,11 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
                 return fermatApp.getAppPublicKey();
             }
         }
+        return null;
+    }
+
+    @Override
+    public List<FermatApp> getPosibleConnections() {
         return null;
     }
 }

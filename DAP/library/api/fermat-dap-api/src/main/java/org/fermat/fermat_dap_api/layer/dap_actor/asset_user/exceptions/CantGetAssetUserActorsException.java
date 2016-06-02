@@ -10,6 +10,7 @@ public class CantGetAssetUserActorsException extends org.fermat.fermat_dap_api.l
     public CantGetAssetUserActorsException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, null, null);
     }
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *

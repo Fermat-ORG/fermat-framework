@@ -26,7 +26,6 @@ public class AssetUserGroupRecord implements org.fermat.fermat_dap_api.layer.dap
     }
 
     /**
-     *
      * @param groupId
      */
     public void setGroupId(String groupId) {
@@ -34,7 +33,6 @@ public class AssetUserGroupRecord implements org.fermat.fermat_dap_api.layer.dap
     }
 
     /**
-     *
      * @param groupName
      */
     public void setGroupName(String groupName) {

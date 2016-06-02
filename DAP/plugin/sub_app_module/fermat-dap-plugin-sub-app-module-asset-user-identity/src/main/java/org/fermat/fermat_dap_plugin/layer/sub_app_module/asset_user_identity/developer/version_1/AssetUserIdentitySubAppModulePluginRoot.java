@@ -14,14 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.interfaces.AssetUserIdentityModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.exceptions.CantGetSupAppRedeemPointModuleException;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset_user_identity.developer.version_1.structure.AssetUserIdentitySubAppModuleManager;
@@ -42,7 +39,7 @@ import java.util.regex.Pattern;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY)
-public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule<UserIdentitySettings, ActiveActorIdentityInformation> implements
+public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule implements
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
@@ -118,26 +115,27 @@ public class AssetUserIdentitySubAppModulePluginRoot extends AbstractModule<User
         }
     }
 
-    @Override
-    public void start(){
-        /**
-         * Init the plugin manager
-         */
-        System.out.println("******* Init Asset User Sup App Module Identity ******");
-        assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
+//    @Override
+//    public void start(){
+//        /**
+//         * Init the plugin manager
+//         */
+//        System.out.println("******* Init Asset User Sup App Module Identity ******");
+////        assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
+//
+//    }
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetUserIdentitySubAppModuleManager.class)
-    public ModuleManager<UserIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetUserIdentityModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetUserIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity Sup AppModule instantiation started...", null, null);
 
-            if (assetUserIdentityModuleManager == null)
+            if (assetUserIdentityModuleManager == null) {
                 assetUserIdentityModuleManager = new AssetUserIdentitySubAppModuleManager(identityAssetUserManager, pluginFileSystem, pluginId);
 
+                this.serviceStatus = ServiceStatus.STARTED;
+            }
 //            logManager.log(AssetUserIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity Sup AppModule instantiation finished successfully.", null, null);
 
             return assetUserIdentityModuleManager;

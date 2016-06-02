@@ -20,7 +20,7 @@ public class UserSelectorAdapterFilter extends Filter {
         this.data = data;
         this.adapter = adapter;
     }
-    
+
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         String filterString = constraint.toString().toLowerCase();

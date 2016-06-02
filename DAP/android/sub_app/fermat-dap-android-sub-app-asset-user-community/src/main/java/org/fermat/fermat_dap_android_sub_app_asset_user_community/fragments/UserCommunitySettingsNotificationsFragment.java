@@ -29,7 +29,7 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.i
 import static android.widget.Toast.makeText;
 
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
 public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
@@ -41,7 +41,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
 
     public static UserCommunitySettingsNotificationsFragment newInstance() {
