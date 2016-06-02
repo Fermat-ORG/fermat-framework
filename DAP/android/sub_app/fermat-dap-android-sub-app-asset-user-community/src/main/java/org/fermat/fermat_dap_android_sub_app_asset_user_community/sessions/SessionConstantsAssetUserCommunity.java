@@ -25,14 +25,14 @@ public class SessionConstantsAssetUserCommunity {
     public static final int IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION = 501;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP = 502;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_DETAIL = 503;
-    public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME= 504;
+    public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME = 504;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE = 505;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS = 506;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_USERS = 507;
     public static final int IC_ACTION_USER_COMMUNITY_NOTIFICATIONS = 508;
     public static final int IC_ACTION_USER_COMMUNITY_ADD_USERS = 509;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL = 510;
-    public static final int IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL= 511;
+    public static final int IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL = 511;
     public static final int IC_ACTION_USER_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 512;
     public static final int IC_ACTION_USER_COMMUNITY_DISCONNECT = 513;
     public static final int IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING = 514;

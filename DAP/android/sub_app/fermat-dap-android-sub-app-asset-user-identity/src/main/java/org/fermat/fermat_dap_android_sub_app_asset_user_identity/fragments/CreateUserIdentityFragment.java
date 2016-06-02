@@ -82,7 +82,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-//    SettingsManager<UserIdentitySettings> settingsManager;
+    //    SettingsManager<UserIdentitySettings> settingsManager;
     UserIdentitySettings userIdentitySettings = null;
 
     private boolean updateProfileImage = false;

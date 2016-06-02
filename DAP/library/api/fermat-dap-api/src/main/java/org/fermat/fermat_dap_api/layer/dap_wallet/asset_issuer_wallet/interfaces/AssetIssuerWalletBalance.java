@@ -10,11 +10,11 @@ import java.util.List;
 public interface AssetIssuerWalletBalance {
 
     //TODO: Documentar
-    long getBalance()  throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
+    long getBalance() throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 
     List<AssetIssuerWalletList> getAssetIssuerWalletBalances() throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 
     void debit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType) throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException; //TODO: Debemos de definir la estructura de la transaccion
 
-    void credit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType)  throws CantRegisterCreditException; //TODO: Debemos de definir la estructura de la transaccion
+    void credit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType) throws CantRegisterCreditException; //TODO: Debemos de definir la estructura de la transaccion
 }

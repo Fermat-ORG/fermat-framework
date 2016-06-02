@@ -11,6 +11,7 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer {
     String alias;
     String publicKey;
     String mensage;
+
     @Override
     public String getAlias() {
         return alias;
@@ -41,11 +42,11 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer {
         return this.mensage;
     }
 
-    public void setAlias(String alias){
+    public void setAlias(String alias) {
         this.alias = alias;
     }
 
-    public void setPublicKey(String publicKey){
+    public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
 }

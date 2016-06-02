@@ -41,7 +41,7 @@ public class IsGenesisTransactionRegisteredTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -51,13 +51,13 @@ public class IsGenesisTransactionRegisteredTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void isGenesisTransactionRegisteredTest () throws CantExecuteQueryException {
+    public void isGenesisTransactionRegisteredTest() throws CantExecuteQueryException {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         boolean isRegistered = mockAssetDistributionDao.isGenesisTransactionRegistered(genesisTransaction);
         Assert.assertTrue(isRegistered);
@@ -70,7 +70,7 @@ public class IsGenesisTransactionRegisteredTest {
         try {
             mockAssetDistributionDao.isGenesisTransactionRegistered(genesisTransaction);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
         }
     }

@@ -2,7 +2,6 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.common.navigation_draw
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;

@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -77,11 +76,11 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
             this.assetUserCommunitySubAppSession = this.getFullyLoadedSession();
 
             if (assetUserCommunitySubAppSession != null)
-                    manager = assetUserCommunitySubAppSession.getModuleManager();
+                manager = assetUserCommunitySubAppSession.getModuleManager();
 
-                return UserCommunityBuildNotificationPainter.getNotification(manager, code, Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
+            return UserCommunityBuildNotificationPainter.getNotification(manager, code, Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

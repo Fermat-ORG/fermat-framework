@@ -87,11 +87,11 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer
             else
                 newIdentityButton.setVisibility(View.VISIBLE);
         } catch (CantListAssetIssuersException e) {
-                Toast.makeText(getActivity().getApplicationContext(), "Can't Get Asset Issuer List", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+            Toast.makeText(getActivity().getApplicationContext(), "Can't Get Asset Issuer List", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         } catch (Exception e) {
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Asset Issuer List", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Asset Issuer List", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 

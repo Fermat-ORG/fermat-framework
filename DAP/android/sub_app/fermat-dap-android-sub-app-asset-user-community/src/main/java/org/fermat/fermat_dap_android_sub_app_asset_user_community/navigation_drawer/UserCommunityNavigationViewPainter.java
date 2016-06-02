@@ -27,7 +27,7 @@ public class UserCommunityNavigationViewPainter implements NavigationViewPainter
 
     private static final String TAG = "Use-ComunNavigationView";
 
-    private  WeakReference<Context> activity;
+    private WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
     AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     AssetUserCommunitySubAppModuleManager moduleManager;

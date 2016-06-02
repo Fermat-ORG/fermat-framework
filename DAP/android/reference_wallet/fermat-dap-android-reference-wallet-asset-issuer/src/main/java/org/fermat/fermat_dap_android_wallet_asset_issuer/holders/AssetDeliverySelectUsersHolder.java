@@ -28,7 +28,6 @@ public class AssetDeliverySelectUsersHolder extends FermatViewHolder {
     private ImageView imageViewUser;
 
 
-
     /**
      * Constructor
      *

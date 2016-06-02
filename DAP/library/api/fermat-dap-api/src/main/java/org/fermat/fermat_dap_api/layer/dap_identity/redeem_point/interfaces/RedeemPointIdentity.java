@@ -22,11 +22,12 @@ public interface RedeemPointIdentity extends ActiveActorIdentityInformation, Ser
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param message the message to sign
      * @return the signature
      * @throws CantSingMessageException
      */
-    String createMessageSignature(String message) ;
+    String createMessageSignature(String message);
 
     String getContactInformation();
 

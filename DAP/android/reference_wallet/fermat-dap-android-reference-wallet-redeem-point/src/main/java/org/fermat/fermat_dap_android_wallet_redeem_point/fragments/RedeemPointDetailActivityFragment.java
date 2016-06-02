@@ -260,7 +260,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -271,8 +271,8 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_image_redeem_point,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_image_redeem_point, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -280,11 +280,11 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -390,12 +390,14 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
             noUsersView.setVisibility(View.GONE);
         }
     }
+
     @Override
     public List<UserRedeemed> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<UserRedeemed> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                if (digitalAsset == null)
+                    digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
                 users = Data.getUserRedeemedPointList(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
 

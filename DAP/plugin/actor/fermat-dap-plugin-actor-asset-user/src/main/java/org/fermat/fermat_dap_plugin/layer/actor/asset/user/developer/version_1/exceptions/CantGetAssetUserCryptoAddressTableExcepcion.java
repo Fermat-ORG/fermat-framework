@@ -19,7 +19,6 @@ public class CantGetAssetUserCryptoAddressTableExcepcion extends FermatException
     }
 
     /**
-     *
      * @param message
      * @param context
      * @param possibleReason

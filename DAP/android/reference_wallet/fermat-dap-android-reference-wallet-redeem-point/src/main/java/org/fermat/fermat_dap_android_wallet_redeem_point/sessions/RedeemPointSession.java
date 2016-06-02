@@ -39,7 +39,6 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet, A
 //    private ErrorManager errorManager;
 
 //    private WalletSettings settings;
-
     public RedeemPointSession(String publicKey, InstalledWallet installedWallet, ErrorManager errorManager, AssetRedeemPointWalletSubAppModule manager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, installedWallet, errorManager, manager, resourceProviderManager);
 //        this.installedWallet = installedWallet;
@@ -88,7 +87,6 @@ public class RedeemPointSession extends AbstractFermatSession<InstalledWallet, A
 //    public void setSettings(WalletSettings settings) {
 //        this.settings = settings;
 //    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
