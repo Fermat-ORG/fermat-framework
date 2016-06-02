@@ -54,6 +54,8 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -94,6 +96,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
+    private ExecutorService _executor;
 //    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
@@ -109,6 +112,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            _executor = Executors.newFixedThreadPool(2);
+
             setHasOptionsMenu(true);
 
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
@@ -252,6 +257,19 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
             }
         }, 500);
+
+        isRefreshing = true;
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMoreData();
+                    isRefreshing = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return rootView;
     }
