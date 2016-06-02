@@ -4,12 +4,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/12/15.
  */
-public class ContractClauseRecord implements ContractClause {
+public class ContractClauseRecord implements ContractClause, Serializable {
 
     UUID clauseId;
     ContractClauseType type;

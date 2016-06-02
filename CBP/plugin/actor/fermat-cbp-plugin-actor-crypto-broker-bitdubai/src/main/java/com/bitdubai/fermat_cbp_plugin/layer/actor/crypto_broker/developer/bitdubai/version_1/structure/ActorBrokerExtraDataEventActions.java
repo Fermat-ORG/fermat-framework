@@ -20,10 +20,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleExtraDataRequestEventException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,20 +38,22 @@ public class ActorBrokerExtraDataEventActions {
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private CryptoBrokerActorDao cryptoBrokerActorDao;
-    private final ErrorManager errorManager;
+    private final CryptoBrokerActorPluginRoot pluginRoot;
     private final PluginVersionReference pluginVersionReference;
+
+    private List<CryptoBrokerWalletAssociatedSetting> associatedWallets;
 
     public ActorBrokerExtraDataEventActions(
             final CryptoBrokerManager cryptoBrokerANSManager,
             final CryptoBrokerWalletManager cryptoBrokerWalletManager,
             final CryptoBrokerActorDao cryptoBrokerActorDao,
-            final ErrorManager errorManager,
+            final CryptoBrokerActorPluginRoot pluginRoot,
             final PluginVersionReference pluginVersionReference
     ) {
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoBrokerActorDao = cryptoBrokerActorDao;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -70,28 +72,25 @@ public class ActorBrokerExtraDataEventActions {
             }
 
         } catch (CantListPendingQuotesRequestsException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
-                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleExtraDataRequestEventException(e,
                     "Trying to get the list of quotes request in Network Service database whit state RECEIVED",
                     "Maybe the DB table is empty or the data is not correctly putted");
 
         } catch (CantGetExtraDataActorException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
-                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleExtraDataRequestEventException(e,
                     "Trying to get the quotes from the Crypto Broker Wallet Plugin database",
                     "Can be multiple reasons. See the Stack Trace for more info");
 
         } catch (CantAnswerQuotesRequestException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
-                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleExtraDataRequestEventException(e,
                     "Trying to call the Network Service to answer the request of the extra data",
                     "Can be multiple reasons. Maybe an error occurred trying to update the Request Status. See the Stack Trace for more info");
 
         } catch (QuotesRequestNotFoundException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.
                     DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleExtraDataRequestEventException(e,
                     "Trying to call the Network Service to answer the request of the extra data",
@@ -108,7 +107,7 @@ public class ActorBrokerExtraDataEventActions {
             final CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
 
             final CryptoBrokerWalletSetting setting = wallet.getCryptoWalletSetting();
-            final List<CryptoBrokerWalletAssociatedSetting> associatedWallets = setting.getCryptoBrokerWalletAssociatedSettings();
+            associatedWallets = setting.getCryptoBrokerWalletAssociatedSettings();
 
             for (CryptoBrokerWalletAssociatedSetting merchandiseWallet : associatedWallets) {
                 Currency merchandise = merchandiseWallet.getMerchandise();
@@ -119,10 +118,15 @@ public class ActorBrokerExtraDataEventActions {
                     if (merchandise != currencyPayment) {
                         try {
                             Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
-                            quotes.add(new CryptoBrokerQuote(quote));
+                            String supportedPlatforms = supportedPlatforms(merchandise);
+                            quotes.add(new CryptoBrokerQuote(
+                                    (Currency) quote.getMerchandise(),
+                                    quote.getFiatCurrency(),
+                                    quote.getPriceReference(),
+                                    supportedPlatforms
+                            ));
                         } catch (CantGetCryptoBrokerQuoteException e) {
-                            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
-                                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         }
                     }
                 }
@@ -145,5 +149,28 @@ public class ActorBrokerExtraDataEventActions {
         }
 
         return quotes;
+    }
+
+    public String supportedPlatforms(Currency merchandise){
+
+        String result = "";
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for (CryptoBrokerWalletAssociatedSetting paymentWallet : associatedWallets) {
+            Currency currency = paymentWallet.getMerchandise();
+
+            if (merchandise == currency) {
+                if(!list.contains(paymentWallet.getPlatform().getCode())){
+                    list.add(paymentWallet.getPlatform().getCode());
+                }
+            }
+        }
+
+        for(String platform : list){
+            result += platform+":";
+        }
+
+        return result;
     }
 }

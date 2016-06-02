@@ -47,7 +47,7 @@ public class MainActivityFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -58,8 +58,8 @@ public class MainActivityFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -67,11 +67,11 @@ public class MainActivityFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 }

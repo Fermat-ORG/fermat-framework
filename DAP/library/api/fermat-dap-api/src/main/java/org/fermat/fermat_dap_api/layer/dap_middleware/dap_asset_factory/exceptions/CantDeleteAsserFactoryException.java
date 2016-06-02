@@ -15,7 +15,8 @@ public class CantDeleteAsserFactoryException extends FermatException {
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
     static final String DEFAULT_MESSAGE = "There was an error Deete Asset Factory.";
+
     public CantDeleteAsserFactoryException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

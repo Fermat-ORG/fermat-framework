@@ -9,11 +9,15 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+
+import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
@@ -25,7 +29,6 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
      * UI components
      */
 
-    ArtistCommunityInformation artistCommunityInformation;
 
     ArtistCommunitySelectableIdentity identity;
     private FermatTextView title;
@@ -33,36 +36,52 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
     private FermatTextView userName;
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
+    //Identity data
+    private UUID connectionId;
+    private String alias;
 
-    public AcceptDialog(Activity a                                 ,
-                        ArtistSubAppSession      artistSubAppSession,
-                        SubAppResourcesProviderManager          subAppResources                   ,
-                        ArtistCommunityInformation        artistCommunityInformation           ,
-                        ArtistCommunitySelectableIdentity identity                          ) {
+    public AcceptDialog(
+            Activity a,
+            ArtistSubAppSession artistSubAppSession,
+            SubAppResourcesProviderManager subAppResources,
+            ArtistCommunityInformation artistCommunityInformation,
+            ArtistCommunitySelectableIdentity identity) {
 
         super(a, artistSubAppSession, subAppResources);
-
-        this.artistCommunityInformation = artistCommunityInformation;
-        this.identity             = identity               ;
+        this.connectionId = artistCommunityInformation.getConnectionId();
+        this.alias = artistCommunityInformation.getAlias();
+        this.identity = identity;
     }
 
+    public AcceptDialog(
+            Activity a,
+            ArtistSubAppSession artistSubAppSession,
+            SubAppResourcesProviderManager subAppResources,
+            UUID connectionId,
+            String alias,
+            ArtistCommunitySelectableIdentity identity) {
+        super(a, artistSubAppSession, subAppResources);
+        this.connectionId = connectionId;
+        this.alias = alias;
+        this.identity = identity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title = (FermatTextView) findViewById(R.id.title);
+        title = (FermatTextView) findViewById(R.id.aac_title);
         description = (FermatTextView) findViewById(R.id.aac_description);
         userName = (FermatTextView) findViewById(R.id.aac_user_name);
-        positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
+        positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(artistCommunityInformation.getAlias());
+        userName.setText(alias);
 
     }
 
@@ -80,32 +99,40 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.afc_positive_button) {
+        if (i == R.id.aac_positive_button) {
             // try {
-            if (artistCommunityInformation != null && identity != null) {
-                Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
-                //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
-                Toast.makeText(getContext(), artistCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+            if (connectionId != null && alias !=null && identity != null) {
+                try {
+                    getSession().getModuleManager().acceptArtist(connectionId);
+                } catch (CantAcceptRequestException e) {
+                    Toast.makeText(getContext(), alias + " Can not accept the request.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                } catch (ConnectionRequestNotFoundException e) {
+                    Toast.makeText(getContext(), alias + "Request ID not found.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                Toast.makeText(getContext(), alias + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                getSession().setData("connectionresult", 3);
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }
             dismiss();
             /*} catch (CantAcceptRequestException e) {
                 e.printStackTrace();
             }*/
             dismiss();
-        } else if (i == R.id.afc_negative_button) {
-            //try {
-            if (artistCommunityInformation != null && identity != null) {
-                Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
-                // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
-            } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
-            }
-            dismiss();
-            /*} catch (IntraUserConnectionDenialFailedException e) {
+        } else if (i == R.id.aac_negative_button) {
+            try {
+                if (connectionId != null && alias !=null && identity != null) {
+                    Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                    getSession().getModuleManager().denyConnection(connectionId);
+                } else {
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                }
+                dismiss();
+            } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
             dismiss();
         }
     }

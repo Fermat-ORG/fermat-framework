@@ -3,8 +3,9 @@ package org.fermat.fermat_dap_android_sub_app_asset_factory.factory;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.AssetEditorFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.EditableAssetsFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.PublishedAssetsFragment;
@@ -12,7 +13,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFac
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFactoryNetworkFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFactoryNotificationFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * AssetFactoryFragmentFactory
@@ -25,11 +25,11 @@ public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFact
     @Override
     public AbstractFermatFragment getFermatFragment(AssetFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT))
-                return EditableAssetsFragment.newInstance();
+            return EditableAssetsFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT))
-                return PublishedAssetsFragment.newInstance();
+            return PublishedAssetsFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY))
-                return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
+            return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS))
             return SettingsFactoryFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN))

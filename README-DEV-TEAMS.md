@@ -1,4 +1,5 @@
-![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/fermat_logo_3D/Fermat_logo_v2_readme_1024x466.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
 # Dev Teams
 
 ## Introduction
@@ -28,7 +29,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
-* Monogatari
+* Yayo
 * Navi Charlie
 * Navi Sierra
 * Fsociety
@@ -42,8 +43,8 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | Thunder | | | |
 | | Kabuto | | |
 | | Mordor | | |
-| | | Monogatari | |
 | | Skynet | | |
+| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -137,7 +138,7 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
 
-* **Manuel Perez [New Parent Team Leader]**<br/>
+* **Manuel Perez [Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
@@ -241,14 +242,14 @@ We are putting together a team of talented developers, especially passionate abo
 #### Team Members:
 
 
-* **Manuel Perez [New Parent Team Leader]**<br/>
+* **Manuel Perez [Full Team Leader]**<br/>
 ---
     Email:   darkpriestrelative@gmail.com
     Skype:   darkestpriest
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo [New Team Leader]**<br/>
+* **Gabriel Araujo [Veteran Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
@@ -276,42 +277,8 @@ We are putting together a team of talented developers, especially passionate abo
 ---
     Email:   andyaacm@gmail.com
     Github:  https://github.com/macuare
-
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
-
-<br/>
-### Monogatari Team:
------------------------------------
-
-This is a team raised from Mordor Team, some of us has been around fermat for a while, and we're looking forward to reach new developers. We feel comfortable working at the back-end but also we do Android Job when required.
-
-* In the Chat Platform We were involved in the back end development.
-* We helpéd in Tokenly and Artist development.
-* And now we're taking over P2P TAXI and P2P Dating development.
-
-#### Team Members:
-
-* **Gabriel Araujo [New Team Leader]**<br/>
----
-      Email:   gabe_512@hotmail.com
-      Skype:   gabee512
-      Github:  https://github.com/GaboHub
-
-* **Luis Torres [New Developer]**<br/>
----
-    Email:   lutor1106@gmail.com
-    Skype:   
-    Github:  https://github.com/ilutor
-
-* **Gianfranco Ciafardone [New Developer]**<br/>
----
-    Email:   gciafardone@gmail.com
-    Skype:   giankor
-    Github:  https://github.com/Giankor
-
-    
-This is a Team of young and skillful developers, we like anime, music but specially progressive. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
 ### Kabuto Team:
@@ -335,7 +302,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   josejcb89
       Github:  https://github.com/josejcb
 
-* **Jose Vilchez [Veteran Developer]**<br/>
+* **Jose Vilchez [New Developer]**<br/>
 ---
       Email:   josvilchezalmera@gmail.com
       Skype:   josvilchezalmera
@@ -347,7 +314,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
       Skype:   richardalozada
       Github:  https://github.com/Lozadaa 
 
-* **Rodrigo Guzman [New Developer]**<br/>
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
 ---
       Email:   roygufo@gmail.com
       Skype:   roy-epps
@@ -371,40 +338,34 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 #### Skynet Team Members:
 
-* **Nerio Enrique Indriago Ortega [Full Team Leader]** <br/>
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Penelope Quintero [Veteran Developer]** <br/>
+* **Penelope Quintero [New Developer]** <br/>
 ---
       Email:   pennyxz@gmail.com
       Skype:   pennyxz
       Github:  https://github.com/pennyxz
 
-* **Jinmy Bohorquez [Veteran Developer]** <br/>
+* **Jinmy Bohorquez [New Developer]** <br/>
 ---
       Email:   jinmybohorquez@gmail.com
       Skype:   jinmyb22
       Github:  https://github.com/jinmyjbv
 
-* **Frank Contreras [Veteran Developer]** <br/>
+* **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
       Github:  https://github.com/javafrank
-
-* **José Briceño [New Developer]** <br/>
----
-      Email:   josebricenor@gmail.com
-      Skype:   josebricenor
-      Github:  https://github.com/josebricenor
 <br/>
 
 ### Team Yayo:
 -----------------------------------
-### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/YAYO_1.jpg "Logo Yayo Team")
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/YAYO_1.jpg "Logo Yayo Team")
 On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
 We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
 
@@ -416,15 +377,38 @@ We are responsible of only one thing, making fermat a successfully project, shar
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
+* **José Briceño [New Developer]** <br/>
+---
+      Email:   josebricenor@gmail.com
+      Skype:   josebricenor
+      Github:  https://github.com/josebricenor
+
+* **Luis Torres [New Developer]** <br/>
+---
+      Email:   lutor1106@gmail.com
+      Skype:   luis.fernando.torres.leon
+      Github:  https://github.com/iLutor
+
+* **Eduardo Guerere [New Developer]** <br/>
+---
+      Email:   eduardoguerere@gmail.com
+      Skype:   eduardo.guerere
+      Github:  https://github.com/eduardoguerere
 
 <br>
 We don't mean to make fun of everything, just about the serious things.
 <br>
 
-### Purple Haze Team:
+### Code Butchers Team:
 -----------------------------------
-### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/c07467a01e3de3093890fd26cf4f1d1fd3df5c6f/MediaKit/Logotype/Fermat%20Teams/logo_purple_haze_team.jpg "Logo Purple Haze Team")
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
+
+* In the Fermat Core we are responsible for the enhancements and maintenance.
+* In the OSA Platform we do our best.
+* In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
+* In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
+
+In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
 
 #### Team Members:
 
@@ -435,19 +419,24 @@ We are a team of developers of diverse nature, interested on the basis and struc
     Skype:   leon.acosta
     Github:  https://github.com/lnacosta
     
+    
+* **Patricio Gesualdi**<br/>
+---
+      Email:   pmgesualdi@hotmail.com
+      Skype:   pmgesualdi
+      Github:  https://github.com/pmgesualdi
+
 We love music and we do music, we love movies (fanatics), we are also amateur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
 <br/>
 ### DBZ Team:
 -----------------------------------
-
-### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/logo_dbz_team.jpg "Logo DBZ")
-
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/logo_dbz_team.jpg "Logo DBZ Team")
 We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
 
 #### Team Members:
 
-* **Nelson Ramirez [Team Leader]**<br/>
+* **Nelson Ramirez [Full Team Leader]**<br/>
 ---
     Email:   nelsonalfo@gmail.com
     Skype:   nelalfo
@@ -462,6 +451,13 @@ We are a developer team with different experience levels; we give our best to de
 ---
       Skype:   seed_1987
       Github:  https://github.com/abicelis
+    
+
+* **Guillermo Gutierrez [New Developer]**
+---
+      Email:   guillermo20@gmail.com
+      Skype:   guillermo20
+      Github:  https://github.com/guillermo20
 
 * **Yordin Alayn [New Developer]**
 ---
@@ -475,8 +471,6 @@ We can talk about any topic outside of work, as movies, video games (!), politic
 
 ### Navi Charlie:
 -----------------------------------
-### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/Fermat%20Teams/logo_charlie_team.jpg "logo Charlie team")
-
 Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
 
 #### Team Members:
@@ -487,17 +481,11 @@ Developers of dev.fermat.org on the client-side. We are responsible to show to t
     Skype:   miguel-209
     Github:  https://github.com/miguelcldn
 
-* **Isaías Taborda [Navi Veteran Developer]**<br/>
+* **Isaías Taborda [Navi Developer]**<br/>
 ---
     Email:   isaiasve30@hotmail.com
     Skype:   
     Github:  https://github.com/IsaTab
-
-* **Simón Oroño [Navi Veteran Developer]**<br/>
----
-    Email:   simonorono@protonmail.com
-    Skype:   
-    Github:  https://github.com/simonorono
     
     
 * **Ricardo Delgado [Navi New Team Leader]**<br/>
@@ -540,8 +528,6 @@ About the group: We like anime, TV shows, movies and videogames. We always find 
 
 ### Navi Sierra:
 -----------------------------------
-### ![alt text]( https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/logo_sierra_team.jpg "logo Sierra team")
-
 In the Navi Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
 
 #### Team Members:
@@ -563,6 +549,12 @@ In the Navi Sierra Team we look for the excellence in coding, following the best
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
+
+* **Erick Narvaez [Navi Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
 
 <br/>
 

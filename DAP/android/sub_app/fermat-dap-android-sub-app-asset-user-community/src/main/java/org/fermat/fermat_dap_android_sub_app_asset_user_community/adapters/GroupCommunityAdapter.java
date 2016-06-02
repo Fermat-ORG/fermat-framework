@@ -5,11 +5,12 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.squareup.picasso.Picasso;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.GroupViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.PopupMenu;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
             }
 
             holder.groupMembers.setText(R.string.group_members);
-            holder.groupMembers.append(String.format("%s",data.getMembers()));
+            holder.groupMembers.append(String.format("%s", data.getMembers()));
 
-        Picasso.with(context).load(R.drawable.ic_group_image).into(holder.thumbnail);
+            Picasso.with(context).load(R.drawable.ic_group_image).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -70,7 +71,6 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
     public void setMenuItemClick(PopupMenu menuItemClick) {
         this.menuItemClick = menuItemClick;
     }
-
 
 
 }

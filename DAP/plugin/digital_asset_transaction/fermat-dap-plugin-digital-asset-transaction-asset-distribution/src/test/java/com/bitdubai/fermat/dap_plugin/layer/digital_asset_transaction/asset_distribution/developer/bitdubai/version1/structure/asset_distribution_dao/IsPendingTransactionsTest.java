@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class IsPendingTransactionsTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -52,13 +52,13 @@ public class IsPendingTransactionsTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void isPendingTransactionsTest () throws CantExecuteQueryException {
+    public void isPendingTransactionsTest() throws CantExecuteQueryException {
         boolean isPending = mockAssetDistributionDao.isPendingTransactions(CryptoStatus.PENDING_SUBMIT);
         Assert.assertTrue(isPending);
     }
@@ -70,7 +70,7 @@ public class IsPendingTransactionsTest {
         try {
             mockAssetDistributionDao.isPendingTransactions(CryptoStatus.PENDING_SUBMIT);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
         }
     }

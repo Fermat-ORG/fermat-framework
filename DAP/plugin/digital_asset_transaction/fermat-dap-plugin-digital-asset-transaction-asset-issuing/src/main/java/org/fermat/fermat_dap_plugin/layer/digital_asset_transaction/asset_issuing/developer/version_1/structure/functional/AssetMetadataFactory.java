@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -9,14 +10,15 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
@@ -38,11 +40,11 @@ public class AssetMetadataFactory implements Callable<Boolean> {
     private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao;
     private final IntraActorCryptoTransactionManager manager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
 
     //CONSTRUCTORS
 
-    public AssetMetadataFactory(IssuingRecord issuingRecord, AssetVaultManager assetVaultManager, ActorAssetIssuer actorAssetIssuer, IntraWalletUserIdentity intraActor, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao, IntraActorCryptoTransactionManager manager, CryptoAddressBookManager cryptoAddressBookManager, BitcoinWalletManager bitcoinWalletManager) {
+    public AssetMetadataFactory(IssuingRecord issuingRecord, AssetVaultManager assetVaultManager, ActorAssetIssuer actorAssetIssuer, IntraWalletUserIdentity intraActor, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao, IntraActorCryptoTransactionManager manager, CryptoAddressBookManager cryptoAddressBookManager, CryptoWalletManager cryptoWalletManager) {
         this.issuingRecord = issuingRecord;
         this.assetVaultManager = assetVaultManager;
         this.actorAssetIssuer = actorAssetIssuer;
@@ -50,7 +52,7 @@ public class AssetMetadataFactory implements Callable<Boolean> {
         this.dao = dao;
         this.manager = manager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
     }
 
 
@@ -68,8 +70,8 @@ public class AssetMetadataFactory implements Callable<Boolean> {
             dao.unProcessingAsset(issuingRecord.getAsset().getPublicKey());
             return Boolean.FALSE;
         }
-        BitcoinWalletWallet wallet = bitcoinWalletManager.loadWallet(issuingRecord.getBtcWalletPk());
-        BitcoinWalletBalance balance = wallet.getBalance(BalanceType.AVAILABLE);
+        CryptoWalletWallet wallet = cryptoWalletManager.loadWallet(issuingRecord.getBtcWalletPk());
+        CryptoWalletBalance balance = wallet.getBalance(BalanceType.AVAILABLE);
         if (issuingRecord.getAsset().getGenesisAmount() > balance.getBalance(issuingRecord.getNetworkType())) {
             dao.updateIssuingStatus(issuingRecord.getAsset().getPublicKey(), IssuingStatus.INSUFFICIENT_FONDS);
             dao.unProcessingAsset(issuingRecord.getAsset().getPublicKey());
@@ -117,7 +119,8 @@ public class AssetMetadataFactory implements Callable<Boolean> {
                 Actors.DAP_ASSET_ISSUER,
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                 true,
-                issuingRecord.getNetworkType());
+                issuingRecord.getNetworkType(),
+                CryptoCurrency.BITCOIN);
     }
     //GETTER AND SETTERS
 

@@ -23,6 +23,6 @@ public class IssuerCommunityNotificationsHolder extends FermatViewHolder {
     public IssuerCommunityNotificationsHolder(View itemView) {
         super(itemView);
         userName = (FermatTextView) itemView.findViewById(R.id.username);
-        userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
+        userAvatar = (ImageView) itemView.findViewById(R.id.imageView_avatar);
     }
 }

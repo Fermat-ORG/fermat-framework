@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.holders.AssetRedeemRedeemPointHolder;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -39,7 +40,7 @@ public class AssetRedeemPointAdapter extends FermatAdapter<RedeemPoint, AssetRed
     @Override
     protected void bindHolder(final AssetRedeemRedeemPointHolder holder, final RedeemPoint redeemPoint, int position) {
         holder.nameText.setText(redeemPoint.getName());
-        if(redeemPoint.getActorAssetRedeemPoint().getAddress() != null) {
+        if (redeemPoint.getActorAssetRedeemPoint().getAddress() != null) {
             holder.addressText.setText(String.format("%s %s", redeemPoint.getActorAssetRedeemPoint().getAddress().getStreetName(), redeemPoint.getActorAssetRedeemPoint().getAddress().getHouseNumber()));
             holder.cityText.setText(redeemPoint.getActorAssetRedeemPoint().getAddress().getCityName());
         }

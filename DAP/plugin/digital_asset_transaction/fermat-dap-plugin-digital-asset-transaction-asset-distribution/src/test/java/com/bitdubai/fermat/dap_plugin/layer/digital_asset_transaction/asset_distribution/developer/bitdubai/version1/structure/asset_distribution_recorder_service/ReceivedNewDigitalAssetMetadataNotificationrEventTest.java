@@ -1,12 +1,11 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_recorder_service;
 
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
+import org.fermat.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events.AssetDistributionRecorderService;
-
-import org.fermat.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +24,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
 
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
     ReceivedNewDigitalAssetMetadataNotificationEvent event;
+
     @Before
     public void init() throws Exception {
 //        EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
@@ -35,7 +35,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
     }
 
     @Test
-    public void receivedNewDigitalAssetMetadataNotificationrEventTest () throws CantSaveEventException {
+    public void receivedNewDigitalAssetMetadataNotificationrEventTest() throws CantSaveEventException {
 //        assetDistributionRecorderService.receivedTransactionStatusNotificationrEvent(event);
     }
 

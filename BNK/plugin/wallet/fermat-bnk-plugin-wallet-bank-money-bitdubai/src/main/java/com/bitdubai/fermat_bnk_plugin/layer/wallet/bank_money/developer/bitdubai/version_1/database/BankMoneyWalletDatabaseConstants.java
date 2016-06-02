@@ -15,7 +15,7 @@ public class BankMoneyWalletDatabaseConstants {
     /**
      * Database name
      */
-    public static final String DATABASE_NAME = "BankMoneyWallet";
+    public static final String DATABASE_NAME = "BankMoneyWalletManager";
 
     /**
      * Bank Money database table definition.
@@ -51,6 +51,7 @@ public class BankMoneyWalletDatabaseConstants {
     public static final String BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME = "account_type";
     public static final String BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
     public static final String BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME = "book_balance";
+    public static final String BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME = "image_id";
 
     public static final String BANK_MONEY_ACCOUNTS_FIRST_KEY_COLUMN = "public_key";
 

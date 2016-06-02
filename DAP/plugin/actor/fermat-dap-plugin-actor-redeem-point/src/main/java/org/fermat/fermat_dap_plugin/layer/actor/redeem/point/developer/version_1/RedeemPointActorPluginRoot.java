@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -43,6 +45,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -86,10 +91,6 @@ import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.exceptions.CantUpdateRedeemPointException;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.structure.RedeemPointActorAddress;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.structure.RedeemPointActorDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -422,8 +423,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
         try {
             this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
-        }
-        catch (CantGetRedeemPointsListException e) {
+        } catch (CantGetRedeemPointsListException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
         } catch (CantUpdateRedeemPointException e) {
@@ -481,7 +481,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
 //                try {
             cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
-                    null,
+                    WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                     CryptoCurrency.BITCOIN,
                     senderActorType,
                     destinationActorType,

@@ -5,11 +5,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +43,9 @@ public class GetActorUserPublicKeyByGenesisTransactionTest {
     List<DatabaseTableRecord> records, recordsForException;
     private AssetDistributionDao mockAssetDistributionDao;
     private String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
+
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -57,23 +58,24 @@ public class GetActorUserPublicKeyByGenesisTransactionTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
+
     @Test
-    public void getActorUserPublicKeyByGenesisTransactionTest () throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetDistributionProgressException {
+    public void getActorUserPublicKeyByGenesisTransactionTest() throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetDistributionProgressException {
 
         mockAssetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
     }
 
-   @Test
+    @Test
     public void getActorUserPublicKeyByGenesisTransactionThrowsCantCheckAssetDistributionProgressException() throws Exception {
         when(databaseTable.getRecords()).thenReturn(recordsForException);
         try {
             mockAssetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof UnexpectedResultReturnedFromDatabaseException);
         }
     }
@@ -84,7 +86,7 @@ public class GetActorUserPublicKeyByGenesisTransactionTest {
         try {
             mockAssetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }

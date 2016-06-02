@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+
 import org.fermat.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.AssetIssuerActorPluginRoot;
 
@@ -24,7 +25,7 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
 
         if (this.assetActorIssuerPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if(fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
+            if (fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
                 System.out.println("ACTOR ASSET ISSUER RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
 
                 NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;

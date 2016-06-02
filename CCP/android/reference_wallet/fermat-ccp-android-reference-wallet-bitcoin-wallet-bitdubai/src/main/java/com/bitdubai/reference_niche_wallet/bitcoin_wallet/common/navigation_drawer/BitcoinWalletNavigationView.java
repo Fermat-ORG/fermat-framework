@@ -88,5 +88,8 @@ public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
     }
 
 
-
+    @Override
+    public View addNavigationViewHeader() {
+        return null;
+    }
 }

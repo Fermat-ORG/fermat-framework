@@ -5,11 +5,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class GetEventTypeByIdTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -55,13 +55,13 @@ public class GetEventTypeByIdTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void getEventTypeByIdTest () throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public void getEventTypeByIdTest() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         mockAssetDistributionDao.getEventTypeById("eventId");
     }
 
@@ -71,7 +71,7 @@ public class GetEventTypeByIdTest {
         try {
             mockAssetDistributionDao.getEventTypeById("eventId");
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
             Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
         }
@@ -83,7 +83,7 @@ public class GetEventTypeByIdTest {
         try {
             mockAssetDistributionDao.getEventTypeById("eventId");
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }

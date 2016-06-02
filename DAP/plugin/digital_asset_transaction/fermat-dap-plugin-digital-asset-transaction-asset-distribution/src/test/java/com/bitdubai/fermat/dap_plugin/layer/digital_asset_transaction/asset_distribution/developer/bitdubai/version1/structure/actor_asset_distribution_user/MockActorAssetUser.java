@@ -3,6 +3,7 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
@@ -31,6 +32,7 @@ public class MockActorAssetUser implements ActorAssetUser {
     public long getRegistrationDate() {
         return 0;
     }
+
     @Override
     public byte[] getProfileImage() {
         return new byte[0];
@@ -58,7 +60,10 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
-    public Location getLocation() {return null;}
+    public Location getLocation() {
+        return null;
+    }
+
     @Override
     public Genders getGenders() {
         return null;

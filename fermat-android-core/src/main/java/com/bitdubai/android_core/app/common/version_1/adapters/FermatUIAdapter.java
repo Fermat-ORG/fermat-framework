@@ -1,6 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.adapters;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface FermatUIAdapter {
 
-    List<AbstractFermatFragment> getLstCurrentFragments();
+    List<AbstractFermatFragmentInterface> getLstCurrentFragments();
 
 }

@@ -59,7 +59,7 @@ public enum MessageContentType {
     public static MessageContentType getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "TXT":
+            case "TEXT":
                 return MessageContentType.TEXT;
             case "JSON":
                 return MessageContentType.JSON;

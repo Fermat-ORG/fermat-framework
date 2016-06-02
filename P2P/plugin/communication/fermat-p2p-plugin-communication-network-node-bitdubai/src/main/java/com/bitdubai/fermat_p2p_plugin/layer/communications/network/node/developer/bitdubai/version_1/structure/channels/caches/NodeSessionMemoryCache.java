@@ -109,4 +109,12 @@ public class NodeSessionMemoryCache {
 
         return instance.nodeSessions.containsKey(nodePublicKeyIdentity);
     }
+
+    /**
+     * Get node sessions
+     * @return Map<String, Session>
+     */
+    public static Map<String, Session> getNodeSessions() {
+        return instance.nodeSessions;
+    }
 }

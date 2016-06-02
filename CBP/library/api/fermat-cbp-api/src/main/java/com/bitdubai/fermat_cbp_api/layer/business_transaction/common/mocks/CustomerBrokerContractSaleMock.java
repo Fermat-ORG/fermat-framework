@@ -4,12 +4,15 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
+import java.io.Serializable;
 import java.util.Collection;
 
-/** This mock is only for testing
+
+/**
+ * This mock is only for testing
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/01/16.
  */
-public class CustomerBrokerContractSaleMock implements CustomerBrokerContractSale{
+public class CustomerBrokerContractSaleMock implements CustomerBrokerContractSale, Serializable {
     @Override
     public String getContractId() {
         return "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
@@ -51,5 +54,7 @@ public class CustomerBrokerContractSaleMock implements CustomerBrokerContractSal
     }
 
     @Override
-    public String getCancelReason() { return "";}
+    public String getCancelReason() {
+        return "";
+    }
 }

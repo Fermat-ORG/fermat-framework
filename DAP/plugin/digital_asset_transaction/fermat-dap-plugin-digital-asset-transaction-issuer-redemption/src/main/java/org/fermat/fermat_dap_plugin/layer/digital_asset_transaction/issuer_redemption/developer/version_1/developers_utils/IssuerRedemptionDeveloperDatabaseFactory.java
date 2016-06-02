@@ -1,8 +1,5 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.developers_utils;
 
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseConstants;
-
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -11,13 +8,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_reception.exceptions.CantInitializeAssetReceptionTransactionDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/11/15.
  */
-public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class IssuerRedemptionDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -156,12 +154,12 @@ public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPlugin
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -181,7 +179,7 @@ public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPlugin
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }
@@ -189,13 +187,13 @@ public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPlugin
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

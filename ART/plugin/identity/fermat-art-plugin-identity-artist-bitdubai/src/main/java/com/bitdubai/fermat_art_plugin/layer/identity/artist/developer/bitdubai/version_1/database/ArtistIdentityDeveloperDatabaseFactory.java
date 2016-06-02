@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by GAbriel Araujo 10/03/16.
  */
-public class ArtistIdentityDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ArtistIdentityDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -50,15 +50,15 @@ public class ArtistIdentityDeveloperDatabaseFactory implements DealsWithPluginDa
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 
     /**
      * This method open or creates the database i'll be working with
@@ -129,6 +129,11 @@ public class ArtistIdentityDeveloperDatabaseFactory implements DealsWithPluginDa
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME);
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+        ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+        ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
+        ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME);
+        ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME);
+
         /**
          * Table Asset User addition.
          */

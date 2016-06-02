@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,13 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 17/10/15.
  */
-public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetIssuerNetworkServiceDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -253,15 +250,15 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
             else
                 initializeDatabase();
 
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+            DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -281,7 +278,7 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }
@@ -289,13 +286,13 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

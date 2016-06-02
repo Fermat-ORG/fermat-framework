@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_art_api.all_definition.exceptions;
 
-import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
-
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */

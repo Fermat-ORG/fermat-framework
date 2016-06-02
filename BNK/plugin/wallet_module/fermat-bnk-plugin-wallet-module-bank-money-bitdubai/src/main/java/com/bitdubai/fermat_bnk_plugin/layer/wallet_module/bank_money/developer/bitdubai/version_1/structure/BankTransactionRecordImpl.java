@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
@@ -9,20 +8,22 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
+import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by guillermo on 03/02/16.
  */
-public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
+public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
-    private float amount;
+    private BigDecimal amount;
     private String memo;
     private long timestamp;
     private TransactionType transactionType;
     private BankTransactionStatus bankTransactionStatus;
 
-    public BankTransactionRecordImpl(float amount, String memo, long timestamp,TransactionType transactionType,BankTransactionStatus bankTransactionStatus) {
+    public BankTransactionRecordImpl(BigDecimal amount, String memo, long timestamp,TransactionType transactionType,BankTransactionStatus bankTransactionStatus) {
         this.amount = amount;
         this.memo = memo;
         this.timestamp = timestamp;
@@ -51,7 +52,7 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
 
@@ -91,13 +92,13 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
     }
 
     @Override
-    public long getRunningBookBalance() {
-        return 0;
+    public BigDecimal getRunningBookBalance() {
+        return new BigDecimal(0);
     }
 
     @Override
-    public long getRunningAvailableBalance() {
-        return 0;
+    public BigDecimal getRunningAvailableBalance() {
+        return new BigDecimal(0);
     }
 
     @Override

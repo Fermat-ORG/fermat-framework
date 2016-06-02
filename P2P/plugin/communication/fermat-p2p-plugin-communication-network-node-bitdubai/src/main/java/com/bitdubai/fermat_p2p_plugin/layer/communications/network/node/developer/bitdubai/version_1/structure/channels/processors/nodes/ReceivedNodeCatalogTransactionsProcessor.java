@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -16,8 +17,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceivedNodeCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedNodeCatalogTransactionsProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedNodeCatalogTransactionsProcessor.class));
 
     /**
      * Constructor with parameter
@@ -53,7 +54,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingPackage(Session session, Package packageReceived) {
+    public synchronized void processingPackage(Session session, Package packageReceived) {
 
         LOG.info("Processing new package received");
 
@@ -131,14 +132,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * Process the transaction
      * @param nodesCatalogTransaction
      */
-    private int processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException {
+    private int processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
 
         LOG.info("Executing method processTransaction");
 
-        int lateNotificationsCounter = 0;
+        if ((getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) &&
+                nodesCatalogTransaction.getTransactionType() == NodesCatalogTransaction.ADD_TRANSACTION_TYPE){
 
-        if (exist(nodesCatalogTransaction.getIdentityPublicKey())){
-            lateNotificationsCounter++;
+            return 1;
+
         }else {
 
             switch (nodesCatalogTransaction.getTransactionType()){
@@ -161,30 +163,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         }
 
-        return lateNotificationsCounter;
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param identityPublicKey
-     * @return boolean
-     */
-    private boolean exist(String identityPublicKey) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        LOG.info("Executing method exist");
-
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(identityPublicKey);
-
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
+        return 0;
     }
 
     /**
@@ -193,28 +172,30 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        LOG.info("Executing method insertNodesCatalog");
+        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) {
+            LOG.info("Executing method insertNodesCatalog");
 
-        /*
-         * Create the NodesCatalog
-         */
-        NodesCatalog nodeCatalog = new NodesCatalog();
-        nodeCatalog.setIp(nodesCatalogTransaction.getIp());
-        nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        nodeCatalog.setName(nodesCatalogTransaction.getName());
-        nodeCatalog.setOfflineCounter(0);
-        nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalog nodeCatalog = new NodesCatalog();
+            nodeCatalog.setIp(nodesCatalogTransaction.getIp());
+            nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
+            nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
+            nodeCatalog.setName(nodesCatalogTransaction.getName());
+            nodeCatalog.setOfflineCounter(0);
+            nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
+            nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+            nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
+            nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+        }
     }
 
     /**
@@ -223,11 +204,11 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         LOG.info("Executing method updateNodesCatalog");
 
-       /*
+        /*
          * Create the NodesCatalog
          */
         NodesCatalog nodeCatalog = new NodesCatalog();
@@ -241,10 +222,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
         nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogDao().update(nodeCatalog);
+        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) {
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogDao().update(nodeCatalog);
+        } else {
+            // if it does not exists i create it
+            getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+        }
     }
 
     /**
@@ -254,14 +240,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteNodesCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteNodesCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method deleteNodesCatalog");
 
         /*
          * Delete from the data base
          */
-        getDaoFactory().getNodesCatalogDao().delete(identityPublicKey);
+        if (getDaoFactory().getNodesCatalogDao().exists(identityPublicKey))
+            getDaoFactory().getNodesCatalogDao().delete(identityPublicKey);
     }
 
     /**
@@ -270,14 +257,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertNodesCatalogTransaction");
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getNodesCatalogTransactionDao().create(nodesCatalogTransaction);
+        if (!getDaoFactory().getNodesCatalogTransactionDao().exists(nodesCatalogTransaction.getId()))
+            getDaoFactory().getNodesCatalogTransactionDao().create(nodesCatalogTransaction);
     }
 
     /**
@@ -286,29 +274,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
 
         /*
-         * Create the NodesCatalog
-         */
-        NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
-        transaction.setIp(nodesCatalogTransaction.getIp());
-        transaction.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        transaction.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        transaction.setName(nodesCatalogTransaction.getName());
-        transaction.setTransactionType(nodesCatalogTransaction.getTransactionType());
-        transaction.setHashId(transaction.getHashId());
-        transaction.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        transaction.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        transaction.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        transaction.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
-
-        /*
          * Save into the data base
          */
-        getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+        if (!getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().exists(nodesCatalogTransaction.getId()))
+            getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(nodesCatalogTransaction);
     }
 
 }

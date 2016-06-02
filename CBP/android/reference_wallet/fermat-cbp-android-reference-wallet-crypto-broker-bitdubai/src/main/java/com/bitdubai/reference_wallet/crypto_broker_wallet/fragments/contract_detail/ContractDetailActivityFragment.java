@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -84,6 +85,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     /**
      * This method will be execute at the screen start.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -94,7 +96,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             walletModuleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
-            data=(ContractBasicInformation) appSession.getData("contract_data");
+            data = (ContractBasicInformation) appSession.getData("contract_data");
             appSession.setData("ContractDetailFragment", this);
 
         } catch (Exception e) {
@@ -110,7 +112,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         configureToolbar();
         initViews(layout);
-        contractInformation=createContractDetails();
+        contractInformation = createContractDetails();
         bindData();
 
         return layout;
@@ -167,40 +169,39 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 }
             }
         });
-        String paymentCurrency = data.getPaymentCurrency();
+
+        final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
+        final String paymentCurrency = data.getPaymentCurrency();
+        final String merchandise = data.getMerchandise();
+        double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final Date lastUpdate = new Date(data.getLastUpdate());
+
         brokerName.setText(data.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(data.getCryptoCustomerImage()));
-        sellingSummary.setText("BUYING " + data.getMerchandise());
-        //TODO: averiguar el detailrate como escribirlo
-        //detailRate.setText("1 BTC @"+ data.getExchangeRateAmount() + " "+ data.getPaymentCurrency());
-        //detailRate.setText("1 BTC @ 254 USD");
+        sellingSummary.setText(String.format("BUYING %1$s", merchandise));
+        detailDate.setText(formatter.format(lastUpdate));
+        detailRate.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRateAmount, paymentCurrency));
 
-        Date date = new Date(data.getLastUpdate());
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
-        detailDate.setText("Date:\n"+formatter.format(date));
-        double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
-        double amount= getFormattedNumber(data.getAmount());
         adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletModuleManager, this);
-        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
         recyclerView.setAdapter(adapter);
     }
 
-    private double getFormattedNumber(float number){
-        int decimalPlaces=2;
+    private double getFormattedNumber(float number) {
+        int decimalPlaces = 2;
         BigDecimal bigDecimalNumber = new BigDecimal(number);
-        bigDecimalNumber=bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+        bigDecimalNumber = bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
         return bigDecimalNumber.doubleValue();
     }
 
-    private List<ContractDetail> createContractDetails(){
-        List<ContractDetail> contractDetails=new ArrayList<>();
+    private List<ContractDetail> createContractDetails() {
+        List<ContractDetail> contractDetails = new ArrayList<>();
         ContractDetail contractDetail;
         //TODO: when the module is finished, use the followings lines to create contract details.
-        CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager= appSession.getModuleManager();
-        if(walletModuleManager !=null){
-            try{
+        CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager = appSession.getModuleManager();
+        if (walletModuleManager != null) {
+            try {
                 //ContractDetail contractDetail;
-                CustomerBrokerContractSale customerBrokerContractSale= cryptoBrokerWalletModuleManager.getCustomerBrokerContractSaleByNegotiationId(data.getNegotiationId().toString());
+                CustomerBrokerContractSale customerBrokerContractSale = cryptoBrokerWalletModuleManager.getCustomerBrokerContractSaleByNegotiationId(data.getNegotiationId().toString());
                 //Customer
                 ContractStatus contractStatus = customerBrokerContractSale.getStatus();
 
@@ -211,52 +212,54 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 String merchandiseCurrency = "MK";
                 String merchandiseAmount = "-1";
                 String merchandisePaymentMethod = "MK";
-                MoneyType paymentMethodType = MoneyType.BANK;
+                MoneyType customerPaymentMethodType = MoneyType.BANK;
+                MoneyType brokerPaymentMethodType = MoneyType.BANK;
 
-                try{
+                try {
                     Collection<Clause> clauses = walletModuleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
                     //Extract info from clauses
-                    for(Clause clause : clauses)
-                    {
-                        if(clause.getType() == ClauseType.EXCHANGE_RATE)
+                    for (Clause clause : clauses) {
+                        if (clause.getType() == ClauseType.EXCHANGE_RATE)
                             exchangeRate = clause.getValue();
 
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY){
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY) {
                             try {
-                                if(FiatCurrency.codeExists(clause.getValue()))
+                                if (FiatCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
-                                else if(CryptoCurrency.codeExists(clause.getValue()))
+                                else if (CryptoCurrency.codeExists(clause.getValue()))
                                     paymentCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 paymentCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
                             paymentAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
-                            merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                            paymentMethodType= MoneyType.getByCode(clause.getValue());
+                        if (clause.getType() == ClauseType.BROKER_PAYMENT_METHOD) {
+                            merchandisePaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                            brokerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
                                 if (FiatCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = FiatCurrency.getByCode(clause.getValue()).getFriendlyName();
                                 else if (CryptoCurrency.codeExists(clause.getValue()))
                                     merchandiseCurrency = CryptoCurrency.getByCode(clause.getValue()).getFriendlyName();
-                            }catch(Exception e) {
+                            } catch (Exception e) {
                                 merchandiseCurrency = clause.getValue();
                             }
                         }
-                        if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
+                        if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                             merchandiseAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD){
+                        if (clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD) {
                             paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                            paymentMethodType= MoneyType.getByCode(clause.getValue());
+                            customerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
                     }
 
-                }catch(Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
                 long paymentSubmitDate = walletModuleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
@@ -274,7 +277,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentSubmitDate,paymentMethodType);
+                        paymentSubmitDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -286,7 +289,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentAckDate,paymentMethodType);
+                        paymentAckDate, customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -298,7 +301,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseSubmitDate,paymentMethodType);
+                        merchandiseSubmitDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -310,7 +313,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseAckDate,paymentMethodType);
+                        merchandiseAckDate, brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -321,7 +324,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 }
             }
 
-        } else{
+        } else {
             //If module is null, I cannot handle with this.
             Toast.makeText(
                     getActivity(),
@@ -344,12 +347,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     /**
      * This method is for testing
+     *
      * @param image
+     *
      * @return
      */
-    private byte[] getByteArrayFromImageView(ImageView image){
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+    private byte[] getByteArrayFromImageView(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
         return stream.toByteArray();
     }

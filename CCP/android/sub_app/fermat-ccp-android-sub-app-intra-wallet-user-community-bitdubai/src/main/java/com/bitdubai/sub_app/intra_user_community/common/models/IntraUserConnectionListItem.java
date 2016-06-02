@@ -31,7 +31,7 @@ public class IntraUserConnectionListItem implements Item {
         this.connectionStatus = connectionStatus;
     }
 
-    public static ArrayList<IntraUserConnectionListItem> getTestData(Resources resources) {
+   /* public static ArrayList<IntraUserConnectionListItem> getTestData(Resources resources) {
         ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
         Drawable d = resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
@@ -92,9 +92,9 @@ public class IntraUserConnectionListItem implements Item {
         }
         return lst;
 
-    }
+    }*/
 
-    public static ArrayList<IntraUserConnectionListItem> getTestDataExample(Resources resources) {
+   /* public static ArrayList<IntraUserConnectionListItem> getTestDataExample(Resources resources) {
         ArrayList<IntraUserConnectionListItem> lst = new ArrayList<IntraUserConnectionListItem>();
         Drawable d = resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
@@ -138,7 +138,7 @@ public class IntraUserConnectionListItem implements Item {
         return lst;
 
 
-    }
+    }*/
 
     public String getName() {
         return name;

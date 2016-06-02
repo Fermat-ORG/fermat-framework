@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_android_api.engine;
 
-import com.bitdubai.fermat_core.FermatSystem;
-
 /**
  * Created by Matias Furszyfer on 2015.12.15..
  */
-public interface FermatApplicationSession {
+public interface FermatApplicationSession<S> {
 
-    FermatSystem getFermatSystem();
+    S getFermatSystem();
+
+    FermatApplicationCaller getApplicationManager();
 
 }

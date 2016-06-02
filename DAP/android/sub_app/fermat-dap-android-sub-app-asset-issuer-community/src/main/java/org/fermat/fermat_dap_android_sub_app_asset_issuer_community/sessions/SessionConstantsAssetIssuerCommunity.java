@@ -27,7 +27,7 @@ public class SessionConstantsAssetIssuerCommunity {
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_HISTORY = 403;
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_STATISTICS = 404;
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL = 405;
-    public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL= 406;
+    public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL = 406;
     public static final int IC_ACTION_ISSUER_COMMUNITY_NOTIFICATIONS = 407;
     public static final int IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION = 408;
     public static final int IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING = 409;

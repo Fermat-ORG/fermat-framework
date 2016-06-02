@@ -13,8 +13,7 @@ public class UserAssetNegotiation {
     private int quantityToBuy;
 
 
-
-    public UserAssetNegotiation(){
+    public UserAssetNegotiation() {
     }
 
 
@@ -23,7 +22,7 @@ public class UserAssetNegotiation {
         this.ammountPerUnit = ammountPerUnit;
         this.quantityToBuy = quantityToBuy;
         //this.digitalAssetPublicKey = digitalAssetPublicKey;
-        
+
     }
 
     public UserAssetNegotiation(long ammountPerUnit, int quantityToBuy) {

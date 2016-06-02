@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
@@ -10,6 +11,7 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer {
     String alias;
     String publicKey;
     String mensage;
+
     @Override
     public String getAlias() {
         return alias;
@@ -40,11 +42,11 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer {
         return this.mensage;
     }
 
-    public void setAlias(String alias){
+    public void setAlias(String alias) {
         this.alias = alias;
     }
 
-    public void setPublicKey(String publicKey){
+    public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
 }

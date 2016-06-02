@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -18,8 +18,6 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingCha
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -153,20 +151,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
         }
     }
 
-//    public void IncomingNewOnlineStatusUpdateEventHandler(IncomingNewOnlineStatusUpdate event) throws CantSaveEventException {
-//        try{
-//            chatMiddlewareMonitorAgent.checkIncomingOnlineStatus(event.getChatId());
-//        } catch (Exception exception) {
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CHAT_MIDDLEWARE,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-//                    FermatException.wrapException(exception));
-//            throw new CantSaveEventException(
-//                    exception,
-//                    "Saving OutgoingChat event",
-//                    "Unexpected Exception");
-//        }
-//    }
+
 
     @Override
     public void start() throws CantStartServiceException {

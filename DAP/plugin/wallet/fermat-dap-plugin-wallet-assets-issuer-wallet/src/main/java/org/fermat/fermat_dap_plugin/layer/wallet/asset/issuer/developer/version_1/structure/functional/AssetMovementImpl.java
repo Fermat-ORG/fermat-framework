@@ -22,7 +22,7 @@ public class AssetMovementImpl implements AssetMovement {
         this.actorFrom = actorFrom;
         this.actorTo = actorTo;
         this.timestamp = timestamp;
-        this.type=type;
+        this.type = type;
     }
 
     public AssetMovementImpl() {
@@ -64,7 +64,9 @@ public class AssetMovementImpl implements AssetMovement {
         this.timestamp = timestamp;
     }
 
-    public void setType(AssetMovementType type) { this.type = type; }
+    public void setType(AssetMovementType type) {
+        this.type = type;
+    }
 
     //INNER CLASSES
 }

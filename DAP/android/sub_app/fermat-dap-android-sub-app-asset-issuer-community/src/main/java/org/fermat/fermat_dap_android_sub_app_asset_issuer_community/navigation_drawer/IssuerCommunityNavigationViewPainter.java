@@ -3,13 +3,20 @@ package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.navigation_
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 import java.lang.ref.WeakReference;
 
@@ -18,24 +25,38 @@ import java.lang.ref.WeakReference;
  */
 public class IssuerCommunityNavigationViewPainter implements NavigationViewPainter {
 
+    private static final String TAG = "Iss-ComunNavigationView";
+
     private WeakReference<Context> activity;
+    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     private ActiveActorIdentityInformation activeIdentity;
+    AssetIssuerCommunitySubAppModuleManager moduleManager;
+    private ErrorManager errorManager;
 
-    public IssuerCommunityNavigationViewPainter(Context activity) {
+    public IssuerCommunityNavigationViewPainter(Context activity, AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession) {
         this.activity = new WeakReference<Context>(activity);
-    }
+        this.assetIssuerCommunitySubAppSession = assetIssuerCommunitySubAppSession;
 
-    public IssuerCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation activeIdentity) {
-        this.activity = new WeakReference<Context>(activity);
-        this.activeIdentity = activeIdentity;
+        errorManager = assetIssuerCommunitySubAppSession.getErrorManager();
+
+        try {
+            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+            activeIdentity = this.moduleManager.getActiveAssetIssuerIdentity();//(assetIssuerSession.getAppPublicKey());
+
+        } catch (FermatException ex) {
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
+        }
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetIssuer) {
+    public View addNavigationViewHeader() {
         try {
             return IssuerCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
-        } catch (CantGetIdentityAssetUserException e) {
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), activeIdentity);
+        } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
             return null;
         }

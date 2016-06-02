@@ -7,6 +7,7 @@
 package org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
@@ -45,9 +46,11 @@ public interface DigitalAssetMetadataTransaction {
 
     /**
      * The platform component that this event is destinated for.
+     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getReceiverType();
+
     /**
      * Get the Sender Id
      *
@@ -57,9 +60,11 @@ public interface DigitalAssetMetadataTransaction {
 
     /**
      * The platform component that send this event.
+     *
      * @return {@link PlatformComponentType}
      */
     PlatformComponentType getSenderType();
+
     /**
      * Get the GenesisTransaction
      *
@@ -72,10 +77,11 @@ public interface DigitalAssetMetadataTransaction {
      *
      * @return DigitalAssetMetadataTransactionType
      */
-    DigitalAssetMetadataTransactionType getType() ;
+    DigitalAssetMetadataTransactionType getType();
 
     /**
      * Get the Timestamp
+     *
      * @return Long
      */
     Long getTimestamp();

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+
 import org.fermat.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
 
 /**
@@ -11,7 +12,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCom
  */
 public class ActorAssetIssuerCompleteRegistrationNotificationEventHandler implements FermatEventHandler {
 
-//    private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
+    //    private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
     private org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.AssetIssuerActorPluginRoot assetActorIssuerPluginRoot;
 
     public ActorAssetIssuerCompleteRegistrationNotificationEventHandler(org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.AssetIssuerActorPluginRoot assetActorIssuerPluginRoot) {

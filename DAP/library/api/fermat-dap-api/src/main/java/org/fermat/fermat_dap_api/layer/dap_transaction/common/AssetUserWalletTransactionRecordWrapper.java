@@ -3,6 +3,7 @@ package org.fermat.fermat_dap_api.layer.dap_transaction.common;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.util.ActorUtils;
@@ -96,7 +97,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0  ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.memo = memo;
@@ -117,7 +118,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorTo.getActorPublicKey();
         this.actorFromType = ActorUtils.getActorType(actorFrom);
         this.actorToType = ActorUtils.getActorType(actorTo);
-        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0  ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.memo = memo;

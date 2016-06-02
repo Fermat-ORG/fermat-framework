@@ -55,10 +55,10 @@ public class Issuer {
         List<Asset> assets;
         List<Issuer> issuers = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            issuer = new Issuer("Issuer "+i);
+            issuer = new Issuer("Issuer " + i);
             assets = new ArrayList<>();
             for (int j = 0; j < 5; j++) {
-                asset = new Asset("Asset "+j);
+                asset = new Asset("Asset " + j);
                 assets.add(asset);
             }
             issuer.setAssets(assets);

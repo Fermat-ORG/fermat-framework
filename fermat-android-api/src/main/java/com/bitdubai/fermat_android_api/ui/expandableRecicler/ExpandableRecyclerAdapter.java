@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,6 +39,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     private static final int TYPE_PARENT = 0;
     private static final int TYPE_CHILD = 1;
     private static final int TYPE_CHILD_LAST = 2;
+    private static final String TAG = "ExpandableRecyclerAdap";
     /**
      * A {@link List} of all currently expanded {@link ParentListItem} objects
      * and their children, in order. Changes to this list should be made through the add/remove methods
@@ -584,8 +586,13 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             if (childItemList != null) {
                 int childListItemCount = childItemList.size();
                 for (int i = 0; i < childListItemCount; i++) {
-                    mItemList.add(parentIndex + i + 1, childItemList.get(i));
-                    notifyItemInserted(parentIndex + i + 1);
+                    try {
+                        mItemList.add(parentIndex + i + 1, childItemList.get(i));
+                        notifyItemInserted(parentIndex + i + 1);
+                    }catch (Exception e){
+                        Log.e(TAG,"Error: expandParentListItem.");
+                       // e.printStackTrace();
+                    }
                 }
             }
         }
@@ -652,10 +659,18 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param parentItemList the list of parent items (with children) to be replace with
      */
     public void changeDataSet(@NonNull List<? extends ParentListItem> parentItemList) {
+        onChangeDataSet();
         mParentItemList = parentItemList;
         mItemList = ExpandableRecyclerAdapterHelper.generateParentChildItemList(parentItemList);
 
         notifyDataSetChanged();
+    }
+
+    /**
+     * Notify subClass when dataset is change to stop work if is running
+     */
+    protected void onChangeDataSet(){
+
     }
 
     /**

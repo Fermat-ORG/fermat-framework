@@ -2,20 +2,16 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
-
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantApproveLossProtectedRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
@@ -23,10 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
-
-import android.content.Context;
 
 import java.util.UUID;
 
@@ -38,7 +31,7 @@ public class Confirm_Send_Payment_Dialog extends Dialog implements
 
 
 
-public Activity activity;
+public Context context;
 public Dialog d;
 
 private BlockchainNetworkType blockchainNetworkType;
@@ -69,6 +62,7 @@ public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
     this.cryptoAmount = cryptoAmount;
     this.blockchainNetworkType = blockchainNetworkType;
     this.lossProtectedWallet = lossProtectedWallet;
+    this.context = a;
  }
 
 
@@ -109,11 +103,11 @@ private void setUpScreenComponents(){
                 {
                     lossProtectedWallet.approveRequest(this.requestId
                             , appSession.getIntraUserModuleManager().getPublicKey());
-                    Toast.makeText(this.activity, "Request accepted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this.context, "Request accepted", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(this.activity, "Action not allowed, Insufficient Funds.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.context, "Action not allowed, Insufficient Funds.", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -130,7 +124,10 @@ private void setUpScreenComponents(){
             } catch (CantGetCryptoLossProtectedWalletException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this.activity, "Sending...", Toast.LENGTH_SHORT).show();
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }

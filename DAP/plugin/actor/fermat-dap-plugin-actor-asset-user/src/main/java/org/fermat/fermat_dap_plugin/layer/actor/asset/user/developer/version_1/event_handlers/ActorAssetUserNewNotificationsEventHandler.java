@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.AssetUserActorPluginRoot;
@@ -41,9 +42,9 @@ public class ActorAssetUserNewNotificationsEventHandler implements FermatEventHa
             EventType eventExpected = EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS;
             EventSource eventSource = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
             String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" +
-                    "Event Source received: "+ fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
+                    "Event Source received: " + fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
                     "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode() + "\n" +
-                    "Event Source: "+ eventSource.toString() + " - " + eventSource.getCode();
+                    "Event Source: " + eventSource.toString() + " - " + eventSource.getCode();
             throw new UnexpectedEventException(context);
         }
     }

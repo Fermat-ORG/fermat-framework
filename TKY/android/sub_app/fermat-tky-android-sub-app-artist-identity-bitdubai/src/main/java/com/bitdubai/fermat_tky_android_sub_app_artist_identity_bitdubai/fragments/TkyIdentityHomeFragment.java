@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.fragments;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
-
 
 /**
  * Created by Juan Sulbaran sulbaranja@gmail.com on 21/03/16.

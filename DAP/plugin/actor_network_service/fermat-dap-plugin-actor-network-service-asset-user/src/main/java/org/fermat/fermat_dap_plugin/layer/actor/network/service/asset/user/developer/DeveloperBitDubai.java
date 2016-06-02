@@ -14,15 +14,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-//import AssetUserActorNetworkServicePluginRoot;
+
 import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.AssetUserActorNetworkServicePluginRoot;
 
+//import AssetUserActorNetworkServicePluginRoot;
+
 /**
-* The Class <code>DeveloperBitDubai</code> is
-* the responsible to initialize the plugin.
-* <p/>
-*
-* Created by Roberto Requena - (rrequena) on 17/07/15.
+ * The Class <code>DeveloperBitDubai</code> is
+ * the responsible to initialize the plugin.
+ * <p/>
+ * <p/>
+ * Created by Roberto Requena - (rrequena) on 17/07/15.
  * Updated by lnacosta (laion.cj91@gmail.com) on 11/11/2015.
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {

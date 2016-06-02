@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -44,7 +43,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.DeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantDeliveryDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl;
 
 import java.util.ArrayList;
@@ -60,7 +58,7 @@ import java.util.UUID;
         createdBy = "franklin",
         layer = Layers.WALLET,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_USER_WALLET)
+        plugin = Plugins.ASSET_USER)
 public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         AssetUserWalletManager,
         DatabaseManagerForDevelopers {
@@ -88,6 +86,8 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     }
 
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
+    BlockchainNetworkType selectedNetwork;
+
     private List<UUID> userWallets = new ArrayList<>();
     public static final String PATH_DIRECTORY = "asset-user-swap/";
     private static final String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
@@ -115,19 +115,21 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
-                    this,
-                    pluginDatabaseSystem,
-                    pluginFileSystem,
-                    pluginId,
-                    userManager,
-                    issuerManager,
-                    redeemPointManager,
-                    broadcaster);
-
+            if (assetUserWallet == null) {
+                assetUserWallet = new AssetUserWalletImpl(
+                        this,
+                        pluginDatabaseSystem,
+                        pluginFileSystem,
+                        pluginId,
+                        userManager,
+                        issuerManager,
+                        redeemPointManager,
+                        broadcaster);
+            }
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
-            userWallet.initialize(internalAssetIssuerWalletId);
-            return userWallet;
+            changeNetworkType(networkType);
+            assetUserWallet.initialize(internalAssetIssuerWalletId);
+            return assetUserWallet;
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
@@ -137,17 +139,19 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
-                    this,
-                    pluginDatabaseSystem,
-                    pluginFileSystem,
-                    pluginId,
-                    userManager,
-                    issuerManager,
-                    redeemPointManager,
-                    broadcaster);
-
-            UUID internalAssetIssuerWalletId = userWallet.create(walletPublicKey, networkType);
+            if (assetUserWallet == null) {
+                assetUserWallet = new AssetUserWalletImpl(
+                        this,
+                        pluginDatabaseSystem,
+                        pluginFileSystem,
+                        pluginId,
+                        userManager,
+                        issuerManager,
+                        redeemPointManager,
+                        broadcaster);
+            }
+            UUID internalAssetIssuerWalletId = assetUserWallet.create(walletPublicKey, networkType);
+            changeNetworkType(networkType);
             userWallets.add(internalAssetIssuerWalletId);
         } catch (CantCreateWalletException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -230,5 +234,35 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+    @Override
+    public void changeNetworkType(BlockchainNetworkType networkType) {
+        if (networkType == null) {
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        } else {
+            selectedNetwork = networkType;
+        }
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_ISSUER_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException exception) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//                exception.printStackTrace();
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
+        return selectedNetwork;
     }
 }

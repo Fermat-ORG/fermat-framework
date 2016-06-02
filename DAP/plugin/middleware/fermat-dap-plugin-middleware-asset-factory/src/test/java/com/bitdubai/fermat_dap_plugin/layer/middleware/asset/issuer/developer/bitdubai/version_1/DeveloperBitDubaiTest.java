@@ -2,8 +2,8 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.DeveloperBitDubai;
 
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.DeveloperBitDubai;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,15 +12,15 @@ import org.junit.Test;
  */
 public class DeveloperBitDubaiTest {
     @Test
-    public void constructorTest(){
+    public void constructorTest() {
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai.getPlugin());
 
     }
 
     @Test
-    public void getterTest(){
-        DeveloperBitDubai developerBitDubai= new DeveloperBitDubai();
+    public void getterTest() {
+        DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
 
         Assert.assertEquals(developerBitDubai.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
 

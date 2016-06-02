@@ -10,6 +10,7 @@ import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.RedeemPointActorPluginRoot;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
     RedeemPointActorPluginRoot redeemPointActorPluginRoot;
     CryptoAddressesManager cryptoAddressesNetworkServiceManager;
 
-    public CryptoAddressRequestedEventHandler(RedeemPointActorPluginRoot redeemPointActorPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager){
+    public CryptoAddressRequestedEventHandler(RedeemPointActorPluginRoot redeemPointActorPluginRoot, CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
         this.redeemPointActorPluginRoot = redeemPointActorPluginRoot;
         this.cryptoAddressesNetworkServiceManager = cryptoAddressesNetworkServiceManager;
     }
@@ -40,7 +41,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
                 list = cryptoAddressesNetworkServiceManager.listAllPendingRequests();
 
                 for (final CryptoAddressRequest request : list) {
-                    if(request.getCryptoAddress()!=null) {
+                    if (request.getCryptoAddress() != null) {
                         if (request.getCryptoAddress().getAddress() != null)
                             if (request.getIdentityTypeResponding().equals(Actors.DAP_ASSET_REDEEM_POINT)) {
                                 redeemPointActorPluginRoot.handleCryptoAddressesNewsEvent();

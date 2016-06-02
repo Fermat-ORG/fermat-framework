@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#010c12"
+    android:background="#FFFFFFFF"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -15,18 +15,29 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/circular_friend_list">
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            >
 
             <ImageView
                 android:id="@+id/afc_selectable_identity_user_avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                android:background="@drawable/circular_friend_list"/>
+
+            <ImageView
+                android:id="@+id/afc_recycler_icon"
+                android:src="@drawable/afc_people"
+                android:contentDescription="@string/app_name"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="centerCrop"
+                tools:listitem="@layout/afc_row_connection_list"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
@@ -38,9 +49,10 @@
             android:paddingLeft="8dp"
             android:paddingStart="8dp"
             android:text="Username"
-            android:textColor="#0072bb"
+            android:textColor="#6D6F71"
             android:textSize="14sp"
             tools:ignore="HardcodedText,RtlSymmetry" />
+
 
     </LinearLayout>
 
@@ -48,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
-        android:background="#ffffff" />
+        android:background="@drawable/line_coloured" />
 
 
 </LinearLayout>

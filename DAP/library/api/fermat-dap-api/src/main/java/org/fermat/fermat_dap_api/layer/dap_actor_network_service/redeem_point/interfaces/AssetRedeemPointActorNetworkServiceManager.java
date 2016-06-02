@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetRedeemPointActorNetworkServiceManager extends FermatManager, org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService {
+public interface AssetRedeemPointActorNetworkServiceManager extends DAPNetworkService, FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *
@@ -44,13 +45,13 @@ public interface AssetRedeemPointActorNetworkServiceManager extends FermatManage
     /**
      * The method <code>askConnectionActorAsset</code> sends a connection request to another Actor.
      *
-     * @param actorAssetLoggedInPublicKey   The logged public key of the
-     * @param actorAssetLoggedName          The logged name
-     * @param senderType                    The senderType
-     * @param actorAssetToAddPublicKey      The actorAssetToAddPublicKey
-     * @param actorAssetToAddName           The actorAssetToAddName
-     * @param destinationType               The public key of the
-     * @param profileImage                  The profile image of the user sending the request
+     * @param actorAssetLoggedInPublicKey The logged public key of the
+     * @param actorAssetLoggedName        The logged name
+     * @param senderType                  The senderType
+     * @param actorAssetToAddPublicKey    The actorAssetToAddPublicKey
+     * @param actorAssetToAddName         The actorAssetToAddName
+     * @param destinationType             The public key of the
+     * @param profileImage                The profile image of the user sending the request
      */
     void askConnectionActorAsset(String actorAssetLoggedInPublicKey,
                                  String actorAssetLoggedName,
@@ -80,7 +81,7 @@ public interface AssetRedeemPointActorNetworkServiceManager extends FermatManage
     /**
      * The method <coda>disconnectConnectionActorAsset</coda> disconnects and informs the other intra user the disconnecting
      *
-     * @param actorAssetLoggedInPublicKey The public key of the actor asset disconnecting the connection
+     * @param actorAssetLoggedInPublicKey     The public key of the actor asset disconnecting the connection
      * @param actorAssetToDisconnectPublicKey The public key of the user to disconnect
      * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDisconnectConnectionActorAssetException
      */

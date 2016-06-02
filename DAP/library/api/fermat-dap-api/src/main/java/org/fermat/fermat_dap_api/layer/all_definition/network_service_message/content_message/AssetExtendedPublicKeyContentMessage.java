@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 
 /**
@@ -18,6 +19,7 @@ public class AssetExtendedPublicKeyContentMessage implements DAPContentMessage {
 
     /**
      * overloaded constructor
+     *
      * @param extendedPublicKey
      */
     public AssetExtendedPublicKeyContentMessage(ExtendedPublicKey extendedPublicKey, String actorPublicKey) {
@@ -27,6 +29,7 @@ public class AssetExtendedPublicKeyContentMessage implements DAPContentMessage {
 
     /**
      * Gets the Extended Public Key
+     *
      * @return
      */
     public ExtendedPublicKey getExtendedPublicKey() {
@@ -35,6 +38,7 @@ public class AssetExtendedPublicKeyContentMessage implements DAPContentMessage {
 
     /**
      * extended public key setter
+     *
      * @param extendedPublicKey
      */
     public void setExtendedPublicKey(ExtendedPublicKey extendedPublicKey) {
@@ -43,6 +47,7 @@ public class AssetExtendedPublicKeyContentMessage implements DAPContentMessage {
 
     /**
      * gets the actor public key
+     *
      * @return
      */
     public String getActorPublicKey() {
@@ -51,6 +56,7 @@ public class AssetExtendedPublicKeyContentMessage implements DAPContentMessage {
 
     /**
      * sets the actor public key
+     *
      * @param actorPublicKey
      */
     public void setActorPublicKey(String actorPublicKey) {

@@ -2,9 +2,9 @@ package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asse
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDatabaseConstants;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +62,7 @@ public class GetDatabaseTableListTest {
         eventsRecorderColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_EVENTS_RECORDED_STATUS_COLUMN_NAME);
         eventsRecorderColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
 
-        assetIssuingColumns=new ArrayList<>();
+        assetIssuingColumns = new ArrayList<>();
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME);

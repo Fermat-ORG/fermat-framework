@@ -2,7 +2,6 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-
 import org.junit.Test;
 
 import java.sql.Timestamp;
@@ -14,19 +13,20 @@ import java.util.Date;
 public class IsValidContractTest {
 
     ContractProperty datePropertySetAsActual;
-    public IsValidContractTest(){
 
-        datePropertySetAsActual=new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
-        Date date= new Date();
+    public IsValidContractTest() {
+
+        datePropertySetAsActual = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
+        Date date = new Date();
         datePropertySetAsActual.setValue(new Timestamp(date.getTime()));
         System.out.println("Present time: " + datePropertySetAsActual.getValue());
     }
 
     @Test
-    public void getTheTimestampFromContractPropertyTest(){
+    public void getTheTimestampFromContractPropertyTest() {
 
-        Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();
-        System.out.println("Timestamp from ContractProperty: "+expirationDate);
+        Timestamp expirationDate = (Timestamp) datePropertySetAsActual.getValue();
+        System.out.println("Timestamp from ContractProperty: " + expirationDate);
 
     }
 //Comment by Luis Campo

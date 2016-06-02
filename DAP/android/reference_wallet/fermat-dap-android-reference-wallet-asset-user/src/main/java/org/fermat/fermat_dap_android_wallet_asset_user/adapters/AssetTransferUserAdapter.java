@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.holders.AssetTransferUserHolder;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -40,7 +41,7 @@ public class AssetTransferUserAdapter extends FermatAdapter<User, AssetTransferU
     protected void bindHolder(final AssetTransferUserHolder holder, final User user, int position) {
         holder.nameText.setText(user.getName());
         if (user.isSelected()) {
-           holder.userContent.setVisibility(View.VISIBLE);
+            holder.userContent.setVisibility(View.VISIBLE);
         } else {
             holder.userContent.setVisibility(View.INVISIBLE);
         }

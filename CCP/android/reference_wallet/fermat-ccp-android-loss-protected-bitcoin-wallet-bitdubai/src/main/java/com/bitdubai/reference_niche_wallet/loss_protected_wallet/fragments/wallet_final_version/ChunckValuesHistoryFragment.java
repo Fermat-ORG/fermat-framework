@@ -14,12 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -37,9 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
@@ -47,19 +43,17 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -89,13 +83,13 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
      }
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
     private LossProtectedWalletTransaction selectedItem;
-    private LossProtectedWalletManager moduleManager;
+
     /**
      * Executor Service
      */
@@ -121,7 +115,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private long balanceAvailable;
     private long realBalance;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -143,9 +137,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         lstTransaction = new ArrayList<>();
         try {
-            moduleManager = lossProtectedWalletSession.getModuleManager();
-
-            cryptoWallet = moduleManager.getCryptoWallet();
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
 
             getExecutor().execute(new Runnable() {
                 @Override
@@ -166,13 +158,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 }
             });
 
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
 
 
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
             }
@@ -186,22 +176,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         }
 
 
-        //default Exchange rate Provider
-        try {
-            if(cryptoWallet.getExchangeProvider()==null) {
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-                cryptoWallet.setExchangeProvider(exchangeProviderId);
-
-            }
-            else
-            {
-                exchangeProviderId =cryptoWallet.getExchangeProvider();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Nullable
@@ -274,9 +248,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             long balance = 0;
             if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
-                balance = cryptoWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+                balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
-                balance = cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance = lossProtectedWalletManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
 
@@ -333,7 +307,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,cryptoWallet,lossProtectedWalletSession,this);
+            adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,lossProtectedWalletManager,lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -363,7 +337,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            lstTransaction = cryptoWallet.listAllActorTransactionsByTransactionType(
+            lstTransaction = lossProtectedWalletManager.listAllActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
                     TransactionType.CREDIT,
                     lossProtectedWalletSession.getAppPublicKey(),
@@ -444,7 +418,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.loos_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
     }
 
     @Override
@@ -457,7 +430,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
-                setUpPresentation(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+
+                setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
+
+
+                setUpPresentation(lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+
                 return true;
             }
 
@@ -476,7 +454,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                         getActivity(),
                         lossProtectedWalletSession,
                         null,
-                        (cryptoWallet.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                        (lossProtectedWalletManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -511,15 +489,13 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         try {
 
             if(balanceType.equals(BalanceType.REAL))
-                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance =  lossProtectedWalletManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             if(balanceType.equals(BalanceType.AVAILABLE))
-                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                balance =  lossProtectedWalletManager.getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
 
 
         } catch (CantGetLossProtectedBalanceException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
             e.printStackTrace();
         }
         return balance;
@@ -581,11 +557,27 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     }
     private void getAndShowMarketExchangeRateData(final View container) {
 
+        final int MAX_DECIMAL_FOR_RATE = 2;
+        final int MIN_DECIMAL_FOR_RATE = 2;
+
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {
 
-                ExchangeRate rate =  cryptoWallet.getCurrencyExchange(exchangeProviderId);
+                //default Exchange rate Provider
+
+                if(lossProtectedWalletManager.getExchangeProvider()==null) {
+                    List<ExchangeRateProvider> providers = new ArrayList(lossProtectedWalletManager.getExchangeRateProviderManagers());
+
+                    exchangeProviderId = providers.get(0).getProviderId();
+                    lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
+
+                }
+                else
+                {
+                    exchangeProviderId =lossProtectedWalletManager.getExchangeProvider();
+                }
+                ExchangeRate rate =  lossProtectedWalletManager.getCurrencyExchange(exchangeProviderId);
                 return rate;
             }
         };
@@ -597,13 +589,25 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
                     ExchangeRate rate = (ExchangeRate) result[0];
                     // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)) + " USD");
 
                     //get available balance to actual exchange rate
 
-                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
-
+                    lossProtectedWalletSession.setActualExchangeRate(Double.parseDouble(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)));
                     updateBalances();
+                    onRefresh();
+
+                }else{
+                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    dialog_error.show();
 
                 }
             }
@@ -620,6 +624,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
+
+                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                dialog_error.show();
             }
         });
 

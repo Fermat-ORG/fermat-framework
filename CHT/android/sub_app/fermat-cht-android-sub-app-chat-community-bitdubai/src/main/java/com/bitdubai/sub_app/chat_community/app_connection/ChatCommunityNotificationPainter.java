@@ -25,8 +25,6 @@ public class ChatCommunityNotificationPainter implements NotificationPainter {
         this.textBody = textBody;
         this.image    = image;
         remoteViews = null;
-
-
     }
 
     @Override

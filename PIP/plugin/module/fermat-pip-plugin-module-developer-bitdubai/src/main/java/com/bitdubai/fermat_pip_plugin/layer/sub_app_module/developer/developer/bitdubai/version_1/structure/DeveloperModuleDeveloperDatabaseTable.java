@@ -12,9 +12,9 @@ public class DeveloperModuleDeveloperDatabaseTable implements DeveloperDatabaseT
     private String name;
     private List<String> fieldNames;
 
-    DeveloperModuleDeveloperDatabaseTable(String name, List<String> fieldNames){
-        this.name=name;
-        this.fieldNames=fieldNames;
+    DeveloperModuleDeveloperDatabaseTable(String name, List<String> fieldNames) {
+        this.name = name;
+        this.fieldNames = fieldNames;
     }
 
     @Override

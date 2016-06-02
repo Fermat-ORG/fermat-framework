@@ -10,16 +10,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
-
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
@@ -54,6 +54,7 @@ public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
         this.actor = actor;
         this.identity = identity;
     }
+
     public CancelDialog(Activity a,
                         final AssetUserCommunitySubAppSession actorUserSubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
@@ -115,7 +116,7 @@ public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
                         actor.getActorPublicKey() // ACTOR OUTSIDE/EXTERNAL
                 );
                 getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_CANCELED, Boolean.TRUE);
-                Toast.makeText(getContext(),"Connection has Canceled" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Connection has Canceled", Toast.LENGTH_SHORT).show();
 
                 dismiss();
             } catch (CantCancelConnectionActorAssetException e) {

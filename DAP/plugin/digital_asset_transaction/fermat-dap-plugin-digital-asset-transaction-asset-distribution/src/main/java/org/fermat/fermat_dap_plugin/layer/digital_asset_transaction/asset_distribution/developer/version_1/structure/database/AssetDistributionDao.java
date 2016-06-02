@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.TransactionStatus;

@@ -30,11 +30,13 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
@@ -43,11 +45,8 @@ import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstants
 import org.fermat.fermat_dap_android_wallet_asset_user.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -69,9 +68,9 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
     private Resources res;
-    
+
     private ImageView assetNegotiationImage;
-    
+
     private FermatTextView assetNegotiationDetailNameText;
     private FermatTextView assetNegotiationQuantity;
     private FermatTextView assetNegotiationUnitPrice;
@@ -86,7 +85,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     private User user;
 
@@ -105,11 +104,9 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = (AssetUserSession) appSession;
+        assetUserSession = ((AssetUserSession) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         activity = getActivity();
 
@@ -161,7 +158,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM) {
-                setUpHelpAssetSell(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetSell(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -303,7 +300,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         bitmapWorkerTask.execute(img);
 
         assetNegotiationDetailNameText.setText(digitalAsset.getName());
-        assetNegotiationUnitPrice.setText(Long.toString( digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()));
+        assetNegotiationUnitPrice.setText(Long.toString(digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()));
 
         //assetNegotiationQuantity.setText(digitalAsset.getUserAssetNegotiation().getQuantityToBuy());
 
@@ -416,7 +413,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -427,8 +424,8 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -436,11 +433,11 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -490,13 +487,12 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         }
         assetNegotiationDetailNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetNegotiationQuantity.setText(digitalAsset.getAvailableBalanceQuantity() + " " );
+        assetNegotiationQuantity.setText(digitalAsset.getAvailableBalanceQuantity() + " ");
 
         /*if (digitalAsset.getAvailableBalanceQuantity() == 0) {
             selectUserButton.setOnClickListener(null);
         }*/
     }
-
 
 
     private void configureToolbar() {

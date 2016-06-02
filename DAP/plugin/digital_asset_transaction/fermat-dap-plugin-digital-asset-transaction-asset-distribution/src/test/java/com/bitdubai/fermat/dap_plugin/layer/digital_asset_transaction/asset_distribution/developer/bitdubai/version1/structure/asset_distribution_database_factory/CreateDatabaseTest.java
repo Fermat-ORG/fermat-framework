@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +38,12 @@ public class CreateDatabaseTest {
     private String testDataBaseName;
     private AssetDistributionDatabaseFactory assetDistributionDatabaseFactory;
 
-    public void setUpTestValues(){
+    public void setUpTestValues() {
         testId = UUID.randomUUID();
         testDataBaseName = AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE;
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
 
         when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
@@ -52,13 +52,13 @@ public class CreateDatabaseTest {
     }
 
     @Before
-    public void init() throws Exception{
+    public void init() throws Exception {
         setUpTestValues();
         setUpGeneralMockitoRules();
     }
 
     @Test
-    public void createDatabaseSuccessfulInvocationReturnsDatabase() throws Exception{
+    public void createDatabaseSuccessfulInvocationReturnsDatabase() throws Exception {
         System.out.println("Probando el metodo createDatabaseSuccessfulInvocationReturnsDatabase");
         assetDistributionDatabaseFactory = new AssetDistributionDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = assetDistributionDatabaseFactory.createDatabase(testId, testDataBaseName);

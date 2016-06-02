@@ -14,13 +14,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
@@ -48,8 +48,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.Map;

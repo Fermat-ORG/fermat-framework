@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -195,6 +196,7 @@ public class AssetReceptionDao {
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_TYPE_COLUMN_NAME,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME));
     }
+
     /**
      * This method returns a String value from the fieldCode, filtered by value in indexColumn
      *

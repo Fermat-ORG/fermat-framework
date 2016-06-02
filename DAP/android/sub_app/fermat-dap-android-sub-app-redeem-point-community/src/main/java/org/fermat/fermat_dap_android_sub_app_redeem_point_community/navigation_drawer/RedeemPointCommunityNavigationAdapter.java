@@ -29,11 +29,11 @@ public class RedeemPointCommunityNavigationAdapter extends FermatAdapter<MenuIte
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
+    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener) {
 
     }
 
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
+    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener) {
 
     }
 
@@ -92,11 +92,11 @@ public class RedeemPointCommunityNavigationAdapter extends FermatAdapter<MenuIte
                                 .build());
                     }
                     break;
-                case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
-                    break;
+//                case 3:
+//                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
+//                    break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

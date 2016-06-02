@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -101,7 +102,6 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -110,7 +110,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+    BrokerAckOfflinePaymentPluginRoot pluginRoot;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     TransactionTransmissionManager transactionTransmissionManager;
@@ -121,22 +121,22 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
     CashDepositTransactionManager cashDepositTransactionManager;
 
-    public BrokerAckOfflinePaymentMonitorAgent(
-            PluginDatabaseSystem pluginDatabaseSystem,
-            LogManager logManager,
-            ErrorManager errorManager,
-            EventManager eventManager,
-            UUID pluginId,
-            TransactionTransmissionManager transactionTransmissionManager,
-            CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
-            DepositManager depositManager,
-            CryptoBrokerWalletManager cryptoBrokerWalletManager,
-            CashDepositTransactionManager cashDepositTransactionManager) {
+    public BrokerAckOfflinePaymentMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
+                                               LogManager logManager,
+                                               BrokerAckOfflinePaymentPluginRoot pluginRoot,
+                                               EventManager eventManager,
+                                               UUID pluginId,
+                                               TransactionTransmissionManager transactionTransmissionManager,
+                                               CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
+                                               CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+                                               CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+                                               DepositManager depositManager,
+                                               CryptoBrokerWalletManager cryptoBrokerWalletManager,
+                                               CashDepositTransactionManager cashDepositTransactionManager) {
+
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
@@ -156,19 +156,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         monitorAgent = new MonitorAgent();
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
@@ -181,15 +175,10 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         try {
             this.agentThread.interrupt();
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -260,7 +249,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCreateDepositTransactionException | CantMakeDepositTransactionException | CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    pluginRoot.reportError(
                             UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
@@ -279,14 +268,14 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                    pluginRoot.reportError(
                             UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
 
                     throw new CantInitializeCBPAgent(cantCreateDatabaseException,
                             "Initialize Monitor Agent - trying to create the plugin database", "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
 
                 throw new CantInitializeCBPAgent(exception, "Initialize Monitor Agent - trying to open the plugin database", "Please, check the cause");
@@ -296,7 +285,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException, CantMakeDepositTransactionException, CantCreateDepositTransactionException {
 
             try {
-                brokerAckOfflinePaymentBusinessTransactionDao = new BrokerAckOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+                brokerAckOfflinePaymentBusinessTransactionDao = new BrokerAckOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
 
                 String contractHash;
                 String cryptoWalletPublicKey;
@@ -510,21 +499,33 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                     CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(eventId);
                     ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale is null");
+                    String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                     MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
                     FiatCurrency currencyType = getCurrencyTypeFromContract(customerBrokerContractSale);
 
-                    brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
-                            customerBrokerContractSale,
-                            paymentType,
-                            customerBrokerContractSale.getPublicKeyBroker(),
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
-                            currencyType);
+
+                    CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation = customerBrokerSaleNegotiationManager.
+                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+                    Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
+                                customerBrokerContractSale,
+                                paymentType,
+                                customerBrokerContractSale.getPublicKeyBroker(),
+                                ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
+                                currencyType);
+                    }
+
 
                     System.out.println("ACK_OFFLINE_PAYMENT - NEW_CONTRACT_OPENED - New Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT");
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
+            } catch (CantGetListClauseException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Checking pending events", "Cannot update the database");
             } catch (CantUpdateRecordException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Checking pending events", "Cannot update the database");
             } catch (CantConfirmTransactionException e) {
@@ -758,7 +759,12 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
                     if (clauseType.getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        return FiatCurrency.getByCode(clause.getValue());
+                        if(FiatCurrency.codeExists(clause.getValue())){
+                            return FiatCurrency.getByCode(clause.getValue());
+                        }else {
+                            return FiatCurrency.US_DOLLAR;
+                        }
+
                     }
                 }
 

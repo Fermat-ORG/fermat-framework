@@ -2,11 +2,13 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
+import java.io.Serializable;
+
 /**
  * Created by Nerio on 07/09/15.
  * Modified by Franklin on 02/11/2015
  */
-public interface IdentityAssetIssuer extends ActiveActorIdentityInformation {
+public interface IdentityAssetIssuer extends ActiveActorIdentityInformation, Serializable {
 
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image
@@ -18,6 +20,7 @@ public interface IdentityAssetIssuer extends ActiveActorIdentityInformation {
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param message the message to sign
      * @return the signature
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException

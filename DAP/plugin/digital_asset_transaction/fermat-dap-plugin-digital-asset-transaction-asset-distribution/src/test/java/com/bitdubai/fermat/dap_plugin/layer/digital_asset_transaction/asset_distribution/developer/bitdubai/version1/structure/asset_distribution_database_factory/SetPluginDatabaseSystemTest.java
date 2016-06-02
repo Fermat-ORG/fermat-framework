@@ -1,8 +1,8 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_database_factory;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory;
 
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,12 +21,12 @@ public class SetPluginDatabaseSystemTest {
 
 
     @Before
-    public void init() throws Exception{
+    public void init() throws Exception {
         assetDistributionDatabaseFactory = new AssetDistributionDatabaseFactory(mockPluginDatabaseSystem);
     }
 
     @Test
-    public void setPluginDatabaseSystemTest() throws Exception{
+    public void setPluginDatabaseSystemTest() throws Exception {
         assetDistributionDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
     }
 

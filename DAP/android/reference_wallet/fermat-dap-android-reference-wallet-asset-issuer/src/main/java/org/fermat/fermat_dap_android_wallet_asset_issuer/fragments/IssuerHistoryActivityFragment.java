@@ -26,22 +26,21 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -59,6 +58,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
     private static final String TAG = "IssuerHistoryActivityFragment";
 
     // Fermat Managers
+    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -68,7 +68,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
     //UI
     private View noAssetsView;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerHistoryActivityFragment newInstance() {
         return new IssuerHistoryActivityFragment();
@@ -79,10 +79,10 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+        assetIssuerSession = ((AssetIssuerSession) appSession);
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -132,7 +132,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -143,8 +143,8 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -152,11 +152,11 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -192,7 +192,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_HISTORY) {
-                setUpHelpAssetHistory(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetHistory(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

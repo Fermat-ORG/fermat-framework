@@ -33,6 +33,8 @@ public interface ChatManager extends FermatManager {
 
     ChatSearch getSearch();
 
+    void exposeIdentitiesInWait() throws CantExposeIdentityException;
+
 
     void requestConnection(final ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException;
 

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
@@ -69,7 +70,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
             pendingText.setVisibility(View.VISIBLE);
         }
 
-        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin()+" BTC");
+        btcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         expDateText.setText(digitalAsset.getFormattedExpDate());
     }
 

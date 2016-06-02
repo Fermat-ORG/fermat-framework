@@ -8,12 +8,8 @@ import android.view.Window;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-
-import java.util.Objects;
 
 /**
  * Created by mati on 2015.11.17..
@@ -65,7 +61,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
         if(id == R.id.search_contact_btn){
             try {
                 Object[] object = new Object[2];
-                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
+                changeApp(getSession().getCommunityConnection(), object);
             } catch (Exception e) {
                 e.printStackTrace();
             }

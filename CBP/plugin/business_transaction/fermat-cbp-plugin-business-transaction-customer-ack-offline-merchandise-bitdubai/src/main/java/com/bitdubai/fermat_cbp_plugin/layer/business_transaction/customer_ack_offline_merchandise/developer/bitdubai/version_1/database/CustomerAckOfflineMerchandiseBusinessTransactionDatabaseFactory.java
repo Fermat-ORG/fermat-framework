@@ -68,16 +68,16 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory imp
              */
             table = databaseFactory.newTableFactory(ownerId, CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TABLE_NAME);
 
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.TRUE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
             table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
+            table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
             table.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 64,Boolean.FALSE);
 
             table.addIndex(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_FIRST_KEY_COLUMN);
@@ -91,10 +91,10 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDatabaseFactory imp
 
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_TABLE_NAME);
 
-            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 10, Boolean.FALSE);
             eventsRecorderTable.addColumn(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             eventsRecorderTable.addIndex(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);

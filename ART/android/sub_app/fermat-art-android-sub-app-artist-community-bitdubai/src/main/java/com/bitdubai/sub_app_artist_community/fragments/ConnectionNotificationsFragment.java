@@ -46,7 +46,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
 
     private static final int MAX = 20;
 
-    protected final String TAG = "ConnectionNotificationsFragment";
+    protected final String TAG = "ArtistConnectionNotificationsFragment";
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -73,7 +73,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         // setting up  module
         artistCommunityInformation = (ArtistCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = appSession.getModuleManager();
@@ -92,7 +92,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
         try {
             rootView = inflater.inflate(R.layout.aac_fragment_connections_notificactions, container, false);
             setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_recycler_view);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_recyclerview);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -100,18 +100,20 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
 
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.afc_swipeRefresh);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
+            emptyView = (LinearLayout) rootView.findViewById(R.id.aac_emptyview);
 
             onRefresh();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
 
         }
 
@@ -202,9 +204,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
     @Override
     public void onItemClickListener(ArtistCommunityInformation data, int position) {
         try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
-            //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {

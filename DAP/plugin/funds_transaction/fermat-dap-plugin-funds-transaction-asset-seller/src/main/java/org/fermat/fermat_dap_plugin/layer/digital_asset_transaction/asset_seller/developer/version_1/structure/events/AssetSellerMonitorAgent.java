@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -35,11 +35,11 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateE
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
@@ -66,9 +66,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.AssetSellerDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.

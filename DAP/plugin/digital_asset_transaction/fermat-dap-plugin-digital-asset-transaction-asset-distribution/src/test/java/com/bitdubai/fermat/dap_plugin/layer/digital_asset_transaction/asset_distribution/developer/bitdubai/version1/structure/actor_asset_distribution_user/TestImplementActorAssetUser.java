@@ -2,8 +2,8 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.mocks.ActorAssetDistributionUser;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.junit.Test;
 
 /**
@@ -12,16 +12,16 @@ import org.junit.Test;
 public class TestImplementActorAssetUser {
 
     @Test
-    public void implementationTest(){
-        ActorAssetUser actorAssetUser=new MockActorAssetUser();
+    public void implementationTest() {
+        ActorAssetUser actorAssetUser = new MockActorAssetUser();
         System.out.println(actorAssetUser.getActorPublicKey());
-        ActorAssetDistributionUser actorAssetDistributionUser= new  ActorAssetDistributionUser();
+        ActorAssetDistributionUser actorAssetDistributionUser = new ActorAssetDistributionUser();
         actorAssetDistributionUser.setActorAssetUser(actorAssetUser);
         System.out.println(actorAssetDistributionUser.getActorPublicKey());
-        String actorXML= XMLParser.parseObject(actorAssetDistributionUser);
+        String actorXML = XMLParser.parseObject(actorAssetDistributionUser);
         System.out.println(actorXML);
-        ActorAssetUser newActorAssetUser= actorAssetDistributionUser;
-        actorXML= XMLParser.parseObject(newActorAssetUser);
+        ActorAssetUser newActorAssetUser = actorAssetDistributionUser;
+        actorXML = XMLParser.parseObject(newActorAssetUser);
         System.out.println(actorXML);
     }
 

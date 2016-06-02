@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest</code>
@@ -38,9 +38,23 @@ public class NearNodeListMsgRequest extends PackageContent {
         return clientLocation;
     }
 
-    public static NearNodeListMsgRequest parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, NearNodeListMsgRequest.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static NearNodeListMsgRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, NearNodeListMsgRequest.class);
     }
 
 }

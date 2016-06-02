@@ -25,6 +25,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String ACK_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
     public static final String ACK_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
+    public static final String ACK_ONLINE_MERCHANDISE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
     public static final String ACK_ONLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
@@ -60,6 +61,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME = "status";
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
 
     public static final String ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TABLE_FIRST_KEY_COLUMN = "event_id";
 
