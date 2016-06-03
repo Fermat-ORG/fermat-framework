@@ -1301,7 +1301,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        return cryptoVaultManager.isValidAddress(cryptoAddress);
+        //todo Natalia corregir
+        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override
