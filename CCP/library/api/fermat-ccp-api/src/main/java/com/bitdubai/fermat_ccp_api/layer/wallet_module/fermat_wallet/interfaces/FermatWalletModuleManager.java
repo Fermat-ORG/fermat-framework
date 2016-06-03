@@ -9,10 +9,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.interfaces.FermatWallet</code>
  * haves all consumable methods from the plugin
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 10/06/15.
+ * Created by  10/06/16.
  * @version 1.0
  */
-public interface FermatWalletManager extends ModuleManager<FermatWalletSettings, ActiveActorIdentityInformation> {
+public interface FermatWalletModuleManager extends ModuleManager<FermatWalletSettings, ActiveActorIdentityInformation> {
 
     FermatWallet getCryptoWallet() throws CantGetFermatWalletException;
 
