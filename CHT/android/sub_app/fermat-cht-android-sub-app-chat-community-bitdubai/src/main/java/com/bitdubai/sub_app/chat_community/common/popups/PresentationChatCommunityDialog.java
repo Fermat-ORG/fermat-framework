@@ -72,18 +72,18 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
                                                 final ChatUserSubAppSession fermatSession,
                                                 final SubAppResourcesProviderManager resources,
                                                 final ChatActorCommunitySubAppModuleManager moduleManager,
-                                                final int type,
+                                                final int type/*,
                                            final FermatApplicationCaller applicationsHelper,
-                                           final int identityOrChat) {
+                                           final int identityOrChat*/) {
 
         super(activity, fermatSession, resources);
 
         this.activity = activity;
         this.type = type;
         this.moduleManager = moduleManager;
-        this.chatUserSubAppSession = fermatSession;
+        this.chatUserSubAppSession = fermatSession;/*
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
-        this.identityOrChat = identityOrChat;
+        this.identityOrChat = identityOrChat;*/
     }
 
     @Override
