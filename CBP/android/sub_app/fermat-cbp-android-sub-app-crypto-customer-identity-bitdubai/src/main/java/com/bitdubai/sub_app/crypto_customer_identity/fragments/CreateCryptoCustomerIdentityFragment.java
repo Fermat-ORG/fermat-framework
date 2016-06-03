@@ -6,10 +6,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +36,8 @@ import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
@@ -156,7 +161,20 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
-                    break;
+
+                    if (mCustomerImage != null && cryptoCustomerBitmap != null) {
+                        mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
+
+                        RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
+
+                        bitmapDrawable.setCornerRadius(360);
+                        bitmapDrawable.setAntiAlias(true);
+
+                        mCustomerImage.setImageDrawable(bitmapDrawable);
+
+                    }
+
+                break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
@@ -164,6 +182,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, mCustomerImage.getWidth(), mCustomerImage.getHeight(), true);
+
                             Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mCustomerImage);
                         }
                     } catch (Exception e) {
