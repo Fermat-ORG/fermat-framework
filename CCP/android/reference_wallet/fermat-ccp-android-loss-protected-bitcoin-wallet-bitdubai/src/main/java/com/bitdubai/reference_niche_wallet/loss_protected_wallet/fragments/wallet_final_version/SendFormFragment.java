@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.Context;
 import android.content.DialogInterface;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -474,8 +475,14 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         }
         if (lossProtectedWalletContact != null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
-                bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+
+                if (lossProtectedWalletContact.getProfilePicture() != null) {
+
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
+                    bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+                } else
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
+
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
