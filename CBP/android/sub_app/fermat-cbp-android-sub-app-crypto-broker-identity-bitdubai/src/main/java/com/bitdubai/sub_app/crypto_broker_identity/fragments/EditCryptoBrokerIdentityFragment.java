@@ -10,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -195,6 +197,11 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
+
+                    if (mBrokerImage != null && cryptoBrokerBitmap != null) {
+                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+                    }
+
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
