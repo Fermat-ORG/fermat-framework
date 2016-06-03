@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
 import java.lang.ref.WeakReference;
@@ -26,10 +26,10 @@ public class WalletRedeemPointHeaderPainter implements HeaderViewPainter {
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation identityAssetIssuer;
     AssetRedeemPointWalletSubAppModule moduleManager;
-    RedeemPointSession redeemPointSession;
+    RedeemPointSessionReferenceApp redeemPointSession;
     private ErrorManager errorManager;
 
-    public WalletRedeemPointHeaderPainter(Context activity, RedeemPointSession redeemPointSession) {
+    public WalletRedeemPointHeaderPainter(Context activity, RedeemPointSessionReferenceApp redeemPointSession) {
         this.activity = new WeakReference<>(activity);
         this.redeemPointSession = redeemPointSession;
 

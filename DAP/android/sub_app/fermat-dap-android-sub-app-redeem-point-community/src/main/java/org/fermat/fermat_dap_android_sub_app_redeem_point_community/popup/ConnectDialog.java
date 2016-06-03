@@ -17,7 +17,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -29,7 +29,7 @@ import java.util.List;
  * Added by Jinmy Bohorquez 11/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -53,7 +53,7 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
 
 
     public ConnectDialog(final Activity a,
-                         final AssetRedeemPointCommunitySubAppSession actorUserSubAppSession,
+                         final AssetRedeemPointCommunitySubAppSessionReferenceApp actorUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final Actor actorRedeem,
                          final RedeemPointIdentity identity) {
@@ -65,7 +65,7 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
     }
 
     public ConnectDialog(Activity a,
-                         final AssetRedeemPointCommunitySubAppSession actorUserSubAppSession,
+                         final AssetRedeemPointCommunitySubAppSessionReferenceApp actorUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources) {
         super(a, actorUserSubAppSession, subAppResources);
         this.actorRedeem = null;

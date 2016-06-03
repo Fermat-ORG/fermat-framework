@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.settings.AssetIssuerSubAppSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
@@ -34,12 +34,12 @@ import static android.widget.Toast.makeText;
 public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetIssuerCommunitySubAppSession session;
+    private AssetIssuerCommunitySubAppSessionReferenceApp session;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
     //    SettingsManager<AssetIssuerSettings> settingsManager;
     private ErrorManager errorManager;
     AssetIssuerSubAppSettings settings = null;
@@ -54,7 +54,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

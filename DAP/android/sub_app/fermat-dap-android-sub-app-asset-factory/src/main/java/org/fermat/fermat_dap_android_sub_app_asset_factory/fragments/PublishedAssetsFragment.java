@@ -36,7 +36,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.software.shell.fab.ActionButton;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.AssetFactoryAdapter;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
@@ -64,7 +64,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     private final String TAG = "DapPublish";
     private ArrayList<AssetFactory> dataSet;
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -88,7 +88,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
         setHasOptionsMenu(true);
 
         try {
-            assetFactorySession = ((AssetFactorySession) appSession);
+            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
             moduleManager = assetFactorySession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

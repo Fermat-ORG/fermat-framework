@@ -37,7 +37,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
@@ -78,7 +78,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    IssuerIdentitySubAppSession issuerIdentitySubAppSession;
+    IssuerIdentitySubAppSessionReferenceApp issuerIdentitySubAppSession;
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
@@ -100,7 +100,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            issuerIdentitySubAppSession = (IssuerIdentitySubAppSession) appSession;
+            issuerIdentitySubAppSession = (IssuerIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = issuerIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);

@@ -48,6 +48,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.FermatWalletSettings;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
+
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -74,7 +75,6 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      */
     private FermatWallet fermatWallet;
     private FermatWalletSessionReferenceApp appSession;
-
     /**
      * Deals with error manager interface
      */

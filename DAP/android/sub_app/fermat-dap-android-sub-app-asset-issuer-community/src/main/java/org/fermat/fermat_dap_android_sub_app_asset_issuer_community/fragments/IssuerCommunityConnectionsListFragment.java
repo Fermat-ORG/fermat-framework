@@ -31,7 +31,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerConnectionsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -61,7 +61,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     private boolean isRefreshing = false;
     private View rootView;
     private IssuerConnectionsListAdapter adapter;
-    private AssetIssuerCommunitySubAppSession actorIssuerSubAppSession;
+    private AssetIssuerCommunitySubAppSessionReferenceApp actorIssuerSubAppSession;
     private LinearLayout emptyView;
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
@@ -76,7 +76,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
         manager = actorIssuerSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 //        settingsManager = appSession.getModuleManager().getSettingsManager();

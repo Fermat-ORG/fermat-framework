@@ -60,7 +60,7 @@ public class MainFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        try {
-//            manager = ((RedeemPointSession) appSession).getRedeemManager();
+//            manager = ((RedeemPointSessionReferenceApp) appSession).getRedeemManager();
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }

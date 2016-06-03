@@ -40,7 +40,7 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.MyAssetsAdapte
 import org.fermat.fermat_dap_android_wallet_redeem_point.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -72,7 +72,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
     RedeemPointSettings settings = null;
-    RedeemPointSession redeemPointSession;
+    RedeemPointSessionReferenceApp redeemPointSession;
     //    SettingsManager<RedeemPointSettings> settingsManager;
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -95,7 +95,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
             _executor = Executors.newFixedThreadPool(3);
 
-            redeemPointSession = ((RedeemPointSession) appSession);
+            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
             moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -113,7 +113,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
         //Initialize settings
         try {
-            redeemPointSession = ((RedeemPointSession) appSession);
+            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
             moduleManager = redeemPointSession.getModuleManager();
             try {
                 settings = moduleManager.loadAndGetSettings(redeemPointSession.getAppPublicKey());

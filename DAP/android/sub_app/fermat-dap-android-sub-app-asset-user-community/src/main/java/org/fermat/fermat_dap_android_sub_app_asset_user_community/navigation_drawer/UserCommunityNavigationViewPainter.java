@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
@@ -29,11 +29,11 @@ public class UserCommunityNavigationViewPainter implements NavigationViewPainter
 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation activeIdentity;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    public UserCommunityNavigationViewPainter(Context activity, AssetUserCommunitySubAppSession assetUserCommunitySubAppSession) {
+    public UserCommunityNavigationViewPainter(Context activity, AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession) {
         this.activity = new WeakReference<Context>(activity);
         this.assetUserCommunitySubAppSession = assetUserCommunitySubAppSession;
 

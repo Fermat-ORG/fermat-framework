@@ -4,7 +4,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.session;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
@@ -154,6 +153,7 @@ public class LossProtectedWalletSession extends AbstractReferenceAppFermatSessio
         return "public_key_intra_user_commmunity";
     }
 
+<<<<<<< HEAD:CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/loss_protected_wallet/session/LossProtectedWalletSession.java
     private String searchConnectionPublicKey(String code){
         for(FermatApp fermatApp : getPosibleConnections()){
             if(fermatApp.getAppName().equals(code)){
@@ -167,4 +167,6 @@ public class LossProtectedWalletSession extends AbstractReferenceAppFermatSessio
     public List<FermatApp> getPosibleConnections() {
         return null;
     }
+=======
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3:CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/loss_protected_wallet/session/LossProtectedWalletSessionReferenceApp.java
 }

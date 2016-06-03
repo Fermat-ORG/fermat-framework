@@ -2,8 +2,12 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
+<<<<<<< HEAD:CCP/android/reference_wallet/fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/session/ReferenceWalletSession.java
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
+=======
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3:CCP/android/reference_wallet/fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/session/ReferenceWalletSessionReferenceApp.java
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -14,7 +18,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -145,6 +148,7 @@ public class ReferenceWalletSession extends AbstractReferenceAppFermatSession<In
         return "public_key_intra_user_commmunity";
     }
 
+<<<<<<< HEAD:CCP/android/reference_wallet/fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/session/ReferenceWalletSession.java
     private String searchConnectionPublicKey(String code){
         for(FermatApp fermatApp : getPosibleConnections()){
             if(fermatApp.getAppName().equals(code)){
@@ -158,4 +162,6 @@ public class ReferenceWalletSession extends AbstractReferenceAppFermatSession<In
     public List<FermatApp> getPosibleConnections() {
         return null;
     }
+=======
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3:CCP/android/reference_wallet/fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/session/ReferenceWalletSessionReferenceApp.java
 }

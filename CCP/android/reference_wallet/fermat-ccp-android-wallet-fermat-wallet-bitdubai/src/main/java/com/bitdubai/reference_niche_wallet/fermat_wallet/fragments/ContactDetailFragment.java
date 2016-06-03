@@ -38,7 +38,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -53,6 +55,7 @@ import static android.widget.Toast.makeText;
  * @author Francisco Vásquez
  * @version 1.0
  */
+
 public class ContactDetailFragment extends AbstractFermatFragment<FermatWalletSessionReferenceApp,ResourceProviderManager> implements View.OnClickListener {
 
 
@@ -86,7 +89,9 @@ public class ContactDetailFragment extends AbstractFermatFragment<FermatWalletSe
      *  Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
+
     private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
     private FermatButton send_button;
     private FermatButton receive_button;
     private ImageView img_update;

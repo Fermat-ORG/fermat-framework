@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 
@@ -25,7 +25,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Identi
  * Added by Jinmy Bohorquez 09/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -43,7 +43,7 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
     private final IdentityAssetUser identity;
 
     public DisconnectDialog(final Activity activity,
-                            final AssetUserCommunitySubAppSession intraUserSubAppSession,
+                            final AssetUserCommunitySubAppSessionReferenceApp intraUserSubAppSession,
                             final SubAppResourcesProviderManager subAppResources,
                             final Actor actor,
                             final IdentityAssetUser identity) {
@@ -55,7 +55,7 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
     }
 
     public DisconnectDialog(Activity a,
-                            final AssetUserCommunitySubAppSession actorUserSubAppSession,
+                            final AssetUserCommunitySubAppSessionReferenceApp actorUserSubAppSession,
                             final SubAppResourcesProviderManager subAppResources) {
         super(a, actorUserSubAppSession, subAppResources);
         this.actor = null;

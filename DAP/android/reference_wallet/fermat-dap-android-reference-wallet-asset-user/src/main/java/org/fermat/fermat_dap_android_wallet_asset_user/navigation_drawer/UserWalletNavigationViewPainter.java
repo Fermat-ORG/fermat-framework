@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
@@ -33,10 +33,10 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation identityAssetUser;
     AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     private ErrorManager errorManager;
 
-    public UserWalletNavigationViewPainter(Context activity, AssetUserSession assetUserSession) {
+    public UserWalletNavigationViewPainter(Context activity, AssetUserSessionReferenceApp assetUserSession) {
         this.activity = new WeakReference<Context>(activity);
         this.assetUserSession = assetUserSession;
 

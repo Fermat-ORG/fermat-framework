@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +39,6 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
     // Fermat Managers
 
     private ErrorManager errorManager;
-
     private FermatWalletSessionReferenceApp referenceWalletSession;
 
     private Button okBtn;

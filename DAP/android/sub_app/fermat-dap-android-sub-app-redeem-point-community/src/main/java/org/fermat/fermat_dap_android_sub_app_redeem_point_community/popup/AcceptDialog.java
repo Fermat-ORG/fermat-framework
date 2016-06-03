@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
@@ -26,7 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
  * Added by Jinmy Bohorquez 11/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -41,7 +41,7 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
     private FermatButton negativeBtn;
 
     public AcceptDialog(final Activity activity,
-                        final AssetRedeemPointCommunitySubAppSession assetUserCommunitySubAppSession,
+                        final AssetRedeemPointCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources,
                         final Actor actor,
                         final RedeemPointIdentity identity) {

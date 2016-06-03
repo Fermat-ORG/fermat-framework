@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             brokerList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -141,7 +141,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
-        final CryptoCustomerWalletSession walletSession = (CryptoCustomerWalletSession) this.appSession;
+        final CryptoCustomerWalletSessionReferenceApp walletSession = (CryptoCustomerWalletSessionReferenceApp) this.appSession;
         walletSession.setCurrencyToBuy(data.getMerchandise());
         walletSession.setSelectedBrokerIdentity(data);
         walletSession.setQuotes(data.getQuotes());

@@ -46,6 +46,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      * Session
      */
     FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
@@ -81,8 +82,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
+
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
 
@@ -270,6 +271,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     public void setReferenceWalletSession(FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp) {
         this.fermatWalletSessionReferenceApp = fermatWalletSessionReferenceApp;
+
     }
 
     @Override

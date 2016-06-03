@@ -30,7 +30,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class SendTransactionHistoryFragment
     /**
      * Session
      */
-    LossProtectedWalletSession lossProtectedWalletSession;
+    LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
@@ -87,7 +87,7 @@ public class SendTransactionHistoryFragment
 
         super.onCreate(savedInstanceState);
 
-        lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
+        lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp) appSession;
 
         lstWalletTransaction = new ArrayList<>();
         try {
@@ -259,7 +259,7 @@ public class SendTransactionHistoryFragment
         }
     }
 
-    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(LossProtectedWalletSessionReferenceApp referenceWalletSession) {
         this.lossProtectedWalletSession = referenceWalletSession;
     }
 

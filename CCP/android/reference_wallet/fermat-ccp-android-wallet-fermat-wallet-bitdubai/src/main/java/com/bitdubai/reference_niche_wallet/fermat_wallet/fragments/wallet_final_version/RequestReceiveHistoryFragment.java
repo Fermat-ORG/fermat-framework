@@ -33,6 +33,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.Payment
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * Session
      */
     FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
@@ -87,8 +89,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
+
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
@@ -342,6 +344,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     public void setReferenceWalletSession(FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp) {
         this.fermatWalletSessionReferenceApp = fermatWalletSessionReferenceApp;
+
     }
 
    /* @Override

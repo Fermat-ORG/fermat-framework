@@ -11,14 +11,14 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/15/16.
  * Adapted for User Community by Penny on 1/18/16.
  */
-public class ConfirmDeleteDialog extends FermatDialog<AssetUserCommunitySubAppSession, ResourceProviderManager> implements
+public class ConfirmDeleteDialog extends FermatDialog<AssetUserCommunitySubAppSessionReferenceApp, ResourceProviderManager> implements
         View.OnClickListener {
 
     private FermatTextView title;
@@ -32,7 +32,7 @@ public class ConfirmDeleteDialog extends FermatDialog<AssetUserCommunitySubAppSe
         void onClick();
     }
 
-    public ConfirmDeleteDialog(Activity activity, AssetUserCommunitySubAppSession fermatSession, ResourceProviderManager resources) {
+    public ConfirmDeleteDialog(Activity activity, AssetUserCommunitySubAppSessionReferenceApp fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
     }
 

@@ -38,7 +38,9 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletCons
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -56,7 +58,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     private FermatWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<FermatWalletIntraUserActor> intraUserInformationList;
+
     private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
+
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -76,9 +81,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
         try {
             // setting up  module
+
             fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp) appSession;
             moduleManager = fermatWalletSessionReferenceApp.getModuleManager();
             errorManager = fermatWalletSessionReferenceApp.getErrorManager();
+
+
+
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;

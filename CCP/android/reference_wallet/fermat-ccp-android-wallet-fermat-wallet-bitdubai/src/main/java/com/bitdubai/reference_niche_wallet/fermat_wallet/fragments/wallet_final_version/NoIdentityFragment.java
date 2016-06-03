@@ -12,7 +12,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+<<<<<<< HEAD
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+=======
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
 
 /**
  * Created by mati on 2015.11.25..
@@ -23,7 +27,11 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     /**
      * Plaform reference
      */
+<<<<<<< HEAD
     private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+=======
+    private ReferenceAppFermatWalletSession fermatWalletSession;
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
     private IntraUserModuleManager intraUserModuleManager;
 
     /**
@@ -40,7 +48,11 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+<<<<<<< HEAD
             fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp) appSession;
+=======
+            fermatWalletSession = (ReferenceAppFermatWalletSession) appSession;
+>>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
 
         } catch (Exception e){
             e.printStackTrace();

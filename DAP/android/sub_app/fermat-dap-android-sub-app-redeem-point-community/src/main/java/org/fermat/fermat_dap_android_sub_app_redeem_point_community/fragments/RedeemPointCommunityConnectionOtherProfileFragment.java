@@ -31,7 +31,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.Accept
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
@@ -58,7 +58,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView redeemName;
     private FermatTextView redeemCryptoAddres;
@@ -101,7 +101,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         // setting up  module
         actorRedeem = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -195,7 +195,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
 //            try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
+                    (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actorRedeem,
                     null);
@@ -220,7 +220,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getStatus());
 //            try {
             final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
+                    (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actorRedeem,
                     null);
@@ -244,7 +244,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         if (i == R.id.btn_connection_accept) {
             try {
                 AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession,
                         null,
                         actorRedeem,
                         moduleManager.getActiveAssetRedeemPointIdentity());
@@ -264,7 +264,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         if (i == R.id.btn_connection_cancel) {
 //            try {
             CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
+                    (AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession,
                     null,
                     actorRedeem,
                     null);

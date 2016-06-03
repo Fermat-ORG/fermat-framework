@@ -33,7 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CryptoCustomerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
 
@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession.IDENTITY_INFO;
+import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +72,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerIdentitySubAppSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {

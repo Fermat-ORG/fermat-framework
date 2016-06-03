@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 /**
  * Created by Matias Furszyfer on 2016.03.09..
  */
-public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceProviderManager> extends AbstractFermatFragment<S,R> {
+public class AbstractDesktopFragment<S extends ReferenceAppFermatSession,R extends ResourceProviderManager> extends AbstractFermatFragment<S,R> {
 
 
 

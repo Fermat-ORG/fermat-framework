@@ -34,7 +34,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -57,7 +57,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
-    RedeemPointSession redeemPointSession;
+    RedeemPointSessionReferenceApp redeemPointSession;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -77,7 +77,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
         setHasOptionsMenu(true);
 
         try {
-            redeemPointSession = ((RedeemPointSession) appSession);
+            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
             moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

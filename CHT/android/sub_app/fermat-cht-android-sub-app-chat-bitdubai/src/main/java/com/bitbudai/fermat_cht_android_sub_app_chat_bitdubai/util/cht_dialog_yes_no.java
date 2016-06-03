@@ -9,7 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -40,7 +41,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
-    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private AdapterCallbackContacts mAdapterCallback;
     int AlertType = 0;
     String body,title;
@@ -62,8 +63,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
-    public cht_dialog_yes_no(Context activity, FermatSession fermatSession, ResourceProviderManager resources, ContactConnection contactConnm, AdapterCallbackContacts mAdapterCallback) {
-        super(activity, fermatSession, resources);
+    public cht_dialog_yes_no(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources, ContactConnection contactConnm, AdapterCallbackContacts mAdapterCallback) {
+        super(activity, referenceAppFermatSession, resources);
         this.contactConn = contactConnm;
         this.mAdapterCallback = mAdapterCallback;
     }
@@ -80,7 +81,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
             btn_yes = (Button) this.findViewById(R.id.cht_alert_btn_yes);
             btn_no = (Button) this.findViewById(R.id.cht_alert_btn_no);
             try {
-                chatSession = ((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
+                chatSession = ((ChatSessionReferenceApp) getSession());
                 chatManager = chatSession.getModuleManager();
                 //chatManager = moduleManager.getChatManager();
                 errorManager = getSession().getErrorManager();
@@ -144,7 +145,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
             dismiss();
             if(AlertType == 1) {
                 try {
-                    //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
+                    //appSession.setData(ChatSessionReferenceApp.CONNECTION_DATA, contactConn);
                     //Contact conn = chatSession.getSelectedConnection();
                     //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                     if (true) {

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 public class SettingsMainNetworkFragment extends AbstractFermatFragment {
 
     private View rootView;
+
     private FermatWalletSessionReferenceApp referenceWalletSession;
     private FermatWallet cryptoWallet;
     private FermatEditText port;
@@ -55,6 +57,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         referenceWalletSession = (FermatWalletSessionReferenceApp) appSession;
+
         try {
             cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
