@@ -158,6 +158,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
         }
         toolbar = getToolbar();
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -287,7 +294,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_ic_menu_help)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -487,6 +494,21 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     }
 
+  /*  @Override
+    public void onBackPressed(){
+        try {
+            if(ExistIdentity()){
+                updateIdentityInBackDevice("onClick");
+            }else{
+                if(mChatName.getText() != null)
+                createNewIdentityInBackDevice("onClick");
+            }
+        } catch (CHTException e) {
+            //e.printStackTrace();
+        }
+        super.onBackPressed();
+    }*/
+
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -545,10 +567,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
-        String brokerNameText = mChatName.getText().toString();
+        String chatNameText = mChatName.getText().toString();
         String state = mChatConnectionState.getText().toString();
 
-        if (brokerNameText.trim().equals("")) {
+        if (chatNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }
         if (chatBitmap == null) {
@@ -557,7 +579,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), state);
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -578,7 +600,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
