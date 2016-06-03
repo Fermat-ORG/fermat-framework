@@ -471,7 +471,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         }
         if (lossProtectedWalletContact != null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
                 bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);

@@ -509,9 +509,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view_loss, mListView, false);
-        indexBarView.setData(mListView, mListItems, mListSectionPos);
-        mListView.setIndexBarView(indexBarView);
+        //IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view_loss, mListView, false);
+        //indexBarView.setData(mListView, mListItems, mListSectionPos);
+        //mListView.setIndexBarView(indexBarView);
 
         // for configure pinned header view on onrefresh change
         mListView.setOnScrollListener(this);
@@ -807,12 +807,12 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                         // add the letters items in the list and his corresponding sections based on its first letter
                         String prevSection = "";
-                       /* for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
                             String currentItem = letters.get(i);
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                               // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));
@@ -820,7 +820,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                             }
 
                             mListItems.add(positions.get(i));
-                        }*/
+                        }
                     }
 
                 }
@@ -831,6 +831,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         @Override
         protected void onPostExecute(Void result) {
+            isRefreshing = false;
             if (!isCancelled()) {
                 if (mListItems.isEmpty()) {
                     showEmptyText(mListView, mLoadingView, mEmptyView);

@@ -8,6 +8,7 @@ import android.util.Base64;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
@@ -126,7 +127,7 @@ public class WalletUtils {
      * @param strToValidate
      * @return
      */
-    public static CryptoAddress validateAddress(String strToValidate,CryptoWallet cryptoWallet) {
+    public static CryptoAddress validateAddress(String strToValidate,CryptoWallet cryptoWallet,BlockchainNetworkType blockchainNetworkType) {
         String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
 
         CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
@@ -134,7 +135,7 @@ public class WalletUtils {
             token = token.trim();
             if (token.length() > 25 && token.length() < 40) {
                 cryptoAddress.setAddress(token);
-                if (cryptoWallet.isValidAddress(cryptoAddress)) {
+                if (cryptoWallet.isValidAddress(cryptoAddress,blockchainNetworkType)) {
                     return cryptoAddress;
                 }
             }

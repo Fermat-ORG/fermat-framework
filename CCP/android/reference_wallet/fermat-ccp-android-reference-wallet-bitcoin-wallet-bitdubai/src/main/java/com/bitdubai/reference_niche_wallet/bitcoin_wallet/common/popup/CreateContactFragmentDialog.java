@@ -226,7 +226,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             CryptoWallet cryptoWallet = referenceWalletSession.getModuleManager();
 
-            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet, blockchainNetworkType);
 
             String name =contact_name.getText().toString();
 
@@ -296,7 +296,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager());
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager(),blockchainNetworkType);
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
