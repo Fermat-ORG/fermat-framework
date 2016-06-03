@@ -594,7 +594,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }else if(donde.equalsIgnoreCase("onBack")){
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -617,7 +617,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             getActivity().onBackPressed();
                             // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }else if(donde.equalsIgnoreCase("onBack")){
-                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }

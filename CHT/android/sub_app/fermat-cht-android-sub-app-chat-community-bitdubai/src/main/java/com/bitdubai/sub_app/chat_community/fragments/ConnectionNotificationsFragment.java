@@ -265,8 +265,6 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            Toast.makeText(getActivity(), "Connection Accepted ->", Toast.LENGTH_LONG).show();
-            //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
