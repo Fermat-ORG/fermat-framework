@@ -8,7 +8,7 @@ import java.util.UUID;
 public class NetworkServiceMessageDeny extends NetworkServiceMessage {
 
     private final UUID requestId;
-    private final String reason   ;
+    private final String reason;
 
     public NetworkServiceMessageDeny(final UUID requestId, final String reason) {
 

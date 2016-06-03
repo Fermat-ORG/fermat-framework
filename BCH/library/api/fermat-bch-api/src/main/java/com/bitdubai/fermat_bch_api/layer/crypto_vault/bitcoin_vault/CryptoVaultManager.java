@@ -65,10 +65,11 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
 
     /**
      * Validates if the passes CryptoAddress is valid in the current network or not.
-     * @param addressTo
+     * @param addressTo the address we want to validate
+     * @param blockchainNetworkType the network type we are validating the address in.
      * @return true if is valid and we can use it, or false if not.
      */
-    boolean isValidAddress(CryptoAddress addressTo);
+    boolean isValidAddress(CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType);
 
     /**
      * Gets the Mnemonic code generated for this vault.

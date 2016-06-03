@@ -42,7 +42,7 @@ public class GetGenesisTransactionListByCryptoStatusTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -52,13 +52,13 @@ public class GetGenesisTransactionListByCryptoStatusTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void getGenesisTransactionListByCryptoStatusTest () throws CantCheckAssetDistributionProgressException {
+    public void getGenesisTransactionListByCryptoStatusTest() throws CantCheckAssetDistributionProgressException {
         List<String> list = mockAssetDistributionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
         Assert.assertNotNull(list);
     }
@@ -70,7 +70,7 @@ public class GetGenesisTransactionListByCryptoStatusTest {
         try {
             mockAssetDistributionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }

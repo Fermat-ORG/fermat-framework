@@ -56,14 +56,16 @@ public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint>
     private ErrorManager errorManager;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    public RedeemPointsFragment(){}
+    public RedeemPointsFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);Activity activity = getActivity();
+        redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        Activity activity = getActivity();
         moduleManager = (AssetUserWalletSubAppModuleManager) appSession.getModuleManager();
         dataManager = new DataManager(moduleManager);
     }

@@ -6,7 +6,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -35,7 +34,7 @@ public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactory
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_FACTORY,

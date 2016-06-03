@@ -2,10 +2,8 @@ package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_recep
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -22,7 +20,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;

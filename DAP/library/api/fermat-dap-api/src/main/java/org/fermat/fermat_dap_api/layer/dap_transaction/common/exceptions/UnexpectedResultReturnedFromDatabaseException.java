@@ -10,7 +10,7 @@ public class UnexpectedResultReturnedFromDatabaseException extends DAPException 
     public static final String DEFAULT_MESSAGE = "The Database returns an unexpected result.";
 
     public UnexpectedResultReturnedFromDatabaseException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public UnexpectedResultReturnedFromDatabaseException(String message, String possibleReason) {

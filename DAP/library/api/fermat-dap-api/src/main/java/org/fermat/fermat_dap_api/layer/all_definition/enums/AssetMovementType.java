@@ -13,9 +13,7 @@ public enum AssetMovementType implements FermatEnum {
     ASSET_REDEEMED("ARED"),
     ASSET_APPROPIATED("AAPP"),
     ASSET_SOLD("ASOL"),
-    ASSET_TRANSFERRED("ATRA"),
-
-    ;
+    ASSET_TRANSFERRED("ATRA"),;
     //VARIABLE DECLARATION
 
     private String code;

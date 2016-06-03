@@ -3,6 +3,7 @@ package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.holders;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
@@ -22,6 +23,7 @@ public class IssuerViewHolder extends FermatViewHolder {
     public ImageView connectedStateConnected;
     public ImageView connectedStateWaiting;
     public ImageView connectedStateDenied;
+    public ProgressBar progressBar;
 
     /**
      * Constructor
@@ -39,6 +41,6 @@ public class IssuerViewHolder extends FermatViewHolder {
         connectedStateConnected = (ImageView) itemView.findViewById(R.id.connection_state_connected);
         connectedStateWaiting = (ImageView) itemView.findViewById(R.id.connection_state_waiting);
         connectedStateDenied = (ImageView) itemView.findViewById(R.id.connection_state_denied);
-
+        progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
     }
 }

@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -20,7 +19,6 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.common.header.WalletRed
 import org.fermat.fermat_dap_android_wallet_redeem_point.factory.WalletRedeemPointFragmentFactory;
 import org.fermat.fermat_dap_android_wallet_redeem_point.navigation_drawer.RedeemPointWalletNavigationViewPainter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
 /**

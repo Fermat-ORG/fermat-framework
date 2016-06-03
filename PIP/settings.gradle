@@ -41,8 +41,8 @@ project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new F
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
-include ':fermat-pip-plugin-module-notification-bitdubai'
-project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-notification-bitdubai')
+//include ':fermat-pip-plugin-module-notification-bitdubai'
+//project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-notification-bitdubai')
 
 include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')

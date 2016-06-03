@@ -58,7 +58,6 @@ public class IssuePendingDigitalAssetsTest {
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
 
 
-
     String publicKey = "publicKey";
 
     @Before
@@ -79,7 +78,7 @@ public class IssuePendingDigitalAssetsTest {
     }
 
     private void setUpMockitoRules() throws Exception {
-        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager , digitalAssetCryptoTransactionFactory);
+        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
         doNothing().when(digitalAssetCryptoTransactionFactory).issuePendingDigitalAssets(publicKey);
     }
 

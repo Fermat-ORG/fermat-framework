@@ -34,11 +34,13 @@ public abstract class AbstractAgent {
 
 
     public void start() throws CantStartAgentException {
+        if(isRunning()) throw new CantStartAgentException("Agent is already running, first use stop() method to reset");
         this.scheduledExecutorService.scheduleWithFixedDelay(agentJob(),initDelayTime,sleepTime,timeUnit);
         this.status = AgentStatus.STARTED;
     }
 
     public void stop() throws CantStopAgentException {
+        if(isStop()) throw new CantStopAgentException("Agent is not running");
         this.scheduledExecutorService.shutdownNow();
         this.status = AgentStatus.STOPPED;
     }

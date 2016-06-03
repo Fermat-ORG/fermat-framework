@@ -6,6 +6,7 @@ package org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 public interface ActorAssetUserGroupMember {
     /**
      * Returns the group id that representing the id of the group to which the user belongs
+     *
      * @return groupId
      */
     String getGroupId();

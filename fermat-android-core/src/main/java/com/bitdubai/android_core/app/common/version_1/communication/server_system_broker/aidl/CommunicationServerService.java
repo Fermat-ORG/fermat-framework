@@ -72,8 +72,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by MAtias Furszyfer on 2016.04.18..
+ * Created by Matias Furszyfer on 2016.04.18..
  */
+//TODO: le tengo que poner un timeout para desconectar los clientes y no abusen de Fermat, seguramente se pueda controlar esto por un token que me envia
+//TODO:   haciendo que paguen una cierta cantidad de satoshis por utilizar Fermat como servicio en background
 public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
 
     public static final String SERVER_NAME = "server_fermat";

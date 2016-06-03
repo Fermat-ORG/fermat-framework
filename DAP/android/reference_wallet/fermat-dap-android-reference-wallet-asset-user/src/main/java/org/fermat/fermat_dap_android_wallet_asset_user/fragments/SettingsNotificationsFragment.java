@@ -34,7 +34,6 @@ import static android.widget.Toast.makeText;
 
 
 /**
- *
  * Modified by Penelope Quintero for Asset User Wallet on 2016.02.02
  */
 public class SettingsNotificationsFragment extends AbstractFermatFragment {
@@ -44,7 +43,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
     private Switch notificationSwitch;
 
     private AssetUserWalletSubAppModuleManager moduleManager;
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     AssetUserSession assetUserSession;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
