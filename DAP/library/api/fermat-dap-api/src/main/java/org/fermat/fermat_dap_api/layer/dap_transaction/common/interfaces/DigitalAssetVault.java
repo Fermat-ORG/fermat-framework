@@ -23,6 +23,7 @@ public interface DigitalAssetVault {
 
     /**
      * Set the UUID from this plugin
+     *
      * @param pluginId
      * @throws CantSetObjectException
      */
@@ -30,6 +31,7 @@ public interface DigitalAssetVault {
 
     /**
      * Set the PliginFileSystem used to persist Digital Assets in local storage
+     *
      * @param pluginFileSystem
      * @throws CantSetObjectException
      */
@@ -37,33 +39,37 @@ public interface DigitalAssetVault {
 
     /**
      * This method persists the DigitalAsset XML file in local storage.
+     *
      * @param digitalAsset
      * @throws CantCreateDigitalAssetFileException
      */
-    void persistDigitalAssetInLocalStorage(DigitalAsset digitalAsset)throws CantCreateDigitalAssetFileException;
+    void persistDigitalAssetInLocalStorage(DigitalAsset digitalAsset) throws CantCreateDigitalAssetFileException;
 
     /**
      * This method persists the DigitalAssetMetadata XML file in local storage.
+     *
      * @param digitalAssetMetadata
-     * @param internalId Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
+     * @param internalId           Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws CantCreateDigitalAssetFileException
      */
-    void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId)throws CantCreateDigitalAssetFileException ;
+    void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId) throws CantCreateDigitalAssetFileException;
 
     /**
      * This method get the XML file and cast the DigitalAssetMetadata object
+     *
      * @param internalId AssetIssuing: Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @return
      * @throws CantGetDigitalAssetFromLocalStorageException
      */
-    DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException ;
+    DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException;
 
     /**
      * This method delete a XML file from the local storage
+     *
      * @param internalId Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws CantDeleteDigitalAssetFromLocalStorageException
      */
-    void deleteDigitalAssetMetadataFromLocalStorage(String internalId) throws CantDeleteDigitalAssetFromLocalStorageException ;
+    void deleteDigitalAssetMetadataFromLocalStorage(String internalId) throws CantDeleteDigitalAssetFromLocalStorageException;
 
     void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath);
 
@@ -73,7 +79,7 @@ public interface DigitalAssetVault {
 
     boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey, BlockchainNetworkType networkType) throws DAPException;
 
-    void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException ;
+    void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException;
 
     void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager);
 }

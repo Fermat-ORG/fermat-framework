@@ -19,7 +19,6 @@ public class CantGetRedeemPointCryptoAddressTableException extends FermatExcepti
     }
 
     /**
-     *
      * @param message
      * @param context
      * @param possibleReason

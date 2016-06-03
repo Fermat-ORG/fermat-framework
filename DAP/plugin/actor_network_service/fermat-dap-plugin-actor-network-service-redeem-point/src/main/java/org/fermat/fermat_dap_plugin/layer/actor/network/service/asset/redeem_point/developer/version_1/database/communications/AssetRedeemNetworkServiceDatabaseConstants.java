@@ -5,7 +5,7 @@ package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_po
  */
 public class AssetRedeemNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "ActorNetworkServiceAssetRedeemPoint";
+    public static final String DATA_BASE_NAME = "ActorNetworkServiceAssetRedeemPoint";
 
     /**
      * incoming notifications database table definition.
@@ -28,7 +28,7 @@ public class AssetRedeemNetworkServiceDatabaseConstants {
     public static final String INCOMING_NOTIFICATION_FIRST_KEY_COLUMN = INCOMING_NOTIFICATION_ID_COLUMN_NAME;
 
     /**
-     *  outgoing notification database table definition
+     * outgoing notification database table definition
      */
     public static final String OUTGOING_NOTIFICATION_TABLE_NAME = "outgoing_notification";
 

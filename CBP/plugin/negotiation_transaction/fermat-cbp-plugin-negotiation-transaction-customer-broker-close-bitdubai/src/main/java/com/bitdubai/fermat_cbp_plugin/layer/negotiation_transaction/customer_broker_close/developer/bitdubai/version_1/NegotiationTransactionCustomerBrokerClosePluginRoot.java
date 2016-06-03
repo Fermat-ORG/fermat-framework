@@ -239,7 +239,8 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot");
+        returnedClasses.add("NegotiationTransactionCustomerBrokerClosePluginRoot");
+
         return returnedClasses;
     }
 

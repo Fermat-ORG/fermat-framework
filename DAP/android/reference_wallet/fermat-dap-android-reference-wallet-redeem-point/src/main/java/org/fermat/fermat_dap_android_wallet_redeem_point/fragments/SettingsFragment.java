@@ -36,7 +36,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
 import static android.widget.Toast.makeText;
 
 /**
- *
  * Jinmy 02/02/2016
  */
 public class SettingsFragment extends AbstractFermatFragment {
@@ -59,7 +58,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
 

@@ -49,7 +49,6 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
     private AssetUserSession assetUserSession;
 
 
-
     /**
      * UI
      */
@@ -61,7 +60,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
 
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -216,7 +215,6 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
             toolbar.setBackground(drawable);
         }
     }
-
 
 
 }

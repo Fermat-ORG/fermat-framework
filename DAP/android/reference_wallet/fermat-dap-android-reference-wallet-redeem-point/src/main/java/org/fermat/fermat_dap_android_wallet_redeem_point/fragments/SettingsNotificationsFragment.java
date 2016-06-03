@@ -47,7 +47,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
     public static SettingsNotificationsFragment newInstance() {

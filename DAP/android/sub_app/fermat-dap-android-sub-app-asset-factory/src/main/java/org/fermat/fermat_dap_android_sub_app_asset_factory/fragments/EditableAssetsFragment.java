@@ -500,13 +500,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 return false;
             }
             String description = assetFactory.getDescription();
-            if (description.length() == 0)
-            {
+            if (description.length() == 0) {
                 Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (quantity == 0)
-            {
+            if (quantity == 0) {
                 Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -580,7 +578,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                         ex.printStackTrace();
                     }
                 });
-                    worker.execute();
+                worker.execute();
             }
         } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
             cantPublishAssetFactoy.printStackTrace();

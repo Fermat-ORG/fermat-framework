@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface Contract {
     List<ContractProperty> getContractProperties();
+
     ContractProperty getContractProperty(String propertyName);
 
     void addPropertyValue(String propertyName, Object propertyValue) throws CantDefineContractPropertyException;

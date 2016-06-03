@@ -15,7 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
@@ -73,18 +73,18 @@ public class GrouperViewHolder extends ParentViewHolder {
      * Set the data to the views
      *
      */
-    public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
+    public void bind(int childCount,FermatWalletModuleTransaction fermatWalletTransaction) {
 
         byte[] photo = null;
         String contactName = "Uninformed";
 
         //involved actor is not a wallet contact
-        if(cryptoWalletTransaction.getInvolvedActor() != null){
-                photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
-                contactName = cryptoWalletTransaction.getInvolvedActor().getName();
-            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
+        if(fermatWalletTransaction.getInvolvedActor() != null){
+                photo = fermatWalletTransaction.getInvolvedActor().getPhoto();
+                contactName = fermatWalletTransaction.getInvolvedActor().getName();
+            }else if (fermatWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
                 contactName = "Bitcoin Wallet";
-            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
+            }else if (fermatWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
                     contactName = "Loss Protected Wallet";
 
             }
@@ -95,13 +95,14 @@ public class GrouperViewHolder extends ParentViewHolder {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
-            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
+            }else if(fermatWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
 
                     Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
 
-            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
+            }else if(fermatWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
 
-                Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
+                //cannot find symbol variable loss_protected
+                //Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
 
             } else
                 Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
@@ -116,12 +117,12 @@ public class GrouperViewHolder extends ParentViewHolder {
 
 
         txt_contactName.setText(contactName);
-        txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
+        txt_amount.setText(formatBalanceString(fermatWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
 
-        txt_notes.setText(cryptoWalletTransaction.getMemo());
+        txt_notes.setText(fermatWalletTransaction.getMemo());
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
-        txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()) + " hs");
+        txt_time.setText(sdf.format(fermatWalletTransaction.getTimestamp()) + " hs");
         txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
 
         //TODO me falta el total

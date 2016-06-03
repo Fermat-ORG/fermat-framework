@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 08/09/15.
  */
-public class CantRegisterDebitException extends FermatException{
+public class CantRegisterDebitException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

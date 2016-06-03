@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.header;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ public abstract class HeaderFactory <OCL extends View.OnClickListener>{
 
 
     public static View constructHeader(ViewGroup view){
-        BitcoinWalletHeaderFactory headerFactory = new BitcoinWalletHeaderFactory(view);
+        FermatWalletHeaderFactory headerFactory = new FermatWalletHeaderFactory(view);
         return headerFactory.obtainView();
     }
 

@@ -8,8 +8,9 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class DeveloperSubAppSession extends AbstractFermatSession<InstalledSubApp,ToolManager,SubAppResourcesProviderManager> {
+public class DeveloperSubAppSession extends AbstractFermatSession<InstalledSubApp, ToolManager, SubAppResourcesProviderManager> {
 
-    public DeveloperSubAppSession() {}
+    public DeveloperSubAppSession() {
+    }
 
 }

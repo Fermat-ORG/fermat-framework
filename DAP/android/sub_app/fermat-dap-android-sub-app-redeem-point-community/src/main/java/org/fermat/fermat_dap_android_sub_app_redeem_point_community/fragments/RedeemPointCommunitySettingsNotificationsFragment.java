@@ -27,8 +27,9 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.Rede
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 import static android.widget.Toast.makeText;
+
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
 public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
@@ -39,7 +40,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
 
     private RedeemPointCommunitySubAppModuleManager moduleManager;
     RedeemPointSettings settings = null;
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     private ErrorManager errorManager;
 
 

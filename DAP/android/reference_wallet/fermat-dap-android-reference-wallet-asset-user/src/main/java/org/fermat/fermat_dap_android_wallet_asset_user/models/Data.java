@@ -138,7 +138,7 @@ public class Data {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
-        for (AssetNegotiation asset : assetNegotiations){
+        for (AssetNegotiation asset : assetNegotiations) {
             digitalAsset = new DigitalAsset();
             digitalAsset.setAssetPublicKey(asset.getAssetToOffer().getPublicKey());
             digitalAsset.setName(asset.getAssetToOffer().getName());
@@ -155,7 +155,7 @@ public class Data {
             digitalAssets.add(digitalAsset);
 
             List<Resource> resources = asset.getAssetToOffer().getResources();
-            if(resources != null && !resources.isEmpty()){
+            if (resources != null && !resources.isEmpty()) {
                 digitalAsset.setImage(resources.get(0).getResourceBinayData());
             }
         }

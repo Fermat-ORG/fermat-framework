@@ -18,8 +18,8 @@ public class AssetDistributionDatabaseConstants {
     public static final String ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME = "distribution_status";
     public static final String ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
-    public static final String ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_user_bitcoin_address";
-    public static final String ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME="distribution_id";
+    public static final String ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME = "actor_user_bitcoin_address";
+    public static final String ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME = "distribution_id";
 
     public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME;
 
@@ -39,7 +39,7 @@ public class AssetDistributionDatabaseConstants {
     /**
      * Delivering Asset database table definition
      */
-    public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME="delivering";
+    public static final String ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME = "delivering";
 
     public static final String ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
     public static final String ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";

@@ -6,7 +6,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -22,7 +21,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactory
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class AssetFactoryFermatAppConnection extends AppConnections {
+public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactorySession> {
 
     public AssetFactoryFermatAppConnection(Context activity) {
         super(activity);
@@ -35,7 +34,7 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_FACTORY,
@@ -45,14 +44,13 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetFactorySession getSession() {
         return new AssetFactorySession();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new AssetFactoryNavigationViewPainter(getContext(), null);
+        return new AssetFactoryNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

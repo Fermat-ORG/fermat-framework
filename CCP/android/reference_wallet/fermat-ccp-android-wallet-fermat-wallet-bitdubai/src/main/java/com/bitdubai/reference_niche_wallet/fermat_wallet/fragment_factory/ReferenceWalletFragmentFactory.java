@@ -21,13 +21,14 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version.WalletErrorReportFragment;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<FermatWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
 
 
     @Override
@@ -39,73 +40,73 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                 /**
                  * Executing fragments for BITCOIN REQUESTED.
                  */
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE:
                     currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND:
                     currentFragment =SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
                     break;
 
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_TRANSACTIONS:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CONTACTS:
                     currentFragment = ContactsFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_CREATE_CONTACTS:
                     currentFragment = null;//CreateContactFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_DETAIL_CONTACTS:
                     currentFragment = ContactDetailFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_MONEY_REQUEST:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_TRANSACTIONS_BOOK:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT:
+                case CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED:
+                case CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED:
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_RECEIVED:
+                case CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
+                case CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
+                case CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY:
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY:
+                case CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY:
+                case CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_FRAGMENT:
                     currentFragment = SendFormFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_FRAGMENT:
                     currentFragment = RequestFormFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT:
                     currentFragment = ReferenceWalletSettings.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
+                case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
                     currentFragment = SettingsNotificationsFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
+                case CCP_BITCOIN_FERMAT_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
                     currentFragment = SettingsMainNetworkFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_FRAGMENT:
                     currentFragment = AddConnectionFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_FRAGMENT:
                     currentFragment = NoIdentityFragment.newInstance();
                     break;
 
-                case CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_FRAGMENT:
                     currentFragment = MnemonicFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT:
+                case CCP_BITCOIN_FERMAT_WALLET_SEND_ERROR_REPORT_FRAGMENT:
                     currentFragment = WalletErrorReportFragment.newInstance();
                     break;
                 default:

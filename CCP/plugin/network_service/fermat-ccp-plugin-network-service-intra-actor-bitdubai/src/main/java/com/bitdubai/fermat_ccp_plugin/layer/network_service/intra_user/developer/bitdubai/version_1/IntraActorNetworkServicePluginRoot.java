@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
-import android.util.Base64;
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -16,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -75,6 +74,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -111,6 +111,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
      */
     private IntraActorNetworkServiceDeveloperDatabaseFactory intraActorNetworkServiceDeveloperDatabaseFactory;
 
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
      * cacha identities to register
@@ -1343,16 +1344,37 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
         return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
-
-
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("IntraActorNetworkServicePluginRoot");
+//        returnedClasses.add("IntraUserNetworkService");
+//        returnedClasses.add("IntraActorNetworkServiceDao");
+//        returnedClasses.add("Identity");
+//        returnedClasses.add("DAO");
+//        returnedClasses.add("ActorNetworkServiceRecord");
+//        returnedClasses.add("OutgoingNotificationDao");
+//        returnedClasses.add("IntraActorNetworkServiceDeveloperDatabaseFactory");
+//        returnedClasses.add("IntraActorNetworkServiceDatabaseFactory");
+//        returnedClasses.add("IntraActorNetworkServiceDataBaseConstants");
+//        returnedClasses.add("IncomingNotificationDao");
+
+        return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (IntraActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                IntraActorNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                IntraActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                IntraActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 
     private void startTimer(){

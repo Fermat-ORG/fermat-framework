@@ -41,7 +41,7 @@ public class GetGenesisTransactionByAssetRejectedByContractStatusTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -51,25 +51,25 @@ public class GetGenesisTransactionByAssetRejectedByContractStatusTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void getGenesisTransactionByAssetRejectedByContractStatusTest () throws CantCheckAssetDistributionProgressException {
+    public void getGenesisTransactionByAssetRejectedByContractStatusTest() throws CantCheckAssetDistributionProgressException {
         List<String> list = mockAssetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
         Assert.assertNotNull(list);
     }
 
-   @Test
+    @Test
     public void getGenesisTransactionByAssetRejectedByContractStatusThrowsCantCheckAssetDistributionProgressException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-       try {
-           mockAssetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
-       }
+        try {
+            mockAssetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
+        }
     }
 }

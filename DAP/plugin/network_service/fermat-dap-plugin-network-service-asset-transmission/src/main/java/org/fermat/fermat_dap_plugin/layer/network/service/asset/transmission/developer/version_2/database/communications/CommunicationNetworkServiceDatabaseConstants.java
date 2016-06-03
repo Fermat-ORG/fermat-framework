@@ -17,7 +17,7 @@ package org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.de
  */
 public class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "TransmissionServiceDataBase";
+    public static final String DATA_BASE_NAME = "TransmissionServiceDataBase";
     /**
      * DAPMessage database table definition.
      */

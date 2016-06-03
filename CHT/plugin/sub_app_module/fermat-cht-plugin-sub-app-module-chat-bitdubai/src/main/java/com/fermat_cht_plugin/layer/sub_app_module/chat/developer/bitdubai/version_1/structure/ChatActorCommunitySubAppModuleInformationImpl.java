@@ -43,6 +43,7 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image     = exposingData.getImage()    ;
         this.connectionState = exposingData.getConnectionState();
         this.connectionId = exposingData.getConnectionId();
+        this.status = exposingData.getStatus();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
@@ -91,6 +92,11 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     @Override
     public UUID getConnectionId() {
         return this.connectionId;
+    }
+
+    @Override
+    public String getStatus() {
+        return status;
     }
 
     @Override

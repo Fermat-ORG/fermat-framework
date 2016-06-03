@@ -37,7 +37,9 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -233,8 +235,14 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         FrameLayout frameLayout = new FrameLayout(getActivity());
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
+        int buttonSize = 70;
 
-        int padding = FermatScreenCalculator.getPx(getActivity(), 20);
+        ///button size
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            buttonSize = 82;
+        }
+
+        int padding = FermatScreenCalculator.getPx(getActivity(), 30);
         int width = FermatScreenCalculator.getPx(getActivity(), 56);
         //noinspection SuspiciousNameCombination
         FloatingActionButton.LayoutParams actionButtonParams = new FloatingActionButton.LayoutParams(width, width);
@@ -252,7 +260,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         padding = FermatScreenCalculator.getPx(getActivity(), 50);
         button1 = itemBuilder
-                .setSize(82)
+                .setSize(buttonSize)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.loss_externaluser_button))
                 .setText("External User")
@@ -263,7 +271,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         padding = FermatScreenCalculator.getPx(getActivity(), 80);
         button2 = itemBuilder
-                .setSize(82)
+                .setSize(buttonSize)
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
@@ -362,27 +370,56 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     }
 
     private void onRefresh() {
-        try {
-            isRefreshing = true;
-            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (Exception e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "ulnknown error- " + e.getMessage());
-        }
 
-        if (walletContactRecords.isEmpty()) {
-            mEmptyView.setVisibility(View.VISIBLE);
-            mListView.setVisibility(View.GONE);
-        } else {
-            mListView.setVisibility(View.VISIBLE);
-            mEmptyView.setVisibility(View.GONE);
-        }
-        refreshAdapter();
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground()  {
+
+                try {
+                    walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return walletContactRecords;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    if (walletContactRecords.isEmpty()) {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                    } else {
+                        mListView.setVisibility(View.VISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
+                    }
+                    refreshAdapter();
+
+                }
+                else {
+                  makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+                makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        fermatWorker.execute();
+
+
+
     }
-
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
         //if (isHelpEnabled) {
             ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), lossWalletSession, null, checkButton);
@@ -797,8 +834,10 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                                 letters.add(cryptoWalletWalletContact.getActorName());
                                 positions.put(i, cryptoWalletWalletContact);
                             } else
-                                // Is other symbol
+
                                 symbols.add(cryptoWalletWalletContact.getActorName());
+
+
                         }
 
                         final String symbolCode = HeaderTypes.SYMBOL.getCode();

@@ -5,8 +5,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 /**
  * The interface <code>CantGetCryptoWalletException</code>
  * is thrown when i cant RETURN the wallet.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
+ *
  * @version 1.0
  */
 public class CantGetSupAppRedeemPointModuleException extends CryptoWalletException {

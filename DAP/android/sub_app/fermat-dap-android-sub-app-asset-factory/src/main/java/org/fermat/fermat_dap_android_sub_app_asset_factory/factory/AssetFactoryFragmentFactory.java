@@ -25,11 +25,11 @@ public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFact
     @Override
     public AbstractFermatFragment getFermatFragment(AssetFactoryFragmentsEnumType fragments) throws FragmentNotFoundException {
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT))
-                return EditableAssetsFragment.newInstance();
+            return EditableAssetsFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT))
-                return PublishedAssetsFragment.newInstance();
+            return PublishedAssetsFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY))
-                return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
+            return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS))
             return SettingsFactoryFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN))

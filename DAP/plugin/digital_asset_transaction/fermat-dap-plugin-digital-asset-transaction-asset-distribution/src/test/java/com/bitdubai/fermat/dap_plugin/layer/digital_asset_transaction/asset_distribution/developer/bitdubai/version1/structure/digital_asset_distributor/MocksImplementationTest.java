@@ -19,17 +19,17 @@ public class MocksImplementationTest {
 
     @Test
     public void testImplementation() throws CantDefineContractPropertyException {
-        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadata=new MockDigitalAssetMetadataForTesting();
+        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
         System.out.println("--------------Digital Asset Metadata XML:\n" + mockDigitalAssetMetadata);
-        System.out.println("\n--------------Digital Asset Metadata Hash:\n"+mockDigitalAssetMetadata.getDigitalAssetHash());
-        System.out.println("\n--------------Digital Asset Metadata genesis transaction:\n"+mockDigitalAssetMetadata.getGenesisTransaction());
+        System.out.println("\n--------------Digital Asset Metadata Hash:\n" + mockDigitalAssetMetadata.getDigitalAssetHash());
+        System.out.println("\n--------------Digital Asset Metadata genesis transaction:\n" + mockDigitalAssetMetadata.getGenesisTransaction());
         DigitalAsset mockDigitalAsset = mockDigitalAssetMetadata.getDigitalAsset();
-        System.out.println("\n--------------Digital Asset Metadata XML:\n"+mockDigitalAsset);
-        System.out.println("\n--------------Digital Asset Metadata genesis address:\n"+mockDigitalAsset.getGenesisAddress().getAddress());
-        System.out.println("\n--------------Digital Asset Metadata public key:\n"+mockDigitalAsset.getPublicKey());
-        Timestamp expirationDate= (Timestamp) mockDigitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
-        Date date=new Date(expirationDate.getTime());
-        Calendar calendar= new GregorianCalendar();
+        System.out.println("\n--------------Digital Asset Metadata XML:\n" + mockDigitalAsset);
+        System.out.println("\n--------------Digital Asset Metadata genesis address:\n" + mockDigitalAsset.getGenesisAddress().getAddress());
+        System.out.println("\n--------------Digital Asset Metadata public key:\n" + mockDigitalAsset.getPublicKey());
+        Timestamp expirationDate = (Timestamp) mockDigitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+        Date date = new Date(expirationDate.getTime());
+        Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         System.out.println("\n--------------Digital Asset Metadata expiration date:\n" + calendar);
     }

@@ -7,7 +7,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 
 import java.util.List;
 
@@ -23,16 +23,17 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
 
 
     private static final String TAG = "ScreenPagerAdapter";
-    private List<AbstractFermatFragment> fragments;
+    private List<Fragment> fragments;
 
     /**
      * @param fm
      * @param fragments
      */
 
-    public ScreenPagerAdapter(FragmentManager fm, List<AbstractFermatFragment> fragments) {
+    public ScreenPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
-        this.fragments = fragments;
+
+        this.fragments = fragments;;
     }
     /*
      * Return the Fragment associated with a specified position.
@@ -68,11 +69,11 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
         return this.fragments.size();
     }
 
-    public List<AbstractFermatFragment> getLstCurrentFragments() {
-        return fragments;
+    public List<AbstractFermatFragmentInterface> getLstCurrentFragments() {
+        return (List<AbstractFermatFragmentInterface>)(List<?>) fragments;
     }
 
-    public void changeData(List<AbstractFermatFragment> fragments) {
+    public void changeData(List<Fragment> fragments) {
         removeAllFragments();
         this.fragments.clear();
         this.fragments = fragments;
@@ -80,7 +81,7 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
     }
 
     public void removeAllFragments(){
-        for (AbstractFermatFragment fragment : this.fragments) {
+        for (Fragment fragment : this.fragments) {
             FragmentManager manager = fragment.getFragmentManager();
             FragmentTransaction trans = manager.beginTransaction();
             trans.remove(fragment);

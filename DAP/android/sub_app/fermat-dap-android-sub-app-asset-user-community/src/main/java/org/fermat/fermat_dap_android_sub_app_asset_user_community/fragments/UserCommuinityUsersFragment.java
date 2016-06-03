@@ -51,7 +51,6 @@ import static android.widget.Toast.makeText;
 
 /**
  * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
- *
  */
 public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -301,7 +300,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
 
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                    dataSet.add((new Actor(record)));
+                dataSet.add((new Actor(record)));
             }
         }
         return dataSet;
@@ -315,8 +314,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            }
-            else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
+            } else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
                 dialog.setMessage("Adding users to group...");
                 dialog.setCancelable(false);

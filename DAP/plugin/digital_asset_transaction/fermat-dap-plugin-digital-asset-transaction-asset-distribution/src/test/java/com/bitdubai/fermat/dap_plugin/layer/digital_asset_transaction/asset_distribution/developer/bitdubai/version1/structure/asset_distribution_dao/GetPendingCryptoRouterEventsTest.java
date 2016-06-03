@@ -42,7 +42,7 @@ public class GetPendingCryptoRouterEventsTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -52,14 +52,14 @@ public class GetPendingCryptoRouterEventsTest {
         setUpGeneralMockitoRules();
     }
 
-    public void setUpGeneralMockitoRules() throws Exception{
+    public void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
 
     @Test
-    public void getPendingCryptoRouterEventsTest () throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public void getPendingCryptoRouterEventsTest() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         List<String> list = mockAssetDistributionDao.getPendingCryptoRouterEvents();
         Assert.assertNotNull(list);
     }
@@ -71,7 +71,7 @@ public class GetPendingCryptoRouterEventsTest {
         try {
             mockAssetDistributionDao.getPendingCryptoRouterEvents();
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }

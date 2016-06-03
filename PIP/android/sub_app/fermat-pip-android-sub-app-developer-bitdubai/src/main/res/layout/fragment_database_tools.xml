@@ -15,7 +15,6 @@
         android:layout_weight="0.14"
         android:headerDividersEnabled="false"
         android:divider="#FF0000"
-        android:textColor="#000000">
-    </GridView>
+        android:textColor="#000000"></GridView>
 
 </LinearLayout>

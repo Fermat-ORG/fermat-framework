@@ -77,9 +77,14 @@
     <!-- pending_request_row.xml -->
     <string name="balance_amount_25_btc_text">25 btc</string>
     <string name="refuse_text">Refuse</string>
+
+    <!-- dialog_blockchain_download.xml-->
+    <string name="advertisement_text">Advertisement!</string>
+    <string name="the_process_of_downloading_text">The process of downloading blocks \nfrom the Blockchain is in progress.\n  As this occurs, the action bar is shown in red.</string>
+
     <!-- presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
+    <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple bitcoin only wallet.\nIt\'s main features are:</string>
 
     <string name="close_text">Close</string>
     <!-- presentation_wallet.xml -->

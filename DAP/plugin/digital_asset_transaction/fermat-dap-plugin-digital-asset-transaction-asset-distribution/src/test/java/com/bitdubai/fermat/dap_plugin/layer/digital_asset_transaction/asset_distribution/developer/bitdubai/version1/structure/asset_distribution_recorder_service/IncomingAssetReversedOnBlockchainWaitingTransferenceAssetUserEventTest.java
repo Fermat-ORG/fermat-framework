@@ -25,6 +25,7 @@ public class IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventT
 
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
     IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent event;
+
     @Before
     public void init() throws Exception {
         event = new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent();
@@ -34,7 +35,7 @@ public class IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventT
     }
 
     @Test
-    public void incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventTest () throws CantSaveEventException {
+    public void incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventTest() throws CantSaveEventException {
         assetDistributionRecorderService.incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEvent(event);
     }
 
