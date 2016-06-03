@@ -79,13 +79,13 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
 
                     addConnectionCallback.addMenuEnabled();
                     holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
-                    holder.container_data.getBackground().setAlpha(50);
+                    holder.container_data.getBackground().setAlpha(100);
 
                 } else {
                     holder.checkbox_connection.setChecked(false);
 
                     addConnectionCallback.addMenuDisabled();
-                    holder.container_data.getBackground().setAlpha(0);
+                    holder.container_data.getBackground().setAlpha(100);
                 }
             }
         });
@@ -105,15 +105,15 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
                 } else {
                     holder.checkbox_connection.setChecked(false);
                     addConnectionCallback.addMenuDisabled();
-                    holder.container_data.getBackground().setAlpha(0);
+                    holder.container_data.getBackground().setAlpha(50);
                 }
             }
         });
 
         if(data.isSelected()){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                 holder.container_data.setBackground(ContextCompat.getDrawable(context, R.drawable.add_connection_rounded_rectangle_shape));
-            }
+           }
         }
 
     }
