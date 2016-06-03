@@ -325,7 +325,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
-                    .setIsCheckEnabled(checkButton)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         } catch (Exception e) {
