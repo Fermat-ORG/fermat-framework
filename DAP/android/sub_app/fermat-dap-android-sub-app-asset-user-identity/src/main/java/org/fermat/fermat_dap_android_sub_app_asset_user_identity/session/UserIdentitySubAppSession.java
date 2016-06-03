@@ -2,15 +2,17 @@ package org.fermat.fermat_dap_android_sub_app_asset_user_identity.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.interfaces.AssetUserIdentityModuleManager;
 
 /**
  * Created by Francisco Vasquez
  */
-public class UserIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,IdentityAssetUserManager,SubAppResourcesProviderManager> {
+public class UserIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, AssetUserIdentityModuleManager, SubAppResourcesProviderManager> {
 
-    public UserIdentitySubAppSession() {}
+    public UserIdentitySubAppSession() {
+    }
 
     //    /**
 //     * SubApps type

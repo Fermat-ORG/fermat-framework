@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
  * * * * * *
  */
 
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_CONTACTS)
 
 
 public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implements
@@ -199,9 +199,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
         List<String> returnedClasses = new ArrayList<>();
 
         returnedClasses.add("WalletContactsMiddlewarePluginRoot");
-        returnedClasses.add("WalletContactsMiddlewareRegistry");
-        returnedClasses.add("WalletContactsMiddlewareSearch");
-        returnedClasses.add("WalletContactsMiddlewareRecord");
+//        returnedClasses.add("WalletContactsMiddlewareRegistry");
+//        returnedClasses.add("WalletContactsMiddlewareSearch");
+//        returnedClasses.add("WalletContactsMiddlewareRecord");
         return returnedClasses;
     }
 

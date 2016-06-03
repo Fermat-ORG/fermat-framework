@@ -76,7 +76,11 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         setHasOptionsMenu(true);
         // setting up  module
         intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
-        intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
+        try {
+            intraUserInformation = (IntraUserInformation) ((IntraUserSubAppSession) appSession).getData(INTRA_USER_SELECTED,null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();

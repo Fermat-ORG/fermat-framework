@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchaseEventRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by franklin on 11/12/15.
@@ -100,20 +102,17 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         }
     }
 
-    public List<CustomerBrokerPurchase> getCustomerBrokerPurchases(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
+    public List<CustomerBrokerPurchase> getCustomerBrokerPurchases(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         Database database = null;
         List<CustomerBrokerPurchase> customerBrokerPurchases = new ArrayList<>();
-        try{
+        try {
             database = openDatabase();
 
-            for (DatabaseTableRecord record : getCustomerBrokerPurchaseRecordData(filter))
-            {
+            for (DatabaseTableRecord record : getCustomerBrokerPurchaseRecordData(filter)) {
                 final CustomerBrokerPurchase customerBrokerPurchase = getCustomerBrokerPurchase(record);
                 customerBrokerPurchases.add(customerBrokerPurchase);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get customers Broker Purchase from the database with filter: " + filter.toString(), null);
@@ -124,8 +123,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
 
 
     public void saveCustomerBrokerPurchaseTransactionData(CustomerBrokerPurchase customerBrokerPurchase) throws DatabaseOperationException, MissingCustomerBrokerPurchaseDataException {
-        try
-        {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
@@ -147,7 +145,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
             database.executeTransaction(transaction);
             database.closeDatabase();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Customer Broker Purchase Transaction in the database.", null);
@@ -165,18 +163,27 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         return table.getRecords();
     }
 
-    private CustomerBrokerPurchase getCustomerBrokerPurchase(final DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
-    {
-        CustomerBrokerPurchaseImpl customerBrokerPurchase = new CustomerBrokerPurchaseImpl(record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME),
-                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_CONTRACT_TRANSACTION_ID_COLUMN_NAME),
-                record.getLongValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TIMESTAMP_COLUMN_NAME),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        return customerBrokerPurchase;
+    private CustomerBrokerPurchase getCustomerBrokerPurchase(final DatabaseTableRecord record) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
+
+        return new CustomerBrokerPurchaseImpl(
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_TRANSACTION_ID_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_CONTRACT_TRANSACTION_ID_COLUMN_NAME),
+                record.getLongValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_TIMESTAMP_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_PURCHASE_STATUS_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_CONTRACT_STATUS_COLUMN_NAME),
+                TransactionStatus.getByCode(record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME)),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_CURRENCY_TYPE_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_TRANSACTION_TYPE_COLUMN_NAME),
+                record.getStringValue(UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.
+                        CUSTOMER_BROKER_PURCHASE_MEMO_COLUMN_NAME));
     }
 
     private DatabaseTableRecord getCustomerBrokerPurchaseRecord(CustomerBrokerPurchase customerBrokerPurchase

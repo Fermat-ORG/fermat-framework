@@ -20,7 +20,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.Wa
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,6 +86,10 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
      */
     @Override
     protected void bindHolder(final ChunckValuesHistoryItemViewHolder holder, final LossProtectedWalletTransaction data, int position) {
+        final int MAX_DECIMAL_EXCHANGE_RATE_AMOUNT = 2;
+        final int MIN_DECIMAL_EXCHANGE_RATE_AMOUNT = 2;
+        final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
+        final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
 
         LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
         try {
@@ -113,7 +116,12 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         final int percentage = getSpendingPercentage(transaction);
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  Spend " + percentage+"%");
+        holder.getTxt_amount().setText(
+                WalletUtils.formatBalanceStringWithDecimalEntry(
+                        data.getAmount(),
+                        MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
+                        lossProtectedWalletSession.getTypeAmount()) + "  ("+percentage+"% Spend)");
         holder.getTxt_amount().setTypeface(tf) ;
 
         if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())
@@ -121,7 +129,11 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         else
             holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
 
-        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
+        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = "+
+                WalletUtils.formatAmountStringWithDecimalEntry(
+                        data.getExchangeRate(),
+                        MAX_DECIMAL_EXCHANGE_RATE_AMOUNT,
+                        MIN_DECIMAL_EXCHANGE_RATE_AMOUNT));
 
     }
 

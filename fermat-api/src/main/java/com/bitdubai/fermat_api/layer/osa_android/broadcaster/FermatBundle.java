@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * Created by mati on 2016.03.14..
+ * Created by Matias Furszyfer on 2016.03.14..
  */
-public class FermatBundle {
+public class FermatBundle implements Serializable{
 
     HashMap<String,Object> extras;
 
@@ -18,6 +18,15 @@ public class FermatBundle {
 
     public void put(String key,Serializable serializable){
         extras.put(key,serializable);
+    }
+    public void put(String key,Object o){
+        if(o instanceof Serializable){
+            extras.put(key,o);
+        }else if(AuxiiliaryWrapper.isWrapperType(o.getClass())){
+            extras.put(key,o);
+        }else{
+            throw new IllegalArgumentException("Object is not Serializable or primitive type");
+        }
     }
 
 
@@ -51,5 +60,14 @@ public class FermatBundle {
         }else{
             throw new IllegalAccessException("Need int, found"+o.getClass());
         }
+    }
+
+    public Object get(String key) throws IllegalAccessException {
+        if(!extras.containsKey(key)) throw new IllegalArgumentException("Key is not loaded in extras");
+        return extras.get(key);
+    }
+
+    public void remove(String key){
+        extras.remove(key);
     }
 }

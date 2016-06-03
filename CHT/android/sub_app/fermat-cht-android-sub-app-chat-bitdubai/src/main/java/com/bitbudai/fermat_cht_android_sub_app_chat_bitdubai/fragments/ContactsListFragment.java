@@ -142,7 +142,9 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
         try {
-            chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e) {
             chatSettings = null;
         }
@@ -277,7 +279,6 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     noDatalabel.setVisibility(View.VISIBLE);
                     layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
-
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
@@ -390,8 +391,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                         contacticon.add(bmd.getBitmap());
                         if(con.get(i).getConnectionState()!=null)
                             contactStatus.add(con.get(i).getConnectionState().toString());
-                        else
-                            contactStatus.add("");
+                        else contactStatus.add("");
                     }
                     final ContactListAdapter adaptador =
                             new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,

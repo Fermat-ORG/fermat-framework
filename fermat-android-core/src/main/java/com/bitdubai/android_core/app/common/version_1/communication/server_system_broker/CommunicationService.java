@@ -80,23 +80,23 @@ public class CommunicationService extends Service{
                     case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
                         processingQueue++;
                         Log.i(TAG,"Processiong request queue:"+processingQueue);
-                            executorService.submit(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        moduleDataRequest2(
-                                                msg.replyTo,
-                                                data.getString(CommunicationDataKeys.DATA_REQUEST_ID),
-                                                data.getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
-                                                (PluginVersionReference) data.getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
-                                                data.getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
-                                                data.getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD));
-
-                                    } catch (Exception e){
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
+//                            executorService.submit(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        moduleDataRequest2(
+//                                                msg.replyTo,
+//                                                data.getString(CommunicationDataKeys.DATA_REQUEST_ID),
+//                                                data.getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
+//                                                (PluginVersionReference) data.getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
+//                                                data.getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
+//                                                data.getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD));
+//
+//                                    } catch (Exception e){
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            });
 
                         break;
                     default:
@@ -117,11 +117,6 @@ public class CommunicationService extends Service{
     private void unRegisterClient(String key){
         clients.remove(key);
     }
-
-    private void moduleDataRequest2(Messenger replyTo, final String requestId, final String requestKey, final PluginVersionReference pluginVersionReference, final String method, final Serializable parameters){
-        new ModuleAsyncTask(this,fermatSystem,replyTo,requestId,requestKey,pluginVersionReference,method,parameters).execute();
-    }
-
 
     private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable parameters){
         Log.i(TAG,"Invoque method called");

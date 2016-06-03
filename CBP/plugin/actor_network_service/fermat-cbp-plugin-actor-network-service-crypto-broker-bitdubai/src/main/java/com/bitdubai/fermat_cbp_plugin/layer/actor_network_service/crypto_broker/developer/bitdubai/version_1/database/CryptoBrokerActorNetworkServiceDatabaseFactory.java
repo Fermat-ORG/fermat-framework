@@ -73,14 +73,14 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , DatabaseDataType.STRING      ,  36, Boolean.FALSE );
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , DatabaseDataType.TEXT      ,  36, Boolean.FALSE );
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , DatabaseDataType.TEXT      , 130, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , DatabaseDataType.TEXT      , 130, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT      , 130, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
 
             table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_FIRST_KEY_COLUMN);
@@ -97,13 +97,13 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUEST_ID_COLUMN_NAME              , DatabaseDataType.STRING      , 100, Boolean.FALSE );
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING      , 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUEST_ID_COLUMN_NAME              , DatabaseDataType.TEXT      , 100, Boolean.FALSE );
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.TEXT      , 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT      , 100, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TYPE_COLUMN_NAME                    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME                   , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TYPE_COLUMN_NAME                    , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME                   , DatabaseDataType.TEXT      ,  10, Boolean.FALSE);
 
             table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_FIRST_KEY_COLUMN);
 
@@ -117,12 +117,13 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           , DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          , DatabaseDataType.TEXT,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     , DatabaseDataType.TEXT,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , DatabaseDataType.TEXT,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                , DatabaseDataType.MONEY ,   0, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME  , DatabaseDataType.MONEY ,  20, Boolean.FALSE);
 
             table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_FIRST_KEY_COLUMN);
 

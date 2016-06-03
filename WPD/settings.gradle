@@ -15,8 +15,8 @@ include ':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai'
 project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/desktop_module/fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
 
 //engine
-include ':fermat-wpd-plugin-engine-wallet-runtime-bitdubai'
-project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
+include ':fermat-wpd-plugin-engine-app-runtime-bitdubai'
+project(':fermat-wpd-plugin-engine-app-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-app-runtime-bitdubai')
 
 // identity
 
@@ -51,12 +51,10 @@ include ':fermat-wpd-plugin-network-service-wallet-store-bitdubai'
 project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-store-bitdubai')
 
 // Milestone 2 project network service:
-
 include ':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai'
 project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
 
 //SUB APP MODULE
-
 include ':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai'
 project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
 
@@ -65,3 +63,7 @@ project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai').projectDi
 
 include ':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai'
 project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
+
+//Android
+include ':fermat-wpd-android-sub-app-store-bitdubai'
+project(':fermat-wpd-android-sub-app-store-bitdubai').projectDir = new File('WPD/android/sub_app/fermat-wpd-android-sub-app-store-bitdubai')

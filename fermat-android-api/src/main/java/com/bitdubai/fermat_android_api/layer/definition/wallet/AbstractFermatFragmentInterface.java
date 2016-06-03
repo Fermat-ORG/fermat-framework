@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
@@ -13,7 +14,10 @@ public interface AbstractFermatFragmentInterface<S extends FermatSession,R exten
 
     void setAppResourcesProviderManager(R appResourcesProviderManager);
 
+    void onUpdateViewOnUIThread(FermatBundle code);
+    void onUpdateView(FermatBundle code);
     void onUpdateViewOnUIThread(String code);
     void onUpdateView(String code);
 
+    void onBackPressed();
 }

@@ -70,7 +70,6 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
     public ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatIdentityModuleManager == null)
             chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
-
         return chatIdentityModuleManager;
     }
 }

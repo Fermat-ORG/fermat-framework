@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_desto
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
     private final BigDecimal      amount;
     private final String          memo;
     private final String          publicKeyPlugin;
+    private TransactionType transactionType;
 
     public BankTransactionParametersWrapper(UUID transactionId,
                                             FiatCurrency fiatCurrency,
@@ -75,5 +77,14 @@ public class BankTransactionParametersWrapper implements BankTransactionParamete
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 }

@@ -7,8 +7,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ListUserIdentiesFragment;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
 /**
@@ -27,11 +29,11 @@ public class FanCommunityFragmentFactory extends
         AbstractFermatFragment currentFragment = null;
 
         switch (fragments) {
-            case ART_WALLET_STORE_ALL_FRAGMENT:
+            /*case ART_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
-                break;
+                break;*/
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTIONS:
-                //currentFragment = ConnectionsFragment.newInstance();
+                currentFragment = ConnectionsFragment.newInstance();
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_DETAIL:
                 //currentFragment = null;
@@ -47,6 +49,9 @@ public class FanCommunityFragmentFactory extends
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST:
                 currentFragment = ConnectionsListFragment.newInstance();
+                break;
+            case ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST:
+                currentFragment = ListUserIdentiesFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

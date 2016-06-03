@@ -95,15 +95,15 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
              * If the directory does not exist the I create it.
              */
             File storagePath = new File(path);
-            if (!storagePath.exists() && storagePath.mkdirs()) {
-            	storagePath=null;
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
             }
 
             /**
              * Then I create the file.
              * if not exist
              */
-            File file = new File(storagePath, this.fileName);
+            File file = new File(path, this.fileName);
 
             if (!file.exists()) {
                 /**

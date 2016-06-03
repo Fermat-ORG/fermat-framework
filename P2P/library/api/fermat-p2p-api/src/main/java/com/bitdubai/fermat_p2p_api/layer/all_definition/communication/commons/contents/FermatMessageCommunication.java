@@ -8,8 +8,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateDeserializer;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateSerializer;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -317,8 +316,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public String toJson() {
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateSerializer())
-                                     .registerTypeAdapter(Timestamp.class, new JsonDateDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
         return gson.toJson(this);
     }
 
@@ -329,8 +327,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public FermatMessage fromJson(String json) {
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateSerializer())
-                                     .registerTypeAdapter(Timestamp.class, new JsonDateDeserializer()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
         return gson.fromJson(json, FermatMessageCommunication.class);
     }
 

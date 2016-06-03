@@ -118,85 +118,85 @@ public class ChatListFragment extends AbstractFermatFragment{
                 noReadMsgs.clear();
                 imgId.clear();
                 for (Chat chat : chats) {
-                    if(chat.getStatus()!= ChatStatus.INVISSIBLE){
-                    chatidtemp = chat.getChatId();
-                    if (chatidtemp != null) {
-                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                        contactId.add(chat.getRemoteActorPublicKey());
-                        if (chatIdentity != null) {
-                            List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
-                            for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
-                                String pk1 = cont.getPublicKey();
-                                String pk2 = chat.getRemoteActorPublicKey();
-                                if (pk2.equals(pk1)) {
-                                    contactName.add(cont.getAlias());
-                                    Message mess = null;
-                                    try {
-                                        mess = chatManager.getMessageByChatId(chatidtemp);
-                                    } catch (Exception e) {
-                                        mess = null;
-                                    }
-                                    if (mess != null) {
-                                        if (chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing...");
-                                        } else {
-                                            message.add(mess.getMessage());
+                    if (chat.getStatus() != ChatStatus.INVISSIBLE) {
+                        chatidtemp = chat.getChatId();
+                        if (chatidtemp != null) {
+                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                            contactId.add(chat.getRemoteActorPublicKey());
+                            if (chatIdentity != null) {
+                                List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
+                                for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
+                                    String pk1 = cont.getPublicKey();
+                                    String pk2 = chat.getRemoteActorPublicKey();
+                                    if (pk2.equals(pk1)) {
+                                        contactName.add(cont.getAlias());
+                                        Message mess = null;
+                                        try {
+                                            mess = chatManager.getMessageByChatId(chatidtemp);
+                                        } catch (Exception e) {
+                                            mess = null;
                                         }
-                                        status.add(mess.getStatus().toString());
-                                        typeMessage.add(mess.getType().toString());
-                                    } else {
-                                        if (chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing...");
-                                        } else {
-                                            message.add("");
-                                        }
-                                        status.add("");
-                                        typeMessage.add("");
-                                    }
-                                    long timemess = chat.getLastMessageDate().getTime();
-                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                    long milliseconds = timemess + nanos;
-                                    Date dated = new java.util.Date(milliseconds);
-                                    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-                                    formatter.setTimeZone(TimeZone.getDefault());
-                                    String datef = formatter.format(new java.util.Date(milliseconds));
-                                    if (Validate.isDateToday(dated)) {
-                                        if (Validate.isDateToday(dated)) {
-                                            if (Build.VERSION.SDK_INT < 23) {
-                                                if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
-                                                } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
-                                                }
+                                        if (mess != null) {
+                                            if (chatManager.checkWritingStatus(chatidtemp)) {
+                                                message.add("Typing...");
                                             } else {
-                                                if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
+                                                message.add(mess.getMessage());
+                                            }
+                                            status.add(mess.getStatus().toString());
+                                            typeMessage.add(mess.getType().toString());
+                                        } else {
+                                            if (chatManager.checkWritingStatus(chatidtemp)) {
+                                                message.add("Typing...");
+                                            } else {
+                                                message.add("");
+                                            }
+                                            status.add("");
+                                            typeMessage.add("");
+                                        }
+                                        long timemess = chat.getLastMessageDate().getTime();
+                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                        long milliseconds = timemess + nanos;
+                                        Date dated = new java.util.Date(milliseconds);
+                                        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                                        formatter.setTimeZone(TimeZone.getDefault());
+                                        String datef = formatter.format(new java.util.Date(milliseconds));
+                                        if (Validate.isDateToday(dated)) {
+                                            if (Validate.isDateToday(dated)) {
+                                                if (Build.VERSION.SDK_INT < 23) {
+                                                    if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                        formatter = new SimpleDateFormat("HH:mm");
+                                                    } else {
+                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                    }
                                                 } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                        formatter = new SimpleDateFormat("HH:mm");
+                                                    } else {
+                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                    }
                                                 }
                                             }
+                                            formatter.setTimeZone(TimeZone.getDefault());
+                                            datef = formatter.format(new java.util.Date(milliseconds));
+                                        } else {
+                                            Date old = new Date(datef);
+                                            Date today = new Date();
+                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                            if (dias == 1) {
+                                                datef = "YESTERDAY";
+                                            }
                                         }
-                                        formatter.setTimeZone(TimeZone.getDefault());
-                                        datef = formatter.format(new java.util.Date(milliseconds));
-                                    } else {
-                                        Date old = new Date(datef);
-                                        Date today = new Date();
-                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                        if (dias == 1) {
-                                            datef = "YESTERDAY";
-                                        }
+                                        dateMessage.add(datef);
+                                        chatId.add(chatidtemp);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        imgId.add(bmd.getBitmap());
+                                        chatscounter++;
+                                        break;
                                     }
-                                    dateMessage.add(datef);
-                                    chatId.add(chatidtemp);
-                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                    imgId.add(bmd.getBitmap());
-                                    chatscounter++;
-                                    break;
                                 }
-                            }
-                        } else setUpHelpChat(false);
-                    }
+                            } else setUpHelpChat(false);
+                        }
                     }
                 }
                 if (chatscounter==0)
@@ -243,7 +243,8 @@ public class ChatListFragment extends AbstractFermatFragment{
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
-            chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -252,7 +253,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings = new ChatPreferenceSettings();
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
-                chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
-public class CantStartPluginException extends FermatException{
+public class CantStartPluginException extends CantStartException {
     
 
 	private Plugins plugin;

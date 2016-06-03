@@ -267,7 +267,10 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
 
     @Override
     public List<String> getClassesFullPath() {
-        return new ArrayList<>();
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("AssetTransferDigitalAssetTransactionPluginRoot");
+
+        return returnedClasses;
     }
 
     @Override

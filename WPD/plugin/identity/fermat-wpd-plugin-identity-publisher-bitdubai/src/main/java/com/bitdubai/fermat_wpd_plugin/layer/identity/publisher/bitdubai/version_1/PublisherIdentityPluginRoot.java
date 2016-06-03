@@ -241,10 +241,10 @@ public class PublisherIdentityPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory");
+        returnedClasses.add("PublisherIdentityPluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory");
         /**
          * I return the values.
          */

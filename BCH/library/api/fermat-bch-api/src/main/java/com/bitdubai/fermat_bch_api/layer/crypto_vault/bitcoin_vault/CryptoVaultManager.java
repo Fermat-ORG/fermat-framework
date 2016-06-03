@@ -19,6 +19,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoV
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by rodrigo on 11/06/15.
  */
@@ -75,6 +77,12 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws CantLoadExistingVaultSeed
      */
     List<String> getMnemonicCode() throws CantLoadExistingVaultSeed;
+
+    /**
+     *
+     * @throws CantLoadExistingVaultSeed
+     */
+    void importSeedFromMnemonicCode(List<String> mnemonicCode,long date,@Nullable String userPhrase,BlockchainNetworkType blockchainNetworkType) throws CantLoadExistingVaultSeed;
 
     /**
      * Signs the owned inputs of the passed Draft transaction

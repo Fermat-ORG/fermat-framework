@@ -53,4 +53,9 @@ public class IntraUserNetworkService  implements IntraUserInformation,Serializab
     public String getState() {
         return null;
     }
+
+    @Override
+    public void setProfileImageNull() {
+        profileImage = new byte[0];
+    }
 }

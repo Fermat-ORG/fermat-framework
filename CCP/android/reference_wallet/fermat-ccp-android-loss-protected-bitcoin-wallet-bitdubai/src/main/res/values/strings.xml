@@ -12,7 +12,7 @@
     <string name="notes">user notes</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
     <string name="from">From Given Actor</string>
-    <!-- connection_with_community_dialog.xml -->
+    <!-- loss_connection_with_community_dialogialog.xml -->
     <string name="new_user_text">New User</string>
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
@@ -252,6 +252,7 @@
     <string name="see_your_loss_balance_text">* Checking your available balance based on the actual exchange rate.\n* See the quote dollar today.\n* Sending/receiving bitcoins.</string>
 
     <!-- Custom Dialog Fragment -->
+    <string name="exchange_rate_error_connection">Can not get Exchange Rate Provider,\n please check your internet connection.</string>
     <string name="title_label">Network Settings</string>
     <string name="ok_label">OK</string>
     <string name="cancel_label">Cancel</string>

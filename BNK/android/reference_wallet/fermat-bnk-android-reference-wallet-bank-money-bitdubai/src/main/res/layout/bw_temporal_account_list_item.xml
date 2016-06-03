@@ -39,15 +39,16 @@
     <LinearLayout
         android:id="@+id/second_line_first_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_below="@id/acc_first_line"
         android:background="@color/faded_black_20"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/bw_account_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/bw_bg_detail_number_01" />
 
         <LinearLayout
@@ -55,8 +56,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="32dp">
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/balance_text"
@@ -87,7 +88,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Available"
                     android:textColor="@color/text_color_soft_grey"
-                    android:textSize="@dimen/text_size"
+                    android:textSize="14dp"
                     android:visibility="visible" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -95,10 +96,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="30000.00 USD"
+                    android:text="30,000.00 USD"
                     android:gravity="right"
                     android:textColor="@color/text_color_white"
-                    android:textSize="@dimen/large_text_size" />
+                    android:textSize="18dp" />
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -117,7 +118,7 @@
                     android:layout_marginTop="5dp"
                     android:text="To confirm"
                     android:textColor="@color/text_color_soft_grey"
-                    android:textSize="@dimen/text_size"
+                    android:textSize="14dp"
                     android:visibility="visible" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -125,10 +126,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="30000.00 USD"
+                    android:text="30,000.00 USD"
                     android:gravity="right"
                     android:textColor="@color/text_color_white"
-                    android:textSize="@dimen/large_text_size" />
+                    android:textSize="18dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.developer.app_connection;
 
 import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -19,7 +20,7 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DeveloperFermatAppConnection extends AppConnections{
+public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubAppSession> {
 
     public DeveloperFermatAppConnection(Context activity) {
         super(activity);
@@ -32,7 +33,7 @@ public class DeveloperFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.PLUG_INS_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.DEVELOPER,

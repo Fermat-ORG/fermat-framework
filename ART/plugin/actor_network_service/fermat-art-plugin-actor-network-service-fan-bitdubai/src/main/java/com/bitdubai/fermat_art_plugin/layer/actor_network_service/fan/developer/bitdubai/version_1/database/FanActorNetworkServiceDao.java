@@ -288,6 +288,43 @@ public final class FanActorNetworkServiceDao {
     }
 
     /**
+     * This method returns all the request persisted in database
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    public final List<FanConnectionRequest> listAllRequest() throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            final DatabaseTable connectionNewsTable = database.getTable(
+                    FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            final List<FanConnectionRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                cryptoAddressRequests.add(buildConnectionNewRecord(record));
+
+            return cryptoAddressRequests;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListPendingConnectionRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, there is a problem in database and I cannot load the table.");
+        } catch (final InvalidParameterException e) {
+            throw new CantListPendingConnectionRequestsException(
+                    e,
+                    "",
+                    "There is a problem with some enum code."                                                                                );
+        }
+    }
+
+    /**
      * Return all the pending requests depending on the protocol state informed through parameters.
      *
      * @param protocolStates  list of the protocol states that we need to bring.

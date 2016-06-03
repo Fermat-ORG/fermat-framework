@@ -73,6 +73,9 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                 "Chat Actor Network Service",
                 null
         );
+
+        //listenersAdded = new ArrayList<>();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
@@ -87,6 +90,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         try {
 
+            listenersAdded = new ArrayList<>();
             chatActorNetworkServiceDao = new ChatActorNetworkServiceDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             chatActorNetworkServiceDao.initialize();
@@ -98,7 +102,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     getPluginVersionReference()
             );
 
-            executor = Executors.newSingleThreadExecutor();
+            //executor = Executors.newSingleThreadExecutor();
 
             FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
             fermatEventListener.setEventHandler(new ChatP2PCompletedConnectionRegistrationEventHandler(this));

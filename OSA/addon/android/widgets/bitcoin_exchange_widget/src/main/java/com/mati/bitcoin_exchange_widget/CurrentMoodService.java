@@ -10,27 +10,19 @@ import android.widget.RemoteViews;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_core.FermatSystem;
-import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
+//import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 
 public class CurrentMoodService extends Service {
 	public static final String UPDATEMOOD = "UpdateMood";
@@ -99,33 +91,33 @@ public class CurrentMoodService extends Service {
 	            RemoteViews views = new RemoteViews(this.getPackageName(),R.layout.bitcoin_widget);
 
 
-				final CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+//				final CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
 
 				ExecutorService executorService = Executors.newSingleThreadExecutor();
-				try {
-					Collection<CurrencyExchangeRateProviderManager> filteredProviders =
-							providerFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
-
-					for (final CurrencyExchangeRateProviderManager p : filteredProviders) {
-						String providerName = p.getProviderName();
-
-						//UUID del provider, puedes capturarlo y luego obtener una referencia nueva a el usando providerFilter.getProviderReference(UUID)
-						UUID providerId = p.getProviderId();
-
-						Callable<ExchangeRate> callable = new Callable() {
-							@Override
-							public ExchangeRate call() throws Exception {
-								return p.getCurrentExchangeRate(wantedCurrencyPair);
-							}
-						};
-						Future<ExchangeRate> future = executorService.submit(callable);
-						//Tu exchangerate.
-						ExchangeRate rate = future.get();
-						views.setTextViewText(R.id.txt_base_price, String.valueOf(rate.getSalePrice()));
-					}
-				}catch (Exception e){
-					e.printStackTrace();
-				}
+//				try {
+//					Collection<CurrencyExchangeRateProviderManager> filteredProviders =
+//							providerFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+//
+//					for (final CurrencyExchangeRateProviderManager p : filteredProviders) {
+//						String providerName = p.getProviderName();
+//
+//						//UUID del provider, puedes capturarlo y luego obtener una referencia nueva a el usando providerFilter.getProviderReference(UUID)
+//						UUID providerId = p.getProviderId();
+//
+//						Callable<ExchangeRate> callable = new Callable() {
+//							@Override
+//							public ExchangeRate call() throws Exception {
+//								return p.getCurrentExchangeRate(wantedCurrencyPair);
+//							}
+//						};
+//						Future<ExchangeRate> future = executorService.submit(callable);
+//						//Tu exchangerate.
+//						ExchangeRate rate = future.get();
+//						views.setTextViewText(R.id.txt_base_price, String.valueOf(rate.getSalePrice()));
+//					}
+//				}catch (Exception e){
+//					e.printStackTrace();
+//				}
 
 
 	            appWidgetMan.updateAppWidget(widgetId, views);

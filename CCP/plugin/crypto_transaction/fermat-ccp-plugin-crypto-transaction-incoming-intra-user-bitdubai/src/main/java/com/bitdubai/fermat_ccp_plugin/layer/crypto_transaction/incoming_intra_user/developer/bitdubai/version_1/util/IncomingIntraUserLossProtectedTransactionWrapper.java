@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 
@@ -26,6 +27,8 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
     private final String        memo              ;
     private final BlockchainNetworkType blockchainNetworkType;
     private long exchangeRate;
+    private CryptoCurrency cryptoCurrency;
+
 
     public IncomingIntraUserLossProtectedTransactionWrapper(final UUID        transactionId     ,
                                                final UUID          requestId     ,
@@ -39,7 +42,8 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
                                                final long          amount            ,
                                                final long          timestamp         ,
                                                final String        memo              ,
-                                               final BlockchainNetworkType blockchainNetworkType) {
+                                               final BlockchainNetworkType blockchainNetworkType,
+                                                            final CryptoCurrency cryptoCurrency) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -54,6 +58,7 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
         this.timestamp          = timestamp         ;
         this.memo               = memo              ;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -124,6 +129,11 @@ public class IncomingIntraUserLossProtectedTransactionWrapper implements Bitcoin
     @Override
     public long getExchangRate() {
         return 0;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
     }
 
 

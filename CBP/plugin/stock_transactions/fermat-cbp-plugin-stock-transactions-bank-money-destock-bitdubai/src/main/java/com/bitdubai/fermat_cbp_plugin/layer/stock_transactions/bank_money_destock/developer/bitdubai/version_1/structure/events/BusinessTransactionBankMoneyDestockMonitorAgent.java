@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.BusinessTransactionBankMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.utils.BankTransactionParametersWrapper;
@@ -37,7 +38,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final BusinessTransactionBankMoneyDestockPluginRoot pluginRoot;
     private final StockTransactionBankMoneyDestockManager stockTransactionBankMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final UnholdManager unHoldManager;
@@ -51,21 +52,21 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
     /**
      * Constructor for BusinessTransactionBankMoneyDestockMonitorAgent
      *
-     * @param errorManager
+     * @param pluginRoot
      * @param stockTransactionBankMoneyDestockManager
      * @param cryptoBrokerWalletManager
      * @param unHoldManager
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public BusinessTransactionBankMoneyDestockMonitorAgent(ErrorManager errorManager,
+    public BusinessTransactionBankMoneyDestockMonitorAgent(BusinessTransactionBankMoneyDestockPluginRoot pluginRoot,
                                                            StockTransactionBankMoneyDestockManager stockTransactionBankMoneyDestockManager,
                                                            CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                            UnholdManager unHoldManager,
                                                            PluginDatabaseSystem pluginDatabaseSystem,
                                                            UUID pluginId) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.stockTransactionBankMoneyDestockManager = stockTransactionBankMoneyDestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.unHoldManager = unHoldManager;
@@ -295,7 +296,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                 }
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

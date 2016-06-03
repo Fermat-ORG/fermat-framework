@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 
 /**

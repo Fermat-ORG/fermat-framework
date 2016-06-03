@@ -23,7 +23,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CancelDialog;
@@ -38,8 +40,8 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,8 +71,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private FermatTextView userBlockchainNetworkType;
     private FermatTextView userRegistrationDate;
     private FermatTextView userLastConnectionDate;
-    //private IntraUserModuleManager manager;
-    private static AssetUserCommunitySubAppModuleManager manager;
+    //private IntraUserModuleManager moduleManager;
+    private AssetUserCommunitySubAppModuleManager moduleManager;
+    AssetUserSettings settings = null;
     private ErrorManager errorManager;
     private Button connect;
     private Button disconnect;
@@ -98,9 +101,10 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
         actor = (Actor) appSession.getData(USER_SELECTED);
-        manager = assetUserCommunitySubAppSession.getModuleManager();
+
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }
@@ -269,7 +273,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                         (AssetUserCommunitySubAppSession) appSession,
                         null,
                         actor,
-                        manager.getActiveAssetUserIdentity());
+                        moduleManager.getActiveAssetUserIdentity());
 
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -295,8 +299,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private void updateButton() {
         ActorAssetUser actorUser = null;
         try {
-            connectionState = manager.getActorRegisteredDAPConnectionState(this.actor.getActorPublicKey());
-            actorUser = manager.getActorUser(this.actor.getActorPublicKey());
+            connectionState = moduleManager.getActorRegisteredDAPConnectionState(this.actor.getActorPublicKey());
+            actorUser = moduleManager.getActorUser(this.actor.getActorPublicKey());
 
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
@@ -419,7 +423,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         actors = new ArrayList<>();
 
         try {
-            actorAssetUser = manager.getActorUser(actor.getActorPublicKey());
+            actorAssetUser = moduleManager.getActorUser(actor.getActorPublicKey());
 
             tempActor.add(new AssetUserActorRecord(actorAssetUser.getActorPublicKey(),
                     actorAssetUser.getName(),

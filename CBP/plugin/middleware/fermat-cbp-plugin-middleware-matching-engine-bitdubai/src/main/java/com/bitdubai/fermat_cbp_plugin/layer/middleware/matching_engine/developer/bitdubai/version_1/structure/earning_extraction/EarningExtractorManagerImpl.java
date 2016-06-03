@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +31,13 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     private static final String BROKER_WALLET_PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
 
     final private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private MatchingEngineMiddlewareDao dao;
     private HashMap<Platforms, EarningExtractor> earningExtractors;
     private List<CryptoBrokerWalletAssociatedSetting> associatedWallets;
 
-    public EarningExtractorManagerImpl(CryptoBrokerWalletManager walletManager) {
+    public EarningExtractorManagerImpl(CryptoBrokerWalletManager walletManager, MatchingEngineMiddlewareDao dao) {
         this.cryptoBrokerWalletManager = walletManager;
+        this.dao = dao;
         earningExtractors = new HashMap<>();
         associatedWallets = new ArrayList<>();
     }
@@ -118,8 +121,11 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions, Currency earningCurrency) throws CantExtractEarningsException {
         try {
             for (EarningTransaction earningTransaction : earningTransactions)
-                if (earningTransaction.getEarningCurrency() == earningCurrency)
+                if (earningTransaction.getEarningCurrency() == earningCurrency){
+                    dao.markEarningTransactionAsExtracted(earningTransaction.getId());
                     earningTransaction.markAsExtracted();
+                }
+
 
         } catch (EarningTransactionNotFoundException e) {
             throw new CantExtractEarningsException(e, "Trying to get the earning transaction in database to marked as EXTRACTED",

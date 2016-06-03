@@ -6,12 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.squareup.picasso.Picasso;
+
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 
 /**
  * @author Created by mati on 2015.11.12..
@@ -33,11 +35,10 @@ public class UserCommunityFragmentsCommons {
                 if (identityAssetUser.getImage().length > 0) {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), 0, false);
                     bitmapWorkerTask.execute(identityAssetUser.getImage());
-//                    imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetUser.getImage(), 0, identityAssetUser.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.asset_user_comunity).into(imageView);
+                    Picasso.with(activity).load(R.drawable.banner_asset_user_community).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.asset_user_comunity).into(imageView);
+                Picasso.with(activity).load(R.drawable.banner_asset_user_community).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identityAssetUser.getAlias());
         }

@@ -1,16 +1,25 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +34,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -35,10 +45,15 @@ import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.settings.ChatIdentitySettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CommonLogger;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogCropImage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -51,10 +66,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -119,15 +138,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
             chatIdentitySettings = null;
             try {
-                chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
+                chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch(Exception e){
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {
                 chatIdentitySettings = new ChatIdentityPreferenceSettings();
                 chatIdentitySettings.setIsPresentationHelpEnabled(true);
                 try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
+                    //moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -195,6 +216,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
                                     loadImageFromGallery();
+//                                } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+//                                    try {
+//                                        if (cryptoBrokerBitmap != null)
+//                                            rotateImage();
+//                                        else
+//                                            Toast.makeText(getActivity(), "Please select a image", Toast.LENGTH_SHORT).show();
+//                                    } catch (Exception e) {
+//                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//                                    }
+//                                } else {
+//                                    //Nothing
                                 }
                             }
                         });
@@ -236,6 +268,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
                                     loadImageFromGallery();
+//                                } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+//                                    try {
+//                                        rotateImage();
+//                                    } catch (CHTException e) {
+//                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//
+//                                    }
+//                                } else {
+//                                    //Nothing...
                                 }
                             }
                         });
@@ -620,8 +661,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 }
             } catch (CantGetChatIdentityException e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
-
             }
         }
     }
@@ -758,12 +797,71 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
     }
 
+//    private void rotateImage() throws CHTException {
+//        Bitmap thissbitmap = null;
+//        if(cryptoBrokerBitmap != null){
+//            thissbitmap = cryptoBrokerBitmap;
+//        }else if(ExistIdentity() == true){
+//            try {
+//                thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+//            } catch (CantGetChatIdentityException e) {
+//                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            }
+//        }
+//            if (thissbitmap != null) {
+//                //NEW LOGIC
+//                if(ROTATE_VALUE == 0){
+//                        ROTATE_VALUE = 90;
+//                   }else if(ROTATE_VALUE == 90) {
+//                    ROTATE_VALUE = 180;
+//                    }else if(ROTATE_VALUE == 180) {
+//                        ROTATE_VALUE = 270;
+//                    }else if(ROTATE_VALUE == 270){
+//                        ROTATE_VALUE = 0;
+//                    }
+//                    cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
+//                    cryptoBrokerBitmap = getRoundedShape(cryptoBrokerBitmap);
+//                    mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
+//            }else{
+//                Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
+//            }
+//    }
+//
+//    public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
+//        int targetWidth = 200;
+//        int targetHeight = 200;
+//        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+//                targetHeight,Bitmap.Config.ARGB_8888);
+//
+//        Canvas canvas = new Canvas(targetBitmap);
+//        Path path = new Path();
+//        path.addCircle(((float) targetWidth - 1) / 2,
+//                ((float) targetHeight - 1) / 2,
+//                (Math.min(((float) targetWidth),
+//                        ((float) targetHeight)) / 2),
+//                Path.Direction.CCW);
+//
+//        canvas.clipPath(path);
+//        Bitmap sourceBitmap = scaleBitmapImage;
+//        canvas.drawBitmap(sourceBitmap,
+//                new Rect(0, 0, sourceBitmap.getWidth(),
+//                        sourceBitmap.getHeight()),
+//                new Rect(0, 0, targetWidth, targetHeight), null);
+//        return targetBitmap;
+//    }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
+//    public static Bitmap RotateBitmap(Bitmap source, float angle){
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(angle);
+//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+//    }
 
     private boolean checkWriteExternalPermission() {
         String permission = "android.permission.WRITE_EXTERNAL_STORAGE";

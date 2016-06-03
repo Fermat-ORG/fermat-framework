@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWal
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 
@@ -42,6 +43,8 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
 
     long exchangeRate;
 
+    CryptoCurrency cryptoCurrency;
+
 
     public BitcoinLossProtectedWalletTransactionWalletRecord(UUID transactionId,
                                                              CryptoAddress addressFrom,
@@ -56,7 +59,8 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
                                                              Actors actorToType,
                                                              Actors actorFromType,
                                                              com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType,
-                                                             long exchangeRate) {
+                                                             long exchangeRate,
+                                                             CryptoCurrency cryptoCurrency) {
         TransactionId = transactionId;
         AddressFrom = addressFrom;
         RequestId = requestId;
@@ -70,7 +74,8 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
         ActorToType = actorToType;
         ActorFromType = actorFromType;
         BlockchainNetworkType = blockchainNetworkType;
-        exchangeRate = exchangeRate;
+        this.exchangeRate = exchangeRate;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -141,5 +146,10 @@ public class BitcoinLossProtectedWalletTransactionWalletRecord implements Bitcoi
     @Override
     public long getExchangRate() {
         return exchangeRate;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
     }
 }

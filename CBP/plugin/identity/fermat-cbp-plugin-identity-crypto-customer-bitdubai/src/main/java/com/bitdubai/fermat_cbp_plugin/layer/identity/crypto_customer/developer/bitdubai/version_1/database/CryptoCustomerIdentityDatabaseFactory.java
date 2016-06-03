@@ -9,9 +9,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.*;
 
 import java.util.UUID;
+
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_FIRST_KEY_COLUMN;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME;
 
 /**
  *  The Class  <code>com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.Crypto CustomerIdentityDatabaseFactory</code>
@@ -75,10 +81,10 @@ public class CryptoCustomerIdentityDatabaseFactory implements DealsWithPluginDat
              */
             table = databaseFactory.newTableFactory(ownerId, CRYPTO_CUSTOMER_TABLE_NAME);
 
-            table.addColumn(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.TRUE );
-            table.addColumn(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME                 , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME           ,DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME            , DatabaseDataType.TEXT, 100, Boolean.TRUE );
+            table.addColumn(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME                 , DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
+            table.addColumn(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME           ,DatabaseDataType.TEXT,  10, Boolean.FALSE);
 
             table.addIndex (CRYPTO_CUSTOMER_FIRST_KEY_COLUMN);
 

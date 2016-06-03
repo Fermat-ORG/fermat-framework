@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1;
 
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -143,6 +144,19 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
 
     @Override
     public AndroidCoreSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return (AndroidCoreSettings) getSettingsManager().loadAndGetSettings(publicKey);
+        AndroidCoreSettings androidCoreSettings = null;
+        try {
+            androidCoreSettings = (AndroidCoreSettings) getSettingsManager().loadAndGetSettings(publicKey);
+        }catch (Exception e) {
+            if (androidCoreSettings == null) {
+                androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
+                try {
+                    getSettingsManager().persistSettings(publicKey, androidCoreSettings);
+                } catch (CantPersistSettingsException e1) {
+                    throw new CantGetSettingsException(e1,"Settings manager fail in android core module","");
+                }
+            }
+        }
+        return androidCoreSettings;
     }
 }

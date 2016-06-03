@@ -16,54 +16,70 @@ public class ServicesHelpers {
 
     private AppManagerServiceHelper appManagerServiceHelper;
     private NotificationServiceHelper notificationServiceHelper;
-    private ClientSideBrokerServiceHelper clientSideBrokerServiceHelper;
     private ClientSideBrokerServiceHelperAidle clientSystemBrokerServiceAIDL;
 
+    private boolean isInBackground;
 
-    public ServicesHelpers(Context contextWeakReference){
-        appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
-        notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
-        clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
-        //clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
+
+    public ServicesHelpers(Context contextWeakReference,boolean isInBackground){
+        this.isInBackground = isInBackground;
+        if(!isInBackground) {
+            appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
+            notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
+            clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
+        }
     }
 
     public void bindServices(){
         Log.d(TAG, "binding every service");
-        appManagerServiceHelper.bindAppManagerService();
-        notificationServiceHelper.bindNotificationService();
-        clientSideBrokerServiceHelper.clientSideBrokerBoundService();
-        //clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
+        bindBackgroundServices();
+        if(!isInBackground) {
+            appManagerServiceHelper.bindAppManagerService();
+            notificationServiceHelper.bindNotificationService();
+            clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
+        }
     }
 
     public void unbindServices(){
         Log.d(TAG, "unbind every service");
-        appManagerServiceHelper.unbindAppManagerService();
-        notificationServiceHelper.unbindNotificationService();
-        clientSideBrokerServiceHelper.unbindClientSideBrokerService();
-        //clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
+        unbindBackgroundServices();
+        if(!isInBackground) {
+            appManagerServiceHelper.unbindAppManagerService();
+            notificationServiceHelper.unbindNotificationService();
+            clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
+        }
     }
+
+    /**
+     * Future background services
+     */
+    public void bindBackgroundServices() {
+
+    }
+
+    public void unbindBackgroundServices(){
+
+    }
+
 
     public FermatAppsManagerService getAppManager(){
         return appManagerServiceHelper.getFermatAppsManagerService();
     }
 
     public NotificationService getNotificationService() {
+        Log.i(TAG, "getNotificationService, service state: " + notificationServiceHelper.getNotificationService());
         return notificationServiceHelper.getNotificationService();
-    }
-
-    public ClientBrokerService getClientSideBrokerService() {
-        return clientSideBrokerServiceHelper.getClientSystemBrokerService();
-//        return clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
     }
 
     public void clear(){
         appManagerServiceHelper.clear();
         notificationServiceHelper.clear();
-        clientSideBrokerServiceHelper.clear();
     }
 
 
     public ClientBrokerService getClientSideBrokerServiceAIDL() {
         return clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
     }
+
+
 }

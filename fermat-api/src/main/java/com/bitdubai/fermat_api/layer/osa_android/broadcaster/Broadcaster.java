@@ -2,12 +2,14 @@ package com.bitdubai.fermat_api.layer.osa_android.broadcaster;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Matias Furszfer on 2016.02.02
  * Updated by Nelson Ramirez on 2016.03.04
  */
-public interface Broadcaster extends FermatManager {
+public interface Broadcaster extends FermatManager, Serializable {
 
     public static final String PROGRESS_BAR = "progressBar";
     public static final String PROGRESS_BAR_TEXT = "progressBarText";
@@ -18,7 +20,10 @@ public interface Broadcaster extends FermatManager {
      *
      * @param broadcasterType the broadcast type you want to fire. Can be {@link BroadcasterType#UPDATE_VIEW}
      * @param code            the message is going to be send by the broadcaster, this code let you deal with the broadcast the way yo want
+     *
+     * @Deprecated: use publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
      */
+    @Deprecated
     void publish(BroadcasterType broadcasterType, String code);
 
     /**
@@ -28,7 +33,10 @@ public interface Broadcaster extends FermatManager {
      *                        if you want to update a fragment or {@link BroadcasterType#NOTIFICATION_SERVICE} if you want to show a notification
      * @param appCode         the publicKey of the wallet or subapp is going show the notification or <code>null</code> if you want to update a view
      * @param code            the message is going to be send by the broadcaster, this code let you deal with the broadcast the way yo want
+     *
+     * @Deprecated: use publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle);
      */
+    @Deprecated
     void publish(BroadcasterType broadcasterType, String appCode, String code);
 
     /**
@@ -47,9 +55,10 @@ public interface Broadcaster extends FermatManager {
      * @param broadcasterType the broadcast type you want to fire. Can be {@link BroadcasterType#UPDATE_VIEW}
      *                        if you want to update a fragment or {@link BroadcasterType#NOTIFICATION_SERVICE} if you want to show a notification
      * @param bundle            the message is going to be send by the broadcaster, this bundle let you deal with the broadcast the way you want
+     * @param channelReceiversCode   the broadcast is for everyone who are listening in this channel code.
      * @return int the id of the notification
      */
-    int publish(BroadcasterType broadcasterType, FermatBundle bundle);
+    int publish(BroadcasterType broadcasterType, FermatBundle bundle,String channelReceiversCode);
 
 
 

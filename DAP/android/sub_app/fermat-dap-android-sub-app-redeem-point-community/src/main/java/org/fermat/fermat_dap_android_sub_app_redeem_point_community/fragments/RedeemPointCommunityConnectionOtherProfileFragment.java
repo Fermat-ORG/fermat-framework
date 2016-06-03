@@ -23,7 +23,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.AcceptDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
@@ -38,8 +40,8 @@ import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRe
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +58,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSession assetUserCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView redeemName;
     private FermatTextView redeemCryptoAddres;
@@ -64,7 +66,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private FermatTextView redeemBlockchainNetworkType;
     private FermatTextView redeemRegistrationDate;
     private FermatTextView redeemLastConnectionDate;
-    private static RedeemPointCommunitySubAppModuleManager manager;
+    private RedeemPointCommunitySubAppModuleManager moduleManager;
+    RedeemPointSettings settings = null;
     private ErrorManager errorManager;
 
     private Actor actorRedeem;
@@ -96,9 +99,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        assetUserCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
         actorRedeem = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
-        manager = assetUserCommunitySubAppSession.getModuleManager();
+
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }
@@ -243,7 +247,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                         (AssetRedeemPointCommunitySubAppSession) appSession,
                         null,
                         actorRedeem,
-                        manager.getActiveAssetRedeemPointIdentity());
+                        moduleManager.getActiveAssetRedeemPointIdentity());
 
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -293,8 +297,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private void updateButton() {
         ActorAssetRedeemPoint actorAssetRedeemPoint = null;
         try {
-            connectionState = manager.getActorRedeemRegisteredDAPConnectionState(this.actorRedeem.getActorPublicKey());
-            actorAssetRedeemPoint = manager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
+            connectionState = moduleManager.getActorRedeemRegisteredDAPConnectionState(this.actorRedeem.getActorPublicKey());
+            actorAssetRedeemPoint = moduleManager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
 
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
@@ -418,7 +422,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         actors = new ArrayList<>();
 
         try {
-            actorAssetRedeemPoint = manager.getActorRedeemPoint(actorRedeem.getActorPublicKey());
+            actorAssetRedeemPoint = moduleManager.getActorRedeemPoint(actorRedeem.getActorPublicKey());
 
             tempActor.add(new RedeemPointActorRecord(actorAssetRedeemPoint.getActorPublicKey(),
                     actorAssetRedeemPoint.getName(),

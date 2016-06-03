@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +45,8 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public interface ChatManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
+//public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -135,6 +138,7 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
+
     @Override
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
 
