@@ -36,7 +36,7 @@
         android:text="User Name"
         android:layout_marginTop="24dp"
         android:id="@+id/textViewChtTitle"
-        android:textColor="#47BF73"
+        android:textColor="#09D261"
         android:fontFamily="h"
         android:layout_below="@+id/cht_image_background"
         android:layout_centerHorizontal="true" />
