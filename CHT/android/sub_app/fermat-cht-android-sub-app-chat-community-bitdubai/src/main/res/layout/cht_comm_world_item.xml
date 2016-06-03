@@ -70,7 +70,8 @@
         android:visibility="gone"
         android:checked="true"
         android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:layout_alignEnd="@+id/community_name"
+        android:layout_alignRight="@+id/community_name"/>
 
     <RadioButton
         android:layout_width="wrap_content"
@@ -80,7 +81,8 @@
         android:visibility="gone"
         android:checked="true"
         android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:layout_alignEnd="@+id/community_name"
+        android:layout_alignRight="@+id/community_name"/>
 
     <RadioButton
         android:layout_width="wrap_content"
@@ -90,5 +92,6 @@
         android:visibility="gone"
         android:checked="true"
         android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:layout_alignEnd="@+id/community_name"
+        android:layout_alignRight="@+id/community_name"/>
 </RelativeLayout>
