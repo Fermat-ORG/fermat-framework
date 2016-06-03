@@ -39,6 +39,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
+import org.bitcoinj.utils.Fiat;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -287,10 +289,12 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                                     public void onDismiss(DialogInterface dialog) {
                                         if (!containWallet(selectedItem)) {
                                             FiatCurrency cashCurrency = getCashCurrency(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());
-                                            selectedItem.setCurrency(cashCurrency);
-                                            stockWallets.add(selectedItem);
-                                            adapter.changeDataSet(stockWallets);
-                                            showOrHideNoSelectedWalletsView();
+                                            if(cashCurrency != null) {
+                                                selectedItem.setCurrency(cashCurrency);
+                                                stockWallets.add(selectedItem);
+                                                adapter.changeDataSet(stockWallets);
+                                                showOrHideNoSelectedWalletsView();
+                                            }
                                         }
                                     }
                                 });
@@ -364,15 +368,20 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
-                        FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
-                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
-                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
                         if (!containWallet(selectedWallet)) {
-                            selectedWallet.setCurrency(currency_dialog);
-                            stockWallets.add(selectedWallet);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
+
+                            if(inputDialogCBP.getCreatedBankAccount() != null) {
+
+                                FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
+                                String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
+                                bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
+                                bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
+
+                                selectedWallet.setCurrency(currency_dialog);
+                                stockWallets.add(selectedWallet);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
                         }
                     }
                 });
@@ -514,21 +523,16 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     }
 
     private FiatCurrency getCashCurrency(String walletPublicKey) {
+
+        FiatCurrency currency;
+
         try {
-
-            return moduleManager.getCashCurrency(walletPublicKey);
-
+            currency = moduleManager.getCashCurrency(walletPublicKey);
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-            else
-                Log.e(TAG, ex.getMessage(), ex);
+            currency = null;
         }
 
-        return null;
+        return currency;
     }
 
 }
