@@ -405,9 +405,9 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-        if(data.getUserAssetNegotiation() != null){
-            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY,appSession.getAppPublicKey());
-        }else {
+        if (data.getUserAssetNegotiation() != null) {
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY, appSession.getAppPublicKey());
+        } else {
             changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
         }
     }

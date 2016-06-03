@@ -29,6 +29,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
+* Yayo
 * Navi Charlie
 * Navi Sierra
 * Fsociety
@@ -43,6 +44,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | | Kabuto | | |
 | | Mordor | | |
 | | Skynet | | |
+| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -153,6 +155,12 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
+
+* **Victor Mars [Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
 
 <br>
 
@@ -269,12 +277,6 @@ We are putting together a team of talented developers, especially passionate abo
 ---
     Email:   andyaacm@gmail.com
     Github:  https://github.com/macuare
-
-* **Luis Torres [New Developer]** <br/>
----
-      Email:   lutor1106@gmail.com
-      Skype:   luis.fernando.torres.leon
-      Github:  https://github.com/iLutor
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
@@ -336,29 +338,44 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 #### Skynet Team Members:
 
-* **Nerio Enrique Indriago Ortega [Full Team Leader]** <br/>
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
 ---
       Email:   nerioindriago@gmail.com
       Skype:   nerioindriago
       Github:  https://github.com/nindriago
 
-* **Penelope Quintero [Veteran Developer]** <br/>
+* **Penelope Quintero [New Developer]** <br/>
 ---
       Email:   pennyxz@gmail.com
       Skype:   pennyxz
       Github:  https://github.com/pennyxz
 
-* **Jinmy Bohorquez [Veteran Developer]** <br/>
+* **Jinmy Bohorquez [New Developer]** <br/>
 ---
       Email:   jinmybohorquez@gmail.com
       Skype:   jinmyb22
       Github:  https://github.com/jinmyjbv
 
-* **Frank Contreras [Veteran Developer]** <br/>
+* **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
       Github:  https://github.com/javafrank
+<br/>
+
+### Team Yayo:
+-----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/YAYO_1.jpg "Logo Yayo Team")
+On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
+We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
+
+#### Team Members:
+
+* **Victor Mars [Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
 
 * **José Briceño [New Developer]** <br/>
 ---
@@ -366,8 +383,20 @@ We are a team with diverse tastes and full of color making it an explosive integ
       Skype:   josebricenor
       Github:  https://github.com/josebricenor
 
-<br/>
+* **Luis Torres [New Developer]** <br/>
+---
+      Email:   lutor1106@gmail.com
+      Skype:   luis.fernando.torres.leon
+      Github:  https://github.com/iLutor
 
+* **Eduardo Guerere [New Developer]** <br/>
+---
+      Email:   eduardoguerere@gmail.com
+      Skype:   eduardo.guerere
+      Github:  https://github.com/eduardoguerere
+
+<br>
+We don't mean to make fun of everything, just about the serious things.
 <br>
 
 ### Code Butchers Team:

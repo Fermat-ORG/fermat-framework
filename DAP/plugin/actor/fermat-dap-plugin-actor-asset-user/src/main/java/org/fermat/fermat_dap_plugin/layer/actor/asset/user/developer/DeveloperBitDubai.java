@@ -25,8 +25,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
         try {
             registerVersion(new AssetUserActorPluginRoot());
-        }
-        catch (CantRegisterVersionException e) {
+        } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e,
                     "Plugin Developer BitDubai",
                     "Can't register Plugins version DAP Asset User");

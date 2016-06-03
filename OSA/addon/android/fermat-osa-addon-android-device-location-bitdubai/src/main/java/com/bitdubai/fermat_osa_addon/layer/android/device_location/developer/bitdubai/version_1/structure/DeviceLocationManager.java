@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.structure;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
-
 
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
@@ -68,35 +69,45 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
 
             // getting GPS status
             if (locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
+                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                 //"GPS Enabled"
-                if (locationManager != null)
-                {
+                if (locationManager != null) {
                     deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                     if (deviceLocation != null) {
 
-                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationSource.GPS);
+                        location = new DeviceLocation(deviceLocation.getLatitude(), deviceLocation.getLongitude(), deviceLocation.getTime(), deviceLocation.getAltitude(), LocationSource.GPS);
 
-                    }
-                    else{
+                    } else {
                         /**
                          * I not get location device return an exception
                          */
-                        throw  new CantGetDeviceLocationException("Not get GPS Enabled");
+                        throw new CantGetDeviceLocationException("Not get GPS Enabled");
                     }
-                }
-                else{
+                } else {
                     /**
                      * I not get location device return an exception
                      */
-                    throw  new CantGetDeviceLocationException("LocationManager is null");
+                    throw new CantGetDeviceLocationException("LocationManager is null");
                 }
-            }
-            else {
+            } else {
 
                 // GPS not enabled, get status from Network Provider
                 if (locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates( android.location.LocationManager.NETWORK_PROVIDER,  MIN_TIME_BW_UPDATES,  MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
+
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    Activity#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for Activity#requestPermissions for more details.
+                            return null;
+                        }
+                    }
+
+                    locationManager.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                     // "Network"
                     if (locationManager != null) {
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);

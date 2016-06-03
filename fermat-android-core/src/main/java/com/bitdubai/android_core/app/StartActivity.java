@@ -63,13 +63,6 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     Animation animation1;
     Animation animation2;
 
-    /**
-     * Service
-     */
-    private BoundService mBoundService;
-    boolean mServiceConnected = false;
-
-
     private StartReceiver startReceiver;
     private boolean myReceiverIsRegistered;
     private ScheduledExecutorService scheduledExecutorService;

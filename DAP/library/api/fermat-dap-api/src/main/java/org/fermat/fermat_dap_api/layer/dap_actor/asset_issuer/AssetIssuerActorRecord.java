@@ -15,19 +15,19 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAs
  */
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
-    private String                  publicLinkedIdentity;
-    private String                  actorPublicKey;
-    private String                  name;
-    private String                  description;
-    private long                    registrationDate;
-    private long                    lastConnectionDate;
-    private DAPConnectionState      dapConnectionState;
-    private Location                location;
-    private Double                  locationLatitude;
-    private Double                  locationLongitude;
-    private byte[]                  profileImage;
-    private String                  extendedPublicKey;
-    private Actors                  actorsType              = Actors.DAP_ASSET_ISSUER;
+    private String publicLinkedIdentity;
+    private String actorPublicKey;
+    private String name;
+    private String description;
+    private long registrationDate;
+    private long lastConnectionDate;
+    private DAPConnectionState dapConnectionState;
+    private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
+    private byte[] profileImage;
+    private String extendedPublicKey;
+    private Actors actorsType = Actors.DAP_ASSET_ISSUER;
 
 
     /**
@@ -80,19 +80,19 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final String extendedPublicKey,
                                   final byte[] profileImage) {
 
-        this.actorPublicKey     = actorPublicKey;
-        this.name               = name;
+        this.actorPublicKey = actorPublicKey;
+        this.name = name;
         if (dapConnectionState != null)
             this.dapConnectionState = dapConnectionState;
-        this.locationLatitude   = locationLatitude;
-        this.locationLongitude  = locationLongitude;
-        this.registrationDate   = registrationDate;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.registrationDate = registrationDate;
         this.lastConnectionDate = lastConnectionDate;
         if (description != null)
-            this.description        = description;
+            this.description = description;
         if (extendedPublicKey != null)
-            this.extendedPublicKey  = extendedPublicKey;
-        this.actorsType         = actorsType;
+            this.extendedPublicKey = extendedPublicKey;
+        this.actorsType = actorsType;
 
         this.setProfileImage(profileImage);
     }
@@ -193,7 +193,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        if(profileImage != null)
+        if (profileImage != null)
             this.profileImage = profileImage.clone();
         else
             this.profileImage = new byte[0];
@@ -263,42 +263,42 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         Gson gson = new Gson();
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("publicLinkedIdentity",  publicLinkedIdentity);
-        jsonObject.addProperty("actorPublicKey",        actorPublicKey);
-        jsonObject.addProperty("name",                  name);
-        jsonObject.addProperty("description",           description);
-        jsonObject.addProperty("registrationDate",      registrationDate);
-        jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
-        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
-        jsonObject.addProperty("location",              location.toString());
-        jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
-        jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
-        jsonObject.addProperty("actorsType",            actorsType.toString());
-        jsonObject.addProperty("extendedPublicKey",     extendedPublicKey);
-        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("publicLinkedIdentity", publicLinkedIdentity);
+        jsonObject.addProperty("actorPublicKey", actorPublicKey);
+        jsonObject.addProperty("name", name);
+        jsonObject.addProperty("description", description);
+        jsonObject.addProperty("registrationDate", registrationDate);
+        jsonObject.addProperty("lastConnectionDate", lastConnectionDate);
+        jsonObject.addProperty("dapConnectionState", dapConnectionState.toString());
+        jsonObject.addProperty("location", location.toString());
+        jsonObject.addProperty("locationLatitude", locationLatitude.toString());
+        jsonObject.addProperty("locationLongitude", locationLongitude.toString());
+        jsonObject.addProperty("actorsType", actorsType.toString());
+        jsonObject.addProperty("extendedPublicKey", extendedPublicKey);
+        jsonObject.addProperty("profileImage", Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
 
     @Override
     public String toString() {
         String profileImageIssuer = null;
-        if(profileImage != null)
+        if (profileImage != null)
             profileImageIssuer = Base64.encodeToString(profileImage, Base64.DEFAULT);
 
-        return "AssetIssuerActorRecord{"    +
-                "publicLinkedIdentity='"    + publicLinkedIdentity + '\'' +
-                ", actorPublicKey='"        + actorPublicKey + '\'' +
-                ", name='"                  + name + '\'' +
-                ", description='"           + description + '\'' +
-                ", registrationDate="       + registrationDate +
-                ", lastConnectionDate="     + lastConnectionDate +
-                ", dapConnectionState="     + dapConnectionState +
-                ", location="               + location +
-                ", locationLatitude="       + locationLatitude +
-                ", locationLongitude="      + locationLongitude +
-                ", profileImage="           + profileImageIssuer +
-                ", actorsType="             + actorsType +
-                ", extendedPublicKey='"     + extendedPublicKey + '\'' +
+        return "AssetIssuerActorRecord{" +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", lastConnectionDate=" + lastConnectionDate +
+                ", dapConnectionState=" + dapConnectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", profileImage=" + profileImageIssuer +
+                ", actorsType=" + actorsType +
+                ", extendedPublicKey='" + extendedPublicKey + '\'' +
                 '}';
     }
 }

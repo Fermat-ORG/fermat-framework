@@ -100,10 +100,10 @@ dependencies {
 
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
-    compile project(':fermat-pip-android-sub-app-shop-manager-bitdubai')
+//    compile project(':fermat-pip-android-sub-app-shop-manager-bitdubai')
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
-    compile project(':fermat-pip-android-sub-app-wallet-factory-bitdubai')
-    compile project(':fermat-pip-android-sub-app-wallet-publisher-bitdubai')
+//    compile project(':fermat-pip-android-sub-app-wallet-factory-bitdubai')
+//    compile project(':fermat-pip-android-sub-app-wallet-publisher-bitdubai')
     //cbp wallets
     compile project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
     compile project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
@@ -150,14 +150,14 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:support-v13:23.1.1'
     //compile 'com.google.android.gms:play-services:6.5.87'
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
+   // androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.5.3'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:design:23.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
 
     //widget
-    compile project(':bitcoin_exchange_widget')
+//    compile project(':bitcoin_exchange_widget')
     compile 'ch.acra:acra:4.6.2'
     configurations {
         all {

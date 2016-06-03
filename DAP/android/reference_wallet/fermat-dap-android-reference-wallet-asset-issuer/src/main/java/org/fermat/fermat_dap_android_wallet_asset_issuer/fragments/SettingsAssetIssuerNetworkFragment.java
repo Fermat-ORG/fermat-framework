@@ -51,7 +51,7 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetIssuerSession assetIssuerSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
+    //    SettingsManager<AssetIssuerSettings> settingsManager;
     AssetIssuerSettings settings = null;
 
     public static SettingsAssetIssuerNetworkFragment newInstance() {

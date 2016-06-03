@@ -13,14 +13,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
-
 /**
  * Created by rodrigo on 9/4/15.
  */
 public class DigitalAssetTests {
     DigitalAsset digitalAsset;
+
     @Test
-    public void createNewDigitalAsset(){
+    public void createNewDigitalAsset() {
         digitalAsset = new DigitalAsset();
         // I validate is in draft state.
         Assert.assertEquals(State.DRAFT, digitalAsset.getState());

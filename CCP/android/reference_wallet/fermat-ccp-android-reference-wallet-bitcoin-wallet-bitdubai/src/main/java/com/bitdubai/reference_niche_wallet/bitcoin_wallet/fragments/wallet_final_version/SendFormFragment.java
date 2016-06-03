@@ -388,6 +388,22 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 }
             }
         });
+
+        contactName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
+            }
+        });
         /**
          *  Amount observer
          */

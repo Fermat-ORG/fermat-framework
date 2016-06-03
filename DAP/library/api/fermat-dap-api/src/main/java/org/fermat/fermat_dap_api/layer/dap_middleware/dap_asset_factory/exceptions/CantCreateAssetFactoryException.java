@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 08/09/15.
  */
-public class CantCreateAssetFactoryException extends FermatException{
+public class CantCreateAssetFactoryException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -15,7 +15,8 @@ public class CantCreateAssetFactoryException extends FermatException{
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
     static final String DEFAULT_MESSAGE = "There was an error Create Asset Factory.";
+
     public CantCreateAssetFactoryException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

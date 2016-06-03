@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 02/11/15.
  */
-public class CantInitializeAssetIssuerIdentityDatabaseException extends FermatException{
+public class CantInitializeAssetIssuerIdentityDatabaseException extends FermatException {
     public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE INTRA USER IDENTITY DATABASE EXCEPTION";
 
     public CantInitializeAssetIssuerIdentityDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {

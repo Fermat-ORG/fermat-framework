@@ -25,8 +25,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
         try {
             registerVersion(new RedeemPointActorPluginRoot());
-        }
-        catch (CantRegisterVersionException e) {
+        } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e,
                     "Plugin Developer BitDubai",
                     "Can't register Plugins version DAP Redeem Point");

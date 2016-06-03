@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 2/02/16.
  */
-public final class WalletUtilities implements Serializable{
+public final class WalletUtilities implements Serializable {
 
     //VARIABLE DECLARATION
     public static String WALLET_PUBLIC_KEY = "walletPublicKeyTest";

@@ -9,7 +9,7 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
  */
 public class Loggers {
 
-    public static final int TYPE_PLUGIN=1;
+    public static final int TYPE_PLUGIN = 1;
 
     public String picture;
 

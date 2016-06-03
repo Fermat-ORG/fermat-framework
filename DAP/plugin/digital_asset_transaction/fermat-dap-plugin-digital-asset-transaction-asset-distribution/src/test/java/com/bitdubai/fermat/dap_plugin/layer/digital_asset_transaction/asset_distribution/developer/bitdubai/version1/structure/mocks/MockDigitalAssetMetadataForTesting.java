@@ -11,7 +11,7 @@ public class MockDigitalAssetMetadataForTesting extends DigitalAssetMetadata {
     public MockDigitalAssetMetadataForTesting() throws CantDefineContractPropertyException {
         setDigitalAsset(new MockDigitalAssetForTesting());
 //        setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-        String hash=getDigitalAssetHash();
+        String hash = getDigitalAssetHash();
         //System.out.println("DAM Hash: "+hash);
     }
 

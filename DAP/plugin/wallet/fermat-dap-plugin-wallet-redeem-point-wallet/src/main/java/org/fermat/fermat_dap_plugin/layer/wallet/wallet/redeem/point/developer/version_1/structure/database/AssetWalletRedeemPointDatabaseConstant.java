@@ -15,10 +15,10 @@ public class AssetWalletRedeemPointDatabaseConstant {
     public static final String ASSET_WALLET_REDEEM_POINT_ASSET_PUBLIC_KEY_COLUMN_NAME = "assetPublicKey";
     public static final String ASSET_WALLET_REDEEM_POINT_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String ASSET_WALLET_REDEEM_POINT_ADDRESS_TO_COLUMN_NAME = "addressTo";
-    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_COLUMN_NAME= "actorFrom";
-    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_TO_COLUMN_NAME= "actorTo";
-    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_TYPE_COLUMN_NAME= "actorFromType";
-    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_TO_TYPE_COLUMN_NAME= "actorToType";
+    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_COLUMN_NAME = "actorFrom";
+    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_TO_COLUMN_NAME = "actorTo";
+    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_TYPE_COLUMN_NAME = "actorFromType";
+    public static final String ASSET_WALLET_REDEEM_POINT_ACTOR_TO_TYPE_COLUMN_NAME = "actorToType";
     public static final String ASSET_WALLET_REDEEM_POINT_AMOUNT_COLUMN_NAME = "amount";
     public static final String ASSET_WALLET_REDEEM_POINT_TYPE_COLUMN_NAME = "type";
     public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME = "balanceType";

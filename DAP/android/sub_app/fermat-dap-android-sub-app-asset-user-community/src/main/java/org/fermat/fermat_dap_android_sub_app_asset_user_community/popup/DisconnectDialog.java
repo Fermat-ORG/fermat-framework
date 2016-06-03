@@ -53,9 +53,10 @@ public class DisconnectDialog extends FermatDialog<AssetUserCommunitySubAppSessi
         this.actor = actor;
         this.identity = identity;
     }
+
     public DisconnectDialog(Activity a,
-                         final AssetUserCommunitySubAppSession actorUserSubAppSession,
-                         final SubAppResourcesProviderManager subAppResources) {
+                            final AssetUserCommunitySubAppSession actorUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources) {
         super(a, actorUserSubAppSession, subAppResources);
         this.actor = null;
         this.identity = null;

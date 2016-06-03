@@ -62,7 +62,6 @@ public class AssetFactorySession extends AbstractFermatSession<InstalledSubApp, 
 //    public AssetFactoryModuleManager getManager() {
 //        return manager;
 //    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by Nerio on 07/03/16.
  */
-public class UserAssetCommunityHeaderCLickListener implements View.OnClickListener{
+public class UserAssetCommunityHeaderCLickListener implements View.OnClickListener {
 
     public UserAssetCommunityHeaderCLickListener() {
     }

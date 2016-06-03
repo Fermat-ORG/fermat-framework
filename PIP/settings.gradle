@@ -41,8 +41,8 @@ project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new F
 include ':fermat-pip-plugin-module-developer-bitdubai'
 project(':fermat-pip-plugin-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-developer-bitdubai')
 
-include ':fermat-pip-plugin-module-notification-bitdubai'
-project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-notification-bitdubai')
+//include ':fermat-pip-plugin-module-notification-bitdubai'
+//project(':fermat-pip-plugin-module-notification-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-module-notification-bitdubai')
 
 include ':fermat-pip-plugin-network-service-subapp-resources-bitdubai'
 project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai').projectDir = new File('PIP/plugin/network_service/fermat-pip-plugin-network-service-subapp-resources-bitdubai')
@@ -63,14 +63,14 @@ project(':fermat-pip-plugin-world-crypto-index-bitdubai').projectDir = new File(
 include ':fermat-pip-android-sub-app-developer-bitdubai'
 project(':fermat-pip-android-sub-app-developer-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai')
 
-include ':fermat-pip-android-sub-app-shop-manager-bitdubai'
-project(':fermat-pip-android-sub-app-shop-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-shop-manager-bitdubai')
+//include ':fermat-pip-android-sub-app-shop-manager-bitdubai'
+//project(':fermat-pip-android-sub-app-shop-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-shop-manager-bitdubai')
 
 include ':fermat-pip-android-sub-app-sub-app-manager-bitdubai'
 project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai')
 
-include ':fermat-pip-android-sub-app-wallet-factory-bitdubai'
-project(':fermat-pip-android-sub-app-wallet-factory-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-wallet-factory-bitdubai')
-
-include ':fermat-pip-android-sub-app-wallet-publisher-bitdubai'
-project(':fermat-pip-android-sub-app-wallet-publisher-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-wallet-publisher-bitdubai')
+//include ':fermat-pip-android-sub-app-wallet-factory-bitdubai'
+//project(':fermat-pip-android-sub-app-wallet-factory-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-wallet-factory-bitdubai')
+//
+//include ':fermat-pip-android-sub-app-wallet-publisher-bitdubai'
+//project(':fermat-pip-android-sub-app-wallet-publisher-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-wallet-publisher-bitdubai')

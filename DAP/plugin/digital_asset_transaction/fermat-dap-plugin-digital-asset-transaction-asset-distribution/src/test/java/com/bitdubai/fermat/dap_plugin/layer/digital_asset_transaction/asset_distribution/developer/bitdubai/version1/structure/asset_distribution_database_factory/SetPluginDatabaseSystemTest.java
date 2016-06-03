@@ -21,12 +21,12 @@ public class SetPluginDatabaseSystemTest {
 
 
     @Before
-    public void init() throws Exception{
+    public void init() throws Exception {
         assetDistributionDatabaseFactory = new AssetDistributionDatabaseFactory(mockPluginDatabaseSystem);
     }
 
     @Test
-    public void setPluginDatabaseSystemTest() throws Exception{
+    public void setPluginDatabaseSystemTest() throws Exception {
         assetDistributionDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
     }
 

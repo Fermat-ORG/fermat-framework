@@ -40,7 +40,7 @@ public class CommunicationNetworkServiceDatabaseFactory {
      */
     public CommunicationNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /**

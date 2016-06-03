@@ -98,7 +98,6 @@ public class AssetIssuerSession extends AbstractFermatSession<InstalledWallet, A
 //    public void setSettings(WalletSettings settings) {
 //        this.settings = settings;
 //    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

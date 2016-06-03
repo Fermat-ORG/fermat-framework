@@ -22,7 +22,7 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet, Ass
     public static final String PREVIEW_IMGS = "preview_images_wallet_user";
     public static final String DEVELOPER_NAME = "developer_name_wallet_user";
 
-//    private WalletResourcesProviderManager resourceManager;
+    //    private WalletResourcesProviderManager resourceManager;
 //    private AssetUserWalletSubAppModuleManager walletManager;
 //    private InstalledWallet installedWallet;
 //    private ErrorManager errorManager;

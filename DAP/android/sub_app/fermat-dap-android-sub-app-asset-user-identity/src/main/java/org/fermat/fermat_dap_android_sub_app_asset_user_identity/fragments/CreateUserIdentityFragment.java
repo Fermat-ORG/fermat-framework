@@ -82,7 +82,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-//    SettingsManager<UserIdentitySettings> settingsManager;
+    //    SettingsManager<UserIdentitySettings> settingsManager;
     UserIdentitySettings userIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -300,7 +300,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                 //Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mBrokerImage);
             }
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-            brokerImageByteArray = toByteArray(bitmap);
+            brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mIdentityName.setText(identitySelected.getAlias());
@@ -326,7 +326,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
-                            brokerImageByteArray = toByteArray(imageBitmap);
+                            brokerImageByteArray = ImagesUtils.toByteArray(imageBitmap);
                             updateProfileImage = true;
                             Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mIdentityImage);
                         }
@@ -430,8 +430,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
@@ -460,18 +460,6 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
             return true;
 
         return true;
-    }
-
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 
     @Override
