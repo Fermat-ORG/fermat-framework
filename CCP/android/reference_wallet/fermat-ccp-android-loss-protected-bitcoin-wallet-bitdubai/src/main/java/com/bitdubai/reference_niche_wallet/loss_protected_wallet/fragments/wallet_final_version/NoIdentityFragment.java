@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**
  * Created by mati on 2015.11.25..
@@ -23,7 +23,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     /**
      * Plaform reference
      */
-    private LossProtectedWalletSessionReferenceApp referenceWalletSession;
+    private LossProtectedWalletSession referenceWalletSession;
     private IntraUserModuleManager intraUserModuleManager;
 
     /**
@@ -40,7 +40,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (LossProtectedWalletSessionReferenceApp) appSession;
+            referenceWalletSession = (LossProtectedWalletSession) appSession;
 
         } catch (Exception e){
             e.printStackTrace();

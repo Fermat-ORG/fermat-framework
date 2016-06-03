@@ -17,7 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -36,7 +36,7 @@ public class CustomChartMarkerdView extends MarkerView {
 
     private TextView marker_element;
     private List<BitcoinLossProtectedWalletSpend> spend_list;
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletmanager;
     private ErrorManager errorManager;
     private Activity activity;
@@ -49,7 +49,7 @@ public class CustomChartMarkerdView extends MarkerView {
      * @param layoutResource the layout resource to use for the MarkerView
      */
     public CustomChartMarkerdView(Context context,int layoutResource, List<BitcoinLossProtectedWalletSpend> spendingList
-    ,LossProtectedWalletSessionReferenceApp session , ErrorManager error,LossProtectedWallet manager) {
+    ,LossProtectedWalletSession session , ErrorManager error,LossProtectedWallet manager) {
         super(context, layoutResource);
 
         marker_element = (TextView) findViewById(R.id.marker_element);

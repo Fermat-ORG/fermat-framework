@@ -38,7 +38,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletCo
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private CryptoWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
-    private ReferenceWalletSessionReferenceApp referenceWalletSession;
+    private ReferenceWalletSession referenceWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -76,7 +76,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
         try {
             // setting up  module
-            referenceWalletSession = (ReferenceWalletSessionReferenceApp) appSession;
+            referenceWalletSession = (ReferenceWalletSession) appSession;
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = referenceWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

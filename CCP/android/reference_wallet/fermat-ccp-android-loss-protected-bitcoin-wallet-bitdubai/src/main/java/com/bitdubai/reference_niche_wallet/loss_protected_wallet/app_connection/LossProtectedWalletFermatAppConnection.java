@@ -21,16 +21,16 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.LossProtectedWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.LossProtectedWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.LossProtectedWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class LossProtectedWalletFermatAppConnection extends AppConnections<LossProtectedWalletSessionReferenceApp>{
+public class LossProtectedWalletFermatAppConnection extends AppConnections<LossProtectedWalletSession>{
 
     private LossProtectedWallet moduleManager = null;
-    private LossProtectedWalletSessionReferenceApp lossWalletSession;
+    private LossProtectedWalletSession lossWalletSession;
 
     public LossProtectedWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -54,7 +54,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new LossProtectedWalletSessionReferenceApp();
+        return new LossProtectedWalletSession();
     }
 
     @Override

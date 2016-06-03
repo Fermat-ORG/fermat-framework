@@ -19,7 +19,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_Send_Payment_Dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,7 +35,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     private onRefreshList onRefreshList;
 
     LossProtectedWallet lossProtectedWallet;
-    LossProtectedWalletSessionReferenceApp appSession;
+    LossProtectedWalletSession appSession;
     Typeface tf;
 
     boolean lossProtectedEnabled;
@@ -46,7 +46,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.lossProtectedWallet = cryptoWallet;
         this.appSession =referenceWalletSession;

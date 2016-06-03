@@ -66,7 +66,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTyp
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -90,7 +90,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSessionReferenceApp,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -112,7 +112,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     /**
      * Wallet session
      */
-    ReferenceWalletSessionReferenceApp referenceWalletSession;
+    ReferenceWalletSession referenceWalletSession;
     // unsorted list items
     List<CryptoWalletWalletContact> mItems;
     // array list to store section positions
@@ -162,7 +162,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSessionReferenceApp) appSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
@@ -599,7 +599,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(ReferenceWalletSessionReferenceApp appSession) {
+    public void setWalletSession(ReferenceWalletSession appSession) {
         this.appSession = appSession;
     }
 

@@ -31,7 +31,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
@@ -55,11 +55,11 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by mati on 2016.02.09..
  */
-public class LossProtectedSettingsFragment extends FermatPreferenceFragment<LossProtectedWalletSessionReferenceApp,WalletResourcesProviderManager> {
+public class LossProtectedSettingsFragment extends FermatPreferenceFragment<LossProtectedWalletSession,WalletResourcesProviderManager> {
 
 
 
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletManager;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     //private LossProtectedWalletSettings bitcoinWalletSettings = null;

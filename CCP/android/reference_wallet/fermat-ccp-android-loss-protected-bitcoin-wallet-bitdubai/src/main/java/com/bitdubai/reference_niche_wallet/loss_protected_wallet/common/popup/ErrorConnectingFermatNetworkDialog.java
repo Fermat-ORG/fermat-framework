@@ -10,13 +10,13 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**
  * Created by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<LossProtectedWalletSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<LossProtectedWalletSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * onClick listeners
@@ -35,7 +35,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<LossProtect
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity activity,
-                                              final LossProtectedWalletSessionReferenceApp referenceWalletSession,
+                                              final LossProtectedWalletSession referenceWalletSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(activity, referenceWalletSession, subAppResources);

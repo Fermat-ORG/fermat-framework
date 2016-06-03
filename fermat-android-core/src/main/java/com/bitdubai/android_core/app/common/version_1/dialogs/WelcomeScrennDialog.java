@@ -12,11 +12,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Created by mati on 2015.11.27..
  */
-public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSessionReferenceApp,SubAppResourcesProviderManager> implements View.OnClickListener{
+public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,SubAppResourcesProviderManager> implements View.OnClickListener{
 
     private final Activity activity;
     private RadioGroup radio_group;
@@ -43,7 +44,7 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSessionRefe
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public WelcomeScrennDialog(Activity activity, ReferenceWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources) {
+    public WelcomeScrennDialog(Activity activity, ReferenceAppFermatSession fermatSession, SubAppResourcesProviderManager resources) {
         super(activity, fermatSession, resources);
         this.activity = activity;
     }

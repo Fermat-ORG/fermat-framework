@@ -35,10 +35,8 @@ dependencies {
     compile project(':fermat-ccp-api')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
-<<<<<<< HEAD
+
     //compile 'com.google.android:android:4.1.1.4'
-=======
->>>>>>> 4a937b0d89e9c7006b3e28a3e319cefa4b2e3b41
 }
 
 test {

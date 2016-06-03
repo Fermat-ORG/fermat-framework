@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 
 
 /**
  * Created by mati on 2016.02.20..
  */
-public class MnemonicFragment extends AbstractFermatFragment<ReferenceWalletSessionReferenceApp,ResourceProviderManager> {
+public class MnemonicFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> {
 
     /**
      * Platform

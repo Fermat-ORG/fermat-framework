@@ -18,7 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.util.UUID;
 
@@ -44,7 +44,7 @@ private UUID requestId;
 
 private LossProtectedWallet lossProtectedWallet;
 
-private LossProtectedWalletSessionReferenceApp appSession;
+private LossProtectedWalletSession appSession;
         /**
          *  UI components
          */
@@ -53,7 +53,7 @@ private LossProtectedWalletSessionReferenceApp appSession;
 
 
 public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
-                                   LossProtectedWalletSessionReferenceApp appSession, BlockchainNetworkType blockchainNetworkType,LossProtectedWallet lossProtectedWallet){
+                                   LossProtectedWalletSession appSession, BlockchainNetworkType blockchainNetworkType,LossProtectedWallet lossProtectedWallet){
     super(a);
 
     this.requestId = requestId;

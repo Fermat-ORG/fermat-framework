@@ -13,11 +13,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
-<<<<<<< HEAD
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-=======
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
+
 
 
 import java.util.List;
@@ -33,21 +31,16 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
     FermatWallet cryptoWallet;
-<<<<<<< HEAD
+
     FermatWalletSessionReferenceApp referenceWalletSession;
-=======
-    ReferenceAppFermatWalletSession referenceWalletSession;
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-<<<<<<< HEAD
     public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, FermatWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
-=======
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, ReferenceAppFermatWalletSession referenceWalletSession,onRefreshList onRefresh) {
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
+
+
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;

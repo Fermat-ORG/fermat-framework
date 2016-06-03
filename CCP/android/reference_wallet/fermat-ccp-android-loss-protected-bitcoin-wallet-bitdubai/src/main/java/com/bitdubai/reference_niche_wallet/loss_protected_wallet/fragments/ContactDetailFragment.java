@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ReceiveFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -92,7 +92,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
      *  Resources
      */
 
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private FermatButton send_button;
     private FermatButton receive_button;
     private ImageView img_update;
@@ -122,7 +122,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp)appSession;
+            lossProtectedWalletSession = (LossProtectedWalletSession)appSession;
             setHasOptionsMenu(true);
             lossProtectedWalletContact = lossProtectedWalletSession.getLastContactSelected();
             if(lossProtectedWalletContact==null){

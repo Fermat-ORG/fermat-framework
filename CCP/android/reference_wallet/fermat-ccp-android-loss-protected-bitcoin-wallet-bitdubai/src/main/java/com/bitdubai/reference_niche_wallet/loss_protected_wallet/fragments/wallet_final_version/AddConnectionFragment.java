@@ -38,7 +38,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProt
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList = new ArrayList<>();
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -77,7 +77,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
         try {
             // setting up  module
-            lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp) appSession;
+            lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
             moduleManager = lossProtectedWalletSession.getModuleManager();
             errorManager = lossProtectedWalletSession.getErrorManager();
 

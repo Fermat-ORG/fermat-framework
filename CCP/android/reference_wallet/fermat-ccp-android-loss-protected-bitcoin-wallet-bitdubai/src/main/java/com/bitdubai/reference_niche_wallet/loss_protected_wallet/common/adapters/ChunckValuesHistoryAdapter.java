@@ -18,7 +18,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
     LossProtectedWallet cryptoWallet;
-    LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    LossProtectedWalletSession lossProtectedWalletSession;
     Typeface tf;
     /**
      * DATA
@@ -42,7 +42,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         super(context);
     }
 
-    public ChunckValuesHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp lossProtectedWalletSession, onRefreshList onRefresh) {
+    public ChunckValuesHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession lossProtectedWalletSession, onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.lossProtectedWalletSession =lossProtectedWalletSession;

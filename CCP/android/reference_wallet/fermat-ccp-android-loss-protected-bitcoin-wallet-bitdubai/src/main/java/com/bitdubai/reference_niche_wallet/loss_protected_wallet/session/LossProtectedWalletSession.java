@@ -153,20 +153,17 @@ public class LossProtectedWalletSession extends AbstractReferenceAppFermatSessio
         return "public_key_intra_user_commmunity";
     }
 
-<<<<<<< HEAD:CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/loss_protected_wallet/session/LossProtectedWalletSession.java
-    private String searchConnectionPublicKey(String code){
+  /* private String searchConnectionPublicKey(String code){
         for(FermatApp fermatApp : getPosibleConnections()){
             if(fermatApp.getAppName().equals(code)){
                 return fermatApp.getAppPublicKey();
             }
         }
         return null;
-    }
+    }*/
 
-    @Override
+   /* @Override
     public List<FermatApp> getPosibleConnections() {
         return null;
-    }
-=======
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3:CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/loss_protected_wallet/session/LossProtectedWalletSessionReferenceApp.java
+    }*/
 }

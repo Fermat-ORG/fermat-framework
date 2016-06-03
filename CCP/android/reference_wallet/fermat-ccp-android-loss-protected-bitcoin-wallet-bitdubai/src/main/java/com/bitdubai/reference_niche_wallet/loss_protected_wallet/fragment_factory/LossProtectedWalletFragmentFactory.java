@@ -19,13 +19,13 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionHistoryFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<LossProtectedWalletSessionReferenceApp,WalletResourcesProviderManager,LossProtectedFragmentsEnumType>  {
+public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<LossProtectedWalletSession,WalletResourcesProviderManager,LossProtectedFragmentsEnumType>  {
 
 
     @Override

@@ -15,21 +15,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-<<<<<<< HEAD
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-=======
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
+
 
 
 /**
  * Created by mati on 2016.02.20..
  */
-<<<<<<< HEAD
+
 public class MnemonicFragment extends AbstractFermatFragment<FermatWalletSessionReferenceApp,ResourceProviderManager> {
-=======
-public class MnemonicFragment extends AbstractFermatFragment<ReferenceAppFermatWalletSession,ResourceProviderManager> {
->>>>>>> 5aabf9f866e4349193fd667fee696728a3fb73e3
+
 
     /**
      * Platform

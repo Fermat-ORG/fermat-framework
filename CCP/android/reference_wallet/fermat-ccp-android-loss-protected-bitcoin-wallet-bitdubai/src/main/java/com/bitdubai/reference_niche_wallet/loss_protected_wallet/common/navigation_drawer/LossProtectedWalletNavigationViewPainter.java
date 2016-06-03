@@ -15,7 +15,7 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 import java.lang.ref.WeakReference;
 
@@ -27,9 +27,9 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
-    private LossProtectedWalletSessionReferenceApp lossWalletSession;
+    private LossProtectedWalletSession lossWalletSession;
 
-    public LossProtectedWalletNavigationViewPainter(Context activity, LossProtectedWalletSessionReferenceApp lossWalletSession, FermatApplicationCaller applicationsHelper) {
+    public LossProtectedWalletNavigationViewPainter(Context activity, LossProtectedWalletSession lossWalletSession, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
         this.lossWalletSession = lossWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);

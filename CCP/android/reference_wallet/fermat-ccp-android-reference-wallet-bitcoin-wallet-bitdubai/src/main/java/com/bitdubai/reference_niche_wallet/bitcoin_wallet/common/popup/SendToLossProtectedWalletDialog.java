@@ -48,7 +48,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -75,7 +75,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      *  Deals with crypto wallet interface
      */
     private CryptoWallet cryptoWallet;
-    private ReferenceWalletSessionReferenceApp appSession;
+    private ReferenceWalletSession appSession;
 
     /**
      * Deals with error manager interface
@@ -106,7 +106,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     public SendToLossProtectedWalletDialog(Activity activity,
                                            CryptoWallet cryptoWallet,
-                                           ReferenceWalletSessionReferenceApp appSession,
+                                           ReferenceWalletSession appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);

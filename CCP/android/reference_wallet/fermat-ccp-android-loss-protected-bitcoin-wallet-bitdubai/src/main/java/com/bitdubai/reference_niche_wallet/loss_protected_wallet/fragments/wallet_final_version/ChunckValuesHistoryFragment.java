@@ -55,7 +55,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Er
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     /**
      * Session
      */
-    LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    LossProtectedWalletSession lossProtectedWalletSession;
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
@@ -131,7 +131,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         super.onCreate(savedInstanceState);
 
-        lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp)appSession;
+        lossProtectedWalletSession = (LossProtectedWalletSession)appSession;
 
         lstTransaction = new ArrayList<>();
         try {
@@ -399,7 +399,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
 
 
-    public void setReferenceWalletSession(LossProtectedWalletSessionReferenceApp referenceWalletSession) {
+    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
         this.lossProtectedWalletSession = referenceWalletSession;
     }
 
