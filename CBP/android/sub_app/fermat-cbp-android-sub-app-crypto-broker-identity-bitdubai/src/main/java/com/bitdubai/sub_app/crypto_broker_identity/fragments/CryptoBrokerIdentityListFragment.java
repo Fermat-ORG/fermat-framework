@@ -57,6 +57,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     // UI
     private View noMatchView;
+    View emptyListViewsContainer;
+
     private CryptoBrokerIdentityListFilter filter;
 
     private PresentationDialog presentationDialog;
@@ -77,7 +79,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             // setting up  module
             moduleManager = ((CryptoBrokerIdentitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            onRefresh();
         } catch (Exception ex) {
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(
@@ -96,12 +98,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         this.layout = layout;
 
         noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
-
-        if (identityInformationList == null || identityInformationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }
+        emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
 
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.banner_identity)
@@ -138,6 +135,16 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
+    }
+
+    private void showOrHideNoIdentitiesView(){
+        if (identityInformationList == null || identityInformationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
+        }
     }
 
     private void configureToolbar() {
@@ -242,6 +249,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
                     adapter.changeDataSet(identityInformationList);
             }
         }
+        showOrHideNoIdentitiesView();
     }
 
     @Override

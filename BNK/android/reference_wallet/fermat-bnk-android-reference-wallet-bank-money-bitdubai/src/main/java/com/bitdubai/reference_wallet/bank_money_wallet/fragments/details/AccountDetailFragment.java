@@ -102,7 +102,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         }
         System.out.println("DATA =" + data.getAccount());
         bankAccountNumber = data;
-        transactionList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
 
     @Override
@@ -152,7 +152,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         availableText = (FermatTextView) layout.findViewById(R.id.available_text);
         bookText = (FermatTextView) layout.findViewById(R.id.book_text);
         updateBalance();
-        showOrHideNoTransactionsView(transactionList.isEmpty());
         handleWidhtrawalFabVisibilityAccordingToBalance();
 
     }
@@ -247,14 +246,15 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
                 transactionList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
-                showOrHideNoTransactionsView(transactionList.isEmpty());
-                updateBalance();
             }
         }
+
+        showOrHideNoTransactionsView(transactionList);
+        updateBalance();
     }
 
-    private void showOrHideNoTransactionsView(boolean show) {
-        if (show) {
+    private void showOrHideNoTransactionsView(ArrayList<BankMoneyTransactionRecord> transactions) {
+        if (transactions == null || transactions.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emtyView.setVisibility(View.VISIBLE);
         } else {

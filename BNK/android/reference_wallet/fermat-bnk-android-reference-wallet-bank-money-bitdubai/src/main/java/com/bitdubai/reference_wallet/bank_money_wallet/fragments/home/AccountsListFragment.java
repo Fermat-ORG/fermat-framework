@@ -72,7 +72,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
-        accountsList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
     @Override
     protected void initViews(View layout) {
@@ -80,7 +80,6 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         configureToolbar();
 
         emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
-        showOrHideNoAccountListView(accountsList.isEmpty());
 
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankName());
@@ -223,8 +222,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return bankAccountNumbers;
     }
 
-    private void showOrHideNoAccountListView(boolean show) {
-        if (show) {
+    private void showOrHideNoAccountListView(ArrayList<BankAccountNumber> transactions) {
+        if (transactions == null || transactions.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
@@ -242,9 +241,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 accountsList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(accountsList);
-                showOrHideNoAccountListView(accountsList.isEmpty());
             }
         }
+
+        showOrHideNoAccountListView(accountsList);
     }
 
     @Override
