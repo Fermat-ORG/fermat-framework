@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -333,8 +333,8 @@ public class ChatAdapterView extends LinearLayout {
 
     public void onBackPressed() {
         final int actualHeight = getHeight();
-        FrameLayout.LayoutParams layoutParams =
-                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         if(dm.heightPixels < 800)
             layoutParams.height = 764;
@@ -346,8 +346,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void onAdjustKeyboard() {
-        FrameLayout.LayoutParams layoutParams =
-                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) messagesContainer.getLayoutParams();
         layoutParams.height = 440;
         messagesContainer.setLayoutParams(layoutParams);
     }
@@ -376,37 +376,39 @@ public class ChatAdapterView extends LinearLayout {
         String fecha = date;
         SimpleDateFormat formatter;
         String formattedTime;
-        if(android.text.format.DateFormat.is24HourFormat(getContext())) {
-            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        } else {
-            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-        }
-        try {
-            formatter.setTimeZone(TimeZone.getDefault());
-
-             formattedTime = formatter.format(new java.util.Date(date));
-            //String formattedTime = formatter.format(dater);
-            if(date.length() > 16) {
-                 formattedTime = formattedTime.substring(11, 19);
-            }else {
-                 formattedTime = formattedTime.substring(11, 16);
+        if(!date.isEmpty()) {
+            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            } else {
+                formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
             }
+            try {
+                formatter.setTimeZone(TimeZone.getDefault());
 
-            if(Validate.isDateToday(new java.util.Date(date))){
-                    fecha = "today at "+formattedTime;
-                }else{
+                formattedTime = formatter.format(new java.util.Date(date));
+                //String formattedTime = formatter.format(dater);
+                if (date.length() > 16) {
+                    formattedTime = formattedTime.substring(11, 19);
+                } else {
+                    formattedTime = formattedTime.substring(11, 16);
+                }
+
+                if (Validate.isDateToday(new java.util.Date(date))) {
+                    fecha = "today at " + formattedTime;
+                } else {
                     Date today = new Date();
                     long dias = (today.getTime() - new java.util.Date(date).getTime()) / (1000 * 60 * 60 * 24);
-                    if(dias == 1){
-                        fecha = "yesterday at "+formattedTime;
+                    if (dias == 1) {
+                        fecha = "yesterday at " + formattedTime;
                     }
                 }
-        }catch(Exception e){
-            Log.e("ErrorOnSetFormatLastTim", e.getMessage(),e);
+            } catch (Exception e) {
+                Log.e("ErrorOnSetFormatLastTim", e.getMessage(), e);
+            }
         }
-
         return fecha;
     }
+
     public void ChangeStatusOnTheSubtitleBar(int state, String date) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:

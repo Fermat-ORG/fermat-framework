@@ -235,8 +235,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                    applicationsHelper.get(), 0);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                    applicationsHelper.get(), 0*/);
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -376,7 +376,7 @@ public class ConnectionsWorldFragment
                 appSession.setData(CHAT_USER_SELECTED, data);
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
             } else {
-                showDialogHelp(1);
+                showDialogHelp();//1
             }
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
         {
@@ -541,7 +541,7 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
 
             if (id == R.id.action_help)
-                showDialogHelp(0);
+                showDialogHelp();//0
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -552,7 +552,7 @@ public class ConnectionsWorldFragment
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialogHelp(int showIdentity) {
+    private void showDialogHelp() {//int showIdentity
         try {
             moduleManager = appSession.getModuleManager();
             if (moduleManager.getSelectedActorIdentity() != null) {
@@ -562,8 +562,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                    applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                    applicationsHelper.get(), showIdentity*/);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -577,8 +577,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                                    PresentationChatCommunityDialog.TYPE_PRESENTATION,
-                                    applicationsHelper.get(), showIdentity);
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION/*,
+                                    applicationsHelper.get(), showIdentity*/);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -601,8 +601,8 @@ public class ConnectionsWorldFragment
                         chatUserSubAppSession,
                         null,
                         moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                applicationsHelper.get(), showIdentity);
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                applicationsHelper.get(), showIdentity*/);
                 presentationChatCommunityDialog.show();
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -622,8 +622,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                            applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                            applicationsHelper.get(), showIdentity*/);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -638,8 +638,8 @@ public class ConnectionsWorldFragment
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                            applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                            applicationsHelper.get(), showIdentity*/);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

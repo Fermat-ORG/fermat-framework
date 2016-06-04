@@ -188,11 +188,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             this.MAX = MAX;
             this.offset = offset;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             //this.cancel(true);
-
-
             return;
         }
 
@@ -489,7 +488,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
-                    .setIsCheckEnabled(checkButton)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         } catch (Exception e) {
