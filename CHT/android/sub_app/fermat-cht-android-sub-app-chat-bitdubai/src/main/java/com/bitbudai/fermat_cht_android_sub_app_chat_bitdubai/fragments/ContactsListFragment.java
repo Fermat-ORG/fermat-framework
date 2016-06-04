@@ -188,11 +188,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             this.MAX = MAX;
             this.offset = offset;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             //this.cancel(true);
-
-
             return;
         }
 
