@@ -2,7 +2,6 @@ package com.bitdubai.fermat_api.layer.dmp_module;
 
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -29,7 +28,7 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     private AppsStatus appsStatus;
     private int bannerRes;
     private Platforms platform;
-    private AppStructureType appStructureType = AppStructureType.REFERENCE;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
     public InstalledApp(String name, String publicKey, Version version, int iconResource, int position, int notifications,AppsStatus appsStatus,Platforms platform) {
         this.name = name;
@@ -42,9 +41,9 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
         this.platform = platform;
     }
 
-    public void setAppStructureType(AppStructureType appStructureType) {
-        this.appStructureType = appStructureType;
-    }
+//    public void setAppStructureType(AppStructureType appStructureType) {
+//        this.appStructureType = appStructureType;
+//    }
 
     @Override
     public List<InstalledLanguage> getLanguagesId() {
@@ -130,11 +129,11 @@ public class InstalledApp implements com.bitdubai.fermat_api.layer.dmp_module.wa
     public FermatAppType getAppType() {
         return FermatAppType.P2P_APP;
     }
-
-    @Override
-    public AppStructureType getAppStructureType() {
-        return appStructureType;
-    }
+//
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

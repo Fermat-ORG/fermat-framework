@@ -38,6 +38,8 @@ public interface FermatAppsManager {
 
     boolean isAppOpen(String appPublicKey);
 
+    FermatSession getAppsSession(String appPublicKey,boolean isForSubSession);
+
     FermatSession getAppsSession(String appPublicKey);
 
     FermatSession openApp(FermatApp fermatApp,AppConnections fermatAppConnection) throws Exception;

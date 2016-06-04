@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,6 +84,11 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
 
     @Override
     public AppStructureType getAppStructureType() {
+        return AppStructureType.REFERENCE;
+    }
+
+    @Override
+    public List<String> getAppsKeyConsumed() {
         return null;
     }
 
