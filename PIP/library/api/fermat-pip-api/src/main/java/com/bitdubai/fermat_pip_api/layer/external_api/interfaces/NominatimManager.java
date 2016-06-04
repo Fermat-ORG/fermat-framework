@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_pip_api.layer.external_api.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantCreateCountriesListException;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -13,6 +17,7 @@ public interface NominatimManager<T extends Country> extends FermatManager {
      * This method returns a list of Countries available in external api
      * @return
      */
-    List<T> getCountryList();
+    HashMap<String, T> getCountryList()
+            throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException;
 
 }

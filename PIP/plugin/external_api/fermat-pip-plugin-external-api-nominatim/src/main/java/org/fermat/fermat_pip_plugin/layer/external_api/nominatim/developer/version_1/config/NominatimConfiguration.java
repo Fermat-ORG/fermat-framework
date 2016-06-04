@@ -10,4 +10,14 @@ public class NominatimConfiguration {
      */
     public static final String EXTERNAL_API_LIST_ALL_COUNTRIES = "http://www.geognos.com/api/en/countries/info/all.json";
 
+    /**
+     * Represents the backup-file name.
+     */
+    public static final String COUNTRIES_BACKUP_FILE = "countries-backup";
+
+    /**
+     * Represents the backup-file path.
+     */
+    public static final String PATH_TO_COUNTRIES_FILE = "";
+
 }

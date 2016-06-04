@@ -6,13 +6,13 @@ import com.bitdubai.fermat_pip_api.layer.external_api.interfaces.Country;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.CountryRecord;
+import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.exceptions.CantCreateCountryException;
+import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.records.CountryRecord;
 import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.config.GeonosJsonAttNames;
 import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.config.NominatimConfiguration;
 import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.util.RemoteJSonProcessor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,14 +28,14 @@ public class GeonosProcessor extends AbstractAPIProcessor {
      * This method returns all the countries from an external api
      * @return
      */
-    public static List<Country> getCountries()
+    public static HashMap<String, Country> getCountries()
             throws CantConnectWithExternalAPIException, CantGetJSonObjectException {
         //We request the list to the Geonos API
         JsonObject jsonObject = RemoteJSonProcessor.getJSonObject(queryUrl);
         return getCountriesByJsonObject(jsonObject);
     }
 
-    private static List<Country> getCountriesByJsonObject(JsonObject jsonObject)
+    private static HashMap<String, Country> getCountriesByJsonObject(JsonObject jsonObject)
             throws CantConnectWithExternalAPIException {
 
         //Status code from API
@@ -52,14 +52,24 @@ public class GeonosProcessor extends AbstractAPIProcessor {
         JsonElement jsonElement;
         String countryName;
         String countryShortName;
-        List<Country> countryList = new ArrayList<>();
+        HashMap<String, Country> countryList = new HashMap<>();
         Country country;
+        float[] coordinates;
         for(Map.Entry<String, JsonElement> entry : resultsKeySet){
             countryShortName = entry.getKey();
             jsonElement = entry.getValue();
             countryName = getStringFromJsonElement(jsonElement, GeonosJsonAttNames.COUNTRY_NAME);
-            country = new CountryRecord(countryName,countryShortName);
-            countryList.add(country);
+            coordinates = getArrayIntFromJsonObject(jsonObject, GeonosJsonAttNames.GEO_RECTANGLE);
+            try{
+                country = new CountryRecord(countryName,countryShortName,coordinates);
+                countryList.put(countryShortName, country);
+            } catch (CantCreateCountryException e) {
+                //If we got an error from this country, In this version, we'll not include it in the HashMap
+                System.out.print("Geonos-Processor: The country labelled as "+countryShortName+" " +
+                        "is not valid from geonos api");
+                continue;
+            }
+
         }
         return countryList;
     }

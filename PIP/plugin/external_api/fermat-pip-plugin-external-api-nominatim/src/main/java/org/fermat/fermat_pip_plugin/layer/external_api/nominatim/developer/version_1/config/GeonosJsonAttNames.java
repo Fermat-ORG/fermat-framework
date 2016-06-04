@@ -22,6 +22,11 @@ public class GeonosJsonAttNames {
     public static final String COUNTRY_NAME = "Name";
 
     /**
+     * Represents the country geo-rectangle from geonos API
+     */
+    public static final String GEO_RECTANGLE = "GeoRectangle";
+
+    /**
      * NOTE:
      * The Geonos API provides more detailed information, ins this version, We only check this data.
      */

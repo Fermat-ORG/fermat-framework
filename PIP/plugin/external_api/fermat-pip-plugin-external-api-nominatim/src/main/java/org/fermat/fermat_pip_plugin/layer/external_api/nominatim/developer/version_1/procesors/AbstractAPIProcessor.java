@@ -83,6 +83,13 @@ public abstract class AbstractAPIProcessor {
         return jsonElement.getAsDouble();
     }
 
+    /**
+     * This method returns a String Array from a JsonObject by a given field.
+     * The named field must be defined in any class from the package config.
+     * @param jSonObject
+     * @param field
+     * @return
+     */
     protected static String[] getArrayStringFromJsonObject(
             JsonObject jSonObject,
             String field){
@@ -100,6 +107,37 @@ public abstract class AbstractAPIProcessor {
         return valuesArray;
     }
 
+    /**
+     * This method returns a float Array from a JsonObject by a given field.
+     * The named field must be defined in any class from the package config.
+     * @param jSonObject
+     * @param field
+     * @return
+     */
+    protected static float[] getArrayIntFromJsonObject(
+            JsonObject jSonObject,
+            String field){
+        JsonElement jsonElement = jSonObject.get(field);
+        if(jsonElement==null){
+            return new float[]{0};
+        }
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        float[] valuesArray = new float[jsonArray.size()];
+        int counter = 0;
+        for(JsonElement jsonElementFromArray : jsonArray){
+            valuesArray[counter] = jsonElementFromArray.getAsFloat();
+            counter++;
+        }
+        return valuesArray;
+    }
+
+    /**
+     * This method returns a jsonObject from a JsonObject by a given field.
+     * The named field must be defined in any class from the package config.
+     * @param jsonObject
+     * @param field
+     * @return
+     */
     protected static JsonObject getJsonObjectFromJsonObject(
             JsonObject jsonObject,
             String field){
@@ -110,6 +148,13 @@ public abstract class AbstractAPIProcessor {
         return jsonElement.getAsJsonObject();
     }
 
+    /**
+     * This method returns a String from a JsonElement by a given field.
+     * The named field must be defined in any class from the package config.
+     * @param jsonElement
+     * @param field
+     * @return
+     */
     protected static String getStringFromJsonElement(
             JsonElement jsonElement,
             String field){

@@ -19,4 +19,10 @@ public interface Country extends Serializable {
      */
     String getCountryShortName();
 
+    /**
+     * This method returns the country geo-rectangle.
+     * @return
+     */
+    GeoRectangle getGeoRectangle();
+
 }
