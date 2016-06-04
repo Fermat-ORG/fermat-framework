@@ -42,6 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
@@ -51,7 +52,6 @@ import com.software.shell.fab.ActionButton;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.AssetFactoryAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.interfaces.PopupMenu;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
@@ -82,7 +82,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class EditableAssetsFragment extends AbstractFermatFragment implements
+public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     private static AssetFactory selectedAsset;
@@ -94,7 +94,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-    AssetFactorySessionReferenceApp assetFactorySession;
+//    AssetFactorySessionReferenceApp assetFactorySession;
     AssetFactorySettings settings = null;
     //    private MenuItem menuHelp;
 //    private Menu menu;
@@ -122,8 +122,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
         try {
             selectedAsset = null;
-            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
-            moduleManager = assetFactorySession.getModuleManager();
+//            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
