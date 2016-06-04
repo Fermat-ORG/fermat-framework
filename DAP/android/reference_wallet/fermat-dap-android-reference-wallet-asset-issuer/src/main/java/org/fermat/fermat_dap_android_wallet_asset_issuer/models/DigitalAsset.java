@@ -24,7 +24,7 @@ public class DigitalAsset implements Serializable {
     private Long availableBalanceQuantity;
     private Long bookBalanceQuantity;
     private Long availableBalance;
-    private Timestamp expDate;
+    private Date expDate;
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
@@ -136,7 +136,7 @@ public class DigitalAsset implements Serializable {
         return DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
-    public void setExpDate(Timestamp expDate) {
+    public void setExpDate(Date expDate) {
         this.expDate = expDate;
     }
 
