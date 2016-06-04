@@ -46,14 +46,14 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
             Platforms.CHAT_PLATFORM,
             Layers.SUB_APP_MODULE,
             Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
             Developers.BITDUBAI,
             new Version()
-        );
+        )};
     }
 
     @Override

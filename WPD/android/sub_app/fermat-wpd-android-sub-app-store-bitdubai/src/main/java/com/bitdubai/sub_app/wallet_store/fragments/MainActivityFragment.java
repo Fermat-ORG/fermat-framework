@@ -18,6 +18,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -140,7 +141,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         configureToolbar();
         BasicWalletSettings preferenceSettings = getPreferenceSettings();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession).
                 setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
                 setBannerRes(R.drawable.banner_app_store).
                 setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).

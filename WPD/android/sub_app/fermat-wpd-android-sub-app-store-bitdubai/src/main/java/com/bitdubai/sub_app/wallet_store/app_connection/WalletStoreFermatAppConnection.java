@@ -33,14 +33,14 @@ public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSu
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION,
                 Layers.SUB_APP_MODULE,
                 Plugins.WALLET_STORE,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

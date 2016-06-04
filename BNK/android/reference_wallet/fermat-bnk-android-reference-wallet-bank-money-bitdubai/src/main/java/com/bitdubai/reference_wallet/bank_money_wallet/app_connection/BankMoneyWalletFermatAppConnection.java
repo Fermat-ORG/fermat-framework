@@ -31,14 +31,14 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.BANKING_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

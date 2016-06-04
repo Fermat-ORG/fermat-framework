@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.desktop;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 
@@ -30,6 +31,11 @@ public class InstalledDesktop implements FermatApp {
     @Override
     public FermatAppType getAppType() {
         return FermatAppType.DESKTOP;
+    }
+
+    @Override
+    public AppStructureType getAppStructureType() {
+        return AppStructureType.REFERENCE;
     }
 
     @Override

@@ -39,14 +39,14 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.ASSET_ISSUER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

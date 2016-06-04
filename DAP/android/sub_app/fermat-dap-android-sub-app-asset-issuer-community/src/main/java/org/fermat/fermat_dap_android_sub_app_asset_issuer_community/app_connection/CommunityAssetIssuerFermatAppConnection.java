@@ -39,14 +39,14 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_ISSUER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

@@ -31,14 +31,14 @@ public class CryptoWalletUserFermatAppConnection extends AppConnections{
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.INTRA_IDENTITY_USER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

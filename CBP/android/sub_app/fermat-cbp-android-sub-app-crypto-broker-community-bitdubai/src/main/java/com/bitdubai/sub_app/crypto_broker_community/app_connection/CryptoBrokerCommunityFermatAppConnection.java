@@ -37,14 +37,14 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Cry
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_BROKER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetTransferSelectUsersAdapter;
@@ -46,7 +48,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy Bohorquez on 18/02/2016.
  */
-public class AssetTransferSelectUserFragment extends FermatWalletListFragment<User>
+public class AssetTransferSelectUserFragment extends FermatWalletListFragment<User,ReferenceAppFermatSession,ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants

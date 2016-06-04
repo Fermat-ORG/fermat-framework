@@ -10,6 +10,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
@@ -31,13 +32,13 @@ import java.util.List;
     private Context context;
     private FermatFragmentFactory fragmentFactory;
     private TabStrip tabStrip;
-    private ReferenceAppFermatSession referenceAppFermatSession;
+    private FermatSession referenceAppFermatSession;
     private ResourceProviderManager resourcesProviderManager;
 
 
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,ReferenceAppFermatSession walletSession,ResourceProviderManager walletResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,ResourceProviderManager walletResourcesProviderManager) {
         super(fm);
         this.context=context;
         this.referenceAppFermatSession =walletSession;
@@ -53,7 +54,7 @@ import java.util.List;
                             Context applicationContext,
                             FermatFragmentFactory fermatFragmentFactory,
                             TabStrip tabStrip,
-                            ReferenceAppFermatSession referenceAppFermatSession,
+                            FermatSession referenceAppFermatSession,
                             ResourceProviderManager resourceProviderManager) {
         super(fragmentManager);
         this.context=applicationContext;

@@ -39,14 +39,14 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.REDEEM_POINT,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

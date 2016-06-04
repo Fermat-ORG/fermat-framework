@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -310,7 +311,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setImageLeft(R.drawable.asset_issuer_identity)
@@ -450,7 +451,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             editAsset();
         } else if (menuItem.getItemId() == R.id.action_publish) {
             if (validate()) {
-                new ConfirmDialog.Builder(getActivity(), appSession)
+                new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                         .setTitle("Confirm")
                         .setMessage("Are you sure you are ready to publish your Asset? Once published you won't be able to perform any changes to it.")
                         .setColorStyle(getResources().getColor(R.color.bg_asset_factory))

@@ -33,14 +33,14 @@ public class FanWalletFermatAppConnection extends AppConnections<FanWalletSessio
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.TOKENLY,
                 Layers.WALLET_MODULE,
                 Plugins.TOKENLY_FAN_WALLET_MODULE,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

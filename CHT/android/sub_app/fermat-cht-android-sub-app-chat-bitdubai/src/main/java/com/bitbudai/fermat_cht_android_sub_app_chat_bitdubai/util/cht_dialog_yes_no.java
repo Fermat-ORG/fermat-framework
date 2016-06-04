@@ -10,8 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -23,8 +25,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -63,7 +63,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
-    public cht_dialog_yes_no(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources, ContactConnection contactConnm, AdapterCallbackContacts mAdapterCallback) {
+    public cht_dialog_yes_no(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources, ContactConnection contactConnm, AdapterCallbackContacts mAdapterCallback) {
         super(activity, referenceAppFermatSession, resources);
         this.contactConn = contactConnm;
         this.mAdapterCallback = mAdapterCallback;

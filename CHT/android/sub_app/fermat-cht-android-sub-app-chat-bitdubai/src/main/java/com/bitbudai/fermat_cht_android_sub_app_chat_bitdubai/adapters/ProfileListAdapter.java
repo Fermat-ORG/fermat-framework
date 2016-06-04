@@ -16,13 +16,13 @@ import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
     ArrayList<Bitmap> profileicon=new ArrayList<>();
     ArrayList<String> profileid=new ArrayList<>();
     private ChatManager chatManager;
-    private ReferenceAppFermatSession appSession;
+    private FermatSession appSession;
     private ErrorManager errorManager;
     private ChatModuleManager moduleManager;
     private ChatSessionReferenceApp chatSession;
@@ -55,7 +55,7 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
 
     public ProfileListAdapter(Context context, ArrayList profileinfo, ArrayList profileicon, ArrayList profileid,
                               ChatManager chatManager, ChatModuleManager moduleManager,
-                              ErrorManager errorManager, ChatSessionReferenceApp chatSession, ReferenceAppFermatSession appSession, AdapterCallback mAdapterCallback) {
+                              ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.profile_list_item, profileinfo);
         //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.profileinfo = profileinfo;

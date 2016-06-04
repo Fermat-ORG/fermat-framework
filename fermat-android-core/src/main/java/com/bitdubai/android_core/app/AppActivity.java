@@ -28,7 +28,7 @@ import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -237,7 +237,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     /**
      * Method that loads the UI
      */
-    protected void loadUI(final ReferenceAppFermatSession referenceAppFermatSession) {
+    protected void loadUI(final FermatSession referenceAppFermatSession) {
         try {
             if(referenceAppFermatSession !=null) {
 //                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
@@ -268,11 +268,12 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 }
                 if (activity.getFragments().size() == 1) {
                     com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
-                    if(runtimeFragment.getPulickKeyFragmentFrom()!=null){
-                        if(!runtimeFragment.getPulickKeyFragmentFrom().equals(referenceAppFermatSession.getAppPublicKey())){
-                           // FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this, );
-                        }
-                    }
+//                    if(runtimeFragment.getPulickKeyFragmentFrom()!=null){
+//                        if(!runtimeFragment.getPulickKeyFragmentFrom().equals(referenceAppFermatSession.getAppPublicKey())){
+//                            //todo: acá busco la session correspondiente a la app, está mal esto. se deberia crear directo la super session de una. y llegar acá cargada.
+//                           FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this,createOrOpenSession());
+//                        }
+//                    }
                     setOneFragmentInScreen(fermatFragmentFactory, referenceAppFermatSession, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }

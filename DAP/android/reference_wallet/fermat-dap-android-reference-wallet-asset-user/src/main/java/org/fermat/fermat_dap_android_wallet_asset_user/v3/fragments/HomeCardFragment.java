@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
@@ -64,7 +66,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/17/16.
  */
-public class HomeCardFragment extends FermatWalletListFragment<Asset> implements FermatListItemListeners<Asset> {
+public class HomeCardFragment extends FermatWalletListFragment<Asset,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<Asset> {
     private Activity activity;
     // Data
     private List<Asset> assets;

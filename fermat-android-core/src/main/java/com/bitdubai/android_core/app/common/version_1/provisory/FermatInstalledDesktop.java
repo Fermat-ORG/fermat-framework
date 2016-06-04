@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.provisory;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 
 /**
@@ -27,6 +28,11 @@ public class FermatInstalledDesktop implements InstalledDesktop {
     @Override
     public FermatAppType getAppType() {
         return FermatAppType.DESKTOP;
+    }
+
+    @Override
+    public AppStructureType getAppStructureType() {
+        return AppStructureType.REFERENCE;
     }
 
     @Override

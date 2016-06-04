@@ -34,20 +34,16 @@ public class FanCommunityFermatAppConnection extends AppConnections<FanCommunity
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.ART_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.FAN_COMMUNITY_SUB_APP_MODULE,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
-    @Override
-    public FanCommunitySubAppSessionReferenceApp getSession() {
-        return new FanCommunitySubAppSessionReferenceApp();
-    }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -119,7 +120,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     private void setUpHelpAssetStatistics(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
@@ -191,7 +192,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                         if (x != null) {
                             final List<User> users = (List<User>) x;
                             if (users.size() > 0) {
-                                new ConfirmDialog.Builder(getActivity(), appSession)
+                                new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                                         .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
                                         .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_entered_info))
                                         .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
@@ -209,7 +210,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                         if (x != null) {
                             final List<Group> groups = (List<Group>) x;
                             if (groups.size() > 0) {
-                                new ConfirmDialog.Builder(getActivity(), appSession)
+                                new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                                         .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
                                         .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_entered_info))
                                         .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))

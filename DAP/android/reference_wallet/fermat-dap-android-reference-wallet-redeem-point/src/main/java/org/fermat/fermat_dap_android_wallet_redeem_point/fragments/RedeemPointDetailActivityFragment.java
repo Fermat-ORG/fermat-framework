@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.UserRedeemedPointListAdapter;
@@ -58,7 +60,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by jinmy on 01/12/16.
  */
-public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed> {
+public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession,ResourceProviderManager> {
 
     private RedeemPointSessionReferenceApp redeemPointSession;
     private AssetRedeemPointWalletSubAppModule moduleManager;

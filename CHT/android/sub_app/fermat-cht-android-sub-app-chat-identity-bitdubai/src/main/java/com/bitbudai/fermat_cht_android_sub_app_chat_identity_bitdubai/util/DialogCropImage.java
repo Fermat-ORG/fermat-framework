@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
@@ -33,7 +33,7 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     CropImageView cropImageView;
     Bitmap image;
     Bitmap croppedImage;
-    public DialogCropImage(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources, Bitmap image) {
+    public DialogCropImage(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources, Bitmap image) {
         super(activity, referenceAppFermatSession, resources);
         this.image = image;
     }

@@ -50,13 +50,13 @@ public class TkyArtistIdentityAppConnection extends AppConnections {
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() { return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() { return new PluginVersionReference[]{ new PluginVersionReference(
             Platforms.TOKENLY,
             Layers.SUB_APP_MODULE,
             Plugins.TOKENLY_ARTIST_SUB_APP_MODULE,
             Developers.BITDUBAI,
             new Version()
-    );
+    )};
     }
 
     @Override

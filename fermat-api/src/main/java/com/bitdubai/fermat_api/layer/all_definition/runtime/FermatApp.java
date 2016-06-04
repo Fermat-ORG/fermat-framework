@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.runtime;
 
 import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 
 import java.io.Serializable;
@@ -18,6 +19,8 @@ public interface FermatApp extends Serializable {
     AppsStatus getAppStatus();
 
     FermatAppType getAppType();
+
+    AppStructureType getAppStructureType();
 
     byte[] getAppIcon();
 
