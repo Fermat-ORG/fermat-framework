@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
@@ -268,13 +269,12 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 }
                 if (activity.getFragments().size() == 1) {
                     com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
-//                    if(runtimeFragment.getPulickKeyFragmentFrom()!=null){
-//                        if(!runtimeFragment.getPulickKeyFragmentFrom().equals(referenceAppFermatSession.getAppPublicKey())){
-//                            //todo: acá busco la session correspondiente a la app, está mal esto. se deberia crear directo la super session de una. y llegar acá cargada.
-//                           FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this,createOrOpenSession());
-//                        }
-//                    }
-                    setOneFragmentInScreen(fermatFragmentFactory, referenceAppFermatSession, runtimeFragment);
+                    FermatSession fermatSubSession = null;
+                    if (runtimeFragment.getPulickKeyFragmentFrom()!=null){
+                        fermatSubSession = ((ComboAppType2FermatSession)referenceAppFermatSession).getFermatSession(runtimeFragment.getPulickKeyFragmentFrom(),FermatSession.class);
+                    }
+
+                    setOneFragmentInScreen(fermatFragmentFactory,(fermatSubSession!=null)?fermatSubSession:referenceAppFermatSession, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
 //                Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());
