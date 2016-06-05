@@ -53,24 +53,18 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession,ResourceProviderManager>
+public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
     private static final String TAG = "IssuerStadisticsActivityFragment";
-
     // Fermat Managers
-    AssetIssuerSessionReferenceApp assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
     // Data
     private List<DigitalAsset> digitalAssets;
-
     //UI
     private View noAssetsView;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerStadisticsActivityFragment newInstance() {
         return new IssuerStadisticsActivityFragment();
@@ -81,12 +75,10 @@ public class IssuerStadisticsActivityFragment extends FermatWalletListFragment<D
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
         errorManager = appSession.getErrorManager();
+        moduleManager = appSession.getModuleManager();
 
-        moduleManager = assetIssuerSession.getModuleManager();
-
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override

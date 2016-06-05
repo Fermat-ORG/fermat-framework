@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
@@ -24,26 +26,13 @@ public class WalletAssetIssuerHeaderPainter implements HeaderViewPainter {
     private static final String TAG = "IssuerNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetIssuerWalletSupAppModuleManager moduleManager;
-    AssetIssuerSessionReferenceApp assetIssuerSession;
-    private ErrorManager errorManager;
+    ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession;
 
-    public WalletAssetIssuerHeaderPainter(Context activity, AssetIssuerSessionReferenceApp assetIssuerSession) {
+    public WalletAssetIssuerHeaderPainter(Context activity,
+                                          ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession) {
+
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;
-
-        try {
-            moduleManager = assetIssuerSession.getModuleManager();
-            errorManager = assetIssuerSession.getErrorManager();
-
-        } catch (Exception ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_ASSET_ISSUER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
     }
 
     @Override

@@ -33,17 +33,17 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> implements Filterable {
 
     private AssetUserWalletSubAppModuleManager manager;
-    private AssetUserSessionReferenceApp assetUserSession;
+    private ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession;
     private HomeCardFragment fragment;
 
 
     public HomeCardAdapter(HomeCardFragment fragment, Context context, List<Asset> digitalAssets, AssetUserWalletSubAppModuleManager manager,
-                           ReferenceAppFermatSession appSession) {
+                           ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> appSession) {
         super(context, digitalAssets);
         this.fragment = fragment;
         this.manager = manager;
         this.dataSet = digitalAssets;
-        this.assetUserSession = (AssetUserSessionReferenceApp) appSession;
+        this.assetUserSession = appSession;
     }
 
     @Override

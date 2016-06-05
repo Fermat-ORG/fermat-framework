@@ -50,7 +50,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/14/15.
  */
-public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession,ResourceProviderManager>
+public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
@@ -59,15 +59,11 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
-    RedeemPointSessionReferenceApp redeemPointSession;
-
     // Data
     private List<DigitalAsset> digitalAssets;
 
     //UI
     private View noAssetsView;
-
-//    SettingsManager<RedeemPointSettings> settingsManager;
 
     public static RedeemPointHistoryActivityFragment newInstance() {
         return new RedeemPointHistoryActivityFragment();
@@ -79,8 +75,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
         setHasOptionsMenu(true);
 
         try {
-            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
-            moduleManager = redeemPointSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

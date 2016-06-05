@@ -13,7 +13,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
@@ -33,8 +33,8 @@ public class Asset implements Serializable {
     private String name;
     private double amount;
     private String description;
-    private Timestamp expDate;
-    private Timestamp date;
+    private Date expDate;
+    private Date date;
     private Status status;
     private String actorName;
     private byte[] actorImage;
@@ -87,8 +87,8 @@ public class Asset implements Serializable {
         setName(digitalAsset.getName());
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
-        setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
-        setDate(new Timestamp(lastTransaction.getTimestamp()));
+        setExpDate((Date) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+        setDate(new Date(lastTransaction.getTimestamp()));
         setStatus((lastTransaction.getBalanceType().equals(BalanceType.AVAILABLE) && lastTransaction.getTransactionType().equals(TransactionType.CREDIT)) ? Status.CONFIRMED : Status.PENDING);
         setActorName(firstTransaction.getActorFrom().getName());
         setActorImage(firstTransaction.getActorFrom().getProfileImage());
@@ -133,19 +133,19 @@ public class Asset implements Serializable {
         this.description = description;
     }
 
-    public Timestamp getExpDate() {
+    public Date getExpDate() {
         return expDate;
     }
 
-    public void setExpDate(Timestamp expDate) {
+    public void setExpDate(Date expDate) {
         this.expDate = expDate;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

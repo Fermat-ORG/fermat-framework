@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
@@ -35,7 +36,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsAssetIssuerFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class SettingsAssetIssuerFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     private View rootView;
 
@@ -45,8 +46,6 @@ public class SettingsAssetIssuerFragment extends AbstractFermatFragment implemen
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSessionReferenceApp assetIssuerSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static SettingsAssetIssuerFragment newInstance() {
         return new SettingsAssetIssuerFragment();
@@ -57,10 +56,9 @@ public class SettingsAssetIssuerFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
 //        try {
         errorManager = appSession.getErrorManager();
-        moduleManager = assetIssuerSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
 
 //            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {

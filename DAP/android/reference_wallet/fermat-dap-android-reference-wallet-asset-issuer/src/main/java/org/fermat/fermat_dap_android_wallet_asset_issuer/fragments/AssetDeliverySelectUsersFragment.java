@@ -46,14 +46,13 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<User,ReferenceAppFermatSession,ResourceProviderManager>
+public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<User,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants
     private static final String TAG = "AssetDeliverySelectUsersFragment";
 
     // Fermat Managers
-    AssetIssuerSessionReferenceApp assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -75,12 +74,10 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
+            moduleManager = appSession.getModuleManager();
 
-            moduleManager = assetIssuerSession.getModuleManager();
-
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
@@ -39,12 +40,11 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy 02/02/2016
  */
-public class SettingsFragment extends AbstractFermatFragment {
+public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager> {
 
     /**
      * Plaform reference
      */
-    private RedeemPointSessionReferenceApp redeemPointSession;
 
     /**
      * UI
@@ -52,11 +52,11 @@ public class SettingsFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
 
+    private AssetRedeemPointWalletSubAppModule moduleManager;
     private ColorStateList mSwitchTrackStateList;
     private FermatTextView networkAction;
     private FermatTextView notificationAction;
 
-    private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
     //    SettingsManager<RedeemPointSettings> settingsManager;
@@ -72,8 +72,7 @@ public class SettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
-        moduleManager = redeemPointSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -92,7 +91,7 @@ public class SettingsFragment extends AbstractFermatFragment {
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_redeem_point_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
-            redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -109,13 +108,13 @@ public class SettingsFragment extends AbstractFermatFragment {
         networkAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK, redeemPointSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK, appSession.getAppPublicKey());
             }
         });
         notificationAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS, redeemPointSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS, appSession.getAppPublicKey());
             }
         });
     }
@@ -130,7 +129,7 @@ public class SettingsFragment extends AbstractFermatFragment {
             super.onActivityCreated(savedInstanceState);
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_redeem_point_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
-            redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 

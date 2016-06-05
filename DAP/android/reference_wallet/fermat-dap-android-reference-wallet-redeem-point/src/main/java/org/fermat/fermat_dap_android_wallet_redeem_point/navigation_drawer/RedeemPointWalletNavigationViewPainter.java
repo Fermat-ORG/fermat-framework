@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -31,35 +33,23 @@ public class RedeemPointWalletNavigationViewPainter implements NavigationViewPai
     private static final String TAG = "RedeemNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation redeemPointIdentity;
-    RedeemPointSessionReferenceApp redeemPointSession;
-    AssetRedeemPointWalletSubAppModule moduleManager;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession;
 
-    public RedeemPointWalletNavigationViewPainter(Context activity, RedeemPointSessionReferenceApp redeemPointSession) {
-        this.activity = new WeakReference<Context>(activity);
+    public RedeemPointWalletNavigationViewPainter(Context activity,
+                                                  ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession,
+                                                  FermatApplicationCaller applicationsHelper) {
+
+        this.activity = new WeakReference<>(activity);
         this.redeemPointSession = redeemPointSession;
-
-        errorManager = redeemPointSession.getErrorManager();
-
-        try {
-            moduleManager = redeemPointSession.getModuleManager();
-            redeemPointIdentity = this.moduleManager.getActiveAssetRedeemPointIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_ASSET_USER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), redeemPointIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), redeemPointSession, applicationsHelper.get());
         } catch (CantGetIdentityRedeemPointException e) {
             e.printStackTrace();
         }

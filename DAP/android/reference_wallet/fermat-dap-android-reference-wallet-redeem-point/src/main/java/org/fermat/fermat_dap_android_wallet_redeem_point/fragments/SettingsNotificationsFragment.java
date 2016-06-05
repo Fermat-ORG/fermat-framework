@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
@@ -37,14 +38,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy  on 02/02/16.
  */
-public class SettingsNotificationsFragment extends AbstractFermatFragment {
+public class SettingsNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager> {
 
     private View rootView;
-    private RedeemPointSessionReferenceApp redeemPointSession;
     private Spinner spinner;
     private Switch notificationSwitch;
     private Toolbar toolbar;
-
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
@@ -60,8 +59,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
-        moduleManager = redeemPointSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -79,7 +77,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_redeem_point_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
-            redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;

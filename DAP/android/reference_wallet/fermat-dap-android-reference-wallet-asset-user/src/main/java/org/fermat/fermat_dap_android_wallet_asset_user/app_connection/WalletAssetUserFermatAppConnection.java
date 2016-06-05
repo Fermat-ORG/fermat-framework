@@ -7,7 +7,9 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -24,10 +26,9 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSessionReferenceApp> {
+public class WalletAssetUserFermatAppConnection extends AppConnections<ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>> {
 
-    AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSessionReferenceApp assetUserSession;
+    ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession;
 
     public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
@@ -40,7 +41,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.ASSET_USER,
@@ -50,14 +51,13 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
     }
 
     @Override
-    public AssetUserSessionReferenceApp getSession() {
+    public AbstractReferenceAppFermatSession getSession() {
         return new AssetUserSessionReferenceApp();
     }
 
-
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -79,7 +79,6 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
             this.assetUserSession = this.getFullyLoadedSession();
             if (assetUserSession != null) {
                 if (assetUserSession.getModuleManager() != null) {
-                    moduleManager = assetUserSession.getModuleManager();
                     enabledNotification = assetUserSession.getModuleManager().loadAndGetSettings(assetUserSession.getAppPublicKey()).getNotificationEnabled();
                 }
             }

@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -31,35 +33,23 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "IssuerNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetIssuerWalletSupAppModuleManager moduleManager;
-    AssetIssuerSessionReferenceApp assetIssuerSession;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession;
 
-    public IssuerWalletNavigationViewPainter(Context activity, AssetIssuerSessionReferenceApp assetIssuerSession) {
+    public IssuerWalletNavigationViewPainter(Context activity,
+                                             ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
+                                             FermatApplicationCaller applicationsHelper) {
+
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;
-
-        errorManager = assetIssuerSession.getErrorManager();
-
-        try {
-            moduleManager = assetIssuerSession.getModuleManager();
-            identityAssetIssuer = this.moduleManager.getActiveAssetIssuerIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_ASSET_ISSUER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetIssuerSession, applicationsHelper.get());
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         }

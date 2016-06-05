@@ -64,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>,ResourceProviderManager>
+public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
 

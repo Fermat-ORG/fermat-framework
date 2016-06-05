@@ -54,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/22/15.
  */
-public class UserDeliveryListFragment extends FermatWalletListFragment<UserDelivery,ReferenceAppFermatSession,ResourceProviderManager> {
+public class UserDeliveryListFragment extends FermatWalletListFragment<UserDelivery,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserDeliveryListFragment";
@@ -62,7 +62,6 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSessionReferenceApp assetIssuerSession;
     // Data
     private List<UserDelivery> users;
     private DigitalAsset digitalAsset;
@@ -86,10 +85,8 @@ public class UserDeliveryListFragment extends FermatWalletListFragment<UserDeliv
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
-
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {

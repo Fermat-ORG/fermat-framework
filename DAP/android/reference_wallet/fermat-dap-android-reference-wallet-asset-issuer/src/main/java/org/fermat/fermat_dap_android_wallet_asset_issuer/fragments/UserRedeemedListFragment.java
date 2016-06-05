@@ -54,22 +54,17 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 01/06/16.
  */
-public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession,ResourceProviderManager> {
+public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserRedeemedListFragment";
-
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSessionReferenceApp assetIssuerSession;
     // Data
     private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
-    //UI
+   //UI
     private View noUsersView;
     private View rootView;
     private FermatTextView assetRedeemedListNameText;
@@ -87,10 +82,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
-
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {

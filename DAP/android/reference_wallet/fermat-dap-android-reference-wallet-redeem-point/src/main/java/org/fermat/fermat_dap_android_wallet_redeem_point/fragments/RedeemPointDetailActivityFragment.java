@@ -60,9 +60,8 @@ import static android.widget.Toast.makeText;
 /**
  * Created by jinmy on 01/12/16.
  */
-public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession,ResourceProviderManager> {
+public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager> {
 
-    private RedeemPointSessionReferenceApp redeemPointSession;
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private Resources res;
 
@@ -81,8 +80,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
     private DigitalAsset digitalAsset;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
-
     public RedeemPointDetailActivityFragment() {
 
     }
@@ -97,8 +94,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         setHasOptionsMenu(true);
 
         try {
-            redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
-            moduleManager = redeemPointSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);

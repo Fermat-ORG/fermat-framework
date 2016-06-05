@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
@@ -24,26 +25,13 @@ public class WalletRedeemPointHeaderPainter implements HeaderViewPainter {
     private static final String TAG = "RedeemNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetRedeemPointWalletSubAppModule moduleManager;
-    RedeemPointSessionReferenceApp redeemPointSession;
-    private ErrorManager errorManager;
+    ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession;
 
-    public WalletRedeemPointHeaderPainter(Context activity, RedeemPointSessionReferenceApp redeemPointSession) {
+    public WalletRedeemPointHeaderPainter(Context activity,
+                                          ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession) {
+
         this.activity = new WeakReference<>(activity);
         this.redeemPointSession = redeemPointSession;
-
-        try {
-            moduleManager = redeemPointSession.getModuleManager();
-            errorManager = redeemPointSession.getErrorManager();
-
-        } catch (Exception ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_REDEEM_POINT_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
     }
 
     @Override

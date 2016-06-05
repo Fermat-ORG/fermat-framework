@@ -60,10 +60,9 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/15/15.
  */
-public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragment<Transaction,ReferenceAppFermatSession,ResourceProviderManager>
+public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragment<Transaction, ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
         implements FermatListItemListeners<Transaction> {
 
-    private RedeemPointSessionReferenceApp redeemPointSession;
     private AssetRedeemPointWalletSubAppModule moduleManager;
 
     private View rootView;
@@ -99,11 +98,10 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
-        moduleManager = redeemPointSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        transactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override
