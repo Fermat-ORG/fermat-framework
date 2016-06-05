@@ -76,7 +76,7 @@ public class NominatimPluginManager implements NominatimManager {
     @Override
     public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
 
-        HashMap<String, Country> countriesList;
+        HashMap<String, Country> countriesList = new HashMap<>();
         try{
             boolean backupFileExists = pluginFileSystem.isTextFileExist(
                     pluginId,
@@ -88,8 +88,21 @@ public class NominatimPluginManager implements NominatimManager {
                 countriesList = createBackupFile();
                 return countriesList;
             }
-
-            return null;//only for compilation
+            //The file exists we gonna get the list from backup file
+            PluginTextFile backupFile = pluginFileSystem.getTextFile(
+                    pluginId,
+                    NominatimConfiguration.PATH_TO_COUNTRIES_FILE,
+                    NominatimConfiguration.COUNTRIES_BACKUP_FILE,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.loadFromMedia();
+            String stringCountriesData = backupFile.getContent();
+            if(stringCountriesData==null||stringCountriesData.isEmpty()){
+                throw new CantCreateCountriesListException(
+                        "The backup file is empty");
+            }
+            countriesList = (HashMap<String, Country>) XMLParser.parseXML(stringCountriesData,countriesList);
+            return countriesList;
         } catch (CantGetJSonObjectException e) {
             nominatimPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
