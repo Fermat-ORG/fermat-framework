@@ -37,14 +37,14 @@ public class AssetFactoryFermatAppConnection extends AppConnections<ReferenceApp
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_FACTORY,
                 Developers.BITDUBAI,
                 new Version()
-            )
-            };
+        )
+        };
     }
 
     @Override

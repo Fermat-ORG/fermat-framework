@@ -82,7 +82,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements
+public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>, ResourceProviderManager> implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
 
     private static AssetFactory selectedAsset;
