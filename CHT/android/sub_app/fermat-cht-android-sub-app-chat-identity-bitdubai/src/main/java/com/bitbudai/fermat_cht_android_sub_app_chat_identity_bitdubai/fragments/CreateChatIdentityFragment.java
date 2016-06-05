@@ -1,10 +1,8 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
 
 import android.content.Context;
@@ -87,9 +85,6 @@ import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.uti
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 
-//import com.theartofdev.edmodo.cropper.CropImage;
-
-
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
@@ -111,15 +106,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     TextView textViewChtTitle;
     byte[] fanImageByteArray;
-    ChatIdentitySession Session;
-    Context context;
+    ChatIdentitySession session;
     Toolbar toolbar;
     TextView statusView;
     ImageView placeholdImg;
-    Button btnRotate;
     int ROTATE_VALUE = 0;
     private Uri imageToUploadUri;
-    private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
 
     public static CreateChatIdentityFragment newInstance() {
@@ -132,9 +124,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            Session = (ChatIdentitySession) appSession;
-            moduleManager = Session.getModuleManager();
-            errorManager = Session.getErrorManager();
+            session = (ChatIdentitySession) appSession;
+            moduleManager = session.getModuleManager();
+            errorManager = session.getErrorManager();
 
             chatIdentitySettings = null;
             try {
@@ -300,7 +292,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     public void setUpDialog() {
         try {
-            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), session)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -583,7 +575,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
+                executor = new EditIdentityExecutor(session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -606,7 +598,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
+                executor = new EditIdentityExecutor(session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -645,7 +637,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             CreateChatIdentityExecutor executor = null;
             try {
-                executor = new CreateChatIdentityExecutor(Session, chatNameText, imgInBytes, identityConnectionNameText);
+                executor = new CreateChatIdentityExecutor(session, chatNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {

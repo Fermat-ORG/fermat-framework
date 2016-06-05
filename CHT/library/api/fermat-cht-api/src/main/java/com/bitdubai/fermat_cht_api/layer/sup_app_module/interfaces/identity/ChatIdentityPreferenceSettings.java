@@ -3,6 +3,9 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSaveSubAppSettings;
+import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
@@ -22,6 +25,17 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
     private Actors localActorType;
     private String localPublicKey;
     private PlatformComponentType localPlatformComponentType;
+
+//    @Override
+//    public void setPreferenceSettings(
+//            String walletPreferenceSettings,
+//            String walletPublicKey) throws CantSaveSubAppSettings {}
+//
+//    @Override
+//    public String getPreferenceSettings(
+//            String walletPublicKey) throws CantLoadSubAppSettings {
+//        return null;
+//    }
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;
@@ -53,10 +67,11 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
      * @return the identifier of the default language of the wallet
      * @throws CantGetDefaultLanguageException
      */
-    //@Override
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+   // @Override
+    public UUID getDefaultLanguage() throws com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException {
         return null;
     }
+
 
     /**
      * This method let us know the default skin of a wallet
@@ -65,7 +80,7 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
      * @throws CantGetDefaultSkinException
      */
     //@Override
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+    public UUID getDefaultSkin() throws com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultSkinException {
         return null;
     }
 
@@ -76,7 +91,7 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
      * @throws CantSetDefaultLanguageException
      */
     //@Override
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
+    public void setDefaultLanguage(UUID languageId) throws com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultLanguageException {
 
     }
 
@@ -87,7 +102,7 @@ public class ChatIdentityPreferenceSettings implements FermatSettings, Serializa
      * @throws CantSetDefaultSkinException
      */
     //@Override
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
+    public void setDefaultSkin(UUID skinId) throws com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException {
 
     }
 
