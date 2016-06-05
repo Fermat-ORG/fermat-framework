@@ -232,7 +232,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog<AssetUserWalletSubAppModuleManager> presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setImageLeft(R.drawable.asset_user_identity)
