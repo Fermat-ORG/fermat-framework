@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
@@ -32,10 +33,9 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy Bohorquez 02/26/2016
  */
-public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
+public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> {
 
     private View rootView;
-    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
@@ -54,8 +54,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -110,7 +109,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
 
     private void setUpSettings(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_community)
                     .setIconRes(R.drawable.asset_user_comunity)
                     .setVIewColor(R.color.dap_community_user_view_color)

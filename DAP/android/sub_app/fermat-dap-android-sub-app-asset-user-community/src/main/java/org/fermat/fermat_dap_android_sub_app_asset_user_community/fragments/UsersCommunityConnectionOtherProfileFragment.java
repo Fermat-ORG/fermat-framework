@@ -19,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
@@ -51,7 +53,7 @@ import java.util.List;
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment
+public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String USER_SELECTED = "user";
@@ -62,7 +64,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
 
     private Resources res;
     private View rootView;
-    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     //private FermatTextView userEmail;
@@ -71,7 +72,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private FermatTextView userBlockchainNetworkType;
     private FermatTextView userRegistrationDate;
     private FermatTextView userLastConnectionDate;
-    //private IntraUserModuleManager moduleManager;
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
     private ErrorManager errorManager;
@@ -103,8 +103,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         // setting up  module
         actor = (Actor) appSession.getData(USER_SELECTED);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }
@@ -197,7 +196,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
+                    appSession,
                     null,
                     actor,
                     null);
@@ -222,7 +221,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //CommonLogger.info(TAG, "User connection state " + actor.getStatus());
 //            try {
             final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
-                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
+                    appSession,
                     null,
                     actor,
                     null);
@@ -245,7 +244,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (i == R.id.btn_connection_cancel) {
 //            try {
             CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                    (AssetUserCommunitySubAppSessionReferenceApp) appSession,
+                    appSession,
                     null,
                     actor,
                     null);
@@ -270,7 +269,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 AcceptDialog notificationAcceptDialog;
 
                 notificationAcceptDialog = new AcceptDialog(getActivity(),
-                        (AssetUserCommunitySubAppSessionReferenceApp) appSession,
+                        appSession,
                         null,
                         actor,
                         moduleManager.getActiveAssetUserIdentity());
@@ -444,7 +443,6 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     actors.add((new Actor(record)));
                 }
             }
-
 
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();

@@ -7,11 +7,13 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -20,13 +22,14 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.Asset
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 
 /**
  * Added by Jinmy Bohorquez 06/03/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -44,21 +47,21 @@ public class CancelDialog extends FermatDialog<AssetUserCommunitySubAppSessionRe
     private final IdentityAssetUser identity;
 
     public CancelDialog(final Activity activity,
-                        final AssetUserCommunitySubAppSessionReferenceApp intraUserSubAppSession,
+                        final ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager> assetUserCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources,
                         final Actor actor,
                         final IdentityAssetUser identity) {
 
-        super(activity, intraUserSubAppSession, subAppResources);
+        super(activity, assetUserCommunitySubAppSession, subAppResources);
 
         this.actor = actor;
         this.identity = identity;
     }
 
     public CancelDialog(Activity a,
-                        final AssetUserCommunitySubAppSessionReferenceApp actorUserSubAppSession,
+                        final ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager> assetUserCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
-        super(a, actorUserSubAppSession, subAppResources);
+        super(a, assetUserCommunitySubAppSession, subAppResources);
         this.actor = null;
         this.identity = null;
     }

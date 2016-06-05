@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -28,34 +30,23 @@ public class IssuerCommunityNavigationViewPainter implements NavigationViewPaint
     private static final String TAG = "Iss-ComunNavigationView";
 
     private WeakReference<Context> activity;
-    AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
-    private ActiveActorIdentityInformation activeIdentity;
-    AssetIssuerCommunitySubAppModuleManager moduleManager;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager> assetIssuerCommunitySubAppSession;
 
-    public IssuerCommunityNavigationViewPainter(Context activity, AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession) {
-        this.activity = new WeakReference<Context>(activity);
+    public IssuerCommunityNavigationViewPainter(Context activity,
+                                                ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager> assetIssuerCommunitySubAppSession,
+                                                FermatApplicationCaller applicationsHelper) {
+
+        this.activity = new WeakReference<>(activity);
         this.assetIssuerCommunitySubAppSession = assetIssuerCommunitySubAppSession;
-
-        errorManager = assetIssuerCommunitySubAppSession.getErrorManager();
-
-        try {
-            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
-            activeIdentity = this.moduleManager.getActiveAssetIssuerIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                Log.e(TAG, ex.getMessage(), ex);
-        }
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return IssuerCommunityFragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), activeIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetIssuerCommunitySubAppSession, applicationsHelper.get());
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
             return null;

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityNotificationAdapter;
@@ -50,7 +51,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class UserCommunityNotificationsFragment extends AbstractFermatFragment implements
+public class UserCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String USER_SELECTED = "user";
@@ -64,16 +65,12 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private UserCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private AssetUserCommunitySubAppModuleManager moduleManager;
-    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
     private List<Actor> listActorInformation;
-    //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -89,8 +86,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         actorInformation = (Actor) appSession.getData(USER_SELECTED);
@@ -243,7 +239,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
@@ -286,7 +282,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    assetUserCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getActiveAssetUserIdentity());

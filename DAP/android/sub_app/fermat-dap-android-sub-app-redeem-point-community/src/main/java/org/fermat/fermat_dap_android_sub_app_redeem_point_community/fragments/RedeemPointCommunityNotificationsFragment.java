@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityNotificationAdapter;
@@ -51,7 +52,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment implements
+public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
@@ -65,17 +66,13 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private RedeemPointCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private RedeemPointCommunitySubAppModuleManager moduleManager;
-    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     RedeemPointSettings settings = null;
 
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
     private List<Actor> listActorInformation;
-    //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
-
-//    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -91,8 +88,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         actorInformation = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
@@ -245,7 +241,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_redeem_point)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
@@ -289,7 +285,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
 
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    assetRedeemPointCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getActiveAssetRedeemPointIdentity());

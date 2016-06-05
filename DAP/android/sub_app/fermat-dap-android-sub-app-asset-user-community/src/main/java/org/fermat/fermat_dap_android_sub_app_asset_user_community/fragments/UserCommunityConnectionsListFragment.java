@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAppFriendsListAdapter;
@@ -51,7 +52,8 @@ import static android.widget.Toast.makeText;
  * Jinmy Bohorquez 12/02/2016
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class UserCommunityConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
+public class UserCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String USER_SELECTED = "user";
     private static final int MAX = 20;
@@ -64,12 +66,10 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     private boolean isRefreshing = false;
     private View rootView;
     private UserCommunityAppFriendsListAdapter adapter;
-    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private LinearLayout emptyView;
     private AssetUserCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<Actor> actors;
-//    SettingsManager<AssetUserSettings> settingsManager;
 
     public static UserCommunityConnectionsListFragment newInstance() {
         return new UserCommunityConnectionsListFragment();
@@ -80,8 +80,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         actors = new ArrayList<>();
@@ -114,7 +113,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)

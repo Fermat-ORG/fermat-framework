@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.software.shell.fab.ActionButton;
 
@@ -59,11 +60,11 @@ import static android.widget.Toast.makeText;
 /**
  * UserCommuinityGroupUsersFragment, Show all the users in the selected group
  */
-public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
-    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private static final int MAX = 20;
 
     private List<Actor> actors;
@@ -82,7 +83,6 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private Menu menu;
     private CreateGroupFragmentDialog dialog;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -99,8 +99,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         try {
             group = (Group) appSession.getData("group_selected");
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -218,7 +217,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
 
     private void setUpPresentation(boolean checkButton) {
 
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
@@ -246,7 +245,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                     lauchCreateGroupDialog();
                 } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE) {
                     appSession.setData("group_ID", group.getGroupId());
-                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, appResourcesProviderManager);
+                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
                     dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {
@@ -281,7 +280,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                     dialog.show();
 
                 } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS) {
-                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, appResourcesProviderManager);
+                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
                     dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {

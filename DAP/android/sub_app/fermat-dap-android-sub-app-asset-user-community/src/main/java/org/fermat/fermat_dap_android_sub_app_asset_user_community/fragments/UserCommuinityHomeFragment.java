@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAdapter;
@@ -64,7 +65,7 @@ import static android.widget.Toast.makeText;
 /**
  * UserCommuinityHomeFragment
  */
-public class UserCommuinityHomeFragment extends AbstractFermatFragment
+public class UserCommuinityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {
@@ -73,10 +74,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager moduleManager;
-    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
-
     static ErrorManager errorManager;
 
     // recycler
@@ -100,10 +99,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
-
     private ExecutorService _executor;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
 
     /**
      * Flags
@@ -124,22 +120,21 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
             actor = (Actor) appSession.getData(USER_SELECTED);
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
-            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
-                settings = assetUserCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey());
+                settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
 
-            if (assetUserCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (appSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (settings == null) {
                     settings = new AssetUserSettings();
                     settings.setIsPresentationHelpEnabled(true);
-                    assetUserCommunitySubAppSession.getModuleManager().persistSettings(assetUserCommunitySubAppSession.getAppPublicKey(), settings);
+                    appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
                 }
             }
 
@@ -488,7 +483,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -622,7 +617,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
+                disconnectDialog = new DisconnectDialog(getActivity(), appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -704,7 +699,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSessionReferenceApp) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();
@@ -774,7 +769,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -904,7 +899,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(USER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetUserCommunitySubAppSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerConnectionsListAdapter;
@@ -49,7 +50,8 @@ import static android.widget.Toast.makeText;
  * Penelope Quintero
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
+public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";
     private static final int MAX = 20;
@@ -62,12 +64,10 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     private boolean isRefreshing = false;
     private View rootView;
     private IssuerConnectionsListAdapter adapter;
-    private AssetIssuerCommunitySubAppSessionReferenceApp actorIssuerSubAppSession;
     private LinearLayout emptyView;
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
     private List<ActorIssuer> lstActorIssuers;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerCommunityConnectionsListFragment newInstance() {
         return new IssuerCommunityConnectionsListFragment();
@@ -77,10 +77,9 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
-        manager = actorIssuerSubAppSession.getModuleManager();
+
+        manager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         lstActorIssuers = new ArrayList<>();
     }
 
@@ -211,7 +210,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
@@ -230,7 +229,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
         try {
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(actorIssuerSubAppSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

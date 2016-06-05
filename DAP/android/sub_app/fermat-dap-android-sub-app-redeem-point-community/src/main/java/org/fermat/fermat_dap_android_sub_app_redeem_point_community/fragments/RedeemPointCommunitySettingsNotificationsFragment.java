@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
@@ -32,16 +33,14 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy Bohorquez 02/26/2016
  */
-public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
+public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager> {
 
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private RedeemPointCommunitySubAppModuleManager moduleManager;
     RedeemPointSettings settings = null;
-    //    SettingsManager<RedeemPointSettings> settingsManager;
     private ErrorManager errorManager;
 
 
@@ -54,8 +53,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -109,7 +107,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
 
     private void setUpSettings(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point)
                     .setIconRes(R.drawable.reddem_point_community)
                     .setVIewColor(R.color.dap_community_redeem_view_color)

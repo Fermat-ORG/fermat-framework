@@ -19,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
@@ -44,14 +46,13 @@ import java.util.Date;
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment
+public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String ISSUER_SELECTED = "issuer";
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
     private ImageView issuerProfileAvatar;
     private FermatTextView issuerName;
     private FermatTextView issuerExtendedKey;
@@ -73,7 +74,6 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private Button accept;
     private DAPConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
-
     /**
      * Create a new instance of this fragment
      *
@@ -90,8 +90,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         // setting up  module
         actorIssuer = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }

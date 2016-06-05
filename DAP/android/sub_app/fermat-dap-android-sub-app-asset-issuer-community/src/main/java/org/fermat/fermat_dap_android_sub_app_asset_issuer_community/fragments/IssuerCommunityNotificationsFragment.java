@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerCommunityNotificationAdapter;
@@ -50,7 +51,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment implements
+public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";
@@ -64,16 +65,12 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     private IssuerCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
-    private AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
 
     private ErrorManager errorManager;
     private int offset = 0;
     private ActorIssuer actorInformation;
     private List<ActorIssuer> listActorInformation;
-    //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -88,8 +85,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         actorInformation = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
@@ -127,9 +123,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
         } catch (Exception ex) {
 //            CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
-
         }
-
 
         return rootView;
     }
@@ -280,7 +274,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
-                    assetIssuerCommunitySubAppSession,
+                    appSession,
                     null,
                     data,
                     moduleManager.getActiveAssetIssuerIdentity());

@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
@@ -32,19 +33,15 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy Bohorquez 02/26/2016
  */
-public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
+public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager> {
 
     private View rootView;
-    private AssetIssuerCommunitySubAppSessionReferenceApp session;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
-    //    SettingsManager<AssetIssuerSettings> settingsManager;
     private ErrorManager errorManager;
     AssetIssuerSubAppSettings settings = null;
-
 
     public static IssuerCommunitySettingsFragment newInstance() {
         return new IssuerCommunitySettingsFragment();
@@ -55,12 +52,10 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
-        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
     }
 
     @Nullable
@@ -74,7 +69,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_issuer_community_opps_system_error, Toast.LENGTH_SHORT).show();
-            session.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -111,7 +106,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
 
     private void setUpSettings(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_community)
                     .setIconRes(R.drawable.asset_issuer_comunity)
                     .setVIewColor(R.color.dap_community_issuer_view_color)
