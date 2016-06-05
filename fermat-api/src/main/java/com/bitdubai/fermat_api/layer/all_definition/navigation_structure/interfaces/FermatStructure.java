@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Matias Furszyfer on 2016.01.06..
@@ -32,6 +33,11 @@ public interface FermatStructure extends Serializable{
      * @return
      */
     AppStructureType getAppStructureType();
+
+    /**
+     *
+     */
+    List<String> getAppsKeyConsumed();
 
     /**
      *  Return an specific Activity object from this class

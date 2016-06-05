@@ -44,7 +44,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -65,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession,ResourceProviderManager>
+public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>,ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
 
@@ -79,7 +78,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
-    AssetUserSessionReferenceApp assetUserSession;
+//    AssetUserSessionReferenceApp assetUserSession;
 //    SettingsManager<AssetUserSettings> settingsManager;
 
     // Data
@@ -101,8 +100,8 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+//            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {

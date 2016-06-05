@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.wallet_manager.structure.provisory_classes;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -33,7 +32,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private int position;
     private AppsStatus status;
     private int bannerRes;
-    private AppStructureType appStructureType = AppStructureType.REFERENCE;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
@@ -200,10 +199,10 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         return FermatAppType.WALLET;
     }
 
-    @Override
-    public AppStructureType getAppStructureType() {
-        return appStructureType;
-    }
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

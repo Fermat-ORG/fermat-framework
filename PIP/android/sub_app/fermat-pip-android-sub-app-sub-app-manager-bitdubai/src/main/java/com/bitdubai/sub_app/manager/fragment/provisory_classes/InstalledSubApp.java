@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.manager.fragment.provisory_classes;
 
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -33,7 +32,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private AppsStatus appStatus;
     private int bannerRes;
     Platforms platforms;
-    private AppStructureType appStructureType = AppStructureType.REFERENCE;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.subApps = subApps;
@@ -183,10 +182,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         return FermatAppType.SUB_APP;
     }
 
-    @Override
-    public AppStructureType getAppStructureType() {
-        return appStructureType;
-    }
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

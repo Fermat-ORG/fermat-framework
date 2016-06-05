@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2016.06.02..
  */
-public class AbstractComboFermatSession<A extends FermatApp,R extends ResourceProviderManager> extends BaseFermatSession<A,R> implements ComboAppFermatSession<A> {
+public class AbstractComboFermatSession<A extends FermatApp,R extends ResourceProviderManager> extends BaseFermatSession<A,R> implements ComboAppFermatSession {
     
     private Map<Class,ModuleManager> moduleManagerMap;
 
@@ -30,7 +30,7 @@ public class AbstractComboFermatSession<A extends FermatApp,R extends ResourcePr
     }
 
     @Override
-    public <T> T getModuleManager(Class<T> classType) throws InvalidParameterException {
+    public <T extends ModuleManager> T getModuleManager(Class<T> classType) throws InvalidParameterException {
         if(!moduleManagerMap.containsKey(classType)) throw new InvalidParameterException();
         return (T) moduleManagerMap.get(classType);
     }

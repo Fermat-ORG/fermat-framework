@@ -33,7 +33,6 @@ public class AssetUserSessionReferenceApp extends AbstractReferenceAppFermatSess
     /**
      * Constructor
      *
-     * @param resourceManager Wallet Resource manager
      * @param errorManager    Error Manager
      * @param manager         AssetIssuerWallet Manager
      */

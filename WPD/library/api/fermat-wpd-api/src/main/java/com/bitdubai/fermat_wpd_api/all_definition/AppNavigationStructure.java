@@ -10,7 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -40,6 +42,7 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     private DeveloperIdentity developer;
     private String actualStart;
     private Platforms platform;
+    private List<String> appsKeyConsumed;
 
     /**
      * AppNavigationStructure constructor
@@ -176,5 +179,17 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
 
     public AppStructureType getAppStructureType() {
         return appStructureType;
+    }
+
+    @Override
+    public List<String> getAppsKeyConsumed() {
+        return appsKeyConsumed;
+    }
+
+    public void addAppKeyToConsume(String appPublicKey){
+        if(appsKeyConsumed==null){
+            appsKeyConsumed = new ArrayList<>();
+        }
+        this.appsKeyConsumed.add(appPublicKey);
     }
 }

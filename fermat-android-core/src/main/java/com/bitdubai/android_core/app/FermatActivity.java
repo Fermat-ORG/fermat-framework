@@ -1748,7 +1748,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             try {
                 alert.setNegativeButton("Cancel", null);
-                alert.show();
+//                alert.show();
 
                 }catch (Exception e){
                     e.printStackTrace();
