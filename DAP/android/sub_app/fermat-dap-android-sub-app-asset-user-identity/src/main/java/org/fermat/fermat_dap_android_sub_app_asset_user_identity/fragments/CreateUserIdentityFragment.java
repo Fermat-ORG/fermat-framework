@@ -56,7 +56,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession,ResourceProviderManager> {
+public class CreateUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserIdentityModuleManager>,ResourceProviderManager> {
 
     private static final String TAG = "CreateAssetUserIdentity";
 
@@ -80,11 +80,9 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    UserIdentitySubAppSessionReferenceApp userIdentitySubAppSession;
     private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-    //    SettingsManager<UserIdentitySettings> settingsManager;
     UserIdentitySettings userIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -103,8 +101,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            userIdentitySubAppSession = (UserIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = userIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 
@@ -167,7 +164,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_identity)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_identity_user_view_color)

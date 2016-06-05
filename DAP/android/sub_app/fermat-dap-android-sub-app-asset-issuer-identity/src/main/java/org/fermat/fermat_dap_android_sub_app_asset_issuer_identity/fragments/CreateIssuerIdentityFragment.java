@@ -39,7 +39,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
@@ -56,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIssuerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession,ResourceProviderManager> {
+public class CreateIssuerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerIdentityModuleManager>,ResourceProviderManager> {
 
     private static final String TAG = "AssetIssuerIdentity";
 
@@ -80,7 +79,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    IssuerIdentitySubAppSessionReferenceApp issuerIdentitySubAppSession;
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
@@ -102,8 +100,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            issuerIdentitySubAppSession = (IssuerIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = issuerIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 
@@ -166,7 +163,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_identity)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_identity_issuer_view_color)

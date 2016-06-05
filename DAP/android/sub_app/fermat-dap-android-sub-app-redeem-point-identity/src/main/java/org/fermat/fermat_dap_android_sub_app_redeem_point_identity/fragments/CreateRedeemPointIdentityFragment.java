@@ -56,7 +56,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession,ResourceProviderManager> {
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointIdentityModuleManager>,ResourceProviderManager> {
 
     private static final String TAG = "RedeemPointIdentity";
 
@@ -70,7 +70,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    RedeemPointIdentitySubAppSessionReferenceApp redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
@@ -91,7 +90,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointIdentitySettings redeemPointIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -110,8 +108,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSessionReferenceApp) appSession;
-            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 
@@ -174,7 +171,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_identity_redeem_view_color)
