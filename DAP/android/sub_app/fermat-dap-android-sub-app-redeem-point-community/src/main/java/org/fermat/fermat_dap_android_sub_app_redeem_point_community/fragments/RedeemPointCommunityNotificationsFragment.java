@@ -34,7 +34,6 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -52,7 +51,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager> implements
+public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";

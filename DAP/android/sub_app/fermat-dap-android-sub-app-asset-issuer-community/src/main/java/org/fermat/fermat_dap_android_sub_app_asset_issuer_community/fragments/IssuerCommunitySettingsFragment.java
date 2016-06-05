@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.settings.AssetIssuerSubAppSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
@@ -33,7 +32,7 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy Bohorquez 02/26/2016
  */
-public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager> {
+public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> {
 
     private View rootView;
     private Spinner spinner;

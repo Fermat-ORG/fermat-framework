@@ -44,7 +44,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -65,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * UserCommuinityHomeFragment
  */
-public class UserCommuinityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
+public class UserCommuinityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {

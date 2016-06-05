@@ -64,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by francisco on 21/10/15.
  */
-public class IssuerCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager> implements
+public class IssuerCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<ActorIssuer> {

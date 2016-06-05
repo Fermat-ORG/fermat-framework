@@ -37,7 +37,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserVi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -54,7 +53,7 @@ import static android.widget.Toast.makeText;
 /**
  * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
  */
-public class UserCommuinityUsersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
+public class UserCommuinityUsersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;

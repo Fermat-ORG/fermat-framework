@@ -34,7 +34,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
@@ -51,7 +50,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager> implements
+public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";

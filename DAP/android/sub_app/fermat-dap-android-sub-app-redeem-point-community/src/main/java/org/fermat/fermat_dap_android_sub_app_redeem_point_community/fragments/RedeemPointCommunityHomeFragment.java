@@ -44,7 +44,6 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -65,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * changed by jinmy Bohorquez on 11/02/16
  */
-public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager>
+public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {

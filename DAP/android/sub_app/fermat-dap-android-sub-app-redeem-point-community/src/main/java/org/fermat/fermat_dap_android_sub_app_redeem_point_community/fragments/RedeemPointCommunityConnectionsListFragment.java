@@ -33,7 +33,6 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityAppFriendsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
@@ -53,7 +52,7 @@ import static android.widget.Toast.makeText;
  * Jinmy Bohorquez 13/02/2016
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager>
+public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";

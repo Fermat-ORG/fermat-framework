@@ -18,7 +18,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -29,7 +28,7 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.i
  * Added by Jinmy Bohorquez 06/03/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> implements View.OnClickListener {
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     /**
      * UI components

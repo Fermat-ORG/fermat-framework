@@ -33,7 +33,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerConnectionsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -50,7 +49,7 @@ import static android.widget.Toast.makeText;
  * Penelope Quintero
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager>
+public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";

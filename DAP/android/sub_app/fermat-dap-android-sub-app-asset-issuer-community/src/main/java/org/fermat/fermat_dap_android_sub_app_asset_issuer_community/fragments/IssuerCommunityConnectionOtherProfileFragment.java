@@ -46,7 +46,7 @@ import java.util.Date;
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>,ResourceProviderManager>
+public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String ISSUER_SELECTED = "issuer";
@@ -74,6 +74,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private Button accept;
     private DAPConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
+
     /**
      * Create a new instance of this fragment
      *

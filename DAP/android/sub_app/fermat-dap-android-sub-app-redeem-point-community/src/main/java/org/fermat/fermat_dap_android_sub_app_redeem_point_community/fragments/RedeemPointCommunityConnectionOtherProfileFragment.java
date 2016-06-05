@@ -33,7 +33,6 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.Accept
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
@@ -53,7 +52,7 @@ import java.util.List;
  * Creado por Jinmy Bohorquez on 11/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class RedeemPointCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>,ResourceProviderManager>
+public class RedeemPointCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";

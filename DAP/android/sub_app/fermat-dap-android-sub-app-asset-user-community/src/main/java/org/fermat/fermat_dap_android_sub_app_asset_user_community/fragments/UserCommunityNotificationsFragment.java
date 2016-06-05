@@ -34,7 +34,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -51,7 +50,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 17/02/16.
  */
-public class UserCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> implements
+public class UserCommunityNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
     public static final String USER_SELECTED = "user";

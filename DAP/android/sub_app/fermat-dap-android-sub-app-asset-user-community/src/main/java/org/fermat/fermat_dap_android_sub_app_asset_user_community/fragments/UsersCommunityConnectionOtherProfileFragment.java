@@ -33,7 +33,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -53,7 +52,7 @@ import java.util.List;
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager>
+public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final String USER_SELECTED = "user";

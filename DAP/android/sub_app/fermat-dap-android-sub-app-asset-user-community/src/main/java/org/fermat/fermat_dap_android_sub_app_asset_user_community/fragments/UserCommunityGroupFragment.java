@@ -37,7 +37,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.Group
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.GroupViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CreateGroupFragmentDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -51,7 +50,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 06/01/16.
  */
-public class UserCommunityGroupFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>,ResourceProviderManager> implements
+public class UserCommunityGroupFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
