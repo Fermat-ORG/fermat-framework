@@ -42,7 +42,6 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.MyAssetsAdapte
 import org.fermat.fermat_dap_android_wallet_redeem_point.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -64,7 +63,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/14/15.
  */
-public class RedeemPointMainActivityFragment extends FermatWalletListFragment<DigitalAsset,ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
+public class RedeemPointMainActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants

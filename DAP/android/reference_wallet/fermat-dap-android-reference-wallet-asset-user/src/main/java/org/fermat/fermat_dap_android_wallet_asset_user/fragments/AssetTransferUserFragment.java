@@ -55,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 18/02/2016.
  */
-public class AssetTransferUserFragment extends FermatWalletListFragment<User,ReferenceAppFermatSession,ResourceProviderManager>
+public class AssetTransferUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants

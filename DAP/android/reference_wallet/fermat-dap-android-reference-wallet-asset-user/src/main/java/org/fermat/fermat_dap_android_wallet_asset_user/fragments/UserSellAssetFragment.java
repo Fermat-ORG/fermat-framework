@@ -76,7 +76,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends FermatWalletListFragment<User,ReferenceAppFermatSession,ResourceProviderManager>
+public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
 

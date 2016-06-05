@@ -33,7 +33,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetDetailTrans
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Transaction;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
@@ -48,7 +47,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy Bohorquez on 04/02/16.
  */
-public class TransactionsFragment extends FermatWalletListFragment<Transaction,ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
+public class TransactionsFragment extends FermatWalletListFragment<Transaction, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<Transaction> {
 
     private AssetUserWalletSubAppModuleManager moduleManager;

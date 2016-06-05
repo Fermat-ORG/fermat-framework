@@ -1,10 +1,6 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.navigation_drawer;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;

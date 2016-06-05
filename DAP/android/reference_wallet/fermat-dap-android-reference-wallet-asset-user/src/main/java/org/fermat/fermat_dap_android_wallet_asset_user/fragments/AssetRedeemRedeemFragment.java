@@ -57,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 18/02/2016.
  */
-public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPoint,ReferenceAppFermatSession,ResourceProviderManager>
+public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     // Constants

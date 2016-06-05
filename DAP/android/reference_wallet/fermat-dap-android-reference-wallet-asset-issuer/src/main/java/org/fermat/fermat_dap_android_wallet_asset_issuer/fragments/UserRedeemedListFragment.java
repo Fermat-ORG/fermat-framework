@@ -38,7 +38,6 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.UserRed
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.UserRedeemed;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -54,7 +53,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 01/06/16.
  */
-public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
+public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedeemed, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserRedeemedListFragment";
@@ -64,7 +63,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     // Data
     private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
-   //UI
+    //UI
     private View noUsersView;
     private View rootView;
     private FermatTextView assetRedeemedListNameText;

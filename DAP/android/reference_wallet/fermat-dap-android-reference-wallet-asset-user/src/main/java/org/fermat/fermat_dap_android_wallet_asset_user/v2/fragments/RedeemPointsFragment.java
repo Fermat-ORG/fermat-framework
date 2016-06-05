@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/3/16.
  */
-public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint,ReferenceAppFermatSession,ResourceProviderManager>
+public class RedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     //UI

@@ -38,7 +38,6 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.UserDel
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.UserDelivery;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -54,7 +53,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/22/15.
  */
-public class UserDeliveryListFragment extends FermatWalletListFragment<UserDelivery,ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
+public class UserDeliveryListFragment extends FermatWalletListFragment<UserDelivery, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     // Constants
     private static final String TAG = "UserDeliveryListFragment";
