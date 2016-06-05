@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 11/01/16.
  */
-public final class DAPStandardFormats implements Serializable{
+public final class DAPStandardFormats implements Serializable {
 
     //VARIABLE DECLARATION
 
