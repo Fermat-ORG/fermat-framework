@@ -40,7 +40,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -56,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserIdentityModuleManager>,ResourceProviderManager> {
+public class CreateUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "CreateAssetUserIdentity";
 

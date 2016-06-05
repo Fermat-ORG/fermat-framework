@@ -55,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIssuerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerIdentityModuleManager>,ResourceProviderManager> {
+public class CreateIssuerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "AssetIssuerIdentity";
 

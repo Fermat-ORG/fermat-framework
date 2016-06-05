@@ -39,7 +39,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -56,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointIdentityModuleManager>,ResourceProviderManager> {
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "RedeemPointIdentity";
 
