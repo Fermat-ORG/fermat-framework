@@ -17,17 +17,18 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.DesktopManagerSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.adapter.WizardPageAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.wizard.DepthPageTransformer;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> implements View.OnClickListener {
+public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements View.OnClickListener {
 
     ViewPager viewPager;
     WizardPageAdapter wizardPageAdapter;
