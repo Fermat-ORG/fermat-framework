@@ -94,14 +94,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-//    AssetFactorySessionReferenceApp assetFactorySession;
     AssetFactorySettings settings = null;
-    //    private MenuItem menuHelp;
-//    private Menu menu;
-    // custom inflater
     private ViewInflater viewInflater;
-
-//    SettingsManager<AssetFactorySettings> settingsManager;
 
     private boolean isRefreshing = false;
     private long satoshisWalletBalance;
@@ -122,16 +116,13 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
 
         try {
             selectedAsset = null;
-//            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
             satoshisWalletBalance = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
-
     }
 
     @Nullable

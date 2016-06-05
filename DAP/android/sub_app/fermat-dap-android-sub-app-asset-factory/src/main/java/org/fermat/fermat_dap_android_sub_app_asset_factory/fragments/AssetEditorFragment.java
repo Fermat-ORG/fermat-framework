@@ -53,6 +53,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Re
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
@@ -86,7 +87,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  *
  * @author Francisco Vasquez
  */
-public class AssetEditorFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class AssetEditorFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -95,7 +96,6 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
     private AssetFactory asset;
 
@@ -142,8 +142,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         setHasOptionsMenu(true);
 
         try {
-            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
-            moduleManager = assetFactorySession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             if (!isEdit) {

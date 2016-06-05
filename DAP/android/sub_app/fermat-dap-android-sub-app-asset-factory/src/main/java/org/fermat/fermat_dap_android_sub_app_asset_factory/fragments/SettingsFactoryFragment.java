@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
@@ -35,18 +36,15 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsFactoryFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements View.OnClickListener {
 
     private View rootView;
-
     private FermatTextView networkAction;
     private FermatTextView notificationAction;
 
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
-//    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static SettingsFactoryFragment newInstance() {
         return new SettingsFactoryFragment();
@@ -57,8 +55,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
-        moduleManager = assetFactorySession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
 //            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

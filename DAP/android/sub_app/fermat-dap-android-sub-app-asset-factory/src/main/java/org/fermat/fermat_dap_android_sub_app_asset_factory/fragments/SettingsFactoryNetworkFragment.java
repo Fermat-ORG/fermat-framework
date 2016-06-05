@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
@@ -42,17 +43,14 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsFactoryNetworkFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener {
+public class SettingsFactoryNetworkFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements AdapterView.OnItemSelectedListener {
 
     private View rootView;
     private Spinner spinner;
     List<BlockchainNetworkType> listElementSpinner;
-
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
-    //    SettingsManager<AssetFactorySettings> settingsManager;
     AssetFactorySettings settings = null;
 
     public static SettingsFactoryNetworkFragment newInstance() {
@@ -64,8 +62,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
-        moduleManager = assetFactorySession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

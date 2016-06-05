@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -28,34 +30,23 @@ public class AssetFactoryNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "FactoryNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetFactorySessionReferenceApp assetFactorySession;
-    AssetFactoryModuleManager moduleManager;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetFactoryModuleManager> factorySession;
 
-    public AssetFactoryNavigationViewPainter(Context activity, AssetFactorySessionReferenceApp assetFactorySession) {
-        this.activity = new WeakReference<Context>(activity);
-        this.assetFactorySession = assetFactorySession;
+    public AssetFactoryNavigationViewPainter(Context activity,
+                                             ReferenceAppFermatSession<AssetFactoryModuleManager> factorySession,
+                                             FermatApplicationCaller applicationsHelper) {
 
-        errorManager = assetFactorySession.getErrorManager();
-
-        try {
-            moduleManager = assetFactorySession.getModuleManager();
-            identityAssetIssuer = this.moduleManager.getActiveAssetIssuerIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                Log.e(TAG, ex.getMessage(), ex);
-        }
+        this.activity = new WeakReference<>(activity);
+        this.factorySession = factorySession;
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), factorySession, applicationsHelper.get());
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         }

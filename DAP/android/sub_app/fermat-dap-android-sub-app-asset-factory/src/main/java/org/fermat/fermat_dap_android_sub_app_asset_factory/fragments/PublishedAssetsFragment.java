@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.software.shell.fab.ActionButton;
 
@@ -56,28 +57,22 @@ import static org.fermat.fermat_dap_api.layer.all_definition.enums.State.FINAL;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class PublishedAssetsFragment extends AbstractFermatFragment implements
+public class PublishedAssetsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>,ResourceProviderManager> implements
         FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
-
     /**
      * asset to edit
      */
     private final String TAG = "DapPublish";
     private ArrayList<AssetFactory> dataSet;
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySessionReferenceApp assetFactorySession;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-
     // custom inflater
     private ViewInflater viewInflater;
-
     private boolean isRefreshing = false;
-
-//    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static PublishedAssetsFragment newInstance() {
         return new PublishedAssetsFragment();
@@ -89,11 +84,8 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
         setHasOptionsMenu(true);
 
         try {
-            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
-            moduleManager = assetFactorySession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
