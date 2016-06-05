@@ -14,8 +14,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.interfaces.Country;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.nominatim.developer.version_1.structure.NominatimPluginManager;
+
+import java.util.HashMap;
 
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "darkpriestrelative@gmail.com", createdBy = "darkestpriest", layer = Layers.EXTERNAL_API, platform = Platforms.PLUG_INS_PLATFORM, plugin = Plugins.NOMINATIM)
 public class NominatimPluginRoot extends AbstractPlugin {
@@ -51,6 +57,7 @@ public class NominatimPluginRoot extends AbstractPlugin {
                     pluginFileSystem,
                     this.pluginId);
             //Test Methods
+            testListCountries();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -64,6 +71,19 @@ public class NominatimPluginRoot extends AbstractPlugin {
          * nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * Test methods
+     */
+    private void testListCountries(){
+        try {
+            HashMap<String, Country> countriesHashMap = this.nominatimPluginManager.getCountryList();
+            System.out.println("NOMINATIM:"+countriesHashMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
     }
 
 }

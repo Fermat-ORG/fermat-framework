@@ -27,6 +27,26 @@ public class GeonosJsonAttNames {
     public static final String GEO_RECTANGLE = "GeoRectangle";
 
     /**
+     * Represents the north coordinate.
+     */
+    public static final String NORTH = "North";
+
+    /**
+     * Represents the north coordinate.
+     */
+    public static final String SOUTH = "South";
+
+    /**
+     * Represents the north coordinate.
+     */
+    public static final String WEST = "West";
+
+    /**
+     * Represents the north coordinate.
+     */
+    public static final String EAST = "East";
+
+    /**
      * NOTE:
      * The Geonos API provides more detailed information, ins this version, We only check this data.
      */

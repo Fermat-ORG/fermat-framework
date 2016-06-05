@@ -88,7 +88,7 @@ public class NominatimPluginManager implements NominatimManager {
                 countriesList = createBackupFile();
                 return countriesList;
             }
-            //TODO: implement the case when the backup file exists
+
             return null;//only for compilation
         } catch (CantGetJSonObjectException e) {
             nominatimPluginRoot.reportError(
