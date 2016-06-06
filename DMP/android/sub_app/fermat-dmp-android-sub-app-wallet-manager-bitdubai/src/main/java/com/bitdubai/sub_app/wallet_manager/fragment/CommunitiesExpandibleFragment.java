@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.adapter.CommunitiesExpandableAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.model.GrouperItem;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Created by mati on 2016.03.14..
  */
-public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFragment<GrouperItem, DesktopSession, ResourceProviderManager>
+public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFragment<GrouperItem, DesktopSessionReferenceApp, ResourceProviderManager>
         implements FermatListItemListeners<InstalledApp> {
 
 

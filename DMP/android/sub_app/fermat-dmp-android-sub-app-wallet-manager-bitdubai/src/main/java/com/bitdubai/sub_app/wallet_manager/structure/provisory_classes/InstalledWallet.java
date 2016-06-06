@@ -32,6 +32,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private int position;
     private AppsStatus status;
     private int bannerRes;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
@@ -197,6 +198,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     public FermatAppType getAppType() {
         return FermatAppType.WALLET;
     }
+
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

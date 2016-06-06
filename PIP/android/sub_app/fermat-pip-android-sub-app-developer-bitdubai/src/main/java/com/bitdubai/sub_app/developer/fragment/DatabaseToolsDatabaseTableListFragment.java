@@ -30,7 +30,7 @@ import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.DatabasesTable;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
 
     View rootView;
     private ErrorManager errorManager;

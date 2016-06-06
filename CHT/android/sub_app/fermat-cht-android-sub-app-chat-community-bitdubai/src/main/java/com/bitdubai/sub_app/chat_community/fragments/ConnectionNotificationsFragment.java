@@ -41,7 +41,7 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -60,14 +60,14 @@ import java.util.List;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 
 public class ConnectionNotificationsFragment
-        extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation>, AcceptDialog.OnDismissListener {
 
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
@@ -104,7 +104,7 @@ public class ConnectionNotificationsFragment
 
             // setting up  module
             chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
-            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -332,7 +332,7 @@ public class ConnectionNotificationsFragment
 //    private boolean isRefreshing = false;
 //    private View rootView;
 //    private NotificationAdapter adapter;
-//    private ChatUserSubAppSession chatUserSubAppSession;
+//    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
 //    private LinearLayout emptyView;
 //    private ChatActorCommunitySubAppModuleManager moduleManager;
 //    private ErrorManager errorManager;
@@ -356,7 +356,7 @@ public class ConnectionNotificationsFragment
 //        super.onCreate(savedInstanceState);
 //        setHasOptionsMenu(true);
 //        // setting up  module
-//        chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+//        chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
 //        chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
 //        moduleManager = chatUserSubAppSession.getModuleManager();
 //        errorManager = appSession.getErrorManager();

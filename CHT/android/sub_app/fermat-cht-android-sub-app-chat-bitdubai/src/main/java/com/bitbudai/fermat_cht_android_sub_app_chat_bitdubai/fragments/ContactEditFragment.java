@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -79,7 +79,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
@@ -120,7 +120,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
         //setHasOptionsMenu(true);
 
         try {
-            chatSession=((ChatSession) appSession);
+            chatSession=((ChatSessionReferenceApp) appSession);
             chatManager= chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
@@ -192,7 +192,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
                     chatManager.newInstanceChatActorCommunitySelectableIdentity((ChatIdentity) chatManager.
                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0);
              for (ChatActorCommunityInformation cont: chatActorCommunityInformations) {
-                if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
                     contactname.add(cont.getAlias());
                     contactid.add(cont.getPublicKey());
                     contactalias.add(cont.getAlias());
@@ -241,7 +241,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
 //                    for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
 //                            (ChatActorCommunitySelectableIdentity) chatManager.
 //                                    getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
-//                        if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+//                        if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
 //                            cont.setAlias(aliasText);
 //                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
 //                            //chatManager.saveContact(con);

@@ -16,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
@@ -32,7 +31,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
@@ -42,7 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -57,7 +55,7 @@ import java.util.List;
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ContactsListFragment
-        extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
@@ -65,7 +63,7 @@ public class ContactsListFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ContactsListFragment";
@@ -95,7 +93,7 @@ public class ContactsListFragment
         try {
             setHasOptionsMenu(true);
             //Get managers
-            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
            // settingsManager = moduleManager.getSettingsManager();
@@ -350,7 +348,7 @@ public class ContactsListFragment
 //    private boolean isRefreshing = false;
 //    private View rootView;
 //    private ContactsListAdapter adapter;
-//    private ChatUserSubAppSession chatUserSubAppSession;
+//    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
 //    private LinearLayout emptyView;
 //    private ChatActorCommunitySubAppModuleManager moduleManager;
 //    private ErrorManager errorManager;
@@ -364,7 +362,7 @@ public class ContactsListFragment
 //    public void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setHasOptionsMenu(true);
-//        chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+//        chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
 //        moduleManager = chatUserSubAppSession.getModuleManager();
 //        errorManager = appSession.getErrorManager();
 //        lstChatUserInformations = new ArrayList<>();

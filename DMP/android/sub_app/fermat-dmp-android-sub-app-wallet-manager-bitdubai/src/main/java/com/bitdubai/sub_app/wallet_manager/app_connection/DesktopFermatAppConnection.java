@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.wallet_manager.app_connection;
 
 import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.*;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -12,15 +12,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentFactory;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DesktopFermatAppConnection extends AppConnections<DesktopSession>{
+public class DesktopFermatAppConnection extends AppConnections<DesktopSessionReferenceApp>{
 
     private CryptoWallet moduleManager = null;
-    private DesktopSession referenceWalletSession;
+    private DesktopSessionReferenceApp referenceWalletSession;
 
     public DesktopFermatAppConnection(Context activity) {
         super(activity);
@@ -32,19 +32,19 @@ public class DesktopFermatAppConnection extends AppConnections<DesktopSession>{
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.DESKTOP_MODULE,
                 Plugins.WALLET_MANAGER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new DesktopSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return new DesktopSessionReferenceApp();
     }
 
     @Override

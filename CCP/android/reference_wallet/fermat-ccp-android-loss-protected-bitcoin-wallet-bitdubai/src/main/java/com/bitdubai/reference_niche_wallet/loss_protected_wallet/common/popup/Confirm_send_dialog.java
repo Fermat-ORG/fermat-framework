@@ -19,7 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 
 /**
@@ -50,7 +50,7 @@ public class Confirm_send_dialog extends Dialog implements
 
     private LossProtectedWallet lossProtectedWallet;
 
-    private LossProtectedWalletSession appSession;
+    private LossProtectedWalletSessionReferenceApp appSession;
 
 
 
@@ -72,7 +72,7 @@ public class Confirm_send_dialog extends Dialog implements
                                Actors deliveredToActorType,
                                ReferenceWallet referenceWallet,
                                BlockchainNetworkType blockchainNetworkType,
-                               LossProtectedWalletSession appSession) {
+                               LossProtectedWalletSessionReferenceApp appSession) {
         super(a);
         this.activity = a;
         this.lossProtectedWallet=lossProtectedWallet;

@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.settings.ChatIdentitySettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CommonLogger;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
@@ -106,6 +107,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     TextView textViewChtTitle;
     byte[] fanImageByteArray;
+    ChatIdentitySessionReferenceApp Session;
+    Context context;
     ChatIdentitySession session;
     Toolbar toolbar;
     TextView statusView;
@@ -124,9 +127,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            session = (ChatIdentitySession) appSession;
-            moduleManager = session.getModuleManager();
-            errorManager = session.getErrorManager();
+            Session = (ChatIdentitySessionReferenceApp) appSession;
+            moduleManager = Session.getModuleManager();
+            errorManager = Session.getErrorManager();
+//            session = (ChatIdentitySession) appSession;
+//            moduleManager = session.getModuleManager();
+//            errorManager = session.getErrorManager();
 
             chatIdentitySettings = null;
             try {

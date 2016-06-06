@@ -11,14 +11,14 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
  * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * Interfaces
@@ -41,7 +41,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
-                                              final IntraUserSubAppSession intraUserSubAppSession,
+                                              final IntraUserSubAppSessionReferenceApp intraUserSubAppSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(a, intraUserSubAppSession, subAppResources);

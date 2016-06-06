@@ -14,17 +14,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
 /**
  * Created by mati on 2015.11.27..
  */
-public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener{
+public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSessionReferenceApp,SubAppResourcesProviderManager> implements View.OnClickListener{
 
     private final Activity activity;
     private FermatButton add_fermat_user;
@@ -39,7 +38,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSes
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ContactsTutorialPart1V2(Activity activity, LossProtectedWalletSession fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
+    public ContactsTutorialPart1V2(Activity activity, LossProtectedWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.checkButton = checkButton;

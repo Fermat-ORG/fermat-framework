@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
@@ -75,7 +75,7 @@ public class ContactFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
     String TAG = "CHT_ContactFragment";
@@ -91,7 +91,7 @@ public class ContactFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession=((ChatSession) appSession);
+            chatSession=((ChatSessionReferenceApp) appSession);
             chatManager= chatSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
@@ -179,10 +179,10 @@ public class ContactFragment extends AbstractFermatFragment {
 //                for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
 //                        chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
 //                                getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
-//                    if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
-//                        appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
+//                    if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
+//                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, cont.getPublicKey());
 //                        break;
-//                        // appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
+//                        // appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
 //                    }
 //                }
 //                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());

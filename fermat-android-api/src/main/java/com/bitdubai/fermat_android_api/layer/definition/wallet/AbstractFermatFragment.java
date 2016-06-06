@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -234,7 +233,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    protected <S extends SubAppsSession> void destroy(){
+    protected void destroy(){
         onDestroy();
         System.gc();
     }

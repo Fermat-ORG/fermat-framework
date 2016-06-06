@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -48,7 +48,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
 
     private Button okBtn;
     private EditText messageEdit;
@@ -63,7 +63,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession = ((ChatSession) appSession);
+            chatSession = ((ChatSessionReferenceApp) appSession);
             chatManager = chatSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();

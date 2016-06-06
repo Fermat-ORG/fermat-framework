@@ -37,7 +37,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -57,7 +57,7 @@ import java.util.Locale;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
  * Modified by Alejandro Bicelis on 22/02/2016
  */
-public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
+public class ContractDetailActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager> {
 
     //Constants
     private static final String TAG = "ContractDetailFrag";

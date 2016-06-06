@@ -26,7 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 
 import java.io.ByteArrayOutputStream;
 
@@ -34,7 +34,7 @@ import java.io.ByteArrayOutputStream;
  * @author Jose manuel de Sousa
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUserSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
 
     public static final int TYPE_PRESENTATION = 1;
@@ -49,7 +49,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
     private RecreateView recreateView;
 
@@ -60,7 +60,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationIntraUserCommunityDialog(final Activity activity,
-                                                final IntraUserSubAppSession fermatSession,
+                                                final IntraUserSubAppSessionReferenceApp fermatSession,
                                                 final SubAppResourcesProviderManager resources,
                                                 final IntraUserModuleManager moduleManager,
                                                 final int type) {

@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
+public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Fermat Managers

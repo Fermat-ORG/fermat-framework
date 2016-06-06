@@ -13,13 +13,13 @@ import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 import com.bitdubai.sub_app.wallet_manager.fragment.settings.ExportImportSeedFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.settings.MoreSettingsFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.welcome_wizard.WelcomeWizardFragment;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession, ResourceProviderManager,DesktopFragmentsEnumType> {
+public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSessionReferenceApp, ResourceProviderManager,DesktopFragmentsEnumType> {
 
 
     @Override

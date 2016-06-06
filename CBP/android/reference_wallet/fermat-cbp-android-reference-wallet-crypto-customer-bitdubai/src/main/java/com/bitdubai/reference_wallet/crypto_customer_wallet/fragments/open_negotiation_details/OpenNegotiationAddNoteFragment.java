@@ -16,12 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 /**
  * Created by Yordin Alayn on 29.01.16.
  */
-public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>{
+public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>{
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
@@ -62,7 +62,7 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
 
     private void bindData() {
 
-        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSession.NEGOTIATION_DATA);
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSessionReferenceApp.NEGOTIATION_DATA);
 
     }
 

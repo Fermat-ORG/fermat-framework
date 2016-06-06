@@ -26,7 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 
 /**
  * DisconectDialog
@@ -35,7 +35,7 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
  * @version 1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -53,7 +53,7 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
     private final ChatActorCommunitySelectableIdentity identity            ;
 
     public DisconnectDialog(final Activity activity,
-                            final ChatUserSubAppSession chatUserSubAppSession,
+                            final ChatUserSubAppSessionReferenceApp chatUserSubAppSession,
                             final SubAppResourcesProviderManager subAppResources,
                             final ChatActorCommunityInformation chatUserInformation,
                             final ChatActorCommunitySelectableIdentity identity) {
