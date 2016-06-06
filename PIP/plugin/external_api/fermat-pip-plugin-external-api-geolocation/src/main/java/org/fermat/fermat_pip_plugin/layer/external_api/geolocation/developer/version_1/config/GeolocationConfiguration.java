@@ -20,4 +20,14 @@ public class GeolocationConfiguration {
      */
     public static final String PATH_TO_COUNTRIES_FILE = "";
 
+    /**
+     * Represents the geonames username.
+     */
+    public static final String GEONAMES_USERNAME = "fermatgeotest";
+
+    /**
+     * Represents the geonames URL to get the country information.
+     */
+    public static final String GEONAMES_URL_COUNTRY = "http://api.geonames.org/countryInfoJSON?formatted=true&lang=en&style=full&country=";
+
 }

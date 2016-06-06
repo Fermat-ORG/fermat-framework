@@ -162,4 +162,18 @@ public abstract class AbstractAPIProcessor {
         return getStringFromJsonObject(jsonObject, field);
     }
 
+    /**
+     * This method returns a long from a JsonElement by a given field.
+     * The named field must be defined in any class from the package config.
+     * @param jsonElement
+     * @param field
+     * @return
+     */
+    protected static long getLongFromJsonElement(
+            JsonElement jsonElement,
+            String field){
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        return getLongFromJsonObject(jsonObject, field);
+    }
+
 }
