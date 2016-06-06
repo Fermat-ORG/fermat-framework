@@ -31,4 +31,10 @@ public interface CountryDependency extends Serializable {
      */
     int getCountryId();
 
+    /**
+     * This method return the dependency Id.
+     * @return
+     */
+    int getDependencyId();
+
 }

@@ -20,4 +20,24 @@ public class GeonamesJsonAttNames {
      */
     public static final String GEONAMES_COUNTRY_ID = "geonameId";
 
+    /**
+     * Represents the geonames dependencies array.
+     */
+    public static final String COUNTRY_GEONAMES_DEPENDENCIES_ARRAY = "geonames";
+
+    /**
+     * Represents the Id from a dependency
+     */
+    public static final String COUNTRY_GEONAMES_DEPENDENCY_ID = "geonameId";
+
+    /**
+     * Represents the Toponym name from a dependency
+     */
+    public static final String COUNTRY_GEONAMES_DEPENDENCY_TOPONYM_NAME = "toponymName";
+
+    /**
+     * Represents the name from a dependency
+     */
+    public static final String COUNTRY_GEONAMES_DEPENDENCY_NAME = "name";
+
 }

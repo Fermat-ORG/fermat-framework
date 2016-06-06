@@ -21,6 +21,16 @@ public class GeolocationConfiguration {
     public static final String PATH_TO_COUNTRIES_FILE = "";
 
     /**
+     * Represents the backup-file name.
+     */
+    public static final String DEPENDENCIES_BACKUP_FILE = "dependencies-backup";
+
+    /**
+     * Represents the backup-file path.
+     */
+    public static final String PATH_TO_DEPENDENCIES_FILE = "";
+
+    /**
      * Represents the geonames username.
      */
     public static final String GEONAMES_USERNAME = "fermatgeotest";
@@ -29,5 +39,10 @@ public class GeolocationConfiguration {
      * Represents the geonames URL to get the country information.
      */
     public static final String GEONAMES_URL_COUNTRY = "http://api.geonames.org/countryInfoJSON?formatted=true&lang=en&style=full&country=";
+
+    /**
+     * Reprents the geonames URL to get the country dependencies.
+     */
+    public static final String GEONAME_URL_COUNTRY_DEPENDENCIES = "http://api.geonames.org/childrenJSON?geonameId=";
 
 }

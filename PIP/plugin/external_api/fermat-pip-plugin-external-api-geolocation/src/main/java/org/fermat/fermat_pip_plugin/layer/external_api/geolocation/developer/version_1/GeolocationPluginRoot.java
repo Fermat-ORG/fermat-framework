@@ -15,10 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.structure.GeolocationPluginManager;
 
 import java.util.HashMap;
+import java.util.List;
 
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "darkpriestrelative@gmail.com", createdBy = "darkestpriest", layer = Layers.EXTERNAL_API, platform = Platforms.PLUG_INS_PLATFORM, plugin = Plugins.NOMINATIM)
 public class GeolocationPluginRoot extends AbstractPlugin {
@@ -54,7 +56,8 @@ public class GeolocationPluginRoot extends AbstractPlugin {
                     pluginFileSystem,
                     this.pluginId);
             //Test Methods
-            testListCountries();
+            //testListCountries();
+            testListDependencies();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -76,6 +79,18 @@ public class GeolocationPluginRoot extends AbstractPlugin {
     private void testListCountries(){
         try {
             HashMap<String, Country> countriesHashMap = this.geolocationPluginManager.getCountryList();
+            System.out.println("NOMINATIM:" + countriesHashMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception " + e);
+        }
+    }
+
+    private void testListDependencies(){
+        try {
+            String countryCode = "VE";
+            List<CountryDependency> countriesHashMap = this.geolocationPluginManager.
+                    getCountryDependencies(countryCode);
             System.out.println("NOMINATIM:"+countriesHashMap);
         } catch (Exception e) {
             e.printStackTrace();
