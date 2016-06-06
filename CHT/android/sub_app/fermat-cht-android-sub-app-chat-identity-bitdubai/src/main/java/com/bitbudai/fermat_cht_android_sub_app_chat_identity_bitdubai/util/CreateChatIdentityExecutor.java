@@ -42,14 +42,14 @@ public class CreateChatIdentityExecutor {
         identity = null;
     }
 
-    public CreateChatIdentityExecutor(ReferenceAppFermatSession session, String identityName, byte[] imageInBytes, String identityConnectionState) throws CantGetChatIdentityException {
+    public CreateChatIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String identityName, byte[] imageInBytes, String identityConnectionState) throws CantGetChatIdentityException {
         this(imageInBytes, identityName, identityConnectionState);
         identity = null;
 
         if (session != null) {
-            ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
+            //ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }
     }
 

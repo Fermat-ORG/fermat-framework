@@ -35,16 +35,16 @@ public class EditIdentityExecutor {
         this.identityConnectionState = identityConnectionState;
     }
 
-    public EditIdentityExecutor(ReferenceAppFermatSession session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
+    public EditIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
         this(imageInBytes, Publickey ,identityName, identityConnectionState);
         identity = null;
         if (session != null) {
-            ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
-            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
+            //ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
+            //Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }else{
-            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
+            //Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }
 
