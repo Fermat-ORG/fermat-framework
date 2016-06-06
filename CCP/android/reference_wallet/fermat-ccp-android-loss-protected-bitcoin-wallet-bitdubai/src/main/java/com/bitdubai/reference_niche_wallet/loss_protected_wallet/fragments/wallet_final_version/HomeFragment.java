@@ -246,8 +246,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            animationManager = new AnimationManager(rootView,emptyListViewsContainer);
-            getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -520,12 +519,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 final String dateActual = sdf.format(actualDate);
                 final String dateSpend = sdf.format(listSpendig.getTimestamp());
                 //get the total earned and lost
-                if(dateActual.equals(dateSpend)){
+               // if(dateActual.equals(dateSpend)){
                 totalEarnedAndLostForToday += getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
-                }
+               // }
 
                 //get the entry value for chart with getEarnOrLostOfSpending method
                 final double valueEntry = getEarnOrLostOfSpending(
@@ -852,10 +851,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 Log.i("VAL SELECTED",
                         "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
                                 + ", DataSet index: " + dataSetIndex);
+                BitcoinLossProtectedWalletSpend spent = allWalletSpendingList.get(dataSetIndex);
 
-
-                ChartDetailDialog dialogo = new ChartDetailDialog(getActivity(),e.getXIndex(),e.getVal(),allWalletSpendingList);
-                dialogo.show();
+                ChartDetailDialog dialogSpent = new ChartDetailDialog(getActivity(),spent);
+                dialogSpent.show();
                 chart.invalidate(); // refresh
 
             }catch (Exception el){

@@ -608,10 +608,20 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
         //}
         try{
-            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
-            actionButton.setVisibility(View.VISIBLE);
-            button1.setVisibility(View.VISIBLE);
-            button2.setVisibility(View.VISIBLE);
+            if(isScrolled)
+            {
+                actionButton.setVisibility(View.GONE);
+                button1.setVisibility(View.GONE);
+                button2.setVisibility(View.GONE);
+
+            }
+            else
+            {
+                FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+                actionButton.setVisibility(View.VISIBLE);
+
+            }
+
         }
         catch(Exception e)
         {

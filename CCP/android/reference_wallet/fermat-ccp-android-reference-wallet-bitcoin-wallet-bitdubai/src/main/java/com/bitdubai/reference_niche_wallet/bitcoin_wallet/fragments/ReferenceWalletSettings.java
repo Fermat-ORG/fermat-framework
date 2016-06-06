@@ -293,7 +293,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
     @Override
     public int getBackgroundAlpha() {
-        return 95;
+        return 0;
     }
 
     @Override

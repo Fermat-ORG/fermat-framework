@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 
 import java.text.SimpleDateFormat;
@@ -28,12 +29,10 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
     public Activity activity;
     public Dialog d;
-    private int index;
-    private float amount;
-    private List ListSpendings;
-    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 2;
-    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 0;
-    private double totalEarnedAndLostForToday = 0;
+    private BitcoinLossProtectedWalletSpend spending;
+    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 4;
+    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 2;
+
     private ImageView earnOrLostImage;
 
     /**
@@ -46,13 +45,11 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
 
 
-    public ChartDetailDialog(Activity a,int index,float amount,List<BitcoinLossProtectedWalletSpend> ListSpendigs)
+    public ChartDetailDialog(Activity a,BitcoinLossProtectedWalletSpend spending)
     {
         super(a);
         this.activity = a;
-        this.index=index;
-        this.amount=amount;
-        this.ListSpendings=ListSpendigs;
+        this.spending=spending;
     }
 
 
@@ -74,40 +71,34 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
 
 
-        if (ListSpendings!=null){
-            for (int i =0;i>ListSpendings.size();i++){
-                if (i == index){
-                    BitcoinLossProtectedWalletSpend lst = (BitcoinLossProtectedWalletSpend) ListSpendings.get(i);
-                    txt_date.setText(sdf.format(lst.getTimestamp()));
-                }
-            }
-        }
+        txt_date.setText(sdf.format(spending.getTimestamp()));
+
         //txt_amount.setText(WalletUtils.formatAmountString(amount));
 
-        if (amount > 0){
+        if (spending.getAmount() > 0){
 
             txt_amount.setText("USD "+
-                    WalletUtils.formatAmountStringWithDecimalEntry(
-                            amount,
+                    WalletUtils.formatBalanceStringWithDecimalEntry(
+                            spending.getAmount(),
                             EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
+                            EARN_AND_LOST_MIN_DECIMAL_FORMAT, ShowMoneyType.BITCOIN.getCode())+" earned");
 
             earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
 
-        }else if (amount==0){
+        }else if (spending.getAmount()==0){
 
             txt_amount.setText("USD 0.00");
             earnOrLostImage.setVisibility(View.INVISIBLE);
 
-        }else if (amount< 0){
+        }else if (spending.getAmount()< 0){
 
-            txt_amount.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
-                    amount*-1,
+            txt_amount.setText("USD "+WalletUtils.formatBalanceStringWithDecimalEntry(
+                    spending.getAmount() * -1,
                     EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                    EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+                    EARN_AND_LOST_MIN_DECIMAL_FORMAT,ShowMoneyType.BITCOIN.getCode())+" lost");
             earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
         }
 

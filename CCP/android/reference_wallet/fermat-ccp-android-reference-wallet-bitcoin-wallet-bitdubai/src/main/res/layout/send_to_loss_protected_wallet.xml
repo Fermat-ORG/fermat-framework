@@ -9,7 +9,7 @@
         android:id="@+id/send_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
+        android:background="@color/color_white"
         android:orientation="horizontal"
         android:paddingLeft="16dip"
         android:paddingRight="16dip">
@@ -107,6 +107,7 @@
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
+                        android:maxLength="12"
                         />
 
                     <Spinner

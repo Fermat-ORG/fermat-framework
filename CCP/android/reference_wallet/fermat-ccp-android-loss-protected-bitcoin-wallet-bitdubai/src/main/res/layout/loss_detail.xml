@@ -5,13 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="#ffffff">
+    android:background="@color/color_white">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="#DC5A0F"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true"
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -40,10 +41,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="Transaction Details!"
+                    android:text="Spending Details"
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textColor="#073487"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     android:gravity="left"
@@ -75,8 +76,8 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:text="Date:DD/MM/YY"
-                   android:textSize="20sp"
-                   android:layout_gravity="right"
+                   android:textSize="14sp"
+
                    android:textColor="@color/black"
                    />
                 <LinearLayout
@@ -96,7 +97,7 @@
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:text="U$D:0.0"
-                       android:textSize="20sp"
+                       android:textSize="14sp"
                        android:textColor="@color/black"
                        />
 
@@ -130,7 +131,7 @@
                 android:id="@+id/accept_btn"
                 android:layout_width="0dp"
                 android:background="#DC5A0F"
-                android:text="CLOSE"
+                android:text="Close"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1"
                 android:layout_height="40dp" />
