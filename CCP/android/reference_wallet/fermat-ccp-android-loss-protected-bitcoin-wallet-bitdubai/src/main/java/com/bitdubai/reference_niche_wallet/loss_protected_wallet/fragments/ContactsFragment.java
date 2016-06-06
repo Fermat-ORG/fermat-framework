@@ -389,6 +389,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onErrorOccurred(Exception ex) {
                 makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -606,6 +607,19 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         //TODO: set obtained position after populating
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
         //}
+        try{
+            FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+            actionButton.setVisibility(View.VISIBLE);
+            button1.setVisibility(View.VISIBLE);
+            button2.setVisibility(View.VISIBLE);
+        }
+        catch(Exception e)
+        {
+
+        }
+
+
+
     }
 
     private void lauchCreateContactDialog(boolean withImage) {
