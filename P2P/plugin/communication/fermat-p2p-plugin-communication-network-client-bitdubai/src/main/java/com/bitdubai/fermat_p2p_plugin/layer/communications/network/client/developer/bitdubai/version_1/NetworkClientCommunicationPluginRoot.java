@@ -174,7 +174,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
-            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+            ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
+            ClientContext.add(ClientContextItem.DATABASE, dataBase);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
 
@@ -189,7 +190,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         identity,
                         this,
                         0,
-                        Boolean.FALSE
+                        Boolean.FALSE,
+                        nodesProfileList.get(0)
                 );
 
             }else {
@@ -201,7 +203,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         identity,
                         this,
                         -1,
-                        Boolean.FALSE
+                        Boolean.FALSE,
+                        null
                 );
 
             }
@@ -434,7 +437,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     identity,
                     this,
                     i+1,
-                    Boolean.FALSE
+                    Boolean.FALSE,
+                    nodesProfileList.get(i+1)
             );
 
         }else{
@@ -446,7 +450,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     identity,
                     this,
                     -1,
-                    Boolean.FALSE
+                    Boolean.FALSE,
+                    null
             );
 
         }
