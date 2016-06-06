@@ -46,6 +46,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -59,7 +60,9 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
+public class ContactsListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
+        implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -124,8 +127,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         super.onCreate(savedInstanceState);
 
         try{
-            chatSession=((ChatSessionReferenceApp) appSession);
-            chatManager= chatSession.getModuleManager();
+            //chatSession=((ChatSessionReferenceApp) appSession);
+            chatManager= appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             chatManager.setAppPublicKey(appSession.getAppPublicKey());
             errorManager=appSession.getErrorManager();
@@ -430,8 +433,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 return false;
             }
         });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+            String filterString = (String) appSession.getData("filterString");
             if (filterString.length() > 0) {
                 searchView.setQuery(filterString, true);
                 searchView.setIconified(false);

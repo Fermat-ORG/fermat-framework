@@ -173,11 +173,11 @@ public class ChatAdapterView extends LinearLayout {
     public void whatToDo() {
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
-            findValues(chatSession.getSelectedContact());
-            if (chatSession.getData("whocallme").equals("chatlist")) {
+            findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));
+            if (appSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
-            } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 //if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
                 chatWasCreate = chatId != null;
@@ -479,7 +479,8 @@ public class ChatAdapterView extends LinearLayout {
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         //ScrollView container = (ScrollView) findViewById(R.id.container);
 
-        if (chatSession != null) {
+        //if (chatSession != null) {
+        if(appSession !=null){
             whatToDo();
             findMessage();
             scroll();
@@ -581,7 +582,7 @@ public class ChatAdapterView extends LinearLayout {
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);
                     } else {
-                        Contact newContact = chatSession.getSelectedContact();
+                        Contact newContact = (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA);//chatSession.getSelectedContact();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
                         chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
@@ -633,11 +634,8 @@ public class ChatAdapterView extends LinearLayout {
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);//
                         //If everything goes OK, we save the chat in the fragment session.
-                        chatSession.setData("whocallme", "chatlist");
-                        chatSession.setData(
-                                "contactid",
-                                newContact
-                        );
+                        appSession.setData("whocallme", "chatlist");
+                        appSession.setData("contactid", newContact);
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
@@ -701,7 +699,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void refreshEvents() {
         //whatToDo();
-        findValues(chatSession.getSelectedContact());
+        findValues((Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA));//chatSession.getSelectedContact());
         findMessage();
         checkStatus();
         scroll();
