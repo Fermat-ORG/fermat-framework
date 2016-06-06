@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.PresentationBitcoinWalletDialog;
@@ -227,7 +227,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new ReceivetransactionsExpandableAdapter(getActivity(), openNegotiationList,getResources());
+            adapter = new ReceivetransactionsAdapter(getActivity(), openNegotiationList,getResources());
             //noinspection unchecked
             adapter.setChildItemFermatEventListeners(this);
         }
