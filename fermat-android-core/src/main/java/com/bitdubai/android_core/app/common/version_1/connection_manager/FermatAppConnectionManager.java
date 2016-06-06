@@ -197,7 +197,9 @@ public class FermatAppConnectionManager {
             case "public_key_art_music_player":
                 fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
                 break;
-
+            default:
+                fermatAppConnection = new EmptyFermatAppConnection(activity);
+                break;
 
 
         }
