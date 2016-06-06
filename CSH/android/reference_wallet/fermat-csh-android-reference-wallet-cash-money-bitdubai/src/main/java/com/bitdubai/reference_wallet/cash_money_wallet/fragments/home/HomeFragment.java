@@ -49,6 +49,9 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
 implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "HomeFragment";
+    private Thread refresherThread;
+    private boolean threadIsRunning = false;
+
 
     // Fermat Managers
     private CashMoneyWalletSession walletSession;
@@ -311,7 +314,13 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         if (moduleManager != null) {
             try {
-                data.addAll(moduleManager.getPendingTransactions());
+                List<CashMoneyWalletTransaction> pendingTransactions = moduleManager.getPendingTransactions();
+                if(!pendingTransactions.isEmpty())
+                    startRefresh();
+                else
+                    stopRefresh();
+
+                data.addAll(pendingTransactions);
                 data.addAll(moduleManager.getTransactions(walletSession.getAppPublicKey(), transactionTypes, balanceTypes, 100, 0));
 
             } catch (Exception ex) {
@@ -431,9 +440,11 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
-            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
-                onRefresh();
-                break;
+            //Nod depending on broadcaster to update screen when transaction finished
+            //Instead im using determinate progressbars, updated by a refresher thread.
+            //case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+                //onRefresh();
+                //break;
             case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS:
                 Toast.makeText(getActivity(), "Transaction failed due to insufficient funds", Toast.LENGTH_SHORT).show();
 
@@ -447,5 +458,52 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 super.onUpdateViewOnUIThread(code);
         }
     }
+
+
+
+
+    /* Refresher thread code */
+    public final void startRefresh() {
+
+        if(!threadIsRunning) {
+            this.refresherThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (threadIsRunning)
+                        doRefresh();
+                }
+            });
+            threadIsRunning = true;
+            this.refresherThread.start();
+        }
+    }
+
+    public final void stopRefresh() {
+
+        if (threadIsRunning)
+            this.refresherThread.interrupt();
+        threadIsRunning = false;
+    }
+
+    private final void doRefresh() {
+
+        while (threadIsRunning) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException interruptedException) {
+                threadIsRunning = false;
+                return;
+            }
+
+            if (refresherThread.isInterrupted()) {
+                threadIsRunning = false;
+                return;
+            }
+
+            onRefresh();
+        }
+    }
+
 }
 
