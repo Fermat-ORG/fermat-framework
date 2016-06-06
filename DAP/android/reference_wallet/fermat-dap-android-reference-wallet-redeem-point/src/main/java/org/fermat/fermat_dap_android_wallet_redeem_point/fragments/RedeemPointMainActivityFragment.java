@@ -192,7 +192,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                     .setSubTitle(R.string.dap_redeem_wallet_welcome_subTitle)
                     .setBody(R.string.dap_redeem_wallet_welcome_body)
                     .setTextFooter(R.string.dap_redeem_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
