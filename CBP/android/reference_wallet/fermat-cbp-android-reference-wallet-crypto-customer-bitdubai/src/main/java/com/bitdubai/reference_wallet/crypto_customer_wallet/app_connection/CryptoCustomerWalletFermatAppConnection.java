@@ -48,14 +48,14 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_CUSTOMER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

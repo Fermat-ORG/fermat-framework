@@ -18,6 +18,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -144,7 +145,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 
      public void ShowDialogWelcome(){
          try {
-             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                      .setBody(R.string.cht_chat_body_broadcast_step_one)
                      .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
                      .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)

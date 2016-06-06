@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -97,7 +98,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
-        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                 .setBannerRes(R.drawable.banner_identity_customer)
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)

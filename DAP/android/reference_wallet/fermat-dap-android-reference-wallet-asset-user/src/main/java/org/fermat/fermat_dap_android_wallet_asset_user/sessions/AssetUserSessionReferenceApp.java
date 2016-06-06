@@ -33,9 +33,8 @@ public class AssetUserSessionReferenceApp extends AbstractReferenceAppFermatSess
     /**
      * Constructor
      *
-     * @param resourceManager Wallet Resource manager
-     * @param errorManager    Error Manager
-     * @param manager         AssetIssuerWallet Manager
+     * @param errorManager Error Manager
+     * @param manager      AssetIssuerWallet Manager
      */
     public AssetUserSessionReferenceApp(String publicKey, InstalledWallet installedWallet, ErrorManager errorManager, AssetUserWalletSubAppModuleManager manager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, installedWallet, errorManager, manager, resourceProviderManager);

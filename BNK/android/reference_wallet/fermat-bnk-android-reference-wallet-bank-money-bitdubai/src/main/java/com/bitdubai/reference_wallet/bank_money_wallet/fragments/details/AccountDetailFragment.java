@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -44,7 +46,7 @@ import java.util.List;
 /**
  * Created by memo on 08/12/15.
  */
-public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTransactionRecord> implements FermatListItemListeners<BankMoneyTransactionRecord>, DialogInterface.OnDismissListener {
+public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTransactionRecord,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<BankMoneyTransactionRecord>, DialogInterface.OnDismissListener {
 
 
     private BankMoneyWalletModuleManager moduleManager;
@@ -120,7 +122,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
         availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                 .setBannerRes(R.drawable.bw_banner_bank)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
                 .setTitle("prueba Title")

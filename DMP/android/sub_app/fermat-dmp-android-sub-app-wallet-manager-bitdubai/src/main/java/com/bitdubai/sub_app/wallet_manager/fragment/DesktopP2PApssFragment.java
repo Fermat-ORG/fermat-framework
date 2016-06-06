@@ -23,6 +23,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ComboAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -364,11 +365,18 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(4);
             lstItemsWithIcon.add(item);
 
+            installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Combo Chat", ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
+            installedSubApp.setAppStatus(AppsStatus.ALPHA);
+            item = new Item(installedSubApp);
+            item.setIconResource(R.drawable.communities_icon);
+            item.setPosition(5);
+            lstItemsWithIcon.add(item);
+
             installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.ART_PLATFORM, AppsStatus.DEV);
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.subapp_art_music_player);
-            item.setPosition(5);
+            item.setPosition(6);
             lstItemsWithIcon.add(item);
 
 

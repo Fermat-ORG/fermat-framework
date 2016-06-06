@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
 import org.fermat.fermat_dap_android_wallet_asset_user.v3.common.filters.HomeCardAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.v3.common.holders.HomeCardViewHolder;
@@ -33,17 +32,17 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> implements Filterable {
 
     private AssetUserWalletSubAppModuleManager manager;
-    private AssetUserSessionReferenceApp assetUserSession;
+    private ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> assetUserSession;
     private HomeCardFragment fragment;
 
 
     public HomeCardAdapter(HomeCardFragment fragment, Context context, List<Asset> digitalAssets, AssetUserWalletSubAppModuleManager manager,
-                           ReferenceAppFermatSession appSession) {
+                           ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager> appSession) {
         super(context, digitalAssets);
         this.fragment = fragment;
         this.manager = manager;
         this.dataSet = digitalAssets;
-        this.assetUserSession = (AssetUserSessionReferenceApp) appSession;
+        this.assetUserSession = appSession;
     }
 
     @Override

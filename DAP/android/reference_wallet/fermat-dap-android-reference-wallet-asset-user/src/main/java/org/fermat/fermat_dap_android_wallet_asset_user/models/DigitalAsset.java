@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
-import java.sql.Timestamp;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by francisco on 08/10/15.
  */
-public class DigitalAsset {
+public class DigitalAsset implements Serializable {
 
     private String name;
     private String amount;
@@ -24,7 +24,7 @@ public class DigitalAsset {
     private Long availableBalanceQuantity;
     private Long bookBalanceQuantity;
     private Long availableBalance;
-    private Timestamp expDate;
+    private Date expDate;
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
@@ -144,7 +144,7 @@ public class DigitalAsset {
         return DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
-    public void setExpDate(Timestamp expDate) {
+    public void setExpDate(Date expDate) {
         this.expDate = expDate;
     }
 

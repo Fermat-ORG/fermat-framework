@@ -5,12 +5,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetIssuerManager extends FermatManager {
+public interface ActorAssetIssuerManager extends FermatManager, Serializable {
 
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey

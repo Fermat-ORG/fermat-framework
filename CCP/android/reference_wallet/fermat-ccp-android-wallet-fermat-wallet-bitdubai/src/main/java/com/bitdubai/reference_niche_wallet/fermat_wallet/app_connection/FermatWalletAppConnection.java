@@ -45,14 +45,14 @@ public class FermatWalletAppConnection extends AppConnections<FermatWalletSessio
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_FERMAT_WALLET,
                 Developers.BITDUBAI,
                 new Version()
-            );
+            )};
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TimePicker;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -20,7 +21,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 public class DialogGetTimePicker extends FermatDialog {
     String formatedDate;
     String time_select;
-    public DialogGetTimePicker(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+    public DialogGetTimePicker(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
     }
 

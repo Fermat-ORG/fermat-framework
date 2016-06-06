@@ -6,7 +6,7 @@ import android.content.Context;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.app_connection.ArtArtistIdentityAppConnection;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
@@ -197,7 +197,9 @@ public class FermatAppConnectionManager {
             case "public_key_art_music_player":
                 fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
                 break;
-
+            default:
+                fermatAppConnection = new EmptyFermatAppConnection(activity);
+                break;
 
 
         }
@@ -206,7 +208,7 @@ public class FermatAppConnectionManager {
     }
 
 
-    public static AppConnections getFermatAppConnection(String publicKey, Context context, ReferenceAppFermatSession referenceAppFermatSession) {
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession referenceAppFermatSession) {
         AppConnections fermatAppConnection = switchStatement(context,publicKey);
         fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
         return fermatAppConnection;

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -24,10 +25,9 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemPointSessionReferenceApp> {
+public class WalletRedeemPointFermatAppConnection extends AppConnections<ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>> {
 
-    AssetRedeemPointWalletSubAppModule moduleManager;
-    RedeemPointSessionReferenceApp redeemPointSession;
+    ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule> redeemPointSession;
 
     public WalletRedeemPointFermatAppConnection(Context activity) {
         super(activity);
@@ -39,14 +39,14 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.REDEEM_POINT,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
@@ -54,10 +54,9 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
         return new RedeemPointSessionReferenceApp();
     }
 
-
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return new RedeemPointWalletNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -79,7 +78,6 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
             this.redeemPointSession = this.getFullyLoadedSession();
             if (redeemPointSession != null) {
                 if (redeemPointSession.getModuleManager() != null) {
-                    moduleManager = redeemPointSession.getModuleManager();
                     enabledNotification = redeemPointSession.getModuleManager().loadAndGetSettings(redeemPointSession.getAppPublicKey()).getNotificationEnabled();
                 }
             }

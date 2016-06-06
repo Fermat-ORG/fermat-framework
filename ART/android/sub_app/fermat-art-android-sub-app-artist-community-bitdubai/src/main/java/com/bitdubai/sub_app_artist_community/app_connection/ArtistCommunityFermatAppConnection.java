@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -31,20 +30,18 @@ public class ArtistCommunityFermatAppConnection extends AppConnections<ArtistSub
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
-                Platforms.ART_PLATFORM,
-                Layers.SUB_APP_MODULE,
-                Plugins.ARTIST_COMMUNITY_SUB_APP_MODULE,
-                Developers.BITDUBAI,
-                new Version()
-        );
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{
+                new PluginVersionReference(
+                        Platforms.ART_PLATFORM,
+                        Layers.SUB_APP_MODULE,
+                        Plugins.ARTIST_COMMUNITY_SUB_APP_MODULE,
+                        Developers.BITDUBAI,
+                        new Version()
+                )
+            };
     }
 
-    @Override
-    protected AbstractReferenceAppFermatSession getSession() {
-        return new ArtistSubAppSessionReferenceApp();
-    }
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {

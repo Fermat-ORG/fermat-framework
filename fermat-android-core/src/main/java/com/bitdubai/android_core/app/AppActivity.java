@@ -27,8 +27,9 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -237,13 +238,13 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     /**
      * Method that loads the UI
      */
-    protected void loadUI(final ReferenceAppFermatSession referenceAppFermatSession) {
+    protected void loadUI(final FermatSession session) {
         try {
-            if(referenceAppFermatSession !=null) {
+            if(session !=null) {
 //                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
-                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(referenceAppFermatSession.getAppPublicKey());
+                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(session.getAppPublicKey());
 //                Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
-                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, referenceAppFermatSession);
+                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, session);
 //                Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
 //                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
@@ -263,17 +264,18 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
 //                if(appStructure.)
                 if (activity.getTabStrip() != null) {
-                    setPagerTabs(activity.getTabStrip(), referenceAppFermatSession, fermatFragmentFactory);
+                    setPagerTabs(activity.getTabStrip(), session, fermatFragmentFactory);
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
                     com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
-                    if(runtimeFragment.getPulickKeyFragmentFrom()!=null){
-                        if(!runtimeFragment.getPulickKeyFragmentFrom().equals(referenceAppFermatSession.getAppPublicKey())){
-                           // FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this, );
-                        }
+                    FermatSession fermatSubSession = null;
+                    if (runtimeFragment.getPulickKeyFragmentFrom()!=null){
+                        fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getPulickKeyFragmentFrom(),FermatSession.class);
+                        fermatFragmentFactory = FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this, fermatSubSession).getFragmentFactory();
                     }
-                    setOneFragmentInScreen(fermatFragmentFactory, referenceAppFermatSession, runtimeFragment);
+
+                    setOneFragmentInScreen(fermatFragmentFactory,(fermatSubSession!=null)?fermatSubSession:session, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
 //                Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());

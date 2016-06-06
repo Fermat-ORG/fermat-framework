@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -97,7 +98,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreateView(inflater, container, savedInstanceState);
 
         if(!hideHelperDialogs) {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                     .setIconRes(R.drawable.cbp_crypto_customer)

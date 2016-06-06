@@ -86,7 +86,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -606,7 +606,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Method used from app to paint tabs
      */
-    protected void setPagerTabs(TabStrip tabStrip, ReferenceAppFermatSession referenceAppFermatSession,FermatFragmentFactory fermatFragmentFactory) throws InvalidParameterException {
+    protected void setPagerTabs(TabStrip tabStrip, FermatSession referenceAppFermatSession,FermatFragmentFactory fermatFragmentFactory) throws InvalidParameterException {
         //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         if(fermatFragmentFactory == null) throw new InvalidParameterException("FragmentFactory null, App code: "+ referenceAppFermatSession.getAppPublicKey());
         tabLayout.setVisibility(View.VISIBLE);
@@ -633,7 +633,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,ReferenceAppFermatSession referenceAppFermatSession, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment) {
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession referenceAppFermatSession, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment) {
 
         try {
 //            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = fermatStructure.getLastActivity().getLastFragment();
@@ -1252,7 +1252,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    protected ReferenceAppFermatSession createOrOpenApplication() {
+    protected FermatSession createOrOpenApplication() {
         try {
             Bundle bundle = getIntent().getExtras();
             FermatApp fermatApp = null;
@@ -1291,16 +1291,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @param fermatApp
      * @return
      */
-    private ReferenceAppFermatSession createOrOpenApp(FermatApp fermatApp){
-        ReferenceAppFermatSession referenceAppFermatSession = null;
+    private FermatSession createOrOpenApp(FermatApp fermatApp) throws Exception {
+        FermatSession fermatSession = null;
         FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
-            referenceAppFermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
+            fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
         }else{
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
-            referenceAppFermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
+            fermatSession = fermatAppsManager.openApp(fermatApp,fermatAppConnection);
         }
-        return referenceAppFermatSession;
+        return fermatSession;
     }
 
     /**
@@ -1310,16 +1310,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * @return
      * @throws Exception
      */
-    protected ReferenceAppFermatSession createOrOpenSession(String appPublicKey) throws Exception {
-        ReferenceAppFermatSession referenceAppFermatSession = null;
+    protected FermatSession createOrOpenSession(String appPublicKey) throws Exception {
+        FermatSession fermatSession = null;
         FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(appPublicKey)){
-            referenceAppFermatSession = fermatAppsManager.getAppsSession(appPublicKey);
+            fermatSession = fermatAppsManager.getAppsSession(appPublicKey);
         }else{
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
-            referenceAppFermatSession = fermatAppsManager.openApp(fermatAppsManager.getApp(appPublicKey),fermatAppConnection);
+            fermatSession = fermatAppsManager.openApp(fermatAppsManager.getApp(appPublicKey),fermatAppConnection);
         }
-        return referenceAppFermatSession;
+        return fermatSession;
     }
 
 
@@ -1428,7 +1428,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
                     final Activity activity = fermatStructure.getLastActivity();
-                    ReferenceAppFermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    FermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
                     final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), referenceAppFermatSession);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1748,7 +1748,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             try {
                 alert.setNegativeButton("Cancel", null);
-                alert.show();
+//                alert.show();
 
                 }catch (Exception e){
                     e.printStackTrace();

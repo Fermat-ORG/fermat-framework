@@ -32,14 +32,14 @@ public class DesktopFermatAppConnection extends AppConnections<DesktopSessionRef
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.DESKTOP_MODULE,
                 Plugins.WALLET_MANAGER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

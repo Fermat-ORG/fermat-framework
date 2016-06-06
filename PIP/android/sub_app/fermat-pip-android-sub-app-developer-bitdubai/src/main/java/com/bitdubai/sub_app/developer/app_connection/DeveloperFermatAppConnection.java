@@ -32,14 +32,14 @@ public class DeveloperFermatAppConnection extends AppConnections<DeveloperSubApp
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.PLUG_INS_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.DEVELOPER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override

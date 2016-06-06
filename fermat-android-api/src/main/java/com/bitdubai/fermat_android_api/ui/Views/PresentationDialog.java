@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -22,8 +21,9 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.27..
  */
-public class PresentationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationDialog<M extends ModuleManager> extends FermatDialog<ReferenceAppFermatSession<M>, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "PresentationDialog";
     private PresentationCallback callback;
@@ -231,15 +231,20 @@ public class PresentationDialog extends FermatDialog<ReferenceAppFermatSession, 
             if (checkButton == checkbox_not_show.isChecked() || checkButton == !checkbox_not_show.isChecked())
                 if (checkbox_not_show.isChecked()) {
                     try {
-                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
-                            FermatSettings bitcoinWalletSettings = ((ModuleManagerImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
-                            bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                            ((ModuleManagerImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
-                        }else{
-                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
-                        }
+                        M module = getSession().getModuleManager();
+//                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
+                        FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl)getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
+                        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                        ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+//                        }else{
+//                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
+//                        }
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         if (callback != null) callback.onError(e);
+                        else e.printStackTrace();
+                    } catch (Exception e){
+                        if (callback != null) callback.onError(e);
+                        else e.printStackTrace();
                     }
                 }
         }

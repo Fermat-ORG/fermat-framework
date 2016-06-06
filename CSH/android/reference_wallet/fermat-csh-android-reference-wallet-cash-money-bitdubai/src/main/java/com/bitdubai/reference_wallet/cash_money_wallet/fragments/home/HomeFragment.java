@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_csh_api.all_definition.constants.CashMoneyWalletBroadcasterConstants;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -45,7 +47,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransaction>
+public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransaction,ReferenceAppFermatSession,ResourceProviderManager>
 implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "HomeFragment";

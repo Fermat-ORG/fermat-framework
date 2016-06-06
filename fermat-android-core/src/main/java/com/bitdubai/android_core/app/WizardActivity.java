@@ -20,7 +20,7 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -161,7 +161,7 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 FermatStructure wallet = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                ReferenceAppFermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
+                FermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(wallet.getPublicKey());
 
                 FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this, referenceAppFermatSession);
 

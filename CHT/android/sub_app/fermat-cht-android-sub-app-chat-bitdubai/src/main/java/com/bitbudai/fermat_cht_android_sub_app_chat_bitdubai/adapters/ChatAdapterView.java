@@ -32,7 +32,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -88,7 +88,7 @@ public class ChatAdapterView extends LinearLayout {
     private ErrorManager errorManager;
     private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
-    private ReferenceAppFermatSession appSession;
+    private FermatSession appSession;
     private Toolbar toolbar;
     private Button sendBtn;
     private EditText messageET;
@@ -112,7 +112,7 @@ public class ChatAdapterView extends LinearLayout {
     static final int TIME_TO_REFRESH_TOOLBAR = 6000;
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSessionReferenceApp chatSession, ReferenceAppFermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
+                           ErrorManager errorManager, ChatSessionReferenceApp chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -777,7 +777,7 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings = chatSettings;
     }
 
-    private void setAppSession(ReferenceAppFermatSession appSession) {
+    private void setAppSession(FermatSession appSession) {
         this.appSession = appSession;
     }
 
@@ -799,7 +799,7 @@ public class ChatAdapterView extends LinearLayout {
         private ErrorManager errorManager;
         private ChatSessionReferenceApp chatSession;
         private ChatPreferenceSettings chatSettings;
-        private ReferenceAppFermatSession appSession;
+        private FermatSession appSession;
         private Toolbar toolbar;
         private boolean loadDummyData = false;
         private int background = -1;
@@ -879,7 +879,7 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
-        public Builder addAppSession(ReferenceAppFermatSession appSession) {
+        public Builder addAppSession(FermatSession appSession) {
             this.appSession = appSession;
             return this;
         }

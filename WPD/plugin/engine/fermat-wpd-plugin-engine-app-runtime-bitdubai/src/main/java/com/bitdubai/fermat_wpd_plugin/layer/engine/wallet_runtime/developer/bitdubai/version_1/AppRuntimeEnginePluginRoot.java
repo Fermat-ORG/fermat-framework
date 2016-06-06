@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
@@ -374,6 +375,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = createFanWalletNavigationStructure();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
+        //Combo cht identity/community
+        runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
+        recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
         /**
          * SubApp generator
@@ -5745,6 +5749,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode();
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        runtimeWalletNavigationStructure.setAppStructureType(AppStructureType.COMBO_TYPE_2);
+        //Apps consume
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
