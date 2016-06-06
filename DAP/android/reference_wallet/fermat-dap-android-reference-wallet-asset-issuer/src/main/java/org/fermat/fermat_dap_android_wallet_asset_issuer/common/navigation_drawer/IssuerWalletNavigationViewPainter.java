@@ -14,14 +14,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.lang.ref.WeakReference;
 
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
 import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.DAP_ASSET_ISSUER_WALLET;
 
 /**
@@ -34,10 +33,10 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     private WeakReference<Context> activity;
     private ActiveActorIdentityInformation identityAssetIssuer;
     AssetIssuerWalletSupAppModuleManager moduleManager;
-    AssetIssuerSession assetIssuerSession;
+    AssetIssuerSessionReferenceApp assetIssuerSession;
     private ErrorManager errorManager;
 
-    public IssuerWalletNavigationViewPainter(Context activity, AssetIssuerSession assetIssuerSession) {
+    public IssuerWalletNavigationViewPainter(Context activity, AssetIssuerSessionReferenceApp assetIssuerSession) {
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;
 

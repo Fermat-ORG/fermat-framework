@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -39,7 +39,7 @@ import static android.widget.Toast.makeText;
 public class SettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private RedeemPointSession redeemPointSession;
+    private RedeemPointSessionReferenceApp redeemPointSession;
     private Spinner spinner;
     private Switch notificationSwitch;
     private Toolbar toolbar;
@@ -47,7 +47,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
     public static SettingsNotificationsFragment newInstance() {
@@ -59,7 +59,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSession) appSession);
+        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
         moduleManager = redeemPointSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

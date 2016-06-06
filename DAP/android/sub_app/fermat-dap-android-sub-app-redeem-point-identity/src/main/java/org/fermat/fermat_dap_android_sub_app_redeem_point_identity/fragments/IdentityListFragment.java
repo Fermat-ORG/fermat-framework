@@ -18,7 +18,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.common.adapters.RedeemPointIdentityAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.common.views.DividerItemDecoration;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
@@ -39,7 +39,7 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
     private ErrorManager errorManager;
     private ArrayList<RedeemPointIdentity> identityInformationList;
 
-    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
+    RedeemPointIdentitySubAppSessionReferenceApp redeemPointIdentitySubAppSession;
 
     public static IdentityListFragment newInstance() {
         return new IdentityListFragment();
@@ -51,7 +51,7 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
 
         try {
             // setting up  module
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
+            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

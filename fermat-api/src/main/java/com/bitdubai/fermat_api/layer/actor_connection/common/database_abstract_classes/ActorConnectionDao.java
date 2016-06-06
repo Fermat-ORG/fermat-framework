@@ -365,7 +365,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
 
         try {
 
-            record.setUUIDValue  (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME             , actorConnection.getConnectionId()                 );
+            record.setUUIDValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_ID_COLUMN_NAME, actorConnection.getConnectionId());
             record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorConnection.getLinkedIdentity().getPublicKey());
             record.setFermatEnum (ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME, actorConnection.getLinkedIdentity().getActorType());
             record.setStringValue(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME                , actorConnection.getPublicKey()                    );
@@ -410,6 +410,34 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
                     e,
                     "Error persist file.",
                     null
+            );
+
+        } catch (final CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "Error creating file.",
+                    null
+            );
+        } catch (final Exception e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "",
+                    "Unhandled Exception."
+            );
+        }
+    }
+
+    protected void deleteNewUserProfileImage(final String publicKey) throws CantPersistProfileImageException {
+
+        try {
+
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
             );
 
         } catch (final CantCreateFileException e) {

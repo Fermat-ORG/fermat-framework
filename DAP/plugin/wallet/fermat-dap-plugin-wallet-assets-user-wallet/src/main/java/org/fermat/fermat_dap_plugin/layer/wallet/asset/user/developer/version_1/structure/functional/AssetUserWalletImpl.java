@@ -26,6 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.exceptions.CantInitializeAssetUserWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
@@ -42,7 +43,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMem
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDao;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDatabaseFactory;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.exceptions.CantInitializeAssetUserWalletException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -255,6 +255,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
         return available;
     }
+
     @Override
     public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         try {

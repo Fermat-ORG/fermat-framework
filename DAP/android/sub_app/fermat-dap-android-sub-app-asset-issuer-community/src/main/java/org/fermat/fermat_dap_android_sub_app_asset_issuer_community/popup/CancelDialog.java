@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -26,7 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
  * Added by Jinmy Bohorquez 06/03/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -44,7 +44,7 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
     private final IdentityAssetIssuer identity;
 
     public CancelDialog(final Activity activity,
-                        final AssetIssuerCommunitySubAppSession issuerCommunitySubAppSession,
+                        final AssetIssuerCommunitySubAppSessionReferenceApp issuerCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources,
                         final ActorIssuer actor,
                         final IdentityAssetIssuer identity) {
@@ -54,8 +54,9 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
         this.actorIssuer = actor;
         this.identity = identity;
     }
+
     public CancelDialog(Activity a,
-                        final AssetIssuerCommunitySubAppSession issuerCommunitySubAppSession,
+                        final AssetIssuerCommunitySubAppSessionReferenceApp issuerCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources) {
         super(a, issuerCommunitySubAppSession, subAppResources);
         this.actorIssuer = null;
@@ -115,7 +116,7 @@ public class CancelDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                         actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
 
                 getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_CANCELED, Boolean.TRUE);
-                Toast.makeText(getContext(),"Connection has been cancel" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Connection has been cancel", Toast.LENGTH_SHORT).show();
 
                 dismiss();
             } catch (CantCancelConnectionActorAssetException e) {

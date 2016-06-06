@@ -48,7 +48,7 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.AssetDe
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Transaction;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
@@ -68,7 +68,7 @@ import static android.widget.Toast.makeText;
 public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Transaction>
         implements FermatListItemListeners<Transaction> {
 
-    private AssetIssuerSession assetIssuerSession;
+    private AssetIssuerSessionReferenceApp assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -112,7 +112,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = (AssetIssuerSession) appSession;
+        assetIssuerSession = (AssetIssuerSessionReferenceApp) appSession;
         moduleManager = assetIssuerSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -290,7 +290,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -301,8 +301,8 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -310,11 +310,11 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -351,7 +351,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
         assetDetailDelivered.setText(digitalAsset.getUnused() + "");
-        assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
+        assetDetailRedeemText.setText(digitalAsset.getRedeemed() + "");
         assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
 
         assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {

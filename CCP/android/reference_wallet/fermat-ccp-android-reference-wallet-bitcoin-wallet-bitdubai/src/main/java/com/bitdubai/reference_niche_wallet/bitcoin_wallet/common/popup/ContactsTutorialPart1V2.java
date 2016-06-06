@@ -50,11 +50,9 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
         add_fermat_user =(FermatButton) findViewById(R.id.add_fermat_user);
         add_extra_user = (FermatButton) findViewById(R.id.add_extra_user);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(checkButton);
-
+        checkbox_not_show.setChecked(true);
         add_fermat_user.setOnClickListener(this);
         add_extra_user.setOnClickListener(this);
-
     }
 
     @Override
@@ -70,19 +68,15 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     @Override
     public void onClick(View v) {
         int id = v.getId();
-
-        if(id == R.id.add_fermat_user){
+        if(id == R.id.add_fermat_user) {
             try {
                 saveSettings();
-//                Object[] object = new Object[2];
-//                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
                 changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
                 dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else if(id == R.id.add_extra_user){
+        } else if(id == R.id.add_extra_user){
             getSession().setData(SessionConstant.CREATE_EXTRA_USER,Boolean.TRUE);
             saveSettings();
             dismiss();
@@ -93,13 +87,13 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
         ((FermatScreenSwapper)activity).changeActivity(ccpBitcoinWalletAddConnectionActivity.getCode(),getSession().getAppPublicKey());
     }
 
-
     private void saveSettings(){
-        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
+        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked()) {
+            //noinspection TryWithIdenticalCatches
             try {
                 BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                 bitcoinWalletSettings.setIsContactsHelpEnabled((checkbox_not_show.isChecked()) ? false : true);
-                getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -107,6 +101,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        }
     }
 
     @Override

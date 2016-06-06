@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
@@ -26,7 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
  * Added by Jinmy Bohorquez 09/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -41,7 +41,7 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
     private FermatButton negativeBtn;
 
     public AcceptDialog(final Activity activity,
-                        final AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession,
+                        final AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession,
                         final SubAppResourcesProviderManager subAppResources,
                         final ActorIssuer actorIssuer,
                         final IdentityAssetIssuer identity) {
@@ -95,7 +95,7 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                         actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
                 getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
                 //Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_accepted, Toast.LENGTH_LONG).show();
-                Toast.makeText(getContext(),"Connection has been accepted" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Connection has been accepted", Toast.LENGTH_SHORT).show();
                 dismiss();
             } catch (final CantAcceptActorAssetUserException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -111,7 +111,7 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
                         actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
 //                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
 //                Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_deny, Toast.LENGTH_LONG).show();
-                Toast.makeText(getContext()," Connection has been denied" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), " Connection has been denied", Toast.LENGTH_SHORT).show();
 
                 dismiss();
             } catch (final CantDenyConnectionActorAssetException e) {

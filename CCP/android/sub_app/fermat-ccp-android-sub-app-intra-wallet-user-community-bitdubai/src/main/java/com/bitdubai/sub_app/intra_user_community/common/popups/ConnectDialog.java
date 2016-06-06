@@ -19,14 +19,14 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
  * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<IntraUserSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -48,7 +48,7 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
 
 
     public ConnectDialog(final Activity                       a                     ,
-                         final IntraUserSubAppSession         intraUserSubAppSession,
+                         final IntraUserSubAppSessionReferenceApp intraUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources       ,
                          final IntraUserInformation           intraUserInformation  ,
                          final IntraUserLoginIdentity         identity              ) {

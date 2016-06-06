@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -29,19 +29,19 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.i
 import static android.widget.Toast.makeText;
 
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
 public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    private AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
 
     public static UserCommunitySettingsNotificationsFragment newInstance() {
@@ -53,7 +53,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

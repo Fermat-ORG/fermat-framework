@@ -20,7 +20,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.05.24..
  */
-public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSession,ResourceProviderManager> {
+public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> {
 
     private View root;
 

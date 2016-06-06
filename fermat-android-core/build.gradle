@@ -157,7 +157,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
     //widget
-    compile project(':bitcoin_exchange_widget')
+//    compile project(':bitcoin_exchange_widget')
     compile 'ch.acra:acra:4.6.2'
     configurations {
         all {

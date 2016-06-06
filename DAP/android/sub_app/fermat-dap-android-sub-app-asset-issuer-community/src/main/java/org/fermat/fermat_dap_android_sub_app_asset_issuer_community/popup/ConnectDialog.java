@@ -17,7 +17,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -29,7 +29,7 @@ import java.util.List;
  * Added by Jinmy Bohorquez 09/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -52,7 +52,7 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
 
 
     public ConnectDialog(final Activity a,
-                         final AssetIssuerCommunitySubAppSession actorIssuerUserSubAppSession,
+                         final AssetIssuerCommunitySubAppSessionReferenceApp actorIssuerUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final ActorIssuer actorIssuer,
                          final IdentityAssetIssuer identity) {
@@ -64,7 +64,7 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     }
 
     public ConnectDialog(Activity a,
-                         final AssetIssuerCommunitySubAppSession actorIssuerUserSubAppSession,
+                         final AssetIssuerCommunitySubAppSessionReferenceApp actorIssuerUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources) {
         super(a, actorIssuerUserSubAppSession, subAppResources);
         this.actorIssuer = null;

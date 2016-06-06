@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.adapter.WizardPageAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.wizard.DepthPageTransformer;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSession,ResourceProviderManager> implements View.OnClickListener {
+public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> implements View.OnClickListener {
 
     ViewPager viewPager;
     WizardPageAdapter wizardPageAdapter;

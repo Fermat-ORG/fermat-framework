@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -18,17 +17,17 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.factory.AssetRedeemPointCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.navigation_drawer.RedeemPointCommunityNavigationViewPainter;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityRedeemPointFermatAppConnection extends AppConnections<AssetRedeemPointCommunitySubAppSession> {
+public class CommunityRedeemPointFermatAppConnection extends AppConnections<AssetRedeemPointCommunitySubAppSessionReferenceApp> {
 
     private RedeemPointCommunitySubAppModuleManager manager;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
 
     public CommunityRedeemPointFermatAppConnection(Context activity) {
         super(activity);
@@ -51,14 +50,13 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new AssetRedeemPointCommunitySubAppSession();
+    public AssetRedeemPointCommunitySubAppSessionReferenceApp getSession() {
+        return new AssetRedeemPointCommunitySubAppSessionReferenceApp();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new RedeemPointCommunityNavigationViewPainter(getContext(), null);
+        return new RedeemPointCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
@@ -70,6 +68,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     public FooterViewPainter getFooterViewPainter() {
         return null;
     }
+
     @Override
 
     public NotificationPainter getNotificationPainter(String code) {
@@ -98,7 +97,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
 //                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
                         notification = new RedeemAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
                     } else {
-                        notification = new RedeemAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
+                        notification = new RedeemAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: " + senderActorPublicKey, "", "");
                     }
                     break;
             }

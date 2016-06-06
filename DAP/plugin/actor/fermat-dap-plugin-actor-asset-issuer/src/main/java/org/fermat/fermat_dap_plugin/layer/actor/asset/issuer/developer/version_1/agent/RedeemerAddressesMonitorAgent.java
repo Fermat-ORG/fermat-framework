@@ -35,6 +35,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
 
     /**
      * constructor
+     *
      * @param cryptoAddressBookManager
      * @param assetVaultManager
      */
@@ -53,7 +54,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
         try {
             redeemers = assetVaultManager.getActiveRedeemPoints();
         } catch (CantGetActiveRedeemPointsException e) {
-            throw new CantStartAgentException(e, "Error getting active redeem points public keys" , "Asset vault issue");
+            throw new CantStartAgentException(e, "Error getting active redeem points public keys", "Asset vault issue");
         }
 
         /**
@@ -62,11 +63,11 @@ public class RedeemerAddressesMonitorAgent implements Agent {
         List<CryptoAddress> addressBookCryptoAddresses = new ArrayList<>();
         try {
             List<CryptoAddressBookRecord> cryptoAddressBookRecords = cryptoAddressBookManager.listCryptoAddressBookRecordsByDeliveredToActorType(Actors.DAP_ASSET_REDEEM_POINT);
-            for (CryptoAddressBookRecord cryptoAddressBookRecord : cryptoAddressBookRecords){
+            for (CryptoAddressBookRecord cryptoAddressBookRecord : cryptoAddressBookRecords) {
                 addressBookCryptoAddresses.add(cryptoAddressBookRecord.getCryptoAddress());
             }
         } catch (CantRegisterCryptoAddressBookRecordException e) {
-            throw new CantStartAgentException(e, "Error getting Addresses from Address book" , "Crypto Address Book issue");
+            throw new CantStartAgentException(e, "Error getting Addresses from Address book", "Crypto Address Book issue");
         }
 
         /**
@@ -85,8 +86,8 @@ public class RedeemerAddressesMonitorAgent implements Agent {
 
     /**
      * private class monitor Agent
-      */
-    private class MonitorAgent implements Runnable{
+     */
+    private class MonitorAgent implements Runnable {
         private CryptoAddressBookManager cryptoAddressBookManager;
         private AssetVaultManager assetVaultManager;
         private List<String> redeemers; //the list of public Keys of redeemers configured in the asset vault
@@ -98,6 +99,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
 
         /**
          * private class constructor
+         *
          * @param cryptoAddressBookManager
          * @param assetVaultManager
          */
@@ -105,7 +107,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
             this.cryptoAddressBookManager = cryptoAddressBookManager;
             this.assetVaultManager = assetVaultManager;
             this.redeemers = redeemers;
-            this.addressBookCryptoAddresses= addressBookCryptoAddresses;
+            this.addressBookCryptoAddresses = addressBookCryptoAddresses;
             this.issuerPublicKey = issuerPublicKey;
 
             keysGenerated = new AtomicBoolean(true);
@@ -131,16 +133,16 @@ public class RedeemerAddressesMonitorAgent implements Agent {
             /**
              * for each redeem Point that has keys in the asset vault I get all the generated addresses.
              **/
-            for (String redeemPointPublicKey : redeemers){
+            for (String redeemPointPublicKey : redeemers) {
                 try {
                     List<CryptoAddress> redeemPointCryptoAddresses;
-                    redeemPointCryptoAddresses = assetVaultManager.     getActiveRedeemPointAddresses(redeemPointPublicKey);
+                    redeemPointCryptoAddresses = assetVaultManager.getActiveRedeemPointAddresses(redeemPointPublicKey);
 
                     /**
                      * if I didn't get any keys, then I'll mark keysGenerated as false.
                      */
-                if (redeemPointCryptoAddresses.size() == 0)
-                    this.keysGenerated.set(false);
+                    if (redeemPointCryptoAddresses.size() == 0)
+                        this.keysGenerated.set(false);
 
                     /**
                      * I remove all the keys that are already registered.
@@ -150,7 +152,7 @@ public class RedeemerAddressesMonitorAgent implements Agent {
                     /**
                      * I will register the new keys
                      */
-                    for (CryptoAddress cryptoAddress : redeemPointCryptoAddresses){
+                    for (CryptoAddress cryptoAddress : redeemPointCryptoAddresses) {
                         registerAddressInCryptoBook(cryptoAddress, redeemPointPublicKey);
                     }
                 } catch (CantGetActiveRedeemPointAddressesException e) {
@@ -164,12 +166,13 @@ public class RedeemerAddressesMonitorAgent implements Agent {
 
         /**
          * registers the given key in the address book.
+         *
          * @param cryptoAddress
          * @param redeempointPublicKey
          * @throws CantRegisterCryptoAddressBookRecordException
          */
         private void registerAddressInCryptoBook(CryptoAddress cryptoAddress, String redeempointPublicKey) throws CantRegisterCryptoAddressBookRecordException {
-            cryptoAddressBookManager.registerCryptoAddress(cryptoAddress,issuerPublicKey , Actors.DAP_ASSET_ISSUER,redeempointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+            cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, issuerPublicKey, Actors.DAP_ASSET_ISSUER, redeempointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             this.keysGenerated.set(true);
         }
     }

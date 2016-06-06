@@ -37,7 +37,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -68,7 +68,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
+    RedeemPointIdentitySubAppSessionReferenceApp redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
@@ -89,7 +89,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointIdentitySettings redeemPointIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -108,7 +108,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
+            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
@@ -121,7 +121,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                     try {
                         if (appSession.getAppPublicKey() != null) {
                             redeemPointIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-                        }else {
+                        } else {
                             redeemPointIdentitySettings = moduleManager.loadAndGetSettings("1");
                         }
                     } catch (Exception e) {
@@ -323,7 +323,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
             bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-            brokerImageByteArray = toByteArray(bitmap);
+            brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
         mIdentityName.setText(identitySelected.getAlias());
@@ -356,7 +356,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
-                            brokerImageByteArray = toByteArray(imageBitmap);
+                            brokerImageByteArray = ImagesUtils.toByteArray(imageBitmap);
                             updateProfileImage = true;
                             Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mIdentityImage);
                         }
@@ -471,8 +471,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 
@@ -501,18 +501,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
             return true;
 
         return true;
-    }
-
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 
     @Override

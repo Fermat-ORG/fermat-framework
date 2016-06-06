@@ -13,16 +13,16 @@ public enum NetworkServiceDaoMessageType {
 
     String code;
 
-    NetworkServiceDaoMessageType(String code){
-        this.code=code;
+    NetworkServiceDaoMessageType(String code) {
+        this.code = code;
     }
 
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 
     public NetworkServiceDaoMessageType getByCode(String code) throws InvalidParameterException {
-        switch (code){
+        switch (code) {
             case "AISS":
                 return NetworkServiceDaoMessageType.ACTOR_ISSUER;
             case "AUSER":

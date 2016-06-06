@@ -33,7 +33,7 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
@@ -46,7 +46,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -80,7 +80,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
@@ -174,7 +174,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(intraUserInformation.getName());
@@ -195,7 +195,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(intraUserInformation.getName());
@@ -213,7 +213,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

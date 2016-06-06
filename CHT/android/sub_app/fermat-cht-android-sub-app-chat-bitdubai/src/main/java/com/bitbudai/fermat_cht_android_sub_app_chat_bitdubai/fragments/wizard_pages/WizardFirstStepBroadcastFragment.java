@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -43,7 +43,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      private ErrorManager errorManager;
      private SettingsManager<ChatSettings> settingsManager;
      private ChatPreferenceSettings chatSettings;
-     private ChatSession chatSession;
+     private ChatSessionReferenceApp chatSession;
      private ChatManager chatManager;
      public static WizardFirstStepBroadcastFragment newInstance() {
         return new WizardFirstStepBroadcastFragment();
@@ -52,9 +52,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
  @Override
      public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
-     chatSession=((ChatSession) appSession);
+     chatSession=((ChatSessionReferenceApp) appSession);
      chatManager= chatSession.getModuleManager();
-     ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+     ChatManager moduleManager = ((ChatSessionReferenceApp) appSession).getModuleManager();
      //TODO:Revisar esto
 //         try {
 //             walletManager = moduleManager;

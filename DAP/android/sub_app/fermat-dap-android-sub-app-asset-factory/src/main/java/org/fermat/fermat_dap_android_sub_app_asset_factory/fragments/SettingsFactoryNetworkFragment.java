@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
@@ -49,10 +49,11 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
 
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
-//    SettingsManager<AssetFactorySettings> settingsManager;
+    //    SettingsManager<AssetFactorySettings> settingsManager;
     AssetFactorySettings settings = null;
+
     public static SettingsFactoryNetworkFragment newInstance() {
         return new SettingsFactoryNetworkFragment();
     }
@@ -62,7 +63,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySession) appSession);
+        assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
         moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -109,7 +110,8 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

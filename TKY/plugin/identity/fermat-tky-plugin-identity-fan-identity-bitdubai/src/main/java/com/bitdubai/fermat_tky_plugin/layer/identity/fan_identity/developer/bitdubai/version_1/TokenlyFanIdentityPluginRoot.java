@@ -182,7 +182,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.ArtistIdentityPluginRoot");
+        returnedClasses.add("TokenlyFanIdentityPluginRoot");
         /**
          * I return the values.
          */

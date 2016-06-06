@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
@@ -43,7 +43,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
 
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     private ErrorManager errorManager;
 //    SettingsManager<AssetFactorySettings> settingsManager;
 
@@ -56,7 +56,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetFactorySession = ((AssetFactorySession) appSession);
+        assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
         moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -126,7 +126,8 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

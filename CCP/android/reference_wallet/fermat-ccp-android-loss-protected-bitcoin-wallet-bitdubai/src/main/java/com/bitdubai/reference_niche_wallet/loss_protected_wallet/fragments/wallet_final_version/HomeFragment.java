@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -47,11 +46,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.custom_view.CustomChartMarkerdView;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ChartDetailDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
@@ -99,6 +98,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     /**
      * DATA
      * */
+
     private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
 
     private double totalEarnedAndLostForToday = 0;
@@ -142,7 +142,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         setHasOptionsMenu(true);
 
         try {
-
 
 
             lossProtectedWalletSession = appSession;
@@ -247,8 +246,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            animationManager = new AnimationManager(rootView,emptyListViewsContainer);
-            getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -423,6 +421,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
 
             chart.setData(data);
+
+
+
+
+
+
+
+
+
+
             chart.setDescription("");
             chart.setDrawGridBackground(false);
             chart.animateY(2000);
@@ -435,6 +443,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
             chart.fitScreen();
+            chart.setOnChartValueSelectedListener(this);
 
             CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
                     R.layout.loss_custom_marker_view,
@@ -442,7 +451,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     lossProtectedWalletSession,
                     errorManager,
                     lossProtectedWalletmanager);
-            chart.setMarkerView(mv);
+            //chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(true);
@@ -510,12 +519,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 final String dateActual = sdf.format(actualDate);
                 final String dateSpend = sdf.format(listSpendig.getTimestamp());
                 //get the total earned and lost
-                if(dateActual.equals(dateSpend)){
+               // if(dateActual.equals(dateSpend)){
                 totalEarnedAndLostForToday += getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
-                }
+               // }
 
                 //get the entry value for chart with getEarnOrLostOfSpending method
                 final double valueEntry = getEarnOrLostOfSpending(
@@ -626,8 +635,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     setUp(inflater);
 
                 }
-
-
             }
         }
         catch (Exception e) {
@@ -745,8 +752,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         );
     }
 
-
-
+    
     private void getAndShowMarketExchangeRateData(final View container) {
 
         final int MAX_DECIMAL_FOR_RATE = 2;
@@ -845,6 +851,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 Log.i("VAL SELECTED",
                         "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
                                 + ", DataSet index: " + dataSetIndex);
+                BitcoinLossProtectedWalletSpend spent = allWalletSpendingList.get(dataSetIndex);
+
+                ChartDetailDialog dialogSpent = new ChartDetailDialog(getActivity(),spent);
+                dialogSpent.show();
                 chart.invalidate(); // refresh
 
             }catch (Exception el){

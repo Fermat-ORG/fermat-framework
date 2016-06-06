@@ -41,7 +41,7 @@ public class AssetTransferUserAdapter extends FermatAdapter<User, AssetTransferU
     protected void bindHolder(final AssetTransferUserHolder holder, final User user, int position) {
         holder.nameText.setText(user.getName());
         if (user.isSelected()) {
-           holder.userContent.setVisibility(View.VISIBLE);
+            holder.userContent.setVisibility(View.VISIBLE);
         } else {
             holder.userContent.setVisibility(View.INVISIBLE);
         }

@@ -32,7 +32,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.AcceptDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -64,7 +64,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private RedeemPointCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
     private RedeemPointCommunitySubAppModuleManager moduleManager;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     RedeemPointSettings settings = null;
 
     private ErrorManager errorManager;
@@ -90,7 +90,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

@@ -35,7 +35,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
@@ -78,7 +78,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((RedeemPointSession) appSession).getModuleManager();
+            moduleManager = ((RedeemPointSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
@@ -185,7 +185,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -196,8 +196,8 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_image_redeem_point,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_image_redeem_point, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -205,11 +205,11 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

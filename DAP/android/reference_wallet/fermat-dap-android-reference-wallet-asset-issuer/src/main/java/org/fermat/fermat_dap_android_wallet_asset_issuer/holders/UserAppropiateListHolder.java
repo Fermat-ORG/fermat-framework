@@ -46,6 +46,6 @@ public class UserAppropiateListHolder extends FermatViewHolder {
     }
 
     private void setupColor(UserAppropiate userAppropiate) {
-            appropiateListAppropiateStatus.setTextColor(Color.parseColor("#E7212C"));
+        appropiateListAppropiateStatus.setTextColor(Color.parseColor("#E7212C"));
     }
 }

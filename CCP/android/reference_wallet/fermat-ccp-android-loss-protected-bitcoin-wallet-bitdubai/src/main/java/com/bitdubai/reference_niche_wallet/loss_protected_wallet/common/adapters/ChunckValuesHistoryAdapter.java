@@ -23,8 +23,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossPro
 import java.util.List;
 import java.util.UUID;
 
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
-
 /**
  * Created by Matias Furszyfer on 2015.09.30..
  */

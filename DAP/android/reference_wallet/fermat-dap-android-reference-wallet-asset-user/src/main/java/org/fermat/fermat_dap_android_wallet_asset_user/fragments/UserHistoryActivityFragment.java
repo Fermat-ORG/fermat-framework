@@ -37,7 +37,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -61,7 +61,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -81,7 +81,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         setHasOptionsMenu(true);
 
         try {
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -159,7 +159,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         ActiveActorIdentityInformation identity = null;
         try {
             identity = moduleManager.getSelectedActorIdentity();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (identity == null) {
@@ -189,7 +189,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -200,8 +200,8 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -209,11 +209,11 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

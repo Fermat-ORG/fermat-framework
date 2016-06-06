@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -36,7 +36,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
 import static android.widget.Toast.makeText;
 
 /**
- *
  * Jinmy 02/02/2016
  */
 public class SettingsFragment extends AbstractFermatFragment {
@@ -44,7 +43,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     /**
      * Plaform reference
      */
-    private RedeemPointSession redeemPointSession;
+    private RedeemPointSessionReferenceApp redeemPointSession;
 
     /**
      * UI
@@ -59,7 +58,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
 
@@ -72,7 +71,7 @@ public class SettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSession) appSession);
+        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
         moduleManager = redeemPointSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

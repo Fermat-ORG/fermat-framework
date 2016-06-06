@@ -42,7 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
-import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
@@ -57,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<IntraUserIdentitySubAppSession,ResourceProviderManager> {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<IntraUserIdentitySubAppSessionReferenceApp,ResourceProviderManager> {
 
 
     private static final String TAG = "CreateIdentity";

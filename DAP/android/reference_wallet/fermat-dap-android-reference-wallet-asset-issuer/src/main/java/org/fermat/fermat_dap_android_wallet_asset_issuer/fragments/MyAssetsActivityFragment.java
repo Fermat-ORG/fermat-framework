@@ -41,7 +41,7 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.MyAsset
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -73,7 +73,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetIssuerSettings settings = null;
-    AssetIssuerSession assetIssuerSession;
+    AssetIssuerSessionReferenceApp assetIssuerSession;
 //    SettingsManager<AssetIssuerSettings> settingsManager;
 
     // Data
@@ -99,7 +99,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             appSession.setData("users", null);
 
-            assetIssuerSession = ((AssetIssuerSession) appSession);
+            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             moduleManager = assetIssuerSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -117,7 +117,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         //Initialize settings
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
+            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             moduleManager = assetIssuerSession.getModuleManager();
 
             try {
@@ -180,7 +180,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     showOrHideNoAssetsView(digitalAssets.isEmpty());
                 }
-                });
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

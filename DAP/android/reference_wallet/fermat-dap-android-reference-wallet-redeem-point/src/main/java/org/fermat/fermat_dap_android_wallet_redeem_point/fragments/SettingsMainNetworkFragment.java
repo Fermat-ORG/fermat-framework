@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -52,9 +52,9 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
-    RedeemPointSession redeemPointSession;
+    RedeemPointSessionReferenceApp redeemPointSession;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
     public static SettingsMainNetworkFragment newInstance() {
@@ -66,7 +66,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = ((RedeemPointSession) appSession);
+        redeemPointSession = ((RedeemPointSessionReferenceApp) appSession);
         moduleManager = redeemPointSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -19,7 +19,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.Crypto
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.notifications.CryptoCustomerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION;
@@ -36,7 +36,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
  *
  * @since 2015.12.17
  */
-public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSession> {
+public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSessionReferenceApp> {
 
     public CryptoCustomerWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -59,8 +59,8 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
     }
 
     @Override
-    protected AbstractFermatSession getSession() {
-        return new CryptoCustomerWalletSession();
+    protected AbstractReferenceAppFermatSession getSession() {
+        return new CryptoCustomerWalletSessionReferenceApp();
     }
 
 

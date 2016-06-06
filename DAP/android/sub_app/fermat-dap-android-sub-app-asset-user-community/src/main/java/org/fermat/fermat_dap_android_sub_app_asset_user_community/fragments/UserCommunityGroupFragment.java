@@ -35,7 +35,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.Group
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.GroupViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CreateGroupFragmentDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -54,7 +54,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserCommunitySubAppSessionReferenceApp assetUserCommunitySubAppSession;
 
     private static final int MAX = 20;
 
@@ -89,7 +89,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         setHasOptionsMenu(true);
         try {
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSessionReferenceApp) appSession);
             moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -106,7 +106,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GroupCommunityAdapter(getActivity()){
+        adapter = new GroupCommunityAdapter(getActivity()) {
             @Override
             protected void bindHolder(GroupViewHolder holder, final Group data, int position) {
                 super.bindHolder(holder, data, position);
@@ -272,9 +272,9 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         return super.onOptionsItemSelected(item);
     }
 
-    private void lauchCreateGroupDialog(){
+    private void lauchCreateGroupDialog() {
         dialog = new CreateGroupFragmentDialog(
-                getActivity(), moduleManager,null);
+                getActivity(), moduleManager, null);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

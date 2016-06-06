@@ -7,7 +7,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -21,8 +21,8 @@ import java.util.Date;
  */
 public class DialogGetDatePicker extends FermatDialog {
     String formatedDate;
-    public DialogGetDatePicker(Context activity, FermatSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+    public DialogGetDatePicker(Context activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+        super(activity, referenceAppFermatSession, resources);
     }
 
     @Override

@@ -30,14 +30,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,7 +75,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         try {
             // setting up  module
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) appSession).getModuleManager();
+            moduleManager = ((CryptoBrokerIdentitySubAppSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {

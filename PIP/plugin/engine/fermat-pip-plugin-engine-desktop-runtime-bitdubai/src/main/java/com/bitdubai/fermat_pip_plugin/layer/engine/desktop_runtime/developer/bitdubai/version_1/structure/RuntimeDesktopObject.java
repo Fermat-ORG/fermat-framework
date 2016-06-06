@@ -1,15 +1,13 @@
 package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
-
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -79,17 +77,12 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
     }
 
     @Override
-    public FermatApps getFermatApp() {
-        return FermatApps.MAIN_DESKTOP;
-    }
-
-    @Override
-    public FermatAppType getFermatAppType() {
-        return FermatAppType.DESKTOP;
-    }
-
-    @Override
     public Platforms getPlatform() {
+        return null;
+    }
+
+    @Override
+    public AppStructureType getAppStructureType() {
         return null;
     }
 

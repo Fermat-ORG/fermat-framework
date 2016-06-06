@@ -41,7 +41,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.interfaces.A
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -54,6 +54,8 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -69,7 +71,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
 
@@ -94,6 +96,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
+    private ExecutorService _executor;
 //    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
@@ -109,11 +112,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            _executor = Executors.newFixedThreadPool(2);
+
             setHasOptionsMenu(true);
 
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
             moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -252,6 +257,19 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                 }
             }
         }, 500);
+
+        isRefreshing = true;
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMoreData();
+                    isRefreshing = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return rootView;
     }
@@ -444,7 +462,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             if (toConnect.size() > 0) {
                 ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -520,7 +538,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();

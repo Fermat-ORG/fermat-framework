@@ -29,7 +29,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
@@ -51,7 +51,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    private AssetIssuerCommunitySubAppSessionReferenceApp assetIssuerCommunitySubAppSession;
     private ImageView issuerProfileAvatar;
     private FermatTextView issuerName;
     private FermatTextView issuerExtendedKey;
@@ -90,7 +90,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         // setting up  module
         actorIssuer = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -175,23 +175,23 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
 //            try {
-                ConnectDialog connectDialog = new ConnectDialog(getActivity(),
-                        (AssetIssuerCommunitySubAppSession) appSession,
-                        null,
-                        actorIssuer,
-                        null);
+            ConnectDialog connectDialog = new ConnectDialog(getActivity(),
+                    (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
+                    null,
+                    actorIssuer,
+                    null);
 
-                connectDialog.setTitle(R.string.connection_request_title);
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(actorIssuer.getRecord().getName());
-                connectDialog.setSecondDescription("a connection request");
-                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                connectDialog.show();
+            connectDialog.setTitle(R.string.connection_request_title);
+            connectDialog.setDescription("Do you want to send ");
+            connectDialog.setUsername(actorIssuer.getRecord().getName());
+            connectDialog.setSecondDescription("a connection request");
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            connectDialog.show();
 //            } catch (CantGetIdentityAssetIssuerException e) {
 //                e.printStackTrace();
 //            }
@@ -200,7 +200,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getStatus());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null, actorIssuer, moduleManager.getActiveAssetIssuerIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null, actorIssuer, moduleManager.getActiveAssetIssuerIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(actorIssuer.getRecord().getName());
@@ -220,7 +220,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             Toast.makeText(getActivity(), R.string.connection_success, Toast.LENGTH_SHORT).show();
 //            try {
 //                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-//                        (AssetIssuerCommunitySubAppSession) appSession,
+//                        (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
 //                        null,
 //                        actorIssuer,
 //                        null);
@@ -239,22 +239,22 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         }
         if (i == R.id.btn_connection_cancel) {
 //            try {
-                CancelDialog cancelDialog = new CancelDialog(getActivity(),
-                        (AssetIssuerCommunitySubAppSession) appSession,
-                        null,
-                        actorIssuer,
-                        null);
+            CancelDialog cancelDialog = new CancelDialog(getActivity(),
+                    (AssetIssuerCommunitySubAppSessionReferenceApp) appSession,
+                    null,
+                    actorIssuer,
+                    null);
 
-                cancelDialog.setTitle("Cancel Request");
-                cancelDialog.setDescription("Want to cancel the request to");
-                cancelDialog.setUsername(actorIssuer.getRecord().getName());
-                cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        updateButton();
-                    }
-                });
-                cancelDialog.show();
+            cancelDialog.setTitle("Cancel Request");
+            cancelDialog.setDescription("Want to cancel the request to");
+            cancelDialog.setUsername(actorIssuer.getRecord().getName());
+            cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateButton();
+                }
+            });
+            cancelDialog.show();
 //            } catch (CantGetIdentityAssetIssuerException e) {
 //                e.printStackTrace();
 //            }

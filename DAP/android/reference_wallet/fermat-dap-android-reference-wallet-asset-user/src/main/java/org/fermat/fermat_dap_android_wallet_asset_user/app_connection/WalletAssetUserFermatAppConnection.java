@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -19,17 +18,16 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import org.fermat.fermat_dap_android_wallet_asset_user.common.header.WalletAssetUserHeaderPainter;
 import org.fermat.fermat_dap_android_wallet_asset_user.factory.WalletAssetUserFragmentFactory;
 import org.fermat.fermat_dap_android_wallet_asset_user.navigation_drawer.UserWalletNavigationViewPainter;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSession> {
+public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSessionReferenceApp> {
 
     AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
 
     public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
@@ -52,8 +50,8 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
     }
 
     @Override
-    public AssetUserSession getSession() {
-        return new AssetUserSession();
+    public AssetUserSessionReferenceApp getSession() {
+        return new AssetUserSessionReferenceApp();
     }
 
 

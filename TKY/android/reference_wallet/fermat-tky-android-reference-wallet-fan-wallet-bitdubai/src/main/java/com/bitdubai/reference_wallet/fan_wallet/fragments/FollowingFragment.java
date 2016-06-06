@@ -44,7 +44,7 @@ import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModul
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ import java.util.regex.Matcher;
 public class FollowingFragment extends AbstractFermatFragment implements SearchView.OnQueryTextListener {
 
     //FermatManager
-    private FanWalletSession fanwalletSession;
+    private FanWalletSessionReferenceApp fanwalletSession;
     private FanWalletModule fanWalletModuleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
@@ -92,7 +92,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
         try {
-            fanwalletSession = ((FanWalletSession) appSession);
+            fanwalletSession = ((FanWalletSessionReferenceApp) appSession);
             fanWalletModuleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");

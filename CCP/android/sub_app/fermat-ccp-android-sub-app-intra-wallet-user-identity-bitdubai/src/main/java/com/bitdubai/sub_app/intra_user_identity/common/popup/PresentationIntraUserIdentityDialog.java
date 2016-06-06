@@ -16,12 +16,12 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUse
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
-import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSessionReferenceApp;
 
 /**
  * @author Jose manuel De Sousa
  */
-public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserIdentitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     private final Activity activity;
     private FermatButton startCommunity;
@@ -35,7 +35,7 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationIntraUserIdentityDialog(Activity activity, IntraUserIdentitySubAppSession fermatSession, SubAppResourcesProviderManager resources,final IntraUserIdentityModuleManager moduleManager) {
+    public PresentationIntraUserIdentityDialog(Activity activity, IntraUserIdentitySubAppSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,final IntraUserIdentityModuleManager moduleManager) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.moduleManager = moduleManager;

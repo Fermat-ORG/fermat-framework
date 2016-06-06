@@ -40,7 +40,7 @@ import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.utils.FermatAnimationUtils;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 import com.bitdubai.sub_app_artist_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectionsFragment extends AbstractFermatFragment<ArtistSubAppSession, SubAppResourcesProviderManager> implements SearchView.OnCloseListener,
+public class ConnectionsFragment extends AbstractFermatFragment<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         ActionBar.OnNavigationListener,
         AdapterView.OnItemClickListener,

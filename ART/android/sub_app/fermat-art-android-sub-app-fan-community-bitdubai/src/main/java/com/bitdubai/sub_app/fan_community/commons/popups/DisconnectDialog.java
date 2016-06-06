@@ -17,14 +17,14 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
 public class DisconnectDialog extends
         FermatDialog<
-                FanCommunitySubAppSession,
+                FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager>
         implements
         View.OnClickListener {
@@ -46,7 +46,7 @@ public class DisconnectDialog extends
     FanCommunitySelectableIdentity identity;
 
     public DisconnectDialog(Activity a,
-                            FanCommunitySubAppSession fanCommunitySubAppSession,
+                            FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
                             SubAppResourcesProviderManager subAppResources,
                             FanCommunityInformation cryptoCustomerCommunityInformation,
                             FanCommunitySelectableIdentity identity) {

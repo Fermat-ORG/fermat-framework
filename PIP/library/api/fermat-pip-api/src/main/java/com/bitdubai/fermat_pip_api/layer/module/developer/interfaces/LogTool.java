@@ -8,13 +8,14 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyAddonsException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetClasessHierarchyPluginsException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by ciencias on 6/25/15.
  */
-public interface LogTool {
+public interface LogTool extends Serializable {
 
     List<PluginVersionReference> getAvailablePluginList();
 
@@ -25,6 +26,4 @@ public interface LogTool {
     List<ClassHierarchyLevels> getClassesHierarchyAddons(AddonVersionReference addon) throws CantGetClasessHierarchyAddonsException;
 
     void setNewLogLevelInClass(PluginVersionReference plugin, HashMap<String, LogLevel> newLogLevelInClass);
-
-
 }

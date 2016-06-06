@@ -13,19 +13,20 @@ import java.util.Date;
 public class IsValidContractTest {
 
     ContractProperty datePropertySetAsActual;
-    public IsValidContractTest(){
 
-        datePropertySetAsActual=new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
-        Date date= new Date();
+    public IsValidContractTest() {
+
+        datePropertySetAsActual = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
+        Date date = new Date();
         datePropertySetAsActual.setValue(new Timestamp(date.getTime()));
         System.out.println("Present time: " + datePropertySetAsActual.getValue());
     }
 
     @Test
-    public void getTheTimestampFromContractPropertyTest(){
+    public void getTheTimestampFromContractPropertyTest() {
 
-        Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();
-        System.out.println("Timestamp from ContractProperty: "+expirationDate);
+        Timestamp expirationDate = (Timestamp) datePropertySetAsActual.getValue();
+        System.out.println("Timestamp from ContractProperty: " + expirationDate);
 
     }
 //Comment by Luis Campo

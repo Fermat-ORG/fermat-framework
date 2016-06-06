@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException</code>
  * is thrown when there is an error trying to handle a crypto address received action.
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/11/2015.
  */
 public class CantHandleCryptoAddressReceivedActionException extends FermatException {

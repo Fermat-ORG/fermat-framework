@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -44,7 +44,7 @@ import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionCo
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/1/16.
  */
-public class DetailFragment extends AbstractFermatFragment<AssetUserSession, ResourceProviderManager> {
+public class DetailFragment extends AbstractFermatFragment<AssetUserSessionReferenceApp, ResourceProviderManager> {
     //DATA
     private Asset asset;
     private DataManager dataManager;
@@ -67,7 +67,8 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
     private SettingsManager<AssetUserSettings> settingsManager;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    public DetailFragment() {}
+    public DetailFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

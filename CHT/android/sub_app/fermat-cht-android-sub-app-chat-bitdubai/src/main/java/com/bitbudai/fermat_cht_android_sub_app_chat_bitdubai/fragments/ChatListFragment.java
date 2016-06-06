@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
@@ -74,7 +73,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     ChatListAdapter adapter;
     ChatActorCommunitySelectableIdentity chatIdentity;
     ListView list;
@@ -230,7 +229,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onCreate(savedInstanceState);
 
         try {
-            chatSession = ((ChatSession) appSession);
+            chatSession = ((ChatSessionReferenceApp) appSession);
             chatManager = chatSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
@@ -372,7 +371,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -387,7 +385,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
-                    appSession.setData(ChatSession.CONTACT_DATA, contact);
+                    appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch(Exception e)
                 {
@@ -430,6 +428,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onUpdateViewOnUIThread(code);
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
+            chatlistview();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }
@@ -541,7 +540,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         try{
             // Set the info of chat selected in session
-            appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
+            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
         }catch(CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){

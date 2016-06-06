@@ -1,7 +1,5 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
-import android.os.Bundle;
-
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;

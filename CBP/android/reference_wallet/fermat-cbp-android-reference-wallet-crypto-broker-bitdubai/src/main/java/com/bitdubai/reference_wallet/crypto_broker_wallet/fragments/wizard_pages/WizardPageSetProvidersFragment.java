@@ -32,7 +32,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         currencies = getCurrenciesList();
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page

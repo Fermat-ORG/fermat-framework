@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.IdentitiesAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -110,7 +110,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
 
                 } catch (Exception ex) {
-                    Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
+                    Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.CONFIGURED_DATA);
                     walletConfigured = (data != null);
 
                     if (errorManager != null)

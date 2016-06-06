@@ -21,13 +21,12 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
-
 /**
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
+
 public class Confirm_send_dialog extends Dialog implements
         View.OnClickListener {
-
 
 
     public Activity activity;
@@ -52,11 +51,10 @@ public class Confirm_send_dialog extends Dialog implements
 
     private LossProtectedWalletSession appSession;
 
-
-
     /**
      *  UI components
      */
+
     Button cancel_btn;
     Button accept_btn;
 

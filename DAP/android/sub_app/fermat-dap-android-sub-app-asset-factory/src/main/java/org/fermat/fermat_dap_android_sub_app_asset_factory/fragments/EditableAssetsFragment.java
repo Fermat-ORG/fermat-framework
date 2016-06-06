@@ -50,7 +50,7 @@ import com.software.shell.fab.ActionButton;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.AssetFactoryAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.interfaces.PopupMenu;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
@@ -93,7 +93,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
     private ErrorManager errorManager;
-    AssetFactorySession assetFactorySession;
+    AssetFactorySessionReferenceApp assetFactorySession;
     AssetFactorySettings settings = null;
     //    private MenuItem menuHelp;
 //    private Menu menu;
@@ -121,7 +121,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
         try {
             selectedAsset = null;
-            assetFactorySession = ((AssetFactorySession) appSession);
+            assetFactorySession = ((AssetFactorySessionReferenceApp) appSession);
             moduleManager = assetFactorySession.getModuleManager();
             errorManager = appSession.getErrorManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -500,13 +500,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 return false;
             }
             String description = assetFactory.getDescription();
-            if (description.length() == 0)
-            {
+            if (description.length() == 0) {
                 Toast.makeText(getActivity(), "Invalid Asset Description.", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (quantity == 0)
-            {
+            if (quantity == 0) {
                 Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -580,7 +578,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                         ex.printStackTrace();
                     }
                 });
-                    worker.execute();
+                worker.execute();
             }
         } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
             cantPublishAssetFactoy.printStackTrace();

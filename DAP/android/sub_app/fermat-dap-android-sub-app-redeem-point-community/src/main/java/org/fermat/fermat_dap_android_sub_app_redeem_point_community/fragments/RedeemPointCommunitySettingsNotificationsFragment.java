@@ -21,25 +21,26 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 import static android.widget.Toast.makeText;
+
 /**
- *Jinmy Bohorquez 02/26/2016
+ * Jinmy Bohorquez 02/26/2016
  */
 public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSessionReferenceApp assetRedeemPointCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private RedeemPointCommunitySubAppModuleManager moduleManager;
     RedeemPointSettings settings = null;
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    //    SettingsManager<RedeemPointSettings> settingsManager;
     private ErrorManager errorManager;
 
 
@@ -52,7 +53,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSessionReferenceApp) appSession);
         moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 

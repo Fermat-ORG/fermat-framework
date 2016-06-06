@@ -6,7 +6,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -17,12 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.factory.AssetFactoryFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.navigation_drawer.AssetFactoryNavigationViewPainter;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactorySession> {
+public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactorySessionReferenceApp> {
 
     public AssetFactoryFermatAppConnection(Context activity) {
         super(activity);
@@ -35,7 +34,7 @@ public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactory
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_FACTORY,
@@ -45,8 +44,8 @@ public class AssetFactoryFermatAppConnection extends AppConnections<AssetFactory
     }
 
     @Override
-    public AssetFactorySession getSession() {
-        return new AssetFactorySession();
+    public AssetFactorySessionReferenceApp getSession() {
+        return new AssetFactorySessionReferenceApp();
     }
 
     @Override

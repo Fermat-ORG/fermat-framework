@@ -636,7 +636,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("IntraWalletUserActorPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraWalletUser");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraWalletUser");
 
         /**
          * I return the values.

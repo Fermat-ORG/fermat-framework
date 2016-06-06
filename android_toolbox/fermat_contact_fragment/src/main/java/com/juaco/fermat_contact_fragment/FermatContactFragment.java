@@ -35,7 +35,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -71,7 +71,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 26/02/16.
  */
-public abstract class FermatContactFragment <S extends FermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE>  implements FermatListViewFragment, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public abstract class FermatContactFragment <S extends ReferenceAppFermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE>  implements FermatListViewFragment, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;

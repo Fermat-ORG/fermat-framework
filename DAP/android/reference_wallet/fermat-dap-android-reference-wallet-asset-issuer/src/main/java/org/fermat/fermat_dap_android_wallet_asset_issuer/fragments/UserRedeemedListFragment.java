@@ -36,7 +36,7 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.UserRed
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.UserRedeemed;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -60,7 +60,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSession assetIssuerSession;
+    AssetIssuerSessionReferenceApp assetIssuerSession;
     // Data
     private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
@@ -85,7 +85,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
+            assetIssuerSession = ((AssetIssuerSessionReferenceApp) appSession);
             errorManager = appSession.getErrorManager();
 
             moduleManager = assetIssuerSession.getModuleManager();
@@ -215,7 +215,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -226,8 +226,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -235,11 +235,11 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -323,7 +323,8 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         List<UserRedeemed> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                if (digitalAsset == null)
+                    digitalAsset = (DigitalAsset) appSession.getData("asset_data");
                 users = Data.getUserRedeemedList(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
 
             } catch (Exception ex) {

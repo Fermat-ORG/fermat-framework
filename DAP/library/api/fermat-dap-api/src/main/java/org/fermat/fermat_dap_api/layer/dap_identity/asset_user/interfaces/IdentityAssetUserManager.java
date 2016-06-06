@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
@@ -39,7 +40,7 @@ public interface IdentityAssetUserManager extends FermatManager, Serializable {
      * @return the intra user created
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException if something goes wrong.
      */
-    IdentityAssetUser createNewIdentityAssetUser(String alias,  byte[] profileImage) throws CantCreateNewIdentityAssetUserException;
+    IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException;
 
     /**
      * The method <code>updateIdentityAssetUser</code> change a identity information data

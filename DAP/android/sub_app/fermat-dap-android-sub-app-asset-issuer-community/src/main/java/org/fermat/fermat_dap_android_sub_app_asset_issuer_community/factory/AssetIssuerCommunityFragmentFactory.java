@@ -9,13 +9,12 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.Is
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityConnectionsListFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityHomeFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityNotificationsFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunitySettingsFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<AssetIssuerCommunitySubAppSession, SubAppResourcesProviderManager, AssetIssuerCommunityFragmentEnumTypes> {
+public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<AssetIssuerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager, AssetIssuerCommunityFragmentEnumTypes> {
 
 
     @Override

@@ -67,7 +67,7 @@
                 android:textSize="16sp"
                 tools:ignore="HardcodedText"
                 android:lines="1"
-                android:digits="0123456789 abcdefghijklmnopqrstuvwxyz"/>
+                android:digits="0123456789 abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
 
         </RelativeLayout>
 

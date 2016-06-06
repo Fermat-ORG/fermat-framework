@@ -9,7 +9,7 @@ public class CantRedeemDigitalAssetException extends DAPException {
     static final String DEFAULT_MESSAGE = "There was an error Distributing Digital Assets.";
 
     public CantRedeemDigitalAssetException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantRedeemDigitalAssetException(final String message) {

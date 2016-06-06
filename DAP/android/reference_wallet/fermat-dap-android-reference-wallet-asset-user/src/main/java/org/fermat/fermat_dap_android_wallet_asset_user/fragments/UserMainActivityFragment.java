@@ -42,7 +42,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -77,7 +77,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
 //    SettingsManager<AssetUserSettings> settingsManager;
 
     // Data
@@ -99,7 +99,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -405,9 +405,9 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-        if(data.getUserAssetNegotiation() != null){
-            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY,appSession.getAppPublicKey());
-        }else {
+        if (data.getUserAssetNegotiation() != null) {
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY, appSession.getAppPublicKey());
+        } else {
             changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
         }
     }

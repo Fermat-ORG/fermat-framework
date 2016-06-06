@@ -53,7 +53,7 @@ import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
 import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,ResourceProviderManager> implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractDesktopFragment<DesktopSessionReferenceApp,ResourceProviderManager> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -349,7 +349,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
 
                 if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.bitcoin_wallet);
+                    item.setIconResource(R.drawable.fermat_wallet_icon);
                     item.setPosition(10);
                     installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);

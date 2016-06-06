@@ -28,7 +28,7 @@ import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -237,13 +237,13 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     /**
      * Method that loads the UI
      */
-    protected void loadUI(final FermatSession fermatSession) {
+    protected void loadUI(final ReferenceAppFermatSession referenceAppFermatSession) {
         try {
-            if(fermatSession!=null) {
+            if(referenceAppFermatSession !=null) {
 //                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
-                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(fermatSession.getAppPublicKey());
+                FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(referenceAppFermatSession.getAppPublicKey());
 //                Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
-                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, referenceAppFermatSession);
 //                Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
 //                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
@@ -260,12 +260,20 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     initialisePaging();
 //                    Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
                 }
+
+//                if(appStructure.)
                 if (activity.getTabStrip() != null) {
-                    setPagerTabs(activity.getTabStrip(), fermatSession, fermatFragmentFactory);
+                    setPagerTabs(activity.getTabStrip(), referenceAppFermatSession, fermatFragmentFactory);
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
-                    setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
+                    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
+                    if(runtimeFragment.getPulickKeyFragmentFrom()!=null){
+                        if(!runtimeFragment.getPulickKeyFragmentFrom().equals(referenceAppFermatSession.getAppPublicKey())){
+                           // FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this, );
+                        }
+                    }
+                    setOneFragmentInScreen(fermatFragmentFactory, referenceAppFermatSession, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
 //                Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());

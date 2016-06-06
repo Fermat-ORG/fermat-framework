@@ -3,7 +3,7 @@ package com.bitdubai.sub_app.wallet_store.common.workers;
 import android.app.Activity;
 import android.graphics.Bitmap;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.LANGUAGE_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.SKIN_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.WALLET_VERSION;
 
 /**
  * Created by nelson on 29/08/15.
@@ -34,10 +34,10 @@ public class DetailedCatalogItemWorker extends FermatWorker {
 
     private WalletStoreModuleManager moduleManager;
     private UUID catalogItemId;
-    private SubAppsSession session;
+    private FermatSession session;
 
 
-    public DetailedCatalogItemWorker(WalletStoreModuleManager moduleManager, SubAppsSession session, WalletStoreListItem item, Activity context, FermatWorkerCallBack callBack) {
+    public DetailedCatalogItemWorker(WalletStoreModuleManager moduleManager, FermatSession session, WalletStoreListItem item, Activity context, FermatWorkerCallBack callBack) {
         super(context, callBack);
         this.moduleManager = moduleManager;
         this.catalogItemId = item.getId();
