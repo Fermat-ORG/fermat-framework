@@ -230,7 +230,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
