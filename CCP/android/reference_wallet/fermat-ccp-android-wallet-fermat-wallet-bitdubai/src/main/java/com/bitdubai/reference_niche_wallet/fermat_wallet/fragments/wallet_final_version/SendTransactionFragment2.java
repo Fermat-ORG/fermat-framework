@@ -72,7 +72,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperIt
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.BlockchainDownloadInfoDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import org.apache.http.client.ClientProtocolException;
@@ -98,10 +98,10 @@ import static android.widget.Toast.makeText;
  *
  * @author MAtias Furszyfer
  */
-public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,FermatWalletSession,ResourceProviderManager>
+public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceAppFermatWalletSession,ResourceProviderManager>
         implements FermatListItemListeners<FermatWalletModuleTransaction> {
 
-    private FermatWalletSession referenceWalletSession;
+    private ReferenceAppFermatWalletSession referenceWalletSession;
     private  BlockchainNetworkType blockchainNetworkType;
     private long before = 0;
     private long after = 0;

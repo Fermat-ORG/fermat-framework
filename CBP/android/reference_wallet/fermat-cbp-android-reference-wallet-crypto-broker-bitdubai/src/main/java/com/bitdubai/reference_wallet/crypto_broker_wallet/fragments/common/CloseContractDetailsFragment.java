@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -76,11 +76,11 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
     }
 
     private void initViews(View rootView) {
-        CryptoBrokerWalletSession brokerWalletSession = (CryptoBrokerWalletSession) this.appSession;
+        CryptoBrokerWalletSessionReferenceApp brokerWalletSession = (CryptoBrokerWalletSessionReferenceApp) this.appSession;
         moduleManager = brokerWalletSession.getModuleManager();
         errorManager = brokerWalletSession.getErrorManager();
 
-        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoBrokerWalletSession.CONTRACT_DATA);
+        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoBrokerWalletSessionReferenceApp.CONTRACT_DATA);
         ContractStatus status = contractBasicInfo.getStatus();
 
         ImageView customerImage = (ImageView) rootView.findViewById(R.id.cbw_customer_image);
@@ -129,13 +129,13 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
                 CustomerBrokerNegotiationInformation info;
                 try {
                     info = moduleManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
-                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
+                    appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 
                 } catch (FermatException ex) {
                     // TODO Just for testing. Add a Toast later
                     info = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
-                    appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
+                    appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 
                     if (errorManager != null)

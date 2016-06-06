@@ -29,8 +29,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -38,7 +36,7 @@ import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,12 +51,12 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class LogToolsFragment extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
 
     private ErrorManager errorManager;
     ToolManager toolManager;
 
-//    private DeveloperSubAppSession developerSubAppSession;
+//    private DeveloperSubAppSessionReferenceApp developerSubAppSession;
 
     View rootView;
 

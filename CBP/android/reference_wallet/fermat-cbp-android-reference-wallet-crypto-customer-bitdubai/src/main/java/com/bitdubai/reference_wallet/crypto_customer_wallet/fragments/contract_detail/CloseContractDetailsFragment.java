@@ -22,7 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -31,7 +31,7 @@ import java.text.NumberFormat;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
+public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager> {
     private static final String TAG = "CloseContractDetails";
 
 
@@ -64,7 +64,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoC
 
     private void initViews(View rootView) {
 
-        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoCustomerWalletSession.CONTRACT_DATA);
+        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoCustomerWalletSessionReferenceApp.CONTRACT_DATA);
         ContractStatus status = contractBasicInfo.getStatus();
 
         ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);

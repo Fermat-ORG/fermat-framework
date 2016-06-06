@@ -29,8 +29,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
@@ -38,7 +36,7 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,14 +52,14 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
     /**
      * SubApp session
      */
-//    DeveloperSubAppSession developerSubAppSession;
+//    DeveloperSubAppSessionReferenceApp developerSubAppSession;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -84,7 +82,7 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
         setRetainInstance(true);
 
 //        if(super.appSession !=null){
-//            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
+//            developerSubAppSession = (DeveloperSubAppSessionReferenceApp)super.appSession;
         lstLoggers = (ArrayListLoggers) appSession.getData("list");
 //        }
 
@@ -187,7 +185,7 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
         this.lstLoggers = lstLoggers;
     }
 
-//    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+//    public void setDeveloperSubAppSession(DeveloperSubAppSessionReferenceApp developerSubAppSession) {
 //        this.developerSubAppSession = developerSubAppSession;
 //    }
 

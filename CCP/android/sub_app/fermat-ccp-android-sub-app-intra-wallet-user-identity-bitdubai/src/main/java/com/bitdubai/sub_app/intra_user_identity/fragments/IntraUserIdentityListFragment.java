@@ -22,7 +22,7 @@ import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentit
 
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
 
-import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -40,7 +40,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
     private ErrorManager errorManager;
     private ArrayList<IntraUserModuleIdentity> identityInformationList;
 
-    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession ;
+    IntraUserIdentitySubAppSessionReferenceApp intraUserIdentitySubAppSession ;
 
 
     public static IntraUserIdentityListFragment newInstance() {
@@ -53,7 +53,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
 
         try {
             // setting up  module
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
+            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

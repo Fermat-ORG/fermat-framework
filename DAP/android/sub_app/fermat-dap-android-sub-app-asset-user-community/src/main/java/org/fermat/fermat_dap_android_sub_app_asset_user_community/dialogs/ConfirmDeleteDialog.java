@@ -5,20 +5,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/15/16.
  * Adapted for User Community by Penny on 1/18/16.
  */
-public class ConfirmDeleteDialog extends FermatDialog<AssetUserCommunitySubAppSession, ResourceProviderManager> implements
+public class ConfirmDeleteDialog extends FermatDialog<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager> implements
         View.OnClickListener {
 
     private FermatTextView title;
@@ -32,8 +33,11 @@ public class ConfirmDeleteDialog extends FermatDialog<AssetUserCommunitySubAppSe
         void onClick();
     }
 
-    public ConfirmDeleteDialog(Activity activity, AssetUserCommunitySubAppSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+    public ConfirmDeleteDialog(Activity activity,
+                               final ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager> assetUserCommunitySubAppSession,
+                               ResourceProviderManager resources) {
+
+        super(activity, assetUserCommunitySubAppSession, resources);
     }
 
     @Override

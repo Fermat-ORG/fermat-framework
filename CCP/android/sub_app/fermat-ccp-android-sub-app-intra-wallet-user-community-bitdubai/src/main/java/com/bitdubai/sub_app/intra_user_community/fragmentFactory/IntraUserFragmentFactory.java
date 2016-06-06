@@ -8,7 +8,7 @@ import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificatio
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 
 
 /**
@@ -16,7 +16,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
-public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
+public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSessionReferenceApp,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
 
 
     @Override

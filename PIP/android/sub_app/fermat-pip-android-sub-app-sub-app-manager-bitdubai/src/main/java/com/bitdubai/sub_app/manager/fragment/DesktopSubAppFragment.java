@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
-import com.bitdubai.sub_app.manager.fragment.session.DesktopSession;
+import com.bitdubai.sub_app.manager.fragment.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +61,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
         OnStartDragListener,
         DesktopHolderClickCallback<Item> {
 
+    private static final String TAG = "DesktopSubAppFragment";
     private ItemTouchHelper mItemTouchHelper;
 
     /**
@@ -80,7 +82,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
     private String searchName;
     private List<InstalledWallet> lstInstalledWallet;
-    private DesktopSession desktopSession;
+    private DesktopSessionReferenceApp desktopSession;
     //private SubAppManager moduleManager;
 
     ArrayList<Item> lstItems;
@@ -113,7 +115,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
         try {
 
             // setting up  module
-            //desktopSession = ((DesktopSession) appSession);
+            //desktopSession = ((DesktopSessionReferenceApp) appSession);
             //moduleManager = desktopSession.getModuleManager();
             //errorManager = appSession.getErrorManager();
 
@@ -394,12 +396,14 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
     private void select(AppsStatus appsStatus){
         try {
             List<Item> list = new ArrayList<>();
-            for (Item installedWallet : lstItemsWithIcon) {
-                    if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
-                        list.add(installedWallet);
-                    }
+            if(lstItemsWithIcon!=null)
+                for (Item installedWallet : lstItemsWithIcon) {
+                        if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
+                            list.add(installedWallet);
+                        }
 
-            }
+                }
+            else Log.e(TAG,"List of subApps null, please check this");
             Item[] arrItemsWithoutIcon = new Item[12];
             for (int i = 0; i < 12; i++) {
                 Item emptyItem = new Item(new EmptyItem(0, i));

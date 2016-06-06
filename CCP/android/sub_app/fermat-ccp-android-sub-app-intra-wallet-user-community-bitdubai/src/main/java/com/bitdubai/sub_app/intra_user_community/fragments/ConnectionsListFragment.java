@@ -28,7 +28,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
     private boolean isRefreshing = false;
     private View rootView;
     private AppFriendsListAdapter adapter;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -65,7 +65,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();

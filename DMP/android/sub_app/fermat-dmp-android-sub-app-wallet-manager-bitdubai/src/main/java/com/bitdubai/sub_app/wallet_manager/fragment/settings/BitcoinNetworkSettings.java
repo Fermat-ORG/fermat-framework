@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 /**
  * Created by mati on 2016.04.25..
  */
-public class BitcoinNetworkSettings extends AbstractFermatFragment<DesktopSession,ResourceProviderManager> {
+public class BitcoinNetworkSettings extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> {
 
 
     private View root;
