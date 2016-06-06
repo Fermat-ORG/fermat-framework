@@ -2,6 +2,9 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 
@@ -32,6 +35,18 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
 
     private OnClickAcceptListener acceptBtnListener;
     private boolean setTextFree;
+
+    //TODO COUNT
+    private boolean activeTextCount = false;
+    private int maxLenghtTextCount = 100;
+    FermatTextView textCount;
+
+    //TODO COUNT
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public interface OnClickAcceptListener {
         void onClick(String editTextValue);
@@ -91,14 +106,26 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
         acceptBtn.setOnClickListener(this);
         FermatButton cancelBtn = (FermatButton) findViewById(R.id.ccw_text_dialog_cancel_btn);
         cancelBtn.setOnClickListener(this);
+
         editTextView = (FermatEditText) findViewById(R.id.ccw_text_dialog_edit_text);
         editTextView.setHint(hintStringResource);
+
+        //TODO COUNT
+        if(activeTextCount) {
+            textCount = (FermatTextView) findViewById(R.id.ccw_text_dialog_edit_text_count);
+            editTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+            editTextView.addTextChangedListener(textWatcher);
+            textCount.setText(String.valueOf(maxLenghtTextCount));
+            textCount.setVisibility(View.VISIBLE);
+        }
+
         if (editTextValue != null)
             editTextView.setText(editTextValue);
         if (setTextFree)
             editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
         else
             editTextView.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
+
     }
 
     @Override
@@ -109,5 +136,11 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
     @Override
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
+    }
+
+    //TODO COUNT
+    public void setTextCount(int maxLenghtText){
+        this.maxLenghtTextCount = maxLenghtText;
+        this.activeTextCount = true;
     }
 }
