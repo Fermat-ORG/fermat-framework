@@ -40,6 +40,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
@@ -87,6 +88,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
     private TkyIdentitySubAppSession tkyIdentitySubAppSession;
     private byte[] ArtistImageByteArray;
     private TokenlyArtistIdentityManagerModule moduleManager;
@@ -94,6 +96,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private Button createButton;
     private EditText mArtistExternalUserName;
     private ImageView ArtistImage;
+    private ImageView ArtistImageDefoult;
     private RelativeLayout relativeLayout;
     private Menu menuHelp;
     private Artist identitySelected;
@@ -106,6 +109,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private TokenlyArtistPreferenceSettings tokenlyArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
@@ -116,6 +120,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private View buttonCam;
     private TextView UserNameLabel;
     private TextView PassWordLabel;
+
     private Handler handler;
 
 
@@ -209,6 +214,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         mArtistExternalUserName = (EditText) layout.findViewById(R.id.external_username);
         mArtistExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
         ArtistImage =  (ImageView) layout.findViewById(R.id.tokenly_Artist_image);
+        ArtistImageDefoult = ArtistImage;
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
         MexposureLevel = (Spinner) layout.findViewById(R.id.exposureLevel);
         MartistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.artistAcceptConnectionsType);
@@ -295,6 +301,11 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                //changeActivity(Activities.ART_FAN_IDENTITY_TEST_ACTIVITY);
+
+
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 tokenlyRequestDialog = new ProgressDialog(getActivity());
                 tokenlyRequestDialog.setMessage("Please Wait");
@@ -328,6 +339,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         }
                     }
                 });
+
+
             }
         });
     }
@@ -442,7 +455,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(fanImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             ArtistImageByteArray = toByteArray(bitmap);
             ArtistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -712,12 +725,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             ArtistIdentityAlreadyExistsException,
             WrongTokenlyUserCredentialsException {
        return moduleManager.createArtistIdentity(
-                fanExternalName,
-                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
-                fanPassword,
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType) ;
+               fanExternalName,
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
+               fanPassword,
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType) ;
     }
 
     private Artist updateIdentity(
@@ -747,14 +760,14 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             CantUpdateArtistIdentityException,
             WrongTokenlyUserCredentialsException {
        return  moduleManager.updateArtistIdentity(
-                fanExternalName,
-                fanPassword,
-                identitySelected.getId(),
-                identitySelected.getPublicKey(),
-                ArtistImageByteArray,
-                externalPlatform,
-                exposureLevel,
-                artistAcceptConnectionsType);
+               fanExternalName,
+               fanPassword,
+               identitySelected.getId(),
+               identitySelected.getPublicKey(),
+               ArtistImageByteArray,
+               externalPlatform,
+               exposureLevel,
+               artistAcceptConnectionsType);
     }
 
     private byte[] convertImage(int resImage){
@@ -813,7 +826,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-
+        if (updateProfileImage) {menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");}
         super.onCreateContextMenu(menu, view, menuInfo);
     }
 
@@ -828,9 +841,23 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                   DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void DeletePicture() {
+        ArtistImage.setImageDrawable(null);
+        buttonCam.setBackgroundResource(R.drawable.boton_cam);
+        updateProfileImage = false;
+
+
+
+
     }
 
 

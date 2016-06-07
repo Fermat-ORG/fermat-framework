@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
 public enum ArtFanUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<ArtFanUserIdentityFragmentsEnumType> {
-
+    ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT("ARTSAFITF"),
     ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT("ARTSAFICIF")
             ;
     private String key;

@@ -86,6 +86,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
 
 
     private ArtistIdentitySubAppSession artistIdentitySubAppSession;
@@ -114,6 +115,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private TextView alias;
     private String WarningColor = "#DF0101";
     private String NormalColor  =  "#0080FF";
+    private boolean contextMenuDelete = false;
 
 
 
@@ -206,6 +208,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    updateProfileImage = true;
                     camEditButton.setImageResource(R.drawable.art_edit_picture_button);
                     createButton.setImageResource(R.drawable.art_save_changes_button);
                 }
@@ -230,7 +233,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             artistImageByteArray = toByteArray(bitmap);
             artistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -685,7 +688,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //MIG
-            //    mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
+                //    mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
                 try {
                     if (!updateCheck) {
                         List<String> arraySpinner = new ArrayList<>();
@@ -826,6 +829,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        if (updateProfileImage) {menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");}
+
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
@@ -842,9 +847,19 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                    DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void DeletePicture() {
+        artistImage.setImageDrawable(null);
+        camEditButton.setBackgroundResource(R.drawable.art_edit_picture_button);
+        updateProfileImage = false;
     }
 
     @Override

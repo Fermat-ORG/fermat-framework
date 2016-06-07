@@ -851,21 +851,18 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * ART FAN IDENTITY
              */
 
-         /*
-             *TKY ARTIST IDENTITY
-             */
+
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
             String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(artFanUserIdentityPublicKey);
+
             // Activity: Create New Identity
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
             runtimeActivity.setActivityType(Activities.ART_FAN_IDENTITY_CREATE_PROFILE.getCode());
-            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            //runtimeSubApp.addPosibleStartActivity(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Art Fan Identity");
@@ -883,6 +880,36 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+
+            // TEST: new Activity
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.ART_FAN_IDENTITY_TEST_ACTIVITY);
+            runtimeActivity.setActivityType(Activities.ART_FAN_IDENTITY_TEST_ACTIVITY.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeActivity.setBackActivity(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("TEST");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setTitleColor("#000000");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_TEST_FRAGMENT.getKey());
+
+
+
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 

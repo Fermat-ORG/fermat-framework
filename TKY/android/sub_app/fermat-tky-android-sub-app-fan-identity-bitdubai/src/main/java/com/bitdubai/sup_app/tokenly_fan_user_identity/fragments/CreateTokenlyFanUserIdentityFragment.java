@@ -80,6 +80,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+    private static final int CONTEXT_MENU_DELETE = 3;
     private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private TokenlyFanIdentityManagerModule moduleManager;
@@ -97,6 +98,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean contextMenuDelete = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
@@ -212,6 +214,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    updateProfileImage = true;
                     buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
@@ -242,7 +245,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(fanImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             fanImageByteArray = toByteArray(bitmap);
             fanImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -544,7 +547,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-
+        if (updateProfileImage) {menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");}
         super.onCreateContextMenu(menu, view, menuInfo);
     }
     @Override
@@ -559,9 +562,23 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     loadImageFromGallery();
                     contextMenuInUse = true;
                     return true;
+                case CONTEXT_MENU_DELETE:
+                    DeletePicture();
+                    contextMenuDelete = true;
+                    return true;
             }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void DeletePicture() {
+        fanImage.setImageDrawable(null);
+        buttonCam.setBackgroundResource(R.drawable.boton_cam);
+        updateProfileImage = false;
+
+
+
+
     }
 
     @Override

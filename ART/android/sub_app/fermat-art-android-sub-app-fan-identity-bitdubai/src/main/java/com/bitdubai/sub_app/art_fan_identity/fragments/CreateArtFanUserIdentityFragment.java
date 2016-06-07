@@ -42,6 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -253,7 +254,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+           // bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             fanImageByteArray = toByteArray(bitmap);
             fanImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -411,6 +412,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+
                 CommonLogger.debug(TAG, "get in on createButton.setOnClickListener");
                 int resultKey = createNewIdentity();
                 switch (resultKey) {
@@ -433,7 +438,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         Toast.makeText(getActivity(), "The module manager is null", Toast.LENGTH_LONG).show();
                         break;
                 }
+
+
             }
+
+
         });
 
        // configureToolbar();
