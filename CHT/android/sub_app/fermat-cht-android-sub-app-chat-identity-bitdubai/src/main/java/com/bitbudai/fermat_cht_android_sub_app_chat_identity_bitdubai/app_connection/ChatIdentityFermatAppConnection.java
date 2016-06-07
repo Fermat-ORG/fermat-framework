@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 /**
  * FERMAT-ORG
@@ -65,5 +66,13 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
     public FooterViewPainter getFooterViewPainter() {
         System.out.println("chttttt");
         return null;
+    }
+
+    @Override
+    public int getResource(String id) {
+        if(id.equals("open_nav")){
+            return R.drawable.cht_ic_back_buttom;
+        }
+        return super.getResource(id);
     }
 }

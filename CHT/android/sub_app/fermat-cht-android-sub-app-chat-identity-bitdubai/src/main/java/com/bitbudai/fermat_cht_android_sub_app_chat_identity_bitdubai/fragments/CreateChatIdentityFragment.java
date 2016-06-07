@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,15 +33,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
-
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogCropImage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -56,9 +50,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.squareup.picasso.Picasso;
 
@@ -69,6 +63,9 @@ import java.io.InputStream;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 
 /**
  * FERMAT-ORG
@@ -127,14 +124,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             if(errorManager!=null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
-        toolbar = getToolbar();
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+//        toolbar = getToolbar();
+//        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getActivity().onBackPressed();
+//            }
+//        });
     }
 
     @Override

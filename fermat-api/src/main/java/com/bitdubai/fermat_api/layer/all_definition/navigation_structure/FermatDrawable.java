@@ -5,18 +5,20 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.S
 /**
  * Created by Matias furszyfer on 2016.06.07..
  */
-public class Drawable {
+public class FermatDrawable {
 
     private String id;
+    private String ownerAppPublicKey;
     private SourceLocation sourceLocation;
 
-    public Drawable(String id) {
+    public FermatDrawable(String id) {
         this.id = id;
         this.sourceLocation = SourceLocation.FERMAT_FRAMEWORK;
     }
 
-    public Drawable(String id, SourceLocation sourceLocation) {
+    public FermatDrawable(String id, String ownerAppPublicKey, SourceLocation sourceLocation) {
         this.id = id;
+        this.ownerAppPublicKey = ownerAppPublicKey;
         this.sourceLocation = sourceLocation;
     }
 
@@ -30,5 +32,9 @@ public class Drawable {
 
     public void setSourceLocation(SourceLocation sourceLocation) {
         this.sourceLocation = sourceLocation;
+    }
+
+    public String getOwnerAppPublicKey() {
+        return ownerAppPublicKey;
     }
 }

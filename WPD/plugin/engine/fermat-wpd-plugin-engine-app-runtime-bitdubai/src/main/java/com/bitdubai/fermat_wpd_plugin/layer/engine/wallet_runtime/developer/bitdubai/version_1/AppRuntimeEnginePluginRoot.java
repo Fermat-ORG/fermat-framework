@@ -2569,7 +2569,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3099,7 +3099,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3793,9 +3793,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapse(true);
+        runtimeHeader.setStartCollapsed(true);
         runtimeActivity.setHeader(runtimeHeader);
 
 

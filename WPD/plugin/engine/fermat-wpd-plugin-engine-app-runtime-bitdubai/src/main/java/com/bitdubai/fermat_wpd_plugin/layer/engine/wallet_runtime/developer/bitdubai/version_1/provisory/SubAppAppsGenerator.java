@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
@@ -831,6 +833,10 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
+            MenuItem leftIconMenuItem = new MenuItem();
+            leftIconMenuItem.setFermatDrawable(new FermatDrawable("open_nav", chatIdentityPublicKey, SourceLocation.DEVELOPER_RESOURCES));
+            leftIconMenuItem.setAppLinkPublicKey("back");
+            runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();

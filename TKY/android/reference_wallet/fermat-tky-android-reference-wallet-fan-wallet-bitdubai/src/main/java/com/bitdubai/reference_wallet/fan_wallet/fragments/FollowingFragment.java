@@ -133,7 +133,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
    /*     for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item2 = menu.getItem(i);
 
-            Drawable drawable = item2.getIcon();
+            FermatDrawable drawable = item2.getIcon();
             if (drawable != null) {
                 // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
                 drawable.mutate();
@@ -148,7 +148,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item2 = menu.getItem(i);
 
-            Drawable drawable = item2.getIcon();
+            FermatDrawable drawable = item2.getIcon();
             if (drawable != null) {
                 // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
                 drawable.mutate();
@@ -246,9 +246,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
 
-/*    private Drawable getColoredArrow() {
-        Drawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
+/*    private FermatDrawable getColoredArrow() {
+        FermatDrawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        FermatDrawable wrapped = DrawableCompat.wrap(arrowDrawable);
 
         if (arrowDrawable != null && wrapped != null) {
             // This should avoid tinting all the arrows

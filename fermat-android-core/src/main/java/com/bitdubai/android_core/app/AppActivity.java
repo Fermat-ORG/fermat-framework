@@ -337,11 +337,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             if (nextActivity != null) {
                 if (!nextActivity.equals(lastActivity)) {
                     resetThisActivity();
-                    Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
-                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                    //Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
+                    //intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
                     //recreate();
                     //startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     //finish();
                     //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));

@@ -25,7 +25,7 @@ public class MenuItem implements FermatMenuItem {
     private int itemId;
 
     //This could be an icon or whatever the develoer want
-    private Drawable drawable;
+    private FermatDrawable fermatDrawable;
 
     /**
      * SideMenu class constructors
@@ -101,7 +101,11 @@ public class MenuItem implements FermatMenuItem {
         return itemId;
     }
 
-    public void setDrawable(Drawable itemIcon) {
-        this.drawable = itemIcon;
+    public void setFermatDrawable(FermatDrawable itemIcon) {
+        this.fermatDrawable = itemIcon;
+    }
+
+    public FermatDrawable getFermatDrawable() {
+        return fermatDrawable;
     }
 }

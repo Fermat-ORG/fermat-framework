@@ -103,6 +103,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -544,20 +545,59 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     private void paintToolbarIcon(TitleBar titleBar) {
-        if (titleBar.getIconName() != null) {
-            mToolbar.setNavigationIcon(R.drawable.ic_action_back);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Check if no view has focus:
-                    View view = getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if(titleBar.getLeftIconFermatDrawable()!=null){
+            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getLeftIconFermatDrawable();
+            FermatDrawable leftIconFermatDrawable = menuItem.getFermatDrawable();
+            int resId = 0;
+            switch (leftIconFermatDrawable.getSourceLocation()){
+                case FERMAT_FRAMEWORK:
+                    break;
+                case DEVELOPER_RESOURCES:
+                    resId = FermatAppConnectionManager.getFermatAppConnection(leftIconFermatDrawable.getOwnerAppPublicKey(),this).getResource(leftIconFermatDrawable.getId());
+                    break;
+                case INTERNET_URL:
+                    Log.i(TAG,"Internet request drawable is not supported yet");
+                    break;
+            }
+            mToolbar.setNavigationIcon(resId);
+            if(menuItem.getAppLinkPublicKey().equals("back")){
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
                     }
-                    onBackPressed();
-                }
-            });
+                });
+            }else if(menuItem.getAppLinkPublicKey().equals("nav_menu")) {
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //this is for open the nav menu
+                    }
+                });
+            }else {
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        changeActivity(menuItem.getLinkToActivity().getCode(),null,null);
+                    }
+                });
+            }
+        }else {
+            if (titleBar.getIconName() != null) {
+                mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+                mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Check if no view has focus:
+                        View view = getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+                        onBackPressed();
+                    }
+                });
+            }
         }
         byte[] toolbarIcon = titleBar.getNavigationIcon();
         if (toolbarIcon != null)
@@ -587,9 +627,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 //
-//            Drawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
-//            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-//            LayerDrawable ld = new LayerDrawable(new Drawable[]{colorDrawable, bottomDrawable});
+//            FermatDrawable colorDrawable = new ColorDrawable(Color.parseColor(activity.getColor()));
+//            FermatDrawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
+//            LayerDrawable ld = new LayerDrawable(new FermatDrawable[]{colorDrawable, bottomDrawable});
 //
 //            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
 //                //ld.setCallback(drawableCallback);
@@ -733,7 +773,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     collapsingToolbarLayout.setLayoutParams(params);
                 }
 
-                if(header.getStartCollapse()){
+                if(header.getStartCollapsed()){
                     appBarLayout.setExpanded(false);
                 }
 
@@ -950,7 +990,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     MainLayoutHelper.setTranslucentStatusBar(getWindow(),0);
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
-                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(FermatDrawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -997,7 +1037,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                     gc();
                     //InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
-                    //window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
+                    //window.setBackgroundDrawable(FermatDrawable.createFromStream(inputStream, null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1204,8 +1244,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (pagertabs.getBackground() == null) {
                 if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
-                    //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
-                    //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
+                    //FermatDrawable d = FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                    //getWindow().setBackgroundDrawable(FermatDrawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
                     //pager.setBackground(d);
                     //getWindow().addFlags(WindowManager.LayoutParams.);
                     if (Build.VERSION.SDK_INT > 20) {
