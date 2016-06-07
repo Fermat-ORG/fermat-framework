@@ -7,7 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -61,7 +62,7 @@ public class SubAppAppsGenerator {
 
             TitleBar runtimeTitleBar;
             SideMenu runtimeSideMenu;
-            MainMenu runtimeMainMenu;
+            OptionsMenu runtimeOptionsMenu;
             MenuItem runtimeMenuItem;
             TabStrip runtimeTabStrip;
             StatusBar statusBar;
@@ -429,12 +430,12 @@ public class SubAppAppsGenerator {
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
-/*            runtimeMainMenu = new MainMenu();
+/*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMainMenu.addMenuItem(runtimeMenuItem);
+            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeActivity.setMainMenu(runtimeMainMenu);*/
+            runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -842,6 +843,12 @@ public class SubAppAppsGenerator {
             statusBar = new StatusBar();
             statusBar.setColor("#075e53");
             runtimeActivity.setStatusBar(statusBar);
+
+            OptionsMenu optionsMenu = new OptionsMenu();
+            OptionMenuItem menuItem = new OptionMenuItem("welcome_dialog");
+            menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+            menuItem.setVisibility(2);
+            optionsMenu.addMenuItem(menuItem);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());

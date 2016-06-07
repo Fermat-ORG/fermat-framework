@@ -104,7 +104,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
@@ -154,7 +155,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     private static final String TAG = "fermat-core";
-    private MainMenu mainMenu;
+    private OptionsMenu optionsMenu;
 
     /**
      * Screen adapters
@@ -261,11 +262,27 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         try {
             menu.clear();
-            //mainMenu = getActivityUsedType().getMainMenu();
-            if (mainMenu != null) {
-                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem : mainMenu.getMenuItems()) {
-                    MenuItem item = menu.add(menuItem.getLabel());
+            //optionsMenu = getActivityUsedType().getOptionsMenu();
+            if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                for (int i=0;i< optionsMenuItems.size();i++) {
+                    OptionMenuItem menuItem = optionsMenuItems.get(i);
+//                    MenuItem item = menu.add(menuItem.getLabel());
+                    int id = Integer.parseInt(menuItem.getId().trim());
+                    MenuItem item = menu.add(0, id, 0, menuItem.getLabel());
+                    FermatDrawable icon = menuItem.getFermatDrawable();
+                    if(icon!=null) {
+                        int iconRes = 0;
+                        switch (icon.getSourceLocation()) {
+                            case DEVELOPER_RESOURCES:
+                                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(icon.getOwnerAppPublicKey(), this);
+                                iconRes = fermatAppConnection.getResource(icon.getId());
+                                break;
 
+                        }
+                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                        item.setShowAsAction(menuItem.getVisibility());
+                    }
 //                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
 //                    @Override
 //                    public boolean onMenuItemClick (MenuItem item){
@@ -274,7 +291,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                    }
 //                });
                 }
-                //getMenuInflater().inflate(R.menu.wallet_store_activity_wallet_menu, menu);
 
             }
             return true;
@@ -322,7 +338,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
            // Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
-            MainMenu mainMenu = activity.getMainMenu();
+            OptionsMenu optionsMenu = activity.getOptionsMenu();
 
             SideMenu sideMenu = activity.getSideMenu();
 
@@ -331,8 +347,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             setMainLayout(sideMenu, activity.getHeader());
            // Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
-            setMainMenu(mainMenu);
-           // Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
+            setOptionsMenu(optionsMenu);
+           // Log.i("FERMAT ACTIVITY loadUI", "setOptionsMenu " + System.currentTimeMillis());
 
             paintTabs(tabs, activity);
             //Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
@@ -457,8 +473,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    private void setMainMenu(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
+    private void setOptionsMenu(OptionsMenu optionsMenu) {
+        this.optionsMenu = optionsMenu;
+        invalidateOptionsMenu();
     }
 
     /**
@@ -1577,7 +1594,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 //    @Override
 //    public boolean onOptionsItemSelected(final MenuItem item) {
-//        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+//        if (item.getId() == android.support.v7.appcompat.R.id.home) {
 //            return mDrawerToggle.onOptionsItemSelected(item);
 //        }
 //        return super.onOptionsItemSelected(item);
@@ -1617,8 +1634,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public void onItemClickListener(final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, final int position) {
         data.setSelected(true);
-        mNavItemId = data.getItemId();
-
         // allow some time after closing the drawer before performing real navigation
         // so the user can see what is happening
         mDrawerLayout.closeDrawer(GravityCompat.START);

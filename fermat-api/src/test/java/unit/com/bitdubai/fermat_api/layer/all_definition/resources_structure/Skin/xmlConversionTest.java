@@ -30,7 +30,7 @@ public class xmlConversionTest extends TestCase {
 //        runtimeSubApp.setType(SubApps.CWP_SHELL);
 //        TitleBar runtimeTitleBar;
 //        SideMenu runtimeSideMenu;
-//        MainMenu runtimeMainMenu;
+//        OptionsMenu runtimeMainMenu;
 //        MenuItem runtimeMenuItem;
 //        TabStrip runtimeTabStrip;
 //        StatusBar statusBar;

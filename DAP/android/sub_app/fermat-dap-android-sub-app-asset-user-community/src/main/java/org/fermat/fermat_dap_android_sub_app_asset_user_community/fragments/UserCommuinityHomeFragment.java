@@ -339,7 +339,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 //        create.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-////            if (item.getItemId() == R.id.action_connect) {
+////            if (item.getId() == R.id.action_connect) {
 //                final ProgressDialog dialog = new ProgressDialog(getActivity());
 //                dialog.setMessage("Connecting please wait...");
 //                dialog.setCancelable(false);
@@ -559,9 +559,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
 
 
-        /*int id = item.getItemId();
+        /*int id = item.getId();
 
-//        if (item.getItemId() == R.id.action_connect) {
+//        if (item.getId() == R.id.action_connect) {
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Connecting please wait...");

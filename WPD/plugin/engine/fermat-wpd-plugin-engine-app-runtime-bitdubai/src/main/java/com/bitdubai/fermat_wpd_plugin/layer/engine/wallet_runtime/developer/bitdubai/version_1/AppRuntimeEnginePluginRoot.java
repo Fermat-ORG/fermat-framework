@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -323,7 +323,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         Header runtimeHeader;
@@ -402,7 +402,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //            AppNavigationStructure runtimeAppNavigationStructure;
 //            TitleBar runtimeTitleBar;
 //            SideMenu runtimeSideMenu;
-//            MainMenu runtimeMainMenu;
+//            OptionsMenu runtimeOptionsMenu;
 //            MenuItem runtimeMenuItem;
 //            TabStrip runtimeTabStrip;
 //            StatusBar runtimeStatusBar;
@@ -3996,7 +3996,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4093,13 +4093,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -4806,7 +4806,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4874,13 +4874,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5739,7 +5739,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5863,7 +5863,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5961,13 +5961,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu

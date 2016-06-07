@@ -263,7 +263,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<ReferenceAppF
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 boolean result = false;
-                                int itemId = menuItem.getItemId();
+                                int itemId = menuItem.getId();
                                 if (itemId == R.id.menu_no_logging) {
                                     //TODO: HAcer el cambio acá para que haga el changelevel
                                     changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
