@@ -161,7 +161,7 @@ public class RequestFormFragment extends AbstractFermatFragment<FermatWalletSess
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_request_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
