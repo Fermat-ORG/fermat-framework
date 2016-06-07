@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -64,7 +65,7 @@ import static android.widget.Toast.makeText;
  */
 
 public class ConnectionsWorldFragment
-        extends AbstractFermatFragment<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
@@ -77,14 +78,14 @@ public class ConnectionsWorldFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     //Data
     private ChatActorCommunitySettings appSettings;
     private int offset = 0;
     private int mNotificationsCount = 0;
-    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerCommunityInformationList;
+    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
 
     //Flags
     private boolean isRefreshing = false;
@@ -101,7 +102,7 @@ public class ConnectionsWorldFragment
     private ImageView closeSearch;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-    private SearchView searchView;//private View searchView;
+    private SearchView searchView;
     private android.support.v7.widget.Toolbar toolbar;
     private List<ChatActorCommunityInformation> dataSetFiltered;
     private LinearLayout searchEmptyView;
@@ -124,7 +125,7 @@ public class ConnectionsWorldFragment
             setHasOptionsMenu(true);
 
             //Get managers
-            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
+            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             //@Deprecated
@@ -222,11 +223,11 @@ public class ConnectionsWorldFragment
             {
                 PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
-                            chatUserSubAppSession,
+                            appSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                    applicationsHelper.get(), 0);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                    applicationsHelper.get(), 0*/);
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -366,7 +367,7 @@ public class ConnectionsWorldFragment
                 appSession.setData(CHAT_USER_SELECTED, data);
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
             } else {
-                showDialogHelp(1);
+                showDialogHelp();//1
             }
         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
         {
@@ -531,7 +532,7 @@ public class ConnectionsWorldFragment
             int id = item.getItemId();
 
             if (id == R.id.action_help)
-                showDialogHelp(0);
+                showDialogHelp();//0
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -542,18 +543,18 @@ public class ConnectionsWorldFragment
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialogHelp(int showIdentity) {
+    private void showDialogHelp() {//int showIdentity
         try {
             moduleManager = appSession.getModuleManager();
             if (moduleManager.getSelectedActorIdentity() != null) {
                 if (!moduleManager.getSelectedActorIdentity().getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
-                            chatUserSubAppSession,
+                            appSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                    applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                    applicationsHelper.get(), showIdentity*/);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -564,17 +565,17 @@ public class ConnectionsWorldFragment
                 } else {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
-                            chatUserSubAppSession,
+                            appSession,
                             null,
                             moduleManager,
-                                    PresentationChatCommunityDialog.TYPE_PRESENTATION,
-                                    applicationsHelper.get(), showIdentity);
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION/*,
+                                    applicationsHelper.get(), showIdentity*/);
                     presentationChatCommunityDialog.show();
                     presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             Boolean isBackPressed =
-                                    (Boolean) chatUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                                    (Boolean) appSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
                             if (isBackPressed != null) {
                                 if (isBackPressed) {
                                     getActivity().finish();
@@ -588,16 +589,16 @@ public class ConnectionsWorldFragment
             } else {
                 PresentationChatCommunityDialog presentationChatCommunityDialog =
                         new PresentationChatCommunityDialog(getActivity(),
-                        chatUserSubAppSession,
+                        appSession,
                         null,
                         moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                                applicationsHelper.get(), showIdentity);
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                                applicationsHelper.get(), showIdentity*/);
                 presentationChatCommunityDialog.show();
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        Boolean isBackPressed = (Boolean) chatUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        Boolean isBackPressed = (Boolean) appSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
                         if (isBackPressed != null) {
                             if (isBackPressed) {
                                 getActivity().onBackPressed();
@@ -609,11 +610,11 @@ public class ConnectionsWorldFragment
         } catch (CantGetSelectedActorIdentityException e) {
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
-                            chatUserSubAppSession,
+                            appSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                            applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                            applicationsHelper.get(), showIdentity*/);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -625,11 +626,11 @@ public class ConnectionsWorldFragment
         } catch (ActorIdentityNotSelectedException e) {
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
-                            chatUserSubAppSession,
+                            appSession,
                             null,
                             moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                            applicationsHelper.get(), showIdentity);
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+                            applicationsHelper.get(), showIdentity*/);
             presentationChatCommunityDialog.show();
             presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

@@ -1302,7 +1302,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
-        return cryptoVaultManager.isValidAddress(cryptoAddress);
+        //todo natalia corregir
+        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override

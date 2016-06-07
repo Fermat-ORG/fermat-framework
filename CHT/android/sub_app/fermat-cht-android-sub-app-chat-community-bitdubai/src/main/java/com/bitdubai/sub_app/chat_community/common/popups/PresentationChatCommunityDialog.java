@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -38,7 +39,8 @@ import java.lang.ref.WeakReference;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubAppSessionReferenceApp,
+public class PresentationChatCommunityDialog
+        extends FermatDialog<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>,
         SubAppResourcesProviderManager> implements View.OnClickListener {
 
 
@@ -54,7 +56,7 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
-    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private RecreateView recreateView;
     private int identityOrChat;
@@ -67,21 +69,21 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationChatCommunityDialog(final Activity activity,
-                                                final ChatUserSubAppSessionReferenceApp fermatSession,
+                                                final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> fermatSession,
                                                 final SubAppResourcesProviderManager resources,
                                                 final ChatActorCommunitySubAppModuleManager moduleManager,
-                                                final int type,
+                                                final int type/*,
                                            final FermatApplicationCaller applicationsHelper,
-                                           final int identityOrChat) {
+                                           final int identityOrChat*/) {
 
         super(activity, fermatSession, resources);
 
         this.activity = activity;
         this.type = type;
         this.moduleManager = moduleManager;
-        this.chatUserSubAppSession = fermatSession;
+        this.chatUserSubAppSession = fermatSession;/*
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
-        this.identityOrChat = identityOrChat;
+        this.identityOrChat = identityOrChat;*/
     }
 
     @Override

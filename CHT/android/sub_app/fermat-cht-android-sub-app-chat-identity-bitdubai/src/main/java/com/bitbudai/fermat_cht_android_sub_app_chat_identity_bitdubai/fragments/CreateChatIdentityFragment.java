@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.settings.ChatIdentitySettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
 
@@ -45,6 +44,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditI
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -53,8 +53,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
@@ -70,39 +70,27 @@ import java.io.InputStream;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
-//import com.theartofdev.edmodo.cropper.CropImage;
-
-
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
  */
 
-public class CreateChatIdentityFragment extends AbstractFermatFragment {
+public class CreateChatIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ChatIdentityModuleManager>, ResourceProviderManager> {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int GALLERY_KITKAT_INTENT_CALLED = 3;
     private Bitmap chatBitmap;
-    private static final int CONTEXT_MENU_CAMERA = 1;
-    private static final int CONTEXT_MENU_GALLERY = 2;
     ChatIdentityModuleManager moduleManager;
     private EditText mChatName;
     private EditText mChatConnectionState;
     private ImageView mChatImage;
     ErrorManager errorManager;
     private boolean actualizable;
-    private boolean contextMenuInUse = false;
     TextView textViewChtTitle;
-    byte[] fanImageByteArray;
-    ChatIdentitySessionReferenceApp Session;
-    Context context;
     Toolbar toolbar;
     TextView statusView;
     ImageView placeholdImg;
-    Button btnRotate;
-    int ROTATE_VALUE = 0;
     private Uri imageToUploadUri;
-    private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
 
     public static CreateChatIdentityFragment newInstance() {
@@ -115,9 +103,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            Session = (ChatIdentitySessionReferenceApp) appSession;
-            moduleManager = Session.getModuleManager();
-            errorManager = Session.getErrorManager();
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
 
             chatIdentitySettings = null;
             try {
@@ -137,10 +124,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 }
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
+            if(errorManager!=null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -170,7 +164,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
         try {
             if (ExistIdentity() == false) {
-
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -261,8 +254,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 });
             }
         } catch (CHTException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
+            if(errorManager!=null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
 
@@ -270,13 +263,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_ic_menu_help)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     public void setUpDialog() {
         try {
-            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -286,7 +279,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
         } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            if(errorManager!=null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -470,6 +464,25 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     }
 
+    public void saveAndGoBack(){
+        try {
+            if(ExistIdentity()){
+                updateIdentityInBackDevice("onBack");
+            }else{
+                if(!mChatName.getText().toString().equals("")) {
+                    createNewIdentityInBackDevice("onBack");
+                }
+            }
+        } catch (CHTException e) {
+            //e.printStackTrace();
+        }
+    }
+    @Override
+    public void onBackPressed(){
+        saveAndGoBack();
+        super.onBackPressed();
+    }
+
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -528,10 +541,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
-        String brokerNameText = mChatName.getText().toString();
+        String chatNameText = mChatName.getText().toString();
         String state = mChatConnectionState.getText().toString();
 
-        if (brokerNameText.trim().equals("")) {
+        if (chatNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }
         if (chatBitmap == null) {
@@ -540,7 +553,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), state);
+                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -550,6 +563,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            //Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -561,7 +576,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
+                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -571,6 +586,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            //Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -582,7 +599,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     private void createNewIdentityInBackDevice(String donde) {
-        String brokerNameText = mChatName.getText().toString();
+        String chatNameText = mChatName.getText().toString();
         String identityConnectionNameText = mChatConnectionState.getText().toString();
         if (chatBitmap == null) {
             //Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
@@ -591,14 +608,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         if (identityConnectionNameText.length() == 0) {
             identityConnectionNameText = "Available";
         }
-        if (brokerNameText.trim().equals("")) {
+        if (chatNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
 
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             CreateChatIdentityExecutor executor = null;
             try {
-                executor = new CreateChatIdentityExecutor(Session, brokerNameText, imgInBytes, identityConnectionNameText);
+                executor = new CreateChatIdentityExecutor(appSession, chatNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -607,6 +624,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }else if(donde.equalsIgnoreCase("onBack")){
+                            Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
                         }
                         break;
                 }
@@ -744,6 +763,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("image/jpeg");
+            //Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
+//                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
         }
     }

@@ -62,33 +62,75 @@
         android:layout_height="2dp"
         android:background="#DBDBDB" />
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
         android:id="@+id/connectedButton"
-        android:buttonTint="@color/green"
+        android:scaleType="centerCrop"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:visibility="gone"
         android:checked="true"
-        android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:background="@drawable/connected_button"
+        tools:ignore="ContentDescription"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
         android:id="@+id/blockedButton"
-        android:buttonTint="@color/red"
+        android:scaleType="centerCrop"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:visibility="gone"
         android:checked="true"
-        android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:background="@drawable/blocked_button"
+        tools:ignore="ContentDescription"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
         android:id="@+id/pendingButton"
-        android:buttonTint="@color/yellow"
+        android:scaleType="centerCrop"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:visibility="gone"
         android:checked="true"
-        android:layout_alignBottom="@+id/connection_state_user"
-        android:layout_alignEnd="@+id/community_name" />
+        android:background="@drawable/pending_button"
+        tools:ignore="ContentDescription"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <!--<RadioButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/connectedButton"-->
+        <!--android:buttonTint="@color/green"-->
+        <!--android:visibility="gone"-->
+        <!--android:checked="true"-->
+        <!--android:layout_alignBottom="@+id/connection_state_user"-->
+        <!--android:layout_alignEnd="@+id/community_name"-->
+        <!--android:layout_alignRight="@+id/community_name"/>-->
+
+    <!--<RadioButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/blockedButton"-->
+        <!--android:buttonTint="@color/red"-->
+        <!--android:visibility="gone"-->
+        <!--android:checked="true"-->
+        <!--android:layout_alignBottom="@+id/connection_state_user"-->
+        <!--android:layout_alignEnd="@+id/community_name"-->
+        <!--android:layout_alignRight="@+id/community_name"/>-->
+
+    <!--<RadioButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/pendingButton"-->
+        <!--android:buttonTint="@color/yellow"-->
+        <!--android:visibility="gone"-->
+        <!--android:checked="true"-->
+        <!--android:layout_alignBottom="@+id/connection_state_user"-->
+        <!--android:layout_alignEnd="@+id/community_name"-->
+        <!--android:layout_alignRight="@+id/community_name"/>-->
 </RelativeLayout>

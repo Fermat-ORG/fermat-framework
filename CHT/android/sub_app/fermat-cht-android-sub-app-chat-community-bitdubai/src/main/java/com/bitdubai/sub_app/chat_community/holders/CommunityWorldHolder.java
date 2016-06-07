@@ -20,9 +20,12 @@ public class CommunityWorldHolder extends FermatViewHolder {
     public TextView name;
     public ImageView connectionState;
     public TextView row_connection_state;
-    public RadioButton connectedButton;
-    public RadioButton blockedButton;
-    public RadioButton pendingButton;
+    public ImageView connectedButton;
+    public ImageView blockedButton;
+    public ImageView pendingButton;
+//    public RadioButton connectedButton;
+//    public RadioButton blockedButton;
+//    public RadioButton pendingButton;
 
     /**
      * Constructor
@@ -32,9 +35,9 @@ public class CommunityWorldHolder extends FermatViewHolder {
     public CommunityWorldHolder(View itemView) {
         super(itemView);
         //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
-        connectedButton = (RadioButton) itemView.findViewById(R.id.connectedButton);
-        blockedButton = (RadioButton) itemView.findViewById(R.id.blockedButton);
-        pendingButton = (RadioButton) itemView.findViewById(R.id.pendingButton);
+        connectedButton = (ImageView) itemView.findViewById(R.id.connectedButton);
+        blockedButton = (ImageView) itemView.findViewById(R.id.blockedButton);
+        pendingButton = (ImageView) itemView.findViewById(R.id.pendingButton);
         row_connection_state = (TextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
         name = (TextView) itemView.findViewById(R.id.community_name);

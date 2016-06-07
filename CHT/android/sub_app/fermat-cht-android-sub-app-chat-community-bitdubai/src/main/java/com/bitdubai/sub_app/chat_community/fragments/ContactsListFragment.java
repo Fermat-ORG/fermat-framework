@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -55,7 +56,7 @@ import java.util.List;
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ContactsListFragment
-        extends AbstractFermatFragment<ChatUserSubAppSessionReferenceApp, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
@@ -63,7 +64,7 @@ public class ContactsListFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ContactsListFragment";
@@ -75,7 +76,7 @@ public class ContactsListFragment
     private View rootView;
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
-    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerCommunityInformationArrayList;
+    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
     ImageView noData;
@@ -93,7 +94,7 @@ public class ContactsListFragment
         try {
             setHasOptionsMenu(true);
             //Get managers
-            chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
+            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
            // settingsManager = moduleManager.getSettingsManager();

@@ -18,6 +18,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.List;
 
@@ -41,7 +43,8 @@ import java.util.List;
  * Update by Miguel Payarez on 15/01/2016
  */
 
-public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
+public class ChatFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
     // Fermat Managers
     private ChatManager chatManager;
@@ -65,8 +68,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession = ((ChatSessionReferenceApp) appSession);
-            chatManager = chatSession.getModuleManager();
+            //chatSession = ((ChatSessionReferenceApp) appSession);
+            chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
 
@@ -189,8 +192,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 return false;
             }
         });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+            String filterString = (String) appSession.getData("filterString");
             if (filterString.length() > 0) {
                 searchView.setQuery(filterString, true);
                 searchView.setIconified(false);
@@ -205,7 +208,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        }
         if (item.getItemId() == R.id.menu_clean_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                 alert.setTextTitle("Clean Chat");
                 alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
