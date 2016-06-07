@@ -36,12 +36,12 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
     private OnClickAcceptListener acceptBtnListener;
     private boolean setTextFree;
 
-    //TODO COUNT
+    //TEXT COUNT
     private boolean activeTextCount = false;
     private int maxLenghtTextCount = 100;
     FermatTextView textCount;
 
-    //TODO COUNT
+    //TEXT COUNT
     private final TextWatcher textWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
         public void afterTextChanged(Editable s) {}
@@ -110,7 +110,7 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
         editTextView = (FermatEditText) findViewById(R.id.ccw_text_dialog_edit_text);
         editTextView.setHint(hintStringResource);
 
-        //TODO COUNT
+        //TEXT COUNT
         if(activeTextCount) {
             textCount = (FermatTextView) findViewById(R.id.ccw_text_dialog_edit_text_count);
             editTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
@@ -138,7 +138,7 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSession, R
         return Window.FEATURE_NO_TITLE;
     }
 
-    //TODO COUNT
+    //TEXT COUNT
     public void setTextCount(int maxLenghtText){
         this.maxLenghtTextCount = maxLenghtText;
         this.activeTextCount = true;
