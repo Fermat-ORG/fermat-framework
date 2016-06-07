@@ -124,6 +124,8 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
     private BalanceType balanceType = BalanceType.REAL;
 
+    private int typeAmountSelected = 1;
+
     /**
      * Create a new instance of this fragment
      *
@@ -148,6 +150,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
             else
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
 
             getExecutor().execute(new Runnable() {
@@ -258,12 +265,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             });
 
             long balance = 0;
-            if (lossProtectedWalletSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.AVAILABLE))
+            if (balanceType.getCode().equals(BalanceType.AVAILABLE))
                 balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
                 balance = lossProtectedWalletManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
-            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, (int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected));
 
 
         }catch (Exception e){
@@ -520,13 +527,13 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode() == BalanceType.AVAILABLE.getCode())
                                 ? balanceAvailable : realBalance,
-                        (int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED))
+                        typeAmountSelected)
         );
     }
 
     private void changeAmountType(){
 
-        ShowMoneyType showMoneyType = ((int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         lossProtectedWalletSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED,showMoneyType);
         String moneyTpe = "";
         switch (showMoneyType){
@@ -552,12 +559,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         try {
             if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 realBalance = loadBalance(BalanceType.REAL);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, (int) lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, typeAmountSelected));
                 txt_type_balance.setText(R.string.real_balance_text);
                 lossProtectedWalletSession.setData(SessionConstant.TYPE_BALANCE_SELECTED,BalanceType.REAL);
             } else if (lossProtectedWalletSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.REAL.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, (int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable,typeAmountSelected));
                 txt_type_balance.setText(R.string.available_balance_text);
                 lossProtectedWalletSession.setData(SessionConstant.TYPE_BALANCE_SELECTED,BalanceType.AVAILABLE);
             }

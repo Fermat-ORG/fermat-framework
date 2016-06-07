@@ -30,7 +30,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
     public Activity activity;
     public Dialog d;
     private BitcoinLossProtectedWalletSpend spending;
-    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 4;
+    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 6;
     private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 2;
 
     private ImageView earnOrLostImage;

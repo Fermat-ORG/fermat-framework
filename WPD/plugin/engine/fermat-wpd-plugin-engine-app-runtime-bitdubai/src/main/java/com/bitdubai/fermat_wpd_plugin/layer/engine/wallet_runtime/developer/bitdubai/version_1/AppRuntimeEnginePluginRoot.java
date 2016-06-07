@@ -5864,7 +5864,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         TitleBar runtimeTitleBar;
 
 
-        MainMenu runtimeMainMenu;
+       // MainMenu runtimeMainMenu;
 
         SideMenu runtimeSideMenu;
         OptionsMenu runtimeOptionsMenu;

@@ -130,7 +130,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     private ExecutorService _executor;
-
+    private int typeAmountSelected = 1;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -171,6 +171,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
             else
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
             //get wallet settings
             try {
@@ -559,7 +564,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     public void run() {
                         try {
                             final long balance = moduleManager.getBalance(BalanceType.getByCode(
-                                    (String) appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED)), appSession.getAppPublicKey(), blockchainNetworkType);
+                                    balanceType.getCode()), appSession.getAppPublicKey(), blockchainNetworkType);
 
                             handler.post(new Runnable() {
                                 @Override
@@ -882,7 +887,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void changeAmountType() {
-        ShowMoneyType showMoneyType = (appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, showMoneyType);
         String moneyTpe = "";
         switch (showMoneyType){
@@ -912,12 +917,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, typeAmountSelected));
                 txt_type_balance.setText(R.string.book_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.BOOK);
-            } else if (appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.BOOK.getCode())) {
+            } else if (balanceType.getCode().equals(BalanceType.BOOK.getCode())) {
                 bookBalance = loadBalance(BalanceType.BOOK);
-               txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+               txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected));
                 txt_type_balance.setText(R.string.available_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
             }
@@ -950,7 +955,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
        txt_balance_amount.setText(
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
-                                ? balanceAvailable : bookBalance, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                                ? balanceAvailable : bookBalance, typeAmountSelected));
     }
 
 
