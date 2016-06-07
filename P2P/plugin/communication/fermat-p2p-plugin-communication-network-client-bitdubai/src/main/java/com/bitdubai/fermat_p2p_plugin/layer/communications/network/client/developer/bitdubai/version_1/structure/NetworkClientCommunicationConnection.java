@@ -27,6 +27,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -120,6 +121,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private boolean isExternalNode;
 
     /*
+     * Represent the nodeProfile, it is used to be save
+     * into table NodeConnectionHistory when the client is connected
+     */
+    private NodeProfile nodeProfile;
+
+    /*
      * Constructor
      */
     public NetworkClientCommunicationConnection(final String                               nodeUrl          ,
@@ -128,7 +135,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair                           clientIdentity   ,
                                                 final NetworkClientCommunicationPluginRoot pluginRoot       ,
                                                 final Integer                              nodesListPosition,
-                                                final boolean                              isExternalNode   ){
+                                                final boolean                              isExternalNode   ,
+                                                final NodeProfile                          nodeProfile      ){
 
         URI uri = null;
         try {
@@ -867,5 +875,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     public String getNodeUrl() {
         return nodeUrl;
+    }
+
+    public NodeProfile getNodeProfile() {
+        return nodeProfile;
     }
 }
