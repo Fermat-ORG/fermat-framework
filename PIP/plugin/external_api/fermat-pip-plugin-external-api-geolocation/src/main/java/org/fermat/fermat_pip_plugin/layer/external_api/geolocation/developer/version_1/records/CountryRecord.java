@@ -69,4 +69,13 @@ public class CountryRecord implements Country, Serializable {
     public GeoRectangle getGeoRectangle(){
         return geoRectangle;
     }
+
+    @Override
+    public String toString() {
+        return "CountryRecord{" +
+                "countryName='" + countryName + '\'' +
+                ", countryShortName='" + countryShortName + '\'' +
+                ", geoRectangle=" + geoRectangle +
+                '}';
+    }
 }

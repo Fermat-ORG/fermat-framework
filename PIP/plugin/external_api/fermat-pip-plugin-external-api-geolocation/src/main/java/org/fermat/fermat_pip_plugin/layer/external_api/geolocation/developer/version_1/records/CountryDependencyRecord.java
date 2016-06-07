@@ -80,4 +80,15 @@ public class CountryDependencyRecord implements CountryDependency, Serializable 
     public int getDependencyId() {
         return dependencyId;
     }
+
+    @Override
+    public String toString() {
+        return "CountryDependencyRecord{" +
+                "name='" + name + '\'' +
+                ", toponymName='" + toponymName + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", countryId=" + countryId +
+                ", dependencyId=" + dependencyId +
+                '}';
+    }
 }
