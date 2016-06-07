@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -36,7 +37,6 @@ import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,21 +51,13 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
+public class LogToolsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private ErrorManager errorManager;
     ToolManager toolManager;
-
-//    private DeveloperSubAppSessionReferenceApp developerSubAppSession;
-
     View rootView;
-
-//    private LogTool logTool;
-
     private ArrayListLoggers lstLoggers;
-
     private GridView gridView;
-
     Typeface tf;
 
     public static LogToolsFragment newInstance() {

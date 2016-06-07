@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.developer.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 
-
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -42,7 +42,6 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,26 +57,21 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
+public class LogToolsFragmentLevel1 extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getKey();
-
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-
     View rootView;
-
     //    private LogTool logTool;
     private ErrorManager errorManager;
     ToolManager toolManager;
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
-
     private int loggerLevel = 1;
 
     /**
      * SubApp Session
      */
-//    private DeveloperSubAppSessionReferenceApp developerSubAppSession;
     public static LogToolsFragmentLevel1 newInstance() {
         return new LogToolsFragmentLevel1();
     }
@@ -86,14 +80,7 @@ public class LogToolsFragmentLevel1 extends AbstractFermatFragment<DeveloperSubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-//        if(super.appSession !=null){
-//            developerSubAppSession = (DeveloperSubAppSessionReferenceApp)super.appSession;
-
-
         lstLoggers = (ArrayListLoggers) appSession.getData("list");
-//        }
-
         errorManager = appSession.getErrorManager();
         try {
             toolManager = appSession.getModuleManager();

@@ -82,7 +82,6 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
     private String searchName;
     private List<InstalledWallet> lstInstalledWallet;
-    private DesktopSessionReferenceApp desktopSession;
     //private SubAppManager moduleManager;
 
     ArrayList<Item> lstItems;
