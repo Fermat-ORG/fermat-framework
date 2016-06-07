@@ -845,10 +845,11 @@ public class SubAppAppsGenerator {
             runtimeActivity.setStatusBar(statusBar);
 
             OptionsMenu optionsMenu = new OptionsMenu();
-            OptionMenuItem menuItem = new OptionMenuItem("welcome_dialog");
+            OptionMenuItem menuItem = new OptionMenuItem(1);
             menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
             menuItem.setVisibility(2);
             optionsMenu.addMenuItem(menuItem);
+            runtimeActivity.setOptionsMenu(optionsMenu);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
@@ -3819,6 +3820,15 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#47BF73");
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",communityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setVisibility(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());

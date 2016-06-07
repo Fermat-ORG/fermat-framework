@@ -7,7 +7,7 @@ public class OptionMenuItem extends MenuItem {
 
     private int visibility;
 
-    public OptionMenuItem(String id) {
+    public OptionMenuItem(int id) {
         super(id);
     }
 

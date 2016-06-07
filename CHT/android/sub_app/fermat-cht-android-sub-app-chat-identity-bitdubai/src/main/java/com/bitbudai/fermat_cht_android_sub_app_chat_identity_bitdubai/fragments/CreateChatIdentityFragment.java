@@ -65,7 +65,6 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 
 /**
  * FERMAT-ORG
@@ -260,8 +259,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_ic_menu_help)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_ic_menu_help)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     public void setUpDialog() {
@@ -286,7 +285,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         try {
             int id = item.getItemId();
             switch (id) {
-                case MENU_HELP_ACTION:
+                //case MENU_HELP_ACTION:
+                case 1:
                     setUpDialog();
                     break;
                 case MENU_ADD_ACTION:

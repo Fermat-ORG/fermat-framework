@@ -22,7 +22,7 @@ public class MenuItem implements FermatMenuItem {
 
     boolean selected=false;
     private int notifications;
-    private String id;
+    private int id;
 
     //This could be an icon or whatever the develoer want
     private FermatDrawable fermatDrawable;
@@ -30,7 +30,7 @@ public class MenuItem implements FermatMenuItem {
     /**
      * SideMenu class constructors
      */
-    public MenuItem(String id) {
+    public MenuItem(int id) {
         this.id = id;
     }
 
@@ -101,7 +101,7 @@ public class MenuItem implements FermatMenuItem {
         this.notifications = notifications;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
