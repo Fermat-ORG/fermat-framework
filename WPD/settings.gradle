@@ -67,3 +67,6 @@ project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai').projectDir = 
 //Android
 include ':fermat-wpd-android-sub-app-store-bitdubai'
 project(':fermat-wpd-android-sub-app-store-bitdubai').projectDir = new File('WPD/android/sub_app/fermat-wpd-android-sub-app-store-bitdubai')
+
+include ':fermat-wpd-android-sub-app-wallet-manager-bitdubai'
+project(':fermat-wpd-android-sub-app-wallet-manager-bitdubai').projectDir = new File('WPD/android/sub_app/fermat-wpd-android-sub-app-wallet-manager-bitdubai')

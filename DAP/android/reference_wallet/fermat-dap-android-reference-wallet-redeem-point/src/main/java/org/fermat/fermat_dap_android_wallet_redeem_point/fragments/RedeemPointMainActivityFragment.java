@@ -127,7 +127,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {

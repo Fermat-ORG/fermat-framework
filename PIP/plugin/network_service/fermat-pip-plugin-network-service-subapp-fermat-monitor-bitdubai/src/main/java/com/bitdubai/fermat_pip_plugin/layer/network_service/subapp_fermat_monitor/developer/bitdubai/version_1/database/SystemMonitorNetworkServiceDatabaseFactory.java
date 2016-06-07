@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database.System MonitorNetworkServiceDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database.System MonitorNetworkServiceDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Miguel Celedon - (miguelceledon@outlook.com) on 14/03/16.
  *
  * @version 1.0
@@ -69,17 +69,17 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
-           /**
-            * Create System Data table.
-            */
-           table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_TABLE_NAME);
+            /**
+             * Create System Data table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_TABLE_NAME);
 
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_NODE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_HARDWARE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_OS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
-             table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
+            table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -87,9 +87,9 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-            * Create Connections table.
-            */
-           table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_TABLE_NAME);
+             * Create Connections table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_TABLE_NAME);
 
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_CONNID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_PEERID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -97,7 +97,7 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_PEER_IPV6_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_NETWORK_SERVICE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
-             table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_FIRST_KEY_COLUMN);
+            table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.CONNECTIONS_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -105,16 +105,16 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }           /**
-            * Create Services table.
-            */
-           table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.SERVICES_TABLE_NAME);
+             * Create Services table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.SERVICES_TABLE_NAME);
 
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_SUBTYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
 
-             table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_FIRST_KEY_COLUMN);
+            table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.SERVICES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -122,7 +122,6 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
-
 
 
             table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.PLATFORM_COMPONENTS_TABLE_NAME);
@@ -141,9 +140,7 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             }
 
 
-
-
-} catch (InvalidOwnerIdException invalidOwnerId) {
+        } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.

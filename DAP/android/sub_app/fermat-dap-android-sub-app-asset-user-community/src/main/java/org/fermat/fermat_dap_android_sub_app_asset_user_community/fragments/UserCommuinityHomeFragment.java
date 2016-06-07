@@ -292,7 +292,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)

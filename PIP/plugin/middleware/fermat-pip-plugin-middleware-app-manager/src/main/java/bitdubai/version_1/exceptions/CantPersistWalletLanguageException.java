@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by natalia on 04/08/15.
  */
-public class CantPersistWalletLanguageException  extends FermatException {
+public class CantPersistWalletLanguageException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

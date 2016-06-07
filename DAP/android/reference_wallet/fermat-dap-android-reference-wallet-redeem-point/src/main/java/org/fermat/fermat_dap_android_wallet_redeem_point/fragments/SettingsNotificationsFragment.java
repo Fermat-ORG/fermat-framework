@@ -46,9 +46,6 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment<Refere
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-    //    SettingsManager<RedeemPointSettings> settingsManager;
-    RedeemPointSettings settings = null;
-
     public static SettingsNotificationsFragment newInstance() {
         return new SettingsNotificationsFragment();
     }
@@ -113,7 +110,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment<Refere
 
     private void setUpSettingsNetwork(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)

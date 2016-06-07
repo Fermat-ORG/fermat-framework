@@ -23,20 +23,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,19 +52,12 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubAppSessionReferenceApp, ResourceProviderManager> {
+public class LogToolsFragmentLevel3 extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-
-    /**
-     * SubApp session
-     */
-//    DeveloperSubAppSessionReferenceApp developerSubAppSession;
-
     private static final String ARG_POSITION = "position";
     View rootView;
 
-    //    private LogTool logTool;
     ToolManager toolManager;
     private ErrorManager errorManager;
     private ArrayListLoggers lstLoggers;
@@ -80,11 +73,7 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
-//        if(super.appSession !=null){
-//            developerSubAppSession = (DeveloperSubAppSessionReferenceApp)super.appSession;
         lstLoggers = (ArrayListLoggers) appSession.getData("list");
-//        }
 
         try {
             errorManager = appSession.getErrorManager();
@@ -98,10 +87,7 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
 
     private void changeLogLevel(PluginVersionReference pluginKey, LogLevel logLevel, String resource) {
         try {
@@ -115,9 +101,7 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
     }
 
     @Override
@@ -155,7 +139,6 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
                         }
                         break;
                 }
-
             }
 
             AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.grid_items, lstLoggersToShow);
@@ -165,13 +148,10 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
         //registerForContextMenu(gridView);
         return rootView;
     }
-
 
     public void setLoggerLevel(int level) {
         loggerLevel = level;
@@ -229,7 +209,6 @@ public class LogToolsFragmentLevel3 extends AbstractFermatFragment<DeveloperSubA
                             ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
                             frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
                             frg.setLoggers(lst);
-
                         }
 
                         final FragmentTransaction ft = getFragmentManager().beginTransaction();
