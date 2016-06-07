@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
 import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.chat_community.notifications.CommunityNotificationPainterBuilder;
@@ -81,5 +82,16 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
     @Override
     public NotificationPainter getNotificationPainter(String code){
         return CommunityNotificationPainterBuilder.getNotification(code);
+    }
+
+    @Override
+    public int getResource(String id) {
+        int resId = 0;
+        switch (id){
+            case "ic_welcome_dialog":
+                resId = R.drawable.cht_help_icon;
+                break;
+        }
+        return resId;
     }
 }

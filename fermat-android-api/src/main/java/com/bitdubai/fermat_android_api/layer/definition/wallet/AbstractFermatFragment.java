@@ -106,7 +106,9 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
+
+        super.onCreateOptionsMenu(menu,inflater);
+
     }
 
     public void setAppSession(S appSession) {

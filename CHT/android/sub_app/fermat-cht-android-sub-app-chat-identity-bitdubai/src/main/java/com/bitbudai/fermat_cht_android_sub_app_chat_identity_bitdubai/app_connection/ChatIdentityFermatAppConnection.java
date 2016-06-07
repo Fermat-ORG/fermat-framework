@@ -72,6 +72,8 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
     public int getResource(String id) {
         if(id.equals("open_nav")){
             return R.drawable.cht_ic_back_buttom;
+        }else if (id.equals("ic_welcome_dialog")){
+            return R.drawable.cht_ic_menu_help;
         }
         return super.getResource(id);
     }

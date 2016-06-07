@@ -383,7 +383,7 @@ public class ConnectionsWorldFragment
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-     //   inflater.inflate(R.menu.cht_comm_menu, menu);
+//        inflater.inflate(R.menu.cht_comm_menu, menu);
         // Locate the search item
 //        MenuItem searchItem = menu.findItem(R.id.menu_search);
 //        searchView = (SearchView) searchItem.getActionView();
@@ -532,6 +532,10 @@ public class ConnectionsWorldFragment
 
             if (id == R.id.action_help)
                 showDialogHelp();//0
+
+            if(id == 1){
+                showDialogHelp();
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,

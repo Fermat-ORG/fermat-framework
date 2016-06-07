@@ -268,7 +268,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 for (int i=0;i< optionsMenuItems.size();i++) {
                     OptionMenuItem menuItem = optionsMenuItems.get(i);
 //                    MenuItem item = menu.add(menuItem.getLabel());
-                    int id = Integer.parseInt(menuItem.getId().trim());
+                    int id = menuItem.getId();
                     MenuItem item = menu.add(0, id, 0, menuItem.getLabel());
                     FermatDrawable icon = menuItem.getFermatDrawable();
                     if(icon!=null) {
