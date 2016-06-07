@@ -744,9 +744,10 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             WrongTokenlyUserCredentialsException {
        return moduleManager.updateArtistIdentity(
                fanExternalName,
-               fanPassword, identitySelected.getId(),
+               fanPassword,
+               identitySelected.getId(),
                identitySelected.getPublicKey(),
-               identitySelected.getProfileImage(),
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
                externalPlatform,
                exposureLevel,
                artistAcceptConnectionsType);
@@ -765,7 +766,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                fanPassword,
                identitySelected.getId(),
                identitySelected.getPublicKey(),
-               ArtistImageByteArray,
+               (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
                externalPlatform,
                exposureLevel,
                artistAcceptConnectionsType);
