@@ -39,7 +39,6 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Collections;

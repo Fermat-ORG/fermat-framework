@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp,FermatInterfaceObject {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp, FermatInterfaceObject {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -53,22 +53,20 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.appStatus = appStatus;
     }
 /**
-     * InstalledWallet Interface implementation.
-     */
+ * InstalledWallet Interface implementation.
+ */
 
     /**
      * This method gives us the list of all the languages installed for this wallet
-     *
      */
-    public List<InstalledLanguage> getLanguagesId(){
+    public List<InstalledLanguage> getLanguagesId() {
         return languajesId;
     }
 
     /**
      * This method gives us the list of all the skins installed for this wallet
-     *
      */
-    public List<InstalledSkin> getSkinsId(){
+    public List<InstalledSkin> getSkinsId() {
         return skinsId;
     }
 
@@ -196,7 +194,6 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     public int getPosition() {
         return position;
     }
-
 
 
     @Override

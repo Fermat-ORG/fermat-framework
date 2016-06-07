@@ -20,7 +20,7 @@ public class GettersTest {
     private String navigationStructureVersion;
 
     @Before
-    public void setUpVariable1(){
+    public void setUpVariable1() {
 
 
         path = "path1";
@@ -33,17 +33,17 @@ public class GettersTest {
     }
 
     @Test
-    public void getPathAreEquals(){
+    public void getPathAreEquals() {
         assertThat(repository.getPath()).isEqualTo(path);
     }
 
     @Test
-    public void getNavigationStructureVersion_AreEquals(){
+    public void getNavigationStructureVersion_AreEquals() {
         assertThat(repository.getNavigationStructureVersion()).isEqualTo(navigationStructureVersion);
     }
 
     @Test
-    public void getSkinName_AreEquals(){
+    public void getSkinName_AreEquals() {
         assertThat(repository.getSkinName()).isEqualTo(skinName);
     }
 }

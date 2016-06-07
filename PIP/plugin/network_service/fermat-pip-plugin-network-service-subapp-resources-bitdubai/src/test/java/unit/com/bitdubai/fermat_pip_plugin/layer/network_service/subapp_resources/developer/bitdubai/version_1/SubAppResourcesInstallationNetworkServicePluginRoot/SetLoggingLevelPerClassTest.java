@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -8,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
 
 import org.junit.Test;
@@ -46,7 +46,8 @@ public class SetLoggingLevelPerClassTest {
     private ErrorManager errorManager;
 
     private SubAppResourcesNetworkServicePluginRoot subAppResourcesNetworkServicePluginRoot;
-//
+
+    //
     @Test
     public void setLoggingLevelPerClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();
@@ -65,7 +66,6 @@ public class SetLoggingLevelPerClassTest {
         newLoggingLevel.put(eccKeyPair.getPrivateKey(), LogLevel.AGGRESSIVE_LOGGING);
 
         subAppResourcesNetworkServicePluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-
 
 
     }

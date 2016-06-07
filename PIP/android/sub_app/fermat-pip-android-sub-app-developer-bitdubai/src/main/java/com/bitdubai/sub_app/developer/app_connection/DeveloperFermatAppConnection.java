@@ -35,7 +35,7 @@ public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFer
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.PLUG_INS_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.DEVELOPER,

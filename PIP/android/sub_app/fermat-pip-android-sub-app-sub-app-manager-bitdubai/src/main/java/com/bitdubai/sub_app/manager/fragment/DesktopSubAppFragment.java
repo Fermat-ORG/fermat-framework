@@ -24,6 +24,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -32,11 +34,8 @@ import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
-import com.bitdubai.sub_app.manager.fragment.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -336,10 +335,10 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 //            }
 
             int pos = 0;
-            for(int i = 0;i<lstItemsWithIcon.size();i++){
+            for (int i = 0; i < lstItemsWithIcon.size(); i++) {
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if(itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus()){
-                    arrItemsWithoutIcon[pos]= itemIcon;
+                if (itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus()) {
+                    arrItemsWithoutIcon[pos] = itemIcon;
                     pos++;
                 }
             }
@@ -392,17 +391,17 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
         }
     }
 
-    private void select(AppsStatus appsStatus){
+    private void select(AppsStatus appsStatus) {
         try {
             List<Item> list = new ArrayList<>();
-            if(lstItemsWithIcon!=null)
+            if (lstItemsWithIcon != null)
                 for (Item installedWallet : lstItemsWithIcon) {
-                        if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
-                            list.add(installedWallet);
-                        }
+                    if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
+                        list.add(installedWallet);
+                    }
 
                 }
-            else Log.e(TAG,"List of subApps null, please check this");
+            else Log.e(TAG, "List of subApps null, please check this");
             Item[] arrItemsWithoutIcon = new Item[12];
             for (int i = 0; i < 12; i++) {
                 Item emptyItem = new Item(new EmptyItem(0, i));
@@ -420,7 +419,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
                 ((DesktopAdapter) recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -437,7 +436,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
     @Override
     public void onUpdateViewOnUIThread(String code) {
         AppsStatus appsStatus = AppsStatus.getByCode(code);
-        switch (appsStatus){
+        switch (appsStatus) {
             case RELEASE:
                 break;
             case BETA:
