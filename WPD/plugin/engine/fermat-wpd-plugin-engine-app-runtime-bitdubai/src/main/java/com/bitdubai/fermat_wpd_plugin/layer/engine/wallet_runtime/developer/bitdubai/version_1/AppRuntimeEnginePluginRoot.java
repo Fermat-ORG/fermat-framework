@@ -5833,6 +5833,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
 
+        //OptionMenu
+        optionsMenu = new OptionsMenu();
+        OptionMenuItem menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog", SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setVisibility(2);
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         // Add to navigation structure
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
