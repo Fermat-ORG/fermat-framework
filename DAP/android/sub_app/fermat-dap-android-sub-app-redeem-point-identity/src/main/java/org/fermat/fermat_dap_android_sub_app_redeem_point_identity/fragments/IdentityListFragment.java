@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -31,7 +32,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 @SuppressWarnings({"unchecked", "FieldCanBeLocal"})
-public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity>
+public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity,ReferenceAppFermatSession>
         implements FermatListItemListeners<RedeemPointIdentity> {
 
 
