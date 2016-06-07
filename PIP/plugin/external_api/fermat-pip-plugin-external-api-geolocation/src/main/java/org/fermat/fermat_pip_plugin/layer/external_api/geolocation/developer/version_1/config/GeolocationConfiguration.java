@@ -31,6 +31,16 @@ public class GeolocationConfiguration {
     public static final String PATH_TO_DEPENDENCIES_FILE = "";
 
     /**
+     * Represents the backup-file name.
+     */
+    public static final String CITIES_BACKUP_FILE = "cities-backup";
+
+    /**
+     * Represents the backup-file path.
+     */
+    public static final String PATH_TO_CITIES_FILE = "";
+
+    /**
      * Represents the geonames username.
      */
     public static final String GEONAMES_USERNAME = "fermatgeotest";

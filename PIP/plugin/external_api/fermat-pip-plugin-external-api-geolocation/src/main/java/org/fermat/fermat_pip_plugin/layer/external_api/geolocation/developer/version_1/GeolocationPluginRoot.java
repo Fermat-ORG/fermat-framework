@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 
@@ -57,7 +58,8 @@ public class GeolocationPluginRoot extends AbstractPlugin {
                     this.pluginId);
             //Test Methods
             //testListCountries();
-            testListDependencies();
+            //testListDependencies();
+            //testCitiesByCountry();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -92,6 +94,18 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             List<CountryDependency> countriesHashMap = this.geolocationPluginManager.
                     getCountryDependencies(countryCode);
             System.out.println("NOMINATIM:"+countriesHashMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
+    }
+
+    private void testCitiesByCountry(){
+        try {
+            String countryCode = "VE";
+            List<City> cities = this.geolocationPluginManager.
+                    getCitiesByCountryCode(countryCode);
+            System.out.println("NOMINATIM:"+cities);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("NOMINATIM: Exception "+e);

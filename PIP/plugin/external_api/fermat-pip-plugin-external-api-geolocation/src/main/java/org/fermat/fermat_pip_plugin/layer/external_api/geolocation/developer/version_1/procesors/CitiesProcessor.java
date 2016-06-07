@@ -1,8 +1,9 @@
 package org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+
+import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.records.CityRecord;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +18,12 @@ import java.util.List;
 public class CitiesProcessor {
 
     private static final String CITIES_FILENAME = "cities_shorted.csv";
-//TODO> change all of this, cannot be used, the xml file is too big, try with csv
+    private static final String CSV_SEPARATOR = ";";
+    private static final int CITY_NAME_INDEX = 0;
+    private static final int CITY_LATITUDE_INDEX = 1;
+    private static final int CITY_LONGITUDE_INDEX = 2;
+    private static final int CITY_COUNTRY_CODE_INDEX = 3;
+
     /**
      * This method returns the cities list by country code
      * @param countryCode
@@ -29,29 +35,44 @@ public class CitiesProcessor {
         try{
             ClassLoader classLoader = CitiesProcessor.class.getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream(CITIES_FILENAME);
-            StringBuilder stringBuilder =new StringBuilder();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String read;
+            String[] arrayLine;
+            String countryCodeFromCSV;
+            City city;
+            List<City> cities = new ArrayList<>();
+            float latitude;
+            float longitude;
             while((read = bufferedReader.readLine()) != null) {
-                stringBuilder.append(read);
+                arrayLine = read.split(CSV_SEPARATOR);
+                try{
+                    countryCodeFromCSV = arrayLine[CITY_COUNTRY_CODE_INDEX];
+                } catch (ArrayIndexOutOfBoundsException e){
+                    //wrong city line, I'll ignored
+                    continue;
+                }
+                if (countryCodeFromCSV.equals(countryCode)){
+                    try{
+                        latitude = Float.parseFloat(arrayLine[CITY_LATITUDE_INDEX]);
+                        longitude = Float.parseFloat(arrayLine[CITY_LONGITUDE_INDEX]);
+                    } catch (NumberFormatException e){
+                        //If we got this exception, the data is corrupted, I'll skip this city.
+                        continue;
+                    }
+                    city = new CityRecord(
+                            arrayLine[CITY_NAME_INDEX],
+                            latitude,
+                            longitude,
+                            countryCodeFromCSV);
+                    cities.add(city);
+                }
             }
             bufferedReader.close();
             inputStream.close();
-            String fileData = bufferedReader.toString();
-            if(fileData!=null||!fileData.isEmpty()){
-                List<City> cities = new ArrayList<>();
-                cities = (List<City>) XMLParser.parseXML(fileData, cities);
-                List<City> filteredCities = new ArrayList<>();
-                String countryCodeFromCity;
-                for(City city : cities){
-                    countryCodeFromCity = city.getCountryCode();
-                    if(countryCodeFromCity.equals(countryCode)){
-                        filteredCities.add(city);
-                    }
-                }
-                return filteredCities;
+            if(cities.isEmpty()){
+                throw new CantGetCitiesListException("The date from cities is null");
             }
-            throw new CantGetCitiesListException("The date from cities is null");
+            return cities;
         } catch (IOException e) {
             throw new CantGetCitiesListException(
                     e,

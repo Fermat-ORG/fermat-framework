@@ -11,14 +11,17 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.GeolocationPluginRoot;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.config.GeolocationConfiguration;
+import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.CitiesProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonamesProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonosProcessor;
 
@@ -248,7 +251,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.createTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
-                    GeolocationConfiguration.DEPENDENCIES_BACKUP_FILE+countryCode,
+                    GeolocationConfiguration.DEPENDENCIES_BACKUP_FILE + countryCode,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.setContent(dependenciesListXML);
@@ -263,6 +266,102 @@ public class GeolocationPluginManager implements GeolocationManager {
             throw new CantCreateBackupFileException(
                     e,
                     "Creating backup file with dependencies list",
+                    "Cannot create the backup file in the device");
+        }
+    }
+
+    /**
+     * This method returns the cities by a given country Code
+     * @param countryCode This code must be defined by the external API, in this version this value could be US for USA, AR for Argentina or VE for Venezuela.
+     * @return
+     */
+    public List<City> getCitiesByCountryCode(String countryCode)
+            throws CantGetCitiesListException {
+        List<City> citiesList = new ArrayList<>();
+        try{
+            boolean backupFileExists = pluginFileSystem.isTextFileExist(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.CITIES_BACKUP_FILE+countryCode,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            if(!backupFileExists){
+                citiesList = createCitiesBackupFile(countryCode);
+                return citiesList;
+            }
+            //The file exists we gonna get the list from backup file
+            PluginTextFile backupFile = pluginFileSystem.getTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.CITIES_BACKUP_FILE+countryCode,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.loadFromMedia();
+            String stringCitiesData = backupFile.getContent();
+            if(stringCitiesData==null||stringCitiesData.isEmpty()){
+                throw new CantCreateCountriesListException(
+                        "The backup file is empty");
+            }
+            citiesList = (List<City>) XMLParser.parseXML(
+                    stringCitiesData,
+                    citiesList);
+            return citiesList;
+        }  catch (CantGetJSonObjectException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Cannot get the data from a Json Object");
+        } catch (Exception e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Unexpected Exception");
+        }
+    }
+
+    /**
+     * This method creates invokes the geoname API and create a file with the dependencies list
+     * @return
+     * @throws CantConnectWithExternalAPIException
+     * @throws CantGetJSonObjectException
+     * @throws CantCreateBackupFileException
+     */
+    private List<City> createCitiesBackupFile(String countryCode)
+            throws CantConnectWithExternalAPIException,
+            CantGetJSonObjectException,
+            CantCreateBackupFileException,
+            CantGetCitiesListException {
+        //We ask for the country list in geonames API
+        List<City> citiesList = CitiesProcessor.
+                getCitiesByCountryCode(countryCode);
+        //Parse the dependencies list to XML
+        String dependenciesListXML = XMLParser.parseObject(citiesList);
+        try{
+            //Create file
+            PluginTextFile backupFile = pluginFileSystem.createTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.CITIES_BACKUP_FILE+countryCode,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.setContent(dependenciesListXML);
+            backupFile.persistToMedia();
+            return citiesList;
+        } catch (CantPersistFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with cities list",
+                    "Cannot persist the backup file in the device");
+        } catch (CantCreateFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with cities list",
                     "Cannot create the backup file in the device");
         }
     }
