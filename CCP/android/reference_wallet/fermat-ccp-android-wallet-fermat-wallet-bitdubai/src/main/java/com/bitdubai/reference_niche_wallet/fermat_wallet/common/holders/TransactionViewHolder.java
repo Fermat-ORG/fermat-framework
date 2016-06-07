@@ -23,8 +23,11 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 public class TransactionViewHolder extends FermatViewHolder {
 
     private TextView txt_amount;
-    private TextView txt_notes;
-    private TextView txt_time;
+    private TextView txt_user;
+    private TextView txt_memo;
+    private TextView txt_date;
+    private TextView txt_from_or_to_transaction;
+
 
 
 
@@ -36,14 +39,22 @@ public class TransactionViewHolder extends FermatViewHolder {
     public TransactionViewHolder(View itemView) {
         super(itemView);
 
-        txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
-        txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
-        txt_time = (TextView) itemView.findViewById(R.id.txt_time);
+        txt_amount = (TextView) itemView.findViewById(R.id.fermat_amount);
+        txt_memo = (TextView) itemView.findViewById(R.id.transaction_memo);
+        txt_date = (TextView) itemView.findViewById(R.id.date);
+        txt_user = (TextView) itemView.findViewById(R.id.transacion_user);
+        txt_from_or_to_transaction = (TextView) itemView.findViewById(R.id.fromOrToType);
     }
 
     public TextView getTxt_amount(){return txt_amount;}
 
-    public TextView getTxt_notes(){return txt_notes;}
+    public TextView getTxt_memo(){return txt_memo;}
 
-    public TextView getTxt_time(){return txt_time;}
+    public TextView getTxt_date(){return txt_date;}
+
+    public TextView getTxt_user(){return txt_user;}
+
+    public TextView getTxt_from_or_to_transaction(){return txt_from_or_to_transaction;}
+
+
 }

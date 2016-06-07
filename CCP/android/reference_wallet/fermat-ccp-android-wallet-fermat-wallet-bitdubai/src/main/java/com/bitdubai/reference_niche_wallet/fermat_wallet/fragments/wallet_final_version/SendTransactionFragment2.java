@@ -48,9 +48,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantCreateWalletContactException;
@@ -58,18 +56,15 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetFermatWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListFermatWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.BlockchainDownloadInfoDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
@@ -115,12 +110,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     // Fermat Managers
     private FermatWallet moduleManager;
-    private List<GrouperItem> openNegotiationList;
+    private List<FermatWalletTransaction> lstFermatWalletTransactions;
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
     private long balanceAvailable;
     private View rootView;
-    private List<FermatWalletModuleTransaction> lstCryptoWalletTransactionsAvailable;
+    private List<FermatWalletTransaction> lstCryptoWalletTransactionsAvailable;
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
@@ -707,8 +702,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
-        if(openNegotiationList!=null) {
-            if (openNegotiationList.isEmpty()) {
+        if(lstFermatWalletTransactions!=null) {
+            if (lstFermatWalletTransactions.isEmpty()) {
                recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
@@ -718,7 +713,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-            emptyListViewsContainer.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -730,7 +725,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     @Override
     public FermatAdapter getAdapter() {
-        return null;
+        if (adapter == null) {
+            adapter = new ReceivetransactionsAdapter(getActivity(), lstFermatWalletTransactions,getResources());
+            // setting up event listeners
+        }
+        return adapter;
     }
 
     @Override
@@ -742,7 +741,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.home_send_main;
+        return R.layout.fermat_wallet_home_send_main;
     }
 
     @Override
@@ -767,8 +766,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
 
-                int MAX_TRANSACTIONS = 20;
-                List<FermatWalletModuleTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(
+                /*int MAX_TRANSACTIONS = 20;
+                List<FermatWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(
                         BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(),
                         intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
@@ -794,8 +793,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                         }
                     });
             }
-        } catch (CantListTransactionsException e) {
-            e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -815,11 +812,11 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 //noinspection unchecked
-                openNegotiationList = (ArrayList) result[0];
+                lstFermatWalletTransactions = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(openNegotiationList);
+                    adapter.changeDataSet(lstFermatWalletTransactions);
 
-                if(openNegotiationList.size() > 0)
+                if(lstFermatWalletTransactions.size() > 0)
                 {
                     recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
