@@ -18,33 +18,31 @@ import java.util.Map;
  * Created by Matias Furszyfer 16/9/2015
  */
 
-public class RuntimeDesktopObject implements DesktopObject,Serializable {
+public class RuntimeDesktopObject implements DesktopObject, Serializable {
 
     //SubApps type;
 
     /**
-     *  Tipo de desktop
-     *  si es subApp, wallet
-     *  Deberia tomaerlo como String
+     * Tipo de desktop
+     * si es subApp, wallet
+     * Deberia tomaerlo como String
      */
-     private String desktopType;
+    private String desktopType;
 
     private String appPublicKey;
 
     /**
-     *  Desktop identifier
+     * Desktop identifier
      */
     private String identifier;
 
-    private Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
+    private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
 
     private Activities startActivity;
 
     private Activities lastActivity;
 
-    private Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
-
-
+    private Map<String, LanguagePackage> languagePackages = new HashMap<String, LanguagePackage>();
 
 
     /**
@@ -53,14 +51,14 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
     public void setType(String desktopType) {
         this.desktopType = desktopType;
     }
-    
-    public void addActivity (Activity activity){
+
+    public void addActivity(Activity activity) {
         activities.put(activity.getType(), activity);
     }
 
 
-    public void addLanguagePackage (LanguagePackage languagePackage){
-        languagePackages.put(languagePackage.getName(),languagePackage);
+    public void addLanguagePackage(LanguagePackage languagePackage) {
+        languagePackages.put(languagePackage.getName(), languagePackage);
     }
 
     /**
@@ -73,7 +71,7 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
     }
 
     @Override
-    public Map<Activities, Activity> getActivities(){
+    public Map<Activities, Activity> getActivities() {
         return activities;
     }
 
@@ -99,7 +97,7 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
 
     @Override
     public Activity getActivity(Activities activities) {
-        this.lastActivity=activities;
+        this.lastActivity = activities;
         return this.activities.get(activities);
     }
 
@@ -110,7 +108,7 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
 
     @Override
     public Activity getLastActivity() {
-        if(lastActivity==null){
+        if (lastActivity == null) {
             return activities.get(startActivity);
         }
         return activities.get(lastActivity);
@@ -119,18 +117,19 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
     @Override
     public void changeActualStartActivity(String activityCode) throws IllegalArgumentException {
         try {
-            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
+            if (activities.get(Activities.getValueFromString(activityCode)) == null)
+                throw new IllegalArgumentException();
         } catch (InvalidParameterException e) {
             throw new IllegalArgumentException();
         }
         try {
             this.startActivity = Activities.getValueFromString(activityCode);
             //todo: sacar esto
-            if(lastActivity!=null) {
+            if (lastActivity != null) {
                 if (lastActivity.equals(Activities.DESKTOP_WIZZARD_WELCOME)) {
                     this.lastActivity = Activities.getValueFromString(activityCode);
                 }
-            }else{
+            } else {
                 this.lastActivity = Activities.getValueFromString(activityCode);
             }
         } catch (InvalidParameterException e) {
@@ -144,12 +143,12 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
     }
 
     public void setStartActivity(Activities activity) {
-        this.startActivity=activity;
+        this.startActivity = activity;
     }
 
 
     @Override
-    public Map<String,LanguagePackage> getLanguagePackages(){
+    public Map<String, LanguagePackage> getLanguagePackages() {
         return languagePackages;
     }
 

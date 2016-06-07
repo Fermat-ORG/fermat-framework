@@ -67,8 +67,6 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
     //UI
     private View noAssetsView;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
-
     public static RedeemPointStadisticsActivityFragment newInstance() {
         return new RedeemPointStadisticsActivityFragment();
     }
@@ -81,8 +79,6 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -128,7 +124,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_STATISTICS, 0, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -137,7 +133,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_STATISTICS) {
-                setUpHelpAssetRedeemStatitics(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeemStatitics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,12 +70,13 @@ import java.util.UUID;
  *
  */
 
-public class ChatListFragment extends AbstractFermatFragment{
+public class ChatListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
     private ChatManager chatManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSessionReferenceApp chatSession;
+    private ReferenceAppFermatSession<ChatManager> chatSession;
     ChatListAdapter adapter;
     ChatActorCommunitySelectableIdentity chatIdentity;
     ListView list;
@@ -230,8 +232,8 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onCreate(savedInstanceState);
 
         try {
-            chatSession = ((ChatSessionReferenceApp) appSession);
-            chatManager = chatSession.getModuleManager();
+            //chatSession = ((ChatSessionReferenceApp) appSession);
+            chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
@@ -325,7 +327,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
-                    .setIsCheckEnabled(checkButton)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         } catch (Exception e) {
@@ -458,8 +460,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                return false;
            }
         });
-        if (chatSession.getData("filterString") != null) {
-           String filterString = (String) chatSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+           String filterString = (String) appSession.getData("filterString");
            if (filterString.length() > 0) {
                searchView.setQuery(filterString, true);
                searchView.setIconified(false);
@@ -493,7 +495,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         if (id == R.id.menu_delete_all_chats) {
             try {
                 if(chatId!= null && chatId.size()>0){
-                    final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                    final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                     alert.setTextTitle("Delete All Chats");
                     alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                     alert.setType("delete-chats");
@@ -555,7 +557,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         int id =item.getItemId();
         if (id == R.id.menu_delete_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                 alert.setTextTitle("Delete Chat");
                 alert.setTextBody("Do you want to delete this chat?");
                 alert.setType("delete-chat");
@@ -580,7 +582,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
         if (id == R.id.menu_clean_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                 alert.setTextTitle("Clean Chat");
                 alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
@@ -603,7 +605,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager,errorManager);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                 alert.setType("delete-chats");

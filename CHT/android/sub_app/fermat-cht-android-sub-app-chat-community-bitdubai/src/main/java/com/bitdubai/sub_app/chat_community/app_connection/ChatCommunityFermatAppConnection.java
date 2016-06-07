@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -28,11 +29,11 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenc
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSubAppSessionReferenceApp> {
+public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>> {
 
-    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ChatActorCommunitySelectableIdentity activeIdentity;
+    ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     private ChatCommunityNavigationViewPainter navPainter;
 
     public ChatCommunityFermatAppConnection(Context activity) {
@@ -63,7 +64,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        navPainter=new ChatCommunityNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
+        navPainter=new ChatCommunityNavigationViewPainter(getContext(), getFullyLoadedSession(),getApplicationManager());
         return navPainter;
     }
 

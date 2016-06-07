@@ -40,7 +40,6 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
     private View rootView;
     private FermatTextView networkAction;
     private FermatTextView notificationAction;
-
     // Fermat Managers
     private AssetFactoryModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -123,7 +122,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -146,7 +145,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
 
     private void setUpFactorySettings(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)

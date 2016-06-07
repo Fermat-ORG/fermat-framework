@@ -393,7 +393,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

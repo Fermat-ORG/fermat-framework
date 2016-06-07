@@ -232,7 +232,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog<AssetUserWalletSubAppModuleManager> presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setImageLeft(R.drawable.asset_user_identity)
@@ -242,7 +242,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
                     .setSubTitle(R.string.dap_user_wallet_welcome_subTitle)
                     .setBody(R.string.dap_user_wallet_welcome_body)
                     .setTextFooter(R.string.dap_user_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

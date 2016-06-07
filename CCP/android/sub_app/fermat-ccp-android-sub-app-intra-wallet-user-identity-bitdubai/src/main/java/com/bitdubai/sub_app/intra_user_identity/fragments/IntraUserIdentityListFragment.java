@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserModuleIdentity>
+public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserModuleIdentity,ReferenceAppFermatSession>
         implements FermatListItemListeners<IntraUserModuleIdentity> {
 
 

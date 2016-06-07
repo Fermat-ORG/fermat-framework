@@ -38,7 +38,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     private PresentationCallback callback;
 
     public enum TemplateType {
-        TYPE_PRESENTATION, TYPE_PRESENTATION_WITHOUT_IDENTITIES, DAP_TYPE_PRESENTATION
+        TYPE_PRESENTATION, TYPE_PRESENTATION_WITHOUT_IDENTITIES, TYPE_PRESENTATION_WITH_ONE_IDENTITY
     }
 
     public static final String PRESENTATION_IDENTITY_CREATED = "presentation_identity_created";
@@ -91,7 +91,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
      *
      * @param activity
      * @param referenceAppFermatSession parent class of walletSession and SubAppSession
-     * @param resources     parent class of WalletResources and SubAppResources
+     * @param resources                 parent class of WalletResources and SubAppResources
      */
     private PresentationDialog(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
         super(activity, referenceAppFermatSession, resources);
@@ -126,7 +126,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
                     setUpBasics();
                     setUpListenersPresentation();
                     break;
-                case DAP_TYPE_PRESENTATION:
+                case TYPE_PRESENTATION_WITH_ONE_IDENTITY:
                     image_view_left = (ImageView) findViewById(R.id.image_view_left);
                     container_john_doe = (FrameLayout) findViewById(R.id.container_john_doe);
                     btn_left = (Button) findViewById(R.id.btn_left);
@@ -185,8 +185,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         switch (type) {
             case TYPE_PRESENTATION:
                 return R.layout.presentation_dialog;
-            case DAP_TYPE_PRESENTATION:
-                return R.layout.dap_presentation_dialog;
+            case TYPE_PRESENTATION_WITH_ONE_IDENTITY:
+                return R.layout.presentation_dialog_with_one_identity;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.presentation_dialog_without_identities;
         }
@@ -227,26 +227,26 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     }
 
     private void saveSettings() {
-        if (type != TemplateType.TYPE_PRESENTATION && type != TemplateType.DAP_TYPE_PRESENTATION) {
-            if (checkButton == checkbox_not_show.isChecked() || checkButton == !checkbox_not_show.isChecked())
-                if (checkbox_not_show.isChecked()) {
-                    try {
-                        M module = getSession().getModuleManager();
+        if (type != TemplateType.TYPE_PRESENTATION && type != TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY) {
+//            if (checkButton == checkbox_not_show.isChecked() || checkButton == !checkbox_not_show.isChecked())
+//                if (checkbox_not_show.isChecked()) {
+            try {
+//                        M module = getSession().getModuleManager();
 //                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
-                        FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl)getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
-                        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                        ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
+                bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
 //                        }else{
 //                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
 //                        }
-                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
-                        if (callback != null) callback.onError(e);
-                        else e.printStackTrace();
-                    } catch (Exception e){
-                        if (callback != null) callback.onError(e);
-                        else e.printStackTrace();
-                    }
-                }
+            } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
+                if (callback != null) callback.onError(e);
+                else e.printStackTrace();
+            } catch (Exception e) {
+                if (callback != null) callback.onError(e);
+                else e.printStackTrace();
+            }
+//                }
         }
     }
 
@@ -341,11 +341,11 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         private final WeakReference<Activity> activity;
         private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
-        private boolean isCheckEnabled = true;
+        private boolean isCheckEnabled;
         private PresentationCallback callback;
         private String title;
         private int subTitle = -1;
-        private int body = - 1;
+        private int body = -1;
         private int textFooter = -1;
         private int textCheckbox = -1;
         private String textColor;

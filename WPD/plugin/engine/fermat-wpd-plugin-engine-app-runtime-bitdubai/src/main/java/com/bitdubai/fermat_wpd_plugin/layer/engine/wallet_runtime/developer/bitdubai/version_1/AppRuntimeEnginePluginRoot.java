@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -323,7 +323,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         Header runtimeHeader;
@@ -402,7 +402,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //            AppNavigationStructure runtimeAppNavigationStructure;
 //            TitleBar runtimeTitleBar;
 //            SideMenu runtimeSideMenu;
-//            MainMenu runtimeMainMenu;
+//            OptionsMenu runtimeOptionsMenu;
 //            MenuItem runtimeMenuItem;
 //            TabStrip runtimeTabStrip;
 //            StatusBar runtimeStatusBar;
@@ -2569,7 +2569,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3099,7 +3099,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3793,9 +3793,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapse(true);
+        runtimeHeader.setStartCollapsed(true);
         runtimeActivity.setHeader(runtimeHeader);
 
 
@@ -3996,7 +3996,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4093,13 +4093,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -4806,7 +4806,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4874,13 +4874,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5739,7 +5739,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5758,11 +5758,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
         runtimeActivity.setType(Activities.CHT_COMBO_HOME);
         runtimeActivity.setColor("#12aca1");
-
-        // Header
-//        runtimeHeader = new Header();
-//        runtimeHeader.setLabel("Home");
-//        runtimeActivity.setHeader(runtimeHeader);
 
         // title bar
         runtimeTitleBar = new TitleBar();
@@ -5793,6 +5788,42 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_PROFILE.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_PROFILE);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setColor("#12aca1");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         return runtimeWalletNavigationStructure;
     }
@@ -5832,7 +5863,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
 
+
         MainMenu runtimeMainMenu;
+
+        SideMenu runtimeSideMenu;
+        OptionsMenu runtimeOptionsMenu;
+
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5929,13 +5965,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu

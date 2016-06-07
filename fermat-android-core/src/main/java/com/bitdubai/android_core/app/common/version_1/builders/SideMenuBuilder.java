@@ -77,7 +77,7 @@ public class SideMenuBuilder {
      * Body
      */
     public static void setBody(RelativeLayout navigation_view_footer,boolean hasFooter,NavigationViewPainter viewPainter,LayoutInflater layoutInflater){
-        if(navigation_view_footer!=null) {
+        if(navigation_view_footer!=null && viewPainter!=null) {
             if (hasFooter) {
                 navigation_view_footer.setVisibility(View.VISIBLE);
                 ViewGroup viewGroup = viewPainter.addNavigationViewBodyContainer(layoutInflater, navigation_view_footer);
@@ -88,7 +88,7 @@ public class SideMenuBuilder {
      * Background color
      */
     public static void setBackground(final RelativeLayout navigation_view_body_container, final NavigationViewPainter viewPainter, final Resources resources) {
-        if (navigation_view_body_container != null) {
+        if (navigation_view_body_container != null && viewPainter!=null) {
             if (viewPainter.hasBodyBackground()) {
                 AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
 

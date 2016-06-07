@@ -132,7 +132,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {
@@ -197,7 +197,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setSubTitle(R.string.dap_issuer_wallet_welcome_subTitle)
                     .setBody(R.string.dap_issuer_wallet_welcome_body)
                     .setTextFooter(R.string.dap_issuer_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
@@ -25,14 +27,15 @@ import java.lang.ref.WeakReference;
 public class ChatCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    private ChatUserSubAppSessionReferenceApp subAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public ChatCommunityNavigationViewPainter(Context activity, ChatUserSubAppSessionReferenceApp subAppSession,
+    public ChatCommunityNavigationViewPainter(Context activity,
+                                              ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
                                               FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
         this.subAppSession = subAppSession;
-        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override

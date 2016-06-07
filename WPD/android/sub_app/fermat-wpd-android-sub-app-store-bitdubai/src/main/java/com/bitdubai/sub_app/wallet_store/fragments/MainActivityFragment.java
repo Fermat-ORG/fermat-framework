@@ -63,7 +63,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment<WalletStoreListItem>
+public class MainActivityFragment extends FermatListFragment<WalletStoreListItem,ReferenceAppFermatSession>
         implements FermatListItemListeners<WalletStoreListItem>, OnMenuItemClickListener {
 
     /**

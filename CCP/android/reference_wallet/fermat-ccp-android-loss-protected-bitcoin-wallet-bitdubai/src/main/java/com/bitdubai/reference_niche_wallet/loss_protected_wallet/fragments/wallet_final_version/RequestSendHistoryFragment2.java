@@ -95,7 +95,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-//                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+//                final FermatDrawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

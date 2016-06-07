@@ -385,14 +385,14 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_add_contact) {
+//        if (item.getId() == R.id.menu_add_contact) {
 //            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
 //            return true;
-//        }else if (item.getItemId() == R.id.menu_switch_profile) {
+//        }else if (item.getId() == R.id.menu_switch_profile) {
 //            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
 //            return true;
 //        }
-        /*else if(item.getItemId()==R.id.menu_search)
+        /*else if(item.getId()==R.id.menu_search)
         {
             getActivity().onSearchRequested();
 
@@ -650,10 +650,10 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Sends a request to the People app to display the create contact screen
-        if (item.getItemId()==R.id.menu_add_contact) {
+        if (item.getId()==R.id.menu_add_contact) {
             final Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
             startActivity(intent);
-        } else if(item.getItemId()==R.id.menu_search)
+        } else if(item.getId()==R.id.menu_search)
         {
             getActivity().onSearchRequested();
 

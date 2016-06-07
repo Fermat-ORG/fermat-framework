@@ -25,6 +25,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAda
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -48,7 +50,8 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class ContactEditFragment extends AbstractFermatFragment {
+public class ContactEditFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -79,7 +82,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatSessionReferenceApp chatSession;
+    private ReferenceAppFermatSession<ChatManager> chatSession;
     private Toolbar toolbar;
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
@@ -120,8 +123,8 @@ public class ContactEditFragment extends AbstractFermatFragment {
         //setHasOptionsMenu(true);
 
         try {
-            chatSession=((ChatSessionReferenceApp) appSession);
-            chatManager= chatSession.getModuleManager();
+            //chatSession=((ChatSessionReferenceApp) appSession);
+            chatManager= appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
@@ -438,10 +441,10 @@ public class ContactEditFragment extends AbstractFermatFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Sends a request to the People app to display the create contact screen
-        if (item.getItemId()==R.id.menu_add_contact) {
+        if (item.getId()==R.id.menu_add_contact) {
             final Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
             startActivity(intent);
-        } else if(item.getItemId()==R.id.menu_search)
+        } else if(item.getId()==R.id.menu_search)
         {
             getActivity().onSearchRequested();
 
