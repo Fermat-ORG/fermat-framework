@@ -27,9 +27,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -47,21 +44,30 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkNodeIdentityException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.UPNPService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 
 /**
@@ -75,7 +81,6 @@ import java.sql.Timestamp;
  * @since   Java JDK 1.7
  */
 @PluginInfo(createdBy = "Roberto Requena", maintainerMail = "rart3001@gmail.com", platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_NODE)
-
 public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNodeManager {
 
     /**
@@ -199,6 +204,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
 
             /*
+             * Delete all checked in components
+             * when node starts
+             */
+            daoFactory.getCheckedInActorDao().deleteAll();
+            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+            daoFactory.getCheckedInClientDao().deleteAll();
+            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
+            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+
+            /*
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
@@ -227,9 +242,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             NodeContext.add(NodeContextItem.DAO_FACTORY, daoFactory);
             NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY, developerDatabaseFactory);
-            NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
+            NodeContext.add(NodeContextItem.EVENT_MANAGER, eventManager);
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
-            NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );
+            NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM, pluginDatabaseSystem);
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM, pluginFileSystem);
             NodeContext.add(NodeContextItem.PLUGIN_ROOT, this);
 
@@ -654,7 +669,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+        Boolean isRegister = isRegisterInNodeCatalog();
 
         LOG.info("Is Register? = " + isRegister);
         LOG.info("Am i a Seed Node? = " + isSeedServer);
@@ -729,7 +744,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            nodeCatalog.setLocation(nodeProfile.getLocation());
+            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalog into data base
@@ -746,7 +761,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            transaction.setLocation(nodeProfile.getLocation());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalogTransaction into data base
@@ -797,7 +812,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            nodeCatalog.setLocation(nodeProfile.getLocation());
+            nodeCatalog.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalog into data base
@@ -814,7 +829,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            transaction.setLocation(nodeProfile.getLocation());
+            transaction.setLastLocation(nodeProfile.getLocation().getLatitude(), nodeProfile.getLocation().getLongitude());
 
             /*
              * Insert NodesCatalogTransaction into data base
@@ -841,6 +856,67 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
     }
 
+    /**
+     * Validate is register in the catalog
+     * @return boolean
+     */
+    private boolean isRegisterInNodeCatalog(){
+
+        HttpURLConnection httpURLConnection = null;
+
+        try {
+
+            /*
+             * Get from configuration file
+             */
+            Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+
+            /*
+             * If the configuration file says that is registered, validate against seed node
+             */
+            if (isRegister){
+
+                URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/node/registered/"+getIdentity().getPublicKey());
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestProperty("Accept", "application/json");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                String respond = reader.readLine();
+
+                if (httpURLConnection.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+
+                   /*
+                    * Decode into a json Object
+                    */
+                    JsonParser parser = new JsonParser();
+                    JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                    LOG.info(respondJsonObject);
+
+                    if (respondJsonObject.get("success").getAsBoolean()){
+                        return respondJsonObject.get("isRegistered").getAsBoolean();
+                    }else {
+                        return Boolean.FALSE;
+                    }
+
+                }else{
+                    return Boolean.FALSE;
+                }
+
+
+            } else {
+              return isRegister;
+            }
+
+        }catch (Exception e){
+            return Boolean.FALSE;
+        }finally {
+            if (httpURLConnection != null)
+                httpURLConnection.disconnect();
+        }
+
+    }
 
     /**
      * Get the identity
@@ -849,5 +925,22 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public ECCKeyPair getIdentity() {
         return identity;
+    }
+
+
+    /**
+     * Get the Propagate Actor Catalog Agent
+     * @return PropagateActorCatalogAgent
+     */
+    public PropagateActorCatalogAgent getPropagateActorCatalogAgent() {
+        return propagateActorCatalogAgent;
+    }
+
+    /**
+     * Get Propagate Node Catalog Agent
+     * @return PropagateNodeCatalogAgent
+     */
+    public PropagateNodeCatalogAgent getPropagateNodeCatalogAgent() {
+        return propagateNodeCatalogAgent;
     }
 }

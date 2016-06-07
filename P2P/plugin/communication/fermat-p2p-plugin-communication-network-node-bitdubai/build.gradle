@@ -53,7 +53,7 @@ dependencies {
    // compile 'org.jboss.weld.servlet:weld-servlet:2.3.1.Final'
    // compile 'org.jboss.weld.se:weld-se-core:2.3.1.Final'
 
-    compile 'javax:javaee-api:7.0'
+    compile ('javax:javaee-api:7.0')
     compile 'org.slf4j:slf4j-log4j12:1.7.13'
 
     compile 'commons-codec:commons-codec:1.9'

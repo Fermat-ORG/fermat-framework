@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.ImageUtil;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
@@ -36,6 +37,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractActorNetworkService extends AbstractNetworkService implements ActorNetworkService {
 
+    /**
+     * Represent the MAX_IMAGE_SIZE
+     */
+    public static final long MAX_IMAGE_SIZE = 10240;
+
     private ConcurrentHashMap<String, ActorProfile> registeredActors;
 
     /**
@@ -54,6 +60,8 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 eventSource           ,
                 networkServiceType
         );
+
+        registeredActors = new ConcurrentHashMap<>();
     }
 
     /**
@@ -80,13 +88,13 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                               final Actors   type     ,
                               final byte[]   image    ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
 
-        if (registeredActors == null)
-            registeredActors = new ConcurrentHashMap<>();
-        else if (registeredActors.get(publicKey) != null)
-            throw new ActorAlreadyRegisteredException("publicKey: "+publicKey+" - name: "+name, "An actor is already registered with the given public key.");
+        validateImageSize(image.length);
+
+        if (registeredActors.get(publicKey) != null) {
+            throw new ActorAlreadyRegisteredException("publicKey: " + publicKey + " - name: " + name, "An actor is already registered with the given public key.");
+        }
 
         ActorProfile actorToRegister = new ActorProfile();
-
         actorToRegister.setIdentityPublicKey(publicKey);
         actorToRegister.setActorType(type.getCode());
         actorToRegister.setName(name);
@@ -132,8 +140,11 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                                       final String   extraData,
                                       final byte[]   image    ) throws ActorNotRegisteredException, CantUpdateRegisteredActorException {
 
-        if (registeredActors == null || registeredActors.get(publicKey) == null)
-            throw new ActorNotRegisteredException("publicKey: "+publicKey+" - name: "+name, "The actor we're trying to update is not registered.");
+        validateImageSize(image.length);
+
+        if (registeredActors == null || registeredActors.get(publicKey) == null) {
+            throw new ActorNotRegisteredException("publicKey: " + publicKey + " - name: " + name, "The actor we're trying to update is not registered.");
+        }
 
         ActorProfile actorToUpdate = registeredActors.get(publicKey);
 
@@ -253,6 +264,18 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         }
     }
+
+    /**
+     * Validate the image size of the profile
+     *
+     * @param byteArraySize
+     */
+    private void validateImageSize(long byteArraySize){
+        if (byteArraySize > MAX_IMAGE_SIZE){
+            throw new IllegalArgumentException("The current image size ("+ ImageUtil.bytesIntoHumanReadable(byteArraySize)+ ") exceeds the allowable limit size ("+ ImageUtil.bytesIntoHumanReadable(MAX_IMAGE_SIZE)+ ")");
+        }
+    }
+
 
     protected void onActorNetworkServiceStart() throws CantStartPluginException {
 

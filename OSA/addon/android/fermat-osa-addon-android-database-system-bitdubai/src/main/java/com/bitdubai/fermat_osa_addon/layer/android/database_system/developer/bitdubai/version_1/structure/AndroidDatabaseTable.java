@@ -185,6 +185,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+    @Override
+    public void deleteAllRecord() throws CantDeleteRecordException {
+
+    }
+
     /**
      * <p>This method inserts a new record in the database
      *
