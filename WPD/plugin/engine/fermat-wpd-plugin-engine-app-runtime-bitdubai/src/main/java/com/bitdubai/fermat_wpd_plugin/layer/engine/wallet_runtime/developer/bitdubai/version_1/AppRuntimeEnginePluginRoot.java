@@ -5794,6 +5794,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CHT_COMBO_PROFILE.getCode());
         runtimeActivity.setType(Activities.CHT_COMBO_PROFILE);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
         runtimeActivity.setColor("#12aca1");
 
         // title bar

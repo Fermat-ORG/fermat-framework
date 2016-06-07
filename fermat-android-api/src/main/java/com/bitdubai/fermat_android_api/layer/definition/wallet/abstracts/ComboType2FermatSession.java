@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class ComboType2FermatSession <A extends FermatApp,R extends ResourceProv
 
     @Override
     public <T extends FermatSession> T getFermatSession(String appPublicKey, Class<T> sessionType) throws InvalidParameterException {
-        if (!sessionMap.containsKey(appPublicKey)) throw new  InvalidParameterException("Session not exist");
+        if (!sessionMap.containsKey(appPublicKey)) throw new  InvalidParameterException("Session not exist for pk: "+appPublicKey,"Pk valids in this ComboSession: "+ Arrays.toString(sessionMap.keySet().toArray()));
         return (T) sessionMap.get(appPublicKey);
     }
 }

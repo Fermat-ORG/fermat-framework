@@ -395,31 +395,35 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
 
     private void select(AppsStatus appsStatus) {
         try {
-            List<Item> list = new ArrayList<>();
-            if (lstItemsWithIcon != null)
-                for (Item installedWallet : lstItemsWithIcon) {
-                    if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
-                        list.add(installedWallet);
+            if(isAttached) {
+                List<Item> list = new ArrayList<>();
+                if (lstItemsWithIcon != null)
+                    for (Item installedWallet : lstItemsWithIcon) {
+                        if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
+                            list.add(installedWallet);
+                        }
+
                     }
-
+                else Log.e(TAG, "List of subApps null, please check this");
+                Item[] arrItemsWithoutIcon = new Item[12];
+                for (int i = 0; i < 12; i++) {
+                    Item emptyItem = new Item(new EmptyItem(0, i));
+                    emptyItem.setIconResource(-1);
+                    arrItemsWithoutIcon[i] = emptyItem;
                 }
-            else Log.e(TAG, "List of subApps null, please check this");
-            Item[] arrItemsWithoutIcon = new Item[12];
-            for (int i = 0; i < 12; i++) {
-                Item emptyItem = new Item(new EmptyItem(0, i));
-                emptyItem.setIconResource(-1);
-                arrItemsWithoutIcon[i] = emptyItem;
-            }
 
-            int j = 0;
-            for (Item itemIcon : list) {
-                arrItemsWithoutIcon[j] = itemIcon;
-                j++;
-            }
+                int j = 0;
+                for (Item itemIcon : list) {
+                    arrItemsWithoutIcon[j] = itemIcon;
+                    j++;
+                }
 
-            if (recyclerView.getAdapter() != null) {
-                ((DesktopAdapter) recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
-                recyclerView.getAdapter().notifyDataSetChanged();
+                if (recyclerView != null) {
+                    if (recyclerView.getAdapter() != null) {
+                        ((DesktopAdapter) recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

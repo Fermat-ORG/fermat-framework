@@ -179,7 +179,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
             if (fragment != null) frgBackType = fragment.getBack();
             if (frgBackType != null) {
-                changeFragment(fermatStructure.getPublicKey(), frgBackType);
+                changeFragment(fermatStructure.getPublicKey(), fragment);
             } else if (((activity != null) ? activity.getBackActivity() : null) != null && activity.getBackAppPublicKey() != null) {
                 if (activityBackCode != null) {
                     changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
@@ -394,19 +394,23 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }
     }
 
-    public void changeFragment(String appPublicKey, String fragmentType) {
+    public void changeFragment(String appPublicKey, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fermatFragment) {
         try {
-            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fragmentType);
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appPublicKey,this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
+            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getPulickKeyFragmentFrom(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
             FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
-            Fragment fragment = fragmentFactory.getFragment(fragmentType,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources());
+            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.fragment_container2, fragment);
+//            FT.replace(R.id.fragment_container2, fragment);
+            Fragment fragmentToReplace = getAdapter().getItem(0);
+            FT.replace(((ViewGroup)fragmentToReplace.getView().getParent()).getId(), fragment);
             FT.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeFragment"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            handleExceptionAndRestart();
         }
     }
 
