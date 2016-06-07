@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 import java.util.UUID;
 
@@ -45,7 +44,7 @@ private UUID requestId;
 
 private LossProtectedWallet lossProtectedWallet;
 
-private LossProtectedWalletSession appSession;
+private LossProtectedWalletSessionReferenceApp appSession;
         /**
          *  UI components
          */
@@ -54,7 +53,7 @@ private LossProtectedWalletSession appSession;
 
 
 public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
-                                   LossProtectedWalletSession appSession, BlockchainNetworkType blockchainNetworkType,LossProtectedWallet lossProtectedWallet){
+                                   LossProtectedWalletSessionReferenceApp appSession, BlockchainNetworkType blockchainNetworkType,LossProtectedWallet lossProtectedWallet){
     super(a);
 
     this.requestId = requestId;

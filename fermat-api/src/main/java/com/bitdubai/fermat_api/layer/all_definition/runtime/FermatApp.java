@@ -19,6 +19,8 @@ public interface FermatApp extends Serializable {
 
     FermatAppType getAppType();
 
+//    AppStructureType getAppStructureType();
+
     byte[] getAppIcon();
 
     int getIconResource();

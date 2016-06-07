@@ -279,9 +279,9 @@ public class FermatAppConnectionManager {
         return fermatAppConnection;
     }
 
-    public static AppConnections getFermatAppConnection(String publicKey, Activity activity, FermatSession fermatSession) {
+    public static AppConnections getFermatAppConnection(String publicKey, Activity activity, FermatSession referenceAppFermatSession) {
         AppConnections fermatAppConnection = switchStatement(activity,publicKey);
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
+        fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
         return fermatAppConnection;
     }
 

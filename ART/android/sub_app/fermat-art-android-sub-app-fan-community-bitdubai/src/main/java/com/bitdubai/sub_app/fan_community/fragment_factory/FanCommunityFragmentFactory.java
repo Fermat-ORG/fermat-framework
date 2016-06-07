@@ -11,14 +11,14 @@ import com.bitdubai.sub_app.fan_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ListUserIdentiesFragment;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
 public class FanCommunityFragmentFactory extends
         FermatFragmentFactory<
-                FanCommunitySubAppSession,
+                FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager,
                 FanCommunityFragmentsEnumType> {
 

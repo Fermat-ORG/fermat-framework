@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -34,10 +35,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -54,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "RedeemPointIdentity";
 
@@ -68,7 +69,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
@@ -89,7 +89,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-    //    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointIdentitySettings redeemPointIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -108,8 +107,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
-            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 

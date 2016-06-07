@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ClosedNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.Map;
 
@@ -44,7 +44,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager> {
+public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager> {
     
     private static final String TAG = "ClosedNegDetailsFrag";
     

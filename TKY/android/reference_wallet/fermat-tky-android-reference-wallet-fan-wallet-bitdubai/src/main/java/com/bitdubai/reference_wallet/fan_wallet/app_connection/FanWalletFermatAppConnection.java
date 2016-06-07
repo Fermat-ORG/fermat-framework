@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -16,12 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.reference_wallet.fan_wallet.common.header.FanWalletHeaderPainter;
 import com.bitdubai.reference_wallet.fan_wallet.fragmentFactory.FanWalletFragmentFactory;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
 /**
  * Created by Miguel Payarez on 28/03/16.
  */
-public class FanWalletFermatAppConnection extends AppConnections<FanWalletSession> {
+public class FanWalletFermatAppConnection extends AppConnections<FanWalletSessionReferenceApp> {
 
     public FanWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -33,18 +33,18 @@ public class FanWalletFermatAppConnection extends AppConnections<FanWalletSessio
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.TOKENLY,
                 Layers.WALLET_MODULE,
                 Plugins.TOKENLY_FAN_WALLET_MODULE,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public AbstractFermatSession getSession() { return new FanWalletSession(); }
+    public AbstractReferenceAppFermatSession getSession() { return new FanWalletSessionReferenceApp(); }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

@@ -23,12 +23,13 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetRedeemPointManager extends FermatManager {
+public interface ActorAssetRedeemPointManager extends FermatManager, Serializable {
 
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey

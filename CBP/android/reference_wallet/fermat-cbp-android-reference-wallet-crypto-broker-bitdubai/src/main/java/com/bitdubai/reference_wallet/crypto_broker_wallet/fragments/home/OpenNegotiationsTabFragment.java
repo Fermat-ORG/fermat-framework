@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     // Fermat Managers
@@ -193,7 +193,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
+        appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
         /*
         if(data.getStatus() == NegotiationStatus.SENT_TO_BROKER || data.getStatus() == NegotiationStatus.WAITING_FOR_BROKER){

@@ -11,7 +11,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileLi
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardFirstStepBroadcastFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardScheduledTwoStepBroadcastFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardTwoStepBroadcastFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
@@ -25,7 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @version 1.0
  */
 
-public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubAppResourcesProviderManager, ChatFragmentsEnumType> {
+public class ChatFragmentFactory extends FermatFragmentFactory<ChatSessionReferenceApp, SubAppResourcesProviderManager, ChatFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(ChatFragmentsEnumType fragments) throws FragmentNotFoundException {

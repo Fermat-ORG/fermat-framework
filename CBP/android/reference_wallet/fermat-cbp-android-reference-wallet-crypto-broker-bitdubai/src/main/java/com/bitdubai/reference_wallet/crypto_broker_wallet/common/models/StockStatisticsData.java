@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,7 +26,7 @@ public class StockStatisticsData {
     private Currency currency;
     private float balance;
 
-    public StockStatisticsData(CryptoBrokerWalletAssociatedSetting associatedWallet, CryptoBrokerWalletSession session) {
+    public StockStatisticsData(CryptoBrokerWalletAssociatedSetting associatedWallet, CryptoBrokerWalletSessionReferenceApp session) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);

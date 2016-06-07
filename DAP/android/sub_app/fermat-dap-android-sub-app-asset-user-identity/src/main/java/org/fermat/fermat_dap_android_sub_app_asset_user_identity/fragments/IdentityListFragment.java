@@ -18,7 +18,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.common.adapters.UserIdentityAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.common.views.DividerItemDecoration;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -38,7 +38,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
     private ErrorManager errorManager;
     private ArrayList<IdentityAssetUser> identityInformationList;
 
-    UserIdentitySubAppSession userIdentitySubAppSession;
+    UserIdentitySubAppSessionReferenceApp userIdentitySubAppSession;
 
     public static IdentityListFragment newInstance() {
         return new IdentityListFragment();
@@ -50,7 +50,7 @@ public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
 
         try {
             // setting up  module
-            userIdentitySubAppSession = (UserIdentitySubAppSession) appSession;
+            userIdentitySubAppSession = (UserIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = userIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

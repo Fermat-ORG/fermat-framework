@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -39,7 +40,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -57,7 +58,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
     private Activity activity;
 
-    private AssetUserSession assetUserSession;
+    private AssetUserSessionReferenceApp assetUserSession;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
     private View rootView;
@@ -91,7 +92,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSession) appSession);
+        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -114,7 +115,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
     private void setUpHelpAssetRedeem(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
@@ -175,7 +176,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     if (x != null) {
                         final List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
-                            new ConfirmDialog.Builder(getActivity(), appSession)
+                            new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                                     .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                                     .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
                                     .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))

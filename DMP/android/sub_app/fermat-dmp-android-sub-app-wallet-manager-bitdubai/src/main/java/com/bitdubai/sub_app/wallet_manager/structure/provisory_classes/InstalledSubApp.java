@@ -33,6 +33,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
 
     private int banner = 0;
     private Platforms platform;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version, Platforms platform, AppsStatus appsStatus) {
@@ -180,6 +181,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     public FermatAppType getAppType() {
         return FermatAppType.SUB_APP;
     }
+
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
 
     @Override
     public byte[] getAppIcon() {

@@ -25,14 +25,14 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetMerchandisesFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetProvidersFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 /**
  * Return new instances of the fragments for this wallet
  * <p/>
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<CryptoBrokerWalletSession,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
+public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<CryptoBrokerWalletSessionReferenceApp,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {

@@ -9,13 +9,13 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 
 /**
  * Created by mati on 2015.11.17..
  */
-public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWalletSession,WalletResourcesProviderManager> implements View.OnClickListener {
+public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWalletSessionReferenceApp,WalletResourcesProviderManager> implements View.OnClickListener {
 
 
     private final Activity activity;
@@ -29,7 +29,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<LossProtectedWal
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ConnectionWithCommunityDialog(Activity activity, LossProtectedWalletSession fermatSession, WalletResourcesProviderManager resources) {
+    public ConnectionWithCommunityDialog(Activity activity, LossProtectedWalletSessionReferenceApp fermatSession, WalletResourcesProviderManager resources) {
         super(activity, fermatSession, resources);
         this.activity = activity;
     }

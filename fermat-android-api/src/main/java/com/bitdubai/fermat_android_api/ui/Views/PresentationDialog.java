@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,15 +14,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.27..
  */
-public class PresentationDialog extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationDialog<M extends ModuleManager> extends FermatDialog<ReferenceAppFermatSession<M>, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "PresentationDialog";
     private PresentationCallback callback;
@@ -90,11 +90,11 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
      * Constructor using Session and Resources
      *
      * @param activity
-     * @param fermatSession parent class of walletSession and SubAppSession
+     * @param referenceAppFermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    private PresentationDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
-        super(activity, fermatSession, resources);
+    private PresentationDialog(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, SubAppResourcesProviderManager resources, TemplateType type, boolean checkButton) {
+        super(activity, referenceAppFermatSession, resources);
         this.activity = activity;
         this.type = type;
         this.checkButton = checkButton;
@@ -231,15 +231,20 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             if (checkButton == checkbox_not_show.isChecked() || checkButton == !checkbox_not_show.isChecked())
                 if (checkbox_not_show.isChecked()) {
                     try {
-                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
-                            FermatSettings bitcoinWalletSettings = ((ModuleManagerImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
-                            bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                            ((ModuleManagerImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
-                        }else{
-                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
-                        }
+                        M module = getSession().getModuleManager();
+//                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
+                        FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl)getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
+                        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                        ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+//                        }else{
+//                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
+//                        }
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         if (callback != null) callback.onError(e);
+                        else e.printStackTrace();
+                    } catch (Exception e){
+                        if (callback != null) callback.onError(e);
+                        else e.printStackTrace();
                     }
                 }
         }
@@ -334,7 +339,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
          * Members
          */
         private final WeakReference<Activity> activity;
-        private final WeakReference<FermatSession> fermatSession;
+        private final WeakReference<ReferenceAppFermatSession> fermatSession;
         private TemplateType templateType = TemplateType.TYPE_PRESENTATION;
         private boolean isCheckEnabled = true;
         private PresentationCallback callback;
@@ -414,9 +419,9 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             return presentationDialog;
         }
 
-        public Builder(Activity activity, FermatSession fermatSession) {
+        public Builder(Activity activity, ReferenceAppFermatSession referenceAppFermatSession) {
             this.activity = new WeakReference<Activity>(activity);
-            this.fermatSession = new WeakReference<FermatSession>(fermatSession);
+            this.fermatSession = new WeakReference<ReferenceAppFermatSession>(referenceAppFermatSession);
         }
 
         public Builder setBannerRes(int bannerRes) {

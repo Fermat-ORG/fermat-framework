@@ -206,9 +206,9 @@ public class FermatAppConnectionManager {
     }
 
 
-    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession fermatSession) {
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession referenceAppFermatSession) {
         AppConnections fermatAppConnection = switchStatement(context,publicKey);
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
+        fermatAppConnection.setFullyLoadedSession(referenceAppFermatSession);
         return fermatAppConnection;
     }
 

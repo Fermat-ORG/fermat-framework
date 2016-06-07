@@ -53,7 +53,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
@@ -66,7 +66,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by Joaquin Carrasquero on 16/03/16.
  */
-public class SendFormWalletFragment extends AbstractFermatFragment<LossProtectedWalletSession, ResourceProviderManager> implements View.OnClickListener {
+public class SendFormWalletFragment extends AbstractFermatFragment<LossProtectedWalletSessionReferenceApp, ResourceProviderManager> implements View.OnClickListener {
 
 
     /**

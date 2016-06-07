@@ -9,6 +9,7 @@ import android.view.Window;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SpacesItemDecoration;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -17,7 +18,6 @@ import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by mati on 2015.11.27..
  */
-public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesProviderManager>{
+public class FolderDialog extends FermatDialog<FermatSession,SubAppResourcesProviderManager>{
 
 
     private AbstractFermatFragment.ScreenSize screenSize;
@@ -45,13 +45,13 @@ public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesPro
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public FolderDialog(Activity activity, DesktopSession fermatSession, SubAppResourcesProviderManager resources,List<Item> lstItems,DesktopHolderClickCallback desktopHolderClickCallback) {
+    public FolderDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,List<Item> lstItems,DesktopHolderClickCallback desktopHolderClickCallback) {
         super(activity, fermatSession, resources);
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
     }
 
-    public FolderDialog(Activity activity, int themeResId, DesktopSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback,AppsStatus appsStatus,AbstractFermatFragment.ScreenSize screenSize) {
+    public FolderDialog(Activity activity, int themeResId, FermatSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback,AppsStatus appsStatus,AbstractFermatFragment.ScreenSize screenSize) {
         super(activity, themeResId, fermatSession, resources);
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
@@ -59,7 +59,7 @@ public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesPro
         this.appStatus = appsStatus;
         this.screenSize = screenSize;
     }
-    public FolderDialog(Activity activity, DesktopSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback,AppsStatus appsStatus,AbstractFermatFragment.ScreenSize screenSize) {
+    public FolderDialog(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback,AppsStatus appsStatus,AbstractFermatFragment.ScreenSize screenSize) {
         super(activity, fermatSession, resources);
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
