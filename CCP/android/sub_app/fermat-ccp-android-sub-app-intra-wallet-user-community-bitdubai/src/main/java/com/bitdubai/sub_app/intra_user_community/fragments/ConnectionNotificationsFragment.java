@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -51,7 +51,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -75,9 +75,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
+        intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
         try {
-            intraUserInformation = (IntraUserInformation) ((IntraUserSubAppSession) appSession).getData(INTRA_USER_SELECTED,null);
+            intraUserInformation = (IntraUserInformation) ((IntraUserSubAppSessionReferenceApp) appSession).getData(INTRA_USER_SELECTED,null);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

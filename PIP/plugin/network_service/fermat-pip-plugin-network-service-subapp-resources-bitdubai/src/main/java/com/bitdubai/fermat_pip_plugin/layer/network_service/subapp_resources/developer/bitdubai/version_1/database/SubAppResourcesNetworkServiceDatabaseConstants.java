@@ -4,7 +4,7 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.de
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0
@@ -12,7 +12,7 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.de
  */
 public class SubAppResourcesNetworkServiceDatabaseConstants {
 
-    public static final String DATABASE_NAME= "SubAppResources";
+    public static final String DATABASE_NAME = "SubAppResources";
 
     /**
      * Repositories database table definition.

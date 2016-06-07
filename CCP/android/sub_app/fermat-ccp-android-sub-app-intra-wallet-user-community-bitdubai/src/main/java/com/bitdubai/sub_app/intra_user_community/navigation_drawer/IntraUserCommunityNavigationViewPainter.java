@@ -10,11 +10,10 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -26,9 +25,9 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
     private WeakReference<Context> activity;
    // private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
-    private IntraUserSubAppSession intraUserSubAppSession;
+    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
 
-    public IntraUserCommunityNavigationViewPainter(Context activity,IntraUserSubAppSession intraUserSubAppSession,FermatApplicationCaller applicationsHelper) {
+    public IntraUserCommunityNavigationViewPainter(Context activity,IntraUserSubAppSessionReferenceApp intraUserSubAppSession,FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
         this.intraUserSubAppSession = intraUserSubAppSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);

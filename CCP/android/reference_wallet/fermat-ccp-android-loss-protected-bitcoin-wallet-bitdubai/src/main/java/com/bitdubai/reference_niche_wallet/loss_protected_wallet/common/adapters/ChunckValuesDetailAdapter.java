@@ -12,13 +12,12 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesDetailItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceStringWithDecimalEntry;
 
 /**
@@ -27,11 +26,11 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtectedWalletSpend,ChunckValuesDetailItemViewHolder> {
     private onRefreshList onRefresh;
     private LossProtectedWallet cryptoWallet;
-    private LossProtectedWalletSession lossProtectedWalletSession;
+    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
     private Typeface tf;
 
 
-    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession lossProtectedWalletSession, onRefreshList onRefresh) {
+    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp lossProtectedWalletSession, onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.lossProtectedWalletSession = lossProtectedWalletSession;

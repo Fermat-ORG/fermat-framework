@@ -26,8 +26,8 @@ public class MaxTimeOutNotificationRaisedEventHandler implements FermatEventHand
         if (fermatEvent == null)
             throw new FermatException("Event is null", null, "Handling event", null);
 
-        if (fermatEvent instanceof MaxTimeOutNotificationReachedEvent){
-            MaxTimeOutNotificationReachedEvent maxTimeOutNotificationReachedEvent = (MaxTimeOutNotificationReachedEvent)fermatEvent;
+        if (fermatEvent instanceof MaxTimeOutNotificationReachedEvent) {
+            MaxTimeOutNotificationReachedEvent maxTimeOutNotificationReachedEvent = (MaxTimeOutNotificationReachedEvent) fermatEvent;
             timeOutAgent = maxTimeOutNotificationReachedEvent.getTimeOutAgent();
 
             if (timeOutAgent == null)

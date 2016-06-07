@@ -33,7 +33,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +44,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 05/04/16.
  */
-public class ReceiveTransactionFragment extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
+public class ReceiveTransactionFragment extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSessionReferenceApp,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
      */
-    LossProtectedWalletSession lossWalletSession;
+    LossProtectedWalletSessionReferenceApp lossWalletSession;
 
     /**
      * MANAGERS
@@ -95,7 +95,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
         super.onCreate(savedInstanceState);
         try {
-       lossWalletSession = (LossProtectedWalletSession)appSession;
+       lossWalletSession = (LossProtectedWalletSessionReferenceApp)appSession;
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
 
@@ -323,7 +323,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
 
 
-    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(LossProtectedWalletSessionReferenceApp referenceWalletSession) {
         this.lossWalletSession = referenceWalletSession;
     }
 

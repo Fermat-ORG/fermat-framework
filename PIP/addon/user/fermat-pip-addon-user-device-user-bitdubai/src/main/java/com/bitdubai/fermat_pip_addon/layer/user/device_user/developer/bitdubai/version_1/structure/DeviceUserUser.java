@@ -7,8 +7,9 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
  * <p>The class <code>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUser</code>
  * implements the interface DeviceUser with its methods and contains other attributes that complete the functionality of the device User.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
+ *
  * @Version 1.0
  */
 public class DeviceUserUser implements DeviceUser {

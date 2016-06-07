@@ -7,17 +7,21 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ComboAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -27,7 +31,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
@@ -320,7 +326,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         Header runtimeHeader;
@@ -372,6 +378,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = createFanWalletNavigationStructure();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
+        //Combo cht identity/community
+        runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
+        recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
         /**
          * SubApp generator
@@ -396,7 +405,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //            AppNavigationStructure runtimeAppNavigationStructure;
 //            TitleBar runtimeTitleBar;
 //            SideMenu runtimeSideMenu;
-//            MainMenu runtimeMainMenu;
+//            OptionsMenu runtimeOptionsMenu;
 //            MenuItem runtimeMenuItem;
 //            TabStrip runtimeTabStrip;
 //            StatusBar runtimeStatusBar;
@@ -2563,7 +2572,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3093,7 +3102,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3787,9 +3796,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapse(true);
+        runtimeHeader.setStartCollapsed(true);
         runtimeActivity.setHeader(runtimeHeader);
 
 
@@ -3990,7 +3999,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4087,13 +4096,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -4800,7 +4809,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4868,13 +4877,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5726,6 +5735,146 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
 
+    private AppNavigationStructure buildChatCommunityIdentityComboApp(){
+
+        AppNavigationStructure runtimeWalletNavigationStructure = new AppNavigationStructure();
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        OptionsMenu runtimeOptionsMenu;
+        MenuItem runtimeMenuItem;
+        TabStrip runtimeTabStrip;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        Footer fermatFooter;
+
+
+        final String publicKey = ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode();
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        runtimeWalletNavigationStructure.setAppStructureType(AppStructureType.COMBO_TYPE_2);
+        //Apps consume
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setColor("#12aca1");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Home");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setVisibility(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
+
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_PROFILE.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_PROFILE);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setColor("#12aca1");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        //OptionMenu
+        optionsMenu = new OptionsMenu();
+        OptionMenuItem menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog", SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setVisibility(2);
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        return runtimeWalletNavigationStructure;
+    }
+
+
+    private SideMenu loadSideMenuChatCombo(String publicKey) {
+        //Navigation
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#ffffff");
+        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_HOME);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Profile");
+        runtimeMenuItem.setIcon("profile");
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_PROFILE);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
+
     private AppNavigationStructure startFermatWalletNavigationStructure() {
 
         Activity runtimeActivity;
@@ -5733,7 +5882,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5831,13 +5980,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu

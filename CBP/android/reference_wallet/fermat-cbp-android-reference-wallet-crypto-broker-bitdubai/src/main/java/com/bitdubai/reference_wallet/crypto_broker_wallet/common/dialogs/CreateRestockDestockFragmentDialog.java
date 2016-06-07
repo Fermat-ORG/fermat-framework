@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -40,7 +40,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
     private Activity activity;
 
-    private FermatSession session;
+    private ReferenceAppFermatSession session;
     private CryptoBrokerWalletAssociatedSetting setting;
 
     /**
@@ -49,7 +49,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
     FermatEditText amountText;
 
 
-    public CreateRestockDestockFragmentDialog(Activity activity, FermatSession session, CryptoBrokerWalletAssociatedSetting setting) {
+    public CreateRestockDestockFragmentDialog(Activity activity, ReferenceAppFermatSession session, CryptoBrokerWalletAssociatedSetting setting) {
         super(activity);
 
         this.activity = activity;

@@ -12,13 +12,13 @@ import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel1;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel2;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragmentLevel3;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
+import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
 
-public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSession, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
+public class DeveloperSubAppFragmentFactory extends FermatFragmentFactory<DeveloperSubAppSessionReferenceApp, SubAppResourcesProviderManager, DeveloperFragmentsEnumType> {
 
     public DeveloperSubAppFragmentFactory() {
     }
