@@ -238,7 +238,7 @@ public class ConnectionsWorldFragment
             }
             else
             {
-                invalidate();
+//                invalidate();
                 onRefresh();
             }
 
