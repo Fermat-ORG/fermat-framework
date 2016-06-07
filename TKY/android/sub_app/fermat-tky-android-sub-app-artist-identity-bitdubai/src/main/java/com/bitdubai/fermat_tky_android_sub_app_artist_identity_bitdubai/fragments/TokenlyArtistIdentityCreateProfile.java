@@ -378,6 +378,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    updateProfileImage = true;
                     buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
@@ -843,6 +844,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                     return true;
                 case CONTEXT_MENU_DELETE:
                    DeletePicture();
+
                     contextMenuDelete = true;
                     return true;
             }
