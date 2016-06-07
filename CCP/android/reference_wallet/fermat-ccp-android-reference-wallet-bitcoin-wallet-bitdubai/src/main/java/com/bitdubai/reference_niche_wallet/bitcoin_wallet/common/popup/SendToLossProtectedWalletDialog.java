@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -46,7 +47,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -73,7 +74,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      *  Deals with crypto wallet interface
      */
     private CryptoWallet cryptoWallet;
-    private ReferenceWalletSession appSession;
+    private ReferenceAppFermatSession<CryptoWallet> appSession;
 
     /**
      * Deals with error manager interface
@@ -104,7 +105,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     public SendToLossProtectedWalletDialog(Activity activity,
                                            CryptoWallet cryptoWallet,
-                                           ReferenceWalletSession appSession,
+                                           ReferenceAppFermatSession appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);

@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -65,7 +66,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -104,7 +105,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * Wallet session
      */
-    LossProtectedWalletSession lossWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
     // unsorted list items
     List<LossProtectedWalletContact> mItems;
     // array list to store section positions
@@ -159,7 +160,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         try {
             _executor = Executors.newFixedThreadPool(2);
-            lossWalletSession = (LossProtectedWalletSession) appSession;
+            lossWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
             setHasOptionsMenu(true);
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             errorManager = appSession.getErrorManager();
@@ -364,7 +365,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             protected Object doInBackground()  {
                 try {
                     walletContactRecords = lossProtectedWalletManager.listWalletContacts(
-                            lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+                            lossWalletSession.getAppPublicKey(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -523,12 +524,12 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
 
-                    lossWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    lossWalletSession.setData(SessionConstant.CONTACT_ACCOUNT_NAME, String.valueOf(adapter.getItem(position)));
 
                     if (position == 1)
-                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT, adapterView.getItemAtPosition(position));
                     else
-                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT, adapterView.getItemAtPosition(position));
 
 
                     Boolean isFromActionBarSend = (Boolean) lossWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);

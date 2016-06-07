@@ -3,12 +3,14 @@ package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 
 
 /**
@@ -16,7 +18,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionR
  * Modify by Jose Manuel De Sousa Dos Santos on 08/12/2015.
  */
 
-public class IntraUserFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSessionReferenceApp,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
+public class IntraUserFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<IntraUserModuleManager>,SubAppResourcesProviderManager,IntraUserFragmentsEnumType> {
 
 
     @Override

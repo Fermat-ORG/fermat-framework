@@ -19,9 +19,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
@@ -29,24 +31,25 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
  * Creado por Jose Manuel De Sousa on 29/11/15.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager>implements View.OnClickListener {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
+    private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -80,7 +83,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
+        intraUserSubAppSession = appSession;
         intraUserInformation = (IntraUserInformation) appSession.getData(INTRA_USER_SELECTED);
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
@@ -174,7 +177,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(intraUserInformation.getName());
@@ -195,7 +198,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (ReferenceAppFermatSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(intraUserInformation.getName());
@@ -213,7 +216,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSessionReferenceApp) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(ReferenceAppFermatSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

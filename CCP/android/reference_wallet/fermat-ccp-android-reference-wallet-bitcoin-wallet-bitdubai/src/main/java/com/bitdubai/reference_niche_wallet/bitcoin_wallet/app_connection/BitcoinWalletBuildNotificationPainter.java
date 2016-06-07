@@ -32,7 +32,7 @@ public class BitcoinWalletBuildNotificationPainter {
                 switch (notificationType){
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                            loggedIntraUserPublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
                             try{
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
                                 notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReurn);

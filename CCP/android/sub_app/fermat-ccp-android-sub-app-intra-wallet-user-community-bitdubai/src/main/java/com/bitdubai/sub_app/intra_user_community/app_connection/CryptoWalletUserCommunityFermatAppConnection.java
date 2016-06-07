@@ -4,6 +4,7 @@ import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -14,13 +15,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.intra_user_community.navigation_drawer.IntraUserCommunityNavigationViewPainter;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections<IntraUserSubAppSessionReferenceApp>{
+public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
 
-   private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
+   private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
 
     public CryptoWalletUserCommunityFermatAppConnection(Context activity) {
@@ -46,7 +47,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new IntraUserSubAppSessionReferenceApp();
+        return (AbstractReferenceAppFermatSession)this.getFullyLoadedSession();
     }
 
     @Override

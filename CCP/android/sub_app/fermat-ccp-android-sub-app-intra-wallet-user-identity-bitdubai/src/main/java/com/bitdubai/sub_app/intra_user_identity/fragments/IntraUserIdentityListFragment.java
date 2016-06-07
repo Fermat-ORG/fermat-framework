@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -40,7 +41,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
     private ErrorManager errorManager;
     private ArrayList<IntraUserModuleIdentity> identityInformationList;
 
-    IntraUserIdentitySubAppSessionReferenceApp intraUserIdentitySubAppSession ;
+    ReferenceAppFermatSession<IntraUserIdentityModuleManager> intraUserIdentitySubAppSession ;
 
 
     public static IntraUserIdentityListFragment newInstance() {
@@ -53,7 +54,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
 
         try {
             // setting up  module
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSessionReferenceApp) appSession;
+            intraUserIdentitySubAppSession = (ReferenceAppFermatSession)appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

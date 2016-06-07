@@ -131,7 +131,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatWalletSettings fermatWalletSettings = null;
 
     private ExecutorService _executor;
-
+    private BalanceType balanceType = BalanceType.AVAILABLE;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -168,6 +168,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
+
+            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
 
             //get wallet settings
             try {
@@ -225,7 +230,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             //check blockchain progress
 
-                                try {
+                       /*         try {
                                     int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
                                     final Toolbar toolBar = getToolbar();
                                     int toolbarColor = 0;
@@ -246,7 +251,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     });
                                 }catch (Exception e){
                                     e.printStackTrace();
-                                }
+                                }*/
 
 
 
@@ -880,7 +885,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         updateBalances();
         setRunningDailyBalance();
         try {
-            if (appSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+
+            if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txt_type_balance.setText(R.string.book_balance);
@@ -919,7 +925,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         balanceAvailable = loadBalance(BalanceType.AVAILABLE);
         txt_balance_amount.setText(
                 WalletUtils.formatBalanceString(
-                        (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode()))
+                        (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
                         ? balanceAvailable : bookBalance, referenceWalletSession.getTypeAmount()));
     }
 
