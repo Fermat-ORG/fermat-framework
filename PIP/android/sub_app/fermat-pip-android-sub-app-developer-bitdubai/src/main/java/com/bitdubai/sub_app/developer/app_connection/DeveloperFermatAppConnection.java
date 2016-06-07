@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperSubAppModuleManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
@@ -22,7 +23,7 @@ import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFermatSession<DeveloperSubAppModuleManager>> {
+public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFermatSession<ToolManager>> {
 
     public DeveloperFermatAppConnection(Context activity) {
         super(activity);

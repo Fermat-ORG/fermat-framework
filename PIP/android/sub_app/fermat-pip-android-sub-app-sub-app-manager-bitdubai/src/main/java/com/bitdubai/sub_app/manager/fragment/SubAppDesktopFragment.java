@@ -15,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
 
@@ -29,7 +32,7 @@ import java.util.List;
 /**
  * Created by Natalia on 12/01/2015.
  */
-public class SubAppDesktopFragment extends AbstractDesktopFragment {
+public class SubAppDesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
@@ -96,8 +99,10 @@ public class SubAppDesktopFragment extends AbstractDesktopFragment {
         installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
+        installedSubApp.setPlatforms(Platforms.DIGITAL_ASSET_PLATFORM);
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP, null, null, "developer_sub_app", "Developer Tools", "public_key_pip_developer_sub_app", "developer_sub_app", new Version(1, 0, 0));
+        installedSubApp.setPlatforms(Platforms.PLUG_INS_PLATFORM);
         mlist.add(installedSubApp);
 //        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","intra_user_identity_sub_app","intra_user_identity_sub_app",new Version(1,0,0));
 //        mlist.add(installedSubApp);

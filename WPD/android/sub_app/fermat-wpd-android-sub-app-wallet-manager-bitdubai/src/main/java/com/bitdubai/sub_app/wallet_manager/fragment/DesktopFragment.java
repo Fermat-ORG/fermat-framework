@@ -69,7 +69,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatSession<WalletManager>,ResourceProviderManager> implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -118,10 +118,6 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lstItems = new ArrayList<>();
-
-
-
-
     }
 
     /**
@@ -169,11 +165,6 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         }catch (OutOfMemoryError outOfMemoryError){
             outOfMemoryError.printStackTrace();
         }
-
-
-
-
-
         return rootView;
     }
 

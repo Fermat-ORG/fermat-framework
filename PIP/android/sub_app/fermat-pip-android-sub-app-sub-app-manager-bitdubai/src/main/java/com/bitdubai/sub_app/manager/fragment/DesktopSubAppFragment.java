@@ -317,12 +317,14 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.asset_factory);
             item.setPosition(2);
+            installedSubApp.setPlatforms(Platforms.DIGITAL_ASSET_PLATFORM);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP, null, null, "developer_sub_app", "Developer Tools", SubAppsPublicKeys.PIP_DEVELOPER.getCode(), "developer_sub_app", new Version(1, 0, 0));
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.developer);
             item.setPosition(3);
+            installedSubApp.setPlatforms(Platforms.PLUG_INS_PLATFORM);
             lstItemsWithIcon.add(item);
 
             for (int i = 0; i < 12; i++) {

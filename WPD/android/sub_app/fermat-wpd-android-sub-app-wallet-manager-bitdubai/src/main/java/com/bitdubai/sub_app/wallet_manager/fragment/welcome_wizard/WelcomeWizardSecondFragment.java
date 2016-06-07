@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
 
 import java.util.Map;
@@ -15,9 +18,7 @@ import java.util.Map;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardSecondFragment extends AbstractFermatFragment implements WizardPageListener{
-
-
+public class WelcomeWizardSecondFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements WizardPageListener{
 
     public static AbstractFermatFragment newInstance(){
         return new WelcomeWizardSecondFragment();
@@ -32,8 +33,6 @@ public class WelcomeWizardSecondFragment extends AbstractFermatFragment implemen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.welcome_wizard_second,container,false);
-
-
 
         return view;
     }

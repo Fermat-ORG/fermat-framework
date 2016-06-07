@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.adapter.CommunitiesExpandableAdapter;
@@ -34,7 +36,7 @@ import java.util.Map;
 /**
  * Created by mati on 2016.03.14..
  */
-public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFragment<GrouperItem, DesktopSessionReferenceApp, ResourceProviderManager>
+public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFragment<GrouperItem, ReferenceAppFermatSession<WalletManager>, ResourceProviderManager>
         implements FermatListItemListeners<InstalledApp> {
 
 

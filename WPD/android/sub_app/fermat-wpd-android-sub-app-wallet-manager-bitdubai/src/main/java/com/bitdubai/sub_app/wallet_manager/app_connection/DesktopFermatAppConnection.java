@@ -4,23 +4,21 @@ import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentFactory;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class DesktopFermatAppConnection extends AppConnections<DesktopSessionReferenceApp>{
-
-    private CryptoWallet moduleManager = null;
-    private DesktopSessionReferenceApp referenceWalletSession;
+public class DesktopFermatAppConnection extends AppConnections<ReferenceAppFermatSession<WalletManager>> {
 
     public DesktopFermatAppConnection(Context activity) {
         super(activity);
