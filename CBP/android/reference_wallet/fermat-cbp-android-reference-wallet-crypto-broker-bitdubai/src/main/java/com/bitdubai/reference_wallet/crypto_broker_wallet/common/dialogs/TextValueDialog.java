@@ -2,6 +2,9 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 
@@ -32,6 +35,18 @@ public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, Res
 
     private OnClickAcceptListener acceptBtnListener;
     private boolean setTextFree;
+
+    //TEXT COUNT
+    private boolean activeTextCount = false;
+    private int maxLenghtTextCount = 100;
+    FermatTextView textCount;
+
+    //TEXT COUNT
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public interface OnClickAcceptListener {
         void onClick(String editTextValue);
@@ -93,6 +108,16 @@ public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, Res
         cancelBtn.setOnClickListener(this);
         editTextView = (FermatEditText) findViewById(R.id.cbw_text_dialog_edit_text);
         editTextView.setHint(hintStringResource);
+
+        //TEXT COUNT
+        if(activeTextCount) {
+            textCount = (FermatTextView) findViewById(R.id.cbw_text_dialog_edit_text_count);
+            editTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+            editTextView.addTextChangedListener(textWatcher);
+            textCount.setText(String.valueOf(maxLenghtTextCount));
+            textCount.setVisibility(View.VISIBLE);
+        }
+
         if (editTextValue != null)
             editTextView.setText(editTextValue);
         if (setTextFree)
@@ -109,5 +134,11 @@ public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, Res
     @Override
     protected int setWindowFeature() {
         return Window.FEATURE_NO_TITLE;
+    }
+
+    //TEXT COUNT
+    public void setTextCount(int maxLenghtText){
+        this.maxLenghtTextCount = maxLenghtText;
+        this.activeTextCount = true;
     }
 }
