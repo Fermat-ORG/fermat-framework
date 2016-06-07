@@ -27,7 +27,7 @@ import java.util.Locale;
 
 
 public class ReceivetransactionsAdapter
-        extends FermatAdapter<FermatWalletTransaction, TransactionViewHolder> {
+        extends FermatAdapter<FermatWalletModuleTransaction, TransactionViewHolder> {
 
     private LayoutInflater mInflater;
 
@@ -38,7 +38,7 @@ public class ReceivetransactionsAdapter
      *  @param context        the activity context where the RecyclerView is going to be displayed
      * @param dataSet the list of FermatWalletModuleTransaction to be displayed in the RecyclerView
      */
-    public ReceivetransactionsAdapter(Context context, List<FermatWalletTransaction> dataSet, Resources res) {
+    public ReceivetransactionsAdapter(Context context, List<FermatWalletModuleTransaction> dataSet, Resources res) {
         super(context,dataSet);
         mInflater = LayoutInflater.from(context);
         this.res = res;
@@ -55,7 +55,7 @@ public class ReceivetransactionsAdapter
     }
 
     @Override
-    protected void bindHolder(TransactionViewHolder holder, FermatWalletTransaction data, int position) {
+    protected void bindHolder(TransactionViewHolder holder, FermatWalletModuleTransaction data, int position) {
         final int MAX_DECIMAL_FOR_TRANSACTION_BALANCE = 4;
         final int MIN_DECIMAL_FOR_TRANSACTION_BALANCE = 2;
 
@@ -76,7 +76,7 @@ public class ReceivetransactionsAdapter
             holder.getTxt_from_or_to_transaction().setText("From");
         else holder.getTxt_from_or_to_transaction().setText("To");
 
-        /*//Validate Involved Actor for contact name
+        //Validate Involved Actor for contact name
         String contactName = "";
         if (data.getInvolvedActor() != null)
             contactName = data.getInvolvedActor().getName();
@@ -89,7 +89,7 @@ public class ReceivetransactionsAdapter
         else
             contactName = "Unknown";
 
-        holder.getTxt_user().setText();*/
+        holder.getTxt_user().setText(contactName);
 
         holder.getTxt_memo().setText(data.getMemo());
 

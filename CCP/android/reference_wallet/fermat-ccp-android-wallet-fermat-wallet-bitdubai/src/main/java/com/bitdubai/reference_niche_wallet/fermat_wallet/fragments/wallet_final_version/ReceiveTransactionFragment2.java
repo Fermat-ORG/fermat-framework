@@ -63,7 +63,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 
-public class ReceiveTransactionFragment2 extends FermatWalletListFragment<FermatWalletTransaction>
+public class ReceiveTransactionFragment2 extends FermatWalletListFragment<FermatWalletModuleTransaction>
         implements FermatListItemListeners<FermatWalletModuleTransaction> {
 
     // Fermat Managers
@@ -71,7 +71,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     private ErrorManager errorManager;
 
     // Data
-    private List<FermatWalletTransaction> lstFermatWalletTransaction;
+    private List<FermatWalletModuleTransaction> lstFermatWalletTransaction;
     private View rootView;
     private List<FermatWalletModuleTransaction> lstCryptoWalletTransactionsAvailable;
 
@@ -183,7 +183,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
         try {
             int id = item.getItemId();
             if(id == FermatWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
             }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
                 setUpPresentation();
@@ -257,29 +257,27 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     }
 
     @Override
-    public List<FermatWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<FermatWalletTransaction> data = new ArrayList<>();
+    public List<FermatWalletModuleTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<FermatWalletModuleTransaction> data = new ArrayList<>();
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         //noinspection TryWithIdenticalCatches
         try {
             ActiveActorIdentityInformation intraUserLoginIdentity = fermatWalletSessionReferenceApp.getIntraUserModuleManager();
             if(intraUserLoginIdentity!=null) {
-/*
+
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(
                         moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
                 int MAX_TRANSACTIONS = 20;
-                List<FermatWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(
+                List<FermatWalletModuleTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(
                         BalanceType.AVAILABLE, TransactionType.CREDIT, fermatWalletSessionReferenceApp.getAppPublicKey(),intraUserPk,
                         blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                 if(list!=null)
                     lstCryptoWalletTransactionsAvailable.addAll(list);
-
-             */
 
                 if(!data.isEmpty())
                     getActivity().runOnUiThread(new Runnable() {
