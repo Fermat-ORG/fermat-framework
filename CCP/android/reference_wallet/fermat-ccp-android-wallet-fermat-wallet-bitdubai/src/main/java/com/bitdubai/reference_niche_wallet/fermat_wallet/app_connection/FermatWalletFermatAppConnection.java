@@ -20,15 +20,15 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class FermatWalletFermatAppConnection extends AppConnections<ReferenceAppFermatWalletSession>{
+public class FermatWalletFermatAppConnection extends AppConnections<FermatWalletSessionReferenceApp>{
 
     private FermatWallet moduleManager = null;
-    private ReferenceAppFermatWalletSession referenceWalletSession;
+    private FermatWalletSessionReferenceApp referenceWalletSession;
 
     public FermatWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -52,7 +52,7 @@ public class FermatWalletFermatAppConnection extends AppConnections<ReferenceApp
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new ReferenceAppFermatWalletSession();
+        return new FermatWalletSessionReferenceApp();
     }
 
     @Override

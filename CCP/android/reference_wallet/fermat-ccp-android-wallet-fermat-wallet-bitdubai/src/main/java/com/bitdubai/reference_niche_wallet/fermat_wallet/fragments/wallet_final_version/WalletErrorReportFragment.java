@@ -24,7 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,8 +39,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
     // Fermat Managers
 
     private ErrorManager errorManager;
-
-    private ReferenceAppFermatWalletSession referenceWalletSession;
+    private FermatWalletSessionReferenceApp referenceWalletSession;
 
     private Button okBtn;
     private EditText messageEdit;
@@ -54,7 +54,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceAppFermatWalletSession) appSession;
+            referenceWalletSession = (FermatWalletSessionReferenceApp) appSession;
             errorManager = appSession.getErrorManager();
 
             errorManager = appSession.getErrorManager();

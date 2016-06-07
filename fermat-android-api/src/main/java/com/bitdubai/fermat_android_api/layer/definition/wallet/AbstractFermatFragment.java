@@ -3,8 +3,11 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
@@ -245,7 +248,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected void sendMail(String userTo, String bodyText) throws Exception {
-        ((FermatActivityManager)getActivity()).sendMailExternal(userTo,bodyText);
+        ((FermatActivityManager)getActivity()).sendMailExternal(userTo, bodyText);
     }
 
     protected final void onBack(String activityCodeBack){
@@ -374,5 +377,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                 screenSizeType = ScreenSize.UNDEFINED;
         }
         return screenSizeType;
+    }
+
+
+    public boolean isActiveNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

@@ -21,11 +21,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+
+
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
+
 public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
 
     private CryptoWallet moduleManager = null;
@@ -53,7 +55,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceAp
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new ReferenceWalletSessionReferenceApp();
+        return null;
     }
 
     @Override

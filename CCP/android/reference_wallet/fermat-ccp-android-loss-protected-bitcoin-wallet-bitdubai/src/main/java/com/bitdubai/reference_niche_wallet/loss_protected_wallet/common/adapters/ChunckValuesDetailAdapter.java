@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -12,7 +13,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesDetailItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -26,11 +27,11 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtectedWalletSpend,ChunckValuesDetailItemViewHolder> {
     private onRefreshList onRefresh;
     private LossProtectedWallet cryptoWallet;
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private Typeface tf;
 
 
-    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp lossProtectedWalletSession, onRefreshList onRefresh) {
+    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession, onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.lossProtectedWalletSession = lossProtectedWalletSession;

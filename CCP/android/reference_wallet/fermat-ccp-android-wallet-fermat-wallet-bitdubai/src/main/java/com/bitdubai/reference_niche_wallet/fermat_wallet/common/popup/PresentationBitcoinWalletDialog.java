@@ -23,7 +23,8 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +32,9 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by mati on 2015.11.27..
  */
-public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
+public class PresentationBitcoinWalletDialog extends FermatDialog<FermatWalletSessionReferenceApp,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
@@ -75,7 +78,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
+    public PresentationBitcoinWalletDialog(Activity activity, FermatWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;

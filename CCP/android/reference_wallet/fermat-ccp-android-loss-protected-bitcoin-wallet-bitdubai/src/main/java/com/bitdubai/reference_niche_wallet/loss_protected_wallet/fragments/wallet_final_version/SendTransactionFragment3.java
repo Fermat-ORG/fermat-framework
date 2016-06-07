@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -33,7 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 05/04/16.
  */
-public class SendTransactionFragment3 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSessionReferenceApp,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
+public class SendTransactionFragment3 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
      */
-    LossProtectedWalletSessionReferenceApp lossWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
     /**
      * MANAGERS
      */
@@ -240,7 +242,7 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
                 if(refreshType.equals(FermatRefreshTypes.NEW))
                     offset = 0;
 
-                LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
+                ActiveActorIdentityInformation intraUserLoginIdentity = lossProtectedWalletManager.getSelectedActorIdentity();
                 if(intraUserLoginIdentity!=null) {
                     String intraUserPk = intraUserLoginIdentity.getPublicKey();
                     lst = lossProtectedWalletManager.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
@@ -323,7 +325,7 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
 
 
 
-    public void setReferenceWalletSession(LossProtectedWalletSessionReferenceApp referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.lossWalletSession = referenceWalletSession;
     }
 

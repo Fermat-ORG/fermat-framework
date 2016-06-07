@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -40,7 +41,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProt
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList = new ArrayList<>();
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -79,7 +80,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
         try {
             // setting up  module
-            lossProtectedWalletSession = (LossProtectedWalletSessionReferenceApp) appSession;
+            lossProtectedWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
             moduleManager = lossProtectedWalletSession.getModuleManager();
             errorManager = lossProtectedWalletSession.getErrorManager();
 
@@ -146,7 +147,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp( lossProtectedWalletSession.getCommunityConnection(), object);
+                    changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -298,14 +299,14 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey()
+                                    moduleManager.getSelectedActorIdentity().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
-                        Toast.makeText(getActivity(),"Please try again later",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please try again later." + e.getMessage(),Toast.LENGTH_SHORT).show();
                         errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                     }
                 }

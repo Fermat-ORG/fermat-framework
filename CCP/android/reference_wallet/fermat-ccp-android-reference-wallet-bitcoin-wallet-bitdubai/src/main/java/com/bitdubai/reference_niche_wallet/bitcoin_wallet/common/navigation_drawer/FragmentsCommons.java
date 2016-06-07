@@ -28,7 +28,9 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
+
         public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatSession<CryptoWallet> referenceWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+
             View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {

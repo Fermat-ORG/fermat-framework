@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -22,16 +23,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
@@ -55,11 +56,11 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by mati on 2016.02.09..
  */
-public class LossProtectedSettingsFragment extends FermatPreferenceFragment<LossProtectedWalletSessionReferenceApp,WalletResourcesProviderManager> {
+public class LossProtectedSettingsFragment extends FermatPreferenceFragment<ReferenceAppFermatSession<LossProtectedWallet>,WalletResourcesProviderManager> {
 
 
 
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletManager;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     //private LossProtectedWalletSettings bitcoinWalletSettings = null;
@@ -457,7 +458,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = lossProtectedWalletManager.requestAddressToKnownUser(
-                    lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
+                    lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,
@@ -471,11 +472,16 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestLossProtectedAddressException e) {
             //errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "CantRequestLossProtectedAddressException", Toast.LENGTH_SHORT).show();
 
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+
+        } catch (CantGetSelectedActorIdentityException e) {
+            Toast.makeText(getActivity().getApplicationContext(), "CantGetSelectedActorIdentityException", Toast.LENGTH_SHORT).show();
+
             e.printStackTrace();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+        } catch (ActorIdentityNotSelectedException e) {
+            Toast.makeText(getActivity().getApplicationContext(), "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
+
             e.printStackTrace();
         }
         return walletAddres;

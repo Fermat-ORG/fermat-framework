@@ -6,19 +6,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
  * Changed by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAppFermatSession<IntraUserModuleManager>, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * Interfaces
@@ -41,7 +43,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
-                                              final IntraUserSubAppSessionReferenceApp intraUserSubAppSession,
+                                              final ReferenceAppFermatSession intraUserSubAppSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(a, intraUserSubAppSession, subAppResources);

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -21,7 +22,7 @@ import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppS
 /**
  * @author Jose manuel De Sousa
  */
-public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationIntraUserIdentityDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     private final Activity activity;
     private FermatButton startCommunity;
@@ -35,7 +36,7 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationIntraUserIdentityDialog(Activity activity, IntraUserIdentitySubAppSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,final IntraUserIdentityModuleManager moduleManager) {
+    public PresentationIntraUserIdentityDialog(Activity activity, ReferenceAppFermatSession<IntraUserIdentityModuleManager> fermatSession, SubAppResourcesProviderManager resources,final IntraUserIdentityModuleManager moduleManager) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.moduleManager = moduleManager;
@@ -90,22 +91,21 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
             if(dontShowAgainCheckBox.isChecked()){
                 try {
                     if(getSession().getAppPublicKey() != null ){
-                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                        IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
                         if(intraUserIdentitySettings!=null) {
                             intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                            getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }else{
                             Log.e(getClass().getName(),"identity settings null, please verify this");
                         }
 
                     }else{
-                        //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                         IntraUserIdentitySettings intraUserIdentitySettings = moduleManager.loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         if (getSession().getAppPublicKey()!=null){
-                            getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }else{
-                            getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                            moduleManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }
 
                     }

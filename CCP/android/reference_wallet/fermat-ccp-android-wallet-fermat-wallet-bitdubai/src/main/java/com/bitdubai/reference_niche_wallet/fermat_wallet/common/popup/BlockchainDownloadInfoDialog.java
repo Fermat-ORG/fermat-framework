@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
@@ -23,7 +25,9 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 /**
  * Created by natalia on 02/05/16
  */
-public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceAppFermatWalletSession,SubAppResourcesProviderManager>
+
+public class BlockchainDownloadInfoDialog extends FermatDialog<FermatWalletSessionReferenceApp,SubAppResourcesProviderManager>
+
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int TYPE_PRESENTATION =1;
@@ -56,7 +60,9 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceAppFerma
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public BlockchainDownloadInfoDialog(Activity activity, ReferenceAppFermatWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
+    public BlockchainDownloadInfoDialog(Activity activity, FermatWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.checkButton = checkButton;

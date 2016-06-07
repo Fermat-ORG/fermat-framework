@@ -167,18 +167,28 @@
         android:layout_height="match_parent"
         android:padding="28dp"
         android:background="@drawable/home_background">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="22dp"
-                android:background="@drawable/graphic"
+
                 android:orientation="vertical">
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    />
+                    android:layout_marginLeft="27dp"
+                    android:background="@drawable/tabla_new">
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -187,7 +197,7 @@
                     android:textColor="#fff"
                     android:visibility="gone"
                     android:id="@+id/noDataInChart"/>
-            </LinearLayout>
+            </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>
