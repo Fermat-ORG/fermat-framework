@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.money.Money;
-
 /**
  * Created by francisco on 09/09/15.
  */

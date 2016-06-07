@@ -528,11 +528,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
     }
 
-    @Override
     public void sendPackageMessage(final PackageContent     packageContent              ,
                                    final NetworkServiceType networkServiceType          ,
-                                   final String             destinationIdentityPublicKey,
-                                   final String             clientDestination           ) throws CantSendMessageException {
+                                   final String             destinationIdentityPublicKey) throws CantSendMessageException {
 
         if (isConnected()){
 
@@ -544,9 +542,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 networkServiceType,
                                 PackageType.MESSAGE_TRANSMIT,
                                 clientIdentity.getPrivateKey(),
-                                destinationIdentityPublicKey,
-                                clientDestination
-
+                                destinationIdentityPublicKey
                         )
                 );
 

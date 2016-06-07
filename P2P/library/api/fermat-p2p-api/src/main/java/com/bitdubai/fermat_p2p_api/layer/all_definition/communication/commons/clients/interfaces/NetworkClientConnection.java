@@ -66,13 +66,6 @@ public interface NetworkClientConnection {
     void actorTraceDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
-     * Through the method <code>sendPackageMessage</code> we can send message to other Client
-     *
-     * @param packageContent
-     */
-    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination) throws CantSendMessageException;
-
-    /**
      * Through the method <code>listRegisteredActorProfiles</code> we can get a list of registered actors
      * filtering them with an instance of discovery query parameters.
      *

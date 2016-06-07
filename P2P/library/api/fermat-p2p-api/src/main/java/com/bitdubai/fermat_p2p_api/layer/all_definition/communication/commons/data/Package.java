@@ -34,9 +34,9 @@ public class Package {
     private NetworkServiceType networkServiceTypeSource;
 
     /**
-     * Represent the clientDestination
+     * Represent the destinationPublicKey
      */
-    private String clientDestination;
+    private String destinationPublicKey;
 
     /**
      * Represent the signature value
@@ -54,43 +54,10 @@ public class Package {
      * @throws InvalidParameterException if the parameters are bad.
      */
     protected Package(final String             content                 ,
-                    final NetworkServiceType networkServiceTypeSource,
-                    final PackageType        packageType             ,
-                    final String             signature               ) {
-
-        if (content == null)
-            throw new InvalidParameterException("Content can't be null.");
-
-        if (networkServiceTypeSource == null)
-            throw new InvalidParameterException("networkServiceTypeSource can't be null.");
-
-        if (packageType == null)
-            throw new InvalidParameterException("packageType can't be null.");
-
-        if (signature == null)
-            throw new InvalidParameterException("signature can't be null.");
-
-        this.content                  = content                 ;
-        this.networkServiceTypeSource = networkServiceTypeSource;
-        this.packageType              = packageType             ;
-        this.signature                = signature               ;
-    }
-
-    /**
-     * Private constructor with parameters.
-     *
-     * @param content                   content of the package.
-     * @param networkServiceTypeSource  type of network service who is sending the package.
-     * @param packageType               package type.
-     * @param signature                 signature of the package.
-     *
-     * @throws InvalidParameterException if the parameters are bad.
-     */
-    protected Package(final String             content                 ,
                       final NetworkServiceType networkServiceTypeSource,
                       final PackageType        packageType             ,
                       final String             signature,
-                      final String clientDestination) {
+                      final String destinationPublicKey) {
 
         if (content == null)
             throw new InvalidParameterException("Content can't be null.");
@@ -104,14 +71,14 @@ public class Package {
         if (signature == null)
             throw new InvalidParameterException("signature can't be null.");
 
-        if (clientDestination == null)
-            throw new InvalidParameterException("clientDestination can't be null.");
+        if (destinationPublicKey == null)
+            throw new InvalidParameterException("destinationPublicKey can't be null.");
 
         this.content                  = content                 ;
         this.networkServiceTypeSource = networkServiceTypeSource;
         this.packageType              = packageType             ;
         this.signature                = signature               ;
-        this.clientDestination        = clientDestination       ;
+        this.destinationPublicKey = destinationPublicKey;
     }
 
     /**
@@ -152,18 +119,18 @@ public class Package {
 
     /**
      * Set the ClientDestination
-     * @param clientDestination
+     * @param destinationPublicKey
      */
-    protected void setClientDestination(String clientDestination) {
-        this.clientDestination = clientDestination;
+    protected void setDestinationPublicKey(String destinationPublicKey) {
+        this.destinationPublicKey = destinationPublicKey;
     }
 
     /**
      * Get the ClientDestination
      * @return String
      */
-    public String getClientDestination() {
-        return clientDestination;
+    public String getDestinationPublicKey() {
+        return destinationPublicKey;
     }
 
     /**
@@ -184,42 +151,6 @@ public class Package {
                                          final String             senderPrivateKey            ,
                                          final String             destinationIdentityPublicKey) {
 
-        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
-                content,
-                destinationIdentityPublicKey
-        );
-
-        String signature   = AsymmetricCryptography.createMessageSignature(
-                messageHash,
-                senderPrivateKey
-        );
-
-        return new Package(
-                content                 ,
-                networkServiceTypeSource,
-                packageType             ,
-                signature
-        );
-    }
-
-    /**
-     * Construct a package instance encrypted with the destination identity public key and signed
-     * whit the private key passed as an argument
-     *
-     * @param content                       content of the package.
-     * @param networkServiceTypeSource      type of network service who is sending the package.
-     * @param packageType                   package type.
-     * @param senderPrivateKey              the private key of the sender.
-     * @param destinationIdentityPublicKey  the public key of the receiver.
-     *
-     * @return Package signed instance
-     */
-    public static Package createInstance(final String             content              ,
-                                                final NetworkServiceType networkServiceTypeSource    ,
-                                                final PackageType        packageType                 ,
-                                                final String             senderPrivateKey            ,
-                                                final String             destinationIdentityPublicKey,
-                                                final String clientDestination) {
 
         String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
                 content,
@@ -232,11 +163,11 @@ public class Package {
         );
 
         return new Package(
-                content                 ,
-                networkServiceTypeSource,
-                packageType             ,
-                signature,
-                clientDestination
+                content                     ,
+                networkServiceTypeSource    ,
+                packageType                 ,
+                signature                   ,
+                destinationIdentityPublicKey
         );
     }
 }

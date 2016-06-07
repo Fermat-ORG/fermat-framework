@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -134,17 +133,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     protected List<FermatEventListener> listenersAdded;
 
-    /*
-     * Represents the listActorConnectIntoNode
-     */
-    protected Map<String, String> listActorConnectIntoNode;
-
-    /*
-     * Represents the listActorProfileConnectedInNode
-     */
-    protected Map<String, List<ActorProfile>> listActorProfileConnectedInNode;
-
-
     /**
      * Represents the networkServiceConnectionManager
      */
@@ -181,8 +169,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         this.registered            = Boolean.FALSE;
         this.listenersAdded        = new CopyOnWriteArrayList<>();
-        this.listActorConnectIntoNode = new HashMap<>();
-        this.listActorProfileConnectedInNode = new HashMap<>();
     }
 
     /**
@@ -560,7 +546,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
-    public void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
+    /**
+     * Through this method you can handle the actor found event for the actor trace that you could have done.
+     *
+     * @param actorProfile an instance of the actor profile
+     */
+    public void handleActorFoundEvent(ActorProfile actorProfile){
 
     }
 
@@ -576,7 +567,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(incomingMessage);
 
-            networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
+            //TODO networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
             /*
              * process the new message receive
              */
@@ -736,7 +727,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     public synchronized void onNewMessageReceived(NetworkServiceMessage messageReceived) {
 
-        System.out.println("Me llego un nuevo mensaje"+ messageReceived);
+        System.out.println("Me llego un nuevo mensaje" + messageReceived);
     }
 
     public synchronized void onSentMessage(NetworkServiceMessage networkServiceMessage) {
@@ -745,10 +736,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         //networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
 
-        networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
-
         try {
-            networkServiceConnectionManager.getOutgoingMessagesDao().update(networkServiceMessage);
+            networkServiceConnectionManager.getOutgoingMessagesDao().markAsDelivered(networkServiceMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
