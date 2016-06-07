@@ -53,6 +53,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.Dialo
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
+import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_GEOLOCATION_ACTION;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -63,6 +64,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
@@ -108,16 +110,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private ImageView mChatImage;
     ErrorManager errorManager;
     private boolean actualizable;
-    private boolean contextMenuInUse = false;
+
     TextView textViewChtTitle;
-    byte[] fanImageByteArray;
     ChatIdentitySession Session;
-    Context context;
     Toolbar toolbar;
     TextView statusView;
     ImageView placeholdImg;
-    Button btnRotate;
-    int ROTATE_VALUE = 0;
     private Uri imageToUploadUri;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
@@ -175,9 +173,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     /**
-     * Inicializa las vistas de este Fragment
+     * Initializes the views of this Fragment
      *
-     * @param layout el layout de este Fragment que contiene las vistas
+     * @param layout layout of this Fragment containing the views
      */
     private void initViews(View layout) {
         actualizable = true;
@@ -294,7 +292,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_ic_menu_help)
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, MENU_GEOLOCATION_ACTION, 0, "geolocation").setIcon(R.drawable.ic_action_map)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -323,6 +323,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     setUpDialog();
                     break;
                 case MENU_ADD_ACTION:
+                    break;
+                case MENU_GEOLOCATION_ACTION:
+                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
                     break;
             }
         } catch (Exception e) {
@@ -375,7 +378,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
                                                     chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
+                                                    Uri imageuri = getImageUri(getActivity(), chatBitmap);
                                                     Picasso.with(getActivity()).load(getImageUri(getActivity(), chatBitmap)).transform(new CircleTransform()).into(mChatImage);
+                                                    deleteImageUri(imageuri);
                                                 } else {
                                                     chatBitmap = null;
                                                 }
@@ -421,7 +426,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
                                             chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), chatBitmap)).transform(new CircleTransform()).into(mChatImage);
+                                            Uri imageuri = getImageUri(getActivity(), chatBitmap);
+                                            Picasso.with(getActivity()).load(imageuri).transform(new CircleTransform()).into(mChatImage);
+                                            deleteImageUri(imageuri);
                                         } else {
                                             chatBitmap = null;
                                         }
@@ -471,7 +478,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
                                             chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), chatBitmap)).transform(new CircleTransform()).into(mChatImage);
+                                            Uri imageuri = getImageUri(getActivity(), chatBitmap);
+                                            Picasso.with(getActivity()).load(imageuri).transform(new CircleTransform()).into(mChatImage);
+                                            deleteImageUri(imageuri);
                                         } else {
                                             chatBitmap = null;
                                         }
@@ -869,6 +878,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void deleteImageUri(Uri uri){
+        getActivity().getContentResolver().delete(uri,null,null);
     }
 
     private boolean checkCameraPermission() {

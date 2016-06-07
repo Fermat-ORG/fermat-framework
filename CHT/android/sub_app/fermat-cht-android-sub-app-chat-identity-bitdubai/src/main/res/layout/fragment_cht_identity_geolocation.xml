@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f9f9f9"
+    android:touchscreenBlocksFocus="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ACCURACY"
+        android:id="@+id/textView"
+        android:textColor="#838383"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="5dp" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_accuracy"
+        android:text="Account Type"
+        android:theme="@style/Theme.AppCompat.Light"
+        android:textColor="#000000"
+        android:backgroundTint="#a5a5a5"
+        android:backgroundTintMode="add"
+        android:background="#c2c2c2"
+        android:foregroundTint="#000000"
+        android:foregroundTintMode="add"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FREQUENCY"
+        android:id="@+id/textView2"
+        android:textColor="#838383"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="5dp" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_frequency"
+        android:text="Account Type"
+        android:theme="@style/Theme.AppCompat.Light"
+        android:textColor="#000000"
+        android:backgroundTint="#a5a5a5"
+        android:backgroundTintMode="add"
+        android:background="#c2c2c2"
+        android:foregroundTint="#000000"
+        android:foregroundTintMode="add"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        />
+</LinearLayout>

@@ -19,7 +19,7 @@
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="closeIcon">@drawable/cht_ic_close_white</item>
-        <item name="navigationIcon">@drawable/cht_ic_back</item>
+        <item name="navigationIcon">@drawable/cht_help_icon</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">
