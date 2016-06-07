@@ -58,6 +58,7 @@ public class CryptoPaymentRequestDatabaseFactory {
             table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME              , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
 
 
             table.addIndex(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_FIRST_KEY_COLUMN);

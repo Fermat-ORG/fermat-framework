@@ -1,4 +1,4 @@
-//package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
+//package com.bitdubai.reference_niche_wallet.fermat_wallet.common.CustomView;
 //
 //import android.app.Activity;
 //import android.content.Context;
@@ -15,10 +15,10 @@
 //import android.widget.LinearLayout;
 //import android.widget.TextView;
 //
-//import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+//import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 //import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-//import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
-//import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
+//import com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.RoundedDrawable;
+//import com.bitdubai.reference_niche_wallet.fermat_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -186,7 +186,7 @@
 //            //imageView_transaction.setImageDrawable();
 ////            imageView_transaction.setImageResource(
 ////                    resources.getIdentifier(
-////                            "com.bitdubai.reference_niche_wallet.bitcoin_wallet:drawable/" + customComponentsObjects.getImageUrl()
+////                            "com.bitdubai.reference_niche_wallet.fermat_wallet:drawable/" + customComponentsObjects.getImageUrl()
 ////                            , null, null));
 ////            byte[] image = customComponentsObjects.getImage();
 ////            Drawable drawableImage = null;

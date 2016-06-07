@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 02/11/15.
  */
-public class CantListAssetRedeemPointException extends FermatException{
+public class CantListAssetRedeemPointException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

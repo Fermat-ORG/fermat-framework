@@ -180,7 +180,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     showOrHideNoAssetsView(digitalAssets.isEmpty());
                 }
-                });
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

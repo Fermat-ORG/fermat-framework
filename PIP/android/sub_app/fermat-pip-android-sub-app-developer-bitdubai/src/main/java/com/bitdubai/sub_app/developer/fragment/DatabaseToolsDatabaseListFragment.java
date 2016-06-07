@@ -16,15 +16,14 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
@@ -43,13 +42,12 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
+public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
     View rootView;
 
-    private DatabaseTool databaseTools;
     private Resource resource;
 
     List<DeveloperDatabase> developerDatabaseList;
@@ -60,7 +58,6 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
 
     private int database_type;
 
-    public  DeveloperSubAppSession developerSubAppSession;
 
     public static DatabaseToolsDatabaseListFragment newInstance() {
         return new DatabaseToolsDatabaseListFragment();
@@ -70,10 +67,9 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(super.appSession !=null){
-            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
+        if (super.appSession != null) {
 
-           resource = (Resource)developerSubAppSession.getData("resource");
+            resource = (Resource) appSession.getData("resource");
         }
 
         //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
@@ -81,10 +77,6 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
         try {
             ToolManager toolManager = ((DeveloperSubAppSession) appSession).getModuleManager();
 
-            databaseTools = toolManager.getDatabaseTool();
-        } catch (CantGetDataBaseToolException e) {
-            appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -97,25 +89,25 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
 
-        lstDatabases=new ArrayList<Databases>();
+        lstDatabases = new ArrayList<Databases>();
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
         try {
             if (Resource.TYPE_ADDON == resource.type) {
                 AddonVersionReference addon = AddonVersionReference.getByKey(resource.code);
-                this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
-                database_type=Databases.TYPE_PLUGIN;
-            } else if (Resource.TYPE_PLUGIN==resource.type) {
+                this.developerDatabaseList = appSession.getModuleManager().getDatabaseListFromAddon(addon);
+                database_type = Databases.TYPE_PLUGIN;
+            } else if (Resource.TYPE_PLUGIN == resource.type) {
 
-                this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(resource.pluginVersionReference);
-                database_type=Databases.TYPE_ADDON;
+                this.developerDatabaseList = appSession.getModuleManager().getDatabaseListFromPlugin(resource.pluginVersionReference);
+                database_type = Databases.TYPE_ADDON;
             }
 
-            for(DeveloperDatabase database : developerDatabaseList){
+            for (DeveloperDatabase database : developerDatabaseList) {
                 Databases item = new Databases();
                 item.picture = "databases";
                 item.databases = database.getName();
-                item.type =  Resource.TYPE_PLUGIN;
+                item.type = Resource.TYPE_PLUGIN;
                 lstDatabases.add(item);
             }
 
@@ -136,8 +128,6 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
         }
         return rootView;
     }
-
-
 
 
     public void setResource(Resource resource) {
@@ -168,13 +158,13 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
                     @Override
                     public void onClick(View view) {
                         //set the next fragment and params
-                        developerSubAppSession.setData("resource",resource);
-                        developerSubAppSession.setData("database", developerDatabaseList.get(position));
+                        appSession.setData("resource", resource);
+                        appSession.setData("database", developerDatabaseList.get(position));
 //                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
                         changeActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST, appSession.getAppPublicKey());
                     }
                 });
-                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                TextView textView = (TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
                 holder.companyTextView = textView;
@@ -209,6 +199,7 @@ public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment {
         }
 
     }
+
     /**
      * ViewHolder.
      */

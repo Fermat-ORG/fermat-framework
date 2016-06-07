@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class BankMoneyWalletDeveloperDatabaseFactory {//implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -152,6 +152,7 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
+        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME);
 
         /**
          * Table Bank Money Total Balances addition.
@@ -224,13 +225,13 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 }

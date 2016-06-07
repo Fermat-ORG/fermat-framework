@@ -22,9 +22,9 @@
             android:layout_marginTop="20dp"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:layout_marginStart="10dp" />
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp" />
 
-        <!-- todo -->
         <LinearLayout
             android:layout_width="190dp"
             android:layout_height="190dp"
@@ -33,8 +33,11 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:paddingStart="16dp"
+            android:paddingLeft="16dp"
             android:paddingEnd="0dp"
+            android:paddingRight="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:paddingBottom="7dp">
 
             <RelativeLayout
@@ -43,15 +46,17 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:paddingStart="28dp"
-                android:paddingEnd="50dp">
+                android:paddingLeft="28dp"
+                android:paddingEnd="50dp"
+                android:paddingRight="50dp">
 
-                <!-- TODO: Update blank fragment layout -->
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/txt_balance_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_toStartOf="@+id/txt_balance_amount_type"
+                    android:layout_toLeftOf="@+id/txt_balance_amount_type"
                     android:text="@string/txt_balance_amount_29_text"
                     android:textSize="28sp"
                     android:textColor="#FFF"
@@ -65,7 +70,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
                     android:text="@string/balance_amount_type_text"
                     android:textColor="#05ddd2"
                     app:typeface="ROBOTO_REGULAR" />

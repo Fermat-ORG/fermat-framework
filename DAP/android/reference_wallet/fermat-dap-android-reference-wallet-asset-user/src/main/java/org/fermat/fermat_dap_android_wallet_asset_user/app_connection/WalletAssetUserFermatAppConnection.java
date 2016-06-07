@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -20,7 +19,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.common.header.WalletAsset
 import org.fermat.fermat_dap_android_wallet_asset_user.factory.WalletAssetUserFragmentFactory;
 import org.fermat.fermat_dap_android_wallet_asset_user.navigation_drawer.UserWalletNavigationViewPainter;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 /**
@@ -28,13 +26,11 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
  */
 public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSession> {
 
-    IdentityAssetUser identityAssetUser;
     AssetUserWalletSubAppModuleManager moduleManager;
     AssetUserSession assetUserSession;
 
     public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
-        this.identityAssetUser = identityAssetUser;
     }
 
     @Override
@@ -54,20 +50,19 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetUserSession getSession() {
         return new AssetUserSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new UserWalletNavigationViewPainter(getContext(), null);
+        return new UserWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new WalletAssetUserHeaderPainter();
+        return new WalletAssetUserHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

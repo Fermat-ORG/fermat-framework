@@ -13,6 +13,7 @@ public class ActorAssetIssuerCompleteRegistrationNotificationEventListener imple
     FermatEventMonitor fermatEventMonitor;
     private org.fermat.fermat_dap_api.layer.all_definition.enums.EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *

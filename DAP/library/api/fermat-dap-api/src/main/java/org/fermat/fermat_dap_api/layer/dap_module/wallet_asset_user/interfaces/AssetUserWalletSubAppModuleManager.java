@@ -38,6 +38,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,7 +46,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings> {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings>, Serializable {
     /**
      * (non-Javadoc)
      *
@@ -137,6 +138,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     /**
      * This method get the available balance of bitcoin wallet
+     *
      * @param walletPublicKey
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException

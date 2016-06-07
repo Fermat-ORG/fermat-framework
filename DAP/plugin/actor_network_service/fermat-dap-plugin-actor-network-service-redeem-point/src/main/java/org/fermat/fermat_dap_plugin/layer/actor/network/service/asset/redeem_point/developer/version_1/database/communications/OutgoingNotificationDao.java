@@ -66,20 +66,20 @@ public class OutgoingNotificationDao {
     }
 
     public ActorAssetNetworkServiceRecord createNotification(UUID notificationId,
-                                                            String senderPublicKey,
-                                                            Actors senderType,
-                                                            String destinationPublicKey,
-                                                            String senderAlias,
+                                                             String senderPublicKey,
+                                                             Actors senderType,
+                                                             String destinationPublicKey,
+                                                             String senderAlias,
 //                                                            String senderPhrase,
-                                                            byte[] senderProfileImage,
-                                                            Actors destinationType,
-                                                            AssetNotificationDescriptor assetNotificationDescriptor,
-                                                            long timestamp,
-                                                            ActorAssetProtocolState actorAssetProtocolState,
-                                                            boolean flagRea,
-                                                            int sentCount,
-                                                            BlockchainNetworkType blockchainNetworkType,
-                                                            UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
+                                                             byte[] senderProfileImage,
+                                                             Actors destinationType,
+                                                             AssetNotificationDescriptor assetNotificationDescriptor,
+                                                             long timestamp,
+                                                             ActorAssetProtocolState actorAssetProtocolState,
+                                                             boolean flagRea,
+                                                             int sentCount,
+                                                             BlockchainNetworkType blockchainNetworkType,
+                                                             UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
 
         try {
             ActorAssetNetworkServiceRecord connectionRequestRecord = null;
@@ -199,7 +199,7 @@ public class OutgoingNotificationDao {
 
             if (!records.isEmpty())
                 return buildAssetUserNetworkServiceRecord(records.get(0)).getActorSenderType();
-            else{
+            else {
                 actorRequestTable.clearAllFilters();
                 actorRequestTable.addStringFilter(AssetRedeemNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeySender, DatabaseFilterType.EQUAL);
                 actorRequestTable.loadToMemory();
@@ -229,7 +229,7 @@ public class OutgoingNotificationDao {
 
             if (!records.isEmpty())
                 return buildAssetUserNetworkServiceRecord(records.get(0)).getActorDestinationType();
-            else{
+            else {
                 actorToRequestTable.clearAllFilters();
                 actorToRequestTable.addStringFilter(AssetRedeemNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, actorPublicKeyDestination, DatabaseFilterType.EQUAL);
                 actorToRequestTable.loadToMemory();
@@ -399,7 +399,7 @@ public class OutgoingNotificationDao {
     }
 
     public List<ActorAssetNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorAssetProtocolState actorAssetProtocolState,
-                                                                                  final AssetNotificationDescriptor assetNotificationDescriptor)
+                                                                                   final AssetNotificationDescriptor assetNotificationDescriptor)
             throws CantGetActorAssetNotificationException {
 
         if (actorAssetProtocolState == null)

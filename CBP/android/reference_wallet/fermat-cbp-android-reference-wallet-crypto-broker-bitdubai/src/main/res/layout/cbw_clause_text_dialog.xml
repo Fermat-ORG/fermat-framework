@@ -7,79 +7,87 @@
               android:background="#FFFFFF"
               android:orientation="vertical">
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_text_dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="@color/cbw_wizard_color"
-        android:gravity="center_vertical"
-        android:padding="16dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:typeface="ROBOTO_REGULAR"
-        tools:text="Title"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-        android:id="@+id/cbw_text_dialog_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="26dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="26dp"
-        android:ellipsize="end"
-        android:ems="10"
-        android:inputType="number|numberDecimal"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:textColor="#1d1d26"
-        android:textColorHint="#9a9a9c"
-        android:textSize="16sp"
-        app:typeface="ROBOTO_REGULAR"
-        tools:hint="Amount"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#898989"/>
-
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_text_dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:typeface="ROBOTO_REGULAR"
+            tools:text="Title"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/cbw_text_dialog_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:ems="10"
+            android:inputType="number|numberDecimal"
+            android:maxLength="10"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="#1d1d26"
+            android:textColorHint="#9a9a9c"
+            android:textSize="15sp"
+            app:typeface="ROBOTO_REGULAR"
+            tools:hint="Amount"/>
+    </LinearLayout>
+
+
+    <RelativeLayout
         android:id="@+id/linear_create_contact"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="52dp"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_text_dialog_cancel_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@+id/cbw_text_dialog_accept_btn"
             android:background="@color/white"
+            android:padding="8dp"
             android:text="@string/cancel"
-            android:textColor="#666666"
+            android:textAllCaps="true"
+            android:textColor="@color/cbw_wizard_color"
             android:textSize="14sp"
+            android:textStyle="bold"
             app:typeface="ROBOTO_REGULAR"/>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="#898989"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_text_dialog_accept_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
             android:background="@color/white"
+            android:padding="8dp"
             android:text="@string/accept"
-            android:textColor="#666666"
+            android:textAllCaps="true"
+            android:textColor="@color/cbw_wizard_color"
             android:textSize="14sp"
-            app:typeface="ROBOTO_REGULAR"
-            />
-    </LinearLayout>
+            android:textStyle="bold"
+            app:typeface="ROBOTO_REGULAR"/>
+    </RelativeLayout>
 
 </LinearLayout>

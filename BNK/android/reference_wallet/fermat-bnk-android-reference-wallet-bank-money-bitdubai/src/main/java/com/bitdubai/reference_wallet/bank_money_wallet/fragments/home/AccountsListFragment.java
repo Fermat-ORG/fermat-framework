@@ -55,7 +55,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return new AccountsListFragment();
     }
 
-    private View emtyView;
+    private View emptyView;
     private FermatTextView header;
 
     private PresentationDialog presentationDialog;
@@ -78,23 +78,19 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+
+        emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        showOrHideNoAccountListView(accountsList.isEmpty());
+
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.bw_banner_1).setIconRes(R.drawable.bw_icon)
+                .setBannerRes(R.drawable.bw_banner_bank).setIconRes(R.drawable.bw_icon)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
-                .setTitle("prueba Title")
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                .build();
-        showOrHideNoAccountListView(accountsList.isEmpty());
-        /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                System.out.println("presentation dialog dismiss");
-            }
-        });*/
+
         boolean showDialog;
         try{
             showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
@@ -137,17 +133,18 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         super.onCreateOptionsMenu(menu,inflater);
         menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account").setIcon(R.drawable.bw_add_icon_action_bar)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, ReferenceWalletConstants.HELP_ACTION, 1, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+        menu.add(1, ReferenceWalletConstants.HELP_ACTION, 1, "Help").setIcon(R.drawable.bw_help_icon_action_bar)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
             return true;
         }
-        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
             presentationDialog.show();
             return true;
         }
@@ -175,7 +172,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onItemClickListener(BankAccountNumber data, int position) {
         appSession.setData("account_data", data);
-        appSession.setData("account_image", AccountListViewHolder.getResource(position));
+        appSession.setData("account_image", AccountListViewHolder.getResource(data.getAccountImageId()));
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
     }
 
@@ -229,10 +226,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     private void showOrHideNoAccountListView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            emtyView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            emtyView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
         }
     }
 
@@ -240,6 +237,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 accountsList = (ArrayList) result[0];
                 if (adapter != null)

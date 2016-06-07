@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -51,15 +50,14 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetIssuerCommunitySubAppSession getSession() {
         return new AssetIssuerCommunitySubAppSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new IssuerCommunityNavigationViewPainter(getContext(), null);
+        return new IssuerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
@@ -90,7 +88,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
                         ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
                         notification = new IssuerAssetCommunityNotificationPainter("New Extended Key", "Was Received From: " + senderActor.getName(), "", "");
                     } else {
-                        notification = new IssuerAssetCommunityNotificationPainter("Extended Key Arrive", "Was Received for: "+senderActorPublicKey, "", "");
+                        notification = new IssuerAssetCommunityNotificationPainter("Extended Key Arrive", "Was Received for: " + senderActorPublicKey, "", "");
                     }
                     break;
                 case "EXTENDED-REQUEST":

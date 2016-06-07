@@ -55,6 +55,8 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -96,6 +98,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemCancel;
 
+    private ExecutorService _executor;
+
 //    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
@@ -111,6 +115,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            _executor = Executors.newFixedThreadPool(2);
+
             setHasOptionsMenu(true);
 
             actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
@@ -275,6 +281,19 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 }
             }
         }, 500);
+
+        isRefreshing = true;
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMoreData();
+                    isRefreshing = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return rootView;
     }

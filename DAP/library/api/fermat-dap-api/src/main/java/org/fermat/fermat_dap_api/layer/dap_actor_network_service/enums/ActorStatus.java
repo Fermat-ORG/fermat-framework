@@ -8,23 +8,24 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum ActorStatus implements FermatEnum {
 
-    LOGGED_IN       ("LOGDIN"),
-    LOGGED_OUT      ("LOGOUT"),
-    UNKNOWN         ("UNKNOW"),
-
-    ;
+    LOGGED_IN("LOGDIN"),
+    LOGGED_OUT("LOGOUT"),
+    UNKNOWN("UNKNOW"),;
 
     private final String code;
 
-    ActorStatus(final String code){
+    ActorStatus(final String code) {
         this.code = code;
     }
 
-    public static ActorStatus getByCode(String code)throws InvalidParameterException{
-        switch (code){
-            case "LOGDIN":  return LOGGED_IN ;
-            case "LOGOUT": return LOGGED_OUT;
-            case "UNKNOW":    return UNKNOWN   ;
+    public static ActorStatus getByCode(String code) throws InvalidParameterException {
+        switch (code) {
+            case "LOGDIN":
+                return LOGGED_IN;
+            case "LOGOUT":
+                return LOGGED_OUT;
+            case "UNKNOW":
+                return UNKNOWN;
             default:
                 throw new InvalidParameterException(
                         "Code received: " + code,
@@ -34,7 +35,7 @@ public enum ActorStatus implements FermatEnum {
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 

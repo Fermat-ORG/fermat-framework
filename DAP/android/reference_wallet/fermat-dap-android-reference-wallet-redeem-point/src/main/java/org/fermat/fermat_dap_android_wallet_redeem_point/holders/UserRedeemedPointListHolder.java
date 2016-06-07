@@ -40,7 +40,6 @@ public class UserRedeemedPointListHolder extends FermatViewHolder {
         redeemedListRedeemedDate.setText(userRedeemed.getFormattedRedeemedDate());
 
 
-
     }
 
 

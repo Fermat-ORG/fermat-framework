@@ -7,7 +7,6 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -51,19 +50,18 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
     }
 
     @Override
-    public AbstractFermatSession getSession() {
+    public AssetIssuerSession getSession() {
         return new AssetIssuerSession();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new IssuerWalletNavigationViewPainter(getContext(), null);
+        return new IssuerWalletNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new WalletAssetIssuerHeaderPainter();
+        return new WalletAssetIssuerHeaderPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

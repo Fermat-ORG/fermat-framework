@@ -17,12 +17,12 @@ public class StringUtils {
         );
     }
 
-    public static String replaceStringByPoint(String s){
+    public static String replaceStringByPoint(String s) {
         return s.replace(".", " ");
 
     }
 
-    public static String replaceStringByUnderScore(String s){
+    public static String replaceStringByUnderScore(String s) {
         return s.replace("_", " ");
 
     }

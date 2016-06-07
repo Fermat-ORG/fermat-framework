@@ -42,9 +42,9 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.module_object_creator.FermatModuleObjectInterface;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
@@ -72,8 +72,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by MAtias Furszyfer on 2016.04.18..
+ * Created by Matias Furszyfer on 2016.04.18..
  */
+//TODO: le tengo que poner un timeout para desconectar los clientes y no abusen de Fermat, seguramente se pueda controlar esto por un token que me envia
+//TODO:   haciendo que paguen una cierta cantidad de satoshis por utilizar Fermat como servicio en background
 public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
 
     public static final String SERVER_NAME = "server_fermat";
@@ -416,33 +418,57 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         }
 
         @Override
-        public FermatModuleObjectWrapper invoqueModuleMethod2(String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
-//            Log.i(TAG,"invoqueModuleMethod");
-//            Log.i(TAG,platformCode);
-//            Log.i(TAG,layerCode);
-//            Log.i(TAG,pluginsCode);
-//            Log.i(TAG,version);
-//            Log.i(TAG,method);
-//            Log.i(TAG,"Parameters");
-//            for (FermatModuleObjectWrapper parameter : parameters) {
-//                Log.i(TAG, parameter.toString());
-//            }
-            FermatModuleObjectWrapper wrapper = null;
-//            try {
-//                PluginVersionReference pluginVersionReference = new PluginVersionReference(
-//                        Platforms.getByCode(platformCode),
-//                        Layers.getByCode(layerCode),
-//                        Plugins.getByCode(pluginsCode),
-//                        Developers.BITDUBAI,
-//                        new Version());
-//                wrapper = moduleDataRequest2(pluginVersionReference,method,parameters);
-//            } catch (InvalidParameterException e) {
-//                e.printStackTrace();
-//            }
+        public FermatModuleObjectWrapper invoqueRuntimeMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
+            Object returnModuleObject = null;
+            PluginVersionReference pluginVersionReference = null;
+            try {
+                pluginVersionReference = new PluginVersionReference(
+                        Platforms.getByCode(platformCode),
+                        Layers.getByCode(layerCode),
+                        Plugins.getByCode(pluginsCode),
+                        Developers.BITDUBAI,
+                        new Version());
+                returnModuleObject = runtimeDataRequest(pluginVersionReference, method, parameters);
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
 
-            wrapper = new FermatModuleObjectWrapper((FermatModuleObjectInterface) parameters[0].getObject());
 
-            return wrapper;
+            /**
+             * Acá se va a hacer el chunk y el envio al cliente
+             */
+            //chunkAndSendData(dataId,clientKey,aidlObject);
+            try {
+
+                if (returnModuleObject instanceof Exception) {
+                    return new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
+                } else {
+                    if (!(returnModuleObject instanceof Serializable)) {
+                        if (returnModuleObject != null) {
+                            NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                            return new FermatModuleObjectWrapper(dataId, null, true, e);
+
+                        } else {
+                            //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
+//                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
+                        }
+                    }
+                    Serializable aidlObject = (Serializable) returnModuleObject;
+                    if (isDataForChunk(aidlObject)) {
+                        try {
+                            sendLargeData(dataId, clientKey, aidlObject);
+                            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                        } catch (Exception e) {
+                            return new FermatModuleObjectWrapper(dataId, aidlObject, true, e);
+                        }
+                    } else {
+                        return new FermatModuleObjectWrapper(aidlObject, false, dataId);
+                    }
+                }
+            } catch (Exception e) {
+//                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                return new FermatModuleObjectWrapper(dataId, null, true, e);
+            }
         }
 
         @Override
@@ -452,6 +478,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
 
     };
+
+
 
 
     @Nullable
@@ -561,6 +589,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     moduleManager = ((AbstractModule) fermatManager).getModuleManager();
                     clazz = moduleManager.getClass();
                 } else {
+                    Log.e(TAG,"Error: No extends AbstractModule class, Plugin: "+pluginVersionReference);
                     clazz = fermatManager.getClass();
                 }
                 Method m = null;
@@ -575,14 +604,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         paramsTypes[i] = parameters[i].getParameterType();
                     }
                 }
-//                if(parameters!=null) {
-//                    classes = new Class[params.length];
-//                    for (int pos = 0; pos < params.length; pos++) {
-////                        if(params[pos]!=null) classes[pos] = params[pos].getClass();
-////                        else Log.e(TAG,"Null parameter on method: "+method);
-////                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
-//                    }
-//                }
                 try {
                     if (paramsTypes == null) {
                         m = clazz.getDeclaredMethod(method, null);
@@ -653,7 +674,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         try {
             s = future.get();
 
-//            Log.i(TAG,"Invoque method return: "+ s);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -661,16 +681,119 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        if(s!=null) {
-//            Log.i(TAG, "Data to send: "+ s.toString());
-//        }else{
-//            Log.i(TAG, "Data to send: null, check this");
-//        }
-
         return s;
     }
 
+    private Object runtimeDataRequest(final PluginVersionReference pluginVersionReference, final String method, final ModuleObjectParameterWrapper[] parameters) {
+        Callable<Object> callable = new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+//                Log.i(TAG,"Method to execute: "+ method);
+//                Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
+//                Log.i(TAG,"Parameters: "+parameters);
+                RuntimeManager runtimeManager = fermatSystem.getRuntimeManager(pluginVersionReference);
+                Class clazz =  runtimeManager.getClass();;
+                Method m = null;
+                Object returnedObject = null;
+                Object[] params = null;
+                Class<?>[] paramsTypes = null;
+                if (parameters != null) {
+                    params = new Object[parameters.length];
+                    paramsTypes = new Class[parameters.length];
+                    for (int i = 0; i < parameters.length; i++) {
+                        params[i] = parameters[i].getObject();
+                        paramsTypes[i] = parameters[i].getParameterType();
+                    }
+                }
+                try {
+                    if (paramsTypes == null) {
+                        m = clazz.getDeclaredMethod(method, null);
+//                        Log.i(TAG,"Method: "+ m.getName());
+//                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
+//                        Log.i(TAG,"Method return type: "+ m.getReturnType());
+                        returnedObject = m.invoke(runtimeManager, null);
+                    } else {
+                        try {
+//                            for(Class c : classes){
+//                                Log.i(TAG,"Class to use for parameter: "+ c.getName());
+//                            }
+                            m = clazz.getDeclaredMethod(method, paramsTypes);
+                        } catch (NoSuchMethodException e) {
+                            //Log.e(TAG,"Metodo buscando: "+method);
+                            for (Method methodInterface : clazz.getDeclaredMethods()) {
+                                if (methodInterface.getName().equals(method)) {
+                                    m = methodInterface;
+                                }
+
+                            }
+                        }
+                        if (runtimeManager != null) {
+                            if (m != null) {
+                                returnedObject = m.invoke(runtimeManager, params);
+                            } else {
+                                for (Method method1 : runtimeManager.getClass().getSuperclass().getDeclaredMethods()) {
+                                    if (method1.getName().equals(method)) {
+                                        try {
+                                            returnedObject = method1.invoke(runtimeManager, params);
+                                        } catch (Exception e) {
+                                            returnedObject = e;
+                                        }
+                                        break;
+                                    }
+                                }
+
+                            }
+                        } else {
+                            Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:" + pluginVersionReference.toString());
+                        }
+                    }
+
+                    if (m != null) {
+                        if(!m.getReturnType().equals(Void.TYPE) && returnedObject==null){
+                            Log.i(TAG, "Object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module if this is not what you expected");
+                        }
+                    }
+
+                } catch (NoSuchMethodException e) {
+                    Log.e(TAG, "NoSuchMethodException:" + method + " on class" + clazz.getName());
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    return e.getTargetException();
+//                    return e;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    return e;
+                }
+                return returnedObject;
+            }
+        };
+
+        Future<Object> future = executorService.submit(callable);
+
+        Object s = null;
+        try {
+            s = future.get();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
+
+
+
+
+    /**
+     *
+     * AsyncTask loader
+     *
+     * @param result array of native object (handle result field with result[0], result[1],... result[n]
+     */
 
     @Override
     public void onPostExecute(Object... result) {

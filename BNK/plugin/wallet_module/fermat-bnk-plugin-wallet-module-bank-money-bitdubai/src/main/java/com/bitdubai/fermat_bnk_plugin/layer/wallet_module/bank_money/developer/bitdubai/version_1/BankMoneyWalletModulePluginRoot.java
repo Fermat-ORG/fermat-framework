@@ -27,19 +27,18 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPrefer
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletModuleManagerImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by memo on 04/12/15.
  */
 @PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE)
 public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
-        LogManagerForDevelopers{
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+        LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
@@ -90,7 +89,15 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("BankMoneyWalletModulePluginRoot");
+//        returnedClasses.add("BankWalletAsyncTransactionAgent");
+//        returnedClasses.add("BankTransactionRecordImpl");
+//        returnedClasses.add("BankTransactionParametersImpl");
+//        returnedClasses.add("BankMoneyWalletModuleManagerImpl");
+//        returnedClasses.add("BankAccountNumberImpl");
+
+        return returnedClasses;
     }
 
     @Override

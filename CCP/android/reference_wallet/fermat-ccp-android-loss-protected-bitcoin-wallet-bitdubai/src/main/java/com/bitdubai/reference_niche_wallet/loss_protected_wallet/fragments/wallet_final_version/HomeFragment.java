@@ -1,7 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
-import android.content.DialogInterface;
+import  android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -68,6 +68,8 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -186,7 +188,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         setUpPresentation(false);
                     }
 
-
                 }}, 500);
 
         } catch (Exception ex) {
@@ -201,7 +202,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     }
 
     private void setUpPresentation(boolean checkButton) {
-         try {
+         try{
                 PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
                         new PresentationBitcoinWalletDialog(
                                 getActivity(),
@@ -347,7 +348,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             long balance = 0;
             if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
-                balance = lossProtectedWalletmanager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+                balance =  lossProtectedWalletmanager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
                 balance = lossProtectedWalletmanager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
@@ -420,9 +421,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             data.setValueTextSize(12f);
             data.setValueTextColor(Color.WHITE);
 
-            chart.setData(data);
-
-
 
             chart.setData(data);
             chart.setDescription("");
@@ -436,8 +434,14 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerDragEnabled(true);
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
+            chart.fitScreen();
 
-            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),R.layout.loss_custom_marker_view);
+            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
+                    R.layout.loss_custom_marker_view,
+                    allWalletSpendingList,
+                    lossProtectedWalletSession,
+                    errorManager,
+                    lossProtectedWalletmanager);
             chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
@@ -510,14 +514,17 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
                 }
+
                 //get the entry value for chart with getEarnOrLostOfSpending method
                 final double valueEntry = getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
 
+
+
                 //Set entries values for the chart
-                entryList.add(new Entry((float) valueEntry, i));
+                entryList.add(new Entry((float)valueEntry, i));
                 xValues.add(String.valueOf(i));
             }
             chart.setVisibility(View.VISIBLE);
@@ -562,8 +569,15 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
 
+            DecimalFormatSymbols separator = new DecimalFormatSymbols();
+            separator.setDecimalSeparator('.');
+            DecimalFormat form = new DecimalFormat("##########.######",separator);
+
             //convert satoshis to bitcoin
-            final double amount = Double.parseDouble(WalletUtils.formatBalanceString(spendingAmount, ShowMoneyType.BITCOIN.getCode()));
+            String monto = WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount)), ShowMoneyType.BITCOIN.getCode());
+
+
+            final double amount = Double.parseDouble(monto.replace(',','.'));
 
             //calculate the Earned/Lost in dollars of the spending value
             totalInDollars = (amount * spendingExchangeRate)-(amount * transaction.getExchangeRate());
@@ -733,6 +747,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     private void getAndShowMarketExchangeRateData(final View container) {
 
+        final int MAX_DECIMAL_FOR_RATE = 2;
+        final int MIN_DECIMAL_FOR_RATE = 2;
+
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
@@ -772,11 +789,19 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                     ExchangeRate rate = (ExchangeRate) result[0];
                     // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                                    rate.getPurchasePrice(),
+                                    MAX_DECIMAL_FOR_RATE,
+                                    MIN_DECIMAL_FOR_RATE)) + " USD");
 
                     //get available balance to actual exchange rate
 
-                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
+                    lossProtectedWalletSession.setActualExchangeRate(Double.parseDouble(
+                            WalletUtils.formatAmountStringWithDecimalEntry(
+                            rate.getPurchasePrice(),
+                            MAX_DECIMAL_FOR_RATE,
+                            MIN_DECIMAL_FOR_RATE)));
 
                     updateBalances();
 

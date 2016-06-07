@@ -19,7 +19,6 @@ public class CantGetAssetUserGroupTableExcepcion extends FermatException {
     }
 
     /**
-     *
      * @param message
      * @param context
      * @param possibleReason

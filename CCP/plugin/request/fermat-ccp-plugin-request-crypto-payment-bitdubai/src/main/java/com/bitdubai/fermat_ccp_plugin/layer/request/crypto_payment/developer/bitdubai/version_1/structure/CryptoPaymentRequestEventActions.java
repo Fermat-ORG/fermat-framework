@@ -294,7 +294,8 @@ public class CryptoPaymentRequestEventActions {
                         type,
                         state,
                         cryptoPaymentRequest.getNetworkType(),
-                        cryptoPaymentRequest.getReferenceWallet()
+                        cryptoPaymentRequest.getReferenceWallet(),
+                        cryptoPaymentRequest.getCryptoCurrency()
                 );
 
                 cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());

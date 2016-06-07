@@ -85,7 +85,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
         bitmapWorkerTask.execute(img);
 
 //  if negotiation
-        if(asset.getAssetUserNegotiation() != null){
+        if (asset.getAssetUserNegotiation() != null) {
 
             holder.homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(holder.res, bitmap));
             holder.cardActorName.setText(asset.getActorName());
@@ -112,7 +112,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             });
 
 
-        }else {
+        } else {
 
             int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
             holder.cardConfirmedImage.setImageResource(image);
@@ -128,7 +128,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
         }
 
         int imageLocked = R.drawable.locked;
-        if (asset.getAssetUserWalletTransaction() != null && asset.getAssetUserWalletTransaction().isLocked()){
+        if (asset.getAssetUserWalletTransaction() != null && asset.getAssetUserWalletTransaction().isLocked()) {
             holder.cardConfirmedImage.setImageResource(imageLocked);
             holder.cardConfirmedText.setText(holder.res.getString(R.string.card_locked));
             holder.cardRedeemButton.setVisibility(View.GONE);
@@ -142,31 +142,31 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
 
     private void initActions(HomeCardViewHolder holder, final Asset asset) {
 
-            holder.cardRedeemButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    assetUserSession.setData("asset_data", asset);
-                    fragment.doRedeem();
-                }
-            });
+        holder.cardRedeemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assetUserSession.setData("asset_data", asset);
+                fragment.doRedeem();
+            }
+        });
 
 
-            holder.cardTransferButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    assetUserSession.setData("asset_data", asset);
-                    fragment.doTransfer();
-                }
-            });
+        holder.cardTransferButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assetUserSession.setData("asset_data", asset);
+                fragment.doTransfer();
+            }
+        });
 
 
-            holder.cardSellButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    assetUserSession.setData("asset_data", asset);
-                    fragment.doSell();
-                }
-            });
+        holder.cardSellButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assetUserSession.setData("asset_data", asset);
+                fragment.doSell();
+            }
+        });
 
         holder.cardAppropriateButton.setOnClickListener(new View.OnClickListener() {
             @Override

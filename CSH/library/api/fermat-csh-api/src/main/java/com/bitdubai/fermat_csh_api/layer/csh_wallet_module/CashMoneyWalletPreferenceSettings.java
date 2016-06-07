@@ -81,6 +81,6 @@ public class CashMoneyWalletPreferenceSettings implements WalletSettings, Serial
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-
+        isHomeTutorialDialogEnabled=b;
     }
 }

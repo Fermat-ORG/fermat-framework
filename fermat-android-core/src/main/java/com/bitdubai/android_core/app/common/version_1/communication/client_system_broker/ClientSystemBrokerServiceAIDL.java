@@ -17,6 +17,7 @@ import android.os.TransactionTooLargeException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
@@ -69,7 +70,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(final PluginVersionReference pluginVersionReference,String responseStr, final Object proxy, final Method method, Object[] args) throws Exception {
+    public Object sendMessage(final PluginVersionReference pluginVersionReference, final Object proxy, final Method method, Object[] args) throws Exception {
         //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
@@ -117,7 +118,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
                 }catch (TimeoutException e){
                     objectFuture.cancel(true);
-                    Log.i(TAG,"Timeout lauched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3());
+                    Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
                     objectArrived = null;
                 }
             }else{
@@ -143,7 +144,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             isDataChuncked = objectArrived.isLargeData();
         }else{
             if (!method.getReturnType().equals(Void.TYPE))
-                Log.e(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module, please check your module and contact furszy if the error persist,");
+                Log.i(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.");
             return null;
         }
         Object o = null;
@@ -306,12 +307,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mIsBound = true;
-
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
-
-
                 //running socket receiver
                 Log.i(TAG,"Starting socket receiver");
                 mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
@@ -323,16 +321,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Log.e(TAG,"Cant run socket, register to server fail");
             }
 
-
-
-
-//            Message msg = Message.obtain(null,
-//                    CommunicationMessages.MSG_REGISTER_CLIENT);
-//            msg.replyTo = mMessenger;
-//            Bundle bundle = new Bundle();
-//            bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
-//            bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED, true);
-//            msg.setData(bundle);
+            try {
+                ApplicationSession.getInstance().setFermatRunning(iServerBrokerService.isFermatSystemRunning());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -541,7 +534,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference) throws CantCreateProxyException {
         //Log.i(TAG,"creating proxy");
-        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,"key",pluginVersionReference);
+        ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }
 

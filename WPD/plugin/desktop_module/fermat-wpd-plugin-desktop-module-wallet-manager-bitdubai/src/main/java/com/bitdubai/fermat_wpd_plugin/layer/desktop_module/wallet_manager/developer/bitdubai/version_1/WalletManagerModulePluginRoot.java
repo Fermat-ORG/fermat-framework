@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -690,12 +691,12 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletType.REFERENCE,
                         new ArrayList<InstalledSkin>(),
                         new ArrayList<InstalledLanguage>(),
-                        "reference_wallet_icon",
+                        "fermat_wallet_icon",
                         "Fermat Wallet",
                         WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.ALPHA);
+                        AppsStatus.DEV);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -847,10 +848,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
-
-
+        returnedClasses.add("WalletManagerModulePluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
         /**
          * I return the values.
          */
@@ -922,6 +921,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     }
 
     @Override
+    @moduleManagerInterfacea(moduleManager = WalletManagerModule.class)
     public ModuleManager<DesktopManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         return this;
     }

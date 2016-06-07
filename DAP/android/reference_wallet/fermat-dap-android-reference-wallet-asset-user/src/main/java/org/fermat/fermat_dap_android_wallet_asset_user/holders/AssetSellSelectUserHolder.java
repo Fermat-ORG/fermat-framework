@@ -29,7 +29,6 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
     public RelativeLayout userLayout;
 
 
-
     /**
      * Constructor
      *

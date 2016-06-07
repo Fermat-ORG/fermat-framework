@@ -23,11 +23,8 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentity
  */
 public class FragmentsCommons {
 
-
     public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identityAssetUser) throws CantGetIdentityRedeemPointException {
-
         View view = inflater.inflate(R.layout.dap_navigation_drawer_redeem_point_wallet_header, null, true);
-
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (identityAssetUser != null) {
@@ -36,8 +33,10 @@ public class FragmentsCommons {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
                         //options.inSampleSize = 2;
+
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), false);
                         bitmapWorkerTask.execute(identityAssetUser.getImage());
+
                         //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
                         //options.inBitmap = bitmap;
                         //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
@@ -45,12 +44,12 @@ public class FragmentsCommons {
                         //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         //imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.redeem_point).into(imageView);
+                        Picasso.with(activity).load(R.drawable.banner_redeem_point_wallet).into(imageView);
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identityAssetUser.getAlias());
             } else {
-                Picasso.with(activity).load(R.drawable.redeem_point).into(imageView);
+                Picasso.with(activity).load(R.drawable.banner_redeem_point_wallet).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(R.string.dap_identity_alias_default_text);
             }

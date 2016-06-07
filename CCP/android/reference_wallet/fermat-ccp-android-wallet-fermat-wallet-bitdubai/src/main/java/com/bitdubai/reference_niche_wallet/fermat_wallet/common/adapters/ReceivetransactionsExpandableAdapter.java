@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.TransactionViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.models.GrouperItem;
@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class ReceivetransactionsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, TransactionViewHolder, GrouperItem, CryptoWalletTransaction> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, TransactionViewHolder, GrouperItem, FermatWalletModuleTransaction> {
 
     private LayoutInflater mInflater;
 
@@ -74,7 +74,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
-        parentViewHolder.bind(parentListItem.getChildCount(),(CryptoWalletTransaction) parentListItem.getCryptoWalletTransaction());
+        parentViewHolder.bind(parentListItem.getChildCount(),(FermatWalletModuleTransaction) parentListItem.getFermatWalletTransaction());
     }
 
     /**
@@ -85,7 +85,7 @@ public class ReceivetransactionsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, CryptoWalletTransaction childListItem) {
+    public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, FermatWalletModuleTransaction childListItem) {
         childViewHolder.bind(childListItem);
     }
 }

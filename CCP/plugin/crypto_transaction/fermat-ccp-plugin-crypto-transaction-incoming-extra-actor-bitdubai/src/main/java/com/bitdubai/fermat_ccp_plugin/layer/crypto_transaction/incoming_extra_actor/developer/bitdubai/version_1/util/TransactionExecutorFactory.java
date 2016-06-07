@@ -8,7 +8,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors.CryptoBasicWalletTransactionExecutor;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors.BitcoinLossProtectedWalletTransactionExecutor;
 
 /**
@@ -46,7 +46,7 @@ public class TransactionExecutorFactory {
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletsException {
-        return new BitcoinBasicWalletTransactionExecutor(cryptoWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
+        return new CryptoBasicWalletTransactionExecutor(cryptoWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
     }
 
     private TransactionExecutor createLossProtectedBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {

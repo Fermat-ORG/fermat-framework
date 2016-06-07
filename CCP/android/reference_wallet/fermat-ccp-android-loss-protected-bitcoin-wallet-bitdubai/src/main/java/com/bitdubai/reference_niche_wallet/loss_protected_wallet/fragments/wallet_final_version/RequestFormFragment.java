@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
@@ -178,7 +180,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             } else {
@@ -188,6 +190,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                 setUpUIData();
 
             }
+
+            setUpContactAddapter();
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -530,6 +534,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
         });
 
         setUpContactAddapter();
+
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11, 8)});
         /**
          * Selector
          */
@@ -604,26 +610,30 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
 
                 if (!amount.equals("") && amount != null && !money.equals(0)) {
 
-                    String txtType = txt_type.getText().toString();
-                    String newAmount = "";
-
                     String notes = null;
                     if (txt_notes.getText().toString().length() != 0){
                         notes = txt_notes.getText().toString();
                     }
+
+                    String txtType = txt_type.getText().toString();
+                    String newAmount = "";
+                    String msg = "";
+
                     if (txtType.equals("[btc]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                        msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                     } else if (txtType.equals("[satoshis]")) {
                         newAmount = amount;
+                        msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                        msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                     }
 
+                    long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
+                    BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                    BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                    BigDecimal operator = new BigDecimal(newAmount);
-                    if(operator.compareTo(minSatoshis) == 1 )
-                    {
+                    if (amountDecimal.longValueExact() > minSatoshis) {
 
                         String identityPublicKey = appSession.getIntraUserModuleManager().getPublicKey();
 
@@ -647,9 +657,10 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 lossProtectedWalletContact.getActorType(),
                                 cryptoAddress,
                                 notes,
-                                operator.longValueExact(),
+                                amountDecimal.longValueExact(),
                                 blockchainNetworkType,
-                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET
+                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                                CryptoCurrency.BITCOIN
 
                         );
                         Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
@@ -657,7 +668,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         else
                             onBack(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
-                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Invalid Request Amount", Toast.LENGTH_LONG).show();

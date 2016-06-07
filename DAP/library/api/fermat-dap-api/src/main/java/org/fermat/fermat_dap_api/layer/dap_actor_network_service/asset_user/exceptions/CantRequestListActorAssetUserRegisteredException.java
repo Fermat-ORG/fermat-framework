@@ -33,5 +33,4 @@ public class CantRequestListActorAssetUserRegisteredException extends DAPExcepti
     }
 
 
-
 }

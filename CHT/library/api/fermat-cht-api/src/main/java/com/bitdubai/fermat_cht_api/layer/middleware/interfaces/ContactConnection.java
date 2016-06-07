@@ -24,6 +24,6 @@ public interface ContactConnection {
     void setCreationDate(long creationDate);
     byte[] getProfileImage();
     void setProfileImage(byte[] profileImage);
-    ContactStatus getContactStatus();
-    void setContactStatus(ContactStatus contactStatus);
+    String getContactStatus();
+    void setContactStatus(String contactStatus);
 }

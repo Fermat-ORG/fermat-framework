@@ -7,7 +7,6 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,13 +44,13 @@ public class AssetFactoryNavigationViewAdapter extends FermatAdapter<MenuItem, A
             if (data.isSelected())
                 holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
-                switch (position) {
-                    case 0:
-                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
-                        break;
-                    case 1:
-                        holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
-                        break;
+            switch (position) {
+                case 0:
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
+                    break;
+                case 1:
+                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
+                    break;
 
 //                    case 2:
 //                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_history_active : R.drawable.ic_nav_history_normal).into(holder.getIcon());
@@ -59,7 +58,7 @@ public class AssetFactoryNavigationViewAdapter extends FermatAdapter<MenuItem, A
 //                    case 3:
 //                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_stadistics_active : R.drawable.ic_nav_stadistics_normal).into(holder.getIcon());
 //                        break;
-                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

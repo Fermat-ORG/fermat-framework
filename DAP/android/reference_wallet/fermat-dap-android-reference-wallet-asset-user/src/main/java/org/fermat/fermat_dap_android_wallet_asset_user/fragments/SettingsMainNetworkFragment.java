@@ -51,7 +51,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -118,7 +118,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         try {
             settings.setBlockchainNetworkPosition(position);
 
-            if(moduleManager != null ) {
+            if (moduleManager != null) {
                 moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
                 moduleManager.changeNetworkType(dataSet);
             }

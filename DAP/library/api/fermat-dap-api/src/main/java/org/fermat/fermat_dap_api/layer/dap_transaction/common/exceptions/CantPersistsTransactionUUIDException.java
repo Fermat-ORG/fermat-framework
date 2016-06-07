@@ -7,6 +7,6 @@ public class CantPersistsTransactionUUIDException extends org.fermat.fermat_dap_
     public static final String DEFAULT_MESSAGE = "There was an error persisting a Digital Asset genesis transaction in Asset Issuing database.";
 
     public CantPersistsTransactionUUIDException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

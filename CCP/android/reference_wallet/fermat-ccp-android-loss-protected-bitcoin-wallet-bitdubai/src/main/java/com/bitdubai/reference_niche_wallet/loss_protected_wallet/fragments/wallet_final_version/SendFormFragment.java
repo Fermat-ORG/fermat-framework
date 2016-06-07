@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -72,11 +73,14 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -133,6 +137,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private BlockchainNetworkType blockchainNetworkType;
 
     boolean lossProtectedEnabled;
+    private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
 
@@ -208,14 +213,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             }
 
-            _executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    setUpContactAddapter();
 
-                }
-            });
-
+            setUpContactAddapter();
 
 
 
@@ -286,6 +285,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -442,7 +442,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         /**
          *  Amount observer
          */
-        editTextAmount.addTextChangedListener(new TextWatcher() {
+        /*editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
 
@@ -457,6 +457,10 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+        */
+
+        editTextAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(11,8)});
+
 
         /**
          * Selector
@@ -485,7 +489,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private void setUpContactAddapter() {
 
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);
@@ -606,7 +610,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
         });
     }
@@ -670,7 +674,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                 if (txtType.equals("[btc]")) {
                                     newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                    msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+                                     msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+
+                                   // newAmount = String.valueOf(Integer.valueOf(newAmount)); //without decimal .00000
                                 } else if (txtType.equals("[satoshis]")) {
                                     newAmount = amount;
                                     msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
@@ -679,10 +685,10 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                     msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
                                 }
 
-                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                long minSatoshis = BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND;
                                 BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                                if (amountDecimal.compareTo(minSatoshis) == 1) {
+                                if (amountDecimal.longValueExact() > minSatoshis) {
 
                                     long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
@@ -721,7 +727,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     lossProtectedWalletContact.getActorPublicKey(),
                                                     lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                    blockchainNetworkType
+                                                    blockchainNetworkType,
+                                                    CryptoCurrency.BITCOIN
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);

@@ -128,7 +128,7 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
                 }
             });
         }
-        
+
         noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_redeem_point_no_transactions);
         showOrHideNoTransactionsView(transactions.isEmpty());
     }

@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityAppFriendsListAdapter;
@@ -71,7 +70,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     RedeemPointSettings settings = null;
     private ErrorManager errorManager;
     private List<Actor> actors;
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     public static RedeemPointCommunityConnectionsListFragment newInstance() {
         return new RedeemPointCommunityConnectionsListFragment();
@@ -171,7 +170,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
 
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(assetRedeemPointCommunitySubAppSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
