@@ -273,7 +273,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     getActivity(),
                     appSession,
                     null,
-                    (moduleManager.getSelectedActorIdentity() != null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                    (moduleManager.getSelectedActorIdentity() == null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                     checkButton);
         } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
@@ -889,6 +889,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private void changeAmountType() {
         ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, showMoneyType);
+        typeAmountSelected = showMoneyType.getCode();
         String moneyTpe = "";
         switch (showMoneyType){
             case BITCOIN:
@@ -920,10 +921,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, typeAmountSelected));
                 txt_type_balance.setText(R.string.book_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.BOOK);
+                balanceType = BalanceType.BOOK;
             } else if (balanceType.getCode().equals(BalanceType.BOOK.getCode())) {
                 bookBalance = loadBalance(BalanceType.BOOK);
                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected));
                 txt_type_balance.setText(R.string.available_balance);
+                balanceType = BalanceType.AVAILABLE;
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
             }
         } catch (Exception e) {

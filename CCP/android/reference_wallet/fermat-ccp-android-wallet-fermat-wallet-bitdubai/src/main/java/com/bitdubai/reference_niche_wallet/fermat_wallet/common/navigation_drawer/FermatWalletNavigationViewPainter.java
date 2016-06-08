@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
+
 
 
 
@@ -28,9 +30,9 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
-    public FermatWalletNavigationViewPainter(Context activity, FermatWalletSessionReferenceApp referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+    public FermatWalletNavigationViewPainter(Context activity, ReferenceAppFermatSession<FermatWallet> referenceWalletSession, FermatApplicationCaller applicationsHelper) {
 
         this.activity = new WeakReference<Context>(activity);
         this.fermatWalletSessionReferenceApp = referenceWalletSession;
