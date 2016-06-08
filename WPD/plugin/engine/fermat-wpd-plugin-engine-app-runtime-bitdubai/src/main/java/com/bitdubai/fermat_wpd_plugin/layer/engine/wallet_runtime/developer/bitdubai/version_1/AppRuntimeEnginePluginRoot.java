@@ -5862,7 +5862,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         MenuItem runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setLabel("Profile");
         runtimeMenuItem.setIcon("home");
         runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_home", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setSelected(true);
