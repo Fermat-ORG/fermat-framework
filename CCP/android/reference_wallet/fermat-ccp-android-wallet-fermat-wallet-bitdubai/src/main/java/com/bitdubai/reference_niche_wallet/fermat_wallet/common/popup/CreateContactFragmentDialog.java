@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -65,7 +66,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
 
-    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -98,7 +99,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a, ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
 
         super(a);
         // TODO Auto-generated constructor stub

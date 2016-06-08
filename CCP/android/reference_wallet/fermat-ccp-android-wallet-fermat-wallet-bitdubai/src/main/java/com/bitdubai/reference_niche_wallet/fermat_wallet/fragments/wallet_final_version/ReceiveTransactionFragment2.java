@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
@@ -63,7 +65,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 
-public class ReceiveTransactionFragment2 extends FermatWalletListFragment<FermatWalletModuleTransaction>
+public class ReceiveTransactionFragment2 extends FermatWalletListFragment<FermatWalletModuleTransaction,ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager>
         implements FermatListItemListeners<FermatWalletModuleTransaction> {
 
     // Fermat Managers
@@ -75,7 +77,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     private View rootView;
     private List<FermatWalletModuleTransaction> lstCryptoWalletTransactionsAvailable;
 
-    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
     private View emptyListViewsContainer;
     private BlockchainNetworkType blockchainNetworkType;
@@ -263,7 +265,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
 
         //noinspection TryWithIdenticalCatches
         try {
-            ActiveActorIdentityInformation intraUserLoginIdentity = fermatWalletSessionReferenceApp.getIntraUserModuleManager();
+            ActiveActorIdentityInformation intraUserLoginIdentity = moduleManager.getSelectedActorIdentity();
             if(intraUserLoginIdentity!=null) {
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();

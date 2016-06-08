@@ -12,10 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
@@ -46,7 +50,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
     private LossProtectedWallet lossProtectedWalletmanager;
     private ErrorManager errorManager;
-    private LossProtectedWalletSession lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
 
     public Activity activity;
     public Dialog d;
@@ -70,7 +74,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
                              BitcoinLossProtectedWalletSpend spending,
                              LossProtectedWallet lossProtectedWalletmanager,
                              ErrorManager errorManager,
-                             LossProtectedWalletSession lossProtectedWalletSession)
+                             ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession)
     {
         super(a);
         this.activity = a;
@@ -147,7 +151,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
         try{
 
             //get the intra user login identity
-            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+            ActiveActorIdentityInformation intraUserLoginIdentity = lossProtectedWalletmanager.getSelectedActorIdentity();
             String intraUserPk = null;
             if (intraUserLoginIdentity != null) {
                 intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -164,7 +168,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
             DecimalFormat form = new DecimalFormat("##########.######",separator);
 
             //convert satoshis to bitcoin
-            String monto = WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount)), ShowMoneyType.BITCOIN.getCode());
+            String monto = WalletUtils.formatBalanceString(Long.parseLong(form.format(spendingAmount).replace(',', '.')), ShowMoneyType.BITCOIN.getCode());
 
 
             final double amount = Double.parseDouble(monto.replace(',','.'));
@@ -179,16 +183,14 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
         } catch (CantListLossProtectedTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(activity, "Oooops! Error Exception : CantListLossProtectedTransactionsException",
+            makeText(activity, "CantListLossProtectedTransactionsException",
                     Toast.LENGTH_SHORT).show();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(activity, "Oooops! Error Exception : CantListCryptoWalletIntraUserIdentityException",
-                    Toast.LENGTH_SHORT).show();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(activity, "Oooops! Error Exception : CantGetCryptoLossProtectedWalletException",
-                    Toast.LENGTH_SHORT).show();
+        } catch (CantGetSelectedActorIdentityException e) {
+            makeText(activity, "CantGetSelectedActorIdentityException", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            makeText(activity, "ActorIdentityNotSelectedException", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
         }
         return 0;
     }
