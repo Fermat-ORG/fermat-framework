@@ -24,10 +24,9 @@ public class ProfileDialog extends FermatDialog  implements View.OnClickListener
     Bitmap image;
 
 
-    public ProfileDialog(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources, ImageView profilePhoto, TextView profileName) {
+    public ProfileDialog(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources) {
         super(activity, referenceAppFermatSession, resources);
-        profilePhoto = this.profilePhoto;
-        profileName = this.profileName;
+
     }
 
     public void setProfilePhoto (Bitmap photo){
@@ -42,6 +41,9 @@ public class ProfileDialog extends FermatDialog  implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        profileName = (TextView) this.findViewById(R.id.contact_name_dialog);
+        profilePhoto = (ImageView) this.findViewById(R.id.profile_image_dialog);
+
         profileName.setText(bodyName);
         profilePhoto.setImageBitmap(image);
     }
@@ -49,6 +51,7 @@ public class ProfileDialog extends FermatDialog  implements View.OnClickListener
     @Override
     public void onClick(View v) {
         int i = v.getId();
+
     }
 
     @Override
