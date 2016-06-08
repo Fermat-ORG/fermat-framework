@@ -100,8 +100,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
         mHandler = new Handler();
         FermatWalletSettings fermatWalletSettings;
         try {
-            fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp) appSession;
-            moduleManager = fermatWalletSessionReferenceApp.getModuleManager();
+            fermatWalletSessionReferenceApp = appSession;
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             if((moduleManager!=null)) {
