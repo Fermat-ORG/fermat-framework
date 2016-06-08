@@ -5866,16 +5866,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setIcon("home");
         runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_home", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setSelected(true);
-        runtimeMenuItem.backgroundSelectedColor("#000");
+        runtimeMenuItem.setTextColor("#000000");
+        runtimeMenuItem.backgroundSelectedColor("#000000");
         runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_HOME);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         fermatBasicNavigationMenuBody.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Profile");
-        runtimeMenuItem.setTextColor("#000");
+        runtimeMenuItem.setTextColor("#000000");
         runtimeMenuItem.setIcon("profile");
-        runtimeMenuItem.backgroundSelectedColor("#000");
+        runtimeMenuItem.backgroundSelectedColor("#000000");
         runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_profile", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_PROFILE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);

@@ -445,7 +445,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                                 navigation_recycler_view,
                                 mAdapter,
                                 (viewPainter!=null)?viewPainter.addItemDecoration():null,
-                                lstItems,
+                                (viewPainter!=null)?lstItems:((FermatBasicNavigationMenu)sideMenu).getBody().getMenuItems(),
                                 this,
                                 activity.getActivityType()
                         );
