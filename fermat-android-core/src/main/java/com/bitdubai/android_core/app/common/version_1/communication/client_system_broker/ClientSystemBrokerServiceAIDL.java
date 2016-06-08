@@ -21,6 +21,7 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -117,9 +118,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 try {
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
                 }catch (TimeoutException e){
+                    //Method canceled and return an exception
                     objectFuture.cancel(true);
                     Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
-                    objectArrived = null;
+                    return new MethodTimeOutException();
                 }
             }else{
                 /**
