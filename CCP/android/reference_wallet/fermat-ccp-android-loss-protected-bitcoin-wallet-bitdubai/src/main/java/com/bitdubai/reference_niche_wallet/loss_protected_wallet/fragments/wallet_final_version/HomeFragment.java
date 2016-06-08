@@ -540,7 +540,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
                 //Set entries values for the chart
                 entryList.add(new Entry((float)valueEntry, i));
-                xValues.add("$"+String.valueOf(valueEntry));
+                xValues.add("$ "+String.valueOf(valueEntry));
             }
             chart.setVisibility(View.VISIBLE);
         }else{
@@ -854,9 +854,15 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 Log.i("VAL SELECTED",
                         "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
                                 + ", DataSet index: " + dataSetIndex);
-                BitcoinLossProtectedWalletSpend spent = allWalletSpendingList.get(dataSetIndex);
 
-                ChartDetailDialog dialogSpent = new ChartDetailDialog(getActivity(),spent);
+                BitcoinLossProtectedWalletSpend spent = allWalletSpendingList.get(e.getXIndex());
+
+                ChartDetailDialog dialogSpent = new ChartDetailDialog(
+                        getActivity(),
+                        spent,
+                        lossProtectedWalletmanager,
+                        errorManager,
+                        lossProtectedWalletSession);
                 dialogSpent.show();
                 chart.invalidate(); // refresh
 

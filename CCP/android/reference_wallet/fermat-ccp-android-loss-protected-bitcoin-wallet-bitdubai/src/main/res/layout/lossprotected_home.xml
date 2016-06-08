@@ -107,7 +107,7 @@
                 android:fontFamily="ROBOTO"
                 android:textSize="16sp"
                 android:textColor="#fff"
-                android:text="Earnings and losts for today:"/>
+                android:text="Total earnings and losts:"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                     android:textSize="16sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_amount_lost_or_earn"
-                    android:text="U$D 0.00 earning"/>
+                    android:text="U$D 0.00"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
