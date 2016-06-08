@@ -35,8 +35,36 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
             west = coordinates[2];
             east = coordinates[3];
         } else {
-            throw new CantCreateGeoRectangleException("The coordinates array is not vaild");
+            throw new CantCreateGeoRectangleException("The coordinates array is not valid");
         }
+    }
+
+    /**
+     * Constructor with parameters
+     * @param north
+     * @param south
+     * @param west
+     * @param east
+     */
+    public GeoRectangleRecord(
+            float north,
+            float south,
+            float west,
+            float east){
+        this.north = north;
+        this.south = south;
+        this.west = west;
+        this.east = east;
+    }
+
+    /**
+     * This constructor is only to avoid null implementations.
+     */
+    public GeoRectangleRecord(){
+        north = 0.0f;
+        south = 0.0f;
+        west = 0.0f;
+        east = 0.0f;
     }
 
     /**

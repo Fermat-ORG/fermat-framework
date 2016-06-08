@@ -60,6 +60,7 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             //testListCountries();
             //testListDependencies();
             //testCitiesByCountry();
+            //testCitiesByDependency();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -105,6 +106,19 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             String countryCode = "VE";
             List<City> cities = this.geolocationPluginManager.
                     getCitiesByCountryCode(countryCode);
+            System.out.println("NOMINATIM:"+cities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
+    }
+
+    private void testCitiesByDependency(){
+        try{
+            String dependencyName = "Carabobo";
+            String countryCode = "VE";
+            List<City> cities = this.geolocationPluginManager.
+                    getCitiesByCountryCodeAndDependencyName(countryCode, dependencyName);
             System.out.println("NOMINATIM:"+cities);
         } catch (Exception e) {
             e.printStackTrace();

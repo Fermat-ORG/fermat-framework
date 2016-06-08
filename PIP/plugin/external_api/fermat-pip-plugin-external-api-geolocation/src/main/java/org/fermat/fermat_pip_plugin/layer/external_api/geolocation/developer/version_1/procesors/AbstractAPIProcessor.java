@@ -114,7 +114,7 @@ public abstract class AbstractAPIProcessor {
      * @param field
      * @return
      */
-    protected static float[] getArrayIntFromJsonObject(
+    protected static float[] getArrayFloatFromJsonObject(
             JsonObject jSonObject,
             String field){
         JsonElement jsonElement = jSonObject.get(field);

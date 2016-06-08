@@ -44,4 +44,13 @@ public interface GeolocationManager<
      */
     List<M> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException;
 
+    /**
+     * This method returns the cities list by a given country code and dependency name
+     * @param countryCode
+     * @return
+     * @throws CantGetCitiesListException
+     */
+    List<M> getCitiesByCountryCodeAndDependencyName(String countryCode, String dependencyName)
+            throws CantGetCitiesListException, CantCreateCountriesListException;
+
 }

@@ -37,4 +37,10 @@ public interface CountryDependency extends Serializable {
      */
     int getDependencyId();
 
+    /**
+     * This method returns the dependency Geo Rectangle.
+     * @return
+     */
+    GeoRectangle getGeoRectangle();
+
 }

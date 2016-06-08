@@ -41,6 +41,16 @@ public class GeolocationConfiguration {
     public static final String PATH_TO_CITIES_FILE = "";
 
     /**
+     * Represents the backup-file name.
+     */
+    public static final String DEPENDENCY_CITIES_BACKUP_FILE = "dependency-cities-backup";
+
+    /**
+     * Represents the backup-file path.
+     */
+    public static final String DEPENDENCY_PATH_TO_CITIES_FILE = "";
+
+    /**
      * Represents the geonames username.
      */
     public static final String GEONAMES_USERNAME = "fermatgeotest";
@@ -51,8 +61,13 @@ public class GeolocationConfiguration {
     public static final String GEONAMES_URL_COUNTRY = "http://api.geonames.org/countryInfoJSON?formatted=true&lang=en&style=full&country=";
 
     /**
-     * Reprents the geonames URL to get the country dependencies.
+     * Represents the geonames URL to get the country dependencies.
      */
     public static final String GEONAME_URL_COUNTRY_DEPENDENCIES = "http://api.geonames.org/childrenJSON?geonameId=";
+
+    /**
+     * Represents the Nominatim URL to get the details from a place.
+     */
+    public static final String NOMINATIM_URL_PLACE_DETAILS = "http://nominatim.openstreetmap.org/search?format=json&addressdetails=0&q=";
 
 }
