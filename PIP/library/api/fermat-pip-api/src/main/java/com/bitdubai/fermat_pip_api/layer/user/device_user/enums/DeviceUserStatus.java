@@ -27,9 +27,12 @@ public enum DeviceUserStatus {
     public static DeviceUserStatus getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
-            case "LI": return DeviceUserStatus.LOGGED_IN;
-            case "LO": return DeviceUserStatus.LOGGED_OUT;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code: " + code, null);
+            case "LI":
+                return DeviceUserStatus.LOGGED_IN;
+            case "LO":
+                return DeviceUserStatus.LOGGED_OUT;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code: " + code, null);
         }
     }
 

@@ -1,17 +1,5 @@
 package unit.com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 
-import static org.mockito.Mockito.*;
-import static org.fest.assertions.api.Assertions.*;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
-import org.robolectric.util.ActivityController;
-
 /**
  * Created by jorgegonzalez on 2015.06.28..
 @RunWith(RobolectricGradleTestRunner.class)

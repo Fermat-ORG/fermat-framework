@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 
 import com.bitdubai.android_api.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/15/16.
  */
-public class ConfirmDialog extends FermatDialog<FermatSession, ResourceProviderManager> implements
+public class ConfirmDialog extends FermatDialog<ReferenceAppFermatSession, ResourceProviderManager> implements
         View.OnClickListener {
 
     private FermatTextView titleText;
@@ -36,8 +36,8 @@ public class ConfirmDialog extends FermatDialog<FermatSession, ResourceProviderM
         void onClick();
     }
 
-    public ConfirmDialog(Activity activity, FermatSession fermatSession, ResourceProviderManager resources) {
-        super(activity, fermatSession, resources);
+    public ConfirmDialog(Activity activity, ReferenceAppFermatSession referenceAppFermatSession, ResourceProviderManager resources) {
+        super(activity, referenceAppFermatSession, resources);
     }
 
     @Override
@@ -104,16 +104,16 @@ public class ConfirmDialog extends FermatDialog<FermatSession, ResourceProviderM
 
     public static class Builder {
         private final WeakReference<Activity> activity;
-        private final WeakReference<FermatSession> fermatSession;
+        private final WeakReference<ReferenceAppFermatSession> fermatSession;
 
         private String title;
         private String message;
         private int colorStyle;
         private OnClickAcceptListener btnListener;
 
-        public Builder(Activity activity, FermatSession fermatSession) {
+        public Builder(Activity activity, ReferenceAppFermatSession referenceAppFermatSession) {
             this.activity = new WeakReference<>(activity);
-            this.fermatSession = new WeakReference<>(fermatSession);
+            this.fermatSession = new WeakReference<>(referenceAppFermatSession);
         }
 
         public ConfirmDialog build() {

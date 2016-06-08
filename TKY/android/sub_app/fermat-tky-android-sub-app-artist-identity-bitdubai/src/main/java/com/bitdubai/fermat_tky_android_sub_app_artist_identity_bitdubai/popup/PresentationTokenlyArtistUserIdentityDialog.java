@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSession;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSessionReferenceApp;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistPreferenceSettings;
 
 /**
  * Created by Juan Sulbaran sulbaranja@gmail.com on 31/03/16.
  */
-public class PresentationTokenlyArtistUserIdentityDialog extends FermatDialog<TkyIdentitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationTokenlyArtistUserIdentityDialog extends FermatDialog<TkyIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     private final Activity activity;
     private FermatButton startCommunity;
@@ -36,7 +36,7 @@ public class PresentationTokenlyArtistUserIdentityDialog extends FermatDialog<Tk
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationTokenlyArtistUserIdentityDialog(Activity activity, TkyIdentitySubAppSession fermatSession, SubAppResourcesProviderManager resources, final TokenlyArtistIdentityManagerModule moduleManager) {
+    public PresentationTokenlyArtistUserIdentityDialog(Activity activity, TkyIdentitySubAppSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, final TokenlyArtistIdentityManagerModule moduleManager) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.moduleManager = moduleManager;

@@ -26,7 +26,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
-import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSessionReferenceApp;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
@@ -58,7 +58,7 @@ public class HomeFragment extends AbstractFermatFragment {
     private long availableBalance;
     private long bookBalance;
 
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceWalletSessionReferenceApp referenceWalletSession;
     SettingsManager<BitcoinWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
@@ -82,7 +82,7 @@ public class HomeFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = (ReferenceWalletSessionReferenceApp) appSession;
 
 
         try {

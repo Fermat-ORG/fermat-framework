@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.wallet_store.common.workers;
 
 import android.app.Activity;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -12,19 +12,19 @@ import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 
 import java.util.UUID;
 
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.LANGUAGE_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.SKIN_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.WALLET_VERSION;
 
 /**
  * Created by nelson on 31/08/15.
  */
 public class InstallWalletWorker extends FermatWorker {
-    private final SubAppsSession session;
+    private final FermatSession session;
     private final WalletStoreModuleManager moduleManager;
 
-    public InstallWalletWorker(Activity context, FermatWorkerCallBack callBack, WalletStoreModuleManager moduleManager, SubAppsSession session) {
+    public InstallWalletWorker(Activity context, FermatWorkerCallBack callBack, WalletStoreModuleManager moduleManager, FermatSession session) {
         super(context, callBack);
         this.moduleManager = moduleManager;
         this.session = session;

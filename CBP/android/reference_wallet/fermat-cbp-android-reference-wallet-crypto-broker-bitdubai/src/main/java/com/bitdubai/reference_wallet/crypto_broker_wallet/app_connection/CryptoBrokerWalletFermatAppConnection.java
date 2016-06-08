@@ -19,7 +19,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBr
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.notifications.CryptoBrokerNotificationPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION;
@@ -37,7 +37,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
  *
  * @since 2015.12.17
  */
-public class CryptoBrokerWalletFermatAppConnection extends AppConnections<CryptoBrokerWalletSession> {
+public class CryptoBrokerWalletFermatAppConnection extends AppConnections<CryptoBrokerWalletSessionReferenceApp> {
 
     public CryptoBrokerWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -49,20 +49,20 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_BROKER,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
 
     }
 
     @Override
-    protected CryptoBrokerWalletSession getSession() {
-        return new CryptoBrokerWalletSession();
+    protected CryptoBrokerWalletSessionReferenceApp getSession() {
+        return new CryptoBrokerWalletSessionReferenceApp();
     }
 
     @Override

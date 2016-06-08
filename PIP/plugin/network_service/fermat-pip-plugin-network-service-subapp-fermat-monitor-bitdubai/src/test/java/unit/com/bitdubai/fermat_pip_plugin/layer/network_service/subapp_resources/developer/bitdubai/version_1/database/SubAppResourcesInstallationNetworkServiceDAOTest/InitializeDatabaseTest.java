@@ -28,8 +28,7 @@ import static org.mockito.Mockito.when;
  * Created by francisco on 30/09/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InitializeDatabaseTest
-{
+public class InitializeDatabaseTest {
     private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesInstallationNetworkServiceDAO;
 
     @Mock
@@ -67,7 +66,7 @@ public class InitializeDatabaseTest
     public void initializeDatabaseTest_ErrorNoOpen_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception {
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenThrow(CantOpenDatabaseException.class);
-        catchException(subAppResourcesInstallationNetworkServiceDAO).initializeDatabase(testOwnerId,SubAppResourcesNetworkServiceDatabaseConstants.DATABASE_NAME);
+        catchException(subAppResourcesInstallationNetworkServiceDAO).initializeDatabase(testOwnerId, SubAppResourcesNetworkServiceDatabaseConstants.DATABASE_NAME);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }
@@ -76,7 +75,7 @@ public class InitializeDatabaseTest
     public void initializeDatabaseTest_ErrorNoFound_ThrowsCantInitializeNetworkServicesWalletResourcesDatabaseException() throws Exception {
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenThrow(DatabaseNotFoundException.class);
-        catchException(subAppResourcesInstallationNetworkServiceDAO).initializeDatabase(testOwnerId,SubAppResourcesNetworkServiceDatabaseConstants.DATABASE_NAME);
+        catchException(subAppResourcesInstallationNetworkServiceDAO).initializeDatabase(testOwnerId, SubAppResourcesNetworkServiceDatabaseConstants.DATABASE_NAME);
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }

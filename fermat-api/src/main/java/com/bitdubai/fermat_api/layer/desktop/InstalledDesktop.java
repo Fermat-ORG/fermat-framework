@@ -31,6 +31,11 @@ public class InstalledDesktop implements FermatApp {
     public FermatAppType getAppType() {
         return FermatAppType.DESKTOP;
     }
+//
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return AppStructureType.REFERENCE;
+//    }
 
     @Override
     public byte[] getAppIcon() {

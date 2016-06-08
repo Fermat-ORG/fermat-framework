@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.NotificationSubAppModulePluginRoot;
 
 /**
- /**
+ * /**
  * Created by Matias Furszyfer
  *
  * @version 1.0

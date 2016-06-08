@@ -3,7 +3,6 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
@@ -33,7 +32,7 @@ public class BitcoinWalletBuildNotificationPainter {
                 switch (notificationType){
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                            loggedIntraUserPublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
                             try{
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
                                 notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReurn);

@@ -3,7 +3,7 @@ package com.mati.expandable_recycler_view;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.02.23..
  */
-public class ExpandableRecyclerView<M extends ParentListItem,S extends FermatSession,RE extends ResourceProviderManager> extends FermatWalletExpandableListFragment<M,S,RE> {
+public class ExpandableRecyclerView<M extends ParentListItem,S extends ReferenceAppFermatSession,RE extends ResourceProviderManager> extends FermatWalletExpandableListFragment<M,S,RE> {
 
 
     private ExpandableAdapter expandableAdapter;

@@ -35,7 +35,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -53,7 +52,7 @@ import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFa
 import com.bitdubai.sub_app.fan_identity.R;
 import com.bitdubai.sup_app.tokenly_fan_user_identity.popup.PresentationTokenlyFanUserIdentityDialog;
 import com.bitdubai.sup_app.tokenly_fan_user_identity.session.SessionConstants;
-import com.bitdubai.sup_app.tokenly_fan_user_identity.session.TokenlyFanUserIdentitySubAppSession;
+import com.bitdubai.sup_app.tokenly_fan_user_identity.session.TokenlyFanUserIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sup_app.tokenly_fan_user_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
@@ -80,7 +79,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private TokenlyFanUserIdentitySubAppSession tokenlyFanUserIdentitySubAppSession;
+    private TokenlyFanUserIdentitySubAppSessionReferenceApp tokenlyFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private TokenlyFanIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -120,7 +119,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
 
         try {
-            tokenlyFanUserIdentitySubAppSession = (TokenlyFanUserIdentitySubAppSession) appSession;
+            tokenlyFanUserIdentitySubAppSession = (TokenlyFanUserIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = tokenlyFanUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);

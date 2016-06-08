@@ -20,7 +20,6 @@ public interface SubAppSettings extends FermatSettings {
      * This method let us know the default language of a wallet
      *
      * @return the identifier of the default language of the wallet
-     *
      * @throws CantGetDefaultLanguageException if something goes wrong.
      */
     UUID getDefaultLanguage() throws CantGetDefaultLanguageException;
@@ -29,7 +28,6 @@ public interface SubAppSettings extends FermatSettings {
      * This method let us know the default skin of a wallet
      *
      * @return the identifier of the default skin of the wallet
-     *
      * @throws CantGetDefaultSkinException if something goes wrong.
      */
     UUID getDefaultSkin() throws CantGetDefaultSkinException;
@@ -38,7 +36,6 @@ public interface SubAppSettings extends FermatSettings {
      * This method let us set the default language for a wallet
      *
      * @param languageId the identifier of the language to set as default
-     *
      * @throws CantSetDefaultLanguageException if something goes wrong.
      */
     void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException;
@@ -47,7 +44,6 @@ public interface SubAppSettings extends FermatSettings {
      * This method let us set the default skin for a wallet
      *
      * @param skinId the identifier of the skin to set as default
-     *
      * @throws CantSetDefaultSkinException if something goes wrong.
      */
     void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException;
@@ -56,10 +52,10 @@ public interface SubAppSettings extends FermatSettings {
      * This method let us set the preference settings for a wallet
      *
      * @param walletPreferenceSettings
-     *
      * @throws CantSetDefaultSkinException
      */
-    @Deprecated // todo this is done through the module manager
+    @Deprecated
+    // todo this is done through the module manager
     void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings;
 
     /**
@@ -68,6 +64,7 @@ public interface SubAppSettings extends FermatSettings {
      * @return preference settings of a wallet
      * @throws CantGetDefaultSkinException
      */
-    @Deprecated // todo this is done through the module manager
+    @Deprecated
+    // todo this is done through the module manager
     String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings;
 }
