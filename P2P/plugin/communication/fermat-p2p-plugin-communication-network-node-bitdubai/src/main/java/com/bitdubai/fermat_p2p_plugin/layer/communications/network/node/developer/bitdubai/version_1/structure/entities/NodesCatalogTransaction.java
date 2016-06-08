@@ -125,7 +125,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
                 latitude,
                 longitude,
                 null     ,
-                null     ,
+                0        ,
                 null     ,
                 System.currentTimeMillis(),
                 LocationSource.UNKNOWN);

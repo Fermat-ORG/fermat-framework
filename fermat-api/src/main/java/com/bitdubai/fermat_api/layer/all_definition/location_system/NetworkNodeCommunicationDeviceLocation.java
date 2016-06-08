@@ -3,6 +3,10 @@ package com.bitdubai.fermat_api.layer.all_definition.location_system;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
+import org.apache.commons.lang.NotImplementedException;
+
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * The class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.wrappers.DeviceLocation</code>
  * contains the coordinates of a point and the time when it was calculated.
@@ -19,7 +23,7 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     private final Double         latitude        ;
     private final Double         longitude       ;
     private final Double         altitude        ;
-    private final Double         accuracy        ;
+    private final long           accuracy        ;
     private final Double         altitudeAccuracy;
     private final long           time            ;
     private final LocationSource source          ;
@@ -30,7 +34,7 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
      */
     public NetworkNodeCommunicationDeviceLocation(){
         this.altitude  = null;
-        this.accuracy = null;
+        this.accuracy = 0;
         this.altitudeAccuracy = null;
         this.source = null;
         this.time = 0;
@@ -51,7 +55,7 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     public NetworkNodeCommunicationDeviceLocation(final double         latitude        ,
                                                   final double         longitude       ,
                                                   final Double         altitude        ,
-                                                  final Double         accuracy        ,
+                                                  final long           accuracy        ,
                                                   final Double         altitudeAccuracy,
                                                   final long           time            ,
                                                   final LocationSource source          ) {
@@ -81,7 +85,7 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     }
 
     @Override
-    public Double getAccuracy() {
+    public long getAccuracy() {
         return accuracy;
     }
 
@@ -98,6 +102,24 @@ public final class NetworkNodeCommunicationDeviceLocation implements Location {
     @Override
     public LocationSource getSource() {
         return source;
+    }
+
+    @Override
+    public void setLatitude(Double latitude) {
+
+        throw new NotImplementedException("Method not implemented");
+    }
+
+    @Override
+    public void setLongitude(Double longitude) {
+
+        throw new NotImplementedException("Method not implemented");
+    }
+
+    @Override
+    public void setAccuracy(long accuracy) {
+
+        throw new NotImplementedException("Method not implemented");
     }
 
     @Override

@@ -115,7 +115,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
                 latitude,
                 longitude,
                 null     ,
-                null     ,
+				0        ,
                 null     ,
                 System.currentTimeMillis(),
                 LocationSource.UNKNOWN);

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -560,43 +561,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 final Double latitude = nodeHistory.getLatitude();
                 final Double longitude = nodeHistory.getLongitude();
 
-
-                Location nodeLocation = new Location() {
-                    @Override
-                    public Double getAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getAltitudeAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLatitude() {
-                        return latitude;
-                    }
-
-                    @Override
-                    public Double getLongitude() {
-                        return longitude;
-                    }
-
-                    @Override
-                    public Double getAltitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Long getTime() {
-                        return null;
-                    }
-
-                    @Override
-                    public LocationSource getSource() {
-                        return null;
-                    }
-                };
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLongitude(longitude);
+                nodeLocation.setLatitude(latitude);
 
                 node.setLocation(nodeLocation);
 
@@ -636,45 +603,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 final Double latitude = nodeHistory.getLatitude();
                 final Double longitude = nodeHistory.getLongitude();
 
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLongitude(longitude);
+                nodeLocation.setLatitude(latitude);
 
-                Location nodeLocation = new Location() {
-                    @Override
-                    public Double getAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getAltitudeAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLatitude() {
-                        return latitude;
-                    }
-
-                    @Override
-                    public Double getLongitude() {
-                        return longitude;
-                    }
-
-                    @Override
-                    public Double getAltitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Long getTime() {
-                        return null;
-                    }
-
-                    @Override
-                    public LocationSource getSource() {
-                        return null;
-                    }
-                };
-
-                                /*
+                /*
                  * Calculate the distance between the two points
                  */
                 Double componentDistance = DistanceCalculator.distance(clientLocation, nodeLocation, DistanceCalculator.KILOMETERS);

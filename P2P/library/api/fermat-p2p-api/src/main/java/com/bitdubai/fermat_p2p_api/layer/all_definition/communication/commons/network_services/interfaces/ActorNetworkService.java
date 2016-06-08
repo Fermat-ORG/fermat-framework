@@ -36,13 +36,15 @@ public interface ActorNetworkService {
      * @throws ActorAlreadyRegisteredException if the actor is already registered.
      * @throws CantRegisterActorException      if something goes wrong.
      */
-    void registerActor(String   publicKey,
-                       String   name     ,
-                       String   alias    ,
-                       String   extraData,
-                       Location location ,
-                       Actors   type     ,
-                       byte[]   image    ) throws ActorAlreadyRegisteredException, CantRegisterActorException;
+    void registerActor(String   publicKey      ,
+                       String   name           ,
+                       String   alias          ,
+                       String   extraData      ,
+                       Location location       ,
+                       Actors   type           ,
+                       byte[]   image          ,
+                       long     refreshInterval,
+                       long     accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException;
 
     /**
      * Through the method <code>updateRegisteredActor</code> we can update
@@ -75,5 +77,12 @@ public interface ActorNetworkService {
      * @throws CantUnregisterActorException if something goes wrong.
      */
     void unregisterActor(String publicKey) throws ActorNotRegisteredException, CantUnregisterActorException;
+
+    /**
+     * Through the method <code>isActorOnline</code> we can check if an actor is online or not.
+     *
+     * @param publicKey of the actor.
+     */
+    boolean isActorOnline(String publicKey);
 
 }

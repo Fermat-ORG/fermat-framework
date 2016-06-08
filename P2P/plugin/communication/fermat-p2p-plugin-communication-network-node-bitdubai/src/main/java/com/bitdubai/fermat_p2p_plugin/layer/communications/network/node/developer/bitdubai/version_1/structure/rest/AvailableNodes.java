@@ -6,6 +6,7 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
@@ -94,7 +95,7 @@ public class AvailableNodes implements RestFulServices {
                     latitudeSource ,
                     longitudeSource,
                     null     ,
-                    null     ,
+                    0        ,
                     null     ,
                     System.currentTimeMillis(),
                     LocationSource.UNKNOWN
@@ -128,7 +129,7 @@ public class AvailableNodes implements RestFulServices {
                                 nodesCatalog.getLastLocation().getLatitude() ,
                                 nodesCatalog.getLastLocation().getLongitude(),
                                 0.0     ,
-                                0.0     ,
+                                0        ,
                                 0.0     ,
                                 System.currentTimeMillis(),
                                 LocationSource.UNKNOWN
@@ -187,42 +188,9 @@ public class AvailableNodes implements RestFulServices {
                     node.getLastLocation().getLongitude() != null){
 
 
-                Location nodeLocation = new Location() {
-                    @Override
-                    public Double getAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getAltitudeAccuracy() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLatitude() {
-                        return node.getLastLocation().getLatitude();
-                    }
-
-                    @Override
-                    public Double getLongitude() {
-                        return node.getLastLocation().getLongitude();
-                    }
-
-                    @Override
-                    public Double getAltitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Long getTime() {
-                        return null;
-                    }
-
-                    @Override
-                    public LocationSource getSource() {
-                        return null;
-                    }
-                };
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLatitude(node.getLastLocation().getLatitude());
+                nodeLocation.setLongitude(node.getLastLocation().getLongitude());
 
                 /*
                  * Calculate the distance between the two points

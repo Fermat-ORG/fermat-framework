@@ -74,7 +74,8 @@ public class ChatActorNetworkServiceManagerTest implements ChatManager {
                     extraDataToJson(chatExposingData),
                     null,
                     Actors.CHAT,
-                    chatExposingData.getImage()
+                    chatExposingData.getImage(),
+                    0,0
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {

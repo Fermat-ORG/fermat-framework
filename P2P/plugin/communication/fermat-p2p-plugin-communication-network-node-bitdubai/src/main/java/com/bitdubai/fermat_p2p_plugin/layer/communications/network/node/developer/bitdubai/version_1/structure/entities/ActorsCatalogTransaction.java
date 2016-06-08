@@ -160,7 +160,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 				latitude,
 				longitude,
 				null     ,
-				null     ,
+				0        ,
 				null     ,
 				System.currentTimeMillis(),
 				LocationSource.UNKNOWN);

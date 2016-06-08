@@ -79,7 +79,8 @@ public final class CryptoBrokerActorNetworkServiceManagerTest implements CryptoB
                     null,
                     null,
                     Actors.CBP_CRYPTO_BROKER,
-                    cryptoBroker.getImage()
+                    cryptoBroker.getImage(),
+                    0,0
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {

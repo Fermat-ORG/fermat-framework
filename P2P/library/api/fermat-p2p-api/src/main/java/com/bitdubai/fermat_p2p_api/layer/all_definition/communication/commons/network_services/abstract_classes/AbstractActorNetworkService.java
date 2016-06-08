@@ -10,8 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.util.ImageUtil;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorNotRegisteredException;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantUnregisterActorException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantUpdateRegisteredActorException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.interfaces.ActorNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.utils.RefreshParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
@@ -43,6 +46,8 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
     public static final long MAX_IMAGE_SIZE = 10240;
 
     private ConcurrentHashMap<String, ActorProfile> registeredActors;
+
+    private NetworkServiceActorLocationUpdaterAgent actorLocationUpdaterAgent;
 
     /**
      * Constructor with parameters
@@ -80,13 +85,15 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
     }
 
     @Override
-    public void registerActor(final String   publicKey,
-                              final String   name     ,
-                              final String   alias    ,
-                              final String   extraData,
-                              final Location location ,
-                              final Actors   type     ,
-                              final byte[]   image    ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
+    public void registerActor(final String   publicKey      ,
+                              final String   name           ,
+                              final String   alias          ,
+                              final String   extraData      ,
+                              final Location location       ,
+                              final Actors   type           ,
+                              final byte[]   image          ,
+                              final long     refreshInterval,
+                              final long     accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
 
         validateImageSize(image.length);
 
@@ -106,7 +113,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         else {
             try {
 
-                actorToRegister.setLocation(locationManager.getLastKnownLocation());
+                Location location1 = locationManager.getLastKnownLocation();
+                location1 = LocationUtils.getRandomLocation(location1, accuracy);
+                actorToRegister.setLocation(location1);
 
             } catch (CantGetDeviceLocationException exception) {
 
@@ -115,6 +124,15 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         }
         actorToRegister.setNsIdentityPublicKey(this.getPublicKey());
         actorToRegister.setExtraData(extraData);
+
+        actorLocationUpdaterAgent.addActorProfile(
+                actorToRegister,
+                new RefreshParameters(
+                        System.currentTimeMillis(),
+                        refreshInterval,
+                        accuracy
+                )
+        );
 
         registeredActors.put(publicKey, actorToRegister);
 
@@ -142,9 +160,8 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         validateImageSize(image.length);
 
-        if (registeredActors == null || registeredActors.get(publicKey) == null) {
+        if (registeredActors == null || registeredActors.get(publicKey) == null)
             throw new ActorNotRegisteredException("publicKey: " + publicKey + " - name: " + name, "The actor we're trying to update is not registered.");
-        }
 
         ActorProfile actorToUpdate = registeredActors.get(publicKey);
 
@@ -157,13 +174,11 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         if (alias != null)
             actorToUpdate.setAlias(alias);
 
-        if (image != null)
+        if (image.length > 0)
             actorToUpdate.setPhoto(image);
 
         if (extraData != null)
             actorToUpdate.setExtraData(extraData);
-
-        registeredActors.put(publicKey, actorToUpdate);
 
         if (this.getConnection() != null && this.getConnection().isRegistered()) {
 
@@ -180,6 +195,23 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         }
     }
 
+    public void updateRegisteredActor(final ActorProfile actorToUpdate) throws CantUpdateRegisteredActorException {
+
+        if (this.getConnection() != null && this.getConnection().isRegistered()) {
+
+            try {
+
+                this.getConnection().unregisterProfile(actorToUpdate);
+
+                this.getConnection().registerProfile(actorToUpdate);
+
+            } catch (CantUnregisterProfileException |CantRegisterProfileException exception) {
+
+                throw new CantUpdateRegisteredActorException(exception, "publicKey: "+actorToUpdate.getIdentityPublicKey()+" - name: "+actorToUpdate.getName(), "There was an error trying to update a registered actor through the network service.");
+            }
+        }
+    }
+
     @Override
     public void unregisterActor(String publicKey) throws ActorNotRegisteredException, CantUnregisterActorException {
 
@@ -187,6 +219,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
             throw new ActorNotRegisteredException("publicKey: "+publicKey, "The actor we're trying to update is not registered.");
 
         ActorProfile actorToUnregister = registeredActors.remove(publicKey);
+        actorLocationUpdaterAgent.removeActorProfile(actorToUnregister);
 
         if (this.getConnection() != null && this.getConnection().isRegistered()) {
 
@@ -199,6 +232,15 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
                 throw new CantUnregisterActorException(exception, "publicKey: "+publicKey, "There was an error trying to update a registered actor through the network service.");
             }
         }
+    }
+
+    @Override
+    public boolean isActorOnline(final String publicKey) {
+
+        if (this.getConnection().isConnected())
+            return this.getConnection().isActorOnline(publicKey);
+        else
+            return false;
     }
 
     protected final void onNetworkServiceRegistered() {
@@ -217,11 +259,13 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
                         CantRegisterActorException cantRegisterActorException = new CantRegisterActorException(exception, "publicKey: "+actorToRegister.getValue().getIdentityPublicKey()+" - name: "+actorToRegister.getValue().getName(), "There was an error trying to register the actor through the network service.");
 
-                        errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorException);
+                        this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorException);
                     }
                 }
             }
         }
+
+        onActorNetworkServiceRegistered();
     }
 
     public final void onActorRegistered(String publicKey) {
@@ -246,6 +290,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
              */
             initializeActorNetworkServiceListeners();
 
+            actorLocationUpdaterAgent = new NetworkServiceActorLocationUpdaterAgent(this);
+
+
             onActorNetworkServiceStart();
 
         } catch (Exception exception) {
@@ -253,13 +300,13 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
             System.out.println(exception.toString());
 
             String context = "Plugin ID: " + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "NS Name: " + "COMPLETE"; // TODO COMPLETE WITH NETWORK SERVICE NAME
+                    + "NS Name: " + this.getProfile().getNetworkServiceType();
 
             String possibleCause = "The Template triggered an unexpected problem that wasn't able to solve by itself - ";
             possibleCause += exception.getMessage();
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -283,6 +330,11 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
     protected void onActorNetworkServiceRegistered() {
 
+        try {
+            actorLocationUpdaterAgent.start();
+        } catch (Exception exception) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+        }
     }
 
 }
