@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -5783,7 +5784,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+
+        //Owner
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeFragment.setOwner(owner);
         runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
 
         //Side Menu
@@ -5791,7 +5796,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        optionMenuItem.setFermatDrawable(new FermatDrawable(6,"ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setVisibility(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -5829,7 +5836,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeFragment.setOwner(owner);
         runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
 
         //Side Menu
@@ -5838,7 +5848,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //OptionMenu
         optionsMenu = new OptionsMenu();
         OptionMenuItem menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog", SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeFragment.setOwner(owner);
+        menuItem.setFermatDrawable(new FermatDrawable(3,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setVisibility(2);
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
@@ -5863,7 +5876,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         MenuItem runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setIcon("home");
-        runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_home", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeMenuItem.setFermatDrawable(new FermatDrawable(4, "ic_menu_home", owner, SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setSelected(true);
         runtimeMenuItem.setTextColor("#000000");
         runtimeMenuItem.backgroundSelectedColor("#000000");
@@ -5876,7 +5891,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setTextColor("#000000");
         runtimeMenuItem.setIcon("profile");
         runtimeMenuItem.backgroundSelectedColor("#000000");
-        runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_profile", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeMenuItem.setFermatDrawable(new FermatDrawable(5,"ic_menu_profile",owner, SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_PROFILE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         fermatBasicNavigationMenuBody.addMenuItem(runtimeMenuItem);

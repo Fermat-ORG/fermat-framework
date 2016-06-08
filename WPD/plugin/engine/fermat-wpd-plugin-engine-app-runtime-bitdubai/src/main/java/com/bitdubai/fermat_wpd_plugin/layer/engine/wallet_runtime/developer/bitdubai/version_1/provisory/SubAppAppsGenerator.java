@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragmen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -835,7 +836,11 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             MenuItem leftIconMenuItem = new MenuItem();
-            leftIconMenuItem.setFermatDrawable(new FermatDrawable("open_nav", chatIdentityPublicKey, SourceLocation.DEVELOPER_RESOURCES));
+            //Owner
+            Owner owner = new Owner();
+            owner.setOwnerAppPublicKey(chatIdentityPublicKey);
+
+            leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
             leftIconMenuItem.setAppLinkPublicKey("back");
             runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -846,7 +851,7 @@ public class SubAppAppsGenerator {
 
             OptionsMenu optionsMenu = new OptionsMenu();
             OptionMenuItem menuItem = new OptionMenuItem(1);
-            menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+            menuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
             menuItem.setVisibility(2);
             optionsMenu.addMenuItem(menuItem);
             runtimeActivity.setOptionsMenu(optionsMenu);
@@ -3823,7 +3828,11 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",communityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+        //Owner
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(communityPublicKey);
+
+        optionMenuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setVisibility(2);
         optionsMenu.addMenuItem(optionMenuItem);

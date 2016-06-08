@@ -275,7 +275,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     MenuItem item = menu.add(0, id, 0, menuItem.getLabel());
                     FermatDrawable icon = menuItem.getFermatDrawable();
                     if(icon!=null) {
-                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwnerAppPublicKey());
+                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
                         item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                         item.setShowAsAction(menuItem.getVisibility());
                     }
@@ -337,8 +337,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
             OptionsMenu optionsMenu = activity.getOptionsMenu();
 
             SideMenu sideMenu = activity.getSideMenu();
-
-
 
             setMainLayout(sideMenu, activity.getHeader());
            // Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
@@ -566,7 +564,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     this,
                     leftIconFermatDrawable.getId(),
                     leftIconFermatDrawable.getSourceLocation(),
-                    leftIconFermatDrawable.getOwnerAppPublicKey()
+                    leftIconFermatDrawable.getOwner().getOwnerAppPublicKey()
             );
             mToolbar.setNavigationIcon(resId);
             if(menuItem.getAppLinkPublicKey().equals("back")){
