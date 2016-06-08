@@ -198,17 +198,19 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
     }
 
     @Override
-    public List<BankMoneyTransactionRecord> getPendingTransactions() {
+    public List<BankMoneyTransactionRecord> getPendingTransactions(String account) {
         List<BankMoneyTransactionRecord> list = new ArrayList<>();
         final List<BankTransactionParameters> queuedTransactions = agent.getQueuedTransactions();
 
         for (BankTransactionParameters data : queuedTransactions) {
-            list.add(new BankTransactionRecordImpl(
+            if(account.equals(data.getAccount())) {
+                list.add(new BankTransactionRecordImpl(
                     data.getAmount(),
                     data.getMemo(),
                     new Date().getTime(),
                     data.getTransactionType(),
                     BankTransactionStatus.PENDING));
+            }
         }
         return list;
     }
