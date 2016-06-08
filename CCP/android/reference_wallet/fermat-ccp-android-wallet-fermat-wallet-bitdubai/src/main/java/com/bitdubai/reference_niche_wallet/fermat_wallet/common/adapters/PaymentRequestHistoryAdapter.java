@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -13,9 +14,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
-
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 
 import java.util.List;
@@ -32,13 +31,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     // private View.OnClickListener mOnClickListener;
     FermatWallet cryptoWallet;
 
-    FermatWalletSessionReferenceApp referenceWalletSession;
+    ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, FermatWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, ReferenceAppFermatSession<FermatWallet> referenceWalletSession,onRefreshList onRefresh) {
 
 
         super(context, dataSet);
@@ -96,7 +95,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), (int)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
         holder.getTxt_amount().setTypeface(tf) ;
 
         if(data.getContact() != null)
@@ -185,7 +184,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 public void onClick(View view) {
                     try {
                         cryptoWallet.approveRequest(data.getRequestId()
-                                , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                                , referenceWalletSession.getModuleManager().getSelectedActorIdentity().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
 //                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());

@@ -6046,11 +6046,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#1173aa");
+        runtimeTabStrip.setTabsColor("#B3D100");
 
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsTextColor("#F9F9F9");
 
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
