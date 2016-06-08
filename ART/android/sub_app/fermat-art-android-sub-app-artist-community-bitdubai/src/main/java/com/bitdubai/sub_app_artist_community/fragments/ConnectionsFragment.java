@@ -234,7 +234,7 @@ public class ConnectionsFragment extends AbstractFermatFragment<ArtistSubAppSess
 //                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
 //
 //            }
-//            if (item.getItemId() == R.id.action_notifications) {
+//            if (item.getId() == R.id.action_notifications) {
 //                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), appSession.getAppPublicKey());
 //                return true;
 //            }

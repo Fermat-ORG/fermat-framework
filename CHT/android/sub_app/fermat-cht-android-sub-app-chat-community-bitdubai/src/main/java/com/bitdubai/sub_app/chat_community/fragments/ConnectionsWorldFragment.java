@@ -32,6 +32,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -41,13 +43,10 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.lang.ref.WeakReference;
@@ -239,7 +238,7 @@ public class ConnectionsWorldFragment
             }
             else
             {
-                invalidate();
+//                invalidate();
                 onRefresh();
             }
 
@@ -384,7 +383,7 @@ public class ConnectionsWorldFragment
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.cht_comm_menu, menu);
+//        inflater.inflate(R.menu.cht_comm_menu, menu);
         // Locate the search item
 //        MenuItem searchItem = menu.findItem(R.id.menu_search);
 //        searchView = (SearchView) searchItem.getActionView();
@@ -533,6 +532,10 @@ public class ConnectionsWorldFragment
 
             if (id == R.id.action_help)
                 showDialogHelp();//0
+
+            if(id == 1){
+                showDialogHelp();
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -1044,7 +1047,7 @@ public class ConnectionsWorldFragment
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
 //        try {
-//            int id = item.getItemId();
+//            int id = item.getId();
 //
 //            if (id == R.id.action_help)
 //                showDialogHelp();

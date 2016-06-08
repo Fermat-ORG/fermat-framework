@@ -70,9 +70,9 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Connection
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
-
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 import com.squareup.picasso.Picasso;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -84,7 +84,9 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by Matias Furszyfer on 2015.11.05..
  */
-public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatWalletSession,ResourceProviderManager> implements View.OnClickListener{
+
+public class SendFormFragment extends AbstractFermatFragment<FermatWalletSessionReferenceApp,ResourceProviderManager> implements View.OnClickListener{
+
 
     private AndroidCoreManager androidCoreManager;
     private NetworkStatus networkStatus;

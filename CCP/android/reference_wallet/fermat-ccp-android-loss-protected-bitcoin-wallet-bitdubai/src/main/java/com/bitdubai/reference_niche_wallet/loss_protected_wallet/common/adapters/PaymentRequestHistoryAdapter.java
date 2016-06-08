@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -19,7 +20,8 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_Send_Payment_Dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
+
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,7 +37,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     private onRefreshList onRefreshList;
 
     LossProtectedWallet lossProtectedWallet;
-    LossProtectedWalletSessionReferenceApp appSession;
+    ReferenceAppFermatSession<LossProtectedWallet> appSession;
     Typeface tf;
 
     boolean lossProtectedEnabled;
@@ -46,7 +48,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.lossProtectedWallet = cryptoWallet;
         this.appSession =referenceWalletSession;
@@ -206,7 +208,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                     try {
 
                         //verify loss protected settings
-                        if(appSession.getActualExchangeRate() != 0){
+                        if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != 0){
 
 
 
@@ -219,7 +221,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
                             lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
 
-                            long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
+                            long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
 
 
                             if( data.getAmount() > availableBalance) //the amount is greater than the available
@@ -241,7 +243,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                             {
                                 //aprove payment request
                                 lossProtectedWallet.approveRequest(data.getRequestId()
-                                        , appSession.getIntraUserModuleManager().getPublicKey());
+                                        , lossProtectedWallet.getSelectedActorIdentity().getPublicKey());
                                 Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 onRefreshList.onRefresh();

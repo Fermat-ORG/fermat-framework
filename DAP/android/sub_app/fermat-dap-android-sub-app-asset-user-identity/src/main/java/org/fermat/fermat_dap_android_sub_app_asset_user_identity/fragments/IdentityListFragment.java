@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IdentityListFragment extends FermatListFragment<IdentityAssetUser>
+public class IdentityListFragment extends FermatListFragment<IdentityAssetUser,ReferenceAppFermatSession>
         implements FermatListItemListeners<IdentityAssetUser> {
 
 

@@ -13,7 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 /**
- * A Drawable that draws an oval with given {@link Bitmap}
+ * A FermatDrawable that draws an oval with given {@link Bitmap}
  *
  * Created by ronner on 10/08/15.
  */

@@ -103,7 +103,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment<ReferenceApp
 
     private void setUpHelpPublished(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
@@ -144,7 +144,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment<ReferenceApp
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_EDITOR_PUBLISHED, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -134,7 +134,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_HISTORY, 0, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

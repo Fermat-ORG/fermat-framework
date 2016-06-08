@@ -48,6 +48,10 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransactionSummary;
@@ -154,10 +158,10 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_FERMAT_WALLET)
 public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWalletSettings> implements FermatWallet,Serializable {
 
-    private final FermatWalletManager bitcoinWalletManager          ;
+    private final CryptoWalletManager bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
@@ -180,7 +184,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    public FermatWalletWalletModuleManager(final FermatWalletManager bitcoinWalletManager,
+    public FermatWalletWalletModuleManager(final CryptoWalletManager bitcoinWalletManager,
                                            final CryptoAddressBookManager cryptoAddressBookManager,
                                            final CryptoAddressesManager cryptoAddressesNSManager,
                                            final CryptoPaymentManager cryptoPaymentManager,
@@ -791,7 +795,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException {
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
         } catch (CantLoadWalletsException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
@@ -812,10 +816,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         List<FermatWalletModuleTransaction> fermatWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null) {
-                FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-                List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
+                CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
                     fermatWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -833,11 +837,11 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException {
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
 
-            for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -858,14 +862,14 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                                         int max,
                                                                         int offset) throws CantListTransactionsException {
         try {
-            FermatWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<FermatWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            List<CryptoWalletTransaction> bitcoinWalletTransactionList = fermatWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
 
-                List<FermatWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
                         bitcoinWalletTransactionList1.add(bwt);
@@ -877,7 +881,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
 
 
-            for (FermatWalletTransaction bwt : bitcoinWalletTransactionList1) {
+            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -894,7 +898,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                                               String walletPublicKey,
                                                               String actorPublicKey) throws CantGetActorTransactionHistoryException {
         try {
-            FermatWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet fermatWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return constructActorTransactionSummary(fermatWalletWallet.getActorTransactionSummary(actorPublicKey, balanceType));
         } catch (CantLoadWalletsException | CantGetActorTransactionSummaryException e) {
             throw new CantGetActorTransactionHistoryException(CantGetActorTransactionHistoryException.DEFAULT_MESSAGE, e);
@@ -919,24 +923,24 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         List<FermatWalletModuleTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null){
-                FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-                List<FermatWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
+                CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
                         balanceType,
                         transactionType,
                         max,
                         offset
                 );
 
-                List<FermatWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+                List<CryptoWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
                         if (bitcoinWalletTransactionList1.isEmpty()){
                             bitcoinWalletTransactionList1.add(bwt);
                         }else {
                             int count = 0;
-                            for (FermatWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
+                            for (CryptoWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
@@ -950,7 +954,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
 
 
-                for (FermatWalletTransaction bwt : bitcoinWalletTransactionList1) {
+                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -966,10 +970,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
         try {
             FermatWalletModuleTransaction cryptoWalletTransaction;
-            FermatWalletWallet bitcoinWalletWallet;
+            CryptoWalletWallet bitcoinWalletWallet;
             bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            FermatWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
+            CryptoWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
             cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
 
             return  cryptoWalletTransaction;
@@ -990,7 +994,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                           String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException {
 
         try {
-            FermatWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             bitcoinWalletWallet.setTransactionDescription(transactionID, description);
         } catch (CantLoadWalletsException | CantStoreMemoException e) {
             throw new CantSaveTransactionDescriptionException(CantSaveTransactionDescriptionException.DEFAULT_MESSAGE, e);
@@ -1001,7 +1005,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    private ActorTransactionSummary constructActorTransactionSummary(FermatWalletTransactionSummary transactionSummary) {
+    private ActorTransactionSummary constructActorTransactionSummary(CryptoWalletTransactionSummary transactionSummary) {
         return new FermatWalletWalletModuleActorTransactionSummary(
                 transactionSummary.getSentTransactionsNumber(),
                 transactionSummary.getReceivedTransactionsNumber(),
@@ -1387,7 +1391,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         }
     }
 
-    private FermatWalletModuleTransaction enrichTransaction(FermatWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
+    private FermatWalletModuleTransaction enrichTransaction(CryptoWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;

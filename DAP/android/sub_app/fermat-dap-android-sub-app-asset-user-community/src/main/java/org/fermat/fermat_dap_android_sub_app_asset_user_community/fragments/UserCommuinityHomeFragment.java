@@ -292,7 +292,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
@@ -339,7 +339,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 //        create.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-////            if (item.getItemId() == R.id.action_connect) {
+////            if (item.getId() == R.id.action_connect) {
 //                final ProgressDialog dialog = new ProgressDialog(getActivity());
 //                dialog.setMessage("Connecting please wait...");
 //                dialog.setCancelable(false);
@@ -559,9 +559,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
 
 
-        /*int id = item.getItemId();
+        /*int id = item.getId();
 
-//        if (item.getItemId() == R.id.action_connect) {
+//        if (item.getId() == R.id.action_connect) {
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
             final ProgressDialog dialog = new ProgressDialog(getActivity());
             dialog.setMessage("Connecting please wait...");

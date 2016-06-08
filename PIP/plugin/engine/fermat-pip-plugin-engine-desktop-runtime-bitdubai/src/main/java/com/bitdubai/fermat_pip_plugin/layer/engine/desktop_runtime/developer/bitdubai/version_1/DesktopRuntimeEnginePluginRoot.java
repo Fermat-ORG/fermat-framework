@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.BottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -49,9 +49,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * TODO this plugin DO.....
- *
+ * <p/>
  * Created by Matias Furszyfer 16/9/2015
  */
 @PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "matiasfurszyfer@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
@@ -75,7 +74,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
      * MAp of desktop identifier + runtimeDesktopObject
      */
 
-    Map<String,DesktopObject> lstDesktops = new HashMap<>();
+    Map<String, DesktopObject> lstDesktops = new HashMap<>();
 
     /**
      * Last desktop-object
@@ -99,7 +98,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
              */
-            if(!loadConfig()) {
+            if (!loadConfig()) {
                 factoryReset();
                 saveFactory();
             }
@@ -116,7 +115,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         }
     }
 
-    private void saveFactory(){
+    private void saveFactory() {
         try {
             PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "config", "desktop_runtime_config", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             pluginTextFile.setContent("true");
@@ -125,18 +124,18 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             e.printStackTrace();
         } catch (CantPersistFileException e) {
             e.printStackTrace();
-        } catch ( Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean loadConfig(){
+    private boolean loadConfig() {
         String dev = null;
         try {
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "config", "desktop_runtime_config", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             pluginTextFile.loadFromMedia();
             dev = pluginTextFile.getContent();
-        }catch (Exception e){
+        } catch (Exception e) {
             //e.printStackTrace();
             dev = "false";
         }
@@ -166,7 +165,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     public DesktopObject getLastDesktopObject() {
         if (lastDesktopObject != null) {
             return lstDesktops.get(lastDesktopObject);
-        }else{
+        } else {
             return lstDesktops.get("main_desktop");
         }
     }
@@ -179,17 +178,18 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //            return desktopObject;
 //        }
         DesktopObject desktopObject = null;
-        if(!lstDesktops.isEmpty()){
-            desktopObject = lstDesktops.get(desktopObjectPublicKey);;
-        }else {
+        if (!lstDesktops.isEmpty()) {
+            desktopObject = lstDesktops.get(desktopObjectPublicKey);
+            ;
+        } else {
             desktopObject = (DesktopObject) getAppByPublicKey(desktopObjectPublicKey);
         }
         return desktopObject;
     }
 
     @Override
-    public Map<String,DesktopObject> listDesktops() {
-        if(lstDesktops.size()<2){
+    public Map<String, DesktopObject> listDesktops() {
+        if (lstDesktops.size() < 2) {
             createToolsDesktop();
         }
         return lstDesktops;
@@ -217,7 +217,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             TitleBar runtimeTitleBar;
             SideMenu runtimeSideMenu;
-            MainMenu runtimeMainMenu;
+            OptionsMenu runtimeOptionsMenu;
             MenuItem runtimeMenuItem;
             TabStrip runtimeTabStrip;
             StatusBar statusBar;
@@ -231,11 +231,6 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             createDesktop();
             Activity activity;
             Fragment fragment;
-
-
-
-
-
 
 
 //            runtimeDesktopObject = new RuntimeDesktopObject();
@@ -256,7 +251,6 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //            // dmp_SUB_APP_MANAGER_FRAGMENT
 //            fragment.setType("CCPSAMF");
 //            activity.addFragment("CCPSAMF", fragment);
-
 
 
             /**
@@ -409,7 +403,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
          */
         //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
         //activity.setType(Activities.dmp_DESKTOP_HOME);
-     //   activity.setActivityType("CCPDHA");
+        //   activity.setActivityType("CCPDHA");
         Fragment fragment = new Fragment();
         fragment.setType(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
@@ -443,7 +437,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
         fragment = new Fragment();
         fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-        activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(),fragment);
+        activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(), fragment);
         runtimeDesktopObject.addActivity(activity);
 
 
@@ -562,7 +556,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeDesktopObject.addActivity(activity);
 
 
-        lstDesktops.put(publicKey,runtimeDesktopObject);
+        lstDesktops.put(publicKey, runtimeDesktopObject);
     }
 
     private void createToolsDesktop() {
@@ -640,12 +634,12 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             } else {
                 fermatStructure = getAppByPublicKey("main_desktop");
                 if (fermatStructure != null) {
-                    if(!lstDesktops.containsKey("main_desktop")) {
+                    if (!lstDesktops.containsKey("main_desktop")) {
                         lstDesktops.put("main_desktop", (DesktopObject) fermatStructure);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             createDesktop();
             fermatStructure = lstDesktops.get("main_desktop");
         }
@@ -665,7 +659,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
                     pluginTextFile.loadFromMedia();
                     String xml = pluginTextFile.getContent();
                     fermatStructure = (DesktopObject) XMLParser.parseXML(xml, fermatStructure);
-                    lstDesktops.put(appPublicKey,fermatStructure);
+                    lstDesktops.put(appPublicKey, fermatStructure);
                 } catch (FileNotFoundException e) {
                     try {
                         PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);

@@ -47,7 +47,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustom
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoCustomerIdentityListFragment extends FermatListFragment<CryptoCustomerIdentityInformation> implements FermatListItemListeners<CryptoCustomerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class CryptoCustomerIdentityListFragment extends FermatListFragment<CryptoCustomerIdentityInformation,ReferenceAppFermatSession> implements FermatListItemListeners<CryptoCustomerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private static final String TAG = "CustomerIdentityList";
     private CryptoCustomerIdentityModuleManager moduleManager;

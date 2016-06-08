@@ -148,7 +148,7 @@ public class SettingsAssetIssuerFragment extends AbstractFermatFragment<Referenc
 
     private void setUpSettings(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)

@@ -73,6 +73,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperI
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.BlockchainDownloadInfoDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import org.apache.http.client.ClientProtocolException;
@@ -98,9 +99,10 @@ import static android.widget.Toast.makeText;
  *
  * @author MAtias Furszyfer
  */
+
+
 public class SendTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager>
         implements FermatListItemListeners<CryptoWalletTransaction> {
-
     private  BlockchainNetworkType blockchainNetworkType;
     private long before = 0;
     private long after = 0;
@@ -123,11 +125,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private int progress1=1;
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
+    private BalanceType balanceType = BalanceType.AVAILABLE;
     
     private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     private ExecutorService _executor;
-
+    private int typeAmountSelected = 1;
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -163,6 +166,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         try {
             moduleManager = appSession.getModuleManager();
+
+            if(appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+                balanceType = (BalanceType)appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
+
+            if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
+                typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            else
+                appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
             //get wallet settings
             try {
@@ -254,12 +267,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     private void setUpPresentation(boolean checkButton) {
         PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
-                new PresentationBitcoinWalletDialog(
-                        getActivity(),
-                        appSession,
-                        null,
-                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                        checkButton);
+                null;
+        try {
+            presentationBitcoinWalletDialog = new PresentationBitcoinWalletDialog(
+                    getActivity(),
+                    appSession,
+                    null,
+                    (moduleManager.getSelectedActorIdentity() != null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                    checkButton);
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
 
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -292,33 +312,43 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     private void setUpBlockchainProgress(final boolean checkButton) {
 
-        final int type = (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES;
+        final int type;
+        try {
+            type = (moduleManager.getSelectedActorIdentity() != null) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES;
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
+                                new BlockchainDownloadInfoDialog(
+                                        getActivity(),
+                                        appSession,
+                                        null,
+                                        type,
+                                        checkButton);
 
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
-                            new BlockchainDownloadInfoDialog(
-                                    getActivity(),
-                                    appSession,
-                                    null,
-                                    type,
-                                    checkButton);
-
-
-                    blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                        }
-                    });
-                    blockchainDownloadInfoDialog.show();
-                }catch (Exception e){
-                    e.printStackTrace();
+                        blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                            }
+                        });
+                        blockchainDownloadInfoDialog.show();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
+
+
+
 
     }
 
@@ -534,7 +564,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     public void run() {
                         try {
                             final long balance = moduleManager.getBalance(BalanceType.getByCode(
-                                    (String) appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED)), appSession.getAppPublicKey(), blockchainNetworkType);
+                                    balanceType.getCode()), appSession.getAppPublicKey(), blockchainNetworkType);
 
                             handler.post(new Runnable() {
                                 @Override
@@ -857,7 +887,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void changeAmountType() {
-        ShowMoneyType showMoneyType = (appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, showMoneyType);
         String moneyTpe = "";
         switch (showMoneyType){
@@ -885,14 +915,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         updateBalances();
         setRunningDailyBalance();
         try {
-            if (appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.AVAILABLE.getCode())) {
+            if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, typeAmountSelected));
                 txt_type_balance.setText(R.string.book_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.BOOK);
-            } else if (appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.BOOK.getCode())) {
+            } else if (balanceType.getCode().equals(BalanceType.BOOK.getCode())) {
                 bookBalance = loadBalance(BalanceType.BOOK);
-               txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+               txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected));
                 txt_type_balance.setText(R.string.available_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
             }
@@ -922,10 +952,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private void updateBalances() {
         bookBalance = loadBalance(BalanceType.BOOK);
         balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-        txt_balance_amount.setText(
+       txt_balance_amount.setText(
                 WalletUtils.formatBalanceString(
-                        (appSession.getData(SessionConstant.TYPE_BALANCE_SELECTED).equals(BalanceType.AVAILABLE.getCode()))
-                                ? balanceAvailable : bookBalance, (Integer) appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                        (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode()))
+                                ? balanceAvailable : bookBalance, typeAmountSelected));
     }
 
 

@@ -127,7 +127,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             toolbar.setTitleTextColor(Color.WHITE);
-            Drawable drawable = null;
+            FermatDrawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
                 toolbar.setElevation(0);

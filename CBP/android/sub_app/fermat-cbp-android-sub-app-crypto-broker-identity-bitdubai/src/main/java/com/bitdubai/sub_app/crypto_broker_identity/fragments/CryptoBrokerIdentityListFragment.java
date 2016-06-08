@@ -43,7 +43,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerId
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
+public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation,ReferenceAppFermatSession>
         implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener{
 
     // Constants

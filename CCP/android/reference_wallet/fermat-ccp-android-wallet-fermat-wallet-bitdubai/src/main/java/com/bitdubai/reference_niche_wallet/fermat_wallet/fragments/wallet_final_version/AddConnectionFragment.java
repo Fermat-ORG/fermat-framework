@@ -36,11 +36,13 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserActor;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -58,7 +60,10 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     private FermatWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<FermatWalletIntraUserActor> intraUserInformationList;
-    private ReferenceAppFermatWalletSession fermatWalletSession;
+
+    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
+
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -78,26 +83,30 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
         try {
             // setting up  module
-            fermatWalletSession = (ReferenceAppFermatWalletSession) appSession;
-            moduleManager = fermatWalletSession.getModuleManager();
-            errorManager = fermatWalletSession.getErrorManager();
+
+            fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp) appSession;
+            moduleManager = fermatWalletSessionReferenceApp.getModuleManager();
+            errorManager = fermatWalletSessionReferenceApp.getErrorManager();
+
+
+
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
             FermatWalletSettings fermatWalletSettings = null;
-            fermatWalletSettings = moduleManager.loadAndGetSettings(fermatWalletSession.getAppPublicKey());
+            fermatWalletSettings = moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
 
             if(fermatWalletSettings != null) {
 
                 if (fermatWalletSettings.getBlockchainNetworkType() == null) {
                     fermatWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                moduleManager.persistSettings(fermatWalletSession.getAppPublicKey(), fermatWalletSettings);
+                moduleManager.persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), fermatWalletSettings);
 
             }
 
-            blockchainNetworkType = moduleManager.loadAndGetSettings(fermatWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            blockchainNetworkType = moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -145,7 +154,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(fermatWalletSession.getCommunityConnection(), object);
+                    changeApp(fermatWalletSessionReferenceApp.getCommunityConnection(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -173,7 +182,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             public void onClick(View v) {
                 ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(
                         getActivity(),
-                        fermatWalletSession,
+                        fermatWalletSessionReferenceApp,
                         null);
                 if (isContactAddPopUp){
                     connectionWithCommunityDialog.show();
@@ -274,7 +283,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         super.onCreateOptionsMenu(menu, inflater);
         this.menu = menu;
         if(isMenuVisible){
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -287,7 +296,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
             int id = item.getItemId();
 
-            if(id == BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION){
+            if(id == FermatWalletConstants.IC_ACTION_ADD_CONNECTION){
                 for(FermatWalletIntraUserActor fermatWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (fermatWalletIntraUserActor.isSelected()) {
@@ -297,8 +306,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                                     fermatWalletIntraUserActor.getPublicKey(),
                                     fermatWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    fermatWalletSession.getIntraUserModuleManager().getPublicKey()
-                                    , appSession.getAppPublicKey(),
+                                    fermatWalletSessionReferenceApp.getIntraUserModuleManager().getPublicKey()
+                                    , fermatWalletSessionReferenceApp.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
@@ -329,7 +338,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.listAllIntraUserConnections(moduleManager.getActiveIdentities().get(0).getPublicKey(),
-                        fermatWalletSession.getAppPublicKey(),
+                        fermatWalletSessionReferenceApp.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
             }
@@ -382,7 +391,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         connectionPickCounter++;
         if(!isMenuVisible){
             isMenuVisible = true;
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setIcon(R.drawable.button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }

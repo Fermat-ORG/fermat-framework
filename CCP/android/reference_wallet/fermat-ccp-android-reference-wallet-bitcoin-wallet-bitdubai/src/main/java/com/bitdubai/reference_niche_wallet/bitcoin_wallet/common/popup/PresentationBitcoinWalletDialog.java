@@ -31,7 +31,9 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by mati on 2015.11.27..
  */
+
 public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession<CryptoWallet>,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
@@ -65,7 +67,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
+
     public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;

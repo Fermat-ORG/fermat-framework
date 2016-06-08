@@ -110,7 +110,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActorAssetIssuerException {

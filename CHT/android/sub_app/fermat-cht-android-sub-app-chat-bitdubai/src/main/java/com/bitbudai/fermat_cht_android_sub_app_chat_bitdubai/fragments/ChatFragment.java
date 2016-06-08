@@ -203,7 +203,7 @@ public class ChatFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_search) {
+//        if (item.getId() == R.id.menu_search) {
 //            return true;
 //        }
         if (item.getItemId() == R.id.menu_clean_chat) {
@@ -228,7 +228,7 @@ public class ChatFragment
             }
             return true;
         }
-//        if (item.getItemId() == R.id.menu_send_chat_email) {
+//        if (item.getId() == R.id.menu_send_chat_email) {
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
 //            return true;
 //        }

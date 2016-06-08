@@ -18,9 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
@@ -29,7 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
@@ -40,7 +42,7 @@ import java.util.List;
  * Creado por Jose manuel De Sousa el 30/11/2015
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionNotificationsFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager> ,ResourceProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
     public static final String INTRA_USER_SELECTED = "intra_user";
     private static final int MAX = 20;
@@ -51,7 +53,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
+    private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private LinearLayout emptyView;
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -75,12 +77,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
-        try {
-            intraUserInformation = (IntraUserInformation) ((IntraUserSubAppSessionReferenceApp) appSession).getData(INTRA_USER_SELECTED,null);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        intraUserSubAppSession = ((ReferenceAppFermatSession) appSession);
+
+            intraUserInformation = (IntraUserInformation) ((ReferenceAppFermatSession) appSession).getData(INTRA_USER_SELECTED);
+
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         lstIntraUserInformations = new ArrayList<>();

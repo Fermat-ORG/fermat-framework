@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -40,7 +41,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletCo
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
+
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer
  */
-public class AddConnectionFragment extends FermatWalletListFragment<CryptoWalletIntraUserActor,ReferenceAppFermatSession,ResourceProviderManager>
+public class AddConnectionFragment extends FermatWalletListFragment<CryptoWalletIntraUserActor,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager>
         implements FermatListItemListeners<CryptoWalletIntraUserActor>,AddConnectionCallback {
 
 
@@ -58,7 +59,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private CryptoWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<CryptoWalletIntraUserActor> intraUserInformationList;
-    private ReferenceWalletSessionReferenceApp referenceWalletSession;
+
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -78,26 +79,26 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
 
         try {
             // setting up  module
-            referenceWalletSession = (ReferenceWalletSessionReferenceApp) appSession;
-            moduleManager = referenceWalletSession.getModuleManager();
-            errorManager = referenceWalletSession.getErrorManager();
+
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
             BitcoinWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            bitcoinWalletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
 
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
 
-            blockchainNetworkType = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            blockchainNetworkType = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -145,7 +146,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(referenceWalletSession.getCommunityConnection(), object);
+                    changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -173,7 +174,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             public void onClick(View v) {
                 ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(
                         getActivity(),
-                        referenceWalletSession,
+                        appSession,
                         null);
                 if (isContactAddPopUp){
                     connectionWithCommunityDialog.show();
@@ -297,7 +298,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                    moduleManager.getSelectedActorIdentity().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
@@ -328,8 +329,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             if (moduleManager == null) {
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
-                data = moduleManager.listAllIntraUserConnections(moduleManager.getActiveIdentities().get(0).getPublicKey(),
-                        referenceWalletSession.getAppPublicKey(),
+                data = moduleManager.listAllIntraUserConnections(moduleManager.getSelectedActorIdentity().getPublicKey(),
+                        appSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
             }

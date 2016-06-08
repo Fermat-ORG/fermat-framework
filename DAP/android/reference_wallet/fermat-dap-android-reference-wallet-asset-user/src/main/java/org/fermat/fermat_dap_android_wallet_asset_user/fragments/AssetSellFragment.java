@@ -40,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -64,11 +65,9 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class AssetSellFragment extends AbstractFermatFragment {
+public class AssetSellFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager> {
 
     private Activity activity;
-
-    private AssetUserSessionReferenceApp assetUserSession;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
     private View rootView;
@@ -93,8 +92,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     private User user;
 
     public AssetSellFragment() {
@@ -110,8 +107,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-        moduleManager = assetUserSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         activity = getActivity();
@@ -134,7 +130,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
     private void setUpHelpAssetSell(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)

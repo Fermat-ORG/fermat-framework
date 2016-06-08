@@ -3,6 +3,8 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -13,8 +15,6 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantS
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 3/27/16.
  */
-public class TimeOutNotifierManager  implements TimeOutManager{
+public class TimeOutNotifierManager implements TimeOutManager {
 
     /**
      * Class Variables
@@ -38,6 +38,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     /**
      * constructor
+     *
      * @param errorManager
      */
     public TimeOutNotifierManager(TimeOutNotifierAgentDatabaseDao timeOutNotifierAgentDatabaseDao, ErrorManager errorManager, TimeOutNotifierAgentPool timeOutNotifierAgentPool) {
@@ -86,7 +87,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     @Override
     public TimeOutAgent getTimeOutAgent(UUID uuid) {
-        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()) {
             if (timeOutAgent.getUUID() == uuid)
                 return timeOutAgent;
         }
@@ -102,7 +103,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     @Override
     public List<TimeOutAgent> getTimeOutAgents(FermatActor owner) {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
-        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()) {
             if (timeOutAgent.getOwner() == owner)
                 timeOutAgentList.add(timeOutAgent);
         }
@@ -112,7 +113,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     @Override
     public List<TimeOutAgent> getTimeOutAgents(AgentStatus status) {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
-        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
+        for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()) {
             if (timeOutAgent.getStatus() == status)
                 timeOutAgentList.add(timeOutAgent);
         }
@@ -124,7 +125,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
         try {
             timeOutNotifierAgentPool.markAsRead(timeOutAgent);
         } catch (CantExecuteQueryException | InconsistentResultObtainedInDatabaseQueryException e) {
-            CantMarkAgentAsReadException exception = new CantMarkAgentAsReadException(e, "Error marking agent as Read. "+ timeOutAgent.toString(), "Database Issue");
+            CantMarkAgentAsReadException exception = new CantMarkAgentAsReadException(e, "Error marking agent as Read. " + timeOutAgent.toString(), "Database Issue");
             errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }

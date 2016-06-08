@@ -24,7 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 public class SettingsMainNetworkFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private ReferenceAppFermatWalletSession referenceWalletSession;
+
+    private FermatWalletSessionReferenceApp referenceWalletSession;
     private FermatWallet cryptoWallet;
     private FermatEditText port;
     private FermatEditText ipAdress;
@@ -54,7 +56,8 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceAppFermatWalletSession) appSession;
+        referenceWalletSession = (FermatWalletSessionReferenceApp) appSession;
+
         try {
             cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

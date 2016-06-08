@@ -9,7 +9,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 /**
  * The enum <code>com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.enums.CryptoProvidersManager</code>
  * contains the Crypto Index CryptoProvidersManager.<p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  *
  * @version 1.0
@@ -18,22 +18,33 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 public enum Providers {
 
     BTCE {
-        public CryptoIndexProvider getProviderInstance() { return new BtceProvider(); }
+        public CryptoIndexProvider getProviderInstance() {
+            return new BtceProvider();
+        }
     },
     /*BTER {
         public CryptoIndexProvider getProviderInstance() { return new BterProvider(); }
     },*/
     CCEX {
-        public CryptoIndexProvider getProviderInstance() { return new CcexProvider(); }
+        public CryptoIndexProvider getProviderInstance() {
+            return new CcexProvider();
+        }
     },
     CEXIO {
-        public CryptoIndexProvider getProviderInstance() { return new CexioProvider(); }
+        public CryptoIndexProvider getProviderInstance() {
+            return new CexioProvider();
+        }
     },
-    CRYPTOCOINCHART{
-        public CryptoIndexProvider getProviderInstance() { return new CryptoCoinChartsProvider(); }
+    CRYPTOCOINCHART {
+        public CryptoIndexProvider getProviderInstance() {
+            return new CryptoCoinChartsProvider();
+        }
     },
-    BITFINEX{
-        public CryptoIndexProvider getProviderInstance() { return new CryptoCoinChartsProvider(); }
+    BITFINEX {
+        public CryptoIndexProvider getProviderInstance() {
+            return new CryptoCoinChartsProvider();
+        }
     };
+
     public abstract CryptoIndexProvider getProviderInstance();
 }

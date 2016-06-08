@@ -43,7 +43,8 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy on 02/02/16.
  */
-public class SettingsMainNetworkFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager> implements AdapterView.OnItemSelectedListener {
+public class SettingsMainNetworkFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener {
 
     private View rootView;
     private Toolbar toolbar;
@@ -128,7 +129,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment<Referenc
 
     private void setUpSettingsNetwork(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)

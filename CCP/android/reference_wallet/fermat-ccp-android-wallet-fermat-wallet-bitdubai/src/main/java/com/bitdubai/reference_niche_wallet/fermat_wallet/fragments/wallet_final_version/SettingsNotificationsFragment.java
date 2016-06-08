@@ -18,7 +18,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils.showMessage;
@@ -29,7 +30,8 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 public class SettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private ReferenceAppFermatWalletSession referenceWalletSession;
+    private FermatWalletSessionReferenceApp referenceWalletSession;
+
     private FermatWallet fermatWallet;
     private FermatEditText port;
     private FermatEditText ipAdress;
@@ -44,7 +46,8 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceAppFermatWalletSession) appSession;
+        referenceWalletSession = (FermatWalletSessionReferenceApp) appSession;
+
         try {
             fermatWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

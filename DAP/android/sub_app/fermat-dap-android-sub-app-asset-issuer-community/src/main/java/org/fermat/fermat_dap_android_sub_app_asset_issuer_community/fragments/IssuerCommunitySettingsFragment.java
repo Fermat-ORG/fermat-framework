@@ -82,7 +82,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<Refe
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, R.string.help)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment<Refe
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
             toolbar.setTitleTextColor(Color.WHITE);
-            Drawable drawable = null;
+            FermatDrawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
                 toolbar.setElevation(0);

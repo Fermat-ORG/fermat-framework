@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.developer.common;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 
 import java.io.Serializable;
 

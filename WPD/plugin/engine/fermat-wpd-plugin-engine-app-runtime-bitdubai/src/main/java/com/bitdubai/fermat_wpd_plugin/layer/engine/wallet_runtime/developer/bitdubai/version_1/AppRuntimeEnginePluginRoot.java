@@ -16,10 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -29,7 +31,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
@@ -322,7 +326,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         Header runtimeHeader;
@@ -374,6 +378,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = createFanWalletNavigationStructure();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
+        //Combo cht identity/community
+        runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
+        recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
         /**
          * SubApp generator
@@ -398,7 +405,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //            AppNavigationStructure runtimeAppNavigationStructure;
 //            TitleBar runtimeTitleBar;
 //            SideMenu runtimeSideMenu;
-//            MainMenu runtimeMainMenu;
+//            OptionsMenu runtimeOptionsMenu;
 //            MenuItem runtimeMenuItem;
 //            TabStrip runtimeTabStrip;
 //            StatusBar runtimeStatusBar;
@@ -2565,7 +2572,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3095,7 +3102,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
@@ -3789,9 +3796,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
-        runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setExpandable(true);
         runtimeHeader.setRemoveHeaderScroll(false);
-        runtimeHeader.setStartCollapse(true);
+        runtimeHeader.setStartCollapsed(true);
         runtimeActivity.setHeader(runtimeHeader);
 
 
@@ -3992,7 +3999,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4089,13 +4096,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -4802,7 +4809,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -4870,13 +4877,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5735,7 +5742,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
@@ -5745,16 +5752,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode();
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        runtimeWalletNavigationStructure.setAppStructureType(AppStructureType.COMBO_TYPE_2);
+        //Apps consume
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
         runtimeActivity.setType(Activities.CHT_COMBO_HOME);
         runtimeActivity.setColor("#12aca1");
-
-        // Header
-//        runtimeHeader = new Header();
-//        runtimeHeader.setLabel("Home");
-//        runtimeActivity.setHeader(runtimeHeader);
 
         // title bar
         runtimeTitleBar = new TitleBar();
@@ -5781,10 +5787,62 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Side Menu
         runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
 
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setVisibility(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         // Add to navigation structure
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_PROFILE.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_PROFILE);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setColor("#12aca1");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment.setFragmentFromApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        //OptionMenu
+        optionsMenu = new OptionsMenu();
+        OptionMenuItem menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog", SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setVisibility(2);
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         return runtimeWalletNavigationStructure;
     }
@@ -5823,13 +5881,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         AppNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
+
+
+       // MainMenu runtimeMainMenu;
+
         SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
+        OptionsMenu runtimeOptionsMenu;
+
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
-        Footer fermatFooter;
 
         Tab runtimeTab;
 
@@ -5845,7 +5907,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
@@ -5854,20 +5916,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Bitcoin wallet");
+        runtimeTitleBar.setLabel("Fermat wallet");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setFont("Helvetica.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -5922,13 +5984,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //         * Menu
 //         */
 //
-        runtimeMainMenu = new MainMenu();
+        runtimeOptionsMenu = new OptionsMenu();
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setIcon("send");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//        runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
 
-        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 //
 //        /**
 //         *  Fin de menu
@@ -5957,18 +6019,18 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
+        runtimeTitleBar.setLabel("bitdubai fermat Wallet");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackgroundColor("#ffffff");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6028,14 +6090,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6085,7 +6147,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6095,13 +6157,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Contacts");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6134,7 +6196,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6145,14 +6207,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6177,7 +6239,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6186,16 +6248,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Send Request To Contact");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6220,14 +6282,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_NO_IDENTITY_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setBackPublicKey(publicKey);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 //        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY);
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -6244,7 +6306,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -6255,13 +6317,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6286,7 +6348,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6297,13 +6359,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6338,14 +6400,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
 
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6367,7 +6429,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY_NOTIFICATIONS.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6378,13 +6440,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6413,7 +6475,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6423,15 +6485,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Contact detail");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6467,13 +6529,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6497,7 +6559,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_ACTIVITY.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6508,13 +6570,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 
@@ -6539,7 +6601,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_FERMAT_WALLET_OPEN_SEND_ERROR_REPORT);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_FERMAT_WALLET_OPEN_SEND_ERROR_REPORT.getCode());
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setBackPublicKey(publicKey);
 
@@ -6551,13 +6613,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#009CD4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setColor("#009CD4");
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#009CD4");
 
         runtimeTabStrip = new TabStrip();
 

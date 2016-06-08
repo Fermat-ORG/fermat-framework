@@ -256,7 +256,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
 
             settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
             for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
                 } else {
@@ -302,7 +302,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setImageLeft(R.drawable.asset_issuer_identity)
@@ -312,7 +312,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
                     .setSubTitle(R.string.dap_asset_factory_welcome_subTitle)
                     .setBody(R.string.dap_asset_factory_welcome_body)
                     .setTextFooter(R.string.dap_asset_factory_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
@@ -351,7 +351,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

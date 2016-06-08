@@ -171,11 +171,11 @@ public class ContactFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_block_contact) {
+//        if (item.getId() == R.id.menu_block_contact) {
 //            //Contact con = chatSession.getSelectedContact();
 //            return true;
 //        }
-//        if (item.getItemId() == R.id.menu_edit_contact) {
+//        if (item.getId() == R.id.menu_edit_contact) {
 //            try {
 //               // Contact con = chatSession.getSelectedContact();
 //                //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
@@ -196,7 +196,7 @@ public class ContactFragment
 //            }
 //            return true;
 //        }
-//        if (item.getItemId() == R.id.menu_del_contact) {
+//        if (item.getId() == R.id.menu_del_contact) {
 //            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
 //            alert.setTextTitle("Delete contact");
 //            alert.setTextBody("Do you want to delete this contact?");
