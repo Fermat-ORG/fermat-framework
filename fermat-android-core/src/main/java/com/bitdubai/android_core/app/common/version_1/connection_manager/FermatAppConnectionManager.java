@@ -47,6 +47,9 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAs
 import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
 import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
 
 //import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
@@ -59,9 +62,13 @@ public class FermatAppConnectionManager {
 
     private static final String TAG = "FermatAppConnection";
 
+    private static Map<String,AppConnections> openConnections = new HashMap<>();
+
     private static AppConnections switchStatement(Context activity,String publicKey){
         AppConnections fermatAppConnection = null;
-
+        if (openConnections.containsKey(publicKey)){
+            return openConnections.get(publicKey);
+        }
         switch (publicKey){
             //CCP WALLET
             case "reference_wallet":
@@ -206,6 +213,9 @@ public class FermatAppConnectionManager {
                 break;
 
 
+        }
+        if(!openConnections.containsKey(publicKey)){
+            openConnections.put(publicKey,fermatAppConnection);
         }
 
         return fermatAppConnection;

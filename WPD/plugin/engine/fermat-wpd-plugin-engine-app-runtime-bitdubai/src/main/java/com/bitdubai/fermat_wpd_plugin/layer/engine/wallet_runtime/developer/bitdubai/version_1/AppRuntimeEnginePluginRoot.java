@@ -20,9 +20,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatD
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -37,6 +37,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.S
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenuBody;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -5851,25 +5853,35 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     private SideMenu loadSideMenuChatCombo(String publicKey) {
         //Navigation
 
-        SideMenu runtimeSideMenu = new SideMenu();
+        FermatBasicNavigationMenu runtimeSideMenu = new FermatBasicNavigationMenu();
         runtimeSideMenu.setBackgroundColor("#ffffff");
         runtimeSideMenu.setNavigationIconColor("#ffffff");
-        runtimeSideMenu.setHasFooter(true);
+
+        // basic menu body
+        FermatBasicNavigationMenuBody fermatBasicNavigationMenuBody = new FermatBasicNavigationMenuBody();
 
         MenuItem runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setLabel("Profile");
         runtimeMenuItem.setIcon("home");
+        runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_home", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setSelected(true);
+        runtimeMenuItem.backgroundSelectedColor("#000");
         runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_HOME);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        fermatBasicNavigationMenuBody.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Profile");
+        runtimeMenuItem.setTextColor("#000");
         runtimeMenuItem.setIcon("profile");
+        runtimeMenuItem.backgroundSelectedColor("#000");
+        runtimeMenuItem.setFermatDrawable(new FermatDrawable("ic_menu_profile", SubAppsPublicKeys.CHT_COMMUNITY.getCode(), SourceLocation.DEVELOPER_RESOURCES));
         runtimeMenuItem.setLinkToActivity(Activities.CHT_COMBO_PROFILE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        fermatBasicNavigationMenuBody.addMenuItem(runtimeMenuItem);
+
+        runtimeSideMenu.setBody(fermatBasicNavigationMenuBody);
 
         return runtimeSideMenu;
     }
