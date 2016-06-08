@@ -30,7 +30,7 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
 
     public WalletContactListAdapter(Context context, int resource, List<WalletContact> items) {
         super(context, resource, items);
-        tf=Typeface.createFromAsset(context.getAssets(), "fonts/helvetica.ttf");
+        tf=Typeface.createFromAsset(context.getAssets(), "fonts/helvetica-neue.ttf");
         this.filteredData = items;
         this.originalData = items;
     }

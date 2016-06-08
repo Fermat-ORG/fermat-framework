@@ -267,7 +267,6 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException {
         try {
 
@@ -1035,7 +1034,6 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                            final TransactionType transactionType,
                                                                                            String walletPublicKey,

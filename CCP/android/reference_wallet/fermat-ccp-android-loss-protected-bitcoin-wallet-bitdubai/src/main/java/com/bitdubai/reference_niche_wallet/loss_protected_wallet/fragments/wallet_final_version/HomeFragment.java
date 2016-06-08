@@ -287,7 +287,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             return rootView;
         }
         catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Recovering from system error. " + e.getMessage(), Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
@@ -370,7 +370,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            makeText(getActivity(), "Recovering from system error - setUpHeader - " + e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -489,7 +489,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         }catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error In Graphic",
+            makeText(getActivity(), "Recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -714,7 +714,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 txt_type_balance.setText(R.string.real_balance_text);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.REAL);
                 balanceType = BalanceType.REAL;
-            } else if (balanceType.equals(BalanceType.REAL.getCode())) {
+            } else if (balanceType.getCode().equals(BalanceType.REAL.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected));
                 txt_type_balance.setText(R.string.available_balance_text);
@@ -723,7 +723,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             }
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Recovering from system error - changeBalanceType", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -802,22 +802,31 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 if (result != null && result.length > 0) {
 
                     ExchangeRate rate = (ExchangeRate) result[0];
-                    // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(
-                            WalletUtils.formatAmountStringWithDecimalEntry(
-                                    rate.getPurchasePrice(),
-                                    MAX_DECIMAL_FOR_RATE,
-                                    MIN_DECIMAL_FOR_RATE)) + " USD");
 
-                    //get available balance to actual exchange rate
+                    if(rate != null)
+                    {
+                        // progressBar.setVisibility(View.GONE);
+                        txt_exchange_rate.setText("1 BTC = " + String.valueOf(
+                                WalletUtils.formatAmountStringWithDecimalEntry(
+                                        rate.getPurchasePrice(),
+                                        MAX_DECIMAL_FOR_RATE,
+                                        MIN_DECIMAL_FOR_RATE)) + " USD");
 
-                    appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, Double.parseDouble(
-                            WalletUtils.formatAmountStringWithDecimalEntry(
-                                    rate.getPurchasePrice(),
-                                    MAX_DECIMAL_FOR_RATE,
-                                    MIN_DECIMAL_FOR_RATE)));
+                        //get available balance to actual exchange rate
 
-                    updateBalances();
+                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, Double.parseDouble(
+                                WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
+                                        MAX_DECIMAL_FOR_RATE,
+                                        MIN_DECIMAL_FOR_RATE)));
+
+                        updateBalances();
+
+                    }
+                    else {
+                        ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                        dialog_error.show();
+                    }
+
 
                 }
                 else {
@@ -835,7 +844,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
                 ErrorManager errorManager = appSession.getErrorManager();
                 if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);

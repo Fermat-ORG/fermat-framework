@@ -168,7 +168,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         referenceWalletSession = appSession;
 
         setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica-neue.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);

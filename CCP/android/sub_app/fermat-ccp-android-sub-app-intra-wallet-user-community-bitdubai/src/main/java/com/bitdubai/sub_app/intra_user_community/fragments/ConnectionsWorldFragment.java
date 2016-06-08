@@ -399,7 +399,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
             isRefreshing = true;
             final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
-            notificationsProgressDialog.setCancelable(false);
+            notificationsProgressDialog.setCancelable(true);
             notificationsProgressDialog.show();
 
             worker = new FermatWorker() {

@@ -217,7 +217,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @throws CantGetIntraUsersListException
      */
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 30)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<IntraUserInformation> getSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
 
         try {
@@ -296,7 +296,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
 

@@ -103,7 +103,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a ", Locale.US);
 
 
         txt_date.setText(sdf.format(spending.getTimestamp()));

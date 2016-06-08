@@ -84,7 +84,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      *
      * @throws CantGetAllLossProtectedWalletContactsException if something goes wrong
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+
     List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException;
 
 
@@ -658,7 +658,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @return
      * @throws CantListLossProtectedTransactionsException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+
     List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                    final TransactionType transactionType,
                                                                                    String walletPublicKey,
