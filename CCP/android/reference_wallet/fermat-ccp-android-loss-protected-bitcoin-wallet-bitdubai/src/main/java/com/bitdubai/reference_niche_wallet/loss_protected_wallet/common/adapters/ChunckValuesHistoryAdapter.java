@@ -6,7 +6,10 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
@@ -18,7 +21,8 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -30,9 +34,10 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
-    LossProtectedWallet cryptoWallet;
-    LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    LossProtectedWallet manager;
+    ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     Typeface tf;
+    private int typeAmountSelected = 1;
     /**
      * DATA
      * **/
@@ -42,13 +47,18 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         super(context);
     }
 
-    public ChunckValuesHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp lossProtectedWalletSession, onRefreshList onRefresh) {
+    public ChunckValuesHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet manager, ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession, onRefreshList onRefresh) {
         super(context, dataSet);
-        this.cryptoWallet = cryptoWallet;
+        this.manager = manager;
         this.lossProtectedWalletSession =lossProtectedWalletSession;
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        if(lossProtectedWalletSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
+            typeAmountSelected = (int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+        else
+            lossProtectedWalletSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
     }
 
 
@@ -91,10 +101,11 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
         try {
-            intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            intraUserLoginIdentity = (LossProtectedWalletIntraUserIdentity) manager.getSelectedActorIdentity();
+
+        } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         String intraUserPk = null;
@@ -104,7 +115,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         //Get transaction data
         try {
-            transaction = cryptoWallet.getTransaction(
+            transaction = manager.getTransaction(
                     data.getTransactionId(),
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
@@ -119,10 +130,10 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
                         data.getAmount(),
                         MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
                         MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        lossProtectedWalletSession.getTypeAmount()) + "  ("+percentage+"% Spend)");
-        holder.getTxt_amount().setTypeface(tf) ;
+                        typeAmountSelected) + "  (" + percentage + "% Spend)");
+        holder.getTxt_amount().setTypeface(tf);
 
-        if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())
+        if ((double)lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) >= data.getExchangeRate())
             holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
         else
             holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
@@ -140,7 +151,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         double spendingAmount = 0;
         try {
 
-            listBitcoinLossProtectedWalletSpend = cryptoWallet.listSpendingBlocksValue(
+            listBitcoinLossProtectedWalletSpend = manager.listSpendingBlocksValue(
                     lossProtectedWalletSession.getAppPublicKey(),
                     transactionId);
 

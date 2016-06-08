@@ -4,20 +4,22 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
+
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -36,7 +38,7 @@ public class CustomChartMarkerdView extends MarkerView {
 
     private TextView marker_element;
     private List<BitcoinLossProtectedWalletSpend> spend_list;
-    private LossProtectedWalletSessionReferenceApp lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     private LossProtectedWallet lossProtectedWalletmanager;
     private ErrorManager errorManager;
     private Activity activity;
@@ -49,7 +51,7 @@ public class CustomChartMarkerdView extends MarkerView {
      * @param layoutResource the layout resource to use for the MarkerView
      */
     public CustomChartMarkerdView(Context context,int layoutResource, List<BitcoinLossProtectedWalletSpend> spendingList
-    ,LossProtectedWalletSessionReferenceApp session , ErrorManager error,LossProtectedWallet manager) {
+    ,ReferenceAppFermatSession<LossProtectedWallet> session , ErrorManager error,LossProtectedWallet manager) {
         super(context, layoutResource);
 
         marker_element = (TextView) findViewById(R.id.marker_element);
@@ -89,7 +91,7 @@ public class CustomChartMarkerdView extends MarkerView {
         try{
 
             //get the intra user login identity
-            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+            ActiveActorIdentityInformation intraUserLoginIdentity = lossProtectedWalletmanager.getSelectedActorIdentity();
             String intraUserPk = null;
             if (intraUserLoginIdentity != null) {
                 intraUserPk = intraUserLoginIdentity.getPublicKey();
@@ -114,10 +116,10 @@ public class CustomChartMarkerdView extends MarkerView {
 
         } catch (CantListLossProtectedTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
         }
         return 0;
     }

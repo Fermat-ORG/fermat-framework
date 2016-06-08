@@ -10,13 +10,15 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 /**
  * Created by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
-@SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAppFermatWalletSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<FermatWalletSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * onClick listeners
@@ -35,7 +37,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity activity,
-                                              final ReferenceAppFermatWalletSession referenceWalletSession,
+                                              final FermatWalletSessionReferenceApp referenceWalletSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(activity, referenceWalletSession, subAppResources);

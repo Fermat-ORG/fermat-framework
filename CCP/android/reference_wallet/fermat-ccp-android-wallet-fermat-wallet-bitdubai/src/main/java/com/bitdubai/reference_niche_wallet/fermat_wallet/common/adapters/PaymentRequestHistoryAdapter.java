@@ -13,7 +13,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 
 import java.util.List;
@@ -29,19 +31,22 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     private onRefreshList onRefreshList;
     // private View.OnClickListener mOnClickListener;
     FermatWallet cryptoWallet;
-    ReferenceAppFermatWalletSession referenceWalletSession;
+
+    FermatWalletSessionReferenceApp referenceWalletSession;
     Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
-    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, ReferenceAppFermatWalletSession referenceWalletSession,onRefreshList onRefresh) {
+    public PaymentRequestHistoryAdapter(Context context, List<PaymentRequest> dataSet, FermatWallet cryptoWallet, FermatWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
+
+
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica.ttf");
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){

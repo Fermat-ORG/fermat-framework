@@ -43,7 +43,6 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        //getChtActiveIdentity();
         return new ChatCommunityFragmentFactory();
     }
 

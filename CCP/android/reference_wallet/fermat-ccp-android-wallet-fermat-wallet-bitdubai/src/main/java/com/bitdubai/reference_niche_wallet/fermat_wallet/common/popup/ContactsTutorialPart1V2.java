@@ -16,13 +16,17 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 /**
  * Created by mati on 2015.11.27..
  */
-public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatWalletSession,SubAppResourcesProviderManager> implements View.OnClickListener{
+
+public class ContactsTutorialPart1V2 extends FermatDialog<FermatWalletSessionReferenceApp,SubAppResourcesProviderManager> implements View.OnClickListener{
+
 
     private final Activity activity;
     private FermatButton add_fermat_user;
@@ -37,7 +41,9 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatWall
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ContactsTutorialPart1V2(Activity activity, ReferenceAppFermatWalletSession fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
+
+    public ContactsTutorialPart1V2(Activity activity, FermatWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.checkButton = checkButton;

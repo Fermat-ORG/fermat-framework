@@ -9,12 +9,15 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 /**
  * Created by mati on 2015.11.17..
  */
-public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceAppFermatWalletSession,WalletResourcesProviderManager> implements View.OnClickListener {
+
+public class ConnectionWithCommunityDialog extends FermatDialog<FermatWalletSessionReferenceApp,WalletResourcesProviderManager> implements View.OnClickListener {
 
 
     private final Activity activity;
@@ -28,7 +31,9 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceAppFerm
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ConnectionWithCommunityDialog(Activity activity, ReferenceAppFermatWalletSession fermatSession, WalletResourcesProviderManager resources) {
+
+    public ConnectionWithCommunityDialog(Activity activity, FermatWalletSessionReferenceApp fermatSession, WalletResourcesProviderManager resources) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
     }

@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.bar_code_scanner.IntentIntegrator;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 
 import static android.widget.Toast.makeText;
@@ -42,7 +42,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     /**
      * Plaform reference
      */
-    private ReferenceAppFermatWalletSession fermatWalletSession;
+    private FermatWalletSessionReferenceApp fermatWalletSession;
     private FermatWallet fermatWallet;
 
 
@@ -63,7 +63,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fermatWalletSession = (ReferenceAppFermatWalletSession) appSession;
+        fermatWalletSession = (FermatWalletSessionReferenceApp) appSession;
         try {
             fermatWallet = fermatWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

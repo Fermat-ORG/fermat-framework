@@ -12,15 +12,17 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -29,16 +31,16 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,LossProtectedWalletSessionReferenceApp lossWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.loss_navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
-            LossProtectedWalletIntraUserIdentity identityModule = lossWalletSession.getIntraUserModuleManager();
+            ActiveActorIdentityInformation identityModule = lossWalletSession.getModuleManager().getSelectedActorIdentity();
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_photo);
             if (identityModule != null) {
-                if (identityModule.getProfileImage() != null) {
-                    if (identityModule.getProfileImage().length > 0) {
-                           imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),identityModule.getProfileImage()));
+                if (identityModule.getImage() != null) {
+                    if (identityModule.getImage().length > 0) {
+                           imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),identityModule.getImage()));
 
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_male_lossp).transform(new CircleTransform()).into(imageView); //default image by param
@@ -63,9 +65,10 @@ public class FragmentsCommons {
         }catch (OutOfMemoryError outOfMemoryError){
             outOfMemoryError.printStackTrace();
             Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+
+        } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
         return view;

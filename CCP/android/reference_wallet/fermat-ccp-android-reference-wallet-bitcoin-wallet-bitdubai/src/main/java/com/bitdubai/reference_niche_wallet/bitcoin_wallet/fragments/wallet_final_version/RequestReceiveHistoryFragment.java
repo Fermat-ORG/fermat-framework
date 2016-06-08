@@ -33,7 +33,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -45,12 +44,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
 
     /**
      * Session
      */
-    ReferenceWalletSessionReferenceApp referenceWalletSession;
+    ReferenceAppFermatSession referenceWalletSession;
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
@@ -89,11 +88,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSessionReferenceApp)appSession;
-
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
@@ -341,7 +338,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSessionReferenceApp referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceAppFermatSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
 

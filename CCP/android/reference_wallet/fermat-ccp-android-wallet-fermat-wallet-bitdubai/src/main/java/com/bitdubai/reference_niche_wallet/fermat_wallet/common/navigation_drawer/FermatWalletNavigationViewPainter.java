@@ -12,7 +12,9 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 
 import java.lang.ref.WeakReference;
@@ -25,11 +27,13 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
-    private ReferenceAppFermatWalletSession fermatWalletSession;
 
-    public FermatWalletNavigationViewPainter(Context activity, ReferenceAppFermatWalletSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+
+    public FermatWalletNavigationViewPainter(Context activity, FermatWalletSessionReferenceApp referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+
         this.activity = new WeakReference<Context>(activity);
-        this.fermatWalletSession = referenceWalletSession;
+        this.fermatWalletSessionReferenceApp = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
@@ -37,7 +41,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),fermatWalletSession,applicationsHelper.get());
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), fermatWalletSessionReferenceApp,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -47,7 +51,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity.get());
+            FermatWalletNavigationViewAdapter navigationViewAdapter = new FermatWalletNavigationViewAdapter(activity.get());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();

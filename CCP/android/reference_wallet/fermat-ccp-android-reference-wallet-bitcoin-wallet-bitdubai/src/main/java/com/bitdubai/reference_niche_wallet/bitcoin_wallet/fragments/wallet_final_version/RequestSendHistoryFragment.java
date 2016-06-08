@@ -29,7 +29,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +40,12 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
+public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
      */
-    ReferenceWalletSessionReferenceApp referenceWalletSession;
+
     String walletPublicKey = "reference_wallet";
     /**
      * MANAGERS
@@ -83,7 +82,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSessionReferenceApp)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
 
@@ -100,13 +98,13 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }
         });
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager();
+            cryptoWallet = appSession.getModuleManager();
 
 
 
             BitcoinWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
@@ -150,7 +148,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -186,7 +184,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,appSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -212,7 +210,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
@@ -269,14 +267,14 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSessionReferenceApp referenceWalletSession) {
-        this.referenceWalletSession = referenceWalletSession;
+    public void setReferenceWalletSession(ReferenceAppFermatSession referenceWalletSession) {
+        this.appSession = referenceWalletSession;
     }
 
     @Override
     public void onClick(View v) {
         try {
-            PaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
+            PaymentRequest paymentRequest = (PaymentRequest) appSession.getData("LastRequestSelected");
             int id = v.getId();
             if(id == R.id.btn_refuse_request){
 
@@ -284,7 +282,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                cryptoWallet.approveRequest(paymentRequest.getRequestId(),cryptoWallet.getSelectedActorIdentity().getPublicKey());
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 

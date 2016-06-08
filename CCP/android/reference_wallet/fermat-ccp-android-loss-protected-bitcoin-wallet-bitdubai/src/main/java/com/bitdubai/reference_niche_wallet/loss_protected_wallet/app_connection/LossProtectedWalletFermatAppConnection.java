@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -21,16 +22,16 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.LossProtectedWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.LossProtectedWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.LossProtectedWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class LossProtectedWalletFermatAppConnection extends AppConnections<LossProtectedWalletSessionReferenceApp>{
+public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
 
     private LossProtectedWallet moduleManager = null;
-    private LossProtectedWalletSessionReferenceApp lossWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
 
     public LossProtectedWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -54,7 +55,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new LossProtectedWalletSessionReferenceApp();
+        return (AbstractReferenceAppFermatSession) this.getFullyLoadedSession();
     }
 
     @Override

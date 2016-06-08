@@ -145,6 +145,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     String deviceUserPublicKey = "walletDevice";
     String walletPublicKey = "reference_wallet";
     String lossProtectedwalletPublicKey = "loss_protected_wallet";
+    String fermatWalletPublicKey = "fermat_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -175,6 +176,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
         boolean existWalletLoss = false;
+        boolean existFermatWallet = false;
         try {
 
             //load user's wallets ids
@@ -188,6 +190,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                     existWallet = true;
                 if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
                     existWalletLoss = true;
+                if (mapEntry.getValue().toString().equals(fermatWalletPublicKey))
+                    existFermatWallet = true;
             }
 
 
@@ -204,6 +208,30 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
                     try {
                         this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
+
+            if (!existFermatWallet) {
+                //Create new Fermat Wallet
+
+                try {
+
+                    cryptoWalletManager.createWallet(fermatWalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), fermatWalletPublicKey);
+
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(fermatWalletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 

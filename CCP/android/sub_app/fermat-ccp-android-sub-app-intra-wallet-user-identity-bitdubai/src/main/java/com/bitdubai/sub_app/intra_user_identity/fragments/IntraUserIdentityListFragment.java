@@ -41,7 +41,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
     private ErrorManager errorManager;
     private ArrayList<IntraUserModuleIdentity> identityInformationList;
 
-    IntraUserIdentitySubAppSessionReferenceApp intraUserIdentitySubAppSession ;
+    ReferenceAppFermatSession<IntraUserIdentityModuleManager> intraUserIdentitySubAppSession ;
 
 
     public static IntraUserIdentityListFragment newInstance() {
@@ -54,7 +54,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraUserM
 
         try {
             // setting up  module
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSessionReferenceApp) appSession;
+            intraUserIdentitySubAppSession = (ReferenceAppFermatSession)appSession;
             moduleManager = intraUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);

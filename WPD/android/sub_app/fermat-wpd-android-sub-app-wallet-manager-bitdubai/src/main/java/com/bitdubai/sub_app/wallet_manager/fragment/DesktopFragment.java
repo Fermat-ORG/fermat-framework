@@ -341,7 +341,7 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
                 if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
-                    item.setIconResource(R.drawable.bitcoin_wallet);
+                    item.setIconResource(R.drawable.fermat_wallet_icon);
                     item.setPosition(10);
                     installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);

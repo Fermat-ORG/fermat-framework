@@ -19,7 +19,9 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantGetFermatWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantListFermatWalletIntraUserIdentityException;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.BitmapWorkerTask;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceAppFermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 import com.squareup.picasso.Picasso;
 
@@ -28,11 +30,12 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
-        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatWalletSession fermatWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+
             View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {
-               ActiveActorIdentityInformation identityInformation= fermatWalletSession.getIntraUserModuleManager();
+               ActiveActorIdentityInformation identityInformation= fermatWalletSessionReferenceApp.getIntraUserModuleManager();
                 ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
                 if (identityInformation != null) {
                     if (identityInformation.getImage() != null) {

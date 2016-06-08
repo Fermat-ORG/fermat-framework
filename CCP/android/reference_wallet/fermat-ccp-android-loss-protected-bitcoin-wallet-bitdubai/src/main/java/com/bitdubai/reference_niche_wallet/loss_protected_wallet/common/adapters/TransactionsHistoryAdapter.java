@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -14,7 +15,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.Sh
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionListItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSessionReferenceApp;
+
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -27,10 +28,10 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
     private com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList onRefreshList;
     LossProtectedWallet cryptoWallet;
-    LossProtectedWalletSessionReferenceApp referenceWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession;
     Typeface tf;
 
-    public TransactionsHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSessionReferenceApp referenceWalletSession,onRefreshList onRefresh) {
+    public TransactionsHistoryAdapter(Context context, List<LossProtectedWalletTransaction> dataSet, LossProtectedWallet cryptoWallet, ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;

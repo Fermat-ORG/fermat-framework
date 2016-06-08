@@ -25,9 +25,11 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
     //private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
     private WeakReference<FermatApplicationCaller> applicationsHelper;
+
     private ReferenceAppFermatSession referenceWalletSession;
 
     public BitcoinWalletNavigationViewPainter(Context activity, ReferenceAppFermatSession referenceWalletSession, FermatApplicationCaller applicationsHelper) {
+
         this.activity = new WeakReference<Context>(activity);
         this.referenceWalletSession = referenceWalletSession;
         this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);

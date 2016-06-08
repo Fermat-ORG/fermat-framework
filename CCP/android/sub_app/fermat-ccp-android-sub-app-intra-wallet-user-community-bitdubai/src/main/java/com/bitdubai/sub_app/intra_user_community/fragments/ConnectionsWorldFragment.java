@@ -30,8 +30,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
@@ -40,6 +42,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -51,7 +54,7 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSessionReferenceApp;
+
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -67,7 +70,7 @@ import static android.widget.Toast.makeText;
  * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
  */
 
-public class ConnectionsWorldFragment extends AbstractFermatFragment implements
+public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserModuleManager>,ResourceProviderManager>  implements
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -97,11 +100,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     // flags
     private boolean isRefreshing = false;
     private View rootView;
-    private IntraUserSubAppSessionReferenceApp intraUserSubAppSession;
+    private ReferenceAppFermatSession<IntraUserModuleManager> intraUserSubAppSession;
     private String searchName;
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations = new ArrayList<>();
-    private List<IntraUserInformation> dataSet = new ArrayList<>();
+
     private android.support.v7.widget.Toolbar toolbar;
     private EditText searchEditText;
     private List<IntraUserInformation> dataSetFiltered;
@@ -133,7 +136,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             setHasOptionsMenu(true);
             // setting up  module
-            intraUserSubAppSession = ((IntraUserSubAppSessionReferenceApp) appSession);
+            intraUserSubAppSession = ((ReferenceAppFermatSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -155,6 +158,39 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
 
+
+            //consult net work status
+
+
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                NetworkStatus networkStatus = null;
+                                try {
+                                    networkStatus = getFermatNetworkStatus();
+                                } catch (CantGetCommunicationNetworkStatusException e) {
+                                    e.printStackTrace();
+                                }
+                                switch (networkStatus) {
+                                    case CONNECTED:
+                                        // setUpReferences();
+                                        break;
+                                    case DISCONNECTED:
+                                        showErrorFermatNetworkDialog();
+                                        break;
+                                }
+
+                            }
+                        }, 500);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -174,15 +210,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
-            setUpReferences();
-            switch (getFermatNetworkStatus()) {
-                case CONNECTED:
-                   // setUpReferences();
-                    break;
-                case DISCONNECTED:
-                    showErrorFermatNetworkDialog();
-                    break;
-            }
+
+          setUpReferences();
+
+            showEmpty(true, emptyView);
+            showEmpty(false, searchEmptyView);
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -192,7 +224,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void setUpReferences() {
-        dataSet = new ArrayList<>();
+
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -225,23 +257,81 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
-            isRefreshing = true;
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        dataSet = getSuggestionCache();
 
-                        showCriptoUsersCache();
-                        isRefreshing = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+            //Get Fermat User Cache List First
+            worker = new FermatWorker() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return getSuggestionCache();
+
+                }
+            };
+            worker.setContext(getActivity());
+            worker.setCallBack(new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (result != null &&
+                            result.length > 0) {
+                        if (getActivity() != null && adapter != null) {
+                            lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
+
+                            if (lstIntraUserInformations != null) {
+
+                                if (lstIntraUserInformations.isEmpty()) {
+                                   showEmpty(true, emptyView);
+                                   showEmpty(false, searchEmptyView);
+
+                                } else {
+                                    adapter.changeDataSet(lstIntraUserInformations);
+                                    showEmpty(false, emptyView);
+                                    showEmpty(false, searchEmptyView);
+                                }
+                            } else {
+                                showEmpty(true, emptyView);
+                                showEmpty(false, searchEmptyView);
+                            }
+
+                        }
+                    } else {
+                        showEmpty(true, emptyView);
+                        showEmpty(false, searchEmptyView);
+
                     }
+                    //get Fermat User list
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            adapter.changeDataSet(lstIntraUserInformations);
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onRefresh();
+                                }
+                            }, 1500);
+                        }
+                    });
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (swipeRefresh != null)
+                        swipeRefresh.setRefreshing(false);
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    ex.printStackTrace();
+
                 }
             });
-
-
+            worker.execute();
         }
+
+
     }
 
     public void showErrorNetworkDialog() {
@@ -314,33 +404,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
-                            adapter.changeDataSet(lstIntraUserInformations);
-                            if (lstIntraUserInformations.isEmpty()) {
-                                //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
-                                try {
-                                     if(dataSet!=null) {
-                                        if (!dataSet.isEmpty()) {
-                                            lstIntraUserInformations.addAll(dataSet);
-                                            showEmpty(false, emptyView);
-                                            showEmpty(false, searchEmptyView);
-                                        } else {
-                                            showEmpty(true, emptyView);
-                                            showEmpty(false, searchEmptyView);
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
 
+                            if (lstIntraUserInformations.isEmpty()) {
+                               showEmpty(true, emptyView);
+                               showEmpty(false, searchEmptyView);
                             } else {
+                                adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);
                                 showEmpty(false, searchEmptyView);
                             }
                         }
                     } else {
-                            showEmpty(false, emptyView);
+                            showEmpty(true, emptyView);
                             showEmpty(false, searchEmptyView);
-                            lstIntraUserInformations.addAll(dataSet);
 
                     }
                 }
@@ -499,7 +575,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if(getActivity()!=null) {
             getActivity().invalidateOptionsMenu();
         }else{
-            Log.e(TAG,"updateNotificationsBadge activity null, please check this, class"+getClass().getName()+" line: "+new Throwable().getStackTrace()[0].getLineNumber());
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
         }
     }
 
@@ -510,7 +586,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private synchronized List<IntraUserInformation> getQueryData(final CharSequence charSequence) {
-        if (dataSet != null && !dataSet.isEmpty()) {
+        if (lstIntraUserInformations != null && !lstIntraUserInformations.isEmpty()) {
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
                 /*dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
@@ -523,7 +599,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
 
                 dataSetFiltered = new ArrayList<IntraUserInformation>();
-                for (IntraUserInformation intraUser : dataSet) {
+                for (IntraUserInformation intraUser : lstIntraUserInformations) {
 
                     if(intraUser.getName().toLowerCase().contains(charSequence.toString().toLowerCase()))
                         dataSetFiltered.add(intraUser);
@@ -546,7 +622,17 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-            dataSet.addAll(userList);
+             if(userList != null)
+                dataSet.addAll(userList);
+             else {
+                 dataSet.addAll(lstIntraUserInformations);
+                 getActivity().runOnUiThread(new Runnable() {
+                     public void run() {
+                         Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                     }
+                 });
+             }
+
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
@@ -601,7 +687,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            showCriptoUsersCache();
+                            //showCriptoUsersCache();
                         }
                     });
                 } else {
@@ -620,7 +706,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                     getActivity().finish();
                                 }
                             } else {
-                                showCriptoUsersCache();
+                               // showCriptoUsersCache();
                                 invalidate();
                             }
                         }
@@ -637,17 +723,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         Boolean isBackPressed = null;
-                        try {
-                            isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS,Boolean.TRUE);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+
+                            isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+
                         if (isBackPressed != null) {
                             if (isBackPressed) {
                                 getActivity().onBackPressed();
                             }
-                        } else
-                            showCriptoUsersCache();
+                        } //else
+                            //showCriptoUsersCache();
                     }
                 });
             }
@@ -664,9 +748,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }else{
             invalidate();
         }
-        if(dataSet !=null)
+        if(lstIntraUserInformations !=null)
         {
-            if (dataSet.isEmpty()) {
+            if (lstIntraUserInformations.isEmpty()) {
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         showEmpty(true, emptyView);
@@ -685,7 +769,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        adapter.changeDataSet(dataSet);
+                        adapter.changeDataSet(lstIntraUserInformations);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -702,7 +786,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    adapter.changeDataSet(dataSet);
+                    adapter.changeDataSet(lstIntraUserInformations);
                     Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
