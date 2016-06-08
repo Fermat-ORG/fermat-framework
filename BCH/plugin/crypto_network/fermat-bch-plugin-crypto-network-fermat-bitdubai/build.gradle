@@ -6,7 +6,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':fermat-api')
     compile files('libs/fermatj-core-0.13.6.jar')
-    compile files('libs/fermatj-core-0.13.6-bundled.jar')
     compile files('libs/fermatj-core-0.13.6-javadoc.jar')
-
 }
