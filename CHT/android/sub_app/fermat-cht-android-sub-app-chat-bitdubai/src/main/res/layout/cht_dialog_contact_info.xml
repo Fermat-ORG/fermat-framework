@@ -8,7 +8,7 @@
     >
 
     <ImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_image_dialog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/cht_center_profile_icon_center"
@@ -23,10 +23,11 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:background="#075e55"
-            android:alpha="0.8"
+            android:alpha="0.9"
             />
 
         <TextView
+            android:id="@+id/contact_name_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="John Doe"
@@ -41,7 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignBottom="@+id/profile_image"
+        android:layout_alignBottom="@+id/profile_image_dialog"
         android:background="#f9f9f9"
         >
 
