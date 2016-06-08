@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ContactListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ProfileDialog;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -98,20 +99,26 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
                 @Override
                 public void onClick(View v) {
                     try {
-                        Contact contact=new ContactImpl();
-                        contact.setRemoteActorPublicKey(contactId.get(pos));
-                        contact.setAlias(contactInfo.get(pos));
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        contactIcon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
-                        contact.setProfileImage(byteArray);
-                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
-                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
-                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                        //appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contactid.get(pos));
-                        mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
-                        //} catch (CantGetContactException e) {
-                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+                        ProfileDialog profile = new ProfileDialog (getContext(), appSession, null);
+                        profile.setProfileName(contactInfo.get(pos));
+                        profile.setProfilePhoto(contactIcon.get(pos));
+                        profile.show();
+
+//                        Contact contact=new ContactImpl();
+//                        contact.setRemoteActorPublicKey(contactId.get(pos));
+//                        contact.setAlias(contactInfo.get(pos));
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        contactIcon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        byte[] byteArray = stream.toByteArray();
+//                        contact.setProfileImage(byteArray);
+//                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
+//                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
+//                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                        //appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contactid.get(pos));
+//                        mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
+//                        //} catch (CantGetContactException e) {
+//                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
