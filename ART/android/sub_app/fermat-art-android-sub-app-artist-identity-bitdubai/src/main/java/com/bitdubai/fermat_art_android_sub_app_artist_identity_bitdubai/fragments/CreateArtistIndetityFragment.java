@@ -590,21 +590,23 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 externalIdentityID,
                                 artExternalPlatform);
                     }else{
-                        if(updateProfileImage)
+                        byte[] currentImage;
+                        if(updateProfileImage) {
+                            currentImage = checkedImage();
                             moduleManager.updateArtistIdentity(
                                     artistName,
                                     identitySelected.getPublicKey(),
-                                    artistImageByteArray,
+                                    currentImage,
                                     exposureLevel,
                                     artistAcceptConnectionsType,
                                     externalIdentityID,
                                     artExternalPlatform,
                                     externalUsername);
-                        else
+                        } else
                             moduleManager.updateArtistIdentity(
                                     artistName,
                                     identitySelected.getPublicKey(),
-                                    identitySelected.getProfileImage(),
+                                    (artistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : artistImageByteArray,
                                     exposureLevel,
                                     artistAcceptConnectionsType,
                                     externalIdentityID,
@@ -622,6 +624,17 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
     }
 
+    private byte[] checkedImage() {
+
+
+
+        if(artistImageByteArray == null){
+            return convertImage(R.drawable.ic_profile_male);
+        }
+
+        return artistImageByteArray;
+    }
+
 
     private boolean validateIdentityData(
             String ArtistExternalName,
@@ -629,8 +642,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             UUID externalIdentityID) {
 
         if (ArtistImageBytes == null){
-            WarningCircle.setVisibility(View.VISIBLE);
-            WarningLabel.setVisibility(View.VISIBLE);
+          //  WarningCircle.setVisibility(View.VISIBLE);
+            //WarningLabel.setVisibility(View.VISIBLE);
         }
 
         if(mArtistExternalPlatform.getSelectedItemPosition()==0){
@@ -666,12 +679,16 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         if(externalIdentityID == null && identitySelectedHasID && isUpdate){
 
             return false;}
+        /*
         if (ArtistImageBytes == null){
 
             return false;}
+            */
+        /*
         if (ArtistImageBytes.length > 0){
 
             return true;}
+            */
         return true;
     }
 
@@ -858,6 +875,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
     private void DeletePicture() {
         artistImage.setImageDrawable(null);
+        artistImageByteArray = null;
         camEditButton.setBackgroundResource(R.drawable.art_edit_picture_button);
         updateProfileImage = false;
     }

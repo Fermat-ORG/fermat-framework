@@ -855,6 +855,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
     private void DeletePicture() {
         ArtistImage.setImageDrawable(null);
+        ArtistImageByteArray = null;
         buttonCam.setBackgroundResource(R.drawable.boton_cam);
         updateProfileImage = false;
 

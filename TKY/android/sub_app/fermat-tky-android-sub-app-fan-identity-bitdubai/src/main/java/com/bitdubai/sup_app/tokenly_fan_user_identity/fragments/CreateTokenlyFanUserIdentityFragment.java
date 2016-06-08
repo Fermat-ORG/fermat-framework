@@ -573,6 +573,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     private void DeletePicture() {
         fanImage.setImageDrawable(null);
+        fanImageByteArray = null;
         buttonCam.setBackgroundResource(R.drawable.boton_cam);
         updateProfileImage = false;
 
@@ -745,7 +746,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
                 identitySelected.getPublicKey(),
-                identitySelected.getProfileImage(),
+                (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 externalPlatform);
     }
 
@@ -760,7 +761,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 fanPassword,
                 identitySelected.getId(),
                 identitySelected.getPublicKey(),
-                fanImageByteArray,
+                (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 externalPlatform);
     }
 
