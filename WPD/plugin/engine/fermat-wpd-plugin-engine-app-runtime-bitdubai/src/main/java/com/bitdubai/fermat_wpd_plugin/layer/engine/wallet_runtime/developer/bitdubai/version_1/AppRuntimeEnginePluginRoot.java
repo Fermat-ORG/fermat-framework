@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
@@ -1552,7 +1553,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Users");
-        runtimeTab.setFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS.getKey());
@@ -1561,7 +1564,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Groups");
-        runtimeTab.setFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_GROUPS);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_GROUPS.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_GROUPS.getKey());
@@ -2297,7 +2300,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Transactions");
-        runtimeTab.setFragment(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_TRANSACTIONS_TAB);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_TRANSACTIONS_TAB.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_TRANSACTIONS_TAB.getKey());
@@ -2306,7 +2311,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Redeemed Users");
-        runtimeTab.setFragment(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_USERS_TAB);
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_USERS_TAB.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_REDEEM_POINT_DETAILS_USERS_TAB.getKey());
@@ -2591,7 +2596,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Negotiations");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
@@ -2600,7 +2605,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Contracts");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
@@ -3124,7 +3129,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Negotiations");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
@@ -3133,7 +3138,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Contracts");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB.getKey());
@@ -3816,7 +3821,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Songs");
-        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT);
+//        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeFragment = new Fragment();
@@ -3826,7 +3831,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Following");
-        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
+//        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
         runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -4060,12 +4065,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -4157,12 +4164,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY);
+//        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
+//        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -4224,12 +4231,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(4,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -4941,12 +4948,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT_HISTORY);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -5010,12 +5019,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_SENT_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_SENT_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -5974,12 +5983,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(4, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_SEND.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE);
+        runtimeTab.setFragment(new FermatRuntimeFragment(5,owner,SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_FERMAT_ALL_BITDUBAI_RECEIVE.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -6071,12 +6082,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY);
+        owner.setOwnerAppPublicKey(publicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_SENT_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
+        runtimeTab.setFragment(new FermatRuntimeFragment(2,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CCP_BITCOIN_FERMAT_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -6138,12 +6150,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY);
+//        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_SENT_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
-        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY);
+//        runtimeTab.setFragment(Fragments.CCP_BITCOIN_FERMAT_WALLET_REQUEST_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTabStrip.setDividerColor(0x72af9c);

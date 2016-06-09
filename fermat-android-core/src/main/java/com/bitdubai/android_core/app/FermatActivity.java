@@ -109,6 +109,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionM
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
@@ -163,8 +164,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * Screen adapters
      */
-    protected TabsPagerAdapter adapter;
-    private ScreenPagerAdapter screenPagerAdapter;
+    private TabsPagerAdapter<?> adapter;
+    private ScreenPagerAdapter<?> screenPagerAdapter;
 
     /**
      * WizardTypes
@@ -646,6 +647,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //            }
 //        }
         }
+    }
+
+    private void setPagerTabs(TabStrip tabStrip,FermatSession session){
+        List<Fragment> fragments = new ArrayList<>();
+        List<Tab> tabs = tabStrip.getTabs();
+        for (Tab tab : tabs) {
+
+        }
+
     }
 
     /**
@@ -1536,11 +1546,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     protected void onBackPressedNotificate(){
         if(getAdapter()!=null) {
-            for (AbstractFermatFragmentInterface abstractFermatFragment : getAdapter().getLstCurrentFragments()) {
+            List<AbstractFermatFragmentInterface> list = getAdapter().getLstCurrentFragments();
+            for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
                 abstractFermatFragment.onBackPressed();
             }
         }else if(getScreenAdapter()!=null){
-            for (AbstractFermatFragmentInterface abstractFermatFragment : getScreenAdapter().getLstCurrentFragments()) {
+            List<AbstractFermatFragmentInterface> list = getScreenAdapter().getLstCurrentFragments();
+            for (AbstractFermatFragmentInterface abstractFermatFragment : list) {
                 abstractFermatFragment.onBackPressed();
             }
         }

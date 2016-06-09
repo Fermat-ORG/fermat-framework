@@ -11,7 +11,6 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -22,7 +21,7 @@ import java.util.List;
 /**
      * Tabs adapter
      */
-    public class TabsPagerAdapter extends FragmentStatePagerAdapter implements FermatUIAdapter{
+    public class TabsPagerAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter{
 
     private List<AbstractFermatFragmentInterface> lstCurrentFragments;
 
@@ -74,7 +73,6 @@ import java.util.List;
         }
     }
 
-
     public void destroyItem(android.view.ViewGroup container, int position, Object object) {
             FragmentManager manager = ((Fragment) object).getFragmentManager();
             if(manager != null) {
@@ -118,7 +116,7 @@ import java.util.List;
                 for (int j = 0; j < titleTabs.size(); j++) {
                     if (j == position) {
                         Tab tab = titleTabs.get(j);
-                        fragmentCodeType = tab.getFragment().getKey();
+                        fragmentCodeType = tab.getFragment().getType();
                         break;
                     }
                 }

@@ -19,18 +19,18 @@ import java.util.List;
 /**
  * ScreenPagerAdapter to add new subApp
  */
-public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUIAdapter {
+public class ScreenPagerAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentPagerAdapter implements FermatUIAdapter<F> {
 
 
     private static final String TAG = "ScreenPagerAdapter";
-    private List<Fragment> fragments;
+    private List<F> fragments;
 
     /**
      * @param fm
      * @param fragments
      */
 
-    public ScreenPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public ScreenPagerAdapter(FragmentManager fm, List<F> fragments) {
         super(fm);
 
         this.fragments = fragments;;
@@ -69,11 +69,11 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
         return this.fragments.size();
     }
 
-    public List<AbstractFermatFragmentInterface> getLstCurrentFragments() {
-        return (List<AbstractFermatFragmentInterface>)(List<?>) fragments;
+    public  List<F> getLstCurrentFragments() {
+        return fragments;
     }
 
-    public void changeData(List<Fragment> fragments) {
+    public void changeData(List<F> fragments) {
         removeAllFragments();
         this.fragments.clear();
         this.fragments = fragments;
@@ -87,6 +87,7 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
             trans.remove(fragment);
             trans.commit();
         }
+        fragments = null;
     }
 
 
