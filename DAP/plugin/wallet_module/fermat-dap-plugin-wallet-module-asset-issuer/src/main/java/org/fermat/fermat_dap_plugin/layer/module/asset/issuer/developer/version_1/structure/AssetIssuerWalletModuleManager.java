@@ -435,6 +435,21 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
     }
 
     @Override
+    public List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException {
+        try {
+            return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, selectedNetwork).getTransactionsForDisplay(assetPublicKey);
+        } catch (CantLoadWalletException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantLoadWalletException("Error load Wallet", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        }
+
+        catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantGetTransactionsException("Error loading transactions for display in wallet", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+    @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<IdentityAssetIssuer> identities = this.getActiveIdentities();
