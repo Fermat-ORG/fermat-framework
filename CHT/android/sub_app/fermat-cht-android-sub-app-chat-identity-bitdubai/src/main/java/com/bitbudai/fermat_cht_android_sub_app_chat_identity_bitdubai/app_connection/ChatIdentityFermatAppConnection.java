@@ -69,10 +69,10 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public int getResource(String id) {
-        if(id.equals("open_nav")){
+    public int getResource(int id) {
+        if(id==7){
             return R.drawable.cht_ic_back_buttom;
-        }else if (id.equals("ic_welcome_dialog")){
+        }else if (id==1){
             return R.drawable.cht_ic_menu_help;
         }
         return super.getResource(id);

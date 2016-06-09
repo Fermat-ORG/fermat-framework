@@ -43,12 +43,12 @@ public class CHTPlatform extends AbstractPlatform {
         }
     }
 
-    public static void main(String[] args) {
-        CHTPlatform chtPlatform = new CHTPlatform();
-        try {
-            chtPlatform.start();
-        } catch (CantStartPlatformException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        CHTPlatform chtPlatform = new CHTPlatform();
+//        try {
+//            chtPlatform.start();
+//        } catch (CantStartPlatformException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

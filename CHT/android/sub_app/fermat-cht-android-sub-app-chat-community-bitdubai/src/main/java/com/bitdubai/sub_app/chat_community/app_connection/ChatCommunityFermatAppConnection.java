@@ -84,10 +84,10 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
     }
 
     @Override
-    public int getResource(String id) {
+    public int getResource(int id) {
         int resId = 0;
         switch (id){
-            case "ic_welcome_dialog":
+            case 1:
                 resId = R.drawable.cht_help_icon;
                 break;
         }

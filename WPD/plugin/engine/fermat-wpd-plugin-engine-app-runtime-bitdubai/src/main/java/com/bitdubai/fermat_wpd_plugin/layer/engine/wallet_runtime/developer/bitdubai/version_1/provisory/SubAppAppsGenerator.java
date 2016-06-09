@@ -6,10 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -108,13 +110,13 @@ public class SubAppAppsGenerator {
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Developer Projects");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS);
-
+//            runtimeTab.setFragment(new FermatRuntimeFragment(1,)Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS);
+//
             runtimeTabStrip.addTab(runtimeTab);
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Edit Mode");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS);
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS);
 
             runtimeTabStrip.addTab(runtimeTab);
 
@@ -167,12 +169,12 @@ public class SubAppAppsGenerator {
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Balance");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
             runtimeTabStrip.addTab(runtimeTab);
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Contacts");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
             runtimeTabStrip.addTab(runtimeTab);
 
             runtimeTabStrip.setDividerColor(0x72af9c);
@@ -333,27 +335,27 @@ public class SubAppAppsGenerator {
             runtimeTabStrip = new TabStrip();
             runtimeTab = new Tab();
             runtimeTab.setLabel("Shop");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Products");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Reviews");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Chat");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("History");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Map");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Products");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Reviews");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Chat");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("History");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
+//            runtimeTabStrip.addTab(runtimeTab);
+//            runtimeTab = new Tab();
+//            runtimeTab.setLabel("Map");
+//            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
             runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -835,7 +837,11 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             MenuItem leftIconMenuItem = new MenuItem();
-            leftIconMenuItem.setFermatDrawable(new FermatDrawable("open_nav", chatIdentityPublicKey, SourceLocation.DEVELOPER_RESOURCES));
+            //Owner
+            Owner owner = new Owner();
+            owner.setOwnerAppPublicKey(chatIdentityPublicKey);
+
+            leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
             leftIconMenuItem.setAppLinkPublicKey("back");
             runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -846,8 +852,8 @@ public class SubAppAppsGenerator {
 
             OptionsMenu optionsMenu = new OptionsMenu();
             OptionMenuItem menuItem = new OptionMenuItem(1);
-            menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
-            menuItem.setVisibility(2);
+            menuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+            menuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(menuItem);
             runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -1286,12 +1292,14 @@ public class SubAppAppsGenerator {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Draft");
-        runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(dapFactoryPublicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Issued");
-        runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3193,7 +3201,9 @@ public class SubAppAppsGenerator {
         runtimeTab = new Tab();
         runtimeTab.setLabel("DataBase Tools");
         runtimeFragment = new Fragment();
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.PIP_DEVELOPER.getCode());
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey()));
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
@@ -3201,7 +3211,7 @@ public class SubAppAppsGenerator {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Log Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
@@ -3361,7 +3371,9 @@ public class SubAppAppsGenerator {
         //Tabs Chats
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
-        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(chatPublicKey);
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
@@ -3371,7 +3383,7 @@ public class SubAppAppsGenerator {
         //Tabs Contacts
         runtimeTab = new Tab();
         runtimeTab.setLabel("CONTACTS");
-        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
@@ -3823,9 +3835,13 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",communityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+        //Owner
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(communityPublicKey);
+
+        optionMenuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setVisibility(2);
+        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
