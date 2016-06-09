@@ -11,7 +11,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.Chat
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
- * Created by franklin 23/04/2016.
+ * Created by Lozadaa 23/04/2016.
  */
 
 public class EditIdentityExecutor {

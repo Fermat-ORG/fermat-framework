@@ -815,15 +815,45 @@ public class SubAppAppsGenerator {
              */
 
             runtimeSubApp = new AppNavigationStructure();
-
             String chatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
-            runtimeSubApp.setPublicKey(chatIdentityPublicKey);
+            runtimeSubApp.setPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+            runtimeSubApp.setPlatform(Platforms.CHAT_PLATFORM);
+
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+            // Activity: Geolocation chat identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(null);
+            // runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+
+            runtimeActivity.setColor("#075e53");
+            runtimeSubApp.addActivity(runtimeActivity);
+            //runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Geolocation");
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeTitleBar.setColor("#075e53");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#075e53");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
 
             // Activity: Create New Identity
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
-
+            runtimeActivity.setBackActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
             runtimeActivity.setColor("#075e53");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
@@ -844,21 +874,17 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#075e53");
             runtimeActivity.setStatusBar(statusBar);
 
-            OptionsMenu optionsMenu = new OptionsMenu();
+            /*OptionsMenu optionsMenu = new OptionsMenu();
             OptionMenuItem menuItem = new OptionMenuItem(1);
             menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
             menuItem.setVisibility(2);
             optionsMenu.addMenuItem(menuItem);
-            runtimeActivity.setOptionsMenu(optionsMenu);
+            runtimeActivity.setOptionsMenu(optionsMenu);*/
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
 
             /*
              *TKY FAN IDENTITY
