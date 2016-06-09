@@ -292,9 +292,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_help_icon)
+        menu.add(0, MENU_GEOLOCATION_ACTION, 0, "geolocation").setIcon(R.drawable.cht_id_geoloication_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(0, MENU_GEOLOCATION_ACTION, 0, "geolocation").setIcon(R.drawable.ic_action_map)
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.cht_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -377,7 +377,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
+                                                    chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
                                                     Uri imageuri = getImageUri(getActivity(), chatBitmap);
                                                     Picasso.with(getActivity()).load(getImageUri(getActivity(), chatBitmap)).transform(new CircleTransform()).into(mChatImage);
                                                     deleteImageUri(imageuri);

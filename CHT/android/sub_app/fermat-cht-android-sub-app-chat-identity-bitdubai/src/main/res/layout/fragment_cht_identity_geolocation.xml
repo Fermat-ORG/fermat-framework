@@ -15,21 +15,14 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
 
-    <Spinner
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner_accuracy"
-        android:text="Account Type"
-        android:theme="@style/Theme.AppCompat.Light"
-        android:textColor="#000000"
-        android:backgroundTint="#a5a5a5"
-        android:backgroundTintMode="add"
-        android:background="#c2c2c2"
-        android:foregroundTint="#000000"
-        android:foregroundTintMode="add"
+        android:id="@+id/accuracy"
+        android:numeric="integer"
+        android:hint="0 - 1000"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        />
+        android:layout_marginRight="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,8 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/spinner_frequency"
-        android:text="Account Type"
-        android:theme="@style/Theme.AppCompat.Light"
         android:textColor="#000000"
         android:backgroundTint="#a5a5a5"
         android:backgroundTintMode="add"
@@ -55,5 +46,6 @@
         android:foregroundTintMode="add"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        />
+        android:theme="@style/AlertDialog.AppCompat.Light" />
+
 </LinearLayout>

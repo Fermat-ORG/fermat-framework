@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
@@ -45,7 +48,8 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
     ChatIdentityModuleManager moduleManager;
     ErrorManager errorManager;
     ChatIdentitySession Session;
-
+    EditText accuracy;
+    Spinner frequency;
     Toolbar toolbar;
     String accuracydata = "Low",frequencydata = "Low";
     private ChatIdentityPreferenceSettings chatIdentitySettings;
@@ -113,21 +117,9 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
         dataspinner.add("High");
 
         // Spinner element
-        final Spinner accuracy = (Spinner) layout.findViewById(R.id.spinner_accuracy);
-        Spinner frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
-
-        // Spinner click listener
-        accuracy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            accuracydata = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
+        accuracy = (EditText) layout.findViewById(R.id.accuracy);
+        frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
+        frequency.setBackgroundColor(new Color.parseColor("#d1d1d1"));
         frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -141,7 +133,6 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataspinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        accuracy.setAdapter(dataAdapter);
         frequency.setAdapter(dataAdapter);
     }
 
@@ -164,13 +155,16 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        super.onBackPressed();
+        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+        // super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetChatIdentityException {
             EditIdentityExecutor executor = null;
             try {
-                byte[] dummy_image = null;
+                if(accuracy.getText().length() == 0){
+                    Toast.makeText(getActivity(), "Acuraccy is empty, please add a value", Toast.LENGTH_SHORT).show();
+                }
                 executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), "name", dummy_image , moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();

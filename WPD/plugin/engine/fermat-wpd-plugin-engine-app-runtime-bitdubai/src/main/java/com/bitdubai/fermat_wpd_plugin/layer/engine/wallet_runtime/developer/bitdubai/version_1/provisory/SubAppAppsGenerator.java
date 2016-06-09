@@ -826,11 +826,11 @@ public class SubAppAppsGenerator {
             runtimeActivity.setType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY);
             runtimeActivity.setActivityType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY.getCode());
             runtimeActivity.setBackActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
-            runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+            //runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeActivity.setColor("#075e53");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+            //runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Geolocation");
