@@ -815,7 +815,7 @@ public class SubAppAppsGenerator {
              */
 
             runtimeSubApp = new AppNavigationStructure();
-
+            String chatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
             runtimeSubApp.setPlatform(Platforms.CHAT_PLATFORM);
 

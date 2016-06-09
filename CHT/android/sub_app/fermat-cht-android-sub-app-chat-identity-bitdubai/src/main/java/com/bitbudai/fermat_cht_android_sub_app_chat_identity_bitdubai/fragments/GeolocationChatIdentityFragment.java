@@ -1,6 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,21 +14,24 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.GeolocationIdentityExecutor;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +46,16 @@ import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.uti
  * Developed by Lozadaa on 04/04/16.
  */
 
-public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
+public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<ReferenceAppFermatSession<ChatIdentityModuleManager>, SubAppResourcesProviderManager> {
+
     ChatIdentityModuleManager moduleManager;
     ErrorManager errorManager;
-    ChatIdentitySession Session;
     EditText accuracy;
     Spinner frequency;
     Toolbar toolbar;
-    String accuracydata = "Low",frequencydata = "Low";
+    long acurracydata;
+    Frecuency frecuencydata;
+
     private ChatIdentityPreferenceSettings chatIdentitySettings;
 
     public static GeolocationChatIdentityFragment newInstance() {
@@ -60,14 +64,10 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         try {
-            Session = (ChatIdentitySession) appSession;
-            moduleManager = Session.getModuleManager();
-            errorManager = Session.getErrorManager();
-
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -109,29 +109,41 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
      *
      * @param layout layout of this Fragment containing the views
      */
+
     private void initViews(View layout) {
+
         // Spinner Drop down elements
-        List<String> dataspinner = new ArrayList<String>();
-        dataspinner.add("Low");
-        dataspinner.add("Normal");
-        dataspinner.add("High");
+        List<Frecuency> dataspinner = new ArrayList<Frecuency>();
+        dataspinner.add(Frecuency.LOW);
+        dataspinner.add(Frecuency.NORMAL);
+        dataspinner.add(Frecuency.HIGH);
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
-        frequency.setBackgroundColor(new Color.parseColor("#d1d1d1"));
-        frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                frequencydata = parent.getItemAtPosition(position).toString();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        try {
+                setValues();
+            // frequency.setBackgroundColor(new Color.parseColor("#d1d1d1"));
+            frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
+                    } catch (InvalidParameterException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, dataspinner);
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        } catch (CantGetChatIdentityException e) {
+            e.printStackTrace();
+        }
+
+        ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(), android.R.layout.simple_spinner_item, dataspinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         frequency.setAdapter(dataAdapter);
     }
@@ -152,35 +164,36 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
 
         }
     }
+
     @Override
     public void onBackPressed(){
         saveAndGoBack();
         changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
-        // super.onBackPressed();
+        //super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetChatIdentityException {
-            EditIdentityExecutor executor = null;
+        GeolocationIdentityExecutor executor = null;
             try {
-                if(accuracy.getText().length() == 0){
+                if (accuracy.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Acuraccy is empty, please add a value", Toast.LENGTH_SHORT).show();
-                }
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), "name", dummy_image , moduleManager.getIdentityChatUser().getConnectionState());
-
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        if (donde.equalsIgnoreCase("onClick")) {
-                            //textViewChtTitle.setText(mBrokerName.getText());
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
-                            // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
-                        }else if(donde.equalsIgnoreCase("onBack")){
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
+                } else {
+                    acurracydata = Long.valueOf(accuracy.getText().toString());
+                    executor = new GeolocationIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), moduleManager.getIdentityChatUser().getAlias(), moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState(), moduleManager.getIdentityChatUser().getCountry(), moduleManager.getIdentityChatUser().getState(), moduleManager.getIdentityChatUser().getCity(), frecuencydata, acurracydata);
+                    int resultKey = executor.execute();
+                    switch (resultKey) {
+                        case SUCCESS:
+                            if (donde.equalsIgnoreCase("onClick")) {
+                                Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
+                                getActivity().onBackPressed();
+                            } else if (donde.equalsIgnoreCase("onBack")) {
+                                Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
+                            }
+                            break;
                         }
-                        break;
-                }
-            } catch (CHTException e) {
+
+                 }
+            }catch(CHTException e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
             }
@@ -198,6 +211,10 @@ public class GeolocationChatIdentityFragment extends AbstractFermatFragment {
         }
         Log.i("CHT EXIST IDENTITY", "FALSE");
         return false;
+    }
+
+    public void setValues() throws CantGetChatIdentityException {
+            accuracy.setText(""+moduleManager.getIdentityChatUser().getAccuracy());
     }
 
 

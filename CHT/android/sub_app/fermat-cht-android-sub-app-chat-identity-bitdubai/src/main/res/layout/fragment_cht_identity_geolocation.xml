@@ -3,7 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f9f9f9"
-    android:touchscreenBlocksFocus="false">
+    android:touchscreenBlocksFocus="false"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,12 +23,13 @@
         android:numeric="integer"
         android:hint="0 - 1000"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp" />
+        android:layout_marginRight="15dp"
+        android:theme="@style/Base.V7.Widget.AppCompat.EditText" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FREQUENCY"
+        android:text="FRECUENCY"
         android:id="@+id/textView2"
         android:textColor="#838383"
         android:layout_marginTop="20dp"

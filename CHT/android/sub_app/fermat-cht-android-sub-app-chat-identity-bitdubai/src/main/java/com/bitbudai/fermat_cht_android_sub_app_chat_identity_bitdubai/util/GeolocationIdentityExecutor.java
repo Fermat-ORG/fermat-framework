@@ -2,9 +2,10 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
 import android.util.Log;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
@@ -19,44 +20,67 @@ public class GeolocationIdentityExecutor {
     public static final int INVALID_ENTRY_DATA = 2;
     public static final int MISSING_IMAGE = 4;
 
-
-    //private ChatIdentitySubAppModulePluginRoot moduleManager;
     private ChatIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private ChatIdentity identity;
     private String Publickey;
     private String identityConnectionState;
-    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState) {
-        //this.imageInBytes = imageInBytes;
+    private Frecuency frecuency;
+    private long acuraccy;
+    private String identityName;
+    private byte[] imageInBytes;
+    private String country, state, city;
+
+    /**
+     * <code>GelocationidentityExecutor</code> this is constructor
+     * @param imageInBytes
+     * @param Publickey
+     * @param identityName
+     * @param identityConnectionState
+     * @param accuracy
+     * @param frecuency
+     */
+    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState, String country, String state, String city, long accuracy, Frecuency frecuency) {
+        this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
-       // this.identityName = identityName;
+        this.identityName = identityName;
         this.identityConnectionState = identityConnectionState;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.acuraccy = acuraccy;
+        this.frecuency = frecuency;
     }
 
-    public GeolocationIdentityExecutor(FermatSession session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState) {
-        this(imageInBytes, Publickey ,identityName, identityConnectionState);
+    /**
+     * <code>GelocationidentityExecutor</code> this is constructor
+     * @param session
+     * @param Publickey
+     * @param identityName
+     * @param imageInBytes
+     * @param identityConnectionState
+     * @param frecuency
+     * @param acuraccy
+     */
+
+    public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, Frecuency frecuency, long acuraccy) {
+        this(imageInBytes, Publickey ,identityName, identityConnectionState, country, state, city, acuraccy,frecuency);
         identity = null;
         if (session != null) {
-            ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
-        }else{
-            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }
     }
 
     public int execute() {
 
-       // try {
-
-            //moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState);
-
-      /*  } catch (CantUpdateChatIdentityException e) {
+        try {
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, acuraccy, frecuency);
+        } catch (CantUpdateChatIdentityException e) {
 
         } catch (Exception e) {
 
-        }*/
+        }
 
         return SUCCESS;
     }
