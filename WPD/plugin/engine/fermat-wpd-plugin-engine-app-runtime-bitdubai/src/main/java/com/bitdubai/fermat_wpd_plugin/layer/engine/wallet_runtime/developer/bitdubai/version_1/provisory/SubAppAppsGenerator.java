@@ -3263,12 +3263,13 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
@@ -3289,12 +3290,13 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
 //        /*New Fragment - Log Level 1*/
         runtimeActivity = new Activity();
@@ -3303,12 +3305,6 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
 
         statusBar = new StatusBar();
         statusBar.setColor("#d07b62");
@@ -3322,6 +3318,12 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+
         runtimeSubApp.addActivity(runtimeActivity);
 
         /*New Fragment - Log Level 2*/
@@ -3331,12 +3333,6 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
 
         statusBar = new StatusBar();
         statusBar.setColor("#d07b62");
@@ -3350,40 +3346,46 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+
         runtimeSubApp.addActivity(runtimeActivity);
+
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+
+        /*New Fragment - Log Level 3*/
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Log > Level 3");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
 
-//        /*New Fragment - Log Level 3*/
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
-//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
-////        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-//
-//        runtimeActivity = new Activity();
-//        runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
-//        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getCode());
-//        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
-//        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
-//        runtimeActivity.setColor("#b46a54");
-//
-//        statusBar = new StatusBar();
-//        statusBar.setColor("#d07b62");
-//        runtimeActivity.setStatusBar(statusBar);
-//
-//        runtimeTitleBar = new TitleBar();
-//        runtimeTitleBar.setLabel("Log > Level 3");
-//        runtimeTitleBar.setLabelSize(titleBarLabelSize);
-//        runtimeTitleBar.setTitleColor("#ffffff");
-////        runtimeTitleBar.setIsTitleTextStatic(true);
-//        runtimeTitleBar.setColor("#d07b62");
-//        runtimeActivity.setTitleBar(runtimeTitleBar);
-//
-//        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
