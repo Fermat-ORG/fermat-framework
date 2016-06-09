@@ -61,7 +61,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     /**
      * Represent the MIN_SUCCESSFUL_PROPAGATION_COUNT
      */
-    private final int MIN_SUCCESSFUL_PROPAGATION_COUNT = 3;
+    public static final int MIN_SUCCESSFUL_PROPAGATION_COUNT = 7;
 
     /**
      * Represent the scheduledThreadPool
@@ -108,10 +108,11 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     /**
      * Propagation logic implementation
      */
-    private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException, CantDeleteRecordDataBaseException {
+    private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException, CantDeleteRecordDataBaseException, InterruptedException {
 
         LOG.info("Executing propagateCatalog()");
 
+        successfulPropagateCount = 0;
         List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare(networkNodePluginRoot.getIdentity().getPublicKey());
         List<NodesCatalogTransaction> transactionList = getNodesCatalogTransactionsPendingForPropagationBlock();
 
@@ -134,22 +135,6 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
                     nodesCatalogDao.update(remoteNodesCatalog);
                 }
             }
-
-            /*
-             * If successful propagation is higher or equals to
-             * the minimum required delete all pending transactions
-             */
-            if (successfulPropagateCount >= MIN_SUCCESSFUL_PROPAGATION_COUNT) {
-
-                LOG.info("Deleting all Transactions Pending For Propagation ");
-                nodesCatalogTransactionsPendingForPropagationDao.deleteAll();
-                LOG.info("Total Transactions Pending For Propagation = " + nodesCatalogTransactionsPendingForPropagationDao.getAllCount());
-                successfulPropagateCount = 0;
-            }else {
-                LOG.info("Not successfully propagated the minimum number of times, records are not erased.");
-                successfulPropagateCount = 0;
-            }
-
 
         }else {
 
