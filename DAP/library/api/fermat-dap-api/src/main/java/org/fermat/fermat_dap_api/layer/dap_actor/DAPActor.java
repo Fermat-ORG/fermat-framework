@@ -7,7 +7,8 @@ import java.io.Serializable;
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface DAPActor extends Serializable{
+
+public interface DAPActor extends Serializable {
 
     /**
      * The method <code>getActorPublicKey</code> gives us the public key of the represented a Actor

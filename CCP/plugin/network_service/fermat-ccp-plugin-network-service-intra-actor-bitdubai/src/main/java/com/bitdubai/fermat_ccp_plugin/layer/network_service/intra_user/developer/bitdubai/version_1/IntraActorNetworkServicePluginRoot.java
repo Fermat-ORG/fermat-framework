@@ -14,15 +14,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -72,6 +74,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -331,8 +334,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
 
             if (actorNetworkServiceRecord.getActorProtocolState()==ActorProtocolState.DONE) {
                 // close connection, sender is the destination
-                System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
-                System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
+               // System.out.println("ENTRANDO EN EL METODO PARA CERRAR LA CONEXION DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
+               // System.out.println("ENTRO AL METODO PARA CERRAR LA CONEXION");
                 //   communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorDestinationPublicKey());
                 //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
@@ -344,7 +347,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                 //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
             }
 
-            System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
+            //System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
@@ -1195,10 +1198,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                     actorsToRegisterCache.add(platformComponentProfile);
 
                     if (isRegister()) {
-                        System.out.println("---------- TESTENADO --------------------");
-                        System.out.println("----------\n" + platformComponentProfile + "\n --------------------");
-                        System.out.println("----------\n " + getNetworkServiceProfile().getNetworkServiceType() + "\n --------------------");
-                        System.out.println("---------- TESTENADO --------------------");
+                       // System.out.println("---------- TESTENADO --------------------");
+                       // System.out.println("----------\n" + platformComponentProfile + "\n --------------------");
+                       // System.out.println("----------\n " + getNetworkServiceProfile().getNetworkServiceType() + "\n --------------------");
+                       // System.out.println("---------- TESTENADO --------------------");
                         communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                         System.out.println("----------\n Pasamos por el registro robert\n --------------------");
                     }
@@ -1241,9 +1244,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                     @Override
                     public void run() {
                         try {
-                            System.out.println("---------------- PROBANDO-----------------------");
+                           // System.out.println("---------------- PROBANDO-----------------------");
                             communicationsClientConnection.registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                            System.out.println("---------------- PROBANDO-----------------------");
+                           // System.out.println("---------------- PROBANDO-----------------------");
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
@@ -1276,7 +1279,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                 Gson gson = new Gson();
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("PHRASE", actor.getPhrase());
-                jsonObject.addProperty("AVATAR_IMG", Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
+                jsonObject.addProperty("AVATAR_IMG", com.bitdubai.fermat_api.layer.all_definition.util.Base64.encodeToString(actor.getPhoto(), Base64.DEFAULT));
                 String extraData = gson.toJson(jsonObject);
 
 
@@ -1291,9 +1294,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                     @Override
                     public void run() {
                         try {
-                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                           // System.out.println("---------------- PROBANDO UPDATE-----------------------");
                             communicationsClientConnection.updateRegisterActorProfile(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                            System.out.println("---------------- PROBANDO UPDATE-----------------------");
+                           // System.out.println("---------------- PROBANDO UPDATE-----------------------");
                         } catch (CantRegisterComponentException e) {
                             e.printStackTrace();
                         }
@@ -1301,7 +1304,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                 });
 
                 thread.start();
-                System.out.println("----------\n Pasamos por el UPDATE robert\n --------------------");
+               // System.out.println("----------\n Pasamos por el UPDATE robert\n --------------------");
             }
         }catch (Exception e){
             e.printStackTrace();

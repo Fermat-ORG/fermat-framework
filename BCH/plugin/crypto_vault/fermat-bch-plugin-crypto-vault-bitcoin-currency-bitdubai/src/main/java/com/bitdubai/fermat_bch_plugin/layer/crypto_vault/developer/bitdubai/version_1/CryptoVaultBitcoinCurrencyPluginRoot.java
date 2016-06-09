@@ -145,11 +145,12 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     /**
      * Determines if the passed CryptoAddress is valid.
      * @param addressTo the address to validate
+     * @param blockchainNetworkType the network in which we are validating the address
      * @return true if valid, false if it is not.
      */
     @Override
-    public boolean isValidAddress(CryptoAddress addressTo) {
-        return  bitcoinCurrencyCryptoVaultManager.isValidAddress(addressTo);
+    public boolean isValidAddress(CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) {
+        return  bitcoinCurrencyCryptoVaultManager.isValidAddress(addressTo, blockchainNetworkType);
     }
 
     @Override

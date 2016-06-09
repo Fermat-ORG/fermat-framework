@@ -2,11 +2,14 @@ package com.bitdubai.android_core.app.common.version_1.connection_manager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ComboAppType2FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.app_connection.ArtArtistIdentityAppConnection;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
@@ -44,6 +47,9 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAs
 import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
 import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
 
 //import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
@@ -54,10 +60,15 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRe
 public class FermatAppConnectionManager {
 
 
+    private static final String TAG = "FermatAppConnection";
+
+    private static Map<String,AppConnections> openConnections = new HashMap<>();
 
     private static AppConnections switchStatement(Context activity,String publicKey){
         AppConnections fermatAppConnection = null;
-
+        if (openConnections.containsKey(publicKey)){
+            return openConnections.get(publicKey);
+        }
         switch (publicKey){
             //CCP WALLET
             case "reference_wallet":
@@ -197,18 +208,31 @@ public class FermatAppConnectionManager {
             case "public_key_art_music_player":
                 fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
                 break;
+            default:
+                fermatAppConnection = new EmptyFermatAppConnection(activity);
+                break;
 
 
-
+        }
+        if(!openConnections.containsKey(publicKey)){
+            openConnections.put(publicKey,fermatAppConnection);
         }
 
         return fermatAppConnection;
     }
 
 
-    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession fermatSession) {
+    public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession session) {
         AppConnections fermatAppConnection = switchStatement(context,publicKey);
-        fermatAppConnection.setFullyLoadedSession(fermatSession);
+        if(!publicKey.equals(session.getAppPublicKey()) && session instanceof ComboAppType2FermatSession){
+            try {
+                session = ((ComboAppType2FermatSession) session).getFermatSession(publicKey,FermatSession.class);
+            } catch (InvalidParameterException e) {
+                Log.e(TAG,"Probando una cosa, no se asusten");
+                e.printStackTrace();
+            }
+        }
+        fermatAppConnection.setFullyLoadedSession(session);
         return fermatAppConnection;
     }
 

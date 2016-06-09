@@ -14,11 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -40,7 +42,8 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class ContactFragment extends AbstractFermatFragment {
+public class ContactFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
 //    // Defines a tag for identifying log entries
 //    private static final String TAG = "ContactsListFragment";
@@ -75,7 +78,7 @@ public class ContactFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
     String TAG = "CHT_ContactFragment";
@@ -91,8 +94,8 @@ public class ContactFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession=((ChatSession) appSession);
-            chatManager= chatSession.getModuleManager();
+            //chatSession=((ChatSessionReferenceApp) appSession);
+            chatManager= appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
@@ -113,7 +116,7 @@ public class ContactFragment extends AbstractFermatFragment {
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
-            Contact con= chatSession.getSelectedContact();
+            Contact con= (Contact) appSession.getData(ChatSessionReferenceApp.CONTACT_DATA); //hatSession.getSelectedContact();
             contactname.add(con.getAlias());
             contactid.add(con.getRemoteActorPublicKey());
             if(con.getContactStatus() != null) {
@@ -168,21 +171,21 @@ public class ContactFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.menu_block_contact) {
+//        if (item.getId() == R.id.menu_block_contact) {
 //            //Contact con = chatSession.getSelectedContact();
 //            return true;
 //        }
-//        if (item.getItemId() == R.id.menu_edit_contact) {
+//        if (item.getId() == R.id.menu_edit_contact) {
 //            try {
 //               // Contact con = chatSession.getSelectedContact();
 //                //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
 //                for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
 //                        chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
 //                                getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
-//                    if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
-//                        appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
+//                    if (cont.getPublicKey() == chatSession.getData(ChatSessionReferenceApp.CONTACT_DATA)) {
+//                        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, cont.getPublicKey());
 //                        break;
-//                        // appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
+//                        // appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
 //                    }
 //                }
 //                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
@@ -193,7 +196,7 @@ public class ContactFragment extends AbstractFermatFragment {
 //            }
 //            return true;
 //        }
-//        if (item.getItemId() == R.id.menu_del_contact) {
+//        if (item.getId() == R.id.menu_del_contact) {
 //            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
 //            alert.setTextTitle("Delete contact");
 //            alert.setTextBody("Do you want to delete this contact?");

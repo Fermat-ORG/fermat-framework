@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.MarketExchangeRatesPageAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 import com.viewpagerindicator.LinePageIndicator;
 
 import java.lang.ref.WeakReference;
@@ -39,13 +39,13 @@ import java.util.List;
 public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "CustomerWalletHeader";
 
-    private final CryptoCustomerWalletSession session;
+    private final CryptoCustomerWalletSessionReferenceApp session;
     private final WeakReference<Context> activity;
     private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
-    public CryptoCustomerWalletHeaderPainter(Context activity, CryptoCustomerWalletSession session) {
+    public CryptoCustomerWalletHeaderPainter(Context activity, CryptoCustomerWalletSessionReferenceApp session) {
         this.session = session;
         this.activity = new WeakReference<>(activity);
 

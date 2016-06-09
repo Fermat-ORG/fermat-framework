@@ -3,10 +3,12 @@ package org.fermat.fermat_dap_api.layer.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 16/02/16.
  */
-public enum DAPMessageSubject implements FermatEnum {
+public enum DAPMessageSubject implements FermatEnum, Serializable {
 
     //ENUM DECLARATION
     /**

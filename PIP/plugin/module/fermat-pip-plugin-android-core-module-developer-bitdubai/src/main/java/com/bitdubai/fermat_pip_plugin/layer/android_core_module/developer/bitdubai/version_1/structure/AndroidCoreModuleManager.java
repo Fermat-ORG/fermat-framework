@@ -7,18 +7,16 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 
 /**
  * Created by Natalia   19/01/2016
- *
  */
-public class AndroidCoreModuleManager  implements AndroidCoreManager {
+public class AndroidCoreModuleManager implements AndroidCoreManager {
 
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
 
-    public AndroidCoreModuleManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager,BitcoinNetworkManager bitcoinNetworkManager) {
+    public AndroidCoreModuleManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager, BitcoinNetworkManager bitcoinNetworkManager) {
         this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
-
 
 
 }

@@ -213,10 +213,10 @@ public class ComponentDAO {
 
         } catch (CantDeleteRecordException e) {
 
-            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(CantLoadTableToMemoryException exception){
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+        } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.", "");
         }
 
     }
@@ -299,6 +299,7 @@ public class ComponentDAO {
         setValuesToRecord(entityRecord, connection);
         return entityRecord;
     }
+
     /**
      * Create a instance of Connection from the DatabaseTableRecord
      *

@@ -135,6 +135,11 @@ public enum Activities implements FermatEnum {
     CWP_WALLET_DEVELOPER_TOOL_DATABASE("CWDTD"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST("CWDTDTL"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST("CWDTDTR"),
+
+    CWP_SUB_APP_DEVELOPER_LOG_TOOLS("CSADLT"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS("CSADLL1T"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS("CSADLL2T"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("CSADLL3T"),
     CWP_WALLET_FACTORY_MAIN("CWFM"),
     CWP_WALLET_FACTORY_EDIT_WALLET("CWFEW"),
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
@@ -400,7 +405,12 @@ public enum Activities implements FermatEnum {
     DESKTOP_MORE_SETTINGS("DMS"),
 
 
-    DESKTOP_WIZZARD_WELCOME("DWW")
+    DESKTOP_WIZZARD_WELCOME("DWW"),
+
+
+    //Combo Chat
+    CHT_COMBO_HOME("CHTCH"),
+    CHT_COMBO_PROFILE("CHTCP"),
     ;
 
     private String code;
@@ -526,6 +536,14 @@ public enum Activities implements FermatEnum {
                 return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST;
             case "CWDTDTR":
                 return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST;
+            case "CSADLT":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_TOOLS;
+            case "CSADLL1T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS;
+            case "CSADLL2T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS;
+            case "CSADLL3T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS;
             case "CWFM":
                 return Activities.CWP_WALLET_FACTORY_MAIN;
             case "CWFEW":
@@ -1033,6 +1051,10 @@ public enum Activities implements FermatEnum {
                 return DESKTOP_SETTING_IMPORT_KEY;
             case "DMS":
                 return DESKTOP_MORE_SETTINGS;
+            case "CHTCH":
+                return CHT_COMBO_HOME;
+            case "CHTCP":
+                return CHT_COMBO_PROFILE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

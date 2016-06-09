@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -38,7 +39,6 @@ import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +54,7 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private ErrorManager errorManager;
     ToolManager toolManager;

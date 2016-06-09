@@ -11,27 +11,27 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantCreateNotification extends FermatException {
 
-	public static final String DEFAULT_MESSAGE = "CAN'T CREATE NOTIFICATION EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE NOTIFICATION EXCEPTION";
 
-	public CantCreateNotification(final String message, final Exception cause, final String context, final String possibleReason) {
-		super(message, cause, context, possibleReason);
-	}
+    public CantCreateNotification(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
+    }
 
-	public CantCreateNotification(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
+    public CantCreateNotification(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
 
-	public CantCreateNotification(final String message) {
-		this(message, null);
-	}
+    public CantCreateNotification(final String message) {
+        this(message, null);
+    }
 
-	public CantCreateNotification(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
+    public CantCreateNotification(final Exception exception) {
+        this(exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
 
-	public CantCreateNotification() {
-		this(DEFAULT_MESSAGE);
-	}
+    public CantCreateNotification() {
+        this(DEFAULT_MESSAGE);
+    }
 
 }

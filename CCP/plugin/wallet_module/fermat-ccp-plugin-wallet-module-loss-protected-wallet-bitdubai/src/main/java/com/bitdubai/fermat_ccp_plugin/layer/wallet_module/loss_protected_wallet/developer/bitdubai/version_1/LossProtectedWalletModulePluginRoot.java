@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
 
 })
 
-@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
 
 public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossProtectedWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers{

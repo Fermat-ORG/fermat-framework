@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -25,7 +26,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
@@ -41,15 +42,14 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by mati on 2016.02.09..
  */
-public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceWalletSession,WalletResourcesProviderManager> implements FermatSettings {
+public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceAppFermatSession<CryptoWallet>,WalletResourcesProviderManager> implements FermatSettings {
 
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
 
     private CryptoWalletWalletContact cryptoWalletWalletContact;
     private BlockchainNetworkType blockchainNetworkType;
-    private CryptoWallet cryptoWallet;
 
     public static ReferenceWalletSettings newInstance() {
         return new ReferenceWalletSettings();
@@ -80,8 +80,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         //noinspection TryWithIdenticalCatches
         try {
-            bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-            cryptoWallet = referenceWalletSession.getModuleManager();
+            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
 
@@ -168,7 +167,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                 //send btc to loss protected
                 SendToLossProtectedWalletDialog sendToLossProtectedWalletDialog = new SendToLossProtectedWalletDialog(
                         getActivity(),
-                        cryptoWallet,
+                        appSession.getModuleManager(),
                         referenceWalletSession,
                         blockchainNetworkType);
                 sendToLossProtectedWalletDialog.show();
@@ -217,7 +216,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                     @Override
                     public void run() {
                         try {
-                            cryptoWallet.importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            appSession.getModuleManager().importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
                         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
                             cantLoadExistingVaultSeed.printStackTrace();
                         }
@@ -240,7 +239,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),cryptoWallet);
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),appSession.getModuleManager(),blockchainNetworkType);
                 if (validAddress != null) {
 
                 }
@@ -293,7 +292,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
     @Override
     public int getBackgroundAlpha() {
-        return 95;
+        return 0;
     }
 
     @Override

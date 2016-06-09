@@ -17,9 +17,11 @@ import android.os.TransactionTooLargeException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -116,9 +118,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 try {
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
                 }catch (TimeoutException e){
+                    //Method canceled and return an exception
                     objectFuture.cancel(true);
                     Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
-                    objectArrived = null;
+                    return new MethodTimeOutException();
                 }
             }else{
                 /**
@@ -306,12 +309,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mIsBound = true;
-
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
-
-
                 //running socket receiver
                 Log.i(TAG,"Starting socket receiver");
                 mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
@@ -323,16 +323,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 Log.e(TAG,"Cant run socket, register to server fail");
             }
 
-
-
-
-//            Message msg = Message.obtain(null,
-//                    CommunicationMessages.MSG_REGISTER_CLIENT);
-//            msg.replyTo = mMessenger;
-//            Bundle bundle = new Bundle();
-//            bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
-//            bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED, true);
-//            msg.setData(bundle);
+            try {
+                ApplicationSession.getInstance().setFermatRunning(iServerBrokerService.isFermatSystemRunning());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
 
@@ -543,6 +538,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         //Log.i(TAG,"creating proxy");
         ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
+    }
+
+    @Override
+    public ModuleManager[] getModuleManager(PluginVersionReference[] pluginVersionReference) throws CantCreateProxyException {
+        ModuleManager[] moduleManagers = new ModuleManager[pluginVersionReference.length];
+        for (int i = 0; i < pluginVersionReference.length; i++) {
+            ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference[i]);
+            moduleManagers[i] = proxyFactory.createModuleManagerProxy(pluginVersionReference[i],mInvocationHandler);
+        }
+        return moduleManagers;
     }
 
 }

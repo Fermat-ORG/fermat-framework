@@ -3,15 +3,15 @@ package com.bitdubai.fermat_pip_addon.layer.hardware.remote_device.remote_device
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.Hardware;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.remote_device.RemoteDeviceHardwareManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by loui on 05/03/15.
  */
-public class RemoteDeviceHardwareAddonRoot implements Addon, Hardware, DealsWithErrors, DealsWithEvents, DealsWithPlatformFileSystem, RemoteDeviceHardwareManager, Service  {
+public class RemoteDeviceHardwareAddonRoot implements Addon, Hardware, DealsWithErrors, DealsWithEvents, DealsWithPlatformFileSystem, RemoteDeviceHardwareManager, Service {
 
 
     /**
@@ -39,16 +39,13 @@ public class RemoteDeviceHardwareAddonRoot implements Addon, Hardware, DealsWith
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
 
-
-
-
     /**
      * Error manager Interface Implementation.
      */
-    
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        
+
     }
 
 
@@ -103,10 +100,9 @@ public class RemoteDeviceHardwareAddonRoot implements Addon, Hardware, DealsWith
     }
 
 
-
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
-    
+
 }

@@ -7,9 +7,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;
-
 import com.mati.fermat_navigator.drawer.holders.NavigationItemMenuViewHolder;
-
 import com.squareup.picasso.Picasso;
 
 /**

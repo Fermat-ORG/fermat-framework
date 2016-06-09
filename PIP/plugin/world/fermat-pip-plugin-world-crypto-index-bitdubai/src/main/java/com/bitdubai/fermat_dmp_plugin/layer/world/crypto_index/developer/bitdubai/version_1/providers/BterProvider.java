@@ -17,17 +17,17 @@ import org.json.JSONException;
  */
 public class BterProvider implements CryptoIndexProvider {
 
-   private String UrlAPI;
+    private String UrlAPI;
 
     /**
-     *
      * @param pair
      * @return
      */
-    public String getUrlAPI(String pair) {return "http://data.bter.com/api/1/ticker/"+ pair;}
+    public String getUrlAPI(String pair) {
+        return "http://data.bter.com/api/1/ticker/" + pair;
+    }
 
     /**
-     *
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time

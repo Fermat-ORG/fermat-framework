@@ -48,7 +48,7 @@ public class GetDatabaseListTest {
     }
 
     @Test
-    public void getDatabaseListTest()  {
+    public void getDatabaseListTest() {
 
         assertThat(subAppResourcesNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
     }

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppSelectableIdentitiesListAdapter;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class ListIdentitiesDialog extends
         FermatDialog<
-                ArtistSubAppSession,
+                ArtistSubAppSessionReferenceApp,
                 SubAppResourcesProviderManager>
         implements
         FermatListItemListeners<ArtistCommunitySelectableIdentity> {
@@ -44,7 +44,7 @@ public class ListIdentitiesDialog extends
     private ArtistCommunitySubAppModuleManager manager;
 
     public ListIdentitiesDialog(final Context activity,
-                                final ArtistSubAppSession subAppSession,
+                                final ArtistSubAppSessionReferenceApp subAppSession,
                                 final SubAppResourcesProviderManager subAppResources) {
         super(
                 activity,

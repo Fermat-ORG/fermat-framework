@@ -22,11 +22,23 @@ public class MenuItem implements FermatMenuItem {
 
     boolean selected=false;
     private int notifications;
-    private int itemId;
+    private int id;
+
+    //This could be an icon or whatever the develoer want
+    private FermatDrawable fermatDrawable;
+    // background color when is selected
+    private String backgroundSelectedColor;
+    //text color
+    private String textColor;
+    private String selectedTextColor;
 
     /**
      * SideMenu class constructors
      */
+    public MenuItem(int id) {
+        this.id = id;
+    }
+
     public MenuItem() {
     }
 
@@ -94,7 +106,39 @@ public class MenuItem implements FermatMenuItem {
         this.notifications = notifications;
     }
 
-    public int getItemId() {
-        return itemId;
+    public int getId() {
+        return id;
+    }
+
+    public void setFermatDrawable(FermatDrawable itemIcon) {
+        this.fermatDrawable = itemIcon;
+    }
+
+    public FermatDrawable getFermatDrawable() {
+        return fermatDrawable;
+    }
+
+    public void backgroundSelectedColor(String color) {
+        this.backgroundSelectedColor = color;
+    }
+
+    public String getBackgroundSelectedColor() {
+        return backgroundSelectedColor;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public String getSelectedTextColor() {
+        return selectedTextColor;
+    }
+
+    public void setSelectedTextColor(String selectedTextColor) {
+        this.selectedTextColor = selectedTextColor;
     }
 }

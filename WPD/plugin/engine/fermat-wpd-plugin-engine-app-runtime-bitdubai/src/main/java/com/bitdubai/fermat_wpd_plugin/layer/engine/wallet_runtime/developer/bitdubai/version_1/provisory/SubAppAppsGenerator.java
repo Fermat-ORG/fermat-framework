@@ -5,8 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -17,14 +19,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Created by mati on 2016.05.09..
@@ -62,7 +62,7 @@ public class SubAppAppsGenerator {
 
             TitleBar runtimeTitleBar;
             SideMenu runtimeSideMenu;
-            MainMenu runtimeMainMenu;
+            OptionsMenu runtimeOptionsMenu;
             MenuItem runtimeMenuItem;
             TabStrip runtimeTabStrip;
             StatusBar statusBar;
@@ -430,12 +430,12 @@ public class SubAppAppsGenerator {
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
-/*            runtimeMainMenu = new MainMenu();
+/*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
             runtimeMenuItem.setLabel("Settings");
-            runtimeMainMenu.addMenuItem(runtimeMenuItem);
+            runtimeOptionsMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeActivity.setMainMenu(runtimeMainMenu);*/
+            runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -824,21 +824,32 @@ public class SubAppAppsGenerator {
             runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
-            runtimeActivity.setColor("#47BF73");
+            runtimeActivity.setColor("#075e53");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Profile");
-            runtimeTitleBar.setColor("#47BF73");
+            runtimeTitleBar.setLabel("P2P Chat Profile");
+            runtimeTitleBar.setColor("#075e53");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
+            MenuItem leftIconMenuItem = new MenuItem();
+            leftIconMenuItem.setFermatDrawable(new FermatDrawable("open_nav", chatIdentityPublicKey, SourceLocation.DEVELOPER_RESOURCES));
+            leftIconMenuItem.setAppLinkPublicKey("back");
+            runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#47BF73");
+            statusBar.setColor("#075e53");
             runtimeActivity.setStatusBar(statusBar);
+
+            OptionsMenu optionsMenu = new OptionsMenu();
+            OptionMenuItem menuItem = new OptionMenuItem(1);
+            menuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",chatIdentityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+            menuItem.setVisibility(2);
+            optionsMenu.addMenuItem(menuItem);
+            runtimeActivity.setOptionsMenu(optionsMenu);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
@@ -1248,9 +1259,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
 
         String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
-
         dapFactory = new AppNavigationStructure();
-
 
         dapFactory.setPublicKey(dapFactoryPublicKey);
         dapFactory.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1335,7 +1344,7 @@ public class SubAppAppsGenerator {
 
         dapFactory.addActivity(runtimeActivity);
 
-        //DAP FACTORY SETTINGS
+        //DAP P SETTINGS
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
@@ -3152,6 +3161,7 @@ public class SubAppAppsGenerator {
 
         runtimeSubApp = new AppNavigationStructure();
         runtimeSubApp.setPublicKey(SubAppsPublicKeys.PIP_DEVELOPER.getCode());
+        runtimeSubApp.setPlatform(Platforms.PLUG_INS_PLATFORM);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
@@ -3162,8 +3172,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#d07b62");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
+//        runtimeSubApp.addActivity(runtimeActivity);
+//        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer");
@@ -3177,24 +3187,30 @@ public class SubAppAppsGenerator {
         runtimeTabStrip.setTabsColor("#d07b62");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#b46a54");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("DataBase Tools");
-        runtimeFragment = new Fragment();
         runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Log Tools");
         runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
 //        runtimeFragment = new Fragment();
 //        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
@@ -3220,13 +3236,13 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
 //        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), runtimeFragment);
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
@@ -3247,12 +3263,13 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
@@ -3273,28 +3290,102 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeSubApp.addActivity(runtimeActivity);
-//        runtimeSubApp.changeActualStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST.getCode());
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
-//
+
+        runtimeSubApp.addActivity(runtimeActivity);
+
+//        /*New Fragment - Log Level 1*/
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Log > Level 1");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        /*New Fragment - Log Level 2*/
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Log > Level 2");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
+
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+
+        /*New Fragment - Log Level 3*/
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Log > Level 3");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
@@ -3322,7 +3413,7 @@ public class SubAppAppsGenerator {
         chtChat.changeActualStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3330,7 +3421,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3340,7 +3431,7 @@ public class SubAppAppsGenerator {
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#000000");
+        runtimeTabStrip.setTabsColor("#075E55");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
 //        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
@@ -3379,7 +3470,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3387,7 +3478,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3413,7 +3504,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3513,7 +3604,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3521,7 +3612,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3565,7 +3656,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3573,7 +3664,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3591,7 +3682,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3599,7 +3690,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3618,7 +3709,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3626,7 +3717,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3644,7 +3735,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3652,7 +3743,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3674,7 +3765,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3682,7 +3773,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3700,7 +3791,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3708,7 +3799,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3726,7 +3817,7 @@ public class SubAppAppsGenerator {
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3734,7 +3825,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3809,6 +3900,15 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#47BF73");
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable("ic_welcome_dialog",communityPublicKey,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setVisibility(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());

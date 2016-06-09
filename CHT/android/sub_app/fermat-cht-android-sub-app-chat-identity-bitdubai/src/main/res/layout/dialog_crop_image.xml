@@ -75,5 +75,7 @@
         custom:aspectRatioX="3"
         custom:aspectRatioY="3"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 </LinearLayout>

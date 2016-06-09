@@ -10,15 +10,15 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 
 /**
  * Throw this addon you can report an unexpected error in the platform.
- *
+ * <p/>
  * For now, the only functionality of the addon is report in log all problems, but in the near future, the idea is to save all the errors and send to a bitDubai server to be properly controlled.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 public final class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon {
 
     private FermatManager errorManager;
-   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
+    // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
     protected HardwareManager hardwareManager;
 
     public ErrorManagerPlatformServiceAddonRoot() {

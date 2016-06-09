@@ -3,8 +3,11 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +19,6 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -104,7 +106,9 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
+
+        super.onCreateOptionsMenu(menu,inflater);
+
     }
 
     public void setAppSession(S appSession) {
@@ -234,7 +238,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    protected <S extends SubAppsSession> void destroy(){
+    protected void destroy(){
         onDestroy();
         System.gc();
     }
@@ -244,7 +248,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected void sendMail(String userTo, String bodyText) throws Exception {
-        ((FermatActivityManager)getActivity()).sendMailExternal(userTo,bodyText);
+        ((FermatActivityManager)getActivity()).sendMailExternal(userTo, bodyText);
     }
 
     protected final void onBack(String activityCodeBack){
@@ -373,5 +377,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                 screenSizeType = ScreenSize.UNDEFINED;
         }
         return screenSizeType;
+    }
+
+
+    public boolean isActiveNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

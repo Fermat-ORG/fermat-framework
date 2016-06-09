@@ -30,12 +30,13 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetUserManager extends FermatManager {
+public interface ActorAssetUserManager extends FermatManager, Serializable {
 
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey

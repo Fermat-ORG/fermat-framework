@@ -29,7 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 04/02/2016.
  */
-public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
+public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
