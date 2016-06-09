@@ -6,15 +6,19 @@ import android.view.View;
 import android.view.Window;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 /**
  * Created by mati on 2015.11.17..
  */
-public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletSession,WalletResourcesProviderManager> implements View.OnClickListener {
+public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceAppFermatSession,ResourceProviderManager> implements View.OnClickListener {
 
 
     private final Activity activity;
@@ -28,7 +32,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public ConnectionWithCommunityDialog(Activity activity, ReferenceWalletSession fermatSession, WalletResourcesProviderManager resources) {
+    public ConnectionWithCommunityDialog(Activity activity, ReferenceAppFermatSession<CryptoWallet> fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
         this.activity = activity;
     }
@@ -61,7 +65,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceWalletS
         if(id == R.id.search_contact_btn){
             try {
                 Object[] object = new Object[2];
-                changeApp(getSession().getCommunityConnection(), object);
+                changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -220,6 +220,7 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
     CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
+    CRYPTO_FERMAT_WALLET        ("CFW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),

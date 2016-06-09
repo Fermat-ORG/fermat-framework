@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by natalia on 05/08/15.
  */
-public class CantUpdateWalletNameException  extends FermatException {
+public class CantUpdateWalletNameException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

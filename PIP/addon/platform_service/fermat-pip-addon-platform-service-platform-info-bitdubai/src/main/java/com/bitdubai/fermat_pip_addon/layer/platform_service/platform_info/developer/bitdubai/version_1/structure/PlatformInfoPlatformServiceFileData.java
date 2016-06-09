@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by rodrigo on 8/5/15.
@@ -14,22 +13,22 @@ import java.util.List;
  */
 public class PlatformInfoPlatformServiceFileData implements PlatformInfo {
 
-    private final String     jdk       ;
-    private       ScreenSize screenSize;
-    private final Version    version   ;
+    private final String jdk;
+    private ScreenSize screenSize;
+    private final Version version;
     private ArrayList<Platforms> lstPlatforms;
 
     public PlatformInfoPlatformServiceFileData() {
 
-        this.jdk        = "1.7"        ;
-        this.version    = new Version();
+        this.jdk = "1.7";
+        this.version = new Version();
     }
 
     public PlatformInfoPlatformServiceFileData(final ScreenSize screenSize) {
 
-        this.jdk        = "1.7"        ;
-        this.screenSize = screenSize   ;
-        this.version    = new Version();
+        this.jdk = "1.7";
+        this.screenSize = screenSize;
+        this.version = new Version();
         lstPlatforms = new ArrayList<Platforms>();
     }
 
@@ -60,8 +59,8 @@ public class PlatformInfoPlatformServiceFileData implements PlatformInfo {
 
     @Override
     public ArrayList<Platforms> addActivePlatform(Platforms cryptoCurrencyPlatform) {
-        if(lstPlatforms!=null)
-        this.lstPlatforms.add(cryptoCurrencyPlatform);
+        if (lstPlatforms != null)
+            this.lstPlatforms.add(cryptoCurrencyPlatform);
         else {
             lstPlatforms = new ArrayList<>();
             lstPlatforms.add(cryptoCurrencyPlatform);

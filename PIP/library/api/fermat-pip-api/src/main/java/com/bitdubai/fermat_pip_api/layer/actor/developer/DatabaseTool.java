@@ -20,14 +20,14 @@ public interface DatabaseTool extends FermatManager {
 
     List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugin);
 
-    List<DeveloperDatabase>  getDatabaseListFromAddon(Addons Addon);
+    List<DeveloperDatabase> getDatabaseListFromAddon(Addons Addon);
 
     List<DeveloperDatabaseTable> getPluginTableListFromDatabase(Plugins plugin, DeveloperDatabase developerDatabase);
 
     List<DeveloperDatabaseTable> getAddonTableListFromDatabase(Addons addon, DeveloperDatabase developerDatabase);
 
-    List<DeveloperDatabaseTableRecord>  getPluginTableContent(Plugins plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord> getPluginTableContent(Plugins plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
-    List<DeveloperDatabaseTableRecord>  getAddonTableContent(Addons addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord> getAddonTableContent(Addons addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }

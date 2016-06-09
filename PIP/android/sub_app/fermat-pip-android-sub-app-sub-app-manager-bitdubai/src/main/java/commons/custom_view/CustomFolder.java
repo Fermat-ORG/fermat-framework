@@ -10,8 +10,6 @@ import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.desktop.Item;
-import com.bitdubai.sub_app.manager.R;
-
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +20,7 @@ import holder.FermatAppHolder;
 /**
  * Created by mati on 2015.11.28..
  */
-public class CustomFolder extends LinearLayout{
+public class CustomFolder extends LinearLayout {
 
     private RecyclerView mRecyclerView;
     private List<Item> lstItems;
@@ -50,10 +48,11 @@ public class CustomFolder extends LinearLayout{
         update();
     }
 
-    public void addItem(Item item){
+    public void addItem(Item item) {
         lstItems.add(item);
     }
-    public void addItems(Collection<Item> collections){
+
+    public void addItems(Collection<Item> collections) {
         this.lstItems.addAll(collections);
         mAdapter.notifyDataSetChanged();
     }
@@ -62,7 +61,8 @@ public class CustomFolder extends LinearLayout{
         this.mAdapter = mAdapter;
         mRecyclerView.swapAdapter(mAdapter, true);
         mRecyclerView.setOnClickListener(onClickListener)
-        ;mAdapter.notifyDataSetChanged();
+        ;
+        mAdapter.notifyDataSetChanged();
     }
 
     public FermatAdapter<Item, FermatAppHolder> getAdapter() {
@@ -70,20 +70,20 @@ public class CustomFolder extends LinearLayout{
     }
 
 
-    public void update(){
-        if(lstItems.size()>4) layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
-        else layoutManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
+    public void update() {
+        if (lstItems.size() > 4)
+            layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
+        else
+            layoutManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    public void setOnClickListener(OnClickListener onClickListener){
+    public void setOnClickListener(OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
         super.setOnClickListener(onClickListener);
     }
-
-
 
 
 }

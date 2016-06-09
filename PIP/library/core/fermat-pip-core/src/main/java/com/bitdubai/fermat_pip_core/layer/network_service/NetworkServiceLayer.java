@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_pip_core.layer.network_service;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_pip_core.layer.network_service.sub_app_resources.SubAppResourcesPluginSubsystem;
 import com.bitdubai.fermat_pip_core.layer.network_service.sub_app_fermat_monitor.FermatMonitorPluginSubsystem;
+import com.bitdubai.fermat_pip_core.layer.network_service.sub_app_resources.SubAppResourcesPluginSubsystem;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_core.layer.platform_service.NetworkServiceLayer</code>
@@ -23,8 +23,8 @@ public class NetworkServiceLayer extends AbstractLayer {
 
         try {
 
-           registerPlugin(new SubAppResourcesPluginSubsystem());
-           registerPlugin(new FermatMonitorPluginSubsystem());
+            registerPlugin(new SubAppResourcesPluginSubsystem());
+            registerPlugin(new FermatMonitorPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

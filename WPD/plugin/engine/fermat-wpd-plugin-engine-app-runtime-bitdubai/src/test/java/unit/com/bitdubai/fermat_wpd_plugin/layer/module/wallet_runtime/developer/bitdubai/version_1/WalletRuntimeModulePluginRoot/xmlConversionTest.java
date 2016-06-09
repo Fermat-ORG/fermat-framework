@@ -3,7 +3,7 @@
 //import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -59,7 +59,7 @@
 ////        AppNavigationStructure runtimeWalletNavigationStructure;
 ////        TitleBar runtimeTitleBar;
 ////        SideMenu runtimeSideMenu;
-////        MainMenu runtimeMainMenu;
+////        OptionsMenu runtimeMainMenu;
 ////        MenuItem runtimeMenuItem;
 ////        TabStrip runtimeTabStrip;
 ////        StatusBar runtimeStatusBar;

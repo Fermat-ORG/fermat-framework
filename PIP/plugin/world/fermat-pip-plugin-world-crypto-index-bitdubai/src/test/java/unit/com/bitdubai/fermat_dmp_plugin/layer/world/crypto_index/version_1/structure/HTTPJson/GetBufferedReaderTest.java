@@ -12,7 +12,6 @@ import java.io.InputStream;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 /**
  * Created by francisco on 03/09/15.
@@ -20,16 +19,17 @@ import static org.mockito.Mockito.mock;
 public class GetBufferedReaderTest {
 
 
-   private InputStream inputStreamTest, inputStreamExceptionTest;
-   private BufferedReader bufferedReaderTest;
+    private InputStream inputStreamTest, inputStreamExceptionTest;
+    private BufferedReader bufferedReaderTest;
     @Mock
-    private HTTPJson httpJson= new HTTPJson();
+    private HTTPJson httpJson = new HTTPJson();
 
     @Before
     public void setValues() throws Exception {
-       inputStreamTest =httpJson.getInputStream("https://www.google.com");
+        inputStreamTest = httpJson.getInputStream("https://www.google.com");
 
     }
+
     @Test
     public void TestGetBufferedReader_successful() throws Exception {
 
@@ -37,7 +37,7 @@ public class GetBufferedReaderTest {
         assertThat(bufferedReaderTest).isNotNull();
     }
 
-    public void TestGetBufferedReader_ThrowsCantGetBufferedReader() throws Exception{
+    public void TestGetBufferedReader_ThrowsCantGetBufferedReader() throws Exception {
         catchException(httpJson).getBufferedReader(null);
         assertThat(caughtException()).isNotNull();
     }

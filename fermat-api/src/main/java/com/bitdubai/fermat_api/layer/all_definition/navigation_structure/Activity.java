@@ -47,7 +47,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Footer footer;
 
-    MainMenu mainMenu;
+    OptionsMenu optionsMenu;
 
     TabStrip tabStrip;
 
@@ -97,8 +97,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.sideMenu = sideMenu;
     }
 
-    public void setMainMenu(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
+    public void setOptionsMenu(OptionsMenu optionsMenu) {
+        this.optionsMenu = optionsMenu;
     }
 
     public void setTabStrip(TabStrip tabStrip) {
@@ -153,8 +153,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public MainMenu getMainMenu() {
-        return mainMenu;
+    public OptionsMenu getOptionsMenu() {
+        return optionsMenu;
     }
 
     @Override

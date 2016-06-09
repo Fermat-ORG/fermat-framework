@@ -24,7 +24,7 @@ public class CloudClientNotificationHandler implements FermatEventHandler<Comple
     @Override
     public void handleEvent(CompleteComponentRegistrationNotificationEvent fermatEvent) throws FermatException {
 
-        if(fermatEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
+        if (fermatEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
 
             System.out.println("*********************************************** NOTIFICACIONES DE COMMUNICATION_CLOUD_CLIENT");
 

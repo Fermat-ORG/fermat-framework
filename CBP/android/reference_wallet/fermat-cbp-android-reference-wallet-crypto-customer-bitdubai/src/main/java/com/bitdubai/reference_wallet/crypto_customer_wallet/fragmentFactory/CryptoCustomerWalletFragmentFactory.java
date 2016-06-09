@@ -27,12 +27,12 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pag
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetBitcoinWalletAndProvidersFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetLocationsFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<CryptoCustomerWalletSession, WalletResourcesProviderManager, CryptoCustomerWalletFragmentsEnumType> {
+public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<CryptoCustomerWalletSessionReferenceApp, WalletResourcesProviderManager, CryptoCustomerWalletFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoCustomerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {

@@ -6,14 +6,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import com.bitdubai.sub_app.art_fan_identity.fragments.CreateArtFanUserIdentityFragment;
-import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
 public class ArtFanUserIdentityFragmentFactory extends
         FermatFragmentFactory<
-                ArtFanUserIdentitySubAppSession,
+                ArtFanUserIdentitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager,
                 ArtFanUserIdentityFragmentsEnumType> {
 

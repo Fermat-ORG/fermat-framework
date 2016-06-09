@@ -56,7 +56,6 @@ public class OutgoingDraftTransactionFinishedNotificationEventListener implement
 //    public FermatEventEnum getEventType() {
 //        return eventType;
 //    }
-
     @Override
     public FermatEventHandler getEventHandler() {
         return this.fermatEventHandler;

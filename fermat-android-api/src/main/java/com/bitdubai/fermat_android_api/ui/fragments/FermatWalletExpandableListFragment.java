@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by nelson on 28/10/15.
  */
-public abstract class FermatWalletExpandableListFragment<M extends ParentListItem,S extends FermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE>
+public abstract class FermatWalletExpandableListFragment<M extends ParentListItem,S extends ReferenceAppFermatSession,RE extends ResourceProviderManager> extends AbstractFermatFragment<S,RE>
         implements RecyclerExpandableListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
