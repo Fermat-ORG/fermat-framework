@@ -5809,7 +5809,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(6,"ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setVisibility(2);
+        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -5861,7 +5861,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
         runtimeFragment.setOwner(owner);
         menuItem.setFermatDrawable(new FermatDrawable(3,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setVisibility(2);
+        menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 

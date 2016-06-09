@@ -853,7 +853,7 @@ public class SubAppAppsGenerator {
             OptionsMenu optionsMenu = new OptionsMenu();
             OptionMenuItem menuItem = new OptionMenuItem(1);
             menuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
-            menuItem.setVisibility(2);
+            menuItem.setShowAsAction(2);
             optionsMenu.addMenuItem(menuItem);
             runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -3841,7 +3841,7 @@ public class SubAppAppsGenerator {
 
         optionMenuItem.setFermatDrawable(new FermatDrawable(8,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setVisibility(2);
+        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 

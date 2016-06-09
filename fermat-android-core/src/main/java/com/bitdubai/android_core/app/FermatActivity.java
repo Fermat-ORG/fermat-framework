@@ -58,6 +58,7 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.nav_menu.NavMenuBasicAdapter;
+import com.bitdubai.android_core.app.common.version_1.builders.option_menu.OptionMenuFrameworkHelper;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
@@ -268,18 +269,25 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         try {
             menu.clear();
-            //optionsMenu = getActivityUsedType().getOptionsMenu();
             if (optionsMenu != null) {
                 List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
                 for (int i=0;i< optionsMenuItems.size();i++) {
                     OptionMenuItem menuItem = optionsMenuItems.get(i);
                     int id = menuItem.getId();
-                    MenuItem item = menu.add(0, id, 0, menuItem.getLabel());
+                    int groupId = menuItem.getGroupId();
+                    int order = menuItem.getOrder();
+                    int showAsAction = menuItem.getShowAsAction();
+                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
                     FermatDrawable icon = menuItem.getFermatDrawable();
                     if(icon!=null) {
                         int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
                         item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                        item.setShowAsAction(menuItem.getVisibility());
+
+                    }
+                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+                    int actionViewClass = menuItem.getActionViewClass();
+                    if(actionViewClass!=-1){
+                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
                     }
                 }
             }
