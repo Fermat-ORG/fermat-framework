@@ -346,7 +346,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
          */
 
         send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
         contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
