@@ -61,10 +61,6 @@ public class Tab implements FermatTab {
         this.label = texto;
     }
 
-    public void setFragment(FermatRuntimeFragment fragment){
-        this.fragment = fragment;
-    }
-
     public void setIcon(byte[] icon) {
         this.icon = icon;
     }

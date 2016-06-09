@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.bitdubai.android_core.app.FermatActivity;
-import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.FermatScreenAdapter;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -39,7 +39,7 @@ public class UpdateViewReceiver extends BroadcastReceiver {
 
     private void updateView(FermatBundle bundle) {
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = weakReference.get().getAdapter();
+            FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
                 for (AbstractFermatFragmentInterface fragment : list) {
@@ -52,7 +52,7 @@ public class UpdateViewReceiver extends BroadcastReceiver {
 
     private void updateView(String code){
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = weakReference.get().getAdapter();
+            FermatScreenAdapter adapter = weakReference.get().getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
                 for (AbstractFermatFragmentInterface fragment : list) {
@@ -66,7 +66,7 @@ public class UpdateViewReceiver extends BroadcastReceiver {
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode,String code){
         if(weakReference.get() instanceof FermatActivity) {
-            TabsPagerAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
+            FermatScreenAdapter adapter = ((FermatActivity) weakReference.get()).getAdapter();
             if (adapter != null) {
                 List<AbstractFermatFragmentInterface> list = adapter.getLstCurrentFragments();
                 for (AbstractFermatFragmentInterface fragment : list) {

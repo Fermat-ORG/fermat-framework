@@ -18,4 +18,9 @@ public class Owner {
     public void setOwnerAppPublicKey(String ownerAppPublicKey) {
         this.ownerAppPublicKey = ownerAppPublicKey;
     }
+
+    @Override
+    public String toString() {
+        return "ownerAppPublicKey='" + ownerAppPublicKey;
+    }
 }

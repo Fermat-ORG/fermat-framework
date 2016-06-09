@@ -261,13 +261,8 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     initialisePaging();
 //                    Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
                 }
-
-//                if(appStructure.)
                 if (activity.getTabStrip() != null) {
-
-
-//                    setPagerTabs(activity.getTabStrip());
-                    setPagerTabs(activity.getTabStrip(), session, fermatFragmentFactory);
+                    setPagerTabs(activity.getTabStrip(),session);
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
@@ -277,7 +272,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                         fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getOwner().getOwnerAppPublicKey(),FermatSession.class);
                         fermatFragmentFactory = FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getOwner().getOwnerAppPublicKey(), this, fermatSubSession).getFragmentFactory();
                     }
-
                     setOneFragmentInScreen(fermatFragmentFactory,(fermatSubSession!=null)?fermatSubSession:session, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
@@ -450,9 +444,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-
-        //outState.putSerializable(INSTALLED_WALLET, lastWallet);
-        //outState.putString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, lastWallet.getWalletPublicKey());
         super.onSaveInstanceState(outState, outPersistentState);
 
     }
