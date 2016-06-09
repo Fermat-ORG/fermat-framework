@@ -228,6 +228,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             }
             inputStream.close();
             bufferedReader.close();
+            inputStreamReader.close();
             
             /**
              * Now we decrypt it.

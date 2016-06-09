@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>CantSetPlatformInformationException</code>
  * is thrown when there is an error trying to set platform information.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.
  */
 public class CantSetPlatformInformationException extends FermatException {

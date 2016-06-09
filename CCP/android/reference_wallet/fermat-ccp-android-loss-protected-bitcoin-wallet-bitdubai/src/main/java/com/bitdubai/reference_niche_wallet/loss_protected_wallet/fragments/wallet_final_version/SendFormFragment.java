@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -48,6 +48,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
@@ -75,12 +77,11 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Er
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.DecimalDigitsInputFilter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -92,7 +93,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 /**
  * Created by Matias Furszyfer on 2015.11.05..
  */
-public class SendFormFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> implements View.OnClickListener{
+public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements View.OnClickListener{
 
 
     /**
@@ -102,7 +103,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private LossProtectedWallet lossProtectedWalletManager;
 
-    private LossProtectedWalletSession lossProtectedWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
 
     /**
      * UI
@@ -269,7 +270,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
         try {
             long balance = 0;
-            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
             txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         } catch (CantGetLossProtectedBalanceException e) {
@@ -403,7 +404,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                     //It will work for your need. I just putted that line for your understanding only
                     //You can use own requirement here also.
 
-                    if (!connectionDialogIsShow) {
+                   /* if (!connectionDialogIsShow) {
                         ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -414,7 +415,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                             }
                         });
                         connectionDialogIsShow = true;
-                    }
+                    }*/
                     return true;
                 }
                 return false;
@@ -470,11 +471,11 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private void setUpUIData() {
         if(lossProtectedWalletContact==null) {
-            lossProtectedWalletContact = appSession.getLastContactSelected();
+            lossProtectedWalletContact = (LossProtectedWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (lossProtectedWalletContact != null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
+                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
                 bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
@@ -507,13 +508,13 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                 walletContact.actorPublicKey,
                                 walletContact.profileImage,
                                 Actors.INTRA_USER,
-                                appSession.getIntraUserModuleManager().getPublicKey(),
+                                lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
                                 blockchainNetworkType);
                     } else {
                         try {
-                            lossProtectedWalletContact = lossProtectedWalletManager.findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
+                            lossProtectedWalletContact = lossProtectedWalletManager.findWalletContactById(walletContact.contactId, lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
                         } catch (CantFindLossProtectedWalletContactException e) {
                             e.printStackTrace();
                         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
@@ -525,7 +526,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                     walletContact.actorPublicKey = lossProtectedWalletContact.getActorPublicKey();
                     if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
                         lossProtectedWalletManager.requestAddressToKnownUser(
-                                appSession.getIntraUserModuleManager().getPublicKey(),
+                                lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
                                 Actors.INTRA_USER,
                                 lossProtectedWalletContact.getActorPublicKey(),
                                 lossProtectedWalletContact.getActorType(),
@@ -548,7 +549,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                             walletContact.actorPublicKey = lossProtectedWalletContact.getActorPublicKey();
 
                             lossProtectedWalletManager.requestAddressToKnownUser(
-                                    appSession.getIntraUserModuleManager().getPublicKey(),
+                                    lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey(),
                                     Actors.INTRA_USER,
                                     lossProtectedWalletContact.getActorPublicKey(),
                                     lossProtectedWalletContact.getActorType(),
@@ -581,16 +582,13 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
                 }
-                catch(CantListCryptoWalletIntraUserIdentityException e)
-                {
-                    e.printStackTrace();
-
-                }catch(CantRequestLossProtectedAddressException e)
+               catch(CantRequestLossProtectedAddressException e)
                 {
                     e.printStackTrace();
                 }
-                catch(CantGetCryptoLossProtectedWalletException e)
-                {
+             catch (CantGetSelectedActorIdentityException e) {
+                    e.printStackTrace();
+                } catch (ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
 
@@ -647,7 +645,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private void sendCrypto() {
         try {
             //first check if have exchange rate info
-            if(appSession.getActualExchangeRate() != 0){
+            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)!= 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                     CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
                     if (validAddress != null) {
@@ -690,7 +688,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                 if (amountDecimal.longValueExact() > minSatoshis) {
 
-                                    long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
+                                    long availableBalance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
 
                                     if(amountDecimal.compareTo(new BigDecimal(availableBalance)) == 1) //Balance value is greater than send amount
                                     {
@@ -783,7 +781,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<LossProtectedWalletContact> walletContactRecords = lossProtectedWalletManager.listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
+            List<LossProtectedWalletContact> walletContactRecords = lossProtectedWalletManager.listAllActorContactsAndConnections(appSession.getAppPublicKey(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
             for (LossProtectedWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
@@ -792,13 +790,18 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
 
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException e) {
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());;
+
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());;
+
             e.printStackTrace();
         } catch (CantGetAllLossProtectedWalletContactsException e) {
             e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());;
         }
         return contacts;
     }

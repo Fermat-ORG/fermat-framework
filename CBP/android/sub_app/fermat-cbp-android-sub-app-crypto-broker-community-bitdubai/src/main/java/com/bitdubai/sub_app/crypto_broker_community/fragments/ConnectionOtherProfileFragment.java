@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconnectDialog;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -38,7 +38,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements Dialog.OnDismissListener, Button.OnClickListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";

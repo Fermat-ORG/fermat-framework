@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.factory;
 
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments.CreateChatIdentityFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments.GeolocationChatIdentityFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -13,7 +14,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * FERMAT-ORG
  * Developed by Lozadaa on 05/04/16.
  */
-public class ChatIdentityFragmentFactory extends FermatFragmentFactory<ChatIdentitySession, SubAppResourcesProviderManager, ChatIdentityFragmentsEnumType> {
+public class ChatIdentityFragmentFactory extends FermatFragmentFactory<ChatIdentitySessionReferenceApp, SubAppResourcesProviderManager, ChatIdentityFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(ChatIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {

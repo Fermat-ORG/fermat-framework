@@ -1,16 +1,16 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception.CantGetDeviceLocationException;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception.LocationServiceException;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.interfaces.LocationServiceAgent;
 
@@ -21,8 +21,8 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.dev
  */
 public class LocationServiceMonitorAgent implements LocationServiceAgent {
 
-    private ErrorManager           errorManager          ;
-    private LocationManager        locationManager       ;
+    private ErrorManager errorManager;
+    private LocationManager locationManager;
     private PlatformDatabaseSystem platformDatabaseSystem;
 
     private Thread locationCollectorThread;
@@ -33,12 +33,12 @@ public class LocationServiceMonitorAgent implements LocationServiceAgent {
     private int requestingLocationFrequency = 60_000;
     private LocationServiceRegistry registry;
 
-    public LocationServiceMonitorAgent(final ErrorManager           errorManager          ,
-                                       final LocationManager        locationManager       ,
+    public LocationServiceMonitorAgent(final ErrorManager errorManager,
+                                       final LocationManager locationManager,
                                        final PlatformDatabaseSystem platformDatabaseSystem) {
 
-        this.errorManager           = errorManager          ;
-        this.locationManager        = locationManager       ;
+        this.errorManager = errorManager;
+        this.locationManager = locationManager;
         this.platformDatabaseSystem = platformDatabaseSystem;
     }
 

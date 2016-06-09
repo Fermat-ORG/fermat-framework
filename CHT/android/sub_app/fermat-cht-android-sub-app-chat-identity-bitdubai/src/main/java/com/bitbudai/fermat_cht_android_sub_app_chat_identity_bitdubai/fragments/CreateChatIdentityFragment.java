@@ -53,9 +53,9 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.Dialo
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_GEOLOCATION_ACTION;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -64,9 +64,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
@@ -87,10 +87,6 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
-import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
-
-//import com.theartofdev.edmodo.cropper.CropImage;
-
 
 /**
  * FERMAT-ORG
@@ -102,20 +98,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int GALLERY_KITKAT_INTENT_CALLED = 3;
     private Bitmap chatBitmap;
-    private static final int CONTEXT_MENU_CAMERA = 1;
-    private static final int CONTEXT_MENU_GALLERY = 2;
     ChatIdentityModuleManager moduleManager;
     private EditText mChatName;
     private EditText mChatConnectionState;
     private ImageView mChatImage;
     ErrorManager errorManager;
     private boolean actualizable;
-
+    private boolean contextMenuInUse = false;
     TextView textViewChtTitle;
+    byte[] fanImageByteArray;
     ChatIdentitySession Session;
+    Context context;
     Toolbar toolbar;
     TextView statusView;
     ImageView placeholdImg;
+    Button btnRotate;
+    int ROTATE_VALUE = 0;
     private Uri imageToUploadUri;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
@@ -130,9 +128,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            Session = (ChatIdentitySession) appSession;
-            moduleManager = Session.getModuleManager();
-            errorManager = Session.getErrorManager();
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
 
             chatIdentitySettings = null;
             try {
@@ -152,8 +149,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 }
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
+            if(errorManager!=null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -283,8 +280,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 });
             }
         } catch (CHTException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
+            if(errorManager!=null)
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
 
@@ -300,7 +297,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     public void setUpDialog() {
         try {
-            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
+            PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
                     .setSubTitle(R.string.cht_chat_identity_subtitle)
                     .setBody(R.string.cht_chat_identity_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
@@ -310,7 +307,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     .setTextFooter(R.string.cht_chat_footer).build();
             pd.show();
         } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            if(errorManager!=null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -592,7 +590,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
+                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -615,7 +613,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
+                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -654,7 +652,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             CreateChatIdentityExecutor executor = null;
             try {
-                executor = new CreateChatIdentityExecutor(Session, chatNameText, imgInBytes, identityConnectionNameText);
+                executor = new CreateChatIdentityExecutor(appSession, chatNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {

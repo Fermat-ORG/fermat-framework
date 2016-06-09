@@ -42,7 +42,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -58,7 +58,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  * Modified by Yordin Alayn 21.01.16
  */
-public class StartNegotiationActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class StartNegotiationActivityFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "StartNegotiationFrag";

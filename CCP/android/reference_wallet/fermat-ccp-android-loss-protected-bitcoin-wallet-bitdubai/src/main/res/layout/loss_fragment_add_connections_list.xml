@@ -22,7 +22,7 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
-            tools:listitem="@layout/intra_user_information_list_item" />
+            tools:listitem="@layout/loss_intra_user_information_list_item" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

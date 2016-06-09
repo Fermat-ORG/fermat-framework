@@ -12,20 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractHistoryAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation>
+public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation,ReferenceAppFermatSession,ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Constants
@@ -65,7 +66,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -189,7 +190,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData(CryptoCustomerWalletSession.CONTRACT_DATA, data);
+        appSession.setData(CryptoCustomerWalletSessionReferenceApp.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

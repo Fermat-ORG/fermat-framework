@@ -1,6 +1,8 @@
 package org.fermat.fermat_dap_api.layer.all_definition.contracts;
 
 
+import java.io.Serializable;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.all_definition.contracts.developer.bitdubai.version_1.ContractProperty</code>
  * defines a Property assigned to a contract defined at a Digital Asset.
@@ -11,7 +13,7 @@ package org.fermat.fermat_dap_api.layer.all_definition.contracts;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ContractProperty {
+public class ContractProperty implements Serializable {
     String name;
     Object value;
 

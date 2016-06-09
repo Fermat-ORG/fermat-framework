@@ -9,6 +9,6 @@ public interface DealsWithErrors {
 
     // We're not using anymore DealsWith interfaces... Now we use Annotations,,, And inside the plug-ins, please pass parameter through constructors.
     @Deprecated
-    void setErrorManager (ErrorManager errorManager);
+    void setErrorManager(ErrorManager errorManager);
 
 }

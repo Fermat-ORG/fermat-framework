@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -29,7 +30,6 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Databases;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,20 +43,16 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     View rootView;
     private ErrorManager errorManager;
 
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
-
     List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList;
-
-
     private Resource resource;
     LinearLayout base;
-
 
     public static DatabaseToolsDatabaseTableRecordListFragment newInstance() {
         return new DatabaseToolsDatabaseTableRecordListFragment();
@@ -100,7 +96,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
             columnNames = developerDatabaseTable.getFieldNames();
             int i = 0;
 
-
             if (developerDatabaseTableRecordList.size() > 0) {
                 i = 0;
                 values = new ArrayList<List<String>>();
@@ -114,7 +109,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
             }
 
             base = (LinearLayout) rootView.findViewById(R.id.base);
-
 
             ScrollView scrollView = new ScrollView(getActivity());
             if (developerDatabaseTableRecordList != null) {
@@ -201,9 +195,5 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends AbstractFermat
 
     public void setResource(Resource resource) {
         this.resource = resource;
-    }
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession appSession) {
-        this.appSession = appSession;
     }
 }

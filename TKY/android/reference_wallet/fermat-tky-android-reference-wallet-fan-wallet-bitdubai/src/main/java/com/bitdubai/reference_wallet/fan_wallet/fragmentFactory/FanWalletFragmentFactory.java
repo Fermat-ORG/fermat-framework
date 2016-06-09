@@ -8,12 +8,12 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_wallet.fan_wallet.fragments.FanWalletMainActivity;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.FollowingFragment;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.SongFragment;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
-public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSession,WalletResourcesProviderManager,FanWalletEnumType> {
+public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSessionReferenceApp,WalletResourcesProviderManager,FanWalletEnumType> {
     @Override
     protected AbstractFermatFragment getFermatFragment(FanWalletEnumType fragments) throws FragmentNotFoundException {
         if (fragments == null) {
