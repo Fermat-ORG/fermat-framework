@@ -118,7 +118,7 @@ public class Data {
         for (AssetStatistic stat :
                 stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
-                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), new Timestamp(stat.getAssetUsedDate().getTime()), stat.getStatus().getDescription());
+                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), stat.getAssetUsedDate(), stat.getStatus().getDescription());
                 users.add(UserAppropiate);
             }
         }
@@ -172,7 +172,7 @@ public class Data {
 
     public static List<Transaction> getTransactions(AssetIssuerWalletSupAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
+        List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY,digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetIssuerWalletTransaction assetUserWalletTransaction :
                 assetUserWalletTransactions) {
