@@ -32,6 +32,10 @@ public class NominatimProcessor extends AbstractAPIProcessor {
     private static final int NORTH_COORDINATE = 1;
     private static final int WEST_COORDINATE = 2;
     private static final int EAST_COORDINATE = 3;
+    private static final float MAX_LATITUDE = 90;
+    private static final float MIN_LATITUDE = -90;
+    private static final float MAX_LONGITUDE = 180;
+    private static final float MIN_LONGITUDE = -180;
 
     public static CountryDependency setGeoRectangle(CountryDependency countryDependency)
             throws CantCreateGeoRectangleException {
@@ -105,10 +109,17 @@ public class NominatimProcessor extends AbstractAPIProcessor {
         throw new CantCreateGeoRectangleException("Cannot find the GeoRectangle for "+dependencyName);
     }
 
-    public static GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+    /**
+     * This method creates a GeoRectangle by a given location.
+     * @param location
+     * @return
+     * @throws CantCreateGeoRectangleException
+     */
+    public static GeoRectangle getGeoRectangleByLocation(String location)
+            throws CantCreateGeoRectangleException {
         try{
             //we're going to consult with nominatim API
-            JsonArray jsonArray = RemoteJSonProcessor.getJSonArray(queryUrl+location);
+            JsonArray jsonArray = RemoteJSonProcessor.getJSonArray(queryUrl + location);
             JsonElement jsonElement = jsonArray.get(0);
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             float[] coordinates = getArrayFloatFromJsonObject(
@@ -142,20 +153,42 @@ public class NominatimProcessor extends AbstractAPIProcessor {
 
     }
 
-    public static Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException{
+    /**
+     * This method returns an Address by a given coordinates.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    public static Address getAddressByCoordinate(float latitude, float longitude)
+            throws CantCreateAddressException{
         try{
             JsonObject jsonObject = RemoteJSonProcessor.getJSonObject(
                     reverseQueryUrl+"&lat="+latitude+"&lon="+longitude);
             JsonObject jsonAddress = getJsonObjectFromJsonObject(
                     jsonObject,
                     NominatimJsonAttNames.ADDRESS);
-            String road = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.ROAD);
-            String neighbourhood = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.NEIGHBOURHOOD);
-            String city = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.CITY);
-            String county = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTY);
-            String state = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.STATE);
-            String country = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTRY);
-            String countryCode = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTRY_CODE)
+            String road = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.ROAD);
+            String neighbourhood = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.NEIGHBOURHOOD);
+            String city = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.CITY);
+            String county = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.COUNTY);
+            String state = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.STATE);
+            String country = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.COUNTRY);
+            String countryCode = getStringFromJsonObject(
+                    jsonAddress,
+                    NominatimJsonAttNames.COUNTRY_CODE)
                     .toUpperCase();
             float[] coordinates = getArrayFloatFromJsonObject(
                     jsonObject,
@@ -189,6 +222,64 @@ public class NominatimProcessor extends AbstractAPIProcessor {
                     "Cannot get a Json Object");
         }
 
+    }
+
+    /**
+     * This method returns a random GeoRectangle.
+     * @return
+     */
+    public static GeoRectangle getRandomGeLocation() throws CantCreateGeoRectangleException {
+        try{
+            float latitude = generateRandomNumberWithLimits(MAX_LATITUDE, MIN_LATITUDE);
+            float longitude = generateRandomNumberWithLimits(MAX_LONGITUDE, MIN_LATITUDE);
+            //System.out.println(reverseQueryUrl + "&lat=" + latitude + "&lon=" + longitude);
+            JsonObject jsonObject = RemoteJSonProcessor.getJSonObject(
+                    reverseQueryUrl + "&lat=" + latitude + "&lon=" + longitude);
+            String errorMessage = getStringFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.ERROR);
+            if(errorMessage.equals(NominatimJsonAttNames.ERROR_MESSAGE)){
+                //System.out.println("NOMINATIM:lat"+latitude+"-lon:"+longitude+" are wrong");
+                //If the coordinates can be processed through the API, I'll try again
+                return getRandomGeLocation();
+            }
+            //The coordinate is valid, so, I'll generate the GeoRectangle.
+            float[] coordinates = getArrayFloatFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.GEO_RECTANGLE);
+            GeoRectangle geoRectangle = new GeoRectangleRecord(
+                    coordinates[NORTH_COORDINATE],
+                    coordinates[SOUTH_COORDINATE],
+                    coordinates[WEST_COORDINATE],
+                    coordinates[EAST_COORDINATE],
+                    latitude,
+                    longitude);
+            return geoRectangle;
+
+        } catch (CantConnectWithExternalAPIException e) {
+            throw new CantCreateGeoRectangleException(
+                    e,
+                    "Getting random geoRectangle from Nominatim API",
+                    "Cannot connect with nominatim API");
+        } catch (CantGetJSonObjectException e) {
+            throw new CantCreateGeoRectangleException(
+                    e,
+                    "Getting random geoRectangle from Nominatim API",
+                    "Cannot get a JsonObject");
+        }
+
+    }
+
+    /**
+     * This method generates a random float between given max and min defined floats.
+     * @param max
+     * @param min
+     * @return
+     */
+    private static float generateRandomNumberWithLimits(float max, float min){
+        float randomNumber = (float) Math.random();
+        float resultNumber = randomNumber*(max-min)+min;
+        return resultNumber;
     }
 
 }

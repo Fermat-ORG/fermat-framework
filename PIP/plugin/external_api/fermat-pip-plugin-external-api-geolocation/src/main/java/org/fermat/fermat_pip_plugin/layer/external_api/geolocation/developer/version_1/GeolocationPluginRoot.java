@@ -65,6 +65,7 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             //testCitiesByDependency();
             //testGetGeoRectangle();
             //testAddress();
+            //testRandomAddress();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -147,8 +148,19 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             float latitude = 9.91861f;
             float longitude = -68.30472f;
             Address address = this.geolocationPluginManager.
-                    getAddressByCoordinate(latitude,longitude);
+                    getAddressByCoordinate(latitude, longitude);
             System.out.println("NOMINATIM:"+address);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
+    }
+
+    private void testRandomAddress(){
+        try{
+            GeoRectangle geoRectangle = this.geolocationPluginManager.
+                    getRandomGeoLocation();
+            System.out.println("NOMINATIM:"+geoRectangle);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("NOMINATIM: Exception "+e);

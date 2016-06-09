@@ -77,4 +77,11 @@ public interface GeolocationManager<
      */
     A getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException;
 
+    /**
+     * This method returns a random geo location represented in a GeoRectangle object.
+     * @return
+     * @throws CantCreateGeoRectangleException
+     */
+    G getRandomGeoLocation() throws CantCreateGeoRectangleException;
+
 }

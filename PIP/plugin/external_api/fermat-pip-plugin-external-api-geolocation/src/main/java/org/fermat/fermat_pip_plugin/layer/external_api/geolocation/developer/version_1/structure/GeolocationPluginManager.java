@@ -569,7 +569,15 @@ public class GeolocationPluginManager implements GeolocationManager {
      */
     public Address getAddressByCoordinate(float latitude, float longitude)
             throws CantCreateAddressException {
-        return NominatimProcessor.getAddressByCoordinate(latitude,longitude);
+        return NominatimProcessor.getAddressByCoordinate(latitude, longitude);
+    }
+
+    /**
+     * This method returns a random geo location represented in a GeoRectangle object.
+     * @return
+     */
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return NominatimProcessor.getRandomGeLocation();
     }
 
 }

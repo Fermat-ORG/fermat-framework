@@ -69,4 +69,14 @@ public class NominatimJsonAttNames {
      * Represents the Nominatim Country Code.
      */
     public static final String COUNTRY_CODE = "country_code";
+
+    /**
+     * Represents the Nominatim error API json
+     */
+    public static final String ERROR = "error";
+
+    /**
+     * Represents the Nominatim API error message.
+     */
+    public static final String ERROR_MESSAGE = "Unable to geocode";
 }
