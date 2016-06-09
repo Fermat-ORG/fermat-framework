@@ -2,8 +2,10 @@ package com.bitdubai.sub_app.developer.filters;
 
 import android.widget.Filter;
 
+import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.Resource;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,10 @@ import java.util.List;
  */
 public class DeveloperLogFilter extends Filter {
 
-    private List<Resource> data;
-    private DatabaseToolsFragment.AppListAdapter adapter;
+    private List<Loggers> data;
+    private LogToolsFragment.AppListAdapter adapter;
 
-    public DeveloperLogFilter(List<Resource> data, DatabaseToolsFragment.AppListAdapter adapter) {
+    public DeveloperLogFilter(List<Loggers> data, LogToolsFragment.AppListAdapter adapter) {
         this.data = data;
         this.adapter = adapter;
     }
@@ -28,17 +30,17 @@ public class DeveloperLogFilter extends Filter {
 
         FilterResults results = new FilterResults();
 
-        final List<Resource> list = data;
+        final List<Loggers> list = data;
 
         int count = list.size();
-        final ArrayList<Resource> nlist = new ArrayList<>(count);
+        final ArrayList<Loggers> nlist = new ArrayList<>(count);
 
         String filterableString;
-        Resource resource;
+        Loggers resource;
 
         for (int i = 0; i < count; i++) {
             resource = list.get(i);
-            filterableString = resource.label;
+            filterableString = resource.classHierarchyLevels.getLevel0();
             if (filterableString.toLowerCase().contains(filterString)) {
                 nlist.add(list.get(i));
             }
@@ -53,7 +55,7 @@ public class DeveloperLogFilter extends Filter {
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
 //        adapter.changeDataSet((List<DigitalAsset>) filterResults.values);
-        adapter.setData((List<Resource>) filterResults.values);
+        adapter.setData((List<Loggers>) filterResults.values);
         adapter.notifyDataSetChanged();
     }
 }
