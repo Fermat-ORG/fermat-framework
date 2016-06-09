@@ -260,7 +260,7 @@ We are putting together a team of talented developers, especially passionate abo
     Skype:   payarez
     Github:  https://github.com/lostwood
 
-* **Juan Sulbaran [New Part-Time Developer]**<br/>
+* **Juan Sulbaran [New Developer]**<br/>
 ---
     Email:   sulbaranja@gmail.com
     Skype:   juanaso15
