@@ -42,9 +42,9 @@ public class ActorAssetUserNewNotificationsEventHandler implements FermatEventHa
             EventType eventExpected = EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS;
             EventSource eventSource = EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER;
             String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" +
-                    "Event Source received: "+ fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
+                    "Event Source received: " + fermatEvent.getSource().toString() + " - " + fermatEvent.getSource().getCode() + "\n" +
                     "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode() + "\n" +
-                    "Event Source: "+ eventSource.toString() + " - " + eventSource.getCode();
+                    "Event Source: " + eventSource.toString() + " - " + eventSource.getCode();
             throw new UnexpectedEventException(context);
         }
     }

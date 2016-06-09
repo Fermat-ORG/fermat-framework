@@ -68,9 +68,9 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
     private Resources res;
-    
+
     private ImageView assetNegotiationImage;
-    
+
     private FermatTextView assetNegotiationDetailNameText;
     private FermatTextView assetNegotiationQuantity;
     private FermatTextView assetNegotiationUnitPrice;
@@ -300,7 +300,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         bitmapWorkerTask.execute(img);
 
         assetNegotiationDetailNameText.setText(digitalAsset.getName());
-        assetNegotiationUnitPrice.setText(Long.toString( digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()));
+        assetNegotiationUnitPrice.setText(Long.toString(digitalAsset.getUserAssetNegotiation().getAmmountPerUnit()));
 
         //assetNegotiationQuantity.setText(digitalAsset.getUserAssetNegotiation().getQuantityToBuy());
 
@@ -413,7 +413,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -424,8 +424,8 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -433,11 +433,11 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -487,13 +487,12 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         }
         assetNegotiationDetailNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetNegotiationQuantity.setText(digitalAsset.getAvailableBalanceQuantity() + " " );
+        assetNegotiationQuantity.setText(digitalAsset.getAvailableBalanceQuantity() + " ");
 
         /*if (digitalAsset.getAvailableBalanceQuantity() == 0) {
             selectUserButton.setOnClickListener(null);
         }*/
     }
-
 
 
     private void configureToolbar() {

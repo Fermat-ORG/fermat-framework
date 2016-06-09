@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
@@ -16,15 +15,13 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
- *
  * Created by nerio on 14/5/2016.
  */
-public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityModuleManager, Serializable {
+public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityModuleManager {
 
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
@@ -34,8 +31,8 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
         super(pluginFileSystem, pluginId);
 
         this.redeemPointIdentityManager = redeemPointIdentityManager;
-        this.pluginFileSystem    = pluginFileSystem;
-        this.pluginId            = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override

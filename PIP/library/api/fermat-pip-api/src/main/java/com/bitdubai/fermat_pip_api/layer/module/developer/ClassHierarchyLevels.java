@@ -2,10 +2,12 @@ package com.bitdubai.fermat_pip_api.layer.module.developer;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 
+import java.io.Serializable;
+
 /**
  * Created by rodrigo on 2015.07.01..
  */
-public class ClassHierarchyLevels {
+public class ClassHierarchyLevels implements Serializable {
     String level0;
     String level1;
     String level2;

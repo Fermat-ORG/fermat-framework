@@ -8,7 +8,7 @@ import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -23,7 +23,7 @@ import java.util.List;
      */
     public class TabsPagerAdapter extends FragmentStatePagerAdapter implements FermatUIAdapter{
 
-    private List<AbstractFermatFragment> lstCurrentFragments;
+    private List<AbstractFermatFragmentInterface> lstCurrentFragments;
 
     private String onlyFragment;
     private String[] titles;
@@ -111,7 +111,7 @@ import java.util.List;
         @Override
         public Fragment getItem(int position) {
             String fragmentCodeType = null;
-            AbstractFermatFragment currentFragment = null;
+            Fragment currentFragment = null;
             if(tabStrip!=null) {
                 List<Tab> titleTabs = tabStrip.getTabs();
                 for (int j = 0; j < titleTabs.size(); j++) {
@@ -127,7 +127,10 @@ import java.util.List;
             try {
                 if(fragmentFactory !=null){
                     currentFragment= fragmentFactory.getFragment(fragmentCodeType, fermatSession, resourcesProviderManager);
-                    lstCurrentFragments.add(currentFragment);
+                    if(currentFragment instanceof AbstractFermatFragmentInterface){
+                        lstCurrentFragments.add((AbstractFermatFragmentInterface) currentFragment);
+                    }
+
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -142,17 +145,18 @@ import java.util.List;
     }
 
 
-    public List<AbstractFermatFragment> getLstCurrentFragments() {
+    public List<AbstractFermatFragmentInterface> getLstCurrentFragments() {
         return lstCurrentFragments;
     }
 
     public void destroyCurrentFragments(){
-        for(Fragment fragment : lstCurrentFragments){
-            FragmentManager manager = fragment.getFragmentManager();
+        for(AbstractFermatFragmentInterface fragment : lstCurrentFragments){
+            Fragment fragment1 =(Fragment)fragment;
+            FragmentManager manager = fragment1.getFragmentManager();
             if(manager != null) {
                 FragmentTransaction trans = manager.beginTransaction();
-                trans.detach(fragment);
-                trans.remove(fragment);
+                trans.detach(fragment1);
+                trans.remove(fragment1);
                 trans.commit();
 
 

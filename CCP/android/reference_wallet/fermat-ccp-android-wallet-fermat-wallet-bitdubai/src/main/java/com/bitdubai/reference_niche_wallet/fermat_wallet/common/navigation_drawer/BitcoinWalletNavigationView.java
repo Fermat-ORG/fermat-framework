@@ -64,7 +64,7 @@ public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
     @Override
     protected FermatAdapter getNavigationAdapter() {
         try {
-            return new BitcoinWalletNavigationViewAdapter(this.activity);
+            return new FermatWalletNavigationViewAdapter(this.activity);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -125,16 +125,46 @@ public class WalletUtils {
      * @return
      */
     public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+
         String stringAmount = "";
 
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDecimal);
+            df.setMinimumFractionDigits(minDecimal);
 
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(maxDecimal);
-        df.setMinimumFractionDigits(minDecimal);
+           stringAmount = df.format(amount); //
 
-        stringAmount =df.format(amount);//+ " BTC";
 
         return stringAmount;
+
+    }
+
+
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatBalanceStringWithDecimalEntry(long amount,int maxDecimal, int minDecimal,int typeAmount) {
+
+        String stringAmount = "";
+
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(maxDecimal);
+            df.setMinimumFractionDigits(minDecimal);
+            String BTCFormat = "";
+
+            BTCFormat = df.format(amount / 100000000.0); //
+
+            stringAmount = BTCFormat ;//+ " BTC";
+        }else if(typeAmount== ShowMoneyType.BITS.getCode()){
+            stringAmount = String.valueOf(amount / 100);
+        }
+        showMoneyType=!showMoneyType;
+
+        return stringAmount;
+
     }
     /**
      *  Formationg Amount no decimal

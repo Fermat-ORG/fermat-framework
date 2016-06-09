@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 05/10/15.
  */
-public class CantGetBalanceRecordException  extends FermatException{
+public class CantGetBalanceRecordException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

@@ -43,7 +43,7 @@ public class UpdateDistributionStatusByGenesisTransactionTest {
     List<DatabaseTableRecord> records, recordsForException;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -56,13 +56,13 @@ public class UpdateDistributionStatusByGenesisTransactionTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void updateDistributionStatusByGenesisTransactionTest () throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateDistributionStatusByGenesisTransactionTest() throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
     }
@@ -74,7 +74,7 @@ public class UpdateDistributionStatusByGenesisTransactionTest {
         try {
             mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
         }
     }
@@ -86,7 +86,7 @@ public class UpdateDistributionStatusByGenesisTransactionTest {
         try {
             mockAssetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.ASSET_ACCEPTED, genesisTransaction);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
             Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
         }

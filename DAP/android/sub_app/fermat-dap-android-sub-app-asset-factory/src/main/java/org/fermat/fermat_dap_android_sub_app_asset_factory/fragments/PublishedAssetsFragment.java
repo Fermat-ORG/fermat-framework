@@ -304,9 +304,9 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException, FileNotFoundException {
         List<AssetFactory> assets = moduleManager.getAssetFactoryByState(FINAL);
         List<Resource> resources;
-        for(AssetFactory item : assets) {
+        for (AssetFactory item : assets) {
             resources = item.getResources();
-            for(Resource resource : resources) {
+            for (Resource resource : resources) {
                 resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource).getContent());
             }
         }

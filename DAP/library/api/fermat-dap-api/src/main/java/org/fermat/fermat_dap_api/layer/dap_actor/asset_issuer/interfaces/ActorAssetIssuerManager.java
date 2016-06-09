@@ -15,8 +15,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
-     * @param actorPublicKey                     The public key of the Asset Actor Issuer
-     * @return                                   THe information associated with the actorPublicKey.
+     * @param actorPublicKey The public key of the Asset Actor Issuer
+     * @return THe information associated with the actorPublicKey.
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException
      */
@@ -25,9 +25,9 @@ public interface ActorAssetIssuerManager extends FermatManager {
     /**
      * The method <code>createActorAssetIssuerFactory</code> create Actor by a Identity
      *
-     * @param assetIssuerActorPublicKey                 Referred to the Identity publicKey
-     * @param assetIssuerActorName                      Referred to the Identity Alias
-     * @param assetIssuerImage              Referred to the Identity profileImage
+     * @param assetIssuerActorPublicKey Referred to the Identity publicKey
+     * @param assetIssuerActorName      Referred to the Identity Alias
+     * @param assetIssuerImage          Referred to the Identity profileImage
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException
      */
     void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerImage) throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
@@ -40,7 +40,7 @@ public interface ActorAssetIssuerManager extends FermatManager {
     /**
      * The method <code>createActorAssetIssuerRegisterInNetworkService</code> create Actor Registered
      *
-     * @param actorAssetIssuers                       Referred to the Identity publicKey
+     * @param actorAssetIssuers Referred to the Identity publicKey
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException
      */
     void createActorAssetIssuerRegisterInNetworkService(List<ActorAssetIssuer> actorAssetIssuers) throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
@@ -94,24 +94,23 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * accepts the connection request sent also by this method.
      *
      * @param actorAssetIssuerToLinkPublicKey The public key of the actor asset user sending the connection request.
-     * @param actorAssetIssuerToAddName               The name of the actor asset user to add
-     * @param actorAssetIssuerToAddPublicKey          The public key of the actor asset  user to add
-     * @param profileImage                           The profile image that the actor asset user has
-     *
+     * @param actorAssetIssuerToAddName       The name of the actor asset user to add
+     * @param actorAssetIssuerToAddPublicKey  The public key of the actor asset  user to add
+     * @param profileImage                    The profile image that the actor asset user has
      * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException if something goes wrong.
      */
     void askActorAssetIssuerForConnection(String actorAssetIssuerToLinkPublicKey,
-                                        String actorAssetIssuerToAddName              ,
-                                        String actorAssetIssuerToAddPublicKey         ,
-                                        byte[] profileImage) throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException, org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
+                                          String actorAssetIssuerToAddName,
+                                          String actorAssetIssuerToAddPublicKey,
+                                          byte[] profileImage) throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException, org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 
 
     /**
      * The method <code>acceptIntraWalletUser</code> takes the information of a connection request, accepts
      * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
      *
-     * @param actorAssetIssuerInPublicKey The public key of the intra user sending the connection request.
-     * @param actorAssetIssuerToAddPublicKey    The public key of the intra user to add
+     * @param actorAssetIssuerInPublicKey    The public key of the intra user sending the connection request.
+     * @param actorAssetIssuerToAddPublicKey The public key of the intra user to add
      * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException
      */
     void acceptActorAssetIssuer(String actorAssetIssuerInPublicKey, String actorAssetIssuerToAddPublicKey) throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
@@ -136,13 +135,14 @@ public interface ActorAssetIssuerManager extends FermatManager {
 
 
     void receivingActorAssetIssuerRequestConnection(String actorAssetIssuerLoggedInPublicKey,
-                                                  String actorAssetIssuerToAddName,
-                                                  String actorAssetIssuerToAddPublicKey,
-                                                  byte[] profileImage,
-                                                  Actors actorsType) throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
+                                                    String actorAssetIssuerToAddName,
+                                                    String actorAssetIssuerToAddPublicKey,
+                                                    byte[] profileImage,
+                                                    Actors actorsType) throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCreateActorAssetReceiveException;
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
+     *
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
      * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException
      */

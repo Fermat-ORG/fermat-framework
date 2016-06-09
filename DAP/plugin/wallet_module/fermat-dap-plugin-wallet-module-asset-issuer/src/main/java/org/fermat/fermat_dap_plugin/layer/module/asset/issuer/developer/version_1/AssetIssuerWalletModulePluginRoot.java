@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -170,10 +169,9 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
 //            throw new CantStartPluginException(exception);
 //        }
 //    }
-
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetIssuerWalletModuleManager.class)
-    public ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetIssuerWalletSupAppModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation started...", null, null);
 

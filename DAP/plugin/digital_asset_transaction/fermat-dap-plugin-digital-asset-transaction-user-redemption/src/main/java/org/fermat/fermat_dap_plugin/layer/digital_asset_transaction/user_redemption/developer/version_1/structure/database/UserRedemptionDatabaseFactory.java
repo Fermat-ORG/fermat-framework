@@ -99,7 +99,7 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating " + UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME + " table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
             DatabaseTableFactory assetDeliveringTable = databaseFactory.newTableFactory(ownerId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
@@ -121,7 +121,7 @@ public class UserRedemptionDatabaseFactory implements DealsWithPluginDatabaseSys
                 //Create the table
                 databaseFactory.createTable(ownerId, assetDeliveringTable);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating " + UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME + " table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {

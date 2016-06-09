@@ -62,8 +62,8 @@
 
                         <AutoCompleteTextView
                             android:id="@+id/contact_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:gravity="left"
                             android:paddingBottom="7dip"
                             android:paddingLeft="14dip"
@@ -204,6 +204,7 @@
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
                         android:textStyle="normal"
+                        android:maxLength="11"
                         />
 
                     <Spinner
@@ -251,6 +252,7 @@
                         android:layout_gravity="end"
                         android:background="@null"
                         android:gravity="left"
+                        android:text=""
                         android:hint="@string/notes_text"
                         android:paddingBottom="7dip"
                         android:paddingLeft="14dip"
@@ -260,7 +262,8 @@
                         android:textColor="#1d1d26"
                         android:textColorHint="#9a9a9c"
                         android:textSize="16sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:maxLength="25"/>
                 </LinearLayout>
 
                 <View

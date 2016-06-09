@@ -7,6 +7,6 @@ public class CantInitializeAssetMonitorAgentException extends org.fermat.fermat_
     public static final String DEFAULT_MESSAGE = "There was an error Initializing Asset Monitor Agent.";
 
     public CantInitializeAssetMonitorAgentException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

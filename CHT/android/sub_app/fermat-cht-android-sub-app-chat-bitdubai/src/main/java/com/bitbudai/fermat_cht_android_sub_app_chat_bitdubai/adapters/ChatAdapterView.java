@@ -335,7 +335,13 @@ public class ChatAdapterView extends LinearLayout {
         final int actualHeight = getHeight();
         FrameLayout.LayoutParams layoutParams =
                 (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
-        layoutParams.height = 764;
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        if(dm.heightPixels < 800)
+            layoutParams.height = 764;
+        else if(dm.heightPixels < 1080 && dm.heightPixels >= 800)
+            layoutParams.height = 944;
+        else if(dm.heightPixels < 1280 && dm.heightPixels >= 1080)
+            layoutParams.height = 1244;
         messagesContainer.setLayoutParams(layoutParams);
     }
 
@@ -719,13 +725,12 @@ public class ChatAdapterView extends LinearLayout {
                }
            }
            else {
-                   if (chatManager.checkOnlineStatus(remotePk)) {
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-                   } else {
-                       String date = chatManager.checkLastConnection(remotePk);
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-                   }
-
+               if (chatManager.checkOnlineStatus(remotePk)) {
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+               } else {
+                   String date = chatManager.checkLastConnection(remotePk);
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
+               }
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();

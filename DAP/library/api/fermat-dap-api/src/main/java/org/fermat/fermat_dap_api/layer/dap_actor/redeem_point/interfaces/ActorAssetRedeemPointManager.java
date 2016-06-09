@@ -33,8 +33,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
-     * @param actorPublicKey                    The public key of the Asset Actor Redeem Point
-     * @return                                  The information associated with the actorPublicKey.
+     * @param actorPublicKey The public key of the Asset Actor Redeem Point
+     * @return The information associated with the actorPublicKey.
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException
      */
@@ -43,8 +43,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     /**
      * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
-     * @param actorPublicKey                    The public key of the Asset Actor Redeem Point
-     * @return                                  The information associated with the actorPublicKey.
+     * @param actorPublicKey The public key of the Asset Actor Redeem Point
+     * @return The information associated with the actorPublicKey.
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException
      */
@@ -53,9 +53,9 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity
      *
-     * @param assetRedeemPointActorPublicKey                Referred to the Identity publicKey
-     * @param assetRedeemPointActorName                     Referred to the Identity Alias
-     * @param assetRedeemPointActorprofileImage             Referred to the Identity profileImage
+     * @param assetRedeemPointActorPublicKey    Referred to the Identity publicKey
+     * @param assetRedeemPointActorName         Referred to the Identity Alias
+     * @param assetRedeemPointActorprofileImage Referred to the Identity profileImage
      * @throws CantCreateActorRedeemPointException
      */
     void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, String contactInformation, String countryName, String cityName) throws CantCreateActorRedeemPointException;
@@ -69,6 +69,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * This method saves an already existing redeem point in the registered redeem point database,
      * usually uses when the redeem point request the issuer an extended public key, we save in
      * the issuer side this redeem point so we can retrieve its information on future uses.
+     *
      * @param redeemPoint The already existing redeem point with all its information
      * @throws CantCreateActorRedeemPointException
      */
@@ -77,7 +78,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     /**
      * The method <code>createActorAssetRedeemPointRegisterInNetworkService</code> create Actor Registered
      *
-     * @param actorAssetRedeemPoints                       Referred to the Identity publicKey
+     * @param actorAssetRedeemPoints Referred to the Identity publicKey
      * @throws CantCreateActorRedeemPointException
      */
     void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException;
@@ -90,6 +91,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException;
 
     DAPConnectionState getActorRedeemPointRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
      * and used in Sub App Community
@@ -127,23 +129,22 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @param actorAssetUserIdentityToLinkPublicKey The public key of the actor asset user sending the connection request.
      * @param actorAssetUserToAddName               The name of the actor asset user to add
      * @param actorAssetUserToAddPublicKey          The public key of the actor asset  user to add
-     * @param profileImage                           The profile image that the actor asset user has
-     *
+     * @param profileImage                          The profile image that the actor asset user has
      * @throws CantAskConnectionActorAssetException if something goes wrong.
      */
     void askActorAssetRedeemForConnection(String actorAssetUserIdentityToLinkPublicKey,
-                                        String actorAssetUserToAddName              ,
-                                        String actorAssetUserToAddPublicKey         ,
-                                        byte[] profileImage                         ,
-                                        BlockchainNetworkType blockchainNetworkType ) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
+                                          String actorAssetUserToAddName,
+                                          String actorAssetUserToAddPublicKey,
+                                          byte[] profileImage,
+                                          BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
 
     /**
      * The method <code>acceptActorAssetRedeem</code> takes the information of a connection request, accepts
      * the request and adds the intra user to the list managed by this plugin with ContactState CONTACT.
      *
-     * @param actorAssetUserInPublicKey The public key of the intra user sending the connection request.
-     * @param actorAssetUserToAddPublicKey    The public key of the intra user to add
+     * @param actorAssetUserInPublicKey    The public key of the intra user sending the connection request.
+     * @param actorAssetUserToAddPublicKey The public key of the intra user to add
      * @throws CantAcceptActorAssetUserException
      */
     void acceptActorAssetRedeem(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException;
@@ -159,7 +160,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
      * The method <code>disconnectToActorAssetRedeemPoint</code> disconnect an intra user from the connections registry
-//     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     * //     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
+     *
      * @param actorUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException
      */
@@ -168,13 +170,14 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
 
     void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,
-                                                  String actorAssetUserToAddName,
-                                                  String actorAssetUserToAddPublicKey,
-                                                  byte[] profileImage,
-                                                  Actors actorsType) throws CantCreateActorAssetReceiveException;
+                                                    String actorAssetUserToAddName,
+                                                    String actorAssetUserToAddPublicKey,
+                                                    byte[] profileImage,
+                                                    Actors actorsType) throws CantCreateActorAssetReceiveException;
 
     /**
      * The method <code>cancelActorAssetRedeem</code> cancels an intra user from the connections registry
+     *
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
      * @throws org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException
      */
@@ -201,7 +204,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     List<DAPActor> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
     /**
-     *The method <code>getLastNotificationActorAssetUser</code> get the last notification received by actor public key
+     * The method <code>getLastNotificationActorAssetUser</code> get the last notification received by actor public key
+     *
      * @param actorAssetUserConnectedPublicKey
      * @return ActorAssetUser notification object
      * @throws CantGetActorAssetNotificationException

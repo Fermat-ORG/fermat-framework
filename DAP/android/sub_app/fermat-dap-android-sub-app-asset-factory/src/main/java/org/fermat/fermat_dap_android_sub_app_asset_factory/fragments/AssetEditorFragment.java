@@ -441,7 +441,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                         if (isAttached) {
                             imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, takePicture.getWidth(), takePicture.getHeight(), true);
-                            if(imageBitmap != null){
+                            if (imageBitmap != null) {
                                 hasResource = true;
 //                                Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(takePicture);
                             }
@@ -474,7 +474,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if(!contextMenuInUse) {
+        if (!contextMenuInUse) {
             switch (item.getItemId()) {
                 case CONTEXT_MENU_CAMERA:
                     dispatchTakePictureIntent();

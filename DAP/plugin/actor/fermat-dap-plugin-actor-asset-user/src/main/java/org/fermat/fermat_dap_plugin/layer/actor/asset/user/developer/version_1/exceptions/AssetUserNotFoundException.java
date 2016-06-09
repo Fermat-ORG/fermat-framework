@@ -20,7 +20,7 @@ public class AssetUserNotFoundException extends FermatException {
 
     private static String DEFAULT_MESSAGE = "The provided AssetUser's public key wasn't found in the database.";
 
-    public AssetUserNotFoundException(String context){
+    public AssetUserNotFoundException(String context) {
         super(DEFAULT_MESSAGE, null, context, null);
     }
 

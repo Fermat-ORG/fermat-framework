@@ -36,15 +36,6 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
     private final int type;
 
     /**
-     * Members
-     */
-    String title;
-    String subTitle;
-    String body;
-    String textFooter;
-    int resBannerimage;
-
-    /**
      * UI
      */
     private CheckBox checkbox_not_show;
@@ -57,7 +48,7 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public BlockchainDownloadInfoDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+    public BlockchainDownloadInfoDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type, boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.checkButton = checkButton;
@@ -68,7 +59,7 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
-        checkbox_not_show.setChecked(!checkButton);
+        checkbox_not_show.setChecked(true);
         btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
         btn_dismiss.setOnClickListener(this);
     }

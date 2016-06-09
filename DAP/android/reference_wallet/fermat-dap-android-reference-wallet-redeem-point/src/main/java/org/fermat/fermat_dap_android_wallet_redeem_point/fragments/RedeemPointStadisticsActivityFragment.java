@@ -185,7 +185,7 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -196,8 +196,8 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_image_redeem_point,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_image_redeem_point, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -205,11 +205,11 @@ public class RedeemPointStadisticsActivityFragment extends FermatWalletListFragm
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 

@@ -62,7 +62,7 @@ public class GetDatabaseTableListTest {
         eventsRecorderColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_EVENTS_RECORDED_STATUS_COLUMN_NAME);
         eventsRecorderColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
 
-        assetIssuingColumns=new ArrayList<>();
+        assetIssuingColumns = new ArrayList<>();
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
         assetIssuingColumns.add(AssetIssuingDatabaseConstants.ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME);

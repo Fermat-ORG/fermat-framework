@@ -15,6 +15,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventListener implements
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *

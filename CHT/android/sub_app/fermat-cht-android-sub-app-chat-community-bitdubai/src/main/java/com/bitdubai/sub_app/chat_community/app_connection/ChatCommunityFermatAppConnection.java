@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.chat_community.app_connection;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -9,16 +10,29 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunitySelectableIdentityImpl;
 import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
 import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.chat_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+
+import java.util.ArrayList;
 
 /**
  * ChatCommunityFermatAppConnection
@@ -30,25 +44,27 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     private ChatUserSubAppSession chatUserSubAppSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
+    private ChatActorCommunitySelectableIdentity activeIdentity;
+    private ChatCommunityNavigationViewPainter navPainter;
 
     public ChatCommunityFermatAppConnection(Context activity) {
         super(activity);
-
     }
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
+        //getChtActiveIdentity();
         return new ChatCommunityFragmentFactory();
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.CHAT_PLATFORM,
-                Layers.SUB_APP_MODULE,
-                Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
-                Developers.BITDUBAI,
-                new Version()
+            Platforms.CHAT_PLATFORM,
+            Layers.SUB_APP_MODULE,
+            Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
+            Developers.BITDUBAI,
+            new Version()
         );
     }
 
@@ -59,8 +75,8 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new ChatCommunityNavigationViewPainter(getContext(),null);
+        navPainter=new ChatCommunityNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
+        return navPainter;
     }
 
     @Override
@@ -75,18 +91,6 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
-        try
-        {
-            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
-            if(chatUserSubAppSession!=  null)
-                moduleManager = chatUserSubAppSession.getModuleManager();
-            return ChatCommunityBuildNotification.getNotification(moduleManager,code);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
+        return CommunityNotificationPainterBuilder.getNotification(code);
     }
 }

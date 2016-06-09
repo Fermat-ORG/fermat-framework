@@ -67,7 +67,8 @@ public class DetailFragment extends AbstractFermatFragment<AssetUserSession, Res
     private SettingsManager<AssetUserSettings> settingsManager;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    public DetailFragment() {}
+    public DetailFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
