@@ -19,4 +19,54 @@ public class NominatimJsonAttNames {
      * Represents the Nominatim display name.
      */
     public static final String DISPLAY_NAME = "display_name";
+
+    /**
+     * Represents the Nominatim latitude.
+     */
+    public static final String LATITUDE = "lat";
+
+    /**
+     * Represents the Nominatim longitude.
+     */
+    public static final String LONGITUDE = "lon";
+
+    /**
+     * Represents the Nominatim address
+     */
+    public static final String ADDRESS = "address";
+
+    /**
+     * Represents the Nominatim Road
+     */
+    public static final String ROAD = "road";
+
+    /**
+     * Represents the Nominatim neighbourhood
+     */
+    public static final String NEIGHBOURHOOD = "neighbourhood";
+
+    /**
+     * Represents the Nominatim City
+     */
+    public static final String CITY = "city";
+
+    /**
+     * Represents the Nominatim County
+     */
+    public static final String COUNTY = "county";
+
+    /**
+     * Represents the Nominatim State
+     */
+    public static final String STATE = "state";
+
+    /**
+     * Represents the Nominatim country
+     */
+    public static final String COUNTRY = "country";
+
+    /**
+     * Represents the Nominatim Country Code.
+     */
+    public static final String COUNTRY_CODE = "country_code";
 }

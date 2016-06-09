@@ -4,7 +4,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Cou
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions.CantCreateCountryException;
-import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
 
 import java.io.Serializable;
 

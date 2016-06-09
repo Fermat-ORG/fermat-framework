@@ -1,15 +1,20 @@
 package org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors;
 
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.config.GeolocationConfiguration;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.config.NominatimJsonAttNames;
-import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+
+import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.records.AddressRecord;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.records.CountryDependencyRecord;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.records.GeoRectangleRecord;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.util.RemoteJSonProcessor;
@@ -20,6 +25,7 @@ import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.ver
 public class NominatimProcessor extends AbstractAPIProcessor {
 
     private static final String queryUrl = GeolocationConfiguration.NOMINATIM_URL_PLACE_DETAILS;
+    private static final String reverseQueryUrl = GeolocationConfiguration.NOMINATIM_URL_REVERSE_GEOLOCATION;
     private static final String DEPENDENCY_TYPE0 = "state";
     private static final String DEPENDENCY_TYPE1 = "administrative";
     private static final int SOUTH_COORDINATE = 0;
@@ -77,17 +83,112 @@ public class NominatimProcessor extends AbstractAPIProcessor {
             if(!(type.equalsIgnoreCase(DEPENDENCY_TYPE0)||type.equalsIgnoreCase(DEPENDENCY_TYPE1))){
                 continue;
             }
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
             float[] coordinates = getArrayFloatFromJsonObject(
-                    jsonElement.getAsJsonObject(),
+                    jsonObject,
+                    NominatimJsonAttNames.GEO_RECTANGLE);
+            float latitude = (float) getDoubleFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.LATITUDE);
+            float longitude = (float) getDoubleFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.LONGITUDE);
+            GeoRectangle geoRectangle = new GeoRectangleRecord(
+                    coordinates[NORTH_COORDINATE],
+                    coordinates[SOUTH_COORDINATE],
+                    coordinates[WEST_COORDINATE],
+                    coordinates[EAST_COORDINATE],
+                    latitude,
+                    longitude);
+            return geoRectangle;
+        }
+        throw new CantCreateGeoRectangleException("Cannot find the GeoRectangle for "+dependencyName);
+    }
+
+    public static GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        try{
+            //we're going to consult with nominatim API
+            JsonArray jsonArray = RemoteJSonProcessor.getJSonArray(queryUrl+location);
+            JsonElement jsonElement = jsonArray.get(0);
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            float[] coordinates = getArrayFloatFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.GEO_RECTANGLE);
+            float latitude = (float) getDoubleFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.LATITUDE);
+            float longitude = (float) getDoubleFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.LONGITUDE);
+            GeoRectangle geoRectangle = new GeoRectangleRecord(
+                    coordinates[NORTH_COORDINATE],
+                    coordinates[SOUTH_COORDINATE],
+                    coordinates[WEST_COORDINATE],
+                    coordinates[EAST_COORDINATE],
+                    latitude,
+                    longitude);
+            return geoRectangle;
+        } catch (CantConnectWithExternalAPIException e) {
+            throw new CantCreateGeoRectangleException(
+                    e,
+                    "Getting geoRectangle from Nominatim API",
+                    "Cannot connect with nominatim API");
+        } catch (CantGetJSonObjectException e) {
+            throw new CantCreateGeoRectangleException(
+                    e,
+                    "Getting geoRectangle from Nominatim API",
+                    "Cannot get Json Object");
+        }
+
+    }
+
+    public static Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException{
+        try{
+            JsonObject jsonObject = RemoteJSonProcessor.getJSonObject(
+                    reverseQueryUrl+"&lat="+latitude+"&lon="+longitude);
+            JsonObject jsonAddress = getJsonObjectFromJsonObject(
+                    jsonObject,
+                    NominatimJsonAttNames.ADDRESS);
+            String road = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.ROAD);
+            String neighbourhood = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.NEIGHBOURHOOD);
+            String city = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.CITY);
+            String county = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTY);
+            String state = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.STATE);
+            String country = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTRY);
+            String countryCode = getStringFromJsonObject(jsonAddress, NominatimJsonAttNames.COUNTRY_CODE)
+                    .toUpperCase();
+            float[] coordinates = getArrayFloatFromJsonObject(
+                    jsonObject,
                     NominatimJsonAttNames.GEO_RECTANGLE);
             GeoRectangle geoRectangle = new GeoRectangleRecord(
                     coordinates[NORTH_COORDINATE],
                     coordinates[SOUTH_COORDINATE],
                     coordinates[WEST_COORDINATE],
-                    coordinates[EAST_COORDINATE]);
-            return geoRectangle;
+                    coordinates[EAST_COORDINATE],
+                    latitude,
+                    longitude);
+            Address address = new AddressRecord(
+                    road,
+                    neighbourhood,
+                    city,
+                    county,
+                    state,
+                    country,
+                    countryCode,
+                    geoRectangle);
+            return address;
+        } catch (CantConnectWithExternalAPIException e) {
+            throw new CantCreateAddressException(
+                    e,
+                    "Getting an address from Nominatim API",
+                    "Cannot connect with Nominatim API");
+        } catch (CantGetJSonObjectException e) {
+            throw new CantCreateAddressException(
+                    e,
+                    "Getting an address from Nominatim API",
+                    "Cannot get a Json Object");
         }
-        throw new CantCreateGeoRectangleException("Cannot find the GeoRectangle for "+dependencyName);
+
     }
 
 }

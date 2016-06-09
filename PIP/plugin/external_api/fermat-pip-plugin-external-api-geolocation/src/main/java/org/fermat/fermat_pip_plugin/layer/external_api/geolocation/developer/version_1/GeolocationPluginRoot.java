@@ -14,9 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.structure.GeolocationPluginManager;
 
@@ -61,6 +63,8 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             //testListDependencies();
             //testCitiesByCountry();
             //testCitiesByDependency();
+            //testGetGeoRectangle();
+            //testAddress();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -120,6 +124,31 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             List<City> cities = this.geolocationPluginManager.
                     getCitiesByCountryCodeAndDependencyName(countryCode, dependencyName);
             System.out.println("NOMINATIM:"+cities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
+    }
+
+    private void testGetGeoRectangle(){
+        try{
+            String location = "Maracay";
+            GeoRectangle geoRectangle = this.geolocationPluginManager.
+                    getGeoRectangleByLocation(location);
+            System.out.println("NOMINATIM:"+geoRectangle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("NOMINATIM: Exception "+e);
+        }
+    }
+
+    private void testAddress(){
+        try{
+            float latitude = 9.91861f;
+            float longitude = -68.30472f;
+            Address address = this.geolocationPluginManager.
+                    getAddressByCoordinate(latitude,longitude);
+            System.out.println("NOMINATIM:"+address);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("NOMINATIM: Exception "+e);

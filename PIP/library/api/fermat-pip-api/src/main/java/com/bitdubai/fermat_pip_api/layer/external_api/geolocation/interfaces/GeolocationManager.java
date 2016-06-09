@@ -2,8 +2,10 @@ package com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
 
@@ -16,7 +18,9 @@ import java.util.List;
 public interface GeolocationManager<
         T extends Country,
         K extends CountryDependency,
-        M extends City> extends FermatManager {
+        M extends City,
+        G extends GeoRectangle,
+        A extends Address> extends FermatManager {
 
     /**
      * This method returns a list of Countries available in an external api
@@ -52,5 +56,25 @@ public interface GeolocationManager<
      */
     List<M> getCitiesByCountryCodeAndDependencyName(String countryCode, String dependencyName)
             throws CantGetCitiesListException, CantCreateCountriesListException;
+
+    /**
+     * This method returns the GeoRectangle owned by a given location.
+     * A GeoRectangle object contains a rectangle that evolves the location.
+     * This rectangle can be drawn with 4 points: North, South, East and West.
+     * Also, the GeoRectangle contains the latitude and longitude of the center of the rectangle.
+     * @param location
+     * @return
+     */
+    G getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException;
+
+    /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    A getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException;
 
 }

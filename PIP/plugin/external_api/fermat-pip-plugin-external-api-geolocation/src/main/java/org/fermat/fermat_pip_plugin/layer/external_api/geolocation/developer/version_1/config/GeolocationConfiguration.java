@@ -70,4 +70,9 @@ public class GeolocationConfiguration {
      */
     public static final String NOMINATIM_URL_PLACE_DETAILS = "http://nominatim.openstreetmap.org/search?format=json&addressdetails=0&q=";
 
+    /**
+     * Represents the Nominatim URL to get the details from a reverse geolocation.
+     */
+    public static final String NOMINATIM_URL_REVERSE_GEOLOCATION = "http://nominatim.openstreetmap.org/reverse?format=json&zoom=18&addressdetails=1";
+
 }

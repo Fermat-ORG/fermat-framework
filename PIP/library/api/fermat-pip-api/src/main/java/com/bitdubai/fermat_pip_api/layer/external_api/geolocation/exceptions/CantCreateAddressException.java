@@ -1,13 +1,13 @@
-package org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions;
+package com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/06/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/06/16.
  */
-public class CantCreateGeoRectangleException extends FermatException {
+public class CantCreateAddressException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CANNOT CREATE A GEO RECTANGLE";
+    public static final String DEFAULT_MESSAGE = "CANNOT CREATE AN ADDRESS OBJECT";
 
     /**
      * Constructor with parameters
@@ -16,7 +16,7 @@ public class CantCreateGeoRectangleException extends FermatException {
      * @param context
      * @param possibleReason
      */
-    public CantCreateGeoRectangleException(
+    public CantCreateAddressException(
             final String message,
             final Exception cause,
             final String context,
@@ -30,7 +30,7 @@ public class CantCreateGeoRectangleException extends FermatException {
      * @param context
      * @param possibleReason
      */
-    public CantCreateGeoRectangleException(
+    public CantCreateAddressException(
             Exception cause,
             String context,
             String possibleReason) {
@@ -42,7 +42,7 @@ public class CantCreateGeoRectangleException extends FermatException {
      * @param message
      * @param cause
      */
-    public CantCreateGeoRectangleException(
+    public CantCreateAddressException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");
@@ -52,7 +52,7 @@ public class CantCreateGeoRectangleException extends FermatException {
      * Constructor with parameters
      * @param message
      */
-    public CantCreateGeoRectangleException(final String message) {
+    public CantCreateAddressException(final String message) {
         this(message, null);
     }
 
@@ -60,7 +60,7 @@ public class CantCreateGeoRectangleException extends FermatException {
      * Constructor with parameters
      * @param exception
      */
-    public CantCreateGeoRectangleException(final Exception exception) {
+    public CantCreateAddressException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -68,7 +68,8 @@ public class CantCreateGeoRectangleException extends FermatException {
     /**
      * Constructor with parameters
      */
-    public CantCreateGeoRectangleException() {
+    public CantCreateAddressException() {
         this(DEFAULT_MESSAGE);
     }
 }
+

@@ -11,11 +11,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
@@ -24,7 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.GeolocationPluginRoot;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.config.GeolocationConfiguration;
-import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.CitiesProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonamesProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonosProcessor;
@@ -469,7 +471,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.createTextFile(
                     pluginId,
                     GeolocationConfiguration.DEPENDENCY_PATH_TO_CITIES_FILE,
-                    GeolocationConfiguration.DEPENDENCIES_BACKUP_FILE+dependencyName,
+                    GeolocationConfiguration.DEPENDENCIES_BACKUP_FILE + dependencyName,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.setContent(dependenciesListXML);
@@ -542,6 +544,32 @@ public class GeolocationPluginManager implements GeolocationManager {
         boolean isLatitudeOk = north>=cityLatitude&&south<=cityLatitude;
         boolean isLongitudeOk = east>=cityLongitude&&west<=cityLongitude;
         return isLatitudeOk&&isLongitudeOk;
+    }
+
+    /**
+     * This method returns the GeoRectangle owned by a given location.
+     * A GeoRectangle object contains a rectangle that evolves the location.
+     * This rectangle can be drawn with 4 points: North, South, East and West.
+     * Also, the GeoRectangle contains the latitude and longitude of the center of the rectangle.
+     * @param location
+     * @return
+     */
+    public GeoRectangle getGeoRectangleByLocation(String location)
+            throws CantCreateGeoRectangleException {
+        return NominatimProcessor.getGeoRectangleByLocation(location);
+    }
+
+    /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    public Address getAddressByCoordinate(float latitude, float longitude)
+            throws CantCreateAddressException {
+        return NominatimProcessor.getAddressByCoordinate(latitude,longitude);
     }
 
 }

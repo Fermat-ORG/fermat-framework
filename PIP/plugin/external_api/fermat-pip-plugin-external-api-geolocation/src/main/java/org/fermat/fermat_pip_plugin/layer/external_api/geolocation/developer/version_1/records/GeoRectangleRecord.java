@@ -2,11 +2,14 @@ package org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.ve
 
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
-import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
 
 import java.io.Serializable;
 
 /**
+ * A GeoRectangle object contains a rectangle that evolves the location.
+ * This rectangle can be drawn with 4 points: North, South, East and West.
+ * Also, the GeoRectangle contains the latitude and longitude of the center of the rectangle.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/06/16.
  */
 public class GeoRectangleRecord implements GeoRectangle, Serializable {
@@ -15,6 +18,8 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
     private final float south;
     private final float west;
     private final float east;
+    private final float latitude;
+    private final float longitude;
 
     private final int COORDINATES_ARRAY_SIZE = 4;
 
@@ -34,6 +39,8 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
             south = coordinates[1];
             west = coordinates[2];
             east = coordinates[3];
+            latitude = 0.0f;
+            longitude = 0.0f;
         } else {
             throw new CantCreateGeoRectangleException("The coordinates array is not valid");
         }
@@ -50,11 +57,15 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
             float north,
             float south,
             float west,
-            float east){
+            float east,
+            float latitude,
+            float longitude){
         this.north = north;
         this.south = south;
         this.west = west;
         this.east = east;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -65,6 +76,8 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
         south = 0.0f;
         west = 0.0f;
         east = 0.0f;
+        latitude = 0.0f;
+        longitude = 0.0f;
     }
 
     /**
@@ -129,6 +142,24 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
         return east;
     }
 
+    /**
+     * This method returns the GeoRectangle latitude
+     * @return
+     */
+    @Override
+    public float getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * This method returns the GeoRectangle longitude
+     * @return
+     */
+    @Override
+    public float getLongitude() {
+        return longitude;
+    }
+
     @Override
     public String toString() {
         return "GeoRectangleRecord{" +
@@ -136,6 +167,8 @@ public class GeoRectangleRecord implements GeoRectangle, Serializable {
                 ", south=" + south +
                 ", west=" + west +
                 ", east=" + east +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
                 '}';
     }
 }
