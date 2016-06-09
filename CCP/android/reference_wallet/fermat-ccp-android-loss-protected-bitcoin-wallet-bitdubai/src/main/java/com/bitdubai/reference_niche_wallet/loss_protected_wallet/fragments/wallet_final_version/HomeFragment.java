@@ -432,11 +432,12 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             }
 
             data.setValueTextSize(12f);
-            data.setValueTextColor(Color.WHITE);
+            //data.setValueTextColor(Color.WHITE);
 
 
             chart.setData(data);
             chart.setDrawGridBackground(false);
+            chart.setDescription("");
             chart.animateY(2000);
             chart.setTouchEnabled(true);
             chart.setDragEnabled(false);
@@ -447,7 +448,6 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
             chart.fitScreen();
-            chart.setOnChartValueSelectedListener(this);
 
             CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
                     R.layout.loss_custom_marker_view,
@@ -506,6 +506,8 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+
         //Date format for earned and lost for today
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         Date actualDate = new Date();
@@ -536,7 +538,13 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
 
-
+                //Set Array Colors
+                if (valueEntry==0)
+                    colors.add(Color.parseColor("#E58617"));
+                else if (valueEntry>0)
+                    colors.add(Color.GREEN);
+                else if (valueEntry<0)
+                    colors.add(Color.RED);
 
                 //Set entries values for the chart
                 entryList.add(new Entry((float)valueEntry, i));
@@ -550,14 +558,14 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             noDataInChart.setVisibility(View.VISIBLE);
         }
 
-        LineDataSet dataset = new LineDataSet(entryList, "dataSet");
+        LineDataSet dataset = new LineDataSet(entryList, "");
         dataset.setColor(Color.WHITE); //
         dataset.setDrawCubic(false);
         dataset.setDrawValues(false);
         dataset.setDrawCircles(true);
         dataset.setCircleSize(3);
-        dataset.setCircleColor(Color.parseColor("#E58617"));
-        dataset.setCircleColorHole(Color.parseColor("#E58617"));
+        dataset.setCircleColors(colors);
+        dataset.setDrawCircleHole(false);
         dataset.setValueFormatter(new LargeValueFormatter());
         dataset.setDrawHighlightIndicators(false);
 
