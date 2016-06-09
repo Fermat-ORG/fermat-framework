@@ -5,6 +5,8 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.events.TimeOutMonitoringAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -14,8 +16,6 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantR
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class TimeOutNotifierAgentPool {
     /**
      * Loads and starts all the agents that are supposed to be running.
      */
-    public void initialize(){
+    public void initialize() {
         runningAgents = new ArrayList<>();
         runningAgents.addAll(loadRunningAgents());
 
@@ -78,6 +78,7 @@ public class TimeOutNotifierAgentPool {
 
     /**
      * adds a new agent to the pool.
+     *
      * @param timeOutNotifierAgent
      * @throws CantAddNewTimeOutAgentException
      */
@@ -121,6 +122,7 @@ public class TimeOutNotifierAgentPool {
 
     /**
      * Gets the running agents of the pool
+     *
      * @return
      */
     public List<TimeOutAgent> getRunningAgents() {
@@ -135,7 +137,7 @@ public class TimeOutNotifierAgentPool {
             dao.updateTimeOutNotifierAgent(agent);
 
             boolean running = false;
-            for (TimeOutAgent myRunningAgents : runningAgents){
+            for (TimeOutAgent myRunningAgents : runningAgents) {
                 if (myRunningAgents.getStatus() == AgentStatus.STARTED)
                     running = true;
             }

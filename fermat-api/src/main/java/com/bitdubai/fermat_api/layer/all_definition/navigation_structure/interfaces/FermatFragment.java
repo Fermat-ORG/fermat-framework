@@ -9,7 +9,6 @@ public interface FermatFragment {
 
     String getBack();
 
-    void setContext(Object... objects);
+    String getPulickKeyFragmentFrom();
 
-    Object[] getContext();
 }

@@ -35,10 +35,6 @@ include ':fermat-core-api'
 include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
 
-// Milestone 1 project:
-include ':fermat-dmp-android-sub-app-wallet-manager-bitdubai'
-project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai')
-
 // identity
 include ':fermat-mkt-plugin-identity-marketer-bitdubai'
 project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('MKT/plugin/identity/fermat-mkt-plugin-identity-marketer-bitdubai')

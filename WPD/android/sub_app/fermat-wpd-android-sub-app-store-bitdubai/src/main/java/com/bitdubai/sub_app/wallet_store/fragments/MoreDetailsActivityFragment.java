@@ -8,15 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
-import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.wallet_store.bitdubai.R;
 
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.DEVELOPER_NAME;
 
 /**
  * Fragment que luce como un Activity donde se muestra mas informacion sobre la Wallet mostrada en DetailsActivityFragment
@@ -56,7 +54,7 @@ public class MoreDetailsActivityFragment extends AbstractFermatFragment {
 //    public void setSubAppsSession(SubAppsSession subAppsSession) {
 //        super.setSubAppsSession(subAppsSession);
 //
-//        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+//        WalletStoreSubAppSessionReferenceApp session = (WalletStoreSubAppSessionReferenceApp) subAppsSession;
 //        moduleManager = session.getModuleManager();
 //    }
 

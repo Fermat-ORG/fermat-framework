@@ -8,8 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CryptoBrokerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.EditCryptoBrokerIdentityFragment;
-import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT;
 import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT;
@@ -18,7 +17,7 @@ import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.Crypto
 /**
  * Created by Nelson Ramirez on 2015.09
  */
-public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<CryptoBrokerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerIdentityFragmentsEnumType> {
+public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<CryptoBrokerIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, CryptoBrokerIdentityFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {

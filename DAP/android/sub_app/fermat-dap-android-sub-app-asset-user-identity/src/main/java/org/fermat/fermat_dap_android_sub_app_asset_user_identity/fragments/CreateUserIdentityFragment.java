@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -34,11 +35,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
-import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIdentitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -54,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateUserIdentityFragment extends AbstractFermatFragment {
+public class CreateUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "CreateAssetUserIdentity";
 
@@ -78,11 +79,9 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    UserIdentitySubAppSession userIdentitySubAppSession;
     private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-    //    SettingsManager<UserIdentitySettings> settingsManager;
     UserIdentitySettings userIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -101,8 +100,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            userIdentitySubAppSession = (UserIdentitySubAppSession) appSession;
-            moduleManager = userIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 

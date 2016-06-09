@@ -18,14 +18,15 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
@@ -34,7 +35,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsAssetIssuerNotificationFragment extends AbstractFermatFragment {
+public class SettingsAssetIssuerNotificationFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager> {
 
     private View rootView;
     private Spinner spinner;
@@ -43,9 +44,6 @@ public class SettingsAssetIssuerNotificationFragment extends AbstractFermatFragm
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetIssuerSession assetIssuerSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
 
     public static SettingsAssetIssuerNotificationFragment newInstance() {
         return new SettingsAssetIssuerNotificationFragment();
@@ -56,10 +54,9 @@ public class SettingsAssetIssuerNotificationFragment extends AbstractFermatFragm
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetIssuerSession = ((AssetIssuerSession) appSession);
 //        try {
         errorManager = appSession.getErrorManager();
-        moduleManager = assetIssuerSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

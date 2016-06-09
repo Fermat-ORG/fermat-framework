@@ -86,6 +86,9 @@
     <string name="welcome_text">Welcome!</string>
     <string name="this_is_a_simple_bitcoin_only_wallet_text">This is a simple bitcoin only wallet.\nIt\'s main features are:</string>
 
+    <!-- contacts_tutorial_part1_v2.xml -->
+    <string name="in_this_wallet_you_can_have_text">In this wallet you can have two different types of contacts:</string>
+
     <string name="close_text">Close</string>
     <!-- presentation_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>

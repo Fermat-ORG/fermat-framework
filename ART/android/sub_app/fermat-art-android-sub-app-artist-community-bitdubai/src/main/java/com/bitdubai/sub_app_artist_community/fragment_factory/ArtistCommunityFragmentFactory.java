@@ -10,12 +10,12 @@ import com.bitdubai.sub_app_artist_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ListUserIdentiesFragment;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<ArtistSubAppSession,SubAppResourcesProviderManager,ArtistCommunityFragmentEnumType> {
+public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<ArtistSubAppSessionReferenceApp,SubAppResourcesProviderManager,ArtistCommunityFragmentEnumType> {
     @Override
     protected AbstractFermatFragment getFermatFragment(ArtistCommunityFragmentEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;

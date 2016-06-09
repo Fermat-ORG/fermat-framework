@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
-import org.w3c.dom.Text;
-
 
 /**
  * Created by Matias Furszyfer 22/09/2015

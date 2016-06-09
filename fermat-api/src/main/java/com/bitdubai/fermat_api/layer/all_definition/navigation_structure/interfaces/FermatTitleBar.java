@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 
 import java.io.Serializable;
@@ -26,5 +27,7 @@ public interface FermatTitleBar  extends Serializable {
     void setColor(String color);
 
     boolean isTitleTextStatic();
+
+    MenuItem getLeftIconFermatDrawable();
 
 }

@@ -538,4 +538,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }
 
+    @Override
+    public ModuleManager[] getModuleManager(PluginVersionReference[] pluginVersionReference) throws CantCreateProxyException {
+        ModuleManager[] moduleManagers = new ModuleManager[pluginVersionReference.length];
+        for (int i = 0; i < pluginVersionReference.length; i++) {
+            ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference[i]);
+            moduleManagers[i] = proxyFactory.createModuleManagerProxy(pluginVersionReference[i],mInvocationHandler);
+        }
+        return moduleManagers;
+    }
+
 }

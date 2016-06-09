@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySessionReferenceApp;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/18/16.
  */
-public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int TYPE_PRESENTATION = 1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES = 2;
@@ -29,7 +29,7 @@ public class AssetFactoryWelcomeDialog extends FermatDialog<AssetFactorySession,
     private ImageView welcomeAppImage;
 
 
-    public AssetFactoryWelcomeDialog(Activity activity, AssetFactorySession fermatSession, SubAppResourcesProviderManager resources, int type, boolean checkButton) {
+    public AssetFactoryWelcomeDialog(Activity activity, AssetFactorySessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, int type, boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.type = type;

@@ -56,7 +56,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotia
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.MathUtils;
 import com.google.common.collect.Lists;
@@ -88,7 +88,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.EXCHAN
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "OpenNegotiationDetails";

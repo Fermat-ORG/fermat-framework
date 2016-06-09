@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

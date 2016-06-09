@@ -1,8 +1,6 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai;
 
 
-
-
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.TimeOutNotifierAgentPluginRoot;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;

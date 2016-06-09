@@ -1,10 +1,13 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Typeface;
+import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.mati.fermat_navigator.drawer.FermatNavigatorDrawerAdapter;
 
@@ -12,47 +15,89 @@ import com.mati.fermat_navigator.drawer.holders.NavigationItemMenuViewHolder;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * Created by natalia on 29/02/16.
  */
-public class FermatWalletNavigationViewAdapter extends FermatNavigatorDrawerAdapter {
+public class FermatWalletNavigationViewAdapter extends FermatAdapter<MenuItem, com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.NavigationItemMenuViewHolder> {
 
-    //TODO: navigation   drawer tool implementation
+
     Typeface tf;
-    protected FermatWalletNavigationViewAdapter(Activity context) {
+    protected FermatWalletNavigationViewAdapter(Context context) {
         super(context);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
+    public FermatWalletNavigationViewAdapter(Context context, List<MenuItem> dataSet) {
+        super(context, dataSet);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica.ttf");
+    }
+    /**
+     * Create a new holder instance
+     *
+     * @param itemView View object
+     * @param type     int type
+     * @return ViewHolder
+     */
     @Override
-    protected void bindMenuItems(NavigationItemMenuViewHolder holder, MenuItem data, int position) {
-        holder.getLabel().setText(data.getLabel());
+    protected com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.NavigationItemMenuViewHolder createHolder(View itemView, int type) {
+        return new com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.NavigationItemMenuViewHolder(itemView);
+    }
 
-        //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
-        if(data.isSelected())
-            holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+    /**
+     * Get custom layout to use it.
+     *
+     * @return int Layout Resource id: Example: R.layout.row_item
+     */
+    @Override
+    protected int getCardViewResource() {
+        return R.layout.navigation_row;
+    }
 
-        switch (position) {
-            case 0:
-                Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_home_fluor : R.drawable.btn_drawer_home_normal).into(holder.getIcon());
-                break;
-            case 1:
-                Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_profile_fluor : R.drawable.btn_drawer_profile_normal).into(holder.getIcon());
-                break;
-            case 2:
-                Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_request_fluor : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
-                if(data.getNotifications()!=0){
-                    holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
-                }
-                break;
-            case 3:
-                Picasso.with(context).load((data.isSelected()) ? R.drawable.icon_settings : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
-                break;
-            case 4:
-                Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_logout_fluor : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
-                break;
-            default:
-                break;
+    /**
+     * Bind ViewHolder
+     *
+     * @param holder   ViewHolder object
+     * @param data     Object data to render
+     * @param position position to render
+     */
+    @Override
+    protected void bindHolder(com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.NavigationItemMenuViewHolder holder, MenuItem data, int position) {
+
+        try {
+
+            holder.getLabel().setText(data.getLabel());
+
+            //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
+            if(data.isSelected())
+                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+
+            switch (position) {
+                case 0:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_home_fluor : R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+                    break;
+                case 1:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_profile_fluor : R.drawable.btn_drawer_profile_normal).into(holder.getIcon());
+                    break;
+                case 2:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_request_fluor : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
+                    if(data.getNotifications()!=0){
+                        holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
+                    }
+                    break;
+                case 3:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.icon_settings : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
+                    break;
+                case 4:
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_logout_fluor : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
+                    break;
+                default:
+                    break;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
+
 }
