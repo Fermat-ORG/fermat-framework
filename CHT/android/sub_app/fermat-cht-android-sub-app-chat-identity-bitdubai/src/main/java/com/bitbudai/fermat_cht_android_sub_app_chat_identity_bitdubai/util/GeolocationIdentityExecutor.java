@@ -26,7 +26,7 @@ public class GeolocationIdentityExecutor {
     private String Publickey;
     private String identityConnectionState;
     private Frecuency frecuency;
-    private long acuraccy;
+    private int accuracy;
     private String identityName;
     private byte[] imageInBytes;
     private String country, state, city;
@@ -40,7 +40,7 @@ public class GeolocationIdentityExecutor {
      * @param accuracy
      * @param frecuency
      */
-    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState, String country, String state, String city, long accuracy, Frecuency frecuency) {
+    public GeolocationIdentityExecutor(byte[] imageInBytes, String Publickey, String identityName, String identityConnectionState, String country, String state, String city, int accuracy, Frecuency frecuency) {
         this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
         this.identityName = identityName;
@@ -48,7 +48,7 @@ public class GeolocationIdentityExecutor {
         this.country = country;
         this.state = state;
         this.city = city;
-        this.acuraccy = acuraccy;
+        this.accuracy = accuracy;
         this.frecuency = frecuency;
     }
 
@@ -63,7 +63,7 @@ public class GeolocationIdentityExecutor {
      * @param acuraccy
      */
 
-    public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, Frecuency frecuency, long acuraccy) {
+    public GeolocationIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session, String Publickey, String identityName, byte[] imageInBytes, String identityConnectionState, String country, String state, String city, Frecuency frecuency, int acuraccy) {
         this(imageInBytes, Publickey ,identityName, identityConnectionState, country, state, city, acuraccy,frecuency);
         identity = null;
         if (session != null) {
@@ -75,7 +75,7 @@ public class GeolocationIdentityExecutor {
     public int execute() {
 
         try {
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, acuraccy, frecuency);
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, country, state, city, identityConnectionState, accuracy, frecuency);
         } catch (CantUpdateChatIdentityException e) {
 
         } catch (Exception e) {

@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/accuracy"
         android:numeric="integer"
+        android:textColor="#616161"
         android:hint="0 - 1000"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -47,7 +48,6 @@
         android:foregroundTint="#000000"
         android:foregroundTintMode="add"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:theme="@style/AlertDialog.AppCompat.Light" />
+        android:layout_marginRight="15dp" />
 
 </LinearLayout>

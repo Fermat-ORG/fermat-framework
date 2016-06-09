@@ -53,7 +53,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     EditText accuracy;
     Spinner frequency;
     Toolbar toolbar;
-    long acurracydata;
+    int acurracydata;
     Frecuency frecuencydata;
 
     private ChatIdentityPreferenceSettings chatIdentitySettings;
@@ -178,7 +178,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                 if (accuracy.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Acuraccy is empty, please add a value", Toast.LENGTH_SHORT).show();
                 } else {
-                    acurracydata = Long.valueOf(accuracy.getText().toString());
+                    acurracydata = Integer.parseInt(accuracy.getText().toString());
                     executor = new GeolocationIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), moduleManager.getIdentityChatUser().getAlias(), moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState(), moduleManager.getIdentityChatUser().getCountry(), moduleManager.getIdentityChatUser().getState(), moduleManager.getIdentityChatUser().getCity(), frecuencydata, acurracydata);
                     int resultKey = executor.execute();
                     switch (resultKey) {
