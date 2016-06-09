@@ -10,7 +10,7 @@ public enum ChatIdentityFragmentsEnumType implements FermatFragmentsEnumType<Cha
 
 
     CHT_CHAT_CREATE_IDENTITY_FRAGMENT("CHTCIF"),
-    CHT_CHAT_EDIT_IDENTITY("CHTEI");
+    CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT("CHTGIF");
 
 
 
