@@ -69,6 +69,7 @@ import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.LogReader;
 import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
+import com.bitdubai.android_core.app.common.version_1.util.ResourceLocationSearcherHelper;
 import com.bitdubai.android_core.app.common.version_1.util.SharedMemory;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
@@ -115,7 +116,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatSideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.nav_menu.FermatBasicNavigationMenu;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -272,14 +275,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     MenuItem item = menu.add(0, id, 0, menuItem.getLabel());
                     FermatDrawable icon = menuItem.getFermatDrawable();
                     if(icon!=null) {
-                        int iconRes = 0;
-                        switch (icon.getSourceLocation()) {
-                            case DEVELOPER_RESOURCES:
-                                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(icon.getOwnerAppPublicKey(), this);
-                                iconRes = fermatAppConnection.getResource(icon.getId());
-                                break;
-
-                        }
+                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwnerAppPublicKey());
                         item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                         item.setShowAsAction(menuItem.getVisibility());
                     }
@@ -422,7 +418,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    private void paintSideMenu(Activity activity, SideMenu sideMenu,AppConnections appConnections) {
+    private <T extends FermatSideMenu> void paintSideMenu(Activity activity, T sideMenu,AppConnections appConnections) {
         try {
             if (sideMenu != null) {
                     String backgroundColor = sideMenu.getBackgroudColor();
@@ -443,12 +439,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
                          * Set adapter
                          */
                         List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
-                        FermatAdapter mAdapter = (viewPainter!=null)?viewPainter.addNavigationViewAdapter():new NavMenuBasicAdapter(this,lstItems);
+                //todo: mejorar esto
+                        FermatAdapter mAdapter = (viewPainter!=null)?viewPainter.addNavigationViewAdapter():new NavMenuBasicAdapter(this,lstItems,((FermatBasicNavigationMenu)sideMenu).getBody());
                         SideMenuBuilder.setAdapter(
                                 navigation_recycler_view,
                                 mAdapter,
                                 (viewPainter!=null)?viewPainter.addItemDecoration():null,
-                                lstItems,
+                                (viewPainter!=null)?lstItems:((FermatBasicNavigationMenu)sideMenu).getBody().getMenuItems(),
                                 this,
                                 activity.getActivityType()
                         );
@@ -565,17 +562,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
         if(titleBar.getLeftIconFermatDrawable()!=null){
             final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getLeftIconFermatDrawable();
             FermatDrawable leftIconFermatDrawable = menuItem.getFermatDrawable();
-            int resId = 0;
-            switch (leftIconFermatDrawable.getSourceLocation()){
-                case FERMAT_FRAMEWORK:
-                    break;
-                case DEVELOPER_RESOURCES:
-                    resId = FermatAppConnectionManager.getFermatAppConnection(leftIconFermatDrawable.getOwnerAppPublicKey(),this).getResource(leftIconFermatDrawable.getId());
-                    break;
-                case INTERNET_URL:
-                    Log.i(TAG,"Internet request drawable is not supported yet");
-                    break;
-            }
+            int resId = ResourceLocationSearcherHelper.obtainRes(
+                    this,
+                    leftIconFermatDrawable.getId(),
+                    leftIconFermatDrawable.getSourceLocation(),
+                    leftIconFermatDrawable.getOwnerAppPublicKey()
+            );
             mToolbar.setNavigationIcon(resId);
             if(menuItem.getAppLinkPublicKey().equals("back")){
                 mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
