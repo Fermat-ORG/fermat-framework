@@ -1,17 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
-import android.app.ActionBar;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,8 +33,8 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     CropImageView cropImageView;
     Bitmap image;
     Bitmap croppedImage;
-    public DialogCropImage(Context activity, FermatSession fermatSession, ResourceProviderManager resources, Bitmap image) {
-        super(activity, fermatSession, resources);
+    public DialogCropImage(Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources, Bitmap image) {
+        super(activity, referenceAppFermatSession, resources);
         this.image = image;
     }
 

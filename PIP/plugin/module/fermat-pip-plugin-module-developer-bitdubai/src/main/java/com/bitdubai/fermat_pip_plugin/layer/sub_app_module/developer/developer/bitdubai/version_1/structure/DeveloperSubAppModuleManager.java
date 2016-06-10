@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -36,10 +35,10 @@ public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppS
     private final DeveloperModuleLogTool developerModuleLogTool;
 
     private ConcurrentHashMap<PluginVersionReference, Plugin> databaseManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference, Addon> databaseManagersOnAddons ;
+    private ConcurrentHashMap<AddonVersionReference, Addon> databaseManagersOnAddons;
 
     private ConcurrentHashMap<PluginVersionReference, Plugin> logManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference , Addon> logManagersOnAddons ;
+    private ConcurrentHashMap<AddonVersionReference, Addon> logManagersOnAddons;
 
     String appPublicKey;
 
@@ -69,7 +68,6 @@ public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppS
                 this.logManagersOnAddons
         );
     }
-
 
     @Override
     public LogTool getLogTool() throws CantGetLogToolException {
@@ -102,22 +100,22 @@ public class DeveloperSubAppModuleManager extends ModuleManagerImpl<BasicSubAppS
 
     @Override
     public List<DeveloperDatabaseTable> getPluginTableListFromDatabase(PluginVersionReference plugin, DeveloperDatabase developerDatabase) {
-        return developerDatabaseTools.getPluginTableListFromDatabase(plugin,developerDatabase);
+        return developerDatabaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getAddonTableListFromDatabase(AddonVersionReference addon, DeveloperDatabase developerDatabase) {
-        return developerDatabaseTools.getAddonTableListFromDatabase(addon,developerDatabase);
+        return developerDatabaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getPluginTableContent(PluginVersionReference plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return developerDatabaseTools.getPluginTableContent(plugin,developerDatabase,developerDatabaseTable);
+        return developerDatabaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getAddonTableContent(AddonVersionReference addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return developerDatabaseTools.getAddonTableContent(addon,developerDatabase,developerDatabaseTable);
+        return developerDatabaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
     }
 
     @Override

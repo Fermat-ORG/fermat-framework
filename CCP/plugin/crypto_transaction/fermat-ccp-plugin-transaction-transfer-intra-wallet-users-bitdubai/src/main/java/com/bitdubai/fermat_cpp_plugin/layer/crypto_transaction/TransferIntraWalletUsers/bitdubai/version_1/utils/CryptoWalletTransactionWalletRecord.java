@@ -141,6 +141,6 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
 
     @Override
     public CryptoCurrency getCryptoCurrency() {
-        return null;
+        return this.cryptoCurrency;
     }
 }

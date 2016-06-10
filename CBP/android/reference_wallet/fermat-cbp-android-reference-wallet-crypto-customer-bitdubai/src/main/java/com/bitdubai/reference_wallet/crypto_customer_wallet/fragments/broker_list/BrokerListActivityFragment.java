@@ -10,19 +10,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerIdentityBusinessInfo>
+public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerIdentityBusinessInfo,ReferenceAppFermatSession,ResourceProviderManager>
         implements FermatListItemListeners<BrokerIdentityBusinessInfo> {
 
     // Constants
@@ -58,7 +60,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             brokerList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -141,7 +143,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
-        final CryptoCustomerWalletSession walletSession = (CryptoCustomerWalletSession) this.appSession;
+        final CryptoCustomerWalletSessionReferenceApp walletSession = (CryptoCustomerWalletSessionReferenceApp) this.appSession;
         walletSession.setCurrencyToBuy(data.getMerchandise());
         walletSession.setSelectedBrokerIdentity(data);
         walletSession.setQuotes(data.getQuotes());

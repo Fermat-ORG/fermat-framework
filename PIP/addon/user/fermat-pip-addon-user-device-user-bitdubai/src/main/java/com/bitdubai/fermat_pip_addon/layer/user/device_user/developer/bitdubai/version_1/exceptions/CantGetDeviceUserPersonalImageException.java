@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * <p>The exception <code>com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserException</code>
  * is thrown when i cannot persist the file with the device user information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta (laion.cj91@gmail.com) on 27/06/2015.
  */
 public class CantGetDeviceUserPersonalImageException extends FermatException {

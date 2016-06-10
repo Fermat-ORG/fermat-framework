@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
@@ -34,10 +35,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
@@ -54,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
+public class CreateIssuerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerIdentityModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "AssetIssuerIdentity";
 
@@ -78,7 +79,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    IssuerIdentitySubAppSession issuerIdentitySubAppSession;
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
@@ -100,8 +100,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            issuerIdentitySubAppSession = (IssuerIdentitySubAppSession) appSession;
-            moduleManager = issuerIdentitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 

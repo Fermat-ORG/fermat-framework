@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp,FermatInterfaceObject {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp, FermatInterfaceObject {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -32,6 +32,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private AppsStatus appStatus;
     private int bannerRes;
     Platforms platforms;
+//    private AppStructureType appStructureType = AppStructureType.REFERENCE;
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.subApps = subApps;
@@ -52,22 +53,20 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.appStatus = appStatus;
     }
 /**
-     * InstalledWallet Interface implementation.
-     */
+ * InstalledWallet Interface implementation.
+ */
 
     /**
      * This method gives us the list of all the languages installed for this wallet
-     *
      */
-    public List<InstalledLanguage> getLanguagesId(){
+    public List<InstalledLanguage> getLanguagesId() {
         return languajesId;
     }
 
     /**
      * This method gives us the list of all the skins installed for this wallet
-     *
      */
-    public List<InstalledSkin> getSkinsId(){
+    public List<InstalledSkin> getSkinsId() {
         return skinsId;
     }
 
@@ -181,6 +180,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         return FermatAppType.SUB_APP;
     }
 
+//    @Override
+//    public AppStructureType getAppStructureType() {
+//        return appStructureType;
+//    }
+
     @Override
     public byte[] getAppIcon() {
         return new byte[0];
@@ -190,7 +194,6 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     public int getPosition() {
         return position;
     }
-
 
 
     @Override

@@ -21,6 +21,7 @@ public class ErrorExchangeRateConnectionDialog extends Dialog implements View.On
     /**
      *  UI components
      */
+
     Button cancel_btn;
 
 

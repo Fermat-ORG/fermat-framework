@@ -220,6 +220,7 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
     CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
+    CRYPTO_FERMAT_WALLET        ("CFW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
@@ -328,7 +329,9 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_WALLET                      ("TWALLET"),
 
     //Init PIP
-    PIP_FERMAT_MONITOR                  ("PFM");
+    PIP_FERMAT_MONITOR                  ("PFM"),
+    NOMINATIM                           ("PNM")
+    ;
     //End PIP
 
     // End  new Plugins

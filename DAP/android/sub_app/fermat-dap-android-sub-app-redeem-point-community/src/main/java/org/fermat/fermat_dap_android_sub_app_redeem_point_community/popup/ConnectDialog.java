@@ -8,19 +8,21 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import java.util.List;
  * Added by Jinmy Bohorquez 11/02/2016
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -53,21 +55,22 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
 
 
     public ConnectDialog(final Activity a,
-                         final AssetRedeemPointCommunitySubAppSession actorUserSubAppSession,
+                         final ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager> assetRedeemCommunitySubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final Actor actorRedeem,
                          final RedeemPointIdentity identity) {
 
-        super(a, actorUserSubAppSession, subAppResources);
+        super(a, assetRedeemCommunitySubAppSession, subAppResources);
 
         this.actorRedeem = actorRedeem;
         this.identity = identity;
     }
 
     public ConnectDialog(Activity a,
-                         final AssetRedeemPointCommunitySubAppSession actorUserSubAppSession,
+                         final ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager> assetRedeemCommunitySubAppSession,
                          final SubAppResourcesProviderManager subAppResources) {
-        super(a, actorUserSubAppSession, subAppResources);
+
+        super(a, assetRedeemCommunitySubAppSession, subAppResources);
         this.actorRedeem = null;
         this.identity = null;
     }

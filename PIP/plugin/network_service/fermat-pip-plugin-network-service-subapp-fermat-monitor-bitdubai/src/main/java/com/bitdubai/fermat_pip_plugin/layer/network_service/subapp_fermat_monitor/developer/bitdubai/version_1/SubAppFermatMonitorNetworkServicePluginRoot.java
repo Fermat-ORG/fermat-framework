@@ -53,12 +53,12 @@ import java.util.List;
  * <p/>
  * It will also serve other peers with these resources when needed.
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer on 17/02/15.
  */
-public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase  implements DatabaseManagerForDevelopers{
+public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
 
-       /**
+    /**
      * Dealing with the repository database
      */
     private ServiceDAO subAppFermatMonitorServiceDAO;
@@ -96,7 +96,7 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
              */
             initializeDb();
             //Initialize Developer Database
-            systemMonitorNetworkServiceDeveloperDatabaseFactory = new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId);
+            systemMonitorNetworkServiceDeveloperDatabaseFactory = new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             systemMonitorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
@@ -158,8 +158,7 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             listenersAdded.add(fermatEventListener);
 
 
-
-        }  catch (CantCreateDatabaseException e) {
+        } catch (CantCreateDatabaseException e) {
             e.printStackTrace();
         } catch (CantInitializeSystemMonitorNetworkServiceDataBaseException e) {
             e.printStackTrace();
@@ -188,7 +187,6 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
-
 
 
     /**
@@ -236,9 +234,9 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             PlatformComponentProfile platformComponentProfile = completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered();
 
             ComponentProfileInfo componentProfileInfo = new ComponentProfileInfo(
-                                            platformComponentProfile.getIdentityPublicKey(),
-                                            platformComponentProfile.getAlias(),
-                                            platformComponentProfile.getNetworkServiceType().getCode());
+                    platformComponentProfile.getIdentityPublicKey(),
+                    platformComponentProfile.getAlias(),
+                    platformComponentProfile.getNetworkServiceType().getCode());
 
             try {
 
@@ -263,12 +261,12 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId).getDatabaseTableList(developerObjectFactory);
+        return new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
 
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabase,developerDatabaseTable);
+        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
     }
 }

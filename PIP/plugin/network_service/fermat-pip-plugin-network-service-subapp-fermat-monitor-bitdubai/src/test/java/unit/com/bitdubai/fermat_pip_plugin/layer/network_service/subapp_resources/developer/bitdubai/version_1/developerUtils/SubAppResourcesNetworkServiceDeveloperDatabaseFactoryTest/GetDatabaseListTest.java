@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -48,7 +47,7 @@ public class GetDatabaseListTest {
     }
 
     @Test
-    public void getDatabaseListTest()  {
+    public void getDatabaseListTest() {
 
         assertThat(subAppResourcesNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
     }

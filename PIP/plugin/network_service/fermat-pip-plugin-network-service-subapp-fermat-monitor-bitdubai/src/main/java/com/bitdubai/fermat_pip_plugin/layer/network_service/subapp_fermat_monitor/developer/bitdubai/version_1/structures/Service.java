@@ -2,7 +2,7 @@ package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monit
 
 //This is a representation of the table in the Database
 public class Service {
-    
+
     public String id = null;
     public String name = null;
     public String type = null;
@@ -14,7 +14,6 @@ public class Service {
         this.type = type;
         this.subType = subType;
     }
-
 
 
     public String getTransactionId() {
