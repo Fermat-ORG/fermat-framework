@@ -47,7 +47,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     // Constants
@@ -56,12 +56,8 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
     // Data
     private List<RedeemPoint> redeemPoints;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     //UI
     private View noRPView;
     private Toolbar toolbar;
@@ -75,11 +71,10 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            redeemPoints = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

@@ -2,12 +2,13 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.models;
 
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by frank on 12/22/15.
  */
-public class UserDelivery {
+public class UserDelivery implements Serializable {
     private String userName;
     private Timestamp deliveryDate;
     private String deliveryStatus;
