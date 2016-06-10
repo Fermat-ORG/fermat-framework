@@ -134,7 +134,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 6;
     private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 0;
     private BalanceType balanceType = BalanceType.REAL;
-    private int typeAmountSelected = 1;
+    private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
 
     public static HomeFragment newInstance(){ return new HomeFragment(); }
 
@@ -156,7 +156,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
 
             if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                typeAmountSelected = ((ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED));
             else
                 appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
@@ -365,7 +365,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             else
                 balance = lossProtectedWalletmanager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
 
-            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected));
+            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
 
         }catch (Exception e){
@@ -645,9 +645,9 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
     private void changeAmountType(){
 
-        ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected.getCode()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED,showMoneyType);
-        typeAmountSelected = showMoneyType.getCode();
+        typeAmountSelected = showMoneyType;
         String moneyTpe = "";
         switch (showMoneyType){
             case BITCOIN:
@@ -710,13 +710,13 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
             if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 realBalance = loadBalance(BalanceType.REAL);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, typeAmountSelected));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.real_balance_text);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.REAL);
                 balanceType = BalanceType.REAL;
             } else if (balanceType.getCode().equals(BalanceType.REAL.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.available_balance_text);
                 balanceType = BalanceType.AVAILABLE;
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.AVAILABLE);
@@ -754,7 +754,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode() == BalanceType.AVAILABLE.getCode())
                                 ? balanceAvailable : realBalance,
-                        typeAmountSelected)
+                        typeAmountSelected.getCode())
         );
     }
 

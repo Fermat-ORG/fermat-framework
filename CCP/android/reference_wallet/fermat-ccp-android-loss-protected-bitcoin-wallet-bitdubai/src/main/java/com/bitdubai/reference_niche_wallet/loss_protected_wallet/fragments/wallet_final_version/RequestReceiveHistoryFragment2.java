@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,6 +74,8 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
     FloatingActionMenu actionMenu;
     private LossProtectedWalletSettings lossProtectedWalletSettings;
+
+    private DialogInterface.OnDismissListener onDismissListener;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -314,6 +317,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public void setReferenceWalletSession(ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
+
 
 
 }
