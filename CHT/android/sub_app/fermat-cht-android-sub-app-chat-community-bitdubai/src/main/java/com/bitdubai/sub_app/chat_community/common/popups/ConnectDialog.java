@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +57,7 @@ public class ConnectDialog
     private final ChatActorCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(final Activity a,
+    public ConnectDialog(final Context a,
                          final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final ChatActorCommunityInformation chatUserInformation,

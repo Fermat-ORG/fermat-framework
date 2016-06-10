@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -47,7 +48,7 @@ public class AcceptDialog
     private FermatButton   positiveBtn;
     private FermatButton   negativeBtn;
 
-    public AcceptDialog(final Activity                       activity              ,
+    public AcceptDialog(final Context activity              ,
                         final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                         final SubAppResourcesProviderManager subAppResources       ,
                         final ChatActorCommunityInformation  chatUserInformation  ,

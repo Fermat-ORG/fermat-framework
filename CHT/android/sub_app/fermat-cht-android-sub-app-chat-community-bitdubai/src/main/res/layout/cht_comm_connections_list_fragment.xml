@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="No connections"
                 android:id="@+id/nodatalabel"
-                android:textColor="#D1D3D4"
+                android:textColor="#BCBEC0"
                 android:textStyle="normal"
                 android:textSize="12pt"
                 android:layout_below="@+id/nodata"

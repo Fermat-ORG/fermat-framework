@@ -3338,7 +3338,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Fermat Chat");
+        runtimeTitleBar.setLabel("P2P Chat");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3773,7 +3773,7 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtComm.getPublicKey(), chtComm);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#075e53");
+        statusBar.setColor("#075E54");
 
 //        runtimeSideMenu = new SideMenu();
 //        runtimeSideMenu.setBackgroundColor("#FFFFFF");
@@ -3810,7 +3810,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#075e53");
+        runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         OptionsMenu optionsMenu = new OptionsMenu();
@@ -3832,9 +3832,9 @@ public class SubAppAppsGenerator {
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#075e53");
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+        runtimeTabStrip.setTabsColor("#075E54");
+        runtimeTabStrip.setTabsTextColor("#F9F9F9");
+        runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Browser
@@ -3934,7 +3934,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#47BF73");
+        runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
