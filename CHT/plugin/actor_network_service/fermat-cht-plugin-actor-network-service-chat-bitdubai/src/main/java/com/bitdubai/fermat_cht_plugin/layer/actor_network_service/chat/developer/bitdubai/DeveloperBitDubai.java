@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.ChatActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.ChatActorNetworkServicePluginRootTest;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
@@ -25,7 +25,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
-            this.registerVersion(new ChatActorNetworkServicePluginRoot());
+            this.registerVersion(new ChatActorNetworkServicePluginRootTest());
         } catch (CantRegisterVersionException e) {
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }

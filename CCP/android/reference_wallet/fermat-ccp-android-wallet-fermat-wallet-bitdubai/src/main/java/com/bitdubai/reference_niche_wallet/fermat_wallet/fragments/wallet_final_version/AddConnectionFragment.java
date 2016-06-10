@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -41,7 +42,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConn
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
@@ -51,7 +52,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer
  */
-public class AddConnectionFragment extends FermatWalletListFragment<FermatWalletIntraUserActor,ReferenceAppFermatSession,ResourceProviderManager>
+public class AddConnectionFragment extends FermatWalletListFragment<FermatWalletIntraUserActor,ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager>
         implements FermatListItemListeners<FermatWalletIntraUserActor>,AddConnectionCallback {
 
 
@@ -61,7 +62,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     private ErrorManager errorManager;
     private ArrayList<FermatWalletIntraUserActor> intraUserInformationList;
 
-    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
 
     private Menu menu;
@@ -84,7 +85,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         try {
             // setting up  module
 
-            fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp) appSession;
+            fermatWalletSessionReferenceApp = appSession;
             moduleManager = fermatWalletSessionReferenceApp.getModuleManager();
             errorManager = fermatWalletSessionReferenceApp.getErrorManager();
 
@@ -154,7 +155,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(fermatWalletSessionReferenceApp.getCommunityConnection(), object);
+                    changeApp(SubAppsPublicKeys.CCP_IDENTITY.getCode(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -306,7 +307,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                                     fermatWalletIntraUserActor.getPublicKey(),
                                     fermatWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    fermatWalletSessionReferenceApp.getIntraUserModuleManager().getPublicKey()
+                                    moduleManager.getSelectedActorIdentity().getPublicKey()
                                     , fermatWalletSessionReferenceApp.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
