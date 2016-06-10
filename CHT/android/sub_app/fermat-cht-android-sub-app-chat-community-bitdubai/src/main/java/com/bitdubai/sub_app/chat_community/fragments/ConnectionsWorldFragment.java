@@ -530,14 +530,15 @@ public class ConnectionsWorldFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-            if (id == R.id.action_help)
-                showDialogHelp();//0
-
-            if(id == 1){
-                showDialogHelp();
+            switch (id) {
+                case 3:
+                    showDialogHelp();
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
             }
-
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -547,7 +548,7 @@ public class ConnectionsWorldFragment
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialogHelp() {//int showIdentity
+    private void showDialogHelp() {
         try {
             moduleManager = appSession.getModuleManager();
             if (moduleManager.getSelectedActorIdentity() != null) {

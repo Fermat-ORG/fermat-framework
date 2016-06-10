@@ -286,10 +286,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             int id = item.getItemId();
             switch (id) {
                 //case MENU_HELP_ACTION:
-                case 1:
+                case 2:
                     setUpDialog();
                     break;
-                case MENU_ADD_ACTION:
+                case 1:
                     break;
             }
         } catch (Exception e) {
