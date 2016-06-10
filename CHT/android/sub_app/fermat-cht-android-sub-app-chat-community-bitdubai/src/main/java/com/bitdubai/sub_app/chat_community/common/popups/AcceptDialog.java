@@ -75,9 +75,9 @@ public class AcceptDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(chatUserInformation.getAlias()+"?");
+        title.setText("Connection Request");
+        description.setText(chatUserInformation.getAlias() + " wants to be your friend in P2P Chat");
+        userName.setText("");
 
     }
 

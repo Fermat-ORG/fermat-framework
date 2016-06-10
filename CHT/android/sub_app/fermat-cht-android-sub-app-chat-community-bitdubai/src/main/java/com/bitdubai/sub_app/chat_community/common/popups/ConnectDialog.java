@@ -77,16 +77,16 @@ public class ConnectDialog
 
         mDescription = (FermatTextView) findViewById(R.id.description);
         mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
+//        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
         mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
-        mSecondDescription.setVisibility(View.VISIBLE);
+//        mSecondDescription.setVisibility(View.GONE);
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
+//        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
     }
 
