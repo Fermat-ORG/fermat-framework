@@ -84,7 +84,7 @@ public class DisconnectDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
 
     }
