@@ -80,9 +80,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    protected ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     protected EventManager eventManager;
 

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
@@ -48,7 +49,7 @@ import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 /**
- * The Class <code>CommunicationsNetworkClientChannel</code>
+ * The Class <code>NetworkClientCommunicationChannel</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 27/11/15.
  * Updated by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
@@ -63,7 +64,7 @@ import javax.websocket.Session;
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
-public class CommunicationsNetworkClientChannel {
+public class NetworkClientCommunicationChannel {
 
     /**
      * Represent the list of package processors
@@ -89,8 +90,8 @@ public class CommunicationsNetworkClientChannel {
 
     private EventManager eventManager  ;
 
-    public CommunicationsNetworkClientChannel(final NetworkClientCommunicationConnection connection    ,
-                                              final Boolean                              isExternalNode) {
+    public NetworkClientCommunicationChannel(final NetworkClientCommunicationConnection connection,
+                                             final Boolean isExternalNode) {
 
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
@@ -127,14 +128,19 @@ public class CommunicationsNetworkClientChannel {
     public void onOpen(Session session){
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" CommunicationsNetworkClientChannel - Starting method onOpen");
+        System.out.println(" NetworkClientCommunicationChannel - Starting method onOpen");
 
         this.clientConnection = session;
+
+        Map<String, Object> map = session.getUserProperties();
+
+        for (Map.Entry entry : map.entrySet())
+            System.out.println("* * * * * * * * |||| * * * * * * * * - "+entry.getKey()+": "+entry.getValue());
 
         /*
          * set ServerIdentity
          */
-        connection.setServerIdentity((String) session.getUserProperties().get(""));
+        connection.setServerIdentity((String) session.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
 
     }
 
@@ -165,7 +171,7 @@ public class CommunicationsNetworkClientChannel {
         System.out.println("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" CommunicationsNetworkClientChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
+        System.out.println(" NetworkClientCommunicationChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
 
         // if it is not an external node i raise the event.
         if (!isExternalNode) {
@@ -210,7 +216,7 @@ public class CommunicationsNetworkClientChannel {
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        //System.out.println("CommunicationsNetworkClientChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
+        //System.out.println("NetworkClientCommunicationChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
     /**
@@ -218,12 +224,12 @@ public class CommunicationsNetworkClientChannel {
      */
     public void raiseClientConnectionClosedNotificationEvent() {
 
-        System.out.println("CommunicationsNetworkClientChannel - raiseClientConnectionClosedNotificationEvent");
+        System.out.println("NetworkClientCommunicationChannel - raiseClientConnectionClosedNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
         platformEvent.setSource(EventSource.NETWORK_CLIENT);
         ((NetworkClientConnectionClosedEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
         eventManager.raiseEvent(platformEvent);
-        System.out.println("CommunicationsNetworkClientChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED");
+        System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED");
     }
 
     /**
@@ -231,12 +237,12 @@ public class CommunicationsNetworkClientChannel {
      */
     public void raiseClientConnectionLostNotificationEvent() {
 
-        System.out.println("CommunicationsNetworkClientChannel - raiseClientConnectionLostNotificationEvent");
+        System.out.println("NetworkClientCommunicationChannel - raiseClientConnectionLostNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
         platformEvent.setSource(EventSource.NETWORK_CLIENT);
         ((NetworkClientConnectionLostEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
         eventManager.raiseEvent(platformEvent);
-        System.out.println("CommunicationsNetworkClientChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
+        System.out.println("NetworkClientCommunicationChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
     /**
