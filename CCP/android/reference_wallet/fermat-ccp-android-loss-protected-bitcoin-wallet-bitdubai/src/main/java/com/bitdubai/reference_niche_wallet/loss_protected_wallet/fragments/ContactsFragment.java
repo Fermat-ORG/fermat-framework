@@ -511,8 +511,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-        View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
-        mListView.setPinnedHeaderView(pinnedHeaderView);
+        //View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
+        //mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
         //IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view_loss, mListView, false);
