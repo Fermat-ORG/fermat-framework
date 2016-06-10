@@ -209,7 +209,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                     try {
 
                         //verify loss protected settings
-                        if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != 0){
+                        if(((double)appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)) != 0){
 
 
 

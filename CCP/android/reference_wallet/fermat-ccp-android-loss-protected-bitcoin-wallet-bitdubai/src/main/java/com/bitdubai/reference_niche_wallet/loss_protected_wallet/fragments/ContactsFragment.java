@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
@@ -57,7 +58,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.CreateCo
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.SubActionButton;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.IndexBarView;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
@@ -65,8 +65,9 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.He
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 
+
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -87,7 +88,7 @@ import static android.widget.Toast.makeText;
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends AbstractFermatFragment implements FermatListViewFragment, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager>  implements FermatListViewFragment, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -160,13 +161,15 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         try {
             _executor = Executors.newFixedThreadPool(2);
-            lossWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
+            lossWalletSession =  appSession;
             setHasOptionsMenu(true);
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             errorManager = appSession.getErrorManager();
             lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
+
+            hideSoftKeyboard(this);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -501,7 +504,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 mListSectionPos,
                 constrainStr,
                 this,
-                errorManager);
+                errorManager,lossWalletSession);
 
         mListView.setAdapter(mPinnedHeaderAdapter);
 
@@ -553,8 +556,10 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 }
             }
         });
+
+
         // TODO: Testing
-        mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       /* mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -564,7 +569,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
     }
 
     public ListFilter instanceOfListFilter() {
@@ -608,7 +613,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         //TODO: set obtained position after populating
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
         //}
-       /* try{
+        try{
 
             if(isScrolled)
               if(actionButton.getVisibility() == View.VISIBLE )
@@ -626,7 +631,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         catch(Exception e)
         {
 
-        }*/
+        }
 
 
 
@@ -938,5 +943,11 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             isScrolled = false;
             new Populate(constrainStr).execute(filtered);
         }
+    }
+
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

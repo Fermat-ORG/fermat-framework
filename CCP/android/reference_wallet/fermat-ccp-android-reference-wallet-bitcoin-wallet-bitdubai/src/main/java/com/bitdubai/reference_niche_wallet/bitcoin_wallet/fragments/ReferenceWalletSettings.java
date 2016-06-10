@@ -47,8 +47,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
     private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
+    private CryptoWallet moduleManager;
 
-    private CryptoWalletWalletContact cryptoWalletWalletContact;
+
     private BlockchainNetworkType blockchainNetworkType;
 
     public static ReferenceWalletSettings newInstance() {
@@ -75,7 +76,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
-        BlockchainNetworkType blockchainNetworkType = null;
+
         List<PreferenceSettingsItem> list = new ArrayList<>();
 
         //noinspection TryWithIdenticalCatches
@@ -216,8 +217,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
                     @Override
                     public void run() {
                         try {
-                            appSession.getModuleManager().importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            appSession.getModuleManager().importMnemonicCode(tempList,date, blockchainNetworkType);
+                            showMessage(getActivity(), "Import Mnemonic code OK ");
                         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+                            showMessage(getActivity(), "Import Mnemonic code ERROR " + cantLoadExistingVaultSeed.getMessage());
                             cantLoadExistingVaultSeed.printStackTrace();
                         }
                     }
@@ -236,7 +239,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
         builder.show();
     }
 
-    private void sendCrypto() {
+   /* private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                 CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),appSession.getModuleManager(),blockchainNetworkType);
@@ -247,7 +250,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
         }catch (Exception e){
 
         }
-    }
+    }*/
 
     @Override
     public void onSettingsTouched(String item, int position) {
@@ -327,7 +330,6 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceA
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
         if (blockchainNetworkType == null) {
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {

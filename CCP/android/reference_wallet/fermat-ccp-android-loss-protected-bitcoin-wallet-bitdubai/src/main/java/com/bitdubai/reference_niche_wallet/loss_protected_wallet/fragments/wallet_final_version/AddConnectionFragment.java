@@ -101,6 +101,8 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
             blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
+            hideSoftKeyboard(this);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

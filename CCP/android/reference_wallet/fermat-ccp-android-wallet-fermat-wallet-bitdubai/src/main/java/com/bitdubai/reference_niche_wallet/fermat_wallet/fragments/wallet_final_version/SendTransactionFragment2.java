@@ -552,7 +552,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+                                    txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
                                 }
                             });
                         } catch (CantGetBalanceException e) {

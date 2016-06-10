@@ -316,8 +316,13 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
             txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
 
-            //show Exchange Market Rate
-            getAndShowMarketExchangeRateData(rootView);
+            try {
+                //show Exchange Market Rate
+                getAndShowMarketExchangeRateData(rootView);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
 
             //Event Click For change the balance type
@@ -840,7 +845,6 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 if (result != null && result.length > 0) {
 
                     ExchangeRate rate = (ExchangeRate) result[0];
-
                     if(rate != null)
                     {
                         // progressBar.setVisibility(View.GONE);
@@ -851,9 +855,6 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                                         MIN_DECIMAL_FOR_RATE)) + " USD");
 
                         //get available balance to actual exchange rate
-
-
-
                         actuaExchangeRate = Double.parseDouble(
                                 WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
                                         MAX_DECIMAL_FOR_RATE,
