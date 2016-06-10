@@ -14,10 +14,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.desktop.InstalledDesktop;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
@@ -30,7 +33,7 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.05.24..
  */
-public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSessionReferenceApp,ResourceProviderManager> {
+public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractReferenceAppFermatSession<InstalledDesktop,WalletManager,ResourceProviderManager>,ResourceProviderManager> {
 
     private View root;
 

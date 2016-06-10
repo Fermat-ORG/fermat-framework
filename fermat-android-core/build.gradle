@@ -75,6 +75,11 @@ android {
     }
 }
 
+//configurations {
+//    all*.exclude group: 'com.android.support', module: 'support-v4'
+//}
+
+
 repositories {
     maven { url "https://jitpack.io" }
     //maven { url "http://52.34.0.33:8081/artifactory/libs-release-local" }
