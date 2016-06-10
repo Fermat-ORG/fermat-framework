@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.desktop.InstalledDesktop;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_wpd.wallet_manager.R;
-import com.bitdubai.sub_app.wallet_manager.session.DesktopSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +76,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
         return view;
     }
 
-    private View initImportView(LayoutInflater inflater, ViewGroup container) {
+    private View initImportView(final LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.import_seed_layour,container,false);
         editText_mnemonic = (EditText) view.findViewById(R.id.editText_mnemonic);
 //        Animation fadeIn = new AlphaAnimation(0, 1);
@@ -102,8 +101,9 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                 if(input.length>0) {
                     try {
                         final long date = Long.parseLong(input[input.length - 1]);
-                        final List<String> mnemonic = Arrays.asList(input);
-                        mnemonic.remove(mnemonic.size() - 1);
+                        final List<String> mnemonic = Arrays.asList(Arrays.copyOfRange(input, 0, input.length-1));
+                        ;//input[0-input.length-1]);
+//                        mnemonic.remove(mnemonic.size() - 1);
                         final List<String> temp = mnemonic;
                         final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
                                 "Importing. Please wait...", true);
@@ -111,7 +111,6 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                             @Override
                             protected Object doInBackground() throws Exception {
                                 try {
-                                    dialog.show();
                                     appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -131,8 +130,8 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                                 ex.printStackTrace();
                             }
                         });
-
-                        fermatWorker.start();
+                        dialog.show();
+                        fermatWorker.execute();
                     }catch (Exception e){
                         e.printStackTrace();
                         editText_mnemonic.animate();
