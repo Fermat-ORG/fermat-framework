@@ -79,7 +79,7 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
 
     }
