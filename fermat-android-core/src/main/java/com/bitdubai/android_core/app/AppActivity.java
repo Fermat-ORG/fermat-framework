@@ -261,20 +261,17 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     initialisePaging();
 //                    Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
                 }
-
-//                if(appStructure.)
                 if (activity.getTabStrip() != null) {
-                    setPagerTabs(activity.getTabStrip(), session, fermatFragmentFactory);
+                    setPagerTabs(activity.getTabStrip(),session);
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
                     com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
                     FermatSession fermatSubSession = null;
-                    if (runtimeFragment.getPulickKeyFragmentFrom()!=null){
-                        fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getPulickKeyFragmentFrom(),FermatSession.class);
-                        fermatFragmentFactory = FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getPulickKeyFragmentFrom(), this, fermatSubSession).getFragmentFactory();
+                    if (runtimeFragment.getOwner()!=null){
+                        fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getOwner().getOwnerAppPublicKey(),FermatSession.class);
+                        fermatFragmentFactory = FermatAppConnectionManager.getFermatAppConnection(runtimeFragment.getOwner().getOwnerAppPublicKey(), this, fermatSubSession).getFragmentFactory();
                     }
-
                     setOneFragmentInScreen(fermatFragmentFactory,(fermatSubSession!=null)?fermatSubSession:session, runtimeFragment);
 //                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
@@ -397,7 +394,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     public void changeFragment(String appPublicKey, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fermatFragment) {
         try {
             ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getPulickKeyFragmentFrom(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
             FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
             Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
@@ -447,9 +444,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-
-        //outState.putSerializable(INSTALLED_WALLET, lastWallet);
-        //outState.putString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, lastWallet.getWalletPublicKey());
         super.onSaveInstanceState(outState, outPersistentState);
 
     }

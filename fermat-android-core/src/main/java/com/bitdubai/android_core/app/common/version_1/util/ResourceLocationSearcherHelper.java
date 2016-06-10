@@ -13,7 +13,7 @@ public class ResourceLocationSearcherHelper {
 
     private static final String TAG = "ResourceLocationHelper";
 
-    public static int obtainRes(Context activity,String resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
+    public static int obtainRes(Context activity,int resourceId,SourceLocation sourceLocation,String publickKeyOwnerOfSource){
         int resId = 0;
         switch (sourceLocation){
             case FERMAT_FRAMEWORK:

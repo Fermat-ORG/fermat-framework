@@ -38,9 +38,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -50,11 +50,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private static final String TAG = "ClientBrokerServiceAIDL";
 //    private static final String KEY = "s";
-    private static final int THREADS_NUM = 3;
+    private static final int THREADS_NUM = 5;
 
     private final IBinder localBinder = new LocalBinder();
 
-    private ExecutorService poolExecutor;
+    private ThreadPoolExecutor poolExecutor;
     private ProxyFactory proxyFactory;
     private BufferChannelAIDL bufferChannelAIDL;
 
@@ -120,6 +120,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 }catch (TimeoutException e){
                     //Method canceled and return an exception
                     objectFuture.cancel(true);
+                    poolExecutor.purge();
                     Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
                     return new MethodTimeOutException();
                 }
@@ -264,7 +265,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     public void onCreate() {
         super.onCreate();
         proxyFactory = new ProxyFactory();
-        poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
+        poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
         bufferChannelAIDL = new BufferChannelAIDL();
 
         Intent serviceIntent = new Intent(this, CommunicationServerService.class);
