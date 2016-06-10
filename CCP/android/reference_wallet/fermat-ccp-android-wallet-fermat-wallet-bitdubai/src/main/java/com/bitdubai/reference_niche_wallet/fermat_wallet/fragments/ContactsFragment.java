@@ -168,7 +168,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         referenceWalletSession = appSession;
 
         setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);
@@ -186,7 +186,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.main_act, container, false);
+            rootView = inflater.inflate(R.layout.contac_main_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();

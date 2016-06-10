@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -102,7 +103,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
             blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
-            hideSoftKeyboard(this);
+            hideSoftKeyboard(getActivity());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -424,6 +425,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        if(activity.getCurrentFocus() != null)
+         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
