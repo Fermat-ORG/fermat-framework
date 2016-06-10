@@ -55,7 +55,7 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
         final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
         final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
         //Get date and set a FormatDate for Data value
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a ", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
         holder.getAmountBalance().setText(

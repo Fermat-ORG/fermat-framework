@@ -72,6 +72,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.DecimalDigitsInputFilter;
@@ -360,8 +361,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     //It will work for your need. I just putted that line for your understanding only
                     //You can use own requirement here also.
 
-                  /*  if (!connectionDialogIsShow) {
-                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appSession.getResourceProviderManager());
+                    if (!connectionDialogIsShow) {
+                        ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(getActivity(), appSession, appResourcesProviderManager);
                         connectionWithCommunityDialog.show();
                         connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -371,7 +372,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
                         });
                         connectionDialogIsShow = true;
-                    }*/
+                    }
                     return true;
                 }
                 return false;

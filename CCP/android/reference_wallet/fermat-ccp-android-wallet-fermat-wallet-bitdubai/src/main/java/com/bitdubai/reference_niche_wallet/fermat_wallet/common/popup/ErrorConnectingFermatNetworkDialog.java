@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.Window;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
@@ -18,7 +20,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSes
  * Created by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<FermatWalletSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAppFermatSession<FermatWallet>, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * onClick listeners
@@ -37,7 +39,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<FermatWalle
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity activity,
-                                              final FermatWalletSessionReferenceApp referenceWalletSession,
+                                              final ReferenceAppFermatSession<FermatWallet> referenceWalletSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(activity, referenceWalletSession, subAppResources);

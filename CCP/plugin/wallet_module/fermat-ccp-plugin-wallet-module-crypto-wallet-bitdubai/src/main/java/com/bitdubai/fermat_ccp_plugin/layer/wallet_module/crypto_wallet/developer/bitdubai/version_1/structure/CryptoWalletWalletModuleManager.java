@@ -168,8 +168,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
-    private final UUID pluginId;
-    private final PluginFileSystem pluginFileSystem;
+//    private final UUID pluginId;
+//    private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
     private final BitcoinNetworkManager bitcoinNetworkManager                   ;
     private final Broadcaster                   broadcaster                     ;
@@ -208,14 +208,20 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
-        this.pluginId = pluginId;
-        this.pluginFileSystem = pluginFileSystem;
+//        this.pluginId = pluginId;
+//        this.pluginFileSystem = pluginFileSystem;
         this.eventManager = eventManager;
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.broadcaster = broadcaster;
         this.walletManagerManager = walletManagerManager;
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
+
+        try {
+            initialize();
+        } catch (CantInitializeCryptoWalletManagerException e) {
+            e.printStackTrace();
+        }
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;

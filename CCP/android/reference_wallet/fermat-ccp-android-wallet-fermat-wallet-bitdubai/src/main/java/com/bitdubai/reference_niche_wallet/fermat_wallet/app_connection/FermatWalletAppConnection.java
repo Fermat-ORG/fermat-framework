@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -24,15 +25,14 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.Refere
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 
-
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
 
-public class FermatWalletAppConnection extends AppConnections<FermatWalletSessionReferenceApp>{
+public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermatSession<FermatWallet>>{
 
     private FermatWallet moduleManager = null;
-    private FermatWalletSessionReferenceApp referenceWalletSession;
+    private ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
 
 
     public FermatWalletAppConnection(Context activity) {
