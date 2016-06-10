@@ -22,10 +22,8 @@ public class ContactDialog extends FermatDialog implements View.OnClickListener 
     private ImageView profilePhoto;
     private TextView profileName;
     private TextView countryName;
-    private TextView stateName;
 
     String bodyName;
-    String state;
     String country;
     Bitmap image;
 
@@ -43,15 +41,21 @@ public class ContactDialog extends FermatDialog implements View.OnClickListener 
         bodyName = name;
     }
 
+    public void setCountryText (String txt){
+        country = txt;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        profileName = (TextView) this.findViewById(R.id.country_place);
+        profileName = (TextView) this.findViewById(R.id.profile_name);
         profilePhoto = (ImageView) this.findViewById(R.id.profile_image);
+        countryName = (TextView) this.findViewById(R.id.country_place);
 
         profileName.setText(bodyName);
         profilePhoto.setImageBitmap(image);
+        countryName.setText(country);
     }
 
     @Override
