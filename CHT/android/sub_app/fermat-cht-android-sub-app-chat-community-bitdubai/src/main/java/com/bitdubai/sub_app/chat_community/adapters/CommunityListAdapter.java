@@ -226,9 +226,9 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                             new ConnectDialog(context, appSession, null,
                                     dat, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Do you want to send ");
+                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
                     connectDialog.setUsername(dat.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
+//                    connectDialog.setSecondDescription("a connection request?");
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {

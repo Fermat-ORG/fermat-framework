@@ -659,9 +659,9 @@ public class ConnectionsWorldFragment
                             new ConnectDialog(getActivity(), appSession, null,
                                     data, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Do you want to send ");
+                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
                     connectDialog.setUsername(data.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
+//                    connectDialog.setSecondDescription("a connection request?");
                     connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
