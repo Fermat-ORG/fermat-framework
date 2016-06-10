@@ -59,8 +59,7 @@
                             android:text="@string/name_text"
                             android:textColor="#073487"
                             android:textSize="12sp"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
+
                             />
 
                         <AutoCompleteTextView
@@ -81,8 +80,6 @@
                             android:contextClickable="false"
                             android:textIsSelectable="false"
                             android:background="@null"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
                             />
 
                     </FrameLayout>
@@ -116,8 +113,7 @@
                         android:textColorHint="#4f4f4f"
                         android:textSize="20sp"
                         android:textStyle="normal"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"/>
+                        />
 
                     <ImageView
                         android:id="@+id/paste_from_clipboard_btn"
@@ -193,8 +189,7 @@
                         android:text="@string/btc_text"
                         android:textColor="#073487"
                         android:textSize="12sp"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"/>
+                       />
                 </LinearLayout>
 
                 <LinearLayout
@@ -225,8 +220,7 @@
                         android:textSize="16sp"
                         android:textStyle="normal"
                         android:maxLength="11"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
+
                         />
 
                     <Spinner

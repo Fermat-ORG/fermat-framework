@@ -21,7 +21,9 @@
             android:layout_marginLeft="10dp"
             android:paddingBottom="3dp"
             android:paddingTop="3dp"
-            android:src="@drawable/ic_contact_search" />
+            android:src="@drawable/ic_contact_search"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
         <EditText
             android:id="@+id/search_view"
@@ -36,7 +38,8 @@
             android:singleLine="true"
             android:textColor="#ffffff"
             android:textColorHint="#fff"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+           />
 
         <ImageButton
 
@@ -49,7 +52,8 @@
             android:layout_alignTop="@+id/search_view"
             android:contentDescription="@string/clear_text_button"
             android:src="@drawable/ic_action_cancel_grey"
-            android:visibility="gone" />
+            android:visibility="gone"
+          />
     </LinearLayout>
 
     <FrameLayout

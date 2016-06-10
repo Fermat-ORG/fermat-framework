@@ -170,7 +170,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
 
-            hideSoftKeyboard(getActivity());
+
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -213,6 +213,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     }
                 }
             }, 300);
+
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -290,6 +292,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(new Bundle());
+            hideSoftKeyboard(getActivity());
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);

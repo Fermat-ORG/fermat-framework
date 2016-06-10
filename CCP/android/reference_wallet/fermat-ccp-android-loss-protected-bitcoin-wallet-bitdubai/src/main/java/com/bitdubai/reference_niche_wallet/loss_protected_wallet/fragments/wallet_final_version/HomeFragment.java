@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -164,7 +165,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
             if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != null)
-                actuaExchangeRate = ((double)appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE));
+                actuaExchangeRate = Double.parseDouble(String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
             else
                 appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, 0);
 
@@ -201,15 +202,16 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
 
             Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable(){
+            handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    if(lossProtectedWalletSettingstemp.isPresentationHelpEnabled()){
+                    if (lossProtectedWalletSettingstemp.isPresentationHelpEnabled()) {
                         setUpPresentation(false);
                     }
 
-                }}, 500);
+                }
+            }, 500);
 
-            hideSoftKeyboard(getActivity());
+
 
         } catch (Exception ex) {
 
@@ -270,6 +272,12 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         try {
             super.onActivityCreated(savedInstanceState);
 
+            hideSoftKeyboard(getActivity());
+
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
+
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -286,7 +294,9 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
 
             setUp(inflater);
+
             return rootView;
+
         }
         catch (Exception e) {
             makeText(getActivity(), "Recovering from system error. " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -302,6 +312,14 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         try {
             setUpHeader(inflater);
             setUpChart(inflater);
+
+            try {
+                //show Exchange Market Rate
+                getAndShowMarketExchangeRateData(rootView);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -319,15 +337,6 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
             txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
             txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
-
-            try {
-                //show Exchange Market Rate
-                getAndShowMarketExchangeRateData(rootView);
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
 
             //Event Click For change the balance type
             txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
@@ -552,63 +561,67 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         Date actualDate = new Date();
 
         //look for the size number of the spendings list
-        int size = ListSpendigs.size();
+        int size = 0;
+        if(ListSpendigs != null)
+           size = ListSpendigs.size();
 
-        //if statement for validate if the list has values
-        if (size > 0) {
-            //loop into the spending transaction
-            for (int i = 0; i < size; i++) {
+            //if statement for validate if the list has values
+            if (size > 0) {
+                //loop into the spending transaction
+                for (int i = 0; i < size; i++) {
 
-                BitcoinLossProtectedWalletSpend listSpendig = ListSpendigs.get(i);
+                    BitcoinLossProtectedWalletSpend listSpendig = ListSpendigs.get(i);
 
-                final String dateActual = sdf.format(actualDate);
-                final String dateSpend = sdf.format(listSpendig.getTimestamp());
-                //get the total earned and lost
-               // if(dateActual.equals(dateSpend)){
-                totalEarnedAndLostForToday += getEarnOrLostOfSpending(
-                        listSpendig.getAmount(),
-                        listSpendig.getExchangeRate(),
-                        listSpendig.getTransactionId());
-               // }
+                    final String dateActual = sdf.format(actualDate);
+                    final String dateSpend = sdf.format(listSpendig.getTimestamp());
+                    //get the total earned and lost
+                    // if(dateActual.equals(dateSpend)){
+                    totalEarnedAndLostForToday += getEarnOrLostOfSpending(
+                            listSpendig.getAmount(),
+                            listSpendig.getExchangeRate(),
+                            listSpendig.getTransactionId());
+                    // }
 
-                //get the entry value for chart with getEarnOrLostOfSpending method
-                final double valueEntry = getEarnOrLostOfSpending(
-                        listSpendig.getAmount(),
-                        listSpendig.getExchangeRate(),
-                        listSpendig.getTransactionId());
+                    //get the entry value for chart with getEarnOrLostOfSpending method
+                    final double valueEntry = getEarnOrLostOfSpending(
+                            listSpendig.getAmount(),
+                            listSpendig.getExchangeRate(),
+                            listSpendig.getTransactionId());
 
-                //Set Array Colors
-                if (valueEntry==0)
-                    colors.add(Color.parseColor("#E58617"));
-                else if (valueEntry>0)
-                    colors.add(Color.GREEN);
-                else if (valueEntry<0)
-                    colors.add(Color.RED);
+                    //Set Array Colors
+                    if (valueEntry==0)
+                        colors.add(Color.parseColor("#E58617"));
+                    else if (valueEntry>0)
+                        colors.add(Color.GREEN);
+                    else if (valueEntry<0)
+                        colors.add(Color.RED);
 
-                //Set entries values for the chart
-                entryList.add(new Entry((float)valueEntry, i));
-                xValues.add("$ "+String.valueOf(valueEntry));
+                    //Set entries values for the chart
+                    entryList.add(new Entry((float)valueEntry, i));
+                    xValues.add("$ "+String.valueOf(valueEntry));
+                }
+                chart.setVisibility(View.VISIBLE);
+            }else{
+                txt_earnOrLost.setText("$0.00");
+                earnOrLostImage.setImageResource(R.drawable.earning_icon);
+                chart.setVisibility(View.GONE);
+                noDataInChart.setVisibility(View.VISIBLE);
             }
-            chart.setVisibility(View.VISIBLE);
-        }else{
-            txt_earnOrLost.setText("$0.00");
-            earnOrLostImage.setImageResource(R.drawable.earning_icon);
-            chart.setVisibility(View.GONE);
-            noDataInChart.setVisibility(View.VISIBLE);
-        }
 
-        LineDataSet dataset = new LineDataSet(entryList, "");
-        dataset.setColor(Color.WHITE); //
-        dataset.setDrawCubic(false);
-        dataset.setDrawValues(false);
-        dataset.setDrawCircles(true);
-        dataset.setCircleSize(3);
-        dataset.setCircleColors(colors);
-        dataset.setDrawCircleHole(false);
-        dataset.setValueFormatter(new LargeValueFormatter());
-        dataset.setDrawHighlightIndicators(false);
+            LineDataSet dataset = new LineDataSet(entryList, "");
+            dataset.setColor(Color.WHITE); //
+            dataset.setDrawCubic(false);
+            dataset.setDrawValues(false);
+            dataset.setDrawCircles(true);
+            dataset.setCircleSize(3);
+            dataset.setCircleColors(colors);
+            dataset.setDrawCircleHole(false);
+            dataset.setValueFormatter(new LargeValueFormatter());
+            dataset.setDrawHighlightIndicators(false);
 
-        return new LineData(xValues, dataset);
+            return new LineData(xValues, dataset);
+
+
 
     }
 

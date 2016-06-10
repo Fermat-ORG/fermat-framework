@@ -173,7 +173,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                 lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
             }
-            hideSoftKeyboard(getActivity());
+
 
         } catch (CantGetSettingsException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -261,6 +261,19 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         errorConnectingFermatNetworkDialog.show();
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(savedInstanceState);
+
+            hideSoftKeyboard(getActivity());
+
+        } catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
+    }
     private void setUpUI() {
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
