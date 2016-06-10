@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -139,7 +140,7 @@ public class ContactsListFragment
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(),2, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);

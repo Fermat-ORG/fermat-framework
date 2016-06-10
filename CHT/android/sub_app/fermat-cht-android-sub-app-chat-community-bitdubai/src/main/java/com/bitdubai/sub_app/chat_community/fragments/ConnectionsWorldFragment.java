@@ -184,9 +184,9 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(layoutManager);
             rootView.setBackgroundColor(Color.parseColor("#f9f9f9"));
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
@@ -252,7 +252,6 @@ public class ConnectionsWorldFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
         return rootView;
     }
 

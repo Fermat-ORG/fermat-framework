@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_below="@+id/community_name"
-        android:padding="15px"
+        android:padding="10dp"
         android:id="@+id/location">
         <ImageView
             android:id="@+id/location_image"
@@ -94,7 +94,7 @@
         android:background="@drawable/cht_comm_accept_conncetion_icon"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
         android:layout_below="@+id/connection_text"  />
 
     <ImageView
@@ -105,7 +105,7 @@
         android:background="@drawable/cht_comm_delete_connetion_icon"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <ImageView
@@ -116,7 +116,7 @@
         android:background="@drawable/cht_comm_hold_conections_icon"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <ImageView
@@ -127,7 +127,7 @@
         android:background="@drawable/cht_comm_hold_conections_icon"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:layout_marginBottom="10dp"
+        android:paddingBottom="10dp"
         android:layout_below="@+id/connection_text" />
 
     <Button
@@ -146,8 +146,6 @@
         android:id="@+id/add_contact_button"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-
-
         />
     <TextView
         android:layout_below="@+id/add_contact_button"
