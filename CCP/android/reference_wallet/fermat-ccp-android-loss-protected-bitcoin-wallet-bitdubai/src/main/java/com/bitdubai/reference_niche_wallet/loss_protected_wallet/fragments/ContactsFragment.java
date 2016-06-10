@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -169,7 +170,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
 
-            hideSoftKeyboard(this);
+            hideSoftKeyboard(getActivity());
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {

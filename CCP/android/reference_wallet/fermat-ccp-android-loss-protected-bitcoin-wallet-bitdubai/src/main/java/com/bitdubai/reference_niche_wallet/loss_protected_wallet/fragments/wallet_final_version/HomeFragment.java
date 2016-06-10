@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
+import android.app.Activity;
 import  android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -206,6 +208,8 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                     }
 
                 }}, 500);
+
+            hideSoftKeyboard(getActivity());
 
         } catch (Exception ex) {
 
@@ -931,5 +935,10 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     @Override
     public void onNothingSelected() {
 
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }
