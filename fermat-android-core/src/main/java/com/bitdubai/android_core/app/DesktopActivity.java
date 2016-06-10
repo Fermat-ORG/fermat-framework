@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -100,24 +98,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 ((ViewGroup) view).removeAllViews();
             }
         }
-    }
-
-    /**
-     * Initialize the contents of the Activity's standard options menu
-     * @param menu
-     * @return true if all is okey
-     */
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-
-        /**
-         *  Our future code goes here...
-         */
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     /**
@@ -424,7 +404,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
 
                         if (activity.getFragments().size() == 1) {
-                            setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), ApplicationSession.getInstance().getAppManager().lastAppSession(), fermatStructure);
+                            setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(), ApplicationSession.getInstance().getAppManager().lastAppSession(), activity.getLastFragment());
                         }
                     }
 

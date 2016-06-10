@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -34,13 +35,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.Data;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -62,7 +63,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/14/15.
  */
-public class RedeemPointMainActivityFragment extends FermatWalletListFragment<DigitalAsset>
+public class RedeemPointMainActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetRedeemPointWalletSubAppModule>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
@@ -72,8 +73,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
     RedeemPointSettings settings = null;
-    RedeemPointSession redeemPointSession;
-    //    SettingsManager<RedeemPointSettings> settingsManager;
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -95,8 +94,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
             _executor = Executors.newFixedThreadPool(3);
 
-            redeemPointSession = ((RedeemPointSession) appSession);
-            moduleManager = redeemPointSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -113,10 +111,9 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
         //Initialize settings
         try {
-            redeemPointSession = ((RedeemPointSession) appSession);
-            moduleManager = redeemPointSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             try {
-                settings = moduleManager.loadAndGetSettings(redeemPointSession.getAppPublicKey());
+                settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
@@ -130,7 +127,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {
@@ -140,8 +137,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
 //            try {
                 if (moduleManager != null) {
-                    moduleManager.persistSettings(redeemPointSession.getAppPublicKey(), settings);
-                    moduleManager.setAppPublicKey(redeemPointSession.getAppPublicKey());
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                     moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                 }
 //            } catch (CantPersistSettingsException e) {
@@ -185,7 +182,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), redeemPointSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setImageLeft(R.drawable.redeem_point_identity)
@@ -195,17 +192,17 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                     .setSubTitle(R.string.dap_redeem_wallet_welcome_subTitle)
                     .setBody(R.string.dap_redeem_wallet_welcome_body)
                     .setTextFooter(R.string.dap_redeem_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetRedeemPointIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
             presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = redeemPointSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                    Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
                     if (o != null) {
                         if ((Boolean) (o)) {
-                            redeemPointSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                            appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
                         }
                     }
                     try {
@@ -258,7 +255,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(redeemPointSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -413,8 +410,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
-        redeemPointSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY, redeemPointSession.getAppPublicKey());
+        appSession.setData("asset_data", data);
+        changeActivity(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY, appSession.getAppPublicKey());
     }
 
     @Override

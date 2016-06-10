@@ -11,7 +11,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.utils.RefreshParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -47,11 +46,6 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
     private ScheduledFuture scheduledFuture;
 
     /**
-     * Represent the registeredActorProfiles
-     */
-    private Map<ActorProfile, RefreshParameters> registeredActorProfiles;
-
-    /**
      * Constructor with parameter
      *
      * @param networkServiceRoot
@@ -60,7 +54,6 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
         this.networkServiceRoot      = networkServiceRoot;
         this.status                  = AgentStatus.CREATED;
-        this.registeredActorProfiles = new HashMap<>();
         this.scheduledThreadPool     = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -73,7 +66,7 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
             long currentTime = System.currentTimeMillis();
 
-            for (Map.Entry<ActorProfile, RefreshParameters> actor : registeredActorProfiles.entrySet()) {
+            for (Map.Entry<ActorProfile, RefreshParameters> actor : networkServiceRoot.getRegisteredActors().entrySet()) {
 
                 if (actor.getValue().getRefreshInterval() > 0) {
 
@@ -180,27 +173,6 @@ public class NetworkServiceActorLocationUpdaterAgent extends FermatAgent {
 
             throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
-    }
-
-    /**
-     * Notify to the agent that remove a specific actor profile
-     *
-     * @param actorProfile
-     */
-    public void removeActorProfile(final ActorProfile actorProfile){
-
-        this.registeredActorProfiles.remove(actorProfile);
-    }
-
-    /**
-     * Notify to the agent that add a specific actor profile
-     *
-     * @param actorProfile
-     */
-    public void addActorProfile(final ActorProfile      actorProfile     ,
-                                final RefreshParameters refreshParameters){
-
-        this.registeredActorProfiles.put(actorProfile, refreshParameters);
     }
 
     private class ActorUpdateTask implements Runnable {

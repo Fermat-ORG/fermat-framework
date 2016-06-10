@@ -80,9 +80,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    protected ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     protected EventManager eventManager;
 
@@ -729,7 +726,9 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         System.out.println("Me llego un nuevo mensaje" + messageReceived);
     }
 
-    public synchronized void onSentMessage(NetworkServiceMessage networkServiceMessage) {
+
+
+    public final synchronized void onNetworkServiceSentMessage(NetworkServiceMessage networkServiceMessage) {
 
         System.out.println("Message Delivered " + networkServiceMessage);
 
@@ -737,9 +736,15 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         try {
             networkServiceConnectionManager.getOutgoingMessagesDao().markAsDelivered(networkServiceMessage);
+
+            onSentMessage(networkServiceMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public synchronized void onSentMessage(NetworkServiceMessage networkServiceMessage) {
 
     }
 

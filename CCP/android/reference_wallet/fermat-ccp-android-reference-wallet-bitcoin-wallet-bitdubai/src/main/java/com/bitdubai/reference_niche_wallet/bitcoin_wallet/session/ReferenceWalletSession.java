@@ -1,7 +1,9 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -13,16 +15,17 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+
+import java.util.List;
 
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class ReferenceWalletSession extends AbstractFermatSession<InstalledWallet,CryptoWallet,WalletResourcesProviderManager>  {
+public class ReferenceWalletSession extends AbstractReferenceAppFermatSession<InstalledWallet,CryptoWallet,WalletResourcesProviderManager> implements FermatSession{
 
 
 
@@ -142,12 +145,17 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         return "public_key_intra_user_commmunity";
     }
 
-    private String searchConnectionPublicKey(String code){
+ private String searchConnectionPublicKey(String code){
         for(FermatApp fermatApp : getPosibleConnections()){
             if(fermatApp.getAppName().equals(code)){
                 return fermatApp.getAppPublicKey();
             }
         }
+        return null;
+    }
+
+
+    public List<FermatApp> getPosibleConnections() {
         return null;
     }
 }

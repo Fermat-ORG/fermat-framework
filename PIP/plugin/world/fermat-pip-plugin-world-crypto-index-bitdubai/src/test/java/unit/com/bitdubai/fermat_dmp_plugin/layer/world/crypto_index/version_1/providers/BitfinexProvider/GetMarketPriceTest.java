@@ -17,10 +17,10 @@ public class GetMarketPriceTest {
     private long time;
 
     @Test
-    public void TestGetMarketPriceTest_successful() throws Exception{
-        cryptoCurrencyTest= CryptoCurrency.getByCode("BTC");
-        fiatCurrencyTest= FiatCurrency.getByCode("USD");
-        double values=bitfinexProvider.getMarketPrice(cryptoCurrencyTest,fiatCurrencyTest,time);
+    public void TestGetMarketPriceTest_successful() throws Exception {
+        cryptoCurrencyTest = CryptoCurrency.getByCode("BTC");
+        fiatCurrencyTest = FiatCurrency.getByCode("USD");
+        double values = bitfinexProvider.getMarketPrice(cryptoCurrencyTest, fiatCurrencyTest, time);
         System.out.println(values);
         Assertions.assertThat(values).isNotNull();
     }

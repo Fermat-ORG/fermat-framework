@@ -3,7 +3,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -28,8 +30,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.CryptoProvidersManager;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -123,15 +123,15 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
     public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
         try {
             CryptoIndex cryptoIndex;
-            cryptoIndex=cryptoProvidersManager.getCurrentIndex(cryptoCurrency,fiatCurrency);
-            cryptoIndexDao.saveLastRateExchange(cryptoCurrency.getCode(),fiatCurrency.getCode(),cryptoIndex.getPurchasePrice());
+            cryptoIndex = cryptoProvidersManager.getCurrentIndex(cryptoCurrency, fiatCurrency);
+            cryptoIndexDao.saveLastRateExchange(cryptoCurrency.getCode(), fiatCurrency.getCode(), cryptoIndex.getPurchasePrice());
             System.out.println(cryptoIndex.getProviderDescription());
             return cryptoIndex.getPurchasePrice();
         } catch (CantGetIndexException e) {
-           throw  new FiatCurrencyNotSupportedException(FiatCurrencyNotSupportedException.DEFAULT_MESSAGE,e,"CryptoIndexWorldPluginRoot","FiatCurrency Not Supported Exception");
+            throw new FiatCurrencyNotSupportedException(FiatCurrencyNotSupportedException.DEFAULT_MESSAGE, e, "CryptoIndexWorldPluginRoot", "FiatCurrency Not Supported Exception");
 
         } catch (CantSaveLastRateExchangeException e) {
-            throw new CryptoCurrencyNotSupportedException(CryptoCurrencyNotSupportedException.DEFAULT_MESSAGE,e,"Cant get Market Price","Cant Save Last Rate Exchange Exception");
+            throw new CryptoCurrencyNotSupportedException(CryptoCurrencyNotSupportedException.DEFAULT_MESSAGE, e, "Cant get Market Price", "Cant Save Last Rate Exchange Exception");
         }
     }
 
@@ -139,7 +139,9 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
      * DealWithErrors Interface implementation.
      */
     @Override
-    public void setErrorManager(ErrorManager errorManager) {this.errorManager = errorManager;}
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 
     /**
      * DealsWithPluginIdentity methods implementation.
@@ -176,13 +178,13 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
     public double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) {
         double marketExchangeRate = 0;
         try {
-            marketExchangeRate=marketPrice.getHistoricalExchangeRate(cryptoCurrency,fiatCurrency,time);
+            marketExchangeRate = marketPrice.getHistoricalExchangeRate(cryptoCurrency, fiatCurrency, time);
         } catch (CantGetHistoricalExchangeRateException cantGetHistoricalExchangeRateException) {
-            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE,cantGetHistoricalExchangeRateException,"CryptoIndexList WorldPluginRoot GetMarketPrice","Cant Get Historical Exchange Rate ");
+            new CantGetHistoricalExchangeRateException(CantGetHistoricalExchangeRateException.DEFAULT_MESSAGE, cantGetHistoricalExchangeRateException, "CryptoIndexList WorldPluginRoot GetMarketPrice", "Cant Get Historical Exchange Rate ");
         } catch (HistoricalExchangeRateNotFoundException e) {
-            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE,e,"CryptoIndexList WorldPluginRoot GetMarketPrice","Historical Exchange Rate Not Found Exception");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(new PluginVersionReference(null), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            new HistoricalExchangeRateNotFoundException(HistoricalExchangeRateNotFoundException.DEFAULT_MESSAGE, e, "CryptoIndexList WorldPluginRoot GetMarketPrice", "Historical Exchange Rate Not Found Exception");
+        } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(new PluginVersionReference(null), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         return marketExchangeRate;
@@ -197,7 +199,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
             CantGetHistoricalExchangeRateException,
             HistoricalExchangeRateNotFoundException {
 
-            return marketPrice.getHistoricalExchangeRateFromDatabase(cryptoCurrency, fiatCurrency, time);
+        return marketPrice.getHistoricalExchangeRateFromDatabase(cryptoCurrency, fiatCurrency, time);
     }
 
 

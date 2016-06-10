@@ -10,14 +10,14 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Error Manager Platform Service Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Error Manager Addon.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
-    public DeveloperBitDubai () {
+    public DeveloperBitDubai() {
         super(new AddonDeveloperReference(Developers.BITDUBAI));
 
 

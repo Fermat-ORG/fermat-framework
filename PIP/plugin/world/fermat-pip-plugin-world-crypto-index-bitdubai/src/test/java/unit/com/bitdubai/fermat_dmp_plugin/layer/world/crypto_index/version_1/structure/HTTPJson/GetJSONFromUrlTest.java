@@ -17,16 +17,16 @@ public class GetJSONFromUrlTest {
     private JSONObject jsonObjectTest;
     HTTPJson htppJson = new HTTPJson();
 
-        @Test
-    public void TestGetJSONFromUrl_successful(){
-        jsonObjectTest=htppJson.getJSONFromUrl("http://api.cryptocoincharts.info/tradingPair/btc_usd");
-            String json;
-            String jsonExpectedValue="btc/usd";
-            json=jsonObjectTest.getString("id");
-            Assertions.assertThat(json).isEqualTo(jsonExpectedValue);
+    @Test
+    public void TestGetJSONFromUrl_successful() {
+        jsonObjectTest = htppJson.getJSONFromUrl("http://api.cryptocoincharts.info/tradingPair/btc_usd");
+        String json;
+        String jsonExpectedValue = "btc/usd";
+        json = jsonObjectTest.getString("id");
+        Assertions.assertThat(json).isEqualTo(jsonExpectedValue);
     }
 
-    public void TestGetJSONFromUrl_ThrowException(){
+    public void TestGetJSONFromUrl_ThrowException() {
         catchException(htppJson).getJSONFromUrl("");
         Assertions.assertThat(caughtException()).isNotNull();//.isInstanceOf(CantGetInputStreamException.class);
     }

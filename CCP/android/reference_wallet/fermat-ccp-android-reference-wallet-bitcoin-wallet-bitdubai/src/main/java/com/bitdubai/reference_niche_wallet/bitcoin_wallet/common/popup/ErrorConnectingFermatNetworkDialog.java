@@ -7,16 +7,18 @@ import android.view.View;
 import android.view.Window;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 /**
  * Created by Jose Manuel De Sousa Dos Santos on 2015.12.03
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceWalletSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * onClick listeners
@@ -35,7 +37,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceWa
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity activity,
-                                              final ReferenceWalletSession referenceWalletSession,
+                                              final ReferenceAppFermatSession<CryptoWallet> referenceWalletSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(activity, referenceWalletSession, subAppResources);

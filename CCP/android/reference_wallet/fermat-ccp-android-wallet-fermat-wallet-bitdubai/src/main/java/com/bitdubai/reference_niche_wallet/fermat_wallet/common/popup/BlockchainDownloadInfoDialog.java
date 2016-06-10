@@ -1,21 +1,24 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
@@ -24,7 +27,9 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 /**
  * Created by natalia on 02/05/16
  */
-public class BlockchainDownloadInfoDialog extends FermatDialog<FermatWalletSession,SubAppResourcesProviderManager>
+
+public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceAppFermatSession<FermatWallet>,SubAppResourcesProviderManager>
+
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final int TYPE_PRESENTATION =1;
@@ -57,7 +62,9 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<FermatWalletSessi
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public BlockchainDownloadInfoDialog(Activity activity, FermatWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
+    public BlockchainDownloadInfoDialog(Activity activity, ReferenceAppFermatSession<FermatWallet> fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.checkButton = checkButton;

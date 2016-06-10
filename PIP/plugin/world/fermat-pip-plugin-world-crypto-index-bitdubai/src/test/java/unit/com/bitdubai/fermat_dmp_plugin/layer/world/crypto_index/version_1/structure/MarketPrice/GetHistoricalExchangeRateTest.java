@@ -19,12 +19,12 @@ public class GetHistoricalExchangeRateTest {
     private long time;
 
     @Test
-    public void TestGetHistoricalExchangeRateTest() throws Exception{
+    public void TestGetHistoricalExchangeRateTest() throws Exception {
         cryptoCurrencyTest = CryptoCurrency.getByCode("BTC");
         fiatCurrencyTest = FiatCurrency.getByCode("USD");
         Date date = new Date();
-        time= date.getTime()/1000;
-        exchangeRate=marketPrice.getHistoricalExchangeRate(cryptoCurrencyTest,fiatCurrencyTest,time);
+        time = date.getTime() / 1000;
+        exchangeRate = marketPrice.getHistoricalExchangeRate(cryptoCurrencyTest, fiatCurrencyTest, time);
         System.out.println(exchangeRate);
     }
 }

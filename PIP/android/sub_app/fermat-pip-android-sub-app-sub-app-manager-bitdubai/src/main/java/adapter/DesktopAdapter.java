@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 import com.bitdubai.sub_app.manager.R;
 
-
 import java.util.Collections;
 import java.util.List;
 
@@ -30,49 +29,49 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     private Item parentItem;
 
     private int fragmentWhoUseThisAdapter;
-    private boolean isChild=false;
+    private boolean isChild = false;
     private DesktopHolderClickCallback desktopHolderClickCallback;
     private AdapterChangeListener adapterChangeListener;
 
     public DesktopAdapter(Context context) {
-            super(context);
-        }
+        super(context);
+    }
 
-        public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter) {
-            super(context, dataSet);
-            this.desktopHolderClickCallback = desktopHolderClickCallback;
-            this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
-        }
-
-    public DesktopAdapter(Context context, List<Item> dataSet,Item parent,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,boolean isChild) {
+    public DesktopAdapter(Context context, List<Item> dataSet, DesktopHolderClickCallback desktopHolderClickCallback, int fragmentWhoUseThisAdapter) {
         super(context, dataSet);
         this.desktopHolderClickCallback = desktopHolderClickCallback;
         this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
-        this.isChild=isChild;
+    }
+
+    public DesktopAdapter(Context context, List<Item> dataSet, Item parent, DesktopHolderClickCallback desktopHolderClickCallback, int fragmentWhoUseThisAdapter, boolean isChild) {
+        super(context, dataSet);
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+        this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
+        this.isChild = isChild;
         this.parentItem = parent;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
     }
 
 
     @Override
-        protected FermatAppHolder createHolder(View itemView, int type) {
-            FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
-            return fermatAppHolder;
-        }
+    protected FermatAppHolder createHolder(View itemView, int type) {
+        FermatAppHolder fermatAppHolder = new FermatAppHolder(itemView);
+        return fermatAppHolder;
+    }
 
-        @Override
-        protected int getCardViewResource() {
-            if(DEKSTOP==fragmentWhoUseThisAdapter)
+    @Override
+    protected int getCardViewResource() {
+        if (DEKSTOP == fragmentWhoUseThisAdapter)
             return R.layout.shell_sub_app_desktop_fragment_grid_item;
 //            else if(FOLDER==fragmentWhoUseThisAdapter) return R.layout.grid_folder;
 //            else if (DESKTOP_FOLDER==fragmentWhoUseThisAdapter) return R.layout.desktop_grid_item;
 //
 //            return R.layout.shell_wallet_desktop_front_grid_item;
-            return 1;
-        }
+        return 1;
+    }
 
-        @Override
-        protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
+    @Override
+    protected void bindHolder(FermatAppHolder holder, Item data, final int position) {
 
 
 //            byte[] profileImage = data.getIcon();
@@ -80,30 +79,30 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 //                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 //                holder.thumbnail.setImageBitmap(bitmap);
 //            }
-            if(data.getIconResource()!=0)
-                if(data.getType()!= InterfaceType.EMPTY)
-                    holder.thumbnail.setImageResource(data.getIconResource());
-            if(data.getType()== InterfaceType.FOLDER){
-                holder.thumbnail.setVisibility(View.GONE);
-                holder.folder.setVisibility(View.VISIBLE);
-                holder.folder.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dataSet.get(position).selected = !dataSet.get(position).selected;
-                        Item item = dataSet.get(position);
-                        notifyItemChanged(position);
-                        desktopHolderClickCallback.onHolderItemClickListener(item, position);
-                        if (adapterChangeListener != null)
-                            adapterChangeListener.onDataSetChanged(dataSet);
-                    }
-                });
-                holder.folder.setAdapter(new DesktopAdapter(context,((FermatFolder) data.getInterfaceObject()).getLstFolderItems(),data,desktopHolderClickCallback,DESKTOP_FOLDER,true));
+        if (data.getIconResource() != 0)
+            if (data.getType() != InterfaceType.EMPTY)
+                holder.thumbnail.setImageResource(data.getIconResource());
+        if (data.getType() == InterfaceType.FOLDER) {
+            holder.thumbnail.setVisibility(View.GONE);
+            holder.folder.setVisibility(View.VISIBLE);
+            holder.folder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataSet.get(position).selected = !dataSet.get(position).selected;
+                    Item item = dataSet.get(position);
+                    notifyItemChanged(position);
+                    desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                    if (adapterChangeListener != null)
+                        adapterChangeListener.onDataSetChanged(dataSet);
+                }
+            });
+            holder.folder.setAdapter(new DesktopAdapter(context, ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), data, desktopHolderClickCallback, DESKTOP_FOLDER, true));
 
-            }else {
+        } else {
 
-                if(!isChild) {
-                    holder.name.setText(data.getName());
-                    //holder.name.setTypeface(tf);
+            if (!isChild) {
+                holder.name.setText(data.getName());
+                //holder.name.setTypeface(tf);
 //                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
@@ -115,39 +114,39 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
 //                                adapterChangeListener.onDataSetChanged(dataSet);
 //                        }
 //                    });
-                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dataSet.get(position).selected = !dataSet.get(position).selected;
-                            Item item = dataSet.get(position);
-                            notifyItemChanged(position);
-                            desktopHolderClickCallback.onHolderItemClickListener(item, position);
-                            if (adapterChangeListener != null)
-                                adapterChangeListener.onDataSetChanged(dataSet);
-                        }
-                    });
-                }else {
-                    Bitmap bm = BitmapFactory.decodeResource(context.getResources(), data.getIconResource());
-                    Bitmap bt=Bitmap.createScaledBitmap(bm, 50, 50, false);
-                    View.OnClickListener onClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dataSet.get(position).selected = !dataSet.get(position).selected;
+                        Item item = dataSet.get(position);
+                        notifyItemChanged(position);
+                        desktopHolderClickCallback.onHolderItemClickListener(item, position);
+                        if (adapterChangeListener != null)
+                            adapterChangeListener.onDataSetChanged(dataSet);
+                    }
+                });
+            } else {
+                Bitmap bm = BitmapFactory.decodeResource(context.getResources(), data.getIconResource());
+                Bitmap bt = Bitmap.createScaledBitmap(bm, 50, 50, false);
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 //                            dataSet.get(parentItem.getPosition()).selected = !dataSet.get(parentItem.getPosition()).selected;
 //                            Item item = dataSet.get(position);
 //                            notifyItemChanged(position);
-                            desktopHolderClickCallback.onHolderItemClickListener(parentItem, parentItem.getPosition());
+                        desktopHolderClickCallback.onHolderItemClickListener(parentItem, parentItem.getPosition());
 //                            if (adapterChangeListener != null)
 //                                adapterChangeListener.onDataSetChanged(dataSet);
-                        }
-                    };
-                    holder.grid_container.setOnClickListener(onClickListener);
-                    holder.thumbnail.setOnClickListener(onClickListener);
-                }
-
-
+                    }
+                };
+                holder.grid_container.setOnClickListener(onClickListener);
+                holder.thumbnail.setOnClickListener(onClickListener);
             }
 
+
         }
+
+    }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {

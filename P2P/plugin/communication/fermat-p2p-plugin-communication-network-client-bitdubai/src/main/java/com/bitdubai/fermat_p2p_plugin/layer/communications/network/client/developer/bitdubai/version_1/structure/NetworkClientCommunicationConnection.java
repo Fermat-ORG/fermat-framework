@@ -35,7 +35,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
@@ -110,9 +110,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private Integer nodesListPosition;
 
     /*
-     * Represent the communicationsNetworkClientChannel
+     * Represent the networkClientCommunicationChannel
      */
-    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
+    private NetworkClientCommunicationChannel networkClientCommunicationChannel;
 
    /*
     * is used to validate if it is connection to an external node
@@ -158,7 +158,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
 
-        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this, isExternalNode);
+        this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
     }
 
     /*
@@ -251,7 +251,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            container.connectToServer(communicationsNetworkClientChannel, uri);
+            container.connectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -278,7 +278,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            container.connectToServer(communicationsNetworkClientChannel, uri);
+            container.connectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -288,8 +288,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public boolean isConnected() {
 
         try {
-            if (communicationsNetworkClientChannel.getClientConnection() != null)
-                return communicationsNetworkClientChannel.getClientConnection().isOpen();
+            if (networkClientCommunicationChannel.getClientConnection() != null)
+                return networkClientCommunicationChannel.getClientConnection().isOpen();
         }catch (Exception e){
             return Boolean.FALSE;
         }
@@ -300,7 +300,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     @Override
     public boolean isRegistered() {
 
-        return communicationsNetworkClientChannel.isRegistered();
+        return networkClientCommunicationChannel.isRegistered();
     }
 
     /*
@@ -544,7 +544,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 networkServiceType,
@@ -581,7 +581,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 NetworkServiceType.UNDEFINED,
@@ -846,8 +846,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return uri;
     }
 
-    public CommunicationsNetworkClientChannel getCommunicationsNetworkClientChannel() {
-        return communicationsNetworkClientChannel;
+    public NetworkClientCommunicationChannel getNetworkClientCommunicationChannel() {
+        return networkClientCommunicationChannel;
     }
 
     public synchronized void addCall(NetworkClientCall networkClientCall) {
@@ -865,7 +865,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
                 // if I can, i will close the session of the connection.
-                this.communicationsNetworkClientChannel.getClientConnection().close();
+                this.networkClientCommunicationChannel.getClientConnection().close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -15,6 +15,9 @@ public class LocationUtils {
     public static Location getRandomLocation(final Location location,
                                              final long     radius  ) {
 
+        if (location == null)
+            return null;
+
         Random random = new Random();
 
         // Convert radius from meters to degrees

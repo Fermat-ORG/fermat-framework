@@ -56,8 +56,8 @@ public class Package {
     protected Package(final String             content                 ,
                       final NetworkServiceType networkServiceTypeSource,
                       final PackageType        packageType             ,
-                      final String             signature,
-                      final String destinationPublicKey) {
+                      final String             signature               ,
+                      final String             destinationPublicKey    ) {
 
         if (content == null)
             throw new InvalidParameterException("Content can't be null.");
@@ -71,14 +71,11 @@ public class Package {
         if (signature == null)
             throw new InvalidParameterException("signature can't be null.");
 
-        if (destinationPublicKey == null)
-            throw new InvalidParameterException("destinationPublicKey can't be null.");
-
         this.content                  = content                 ;
         this.networkServiceTypeSource = networkServiceTypeSource;
         this.packageType              = packageType             ;
         this.signature                = signature               ;
-        this.destinationPublicKey = destinationPublicKey;
+        this.destinationPublicKey     = destinationPublicKey    ;
     }
 
     /**
