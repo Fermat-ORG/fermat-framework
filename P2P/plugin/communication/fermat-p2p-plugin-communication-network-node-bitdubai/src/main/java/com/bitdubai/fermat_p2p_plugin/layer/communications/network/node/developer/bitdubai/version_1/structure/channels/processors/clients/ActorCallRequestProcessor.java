@@ -88,7 +88,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(messageContent.getNetworkServiceType(), traceActor, ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString());
-                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -107,7 +107,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage());
-                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

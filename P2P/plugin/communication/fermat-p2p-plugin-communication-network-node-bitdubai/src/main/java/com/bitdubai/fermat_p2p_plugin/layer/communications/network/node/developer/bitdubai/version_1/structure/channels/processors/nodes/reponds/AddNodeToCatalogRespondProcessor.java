@@ -38,7 +38,7 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
      * @param channel
      * */
     public AddNodeToCatalogRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.ADD_NODE_TO_CATALOG_RESPOND);
+        super(channel, PackageType.ADD_NODE_TO_CATALOG_RESPONSE);
     }
 
     /**

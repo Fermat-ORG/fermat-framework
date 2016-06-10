@@ -31,7 +31,7 @@ public class ServerHandshakeRespondProcessor extends PackageProcessor{
     public ServerHandshakeRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
-                PackageType.SERVER_HANDSHAKE_RESPOND
+                PackageType.SERVER_HANDSHAKE_RESPONSE
         );
     }
 

@@ -35,7 +35,7 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
     public MessageTransmitRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
-                PackageType.MESSAGE_TRANSMIT_RESPOND
+                PackageType.MESSAGE_TRANSMIT_RESPONSE
         );
     }
 

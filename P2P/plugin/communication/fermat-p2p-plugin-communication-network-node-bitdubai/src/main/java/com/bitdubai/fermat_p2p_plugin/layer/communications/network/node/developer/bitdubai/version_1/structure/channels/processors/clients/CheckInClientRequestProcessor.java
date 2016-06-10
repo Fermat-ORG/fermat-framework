@@ -96,7 +96,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), clientProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -123,7 +123,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 Package packageRespond = Package.createInstance(
                         respondProfileCheckInMsj.toJson(),
                         packageReceived.getNetworkServiceTypeSource(),
-                        PackageType.CHECK_IN_CLIENT_RESPOND,
+                        PackageType.CHECK_IN_CLIENT_RESPONSE,
                         channelIdentityPrivateKey,
                         destinationIdentityPublicKey
                 );

@@ -16,7 +16,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.daos.NodeConnectionHistoryDao;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.entities.NodeConnectionHistory;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 
 import java.sql.Timestamp;
 
@@ -24,7 +23,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInClientRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
@@ -47,7 +46,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
     public CheckInClientRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
-                PackageType.CHECK_IN_CLIENT_RESPOND
+                PackageType.CHECK_IN_CLIENT_RESPONSE
         );
         nodeConnectionHistoryDao = new NodeConnectionHistoryDao((Database) ClientContext.get(ClientContextItem.DATABASE));
     }

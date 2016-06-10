@@ -40,7 +40,7 @@ public class ReceivedNodeCatalogTransactionsRespondProcessor extends PackageProc
      * @param channel
      * */
     public ReceivedNodeCatalogTransactionsRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND);
+        super(channel, PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPONSE);
     }
 
     /**

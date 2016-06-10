@@ -30,7 +30,7 @@ public class CheckOutNetworkServiceRespondProcessor extends PackageProcessor {
     public CheckOutNetworkServiceRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
-                PackageType.CHECK_OUT_NETWORK_SERVICE_RESPOND
+                PackageType.CHECK_OUT_NETWORK_SERVICE_RESPONSE
         );
     }
 

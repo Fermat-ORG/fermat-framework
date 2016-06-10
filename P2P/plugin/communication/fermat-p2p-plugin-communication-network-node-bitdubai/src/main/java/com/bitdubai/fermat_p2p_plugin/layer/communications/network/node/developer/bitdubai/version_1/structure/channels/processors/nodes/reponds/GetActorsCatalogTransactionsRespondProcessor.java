@@ -49,7 +49,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
      * @param channel
      * */
     public GetActorsCatalogTransactionsRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND);
+        super(channel, PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPONSE);
     }
 
     /**

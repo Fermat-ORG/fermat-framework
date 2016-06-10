@@ -79,7 +79,7 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS.toString(), actorsCatalogTransactionList, count);
-                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -99,7 +99,7 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorsCatalogTransactionList, new Long(0));
-                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

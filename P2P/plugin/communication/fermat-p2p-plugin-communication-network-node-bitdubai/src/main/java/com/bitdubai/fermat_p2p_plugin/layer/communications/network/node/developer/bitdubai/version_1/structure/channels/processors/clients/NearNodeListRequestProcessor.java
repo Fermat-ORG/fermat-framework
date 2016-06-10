@@ -112,7 +112,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.SUCCESS, NearNodeListMsgRespond.STATUS.SUCCESS.toString(),nodesProfileList);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -131,7 +131,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), null);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

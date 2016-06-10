@@ -147,10 +147,10 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
         clientsSessionMemoryCache.add(cpki, session);
 
         /*
-         * Construct packet SERVER_HANDSHAKE_RESPOND
+         * Construct packet SERVER_HANDSHAKE_RESPONSE
          */
         ServerHandshakeRespond serverHandshakeRespond = new ServerHandshakeRespond(ServerHandshakeRespond.STATUS.SUCCESS, ServerHandshakeRespond.STATUS.SUCCESS.toString(), cpki);
-        Package packageRespond = Package.createInstance(serverHandshakeRespond.toJson(), NetworkServiceType.UNDEFINED, PackageType.SERVER_HANDSHAKE_RESPOND, getChannelIdentity().getPrivateKey(), cpki);
+        Package packageRespond = Package.createInstance(serverHandshakeRespond.toJson(), NetworkServiceType.UNDEFINED, PackageType.SERVER_HANDSHAKE_RESPONSE, getChannelIdentity().getPrivateKey(), cpki);
 
         /*
          * Send the respond

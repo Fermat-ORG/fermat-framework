@@ -18,7 +18,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInProfileDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -41,7 +41,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
     public CheckInProfileDiscoveryQueryRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
-                PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND
+                PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE
         );
         this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
