@@ -135,10 +135,10 @@ public class WalletUtils {
             df.setMaximumFractionDigits(maxDecimal);
             df.setMinimumFractionDigits(minDecimal);
 
-           stringAmount = df.format(Double.parseDouble(value)); //
+           stringAmount = df.format(Double.parseDouble(value));
 
 
-        return stringAmount;
+        return stringAmount.replace(",",".");
 
     }
 
@@ -167,7 +167,7 @@ public class WalletUtils {
         }
         showMoneyType=!showMoneyType;
 
-        return stringAmount;
+        return stringAmount.replace(",",".");
 
     }
     /**

@@ -47,7 +47,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 27/04/16.
  */
-public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedPaymentRequest>, onRefreshList {
+public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest,ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements FermatListItemListeners<LossProtectedPaymentRequest>, onRefreshList {
 
     /**
      * Session
@@ -93,14 +93,14 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
+        referenceWalletSession = appSession;
 
         lstPaymentRequest = new ArrayList<>();
         try {
-            lossProtectedWalletManager = referenceWalletSession.getModuleManager();
+            lossProtectedWalletManager = appSession.getModuleManager();
 
             try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } catch (Exception e) {
 

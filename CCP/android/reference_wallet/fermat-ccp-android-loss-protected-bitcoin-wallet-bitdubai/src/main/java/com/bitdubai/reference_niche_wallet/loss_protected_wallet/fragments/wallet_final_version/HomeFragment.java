@@ -131,10 +131,11 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     /**
      * Constants
      * */
-    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 6;
+    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 2;
     private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 0;
     private BalanceType balanceType = BalanceType.REAL;
     private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
+    private  double actuaExchangeRate = 0;
 
     public static HomeFragment newInstance(){ return new HomeFragment(); }
 
@@ -159,6 +160,11 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 typeAmountSelected = ((ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED));
             else
                 appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
+
+            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != null)
+                actuaExchangeRate = ((double)appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE));
+            else
+                appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, 0);
 
             try {
                 lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -275,15 +281,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             this.inflater = inflater;
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
 
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
-                public void run() {
-                    setUp(inflater);
-                }
-            }, 500);
-
-
-
+            setUp(inflater);
             return rootView;
         }
         catch (Exception e) {
@@ -332,11 +330,11 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             });
 
             //Event Click For change the balance type
-            txt_type_balance.setOnClickListener(new View.OnClickListener(){
+            txt_type_balance.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    changeBalanceType(txt_type_balance,txt_balance_amount);
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
                 }
             });
 
@@ -395,47 +393,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             txt_date_home.setText(sdf.format(actualDate));
 
 
-            //Get all wallet spending from the manager
-            //for especific network
-            allWalletSpendingList = lossProtectedWalletmanager.listAllWalletSpendingValue(appSession.getAppPublicKey(),blockchainNetworkType);
 
-            LineData data = getData(allWalletSpendingList);
-            //LineData data = new LineData(labels, dataset);
-
-            //Set Earned and Lost For To day en UI
-            if (totalEarnedAndLostForToday > 0){
-
-                txt_earnOrLost.setText("USD "+
-                        WalletUtils.formatAmountStringWithDecimalEntry(
-                                totalEarnedAndLostForToday,
-                                EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                                EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
-
-                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-
-            }else if (totalEarnedAndLostForToday==0){
-
-                txt_earnOrLost.setText("USD 0.00");
-                earnOrLostImage.setVisibility(View.INVISIBLE);
-
-            }else if (totalEarnedAndLostForToday< 0){
-
-                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
-                            totalEarnedAndLostForToday*-1,
-                            EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
-
-
-
-                earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
-
-            }
-
-            data.setValueTextSize(12f);
-            //data.setValueTextColor(Color.WHITE);
-
-
-            chart.setData(data);
             chart.setDrawGridBackground(false);
             chart.setDescription("");
             chart.animateY(2000);
@@ -449,51 +407,123 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             chart.setOnChartValueSelectedListener(this);
             chart.fitScreen();
 
-            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
-                    R.layout.loss_custom_marker_view,
-                    allWalletSpendingList,
-                    appSession,
-                    errorManager,
-                    lossProtectedWalletmanager);
-            //chart.setMarkerView(mv);
 
-            YAxis yAxis = chart.getAxisLeft();
-            yAxis.setEnabled(true);
-            yAxis.setTextColor(Color.WHITE);
-            yAxis.setGridColor(Color.WHITE);
-            //yAxis.setStartAtZero(false);
-            //yAxis.setAxisMaxValue(30);
-            //yAxis.setAxisMinValue(-30);
+            //Get all wallet spending from the manager
+            //for especific network
 
-            YAxis yAxis1R = chart.getAxisRight();
-            yAxis1R.setEnabled(false);
-            //yAxis1R.setAxisMaxValue(30);
-            //yAxis1R.setAxisMinValue(-30);
-
-            XAxis xAxis = chart.getXAxis();
-            xAxis.setEnabled(false);
-
-            Legend legend = chart.getLegend();
-            legend.setEnabled(false);
+            FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+                @Override
+                protected Object doInBackground()  {
 
 
+                    try{
+                        allWalletSpendingList = lossProtectedWalletmanager.listAllWalletSpendingValue(appSession.getAppPublicKey(), blockchainNetworkType);
 
-        }catch (CantListLossProtectedSpendingException e) {
-        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
-                    Toast.LENGTH_SHORT).show();
-        }catch (CantLoadWalletException e) {
-        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
-                Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    return allWalletSpendingList;
+                }
+            };
+
+            fermatWorker.setCallBack(new FermatWorkerCallBack() {
+                @Override
+                public void onPostExecute(Object... result) {
+                    if (result != null && result.length > 0) {
+
+                        allWalletSpendingList = (List<BitcoinLossProtectedWalletSpend>) result[0];
+                        LineData data = getData(allWalletSpendingList);
+                        //LineData data = new LineData(labels, dataset);
+                        chart.setData(data);
+                        //Set Earned and Lost For To day en UI
+                        if (totalEarnedAndLostForToday > 0) {
+
+                            txt_earnOrLost.setText("USD " +
+                                    WalletUtils.formatAmountStringWithDecimalEntry(
+                                            totalEarnedAndLostForToday,
+                                            EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                                            EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " earned");
+
+                            earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+
+                        } else if (totalEarnedAndLostForToday == 0) {
+
+                            txt_earnOrLost.setText("USD 0.00");
+                            earnOrLostImage.setVisibility(View.INVISIBLE);
+
+                        } else if (totalEarnedAndLostForToday < 0) {
+
+                            txt_earnOrLost.setText("USD " + WalletUtils.formatAmountStringWithDecimalEntry(
+                                    totalEarnedAndLostForToday * -1,
+                                    EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                                    EARN_AND_LOST_MIN_DECIMAL_FORMAT) + " lost");
+
+
+                            earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
+
+                        }
+
+                        data.setValueTextSize(12f);
+                        data.setValueTextColor(Color.WHITE);
+
+                        CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),
+                                R.layout.loss_custom_marker_view,
+                                allWalletSpendingList,
+                                appSession,
+                                errorManager,
+                                lossProtectedWalletmanager);
+                        //chart.setMarkerView(mv);
+
+                        YAxis yAxis = chart.getAxisLeft();
+                        yAxis.setEnabled(true);
+                        yAxis.setTextColor(Color.WHITE);
+                        yAxis.setGridColor(Color.WHITE);
+                        //yAxis.setStartAtZero(false);
+                        //yAxis.setAxisMaxValue(30);
+                        //yAxis.setAxisMinValue(-30);
+
+                        YAxis yAxis1R = chart.getAxisRight();
+                        yAxis1R.setEnabled(false);
+                        //yAxis1R.setAxisMaxValue(30);
+                        //yAxis1R.setAxisMinValue(-30);
+
+                        XAxis xAxis = chart.getXAxis();
+                        xAxis.setEnabled(false);
+
+                        Legend legend = chart.getLegend();
+                        legend.setEnabled(false);
+
+                    }
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    //  progressBar.setVisibility(View.GONE);
+
+                    makeText(getActivity(), "Error Get SpendingList for Chart ",
+                            Toast.LENGTH_SHORT).show();
+                    ErrorManager errorManager = appSession.getErrorManager();
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    else
+                        Log.e("Get Spendings", ex.getMessage(), ex);
+
+                }
+            });
+
+            fermatWorker.execute();
+
+
         }catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Recovering from system error In Graphic",
+            makeText(getActivity(), "Oooops! recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     /**
@@ -744,7 +774,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
                 balance =  lossProtectedWalletmanager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
 
             if(balanceType.equals(BalanceType.AVAILABLE))
-                balance =  lossProtectedWalletmanager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)));
+                balance =  lossProtectedWalletmanager.getBalance(balanceType, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(actuaExchangeRate));
 
 
         } catch (CantGetLossProtectedBalanceException e) {
@@ -822,10 +852,14 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
                         //get available balance to actual exchange rate
 
-                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, Double.parseDouble(
+
+
+                        actuaExchangeRate = Double.parseDouble(
                                 WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
                                         MAX_DECIMAL_FOR_RATE,
-                                        MIN_DECIMAL_FOR_RATE)));
+                                        MIN_DECIMAL_FOR_RATE));
+
+                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, actuaExchangeRate);
 
                         updateBalances();
 

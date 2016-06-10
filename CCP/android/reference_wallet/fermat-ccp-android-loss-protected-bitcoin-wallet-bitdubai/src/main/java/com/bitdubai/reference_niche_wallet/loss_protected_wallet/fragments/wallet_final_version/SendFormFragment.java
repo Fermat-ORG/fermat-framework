@@ -499,18 +499,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
-
-
                 try{
 
                     walletContactList = getWalletContactList();
-
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
                 return walletContactList;
-
             }
         };
 
@@ -658,9 +654,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
 
         fermatWorker.execute();
-
-
-
     }
 
 

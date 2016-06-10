@@ -608,7 +608,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         //TODO: set obtained position after populating
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
         //}
-        try{
+       /* try{
 
             if(isScrolled)
               if(actionButton.getVisibility() == View.VISIBLE )
@@ -626,7 +626,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         catch(Exception e)
         {
 
-        }
+        }*/
 
 
 
