@@ -325,8 +325,8 @@ public class ContactsListFragment
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-        appSession.setData(CHAT_USER_SELECTED, data);
-        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+//        appSession.setData(CHAT_USER_SELECTED, data);
+//        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
