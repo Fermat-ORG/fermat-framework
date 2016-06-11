@@ -53,6 +53,14 @@ project(':fermat-dap-plugin-sub-app-module-redeem-point-community').projectDir =
 include ':fermat-dap-plugin-sub-app-module-redeem-point-identity'
 project(':fermat-dap-plugin-sub-app-module-redeem-point-identity').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-redeem-point-identity')
 
+//metadata
+include ':fermat-dap-plugin-metadata-digital-asset'
+project(':fermat-dap-plugin-metadata-digital-asset').projectDir = new File('DAP/plugin/metadata/fermat-dap-plugin-metadata-digital-asset')
+
+//offer
+include ':fermat-dap-plugin-offer-asset-specific'
+project(':fermat-dap-plugin-offer-asset-specific').projectDir = new File('DAP/plugin/offer/fermat-dap-plugin-offer-asset-specific')
+
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory'
 project(':fermat-dap-plugin-middleware-asset-factory').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory')

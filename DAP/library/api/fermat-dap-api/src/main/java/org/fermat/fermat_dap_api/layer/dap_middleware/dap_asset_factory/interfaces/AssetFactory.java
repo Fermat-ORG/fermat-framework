@@ -70,6 +70,14 @@ public interface AssetFactory extends Serializable {
 
     void setIsRedeemable(boolean isRedeemable);
 
+    boolean getIsTransferable();
+
+    void setIsTransferable(boolean isTransferable);
+
+    boolean getIsExchangeable();
+
+    void setIsExchangeable(boolean isExchangeable);
+
     Timestamp getExpirationDate();
 
     void setExpirationDate(Timestamp expirationDate);

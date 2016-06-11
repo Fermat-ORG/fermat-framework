@@ -74,6 +74,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<AssetFactorySet
      */
     List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException;
 
+    List<AssetFactory> getAssetsFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException;
     /**
      * This method returns the information stored about the all Asset Factory
      */

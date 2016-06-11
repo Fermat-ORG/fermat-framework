@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -98,14 +97,15 @@ public final class AssetFactoryMiddlewareManager {
 
     private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException, CantCreateFileException, CantPersistFileException {
         try {
-            List<ContractProperty> contractProperties = new ArrayList<>();
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            contractProperties.add(redeemable);
-            contractProperties.add(expirationDate);
-            assetFactory.setContractProperties(contractProperties);
+//            List<ContractProperty> contractProperties = new ArrayList<>();
+//            ContractProperty redeemable;
+//            ContractProperty expirationDate;
+//            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+//            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+//            contractProperties.add(redeemable);
+//            contractProperties.add(expirationDate);
+//            assetFactory.setContractProperties(contractProperties);
+//            assetFactory.getContractProperties().add(expirationDate);
             try {
                 assetFactory.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
             } catch (CantGetAssetIssuerIdentitiesException cantCreateFileException) {
@@ -658,8 +658,8 @@ public final class AssetFactoryMiddlewareManager {
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
                 digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
                 digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
-                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsExchangeable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsTransferable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());

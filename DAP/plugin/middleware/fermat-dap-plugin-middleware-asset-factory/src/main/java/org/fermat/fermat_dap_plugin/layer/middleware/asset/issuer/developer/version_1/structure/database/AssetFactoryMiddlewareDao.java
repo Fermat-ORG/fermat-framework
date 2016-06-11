@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -95,6 +96,8 @@ public class AssetFactoryMiddlewareDao {
         record.setLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
         record.setLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN, assetFactory.getTotalQuantity());
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, String.valueOf(assetFactory.getIsRedeemable()));
+        record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE, String.valueOf(assetFactory.getIsTransferable()));
+        record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE, String.valueOf(assetFactory.getIsExchangeable()));
         if (assetFactory.getExpirationDate() != null) {
             record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, assetFactory.getExpirationDate().toString());
         } else
@@ -196,16 +199,7 @@ public class AssetFactoryMiddlewareDao {
             for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
                 DatabaseTableRecord record = getContractDataRecord(assetFactory.getAssetPublicKey(), contractProperties.getName(),
                         contractProperties.getValue() != null ? contractProperties.getValue().toString() : null);
-                DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
-//                filter.setValue(contractProperties.getName());
-                if (isNewRecord(table, filter))
-                    //New Records
-                    transaction.addRecordToInsert(table, record);
-                else {
-                    //update Records
-                    table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                    transaction.addRecordToUpdate(table, record);
-                }
+                transaction.addRecordToInsert(table, record);
             }
         }
 
@@ -288,6 +282,27 @@ public class AssetFactoryMiddlewareDao {
         return table.getRecords();
     }
 
+    private List<ContractProperty> getAssetFactoryContractList(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
+        final List<DatabaseTableRecord> contractData = getContractsData(assetFactoryPublicKey);
+        List<ContractProperty> contractProperties = new ArrayList<>();
+        for (DatabaseTableRecord record : contractData) {
+            String contractName = record.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN);
+            String contractValue = record.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN);
+            if (contractName != null && contractName.length() > 0 && contractValue != null && contractValue.length() > 0) {
+                if (contractName.equals(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE)) {
+                    contractProperties.add(new ContractProperty(contractName, (contractValue == null || contractValue.equals("null")) ? contractValue : Timestamp.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.REDEEMABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.TRANSFERABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.SALEABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                }
+            }
+        }
+        return contractProperties;
+    }
+
     private List<DatabaseTableRecord> getAssetFactoryData(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
         for (DatabaseTableFilter filter : filters) {
@@ -332,8 +347,25 @@ public class AssetFactoryMiddlewareDao {
 
 
         assetFactory.setIsRedeemable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE)));
+        assetFactory.setIsTransferable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE)));
+        assetFactory.setIsExchangeable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE)));
 
         return assetFactory;
+    }
+
+    private void removeAssetFactoryContractData(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
+        try {
+            database = openDatabase();
+
+            DatabaseTable tableContracts = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
+            tableContracts.addStringFilter(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getAssetPublicKey(), DatabaseFilterType.EQUAL);
+            tableContracts.loadToMemory();
+            for (DatabaseTableRecord record : tableContracts.getRecords()) {
+                tableContracts.deleteRecord(record);
+            }
+        } catch (Exception exception) {
+            throw new CantDeleteAsserFactoryException(exception, "Error delete Contracts of the Asset Factory", "Asset Factory Contracts - Delete");
+        }
     }
 
     public void removeAssetFactory(AssetFactory assetFactory, boolean removeResources) throws CantDeleteAsserFactoryException {
@@ -379,7 +411,6 @@ public class AssetFactoryMiddlewareDao {
 
     public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
 
-
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -399,8 +430,10 @@ public class AssetFactoryMiddlewareDao {
             }
 
             // I wil add the Contracts to the transaction if there are any
-            if (assetFactory.getContractProperties() != null)
+            if (assetFactory.getContractProperties() != null) {
+                removeAssetFactoryContractData(assetFactory);
                 transaction = addContractRecordsToTransaction(transaction, assetFactory);
+            }
             // I wil add the resources to the transaction if there are any
             if (assetFactory.getResources() != null)
                 transaction = addResourceRecordsToTransaction(transaction, assetFactory);
@@ -483,6 +516,8 @@ public class AssetFactoryMiddlewareDao {
                     resource.setResourceBinayData(imageFile.getContent());
                     resources.add(resource);
                 }
+
+                assetFactory.setContractProperties(getAssetFactoryContractList(assetFactory.getAssetPublicKey()));
 
                 assetFactory.setResources(resources);
                 assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
