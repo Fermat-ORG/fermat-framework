@@ -51,6 +51,9 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
     private int vaultType;
     private int type;
 
+    //Progress
+    ProgressDialog dialog = null;
+
     public static ExportImportSeedFragment newInstance(int type) {
         ExportImportSeedFragment abstractFermatFragment =  new ExportImportSeedFragment();
         abstractFermatFragment.setType(type);
@@ -107,8 +110,6 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                         ;//input[0-input.length-1]);
 //                        mnemonic.remove(mnemonic.size() - 1);
                         final List<String> temp = mnemonic;
-                        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                                "Importing. Please wait...", true);
                         FermatWorker fermatWorker = new FermatWorker() {
                             @Override
                             protected Object doInBackground() throws Exception {
@@ -124,7 +125,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                         fermatWorker.setCallBack(new FermatWorkerCallBack() {
                             @Override
                             public void onPostExecute(Object... result) {
-                                dialog.dismiss();
+                                if(dialog!=null)dialog.dismiss();
                                 Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
                             }
 
@@ -133,8 +134,9 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                                 ex.printStackTrace();
                             }
                         });
-                        dialog.show();
                         fermatWorker.execute();
+                        dialog = ProgressDialog.show(getActivity(), "",
+                                "Importing. Please wait...", true);
                     }catch (Exception e){
                         e.printStackTrace();
                         editText_mnemonic.animate();
