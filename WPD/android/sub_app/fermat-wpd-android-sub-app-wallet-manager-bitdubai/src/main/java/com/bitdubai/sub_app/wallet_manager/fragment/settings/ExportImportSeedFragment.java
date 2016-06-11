@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.fragment.settings;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractReferenceAppFermatSession<InstalledDesktop,WalletManager,ResourceProviderManager>,ResourceProviderManager> {
 
+    private static final String TAG = "ImportFragment";
     private View root;
 
     //Export
@@ -111,6 +113,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                             @Override
                             protected Object doInBackground() throws Exception {
                                 try {
+                                    Log.i(TAG,"Starting import");
                                     appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
                                 } catch (Exception e) {
                                     e.printStackTrace();
