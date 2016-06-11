@@ -57,6 +57,11 @@ version = '1.0'
 //}
 
 dependencies {
+    /**
+     *  For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     *  - layer name
+     *  - plugin name
+     */
     compile project(':fermat-api')
     compile project(':fermat-core-api')
     //Sub App

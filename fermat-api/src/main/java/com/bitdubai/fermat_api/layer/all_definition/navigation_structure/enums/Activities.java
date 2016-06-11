@@ -348,6 +348,7 @@ public enum Activities implements FermatEnum {
     //CHT
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_CREATE_IDENTITY("CHTCI"),
+    CHT_CHAT_GEOLOCATION_IDENTITY("CHTGI"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
     CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
@@ -837,6 +838,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
             case "CHTCI":
                 return Activities.CHT_CHAT_CREATE_IDENTITY;
+            case "CHTGI":
+                return Activities.CHT_CHAT_GEOLOCATION_IDENTITY;
             case "CHTBWOD":
                 return  Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL;
             case "CHTBWTD":

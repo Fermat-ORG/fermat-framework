@@ -812,7 +812,6 @@ public class SubAppAppsGenerator {
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
-
             /**
              * CHAT IDENTITY
              */
