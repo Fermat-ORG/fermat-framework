@@ -233,7 +233,8 @@
                             android:layout_width="120dp"
                             android:layout_height="46dp"
                             android:text="@string/add_fermat_user_text"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:background="@color/green_presentation"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -247,14 +248,16 @@
                             android:padding="6dp"
                             android:layout_gravity="center"
                             android:src="@drawable/extra_user_xxhdpi"
-                            android:contentDescription="@string/app_name"/>
+                            android:contentDescription="@string/app_name"
+                            />
 
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                             android:id="@+id/add_extra_user"
                             android:layout_width="120dp"
                             android:layout_height="46dp"
                             android:text="@string/add_extra_user_text"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:background="@color/green_presentation"/>
                     </LinearLayout>
 
                 </LinearLayout>

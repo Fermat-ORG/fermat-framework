@@ -69,7 +69,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
-     List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 
     /**

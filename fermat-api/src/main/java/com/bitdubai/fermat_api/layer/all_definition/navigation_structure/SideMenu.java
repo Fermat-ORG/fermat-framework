@@ -92,4 +92,5 @@ public class SideMenu implements FermatSideMenu {
             e.printStackTrace();
         }
     }
+
 }

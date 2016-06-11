@@ -308,7 +308,7 @@ public class ConnectionsWorldFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show /*&& (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)*/) {
+        if (show /*&& (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
@@ -319,7 +319,7 @@ public class ConnectionsWorldFragment
             rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {
+        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
@@ -1264,12 +1264,12 @@ public class ConnectionsWorldFragment
 //        Animation anim = AnimationUtils.loadAnimation(getActivity(),
 //                show ? android.R.anim.fade_in : android.R.anim.fade_out);
 //        if (show &&
-//                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+//                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.VISIBLE);
 //            if (adapter != null)
 //                adapter.changeDataSet(null);
-//        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+//        } else if (!show && emptyView.getShowAsAction() == View.VISIBLE) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.GONE);
 //        }

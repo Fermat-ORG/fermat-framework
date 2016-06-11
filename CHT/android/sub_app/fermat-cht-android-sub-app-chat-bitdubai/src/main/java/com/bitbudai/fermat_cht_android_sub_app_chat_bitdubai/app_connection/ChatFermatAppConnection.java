@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE;
 
@@ -76,7 +77,7 @@ public class ChatFermatAppConnection extends AppConnections {
     public NotificationPainter getNotificationPainter(String code){
         switch (code){
             case CHAT_NEW_INCOMING_MESSAGE:
-                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.","");
+                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.", "", R.drawable.chat_subapp);
 
             default:
                 return super.getNotificationPainter(code);
@@ -99,4 +100,6 @@ public class ChatFermatAppConnection extends AppConnections {
 //
 //        return notification;
     }
+
+
 }

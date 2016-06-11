@@ -124,7 +124,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
-    private FermatTextView txt_type;
+    private TextView txt_type;
     private ImageView spinnerArrow;
     BlockchainNetworkType blockchainNetworkType;
 
@@ -197,7 +197,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            setUpContactAddapter();
+            //setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
@@ -244,7 +244,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
 
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
-        txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
+        txt_type = (TextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("BTC");

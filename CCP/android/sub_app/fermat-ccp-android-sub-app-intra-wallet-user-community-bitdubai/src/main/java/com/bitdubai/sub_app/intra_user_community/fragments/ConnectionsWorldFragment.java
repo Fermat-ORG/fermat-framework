@@ -263,10 +263,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-                final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+               /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
                 notificationsProgressDialog.setMessage("Loading Crypto Wallet Users Cache");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();
+                notificationsProgressDialog.show();*/
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -280,7 +280,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                        notificationsProgressDialog.dismiss();
+                      //  notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -328,7 +328,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        notificationsProgressDialog.dismiss();
+                        //notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -397,10 +397,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+          /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
             notificationsProgressDialog.setCancelable(true);
-            notificationsProgressDialog.show();
+            notificationsProgressDialog.show();*/
 
             worker = new FermatWorker() {
                 @Override
@@ -413,7 +413,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+                 //   notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -426,6 +426,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                showEmpty(true, emptyView);
                                showEmpty(false, searchEmptyView);
                             } else {
+                                Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+
                                 adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);
                                 showEmpty(false, searchEmptyView);
@@ -440,7 +442,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+                  // notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);

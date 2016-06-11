@@ -75,7 +75,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
-//                    if (holder.connectionState.getVisibility() == View.GONE) {
+//                    if (holder.connectionState.getShowAsAction() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
@@ -94,7 +94,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.VISIBLE);
                     holder.pendingButton.setVisibility(View.GONE);
-//                    if (holder.connectionState.getVisibility() == View.GONE) {
+//                    if (holder.connectionState.getShowAsAction() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
@@ -128,7 +128,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.VISIBLE);
-//                    if (holder.connectionState.getVisibility() == View.GONE) {
+//                    if (holder.connectionState.getShowAsAction() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_standby
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
@@ -137,7 +137,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     holder.connectedButton.setVisibility(View.GONE);
                     holder.blockedButton.setVisibility(View.GONE);
                     holder.pendingButton.setVisibility(View.GONE);
-//                    if (holder.connectionState.getVisibility() == View.VISIBLE)
+//                    if (holder.connectionState.getShowAsAction() == View.VISIBLE)
 //                        holder.connectionState.setVisibility(View.GONE);
                     break;
             }

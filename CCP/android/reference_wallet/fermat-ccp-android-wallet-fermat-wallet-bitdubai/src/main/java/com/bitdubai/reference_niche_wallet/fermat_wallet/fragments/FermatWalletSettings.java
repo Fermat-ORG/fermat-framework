@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.SendToLossProtectedWalletDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
@@ -40,9 +42,9 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by mati on 2016.02.09..
  */
-public class FermatWalletSettings extends FermatPreferenceFragment<FermatWalletSessionReferenceApp,WalletResourcesProviderManager> implements FermatSettings {
+public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppFermatSession<FermatWallet>,WalletResourcesProviderManager> implements FermatSettings {
 
-    private FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
     private com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
 
@@ -79,8 +81,10 @@ public class FermatWalletSettings extends FermatPreferenceFragment<FermatWalletS
 
         //noinspection TryWithIdenticalCatches
         try {
-            bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-            cryptoWallet = fermatWalletSessionReferenceApp.getModuleManager();
+
+            cryptoWallet = appSession.getModuleManager();
+            bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
+
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
 
