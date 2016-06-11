@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 
 import android.app.Activity;
+import android.content.Context;
 import  android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -948,6 +949,13 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     @Override
     public void onNothingSelected() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if(getActivity().getCurrentFocus() != null)
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
     public static void hideSoftKeyboard(Activity activity) {
