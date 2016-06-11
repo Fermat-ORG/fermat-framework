@@ -29,6 +29,7 @@ import java.util.Random;
  * Created by Matias Furszyfer on 2016.03.01..
  */
 public class NotificationService extends Service {
+
     public static String LOG_TAG = "NotificationService";
     private final IBinder mBinder = new LocalBinder();
     // map from AppPublicKey to notificationId
@@ -92,7 +93,7 @@ public class NotificationService extends Service {
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                     Intent intent = new Intent();
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.setAction("org.fermat.APP_LAUNCHER");
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -104,6 +105,7 @@ public class NotificationService extends Service {
                                 .setAutoCancel(true)
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000)
+                                .setContentIntent(pi)
                                 .setContent(remoteViews)
                                 .setWhen(System.currentTimeMillis());
                     } else {
@@ -117,6 +119,7 @@ public class NotificationService extends Service {
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000);
                     }
+                    Log.i(LOG_TAG,"Launcher: "+publicKey);
                 }
             }else{
                 Intent intent = new Intent();
@@ -133,6 +136,7 @@ public class NotificationService extends Service {
                         .setContentIntent(pi)
                         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                         .setLights(Color.YELLOW, 3000, 3000);
+                Log.i(LOG_TAG,"Launcher: "+publicKey);
             }
 
         } else {

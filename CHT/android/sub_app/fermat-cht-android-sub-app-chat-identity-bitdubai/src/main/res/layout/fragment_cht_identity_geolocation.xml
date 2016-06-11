@@ -42,11 +42,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/spinner_frequency"
         android:textColor="#000000"
-        android:backgroundTint="#a5a5a5"
+        android:backgroundTint="#787878"
         android:backgroundTintMode="add"
-        android:background="#c2c2c2"
+        android:background="#000"
         android:foregroundTint="#000000"
-        android:foregroundTintMode="add"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
 

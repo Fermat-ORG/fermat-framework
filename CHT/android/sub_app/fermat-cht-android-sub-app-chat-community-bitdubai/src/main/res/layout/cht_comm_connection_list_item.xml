@@ -1,51 +1,79 @@
 <RelativeLayout
-xmlns:tools="http://schemas.android.com/tools"
-xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#F9F9F9"
+    android:background="@drawable/cht_comm_list_bg"
     android:paddingTop="8dp"
     android:paddingRight="16dp"
     android:paddingLeft="16dp">
 
+
+    <ImageView
+        android:id="@+id/ring_image"
+        android:scaleType="centerCrop"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/cht_comm_circular_shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
     <ImageView
         android:id="@+id/imageView_avatar"
         android:scaleType="centerCrop"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/cht_comm_bg_circula_friend_list"
-        tools:ignore="ContentDescription"
-        android:layout_marginLeft="5dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
         />
     <TextView
         android:id="@+id/username"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="2dip"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/imageView_avatar"
+        android:layout_below="@+id/imageView_avatar"
         android:maxLines="1"
-        android:text="title"
-        android:textColor="#212121"
-        android:textSize="20dip" />
-    <!--TextView
-        android:id="@+id/status"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
-        android:layout_toRightOf="@+id/imageView_avatar"
-        android:ellipsize="end"
-        android:layout_marginLeft="10dp"
-        android:maxLines="3"
-        android:text="desc"
+        android:text="Person Namelsky"
+        android:textAlignment="center"
+        android:textStyle="normal"
         android:textColor="#757575"
-        android:textSize="12dip" /-->
+        android:layout_centerHorizontal="true"
+        android:textSize="20dip"
+        android:paddingTop="10dp" />
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/username"
+        android:padding="10dp"
+        android:id="@+id/location">
+        <ImageView
+            android:id="@+id/location_image"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/cht_comm_geotag_contact_icon"
+            />
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/location_image"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:maxLines="3"
+            android:text="Location - Place"
+            android:textColor="#47BF73"
+            android:textSize="12dp" />
+    </RelativeLayout>
 
     <TextView
-        android:layout_below="@+id/imageView_avatar"
+        android:layout_below="@+id/location"
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#DBDBDB" />
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_height="20dp"/>
 </RelativeLayout>
