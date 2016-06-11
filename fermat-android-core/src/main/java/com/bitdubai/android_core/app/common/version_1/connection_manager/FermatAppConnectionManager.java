@@ -66,10 +66,15 @@ public class FermatAppConnectionManager {
 
     private static AppConnections switchStatement(Context activity,String publicKey){
         AppConnections fermatAppConnection = null;
+        if(activity==null)Log.e(TAG,"Activity null");
         if (openConnections.containsKey(publicKey)){
             fermatAppConnection = openConnections.get(publicKey);
-            if(!fermatAppConnection.getContext().equals(activity)) {
-                fermatAppConnection.clear();
+            if(fermatAppConnection.getContext()!=null) {
+                if (!fermatAppConnection.getContext().equals(activity)) {
+                    fermatAppConnection.clear();
+                    fermatAppConnection.setContext(activity);
+                }
+            }else{
                 fermatAppConnection.setContext(activity);
             }
             return fermatAppConnection;
