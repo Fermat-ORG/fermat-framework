@@ -1239,9 +1239,9 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#1d1d25");
-        runtimeTabStrip.setTabsIndicateColor("#ffffff");
-        runtimeTabStrip.setTabsTextColor("#ffffff");
+        runtimeTabStrip.setTabsColor("#CEE3F4");
+        runtimeTabStrip.setTabsIndicateColor("#8296ab");
+        runtimeTabStrip.setTabsTextColor("#8296ab");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Draft");
