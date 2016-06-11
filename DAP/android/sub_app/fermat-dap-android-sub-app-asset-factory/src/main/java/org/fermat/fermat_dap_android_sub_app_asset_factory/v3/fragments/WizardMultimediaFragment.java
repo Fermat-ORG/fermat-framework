@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -90,7 +91,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
     private ImageButton wizardMultimediaStep2Image;
     private ImageButton wizardMultimediaStep3Image;
     private ImageButton wizardMultimediaStep4Image;
-
+    Bitmap imageBitmap = null;
     private boolean hasResource = false;
     private boolean isEdit = false;
     private AssetFactory asset;
@@ -338,11 +339,11 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
     }
 
     private void go(String code) {
-        if (validate()) {
+//        if (validate()) {
             saveMultimedia();
             appSession.setData("asset_factory", asset);
             changeActivity(code, appSession.getAppPublicKey());
-        }
+//        }
     }
 
     private boolean isValid(AssetFactory asset) {
@@ -376,9 +377,9 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
         }
     }
 
-    private boolean validate() {
-        return true;
-    }
+//    private boolean validate() {
+//        return true;
+//    }
 
     private void saveMultimedia() {
         if (hasResource) {
@@ -391,7 +392,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(toByteArray(wizardMultimediaAssetImage));
+            resource.setResourceBinayData(ImagesUtils.toByteArray(imageBitmap));
             resources.add(resource);
             asset.setResources(resources);
         } else
@@ -429,7 +430,6 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = null;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -473,17 +473,6 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intentLoad, REQUEST_LOAD_IMAGE);
-    }
-
-    private byte[] toByteArray(ImageView imageView) {
-        imageView.setDrawingCacheEnabled(true);
-        imageView.buildDrawingCache();
-        Bitmap bm = imageView.getDrawingCache();
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
     }
 
     @Override

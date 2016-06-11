@@ -30,6 +30,7 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptio
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryRecord;
 
@@ -98,6 +99,7 @@ public class AssetFactoryMiddlewareDao {
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, String.valueOf(assetFactory.getIsRedeemable()));
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE, String.valueOf(assetFactory.getIsTransferable()));
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE, String.valueOf(assetFactory.getIsExchangeable()));
+
         if (assetFactory.getExpirationDate() != null) {
             record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, assetFactory.getExpirationDate().toString());
         } else
@@ -159,7 +161,9 @@ public class AssetFactoryMiddlewareDao {
                                                             String publicKey,
                                                             String name,
                                                             String signature) throws DatabaseOperationException, MissingAssetDataException {
+
         DatabaseTable databaseTable = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ID_COLUMN, UUID.randomUUID().toString());
@@ -171,7 +175,9 @@ public class AssetFactoryMiddlewareDao {
         return record;
     }
 
-    private DatabaseTransaction addResourceRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addResourceRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
 
         if (assetFactory.getResources() != null) {
@@ -192,7 +198,9 @@ public class AssetFactoryMiddlewareDao {
         return transaction;
     }
 
-    private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
         if (assetFactory.getContractProperties() != null) {
@@ -206,10 +214,14 @@ public class AssetFactoryMiddlewareDao {
         return transaction;
     }
 
-    private DatabaseTransaction addIdentityIssuerRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addIdentityIssuerRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
-        DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getAssetPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+        DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getAssetPublicKey(),
+                assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+
         DatabaseTableFilter filter = getIdentityAssetPublicKeyFilter(assetFactory.getAssetPublicKey());
         if (isNewRecord(table, filter))
             //New Records
@@ -327,7 +339,7 @@ public class AssetFactoryMiddlewareDao {
         assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
         assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
         assetFactory.setWalletPublicKey(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
-        org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity assetIssuerIdentity = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity();
+        AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
         assetIssuerIdentity.setAlias(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN));
         assetIssuerIdentity.setPublicKey(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
         assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
@@ -485,7 +497,7 @@ public class AssetFactoryMiddlewareDao {
             for (DatabaseTableRecord assetFactoriesRecord : getAssetFactoryData(filters)) {
 
                 final AssetFactory assetFactory = getAssetFactory(assetFactoriesRecord);
-                org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity assetIssuerIdentity = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity();
+                AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
                 // I will add the indetity issuer information from database
                 for (final DatabaseTableRecord identityIssuerRecords : getIdentityIssuerData(assetFactory.getAssetPublicKey())) {
                     assetIssuerIdentity.setPublicKey(identityIssuerRecords.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
@@ -512,7 +524,9 @@ public class AssetFactoryMiddlewareDao {
                     } catch (InvalidParameterException e) {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY,
+                            resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
                     resource.setResourceBinayData(imageFile.getContent());
                     resources.add(resource);
                 }
@@ -525,11 +539,9 @@ public class AssetFactoryMiddlewareDao {
                 assetFactoryList.add(assetFactory);
             }
 
-
             return assetFactoryList;
         } catch (Exception e) {
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " + filters.toString(), null);
         }
-
     }
 }
