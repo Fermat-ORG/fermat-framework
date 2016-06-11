@@ -7,8 +7,8 @@
 
     <RelativeLayout
         android:id="@+id/cht_image_background"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
+        android:layout_width="280px"
+        android:layout_height="280px"
         android:background="@drawable/bg_circular_cht"
         android:gravity="center"
         android:layout_alignParentTop="true"
