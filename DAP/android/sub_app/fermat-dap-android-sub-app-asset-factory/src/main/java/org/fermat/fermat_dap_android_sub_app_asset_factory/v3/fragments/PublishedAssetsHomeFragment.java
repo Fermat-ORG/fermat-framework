@@ -387,7 +387,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
             for (AssetFactory item : items) {
                 resources = item.getResources();
                 for (Resource resource : resources) {
-                    resource.setResourceBinayData(appSession.getModuleManager().getAssetFactoryResource(resource).getContent());
+                    resource.setResourceBinayData(appSession.getModuleManager().getAssetFactoryResource(resource));
                 }
             }
         } catch (Exception ex) {

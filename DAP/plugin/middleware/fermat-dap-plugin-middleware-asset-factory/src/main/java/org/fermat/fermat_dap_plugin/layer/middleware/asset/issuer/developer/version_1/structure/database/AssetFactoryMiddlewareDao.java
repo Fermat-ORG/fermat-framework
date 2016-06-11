@@ -1,10 +1,14 @@
 package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -21,6 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -488,6 +495,67 @@ public class AssetFactoryMiddlewareDao {
         }
     }
 
+    public void persistNewImageFactory(AssetFactory assetFactory) throws CantPersistFileException {
+        try {
+//            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+//                    DeviceDirectory.LOCAL_USERS.getName(),
+//                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+//                    FilePrivacy.PRIVATE,
+//                    FileLifeSpan.PERMANENT
+//            );
+//
+//            file.setContent(profileImage);
+//
+//            file.persistToMedia();
+            if (assetFactory.getResources() != null) {
+                for (Resource resource : assetFactory.getResources()) {
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId,
+                            DeviceDirectory.LOCAL_USERS.getName(),
+//                        PATH_DIRECTORY,
+                            resource.getId().toString(),
+                            FilePrivacy.PRIVATE,
+                            FileLifeSpan.PERMANENT);
+
+                    imageFile.setContent(resource.getResourceBinayData());
+                    imageFile.persistToMedia();
+                }
+            }
+        } catch (CantPersistFileException e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", e, "Error creating file.", null);
+        } catch (Exception e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public byte[] getImageFactory(Resource resource) throws CantGetResourcesException {
+        byte[] profileImage;
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    resource.getId().toString(),
+//                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            profileImage = file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetResourcesException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            profileImage = new byte[0];
+            // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
+        } catch (Exception e) {
+            throw new CantGetResourcesException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
+        }
+
+        return profileImage;
+    }
+
     public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter... filters) throws DatabaseOperationException, InvalidParameterException, CantCreateFileException {
         try {
             openDatabase();
@@ -524,10 +592,14 @@ public class AssetFactoryMiddlewareDao {
                     } catch (InvalidParameterException e) {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY,
-                            resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//                    getImageFactory(resource);
+//                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId,
+//                            DeviceDirectory.LOCAL_USERS.getName(),
+//                            resource.getId().toString(),
+//                            FilePrivacy.PRIVATE,
+//                            FileLifeSpan.PERMANENT);
 
-                    resource.setResourceBinayData(imageFile.getContent());
+                    resource.setResourceBinayData(getImageFactory(resource));//imageFile.getContent());
                     resources.add(resource);
                 }
 

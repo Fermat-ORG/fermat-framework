@@ -423,7 +423,7 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
                 for (AssetFactory item : items) {
                     resources = item.getResources();
                     for (Resource resource : resources) {
-                        resource.setResourceBinayData(appSession.getModuleManager().getAssetFactoryResource(resource).getContent());
+                        resource.setResourceBinayData(appSession.getModuleManager().getAssetFactoryResource(resource));
                     }
                 }
             }
