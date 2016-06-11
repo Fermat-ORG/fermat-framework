@@ -1,18 +1,61 @@
 apply plugin: 'java'
-apply plugin: 'jacoco'
-apply plugin: 'findbugs'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
-
+apply plugin: 'maven'
+//apply plugin: 'jacoco'
+//apply plugin: 'findbugs'
+//apply plugin: 'checkstyle'
+//apply plugin: 'pmd'
+//apply plugin: 'gradle-one-jar'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = '1.0'
+//configurations {
+//    deployerJars
+//}
+//jar {
+//    manifest {
+//        attributes 'Implementation-Title': 'fermat-cht-core-chat-bitdubai',
+//                'Implementation-Version': version,
+//                'Main-Class': 'com.bitdubai.fermat_cht_core.layer.CHTPlatform'
+//    }
+//    doFirst {
+//        from(
+//// configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+//                configurations.runtime.resolve().collect { it.isDirectory() ? it : zipTree(it) }
+//        ) {
+//            exclude 'META-INF/MANIFEST.MF'
+//            exclude 'META-INF/*.SF'
+//            exclude 'META-INF/*.DSA'
+//            exclude 'META-INF/*.RSA'
+//        }
+//    }
+//}
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+//        classpath fileTree(dir: 'libs', include: '*.jar')
+//
+//    }
+//}
+//ext.sharedManifest = manifest {
+//    attributes 'One-Jar-URL-Factory': 'com.simontuffs.onejar.JarClassLoader$FileURLFactory',
+//            'One-Jar-Expand' : 'webapp/',
+//            'One-Jar-Show-Expand' : 'true'
+//}
+//task chatJar(type: OneJar) {
+//
+//    manifest = project.manifest {
+//        from sharedManifest
+//    }
+//    mainClass = 'com.bitdubai.fermat_cht_core.layer.CHTPlatform'
+//
+//    archiveName = project.name + '-with-dependencies-' + version + ".jar"
+//    additionalDir = file('src/main/resources/one-jar.properties')
+//
+//}
 
-repositories {
-    mavenCentral()
-}
-
-//noinspection GroovyAssignabilityCheck
 dependencies {
     /**
      *  For doing the code more readable, please keep the elements in the file sorted alphabetically:
@@ -37,34 +80,49 @@ dependencies {
     //Actor Network Service
     compile project(':fermat-cht-plugin-actor-network-service-chat-bitdubai')
     compile project(':fermat-cht-plugin-sub-app-module-chat-actor-community-bitdubai')
+    compile 'com.google.code.gson:gson:2.4'
+//    compile 'org.slf4j:slf4j-log4j12:1.7.13'
+//    compile ('org.glassfish.tyrus.bundles:tyrus-standalone-client:1.12')
+//    compile group: 'net.jpountz.lz4', name: 'lz4', version: '1.3'
+//    testCompile group: 'junit', name: 'junit', version: '4.11'
+//    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
+//    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+//    deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
 }
-
-pmd {
-    toolVersion = '5.1.3'
-}
-
-tasks.withType (FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-def jacocoHtmlReport = ""
-
-jacocoTestReport{
-    reports{
-        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
-    }
-}
-
-task testCoverage(dependsOn: jacocoTestReport) << {
-    println jacocoHtmlReport
-}
-
-jacocoTestReport.dependsOn clean, test
-jacocoTestReport.mustRunAfter test
-test.mustRunAfter clean
-
-
-
+//uploadArchives {
+//
+//    repositories {
+//
+//        flatDir {
+//
+//            dirs 'repos'
+//        }
+//        mavenDeployer {
+//            configuration = configurations.deployerJars
+//            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
+//                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
+//            }
+//        }
+//    }
+//}
+//pmd {
+//    toolVersion = '5.1.3'
+//}
+//tasks.withType (FindBugs) {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}
+//def jacocoHtmlReport = ""
+//jacocoTestReport{
+//    reports{
+//        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+//    }
+//}
+//task testCoverage(dependsOn: jacocoTestReport) << {
+//    println jacocoHtmlReport
+//}
+//jacocoTestReport.dependsOn clean, test
+//jacocoTestReport.mustRunAfter test
+//test.mustRunAfter clean

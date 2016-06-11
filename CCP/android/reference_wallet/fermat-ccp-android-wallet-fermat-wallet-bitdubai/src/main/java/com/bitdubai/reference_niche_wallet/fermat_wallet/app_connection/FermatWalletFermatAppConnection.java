@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -20,15 +21,15 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class FermatWalletFermatAppConnection extends AppConnections<FermatWalletSessionReferenceApp>{
+public class FermatWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<FermatWallet>>{
 
     private FermatWallet moduleManager = null;
-    private FermatWalletSessionReferenceApp referenceWalletSession;
+    private ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
 
     public FermatWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -52,7 +53,7 @@ public class FermatWalletFermatAppConnection extends AppConnections<FermatWallet
 
     @Override
     public AbstractReferenceAppFermatSession getSession() {
-        return new FermatWalletSessionReferenceApp();
+        return (AbstractReferenceAppFermatSession)this.getFullyLoadedSession();
     }
 
     @Override

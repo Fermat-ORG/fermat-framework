@@ -510,7 +510,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
          * I will generate the file content.
          */
 
-        //fileContent+= deviceUserPublicKey + "," + walletId + ";";
+        fileContent+= deviceUserPublicKey + "," + walletId + ";";
 
         StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
@@ -518,7 +518,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
-            iterator.remove();
+            //iterator.remove();
         }
 
 
