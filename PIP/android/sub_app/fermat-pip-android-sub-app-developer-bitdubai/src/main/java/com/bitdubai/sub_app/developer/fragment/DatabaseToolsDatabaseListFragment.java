@@ -45,7 +45,7 @@ import java.util.List;
 public class DatabaseToolsDatabaseListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private static final String ARG_POSITION = "position";
-    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
+//    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_TABLES.getKey();
     View rootView;
     private Resource resource;
     List<DeveloperDatabase> developerDatabaseList;

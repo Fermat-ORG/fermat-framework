@@ -26,6 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnou
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -94,4 +95,6 @@ public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<Asse
     void changeNetworkType(BlockchainNetworkType networkType);
 
     BlockchainNetworkType getSelectedNetwork();
+
+    List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException, CantLoadWalletException;
 }

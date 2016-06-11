@@ -2,10 +2,12 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.models;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.io.Serializable;
+
 /**
  * Created by frank on 12/30/15.
  */
-public class User {
+public class User implements Serializable {
     private String name;
     private boolean selected;
 

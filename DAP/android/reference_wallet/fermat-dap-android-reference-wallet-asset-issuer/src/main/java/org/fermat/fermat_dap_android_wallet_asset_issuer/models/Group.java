@@ -2,12 +2,13 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.models;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by frank on 12/30/15.
  */
-public class Group {
+public class Group implements Serializable {
     private String name;
     private boolean selected;
 

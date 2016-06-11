@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -58,7 +59,7 @@ import java.util.Map;
  */
 public class LogToolsFragmentLevel2 extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
-    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getKey();
+//    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getKey();
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -248,8 +249,8 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<ReferenceAppF
                         appSession.setData("list", lst);
                         appSession.setData("level", level);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), R.id.logContainer, null);
-
+//                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), R.id.logContainer, null);
+                        changeActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS, appSession.getAppPublicKey());
 
                     }
                 });

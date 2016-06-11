@@ -305,7 +305,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
-                    .setImageLeft(R.drawable.asset_issuer_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
                     .setTextNameLeft(R.string.dap_asset_factory_welcome_name_left)

@@ -7,6 +7,7 @@
     <string name="app_unnamed">No name given&#8230;</string>
     <string name="home_row_asset_amount">amount: %1$d</string>
     <string name="home_row_asset_bitcoins">bitcoins: "%.6f" BTC</string>
+    <string name="home_asset_confirm_title">Confirm</string>
     <string name="home_asset_state_publishing">Publishing</string>
     <string name="home_asset_state_published">Published</string>
     <string name="dap_asset_factory_delete_menu_item">Delete</string>
@@ -41,4 +42,20 @@
     <string name="dap_asset_factory_welcome_identity_button">New Identity</string>
     <string name="dap_asset_factory_welcome_checkbox">Don\'t show this again</string>
     <string name="dap_asset_factory_welcome_close">Close</string>
+
+    <string name="dap_factory_draft_search">Search</string>
+    <string name="dap_factory_draft_search_hint">Asset name</string>
+
+
+    <!--DapV3 Strings-->
+    <string name="dapV3_home_row_asset_bitcoins">"%.6f" BTC</string>
+    <string name="dap_factory_no_assets">No Assets</string>
+
+    <string name="dap_asset_factory_system_error">Asset Factory system error</string>
+    <string name="dap_asset_factory_no_available">No Available</string>
+    <string name="dap_asset_factory_invalid_name">Invalid Asset Name.</string>
+    <string name="dap_asset_factory_invalid_description">Invalid Asset Description.</string>
+    <string name="dap_asset_factory_invalid_quantity">Asset Quantity must be greater than 0.</string>
+    <string name="dap_asset_factory_v3_publish_confirm">Are you sure you want to publish this asset? This action is irreversible</string>
+    <string name="dap_asset_factory_v3_delete_confirm">Are you sure you want to delete this asset? This action is irreversible</string>
 </resources>
