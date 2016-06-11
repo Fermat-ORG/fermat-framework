@@ -67,7 +67,12 @@ public class FermatAppConnectionManager {
     private static AppConnections switchStatement(Context activity,String publicKey){
         AppConnections fermatAppConnection = null;
         if (openConnections.containsKey(publicKey)){
-            return openConnections.get(publicKey);
+            fermatAppConnection = openConnections.get(publicKey);
+            if(!fermatAppConnection.getContext().equals(activity)) {
+                fermatAppConnection.clear();
+                fermatAppConnection.setContext(activity);
+            }
+            return fermatAppConnection;
         }
         switch (publicKey){
             //CCP WALLET
