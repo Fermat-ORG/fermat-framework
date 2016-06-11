@@ -91,7 +91,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
+         fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
 
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
