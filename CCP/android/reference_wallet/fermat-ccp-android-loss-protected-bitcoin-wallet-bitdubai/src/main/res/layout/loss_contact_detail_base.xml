@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="normal"
                     android:textColor="#999999"
                     android:textColorHint="#4f4f4f"
