@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 01/12/15.
  */
-public enum AssetCurrentStatus implements FermatEnum, Serializable{
+public enum AssetCurrentStatus implements FermatEnum, Serializable {
 
     //ENUM DECLARATION
     ASSET_CREATED("ASCR", "Created"),
