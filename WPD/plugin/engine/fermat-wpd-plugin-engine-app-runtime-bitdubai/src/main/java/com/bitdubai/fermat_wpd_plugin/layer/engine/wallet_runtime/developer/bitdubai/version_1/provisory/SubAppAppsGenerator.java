@@ -1215,6 +1215,8 @@ public class SubAppAppsGenerator {
         Fragment runtimeFragment;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
+        String toolbarColor = "#4B5E75";
+        String statusBarColor = "#3f5b77";
 
         String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
         dapFactory = new AppNavigationStructure();
@@ -1236,9 +1238,9 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#1d1d25");
-        runtimeTabStrip.setTabsIndicateColor("#ffffff");
-        runtimeTabStrip.setTabsTextColor("#ffffff");
+        runtimeTabStrip.setTabsColor("#CEE3F4");
+        runtimeTabStrip.setTabsIndicateColor("#8296ab");
+        runtimeTabStrip.setTabsTextColor("#8296ab");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Draft");
@@ -1249,7 +1251,7 @@ public class SubAppAppsGenerator {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Issued");
-        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -1264,6 +1266,7 @@ public class SubAppAppsGenerator {
 
         runtimeSideMenu = new SideMenu();
         runtimeSideMenu.setBackgroundColor("#1d1d25");
+        runtimeSideMenu.setHasFooter(true);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1289,7 +1292,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#1d1d25");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Draft Asset");
@@ -1304,7 +1307,7 @@ public class SubAppAppsGenerator {
 
         dapFactory.addActivity(runtimeActivity);
 
-        //DAP P SETTINGS
+        //DAP FACTORY SETTINGS
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
@@ -1312,7 +1315,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#1d1d25");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
@@ -1352,7 +1355,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#1d1d25");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
@@ -1376,7 +1379,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#1d1d25");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
@@ -1389,6 +1392,102 @@ public class SubAppAppsGenerator {
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY WIZARD MULTIMEDIA
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
+        runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor(toolbarColor);
+
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Multimedia");
+        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY WIZARD PROPERTIES
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor(toolbarColor);
+
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Properties");
+        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY WIZARD CRYPTO
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor(toolbarColor);
+
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Crypto");
+        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY WIZARD VERIFY
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY);
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor(toolbarColor);
+
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Verify");
+        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey(), runtimeFragment);
 
         dapFactory.addActivity(runtimeActivity);
 

@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -24,19 +23,11 @@ public class Resource implements Serializable {
      * Resource Class private attributes
      */
     private UUID id;
-
     private String name;
-
     private String fileName;
-
     private ResourceType resourceType;
-
     private ResourceDensity resourceDensity;
-
-    File resourceFile;
-
     byte[] resourceBinayData;
-
 
     /**
      * Resource Class Constructors
@@ -53,7 +44,6 @@ public class Resource implements Serializable {
         this.resourceBinayData = resourceBinayData;
     }
 
-
     public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity, byte[] resourceBinayData) {
         this.id = id;
         this.name = name;
@@ -62,8 +52,6 @@ public class Resource implements Serializable {
         this.resourceDensity=resourceDensity;
         this.resourceBinayData = resourceBinayData;
     }
-
-
 
     /**
      * Resource Class getters
@@ -111,18 +99,9 @@ public class Resource implements Serializable {
         this.resourceDensity = resourceDensity;
     }
 
-    public File getResourceFile() {
-        return resourceFile;
-    }
-
-    public void setResourceFile(File resourceFile) {
-        this.resourceFile = resourceFile;
-    }
-
     public void setResourceBinayData(byte[] resourceBinayData){
         this.resourceBinayData = resourceBinayData;
     }
 
     public byte[] getResourceBinayData(){ return resourceBinayData;}
-
 }

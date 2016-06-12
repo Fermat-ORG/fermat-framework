@@ -11,6 +11,7 @@ import java.util.List;
 public class Group implements Serializable {
     private String name;
     private boolean selected;
+    private boolean first;
 
     private ActorAssetUserGroup actorAssetUserGroup;
 
@@ -54,6 +55,14 @@ public class Group implements Serializable {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
     }
 
     @Override

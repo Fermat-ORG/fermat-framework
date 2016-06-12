@@ -9,7 +9,9 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
     private String name;
+    private byte[] image;
     private boolean selected;
+    private boolean first;
 
     private ActorAssetUser actorAssetUser;
 
@@ -18,6 +20,7 @@ public class User implements Serializable {
 
     public User(String name, ActorAssetUser actorAssetUser) {
         this.name = name;
+        this.image = actorAssetUser.getProfileImage();
         this.setActorAssetUser(actorAssetUser);
     }
 
@@ -43,6 +46,22 @@ public class User implements Serializable {
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser) {
         this.actorAssetUser = actorAssetUser;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
     }
 
     @Override

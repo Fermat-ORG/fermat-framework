@@ -39,6 +39,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -414,7 +415,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment<ReferenceAppF
         for (AssetFactory item : items) {
             resources = item.getResources();
             for (Resource resource : resources) {
-                resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource).getContent());
+                try {
+                    resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource));
+                } catch (CantGetResourcesException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return items;
