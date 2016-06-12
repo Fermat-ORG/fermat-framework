@@ -224,7 +224,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment<Refer
             public void onClick(View v) {
                 //TODO: implementar logica de Buy
                 if (isValidBuy()) {
-                    new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                    new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
                             .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))

@@ -171,7 +171,7 @@ public class AssetTransferFragment extends AbstractFermatFragment<ReferenceAppFe
                     if (x != null) {
                         final List<User> users = (List<User>) x;
                         if (users.size() > 0) {
-                            new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                            new ConfirmDialog.Builder(getActivity(), appSession)
                                     .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                                     .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
                                     .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))

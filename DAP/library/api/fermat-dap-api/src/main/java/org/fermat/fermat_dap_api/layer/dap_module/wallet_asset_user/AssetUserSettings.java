@@ -25,6 +25,7 @@ public class AssetUserSettings implements WalletSettings, Serializable {
     private List<BlockchainNetworkType> blockchainNetwork;
     private int blockchainNetworkPosition;
     private boolean notificationEnabled;
+    private boolean assetNotificationEnabled;
 
     public int getBlockchainNetworkPosition() {
         return blockchainNetworkPosition;
@@ -85,5 +86,13 @@ public class AssetUserSettings implements WalletSettings, Serializable {
 
     public void setNotificationEnabled(boolean notificationEnabled) {
         this.notificationEnabled = notificationEnabled;
+    }
+
+    public boolean getAssetNotificationEnabled() {
+        return assetNotificationEnabled;
+    }
+
+    public void setAssetNotificationEnabled(boolean assetNotificationEnabled) {
+        this.assetNotificationEnabled = assetNotificationEnabled;
     }
 }

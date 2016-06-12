@@ -232,7 +232,7 @@ public class AssetSellFragment extends AbstractFermatFragment<ReferenceAppFermat
         sellAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isValidSell()) {
-                    new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                    new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
                             .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
