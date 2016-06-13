@@ -371,7 +371,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     private void setUp(LayoutInflater inflater){
         try {
-            setUpDonut(inflater);
+           // setUpDonut(inflater);
+            setUpChart(inflater);
             setUpScreen();
         }catch (Exception e){
             e.printStackTrace();
@@ -383,6 +384,24 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         if(emptyListViewsContainer!=null)
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
     String runningBalance;
+
+    private void setUpChart(LayoutInflater inflater){
+        final RelativeLayout container_header_balance = getToolbarHeader();
+        try{
+            container_header_balance.removeAllViews();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
+        } else {
+            container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
+        }
+
+        final View balances_chart = inflater.inflate(R.layout.fermat_wallet_chart_header,container_header_balance,true);
+        container_header_balance.setVisibility(View.VISIBLE);
+    }
 
     private void setUpDonut(LayoutInflater inflater)  {
         try {

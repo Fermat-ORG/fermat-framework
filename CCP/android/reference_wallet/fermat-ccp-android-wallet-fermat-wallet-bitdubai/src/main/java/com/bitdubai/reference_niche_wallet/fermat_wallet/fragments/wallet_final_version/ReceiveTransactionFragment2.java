@@ -203,7 +203,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.gradient);
         recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransaction!=null) {
