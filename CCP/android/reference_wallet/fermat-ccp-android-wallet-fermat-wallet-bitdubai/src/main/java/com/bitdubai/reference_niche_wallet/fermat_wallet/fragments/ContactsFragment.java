@@ -244,7 +244,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setLayoutParams(actionButtonParams)
-                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+                .setBackgroundDrawable(R.drawable.fw_add_floatting_buttom)
                 .build();
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
@@ -253,7 +253,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
@@ -264,7 +264,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
@@ -337,7 +337,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreateOptionsMenu(menu, inflater);
 
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.fw_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }

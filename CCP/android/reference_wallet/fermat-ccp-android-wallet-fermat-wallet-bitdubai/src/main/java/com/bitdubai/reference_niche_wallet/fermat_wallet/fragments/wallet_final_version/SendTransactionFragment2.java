@@ -691,7 +691,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 

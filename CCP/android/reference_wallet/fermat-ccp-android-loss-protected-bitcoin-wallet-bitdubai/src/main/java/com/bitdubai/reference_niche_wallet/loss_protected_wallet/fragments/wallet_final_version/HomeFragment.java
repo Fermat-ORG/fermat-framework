@@ -294,9 +294,9 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             setUp(inflater);
 
 
-            final InputMethodManager imm;
+      /*      final InputMethodManager imm;
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
             return rootView;
 
