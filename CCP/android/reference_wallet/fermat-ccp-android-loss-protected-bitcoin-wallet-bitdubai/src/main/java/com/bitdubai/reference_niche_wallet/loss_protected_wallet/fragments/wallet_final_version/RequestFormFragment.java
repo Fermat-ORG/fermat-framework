@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
@@ -230,7 +231,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     }
                 } catch (CantGetCommunicationNetworkStatusException e) {
                     e.printStackTrace();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 //                changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
@@ -650,7 +651,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
                 if (!amount.equals("") && amount != null && !money.equals(0)) {
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                         notes = txt_notes.getText().toString();
                     }
@@ -758,5 +759,16 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     void reportUnexpectedError(final Exception e) {
 
         appSession.getErrorManager().reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 }

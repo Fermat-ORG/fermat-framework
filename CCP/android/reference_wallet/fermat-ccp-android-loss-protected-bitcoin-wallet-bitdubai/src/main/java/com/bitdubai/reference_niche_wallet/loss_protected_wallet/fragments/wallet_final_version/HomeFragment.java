@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 
 import android.app.Activity;
+import android.content.Context;
 import  android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -151,6 +152,10 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         try {
 
 
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
+
             lossProtectedWalletmanager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -272,11 +277,9 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
         try {
             super.onActivityCreated(savedInstanceState);
 
-            hideSoftKeyboard(getActivity());
+            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
-            getActivity().getWindow().setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
-            );
 
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -950,7 +953,16 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
     }
 
+    @Override
+    public void onBackPressed() {
+        hideSoftKeyboard(this.getActivity());
+
+    }
+
     public static void hideSoftKeyboard(Activity activity) {
+
+
+
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if(activity.getCurrentFocus() != null)
          inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
