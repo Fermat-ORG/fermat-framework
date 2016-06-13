@@ -102,6 +102,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 .setIconRes(R.drawable.csh_wallet_logo)
                 .setSubTitle(R.string.csh_home_tut_present_dialog_sub_title)
                 .setBody(R.string.csh_home_tut_present_dialog_body)
+                .setIsCheckEnabled(true)
                 .build();
         homeTutorialPresentationDialog.setOnDismissListener(this);
 

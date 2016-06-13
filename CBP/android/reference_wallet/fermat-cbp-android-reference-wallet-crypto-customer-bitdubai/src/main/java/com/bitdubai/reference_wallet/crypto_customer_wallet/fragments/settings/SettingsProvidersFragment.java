@@ -209,6 +209,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCust
                         .setBody(R.string.ccw_wizard_providers_dialog_body)
                         .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
                         .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
+                        .setIsCheckEnabled(true)
                         .build();
             } else {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -218,6 +219,7 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCust
                         .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
                         .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setIsCheckEnabled(true)
                         .build();
             }
 

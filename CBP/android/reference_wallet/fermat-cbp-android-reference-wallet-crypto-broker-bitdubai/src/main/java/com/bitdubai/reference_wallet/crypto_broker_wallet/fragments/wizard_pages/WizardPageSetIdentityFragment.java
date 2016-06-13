@@ -155,6 +155,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                             .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
                             .setBody(R.string.cbw_crypto_broker_wallet_identity_body)
                             .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_footer)
+                            .setIsCheckEnabled(true)
                             .build();
 
                     boolean showDialog;
@@ -214,6 +215,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                         .setSubTitle(R.string.cbw_crypto_broker_wallet_identity_2_subTitle)// + identities)
                         .setBody(R.string.cbw_crypto_broker_wallet_identity_2_body)
                         .setTextFooter(R.string.cbw_crypto_broker_wallet_identity_2_footer)
+                        .setIsCheckEnabled(true)
                         .build();
                 presentationDialog.setOnDismissListener(this);
 

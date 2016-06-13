@@ -223,6 +223,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .setIsCheckEnabled(true)
                             .build();
 
                 } else {
@@ -234,6 +235,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Re
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .setIsCheckEnabled(true)
                             .build();
                 }
 

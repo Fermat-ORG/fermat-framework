@@ -89,7 +89,8 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-               .build();
+                .setIsCheckEnabled(true)
+                .build();
 
         boolean showDialog;
         try{
