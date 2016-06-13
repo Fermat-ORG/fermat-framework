@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
@@ -59,12 +60,12 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
     }
 
     @Override
-    public List<ChatActorCommunityInformation> getResultLocation(Location location) throws CantGetChtActorSearchResult {
+    public List<ChatActorCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetChtActorSearchResult {
         try {
 
             ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
-            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultLocation(location);
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultLocation(deviceLocation);
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
