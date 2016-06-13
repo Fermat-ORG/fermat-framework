@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectExce
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -32,6 +34,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -48,8 +51,10 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptio
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
 
 import java.util.List;
@@ -84,11 +89,13 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
+    public static final String PATH_DIRECTORY = "assetFactory/resources";
+
     public AssetFactoryMiddlewarePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    private org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent assetFactoryMiddlewareMonitorAgent;
+    private AssetFactoryMiddlewareMonitorAgent assetFactoryMiddlewareMonitorAgent;
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
@@ -99,7 +106,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (assetFactoryMiddlewareMonitorAgent == null) {
-            assetFactoryMiddlewareMonitorAgent = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent(
+            assetFactoryMiddlewareMonitorAgent = new AssetFactoryMiddlewareMonitorAgent(
                     assetFactoryMiddlewareManager,
                     assetIssuingManager,
                     this);
@@ -136,11 +143,11 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager, identityAssetIssuerManager);
         try {
-            pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+            pluginDatabaseSystem.openDatabase(pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException ex) {
             try {
                 AssetFactoryMiddlewareDatabaseFactory assetFactoryMiddlewareDatabaseFactory = new AssetFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
-                assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+                assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             } catch (CantCreateDatabaseException e) {
                 reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
@@ -180,7 +187,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
+    public byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException {
         return assetFactoryMiddlewareManager.getAssetFactoryResource(resource);
     }
 

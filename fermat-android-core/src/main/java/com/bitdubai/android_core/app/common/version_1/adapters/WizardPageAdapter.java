@@ -13,13 +13,14 @@ import java.util.List;
  * WizardPageAdapter
  *
  * @author Francisco Vasquez
+ * @author Matias Furszyfer
  * @version 1.0
  */
-public class WizardPageAdapter extends FragmentStatePagerAdapter implements FermatUIAdapter{
+public class WizardPageAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
 
-    private List<Fragment> fragments;
+    private List<F> fragments;
 
-    public WizardPageAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public WizardPageAdapter(FragmentManager fm, List<F> fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -36,7 +37,7 @@ public class WizardPageAdapter extends FragmentStatePagerAdapter implements Ferm
 
 
     @Override
-    public List<AbstractFermatFragmentInterface> getLstCurrentFragments() {
-        return (List<AbstractFermatFragmentInterface>)(List<?>) fragments;
+    public List<F> getLstCurrentFragments() {
+        return fragments;
     }
 }

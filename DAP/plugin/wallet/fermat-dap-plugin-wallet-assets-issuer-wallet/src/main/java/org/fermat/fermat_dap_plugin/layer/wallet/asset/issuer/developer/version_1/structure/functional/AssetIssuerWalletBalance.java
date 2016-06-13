@@ -3,10 +3,12 @@ package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 29/09/15.
  */
-public class AssetIssuerWalletBalance implements AssetIssuerWalletList {
+public class AssetIssuerWalletBalance implements AssetIssuerWalletList, Serializable {
 
     private DigitalAsset digitalAsset;
     private long bookBalance;

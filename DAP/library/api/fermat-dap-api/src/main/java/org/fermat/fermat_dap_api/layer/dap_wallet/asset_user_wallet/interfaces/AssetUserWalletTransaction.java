@@ -9,7 +9,9 @@ import java.io.Serializable;
 /**
  * Created by franklin on 05/10/15.
  */
+
 public interface AssetUserWalletTransaction extends FermatManager, Serializable {
+
     String getAssetPublicKey();
 
     String getActualTransactionHash();

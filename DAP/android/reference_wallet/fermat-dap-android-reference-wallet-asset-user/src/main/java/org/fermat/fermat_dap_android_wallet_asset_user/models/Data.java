@@ -119,7 +119,7 @@ public class Data implements Serializable {
 
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getDigitalAsset().getGenesisAddress());
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset.getDigitalAsset().getGenesisAddress());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
                 assetUserWalletTransactions) {

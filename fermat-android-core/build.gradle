@@ -8,7 +8,7 @@ android {
 
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '21.1.2'
 
 
     packagingOptions {
@@ -74,6 +74,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
+//configurations {
+//    all*.exclude group: 'com.android.support', module: 'support-v4'
+//}
+
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -155,7 +160,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
-    // compile files('src/main/libs/beans.jar')
     //widget
 //    compile project(':bitcoin_exchange_widget')
     compile 'ch.acra:acra:4.6.2'
@@ -164,17 +168,10 @@ dependencies {
             exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
         }
     }
-    //    compile files('src/main/libs/activation.jar')
-    //    compile files('src/main/libs/additionnal.jar')
-    //    compile files('src/main/libs/mail.jar')
-    // compile 'com.sun.mail:android-mail:1.5.5'
-    //compile 'com.sun.mail:android-activation:1.5.5'
     compile project(':horizontalscrollview')
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    //compile 'com.github.Bossyao168:StackOverView:9808f07dca'
-    //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-//    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }

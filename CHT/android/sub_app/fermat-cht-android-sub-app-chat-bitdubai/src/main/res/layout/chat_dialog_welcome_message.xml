@@ -133,9 +133,13 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:buttonTint="@color/black_overlay"
-                    tools:ignore="RtlCompat,UnusedAttribute" />
+                    tools:ignore="RtlCompat,UnusedAttribute"
+                    android:layout_toRightOf="@+id/view2"
+                    android:layout_toEndOf="@+id/view2"
+                    />
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
+                    android:id="@+id/view2"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="32dp"
