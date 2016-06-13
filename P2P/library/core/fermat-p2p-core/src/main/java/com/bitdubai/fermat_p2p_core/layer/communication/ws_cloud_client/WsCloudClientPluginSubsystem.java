@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginRe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.DeveloperBitDubai;
+//import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
@@ -21,7 +21,7 @@ public class WsCloudClientPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            registerDeveloper(new DeveloperBitDubai());
+           /* registerDeveloper(new DeveloperBitDubai()); */
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
