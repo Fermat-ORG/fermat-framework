@@ -207,22 +207,6 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-//        if (selectedNetwork == null) {
-//            try {
-//                if (settings == null) {
-//                    settingsManager = getSettingsManager();
-//                }
-//                settings = settingsManager.loadAndGetSettings(SubAppsPublicKeys.DAP_FACTORY.getCode());
-//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-//            } catch (CantGetSettingsException exception) {
-//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-//                exception.printStackTrace();
-//            } catch (SettingsNotFoundException e) {
-//                //TODO: Only enter while the Active Actor Wallet is not open.
-//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-////                e.printStackTrace();
-//            }
-//        }
         return selectedNetwork;
     }
 

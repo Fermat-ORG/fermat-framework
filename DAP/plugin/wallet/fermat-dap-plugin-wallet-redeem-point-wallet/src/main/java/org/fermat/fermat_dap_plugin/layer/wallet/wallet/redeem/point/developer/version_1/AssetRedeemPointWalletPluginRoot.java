@@ -43,6 +43,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+
 import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database.DeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional.AssetRedeemPointWalletImpl;
 
@@ -250,22 +251,6 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-//        if (selectedNetwork == null) {
-//            try {
-//                if (settings == null) {
-//                    settingsManager = getSettingsManager();
-//                }
-//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_ISSUER_WALLET.getCode());
-//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-//            } catch (CantGetSettingsException exception) {
-//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-//                exception.printStackTrace();
-//            } catch (SettingsNotFoundException e) {
-//                //TODO: Only enter while the Active Actor Wallet is not open.
-//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-////                e.printStackTrace();
-//            }
-//        }
         return selectedNetwork;
     }
 }

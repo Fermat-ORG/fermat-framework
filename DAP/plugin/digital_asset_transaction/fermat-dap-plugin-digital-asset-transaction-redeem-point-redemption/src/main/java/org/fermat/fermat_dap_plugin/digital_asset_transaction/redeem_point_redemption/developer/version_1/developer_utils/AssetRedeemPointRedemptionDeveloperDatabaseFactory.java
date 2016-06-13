@@ -172,15 +172,5 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory {//implements De
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
-
     //INNER CLASSES
 }
