@@ -299,6 +299,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         dialog.configure(R.string.notes, R.string.ccw_insert_note);
         dialog.setTextFreeInputType(true);
+        dialog.setTextCount(200);
         dialog.setEditTextValue(negotiationInfo.getMemo());
         dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override

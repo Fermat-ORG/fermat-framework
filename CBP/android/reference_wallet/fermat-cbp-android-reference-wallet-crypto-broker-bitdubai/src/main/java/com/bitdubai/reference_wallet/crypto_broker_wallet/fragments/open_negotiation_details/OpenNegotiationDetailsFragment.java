@@ -343,6 +343,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
         TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         dialog.configure(R.string.notes, R.string.cbw_insert_note);
+        dialog.setTextCount(200);
         dialog.setTextFreeInputType(true);
         dialog.setEditTextValue(negotiationInfo.getMemo());
         dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
