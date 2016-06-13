@@ -356,9 +356,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
                                                     chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
-                                                    Uri imageuri = getImageUri(getActivity(), chatBitmap);
-                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), chatBitmap)).transform(new CircleTransform()).into(mChatImage);
-                                                    deleteImageUri(imageuri);
+                                                    mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
                                                 } else {
                                                     chatBitmap = null;
                                                 }
@@ -403,10 +401,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Uri imageuri = getImageUri(getActivity(), chatBitmap);
-                                            Picasso.with(getActivity()).load(imageuri).transform(new CircleTransform()).into(mChatImage);
-                                            deleteImageUri(imageuri);
+                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
+                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
                                         } else {
                                             chatBitmap = null;
                                         }
@@ -455,10 +451,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Uri imageuri = getImageUri(getActivity(), chatBitmap);
-                                            Picasso.with(getActivity()).load(imageuri).transform(new CircleTransform()).into(mChatImage);
-                                            deleteImageUri(imageuri);
+                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
+                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
                                         } else {
                                             chatBitmap = null;
                                         }
@@ -656,6 +650,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         try {
             if (!moduleManager.getIdentityChatUser().getAlias().isEmpty()) {
                 Log.i("CHT EXIST IDENTITY", "TRUE");
+               // Log.i("Acuraccy data",""+moduleManager.getIdentityChatUser().getAccuracy());
                 return true;
             }
         } catch (Exception e) {
