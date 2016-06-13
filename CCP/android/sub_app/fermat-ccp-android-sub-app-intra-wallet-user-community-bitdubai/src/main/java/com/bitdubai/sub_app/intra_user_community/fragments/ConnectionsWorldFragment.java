@@ -426,7 +426,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                showEmpty(true, emptyView);
                                showEmpty(false, searchEmptyView);
                             } else {
-                                Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
 
                                 adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);

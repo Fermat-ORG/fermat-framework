@@ -917,13 +917,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         setRunningDailyBalance();
         try {
             if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
-                balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+               // balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(bookBalance, typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.book_balance);
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.BOOK);
                 balanceType = BalanceType.BOOK;
             } else if (balanceType.getCode().equals(BalanceType.BOOK.getCode())) {
-                bookBalance = loadBalance(BalanceType.BOOK);
+               // bookBalance = loadBalance(BalanceType.BOOK);
                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.available_balance);
                 balanceType = BalanceType.AVAILABLE;
@@ -991,7 +991,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null) {
                     try {
-                        long balance = moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
+                        long balance = balanceAvailable;
                         runningDailyBalance.put(currentTime, balance);
                     }catch (Exception e) {
                         Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
@@ -1013,7 +1013,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 BalanceType.AVAILABLE, appSession.getAppPublicKey(),blockchainNetworkType));
                     } else {
                         //update balance
-                        this.updateDailyBalance(runningDailyBalance.size()-1,moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(),blockchainNetworkType));
+                        this.updateDailyBalance(runningDailyBalance.size()-1,balanceAvailable);
                     }
                 }
 
@@ -1095,11 +1095,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 if(code.equals("Btc_arrive"))
                 {
                     //update balance amount
-                    final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(
-                            moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(),
-                                    blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
+
+                    final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(balanceAvailable,ShowMoneyType.BITCOIN.getCode());
 
                     circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
                     circularProgressBar.setProgressValue2(getBalanceAverage());
