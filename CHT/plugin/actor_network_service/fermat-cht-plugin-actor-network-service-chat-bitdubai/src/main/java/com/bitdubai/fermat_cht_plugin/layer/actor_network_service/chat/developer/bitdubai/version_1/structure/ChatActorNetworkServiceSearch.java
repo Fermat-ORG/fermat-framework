@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -184,7 +185,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
     }
 
     @Override
-    public List<ChatExposingData> getResultLocation(Location location) throws CantListChatException {
+    public List<ChatExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListChatException {
 
         try {
 
@@ -193,7 +194,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                     NetworkServiceType.UNDEFINED,           // NetworkServiceType you want to find
                     null,                                      // alias
                     null,                                      // identityPublicKey
-                    location,                                  // location
+                    deviceLocation,                                  // location
                     null,                                      // distance
                     null,                                      // name
                     null,                                      // extraData
