@@ -149,7 +149,6 @@ import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
- * Update by Miguel Payarez on 2016.04.08
  */
 
 public abstract class FermatActivity extends AppCompatActivity implements

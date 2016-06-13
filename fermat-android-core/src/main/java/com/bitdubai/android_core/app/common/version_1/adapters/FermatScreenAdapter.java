@@ -38,13 +38,13 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
     }
 
     public void destroyItem(android.view.ViewGroup container, int position, Object object) {
-        FragmentManager manager = ((Fragment) object).getFragmentManager();
-        if(manager != null) {
-            FragmentTransaction trans = manager.beginTransaction();
-            trans.detach((Fragment) object);
-            trans.remove((Fragment) object);
-            trans.commit();
-        }
+//        FragmentManager manager = ((Fragment) object).getFragmentManager();
+//        if(manager != null) {
+//            FragmentTransaction trans = manager.beginTransaction();
+//            trans.detach((Fragment) object);
+//            trans.remove((Fragment) object);
+//            trans.commit();
+//        }
     }
 
     public void destroyCurrentFragments(){
