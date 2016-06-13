@@ -165,6 +165,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
                         .setImageRight(R.drawable.ic_profile_male)
+                        .setIsCheckEnabled(true)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
