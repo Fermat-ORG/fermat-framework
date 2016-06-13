@@ -65,10 +65,9 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/15/15.
  */
-public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Transaction, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Transaction, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<Transaction> {
 
-    private AssetUserSessionReferenceApp assetUserSession;
     private AssetUserWalletSubAppModuleManager moduleManager;
 
     private View rootView;
@@ -90,8 +89,6 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     private View noTransactionsView;
     private List<Transaction> transactions;
 
@@ -108,15 +105,14 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-        moduleManager = assetUserSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
         moduleManager.clearDeliverList();
 
         appSession.setData("users_to_transfer", null);
 
-        transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        transactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
         appSession.setData("sell_info", null);
     }

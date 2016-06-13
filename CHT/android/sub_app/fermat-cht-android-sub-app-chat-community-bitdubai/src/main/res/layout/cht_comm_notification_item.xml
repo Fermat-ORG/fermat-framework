@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#f9f9f9"
+    android:background="@drawable/cht_comm_notif_list_bg"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="8dp">
+    android:layout_marginBottom="10dp"
+    android:paddingTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,50 +17,70 @@
 
         <RelativeLayout
             android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/cht_comm_bg_circula_friend_list">
+            android:layout_height="42dp">
 
             <ImageView
                 android:id="@+id/imageView_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
-                tools:ignore="ContentDescription" />
+                android:src="@drawable/cht_comm_notification"/>
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
-            android:singleLine="true"
-            android:text="UserName"
-            android:textColor="#212121"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="UserName Smith"
+                android:textColor="#212121"
+                android:textSize="14dp"
+                android:paddingTop="5dp"
+                />
+            <RelativeLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/user_name"
+                android:id="@+id/secondline">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Connection Request"
+                    android:id="@+id/estatus"
+                    android:textColor="#3d3d3d"
+                    android:textSize="19dp" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="wants to connect with you"
-            android:textColor="#3d3d3d"
-            android:textSize="16sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
-
-        <!-- android:drawableRight="@drawable/ic_profile_connect" -->
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="2 minutes"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"
+                    android:id="@+id/date"
+                    android:textColor="#09D260"
+                    android:textSize="12sp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@+id/estatus"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -67,10 +88,5 @@
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="#ffffff" />
-    <TextView
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#DBDBDB" />
 
 </LinearLayout>

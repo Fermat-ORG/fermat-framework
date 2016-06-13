@@ -17,6 +17,7 @@ public class NotificationHolder extends FermatViewHolder {
 
     public ImageView userAvatar;
     public TextView userName;
+    public TextView date;
 
     /**
      * Constructor
@@ -26,6 +27,7 @@ public class NotificationHolder extends FermatViewHolder {
     public NotificationHolder(View itemView) {
         super(itemView);
         userName = (TextView) itemView.findViewById(R.id.username);
+        date = (TextView) itemView.findViewById(R.id.date);
         userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
 
     }

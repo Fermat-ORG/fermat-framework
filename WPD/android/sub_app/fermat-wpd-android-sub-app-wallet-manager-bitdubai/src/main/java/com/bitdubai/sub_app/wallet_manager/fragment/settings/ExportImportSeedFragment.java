@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.fragment.settings;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.desktop.InstalledDesktop;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
@@ -34,6 +33,7 @@ import java.util.List;
  */
 public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractReferenceAppFermatSession<InstalledDesktop,WalletManager,ResourceProviderManager>,ResourceProviderManager> {
 
+    private static final String TAG = "ImportFragment";
     private View root;
 
     //Export
@@ -48,6 +48,9 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
     //todo: este int va a ser cambiando por algun metodo que me devuelva las vaults que estan disponibles por ahora 0=bitcoin, 1=fermat
     private int vaultType;
     private int type;
+
+    //Progress
+    ProgressDialog dialog = null;
 
     public static ExportImportSeedFragment newInstance(int type) {
         ExportImportSeedFragment abstractFermatFragment =  new ExportImportSeedFragment();
@@ -105,33 +108,61 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<AbstractRef
                         ;//input[0-input.length-1]);
 //                        mnemonic.remove(mnemonic.size() - 1);
                         final List<String> temp = mnemonic;
-                        final ProgressDialog dialog = ProgressDialog.show(getActivity(), "",
-                                "Importing. Please wait...", true);
-                        FermatWorker fermatWorker = new FermatWorker() {
+//                        FermatWorker fermatWorker = new FermatWorker() {
+//                            @Override
+//                            protected Object doInBackground() throws Exception {
+//                                try {
+//                                    Log.i(TAG,"Starting import");
+//                                    appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                                return null;
+//                            }
+//                        };
+//                        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+//                            @Override
+//                            public void onPostExecute(Object... result) {
+//                                if(dialog!=null)dialog.dismiss();
+//                                Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void onErrorOccurred(Exception ex) {
+//                                ex.printStackTrace();
+//                            }
+//                        });
+//                        fermatWorker.execute();
+                        Thread thread = new Thread(new Runnable() {
                             @Override
-                            protected Object doInBackground() throws Exception {
+                            public void run() {
+                                Log.i(TAG,"Starting import");
                                 try {
                                     appSession.getModuleManager().importMnemonicCode(temp, date, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) dialog.dismiss();
+                                            Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
                                 } catch (Exception e) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) dialog.dismiss();
+                                            Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
                                     e.printStackTrace();
                                 }
-                                return null;
-                            }
-                        };
-                        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-                            @Override
-                            public void onPostExecute(Object... result) {
-                                dialog.dismiss();
-                                Toast.makeText(getActivity(), "Import completed, the money will be confirmed in a few minutes :)", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onErrorOccurred(Exception ex) {
-                                ex.printStackTrace();
                             }
                         });
-                        dialog.show();
-                        fermatWorker.execute();
+                        thread.start();
+                        dialog = ProgressDialog.show(getActivity(), "",
+                                "Importing. Please wait...", true);
                     }catch (Exception e){
                         e.printStackTrace();
                         editText_mnemonic.animate();
