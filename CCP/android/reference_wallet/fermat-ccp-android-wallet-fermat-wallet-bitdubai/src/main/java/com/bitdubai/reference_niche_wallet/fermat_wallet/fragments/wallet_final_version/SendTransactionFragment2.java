@@ -401,6 +401,22 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         final View balances_chart = inflater.inflate(R.layout.fermat_wallet_chart_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
+
+
+
+
+        /*chart.setDrawGridBackground(false);
+        chart.setDescription("");
+        chart.animateY(2000);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setHighlightPerDragEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+        chart.setOnChartValueSelectedListener(this);
+        chart.fitScreen();*/
     }
 
     private void setUpDonut(LayoutInflater inflater)  {
