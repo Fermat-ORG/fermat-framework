@@ -98,7 +98,7 @@ public class NotificationService extends Service {
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pi = PendingIntent
-                            .getActivity(this, 0, intent, 0);
+                            .getBroadcast(this, 0, intent, 0);
                     if (remoteViews != null) {
                         builder = new Notification.Builder(this).setSmallIcon(R.mipmap.ic_launcher).setTicker("ticker")
                                 .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
@@ -127,7 +127,7 @@ public class NotificationService extends Service {
                 intent.setAction("org.fermat.APP_LAUNCHER");
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
-                        .getActivity(this, 0, intent, 0);
+                        .getBroadcast(this, 0, intent, 0);
                 builder = new Notification.Builder(this)
                         .setTicker("Something arrive")
                         .setSmallIcon(R.mipmap.ic_launcher)

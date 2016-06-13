@@ -14,6 +14,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by frank on 12/9/15.
  */
-public class Data {
+public class Data implements Serializable {
     public static List<DigitalAsset> getAllDigitalAssets(AssetRedeemPointWalletSubAppModule moduleManager) throws Exception {
         List<AssetRedeemPointWalletList> assets = moduleManager.getAssetRedeemPointWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
@@ -50,8 +51,7 @@ public class Data {
 
     public static List<UserRedeemed> getUserRedeemedPointList(String walletPublicKey, DigitalAsset digitalAsset, AssetRedeemPointWalletSubAppModule moduleManager) throws Exception {
 
-        AssetRedeemPointWallet wallet = moduleManager.loadAssetRedeemPointWallet(walletPublicKey);
-        List<RedeemPointStatistic> all = wallet.getStatisticsByAssetPublicKey(digitalAsset.getAssetPublicKey());
+        List<RedeemPointStatistic> all = moduleManager.getStatisticsByAssetPublicKey(walletPublicKey,digitalAsset.getAssetPublicKey());
         List<UserRedeemed> userRedeemeds = new ArrayList<>();
 
         for (RedeemPointStatistic stadistic : all) {
@@ -59,20 +59,12 @@ public class Data {
             userRedeemeds.add(user);
         }
 
-        /*List<UserRedeemed> userRedeemeds = new ArrayList<>();
-        UserRedeemed user= new UserRedeemed("Penny Quintero",new Timestamp(new Date().getTime()));
-        userRedeemeds.add(user);
-        user= new UserRedeemed("Nerio Indriago",new Timestamp(new Date().getTime()));
-        userRedeemeds.add(user);
-        user= new UserRedeemed("Jinmy Bohorquez",new Timestamp(new Date().getTime()));
-        userRedeemeds.add(user);*/
-
         return userRedeemeds;
     }
 
     public static List<Transaction> getTransactions(AssetRedeemPointWalletSubAppModule moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetRedeemPointWalletTransaction> assetRedeemPointWalletTransactions = moduleManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
+        List<AssetRedeemPointWalletTransaction> assetRedeemPointWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetRedeemPointWalletTransaction assetRedeemPointWalletTransaction :
                 assetRedeemPointWalletTransactions) {

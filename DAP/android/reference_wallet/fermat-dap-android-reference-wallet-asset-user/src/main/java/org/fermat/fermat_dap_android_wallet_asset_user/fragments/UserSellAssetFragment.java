@@ -76,7 +76,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
+public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
 
@@ -84,10 +84,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
 
     private Activity activity;
 
-
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSessionReferenceApp assetUserSession;
-    //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
 
@@ -96,7 +93,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-    //    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -125,13 +121,12 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
 
         try {
 
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             activity = getActivity();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -393,7 +388,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wizard_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageButton
+                android:id="@+id/wizardCryptoStep1Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_multimedia_on"
+                android:background="@null"
+                android:layout_marginLeft="7dp"/>
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multimedia"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardCryptoStep1Image"/>
+
+            <View
+                android:id="@+id/wizardTopLine1"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_on"
+                android:layout_toRightOf="@+id/wizardCryptoStep1Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardCryptoStep2Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_properties_on"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine1"/>
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset\nProperties"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardCryptoStep1Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text1"
+                android:layout_marginLeft="38dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine2"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_on"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/wizardCryptoStep2Image"/>
+
+            <ImageButton
+                android:id="@+id/wizardCryptoStep3Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_crypto_on"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine2"/>
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crypto\ncurrency"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardCryptoStep2Image"
+                android:layout_toRightOf="@+id/text2"
+                android:gravity="center"
+                android:layout_marginLeft="45dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine3"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_toRightOf="@+id/wizardCryptoStep3Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardCryptoStep4Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_verify_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify\nasset"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardCryptoStep4Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text3"
+                android:layout_marginLeft="56dp"/>
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wizardVerifyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/wizardCryptoFormLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp">
+
+            <TextView
+                android:id="@+id/wizardCryptoValueLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset Value"
+                android:textSize="14sp"
+                android:textColor="@color/wizard_label_1"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/wizardCryptoValueEditText"
+                android:layout_width="230dp"
+                android:layout_height="30dp"
+                android:maxLength="16"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:layout_below="@+id/wizardCryptoValueLabel"
+                android:background="@color/wizard_properties_edit_background"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/wizard_properties_edit_text"
+                android:layout_marginTop="5dp"/>
+
+            <Spinner
+                android:id="@+id/wizardCryptoValueSpinner"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@+id/wizardCryptoValueEditText"
+                android:layout_alignTop="@+id/wizardCryptoValueEditText"
+                android:layout_marginLeft="5dp"
+                android:background="@color/wizard_crypto_value_spinner"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wizardBitcoinNoteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Note: Values are displayed in Bitcoins"
+                android:textSize="12sp"
+                android:textColor="@color/wizard_label_2"
+                android:layout_alignParentRight="true"
+
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/wizardCryptoFeeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fee"
+                android:textSize="14sp"
+                android:textColor="@color/wizard_label_1"
+                android:layout_below="@+id/wizardCryptoValueEditText"
+                android:layout_marginTop="15dp"/>
+
+            <Spinner
+                android:id="@+id/wizardCryptoFeeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/wizardCryptoFeeLabel"
+                android:background="@color/wizard_properties_edit_background"/>
+
+            <TextView
+                android:id="@+id/wizardCryptoQuantityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity"
+                android:textSize="14sp"
+                android:textColor="@color/wizard_label_1"
+                android:layout_below="@+id/wizardCryptoFeeSpinner"
+                android:layout_marginTop="15dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/wizardCryptoQuantityEditText"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:ems="10"
+                android:maxLength="9"
+                android:inputType="number"
+                android:layout_below="@+id/wizardCryptoQuantityLabel"
+                android:layout_marginTop="5dp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@color/wizard_properties_edit_text"
+                android:background="@color/wizard_properties_edit_background"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="90dp">
+
+            <TextView
+                android:id="@+id/wizardCryptoTotalLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textSize="12sp"
+                android:textColor="@color/wizard_label_1"
+                android:layout_alignParentRight="true"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wizardCryptoTotalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.000000 BTC"
+                android:textSize="12sp"
+                android:textColor="@color/wizard_label_2"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/wizardCryptoTotalLabel"/>
+
+            <View
+                android:id="@+id/wizardCryptoLine2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_below="@+id/wizardCryptoTotalValue"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/wizard_crypto_line" />
+
+            <TextView
+                android:id="@+id/wizardCryptoBalanceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bitcoin Wallet Balance"
+                android:textSize="12sp"
+                android:textColor="@color/wizard_label_1"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/wizardCryptoLine2"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wizardCryptoBalanceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.000000 BTC"
+                android:textSize="12sp"
+                android:textColor="@color/wizard_label_2"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/wizardCryptoBalanceLabel"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/wizardCryptoButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardCryptoBackButton"
+                android:layout_width="157dp"
+                android:layout_height="35dp"
+                android:text="Back"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_wiz_button_1"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardCryptoNextButton"
+                android:layout_width="157dp"
+                android:layout_height="35dp"
+                android:text="Next"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_wiz_button_2"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+        </LinearLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/wizardCryptoSaveButton"
+            android:layout_width="314dp"
+            android:layout_height="35dp"
+            android:visibility="invisible"
+            android:text="Save"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/wizard_multimedia_wiz_button_1"
+            android:textColor="@color/wizard_multimedia_button_text"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

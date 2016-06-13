@@ -277,7 +277,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1, 0, 0),
                 Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
-        installedSubApp.setIconResource(R.drawable.r_point_community);
+        installedSubApp.setIconResource(R.drawable.reddem_point_community);
         installedSubApp.setBanner(R.drawable.redeem_community);
         installedApps.add(installedSubApp);
 
