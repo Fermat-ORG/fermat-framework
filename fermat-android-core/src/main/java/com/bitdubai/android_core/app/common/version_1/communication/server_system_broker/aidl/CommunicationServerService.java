@@ -81,7 +81,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     public static final String SERVER_NAME = "server_fermat";
 
 
-    private static String TAG = "CommunicationServerService";
+    private static String TAG = "FermatPlatformService";
     private static int BLOCK_SYZE = 1024 * 250;
 
     public int processingQueue = 0;
@@ -523,12 +523,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
 
-        GetTask getTask = new GetTask(this, this);
-        getTask.setCallBack(this);
-        getTask.execute();
+            GetTask getTask = new GetTask(this, this);
+            getTask.setCallBack(this);
+            getTask.execute();
 
-        executorService = Executors.newFixedThreadPool(10);
+            executorService = Executors.newFixedThreadPool(5);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         clients = new HashMap<>();
         socketsClients = new HashMap<>();
 

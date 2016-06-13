@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white">
+
+    <RelativeLayout
+        android:id="@+id/deliverUserHeaderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:visibility="gone">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/letterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:textColor="@color/dap_issuer_wallet_v3_deliver_letter_text"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/dap_issuer_wallet_v3_deliver_line"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/deliverUserHeaderLayout">
+
+        <RelativeLayout
+            android:id="@+id/userImageLayout"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_circular_user_list"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp">
+
+            <ImageView
+                android:id="@+id/userImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_circular_check"
+                android:layout_centerInParent="true"
+                android:id="@+id/selectedUser"
+                android:layout_gravity="center"
+                android:visibility="visible">
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/userNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frank Contreras"
+            android:textColor="@color/dap_issuer_wallet_v3_deliver_text"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif"
+            android:layout_toRightOf="@+id/userImageLayout"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
