@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
@@ -24,7 +25,6 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -38,16 +38,13 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     private static final String TAG = "CustomerNavigationView";
 
     private CryptoCustomerIdentity actorIdentity;
-    private CryptoCustomerWalletSessionReferenceApp session;
-    private ErrorManager errorManager;
     private CryptoCustomerWalletModuleManager moduleManager;
     private WeakReference<Context> activity;
 
-    public CustomerNavigationViewPainter(Context activity, CryptoCustomerWalletSessionReferenceApp session) {
-        this.activity = new WeakReference<Context>(activity);
-        this.session = session;
+    public CustomerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session) {
+        this.activity = new WeakReference<>(activity);
 
-        errorManager = session.getErrorManager();
+        ErrorManager errorManager = session.getErrorManager();
 
         try {
             moduleManager = session.getModuleManager();

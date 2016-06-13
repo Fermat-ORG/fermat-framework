@@ -8,13 +8,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_CLASS_TEXT;
@@ -25,7 +26,7 @@ import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 /**
  * Created by nelson on 14/01/16.
  */
-public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>
+public class TextValueDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements View.OnClickListener {
 
     private FermatEditText editTextView;
@@ -53,7 +54,7 @@ public class TextValueDialog extends FermatDialog<CryptoCustomerWalletSessionRef
     }
 
 
-    public TextValueDialog(Activity activity, CryptoCustomerWalletSessionReferenceApp fermatSession, ResourceProviderManager resources) {
+    public TextValueDialog(Activity activity, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
 
         hintStringResource = R.string.hint;
