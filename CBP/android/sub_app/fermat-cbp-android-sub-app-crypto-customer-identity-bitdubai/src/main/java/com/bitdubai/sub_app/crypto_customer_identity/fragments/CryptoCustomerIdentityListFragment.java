@@ -24,30 +24,31 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CryptoCustomerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
+import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoCustomerIdentityListFragment extends FermatListFragment<CryptoCustomerIdentityInformation,ReferenceAppFermatSession> implements FermatListItemListeners<CryptoCustomerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class CryptoCustomerIdentityListFragment
+        extends FermatListFragment<CryptoCustomerIdentityInformation, ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>>
+        implements FermatListItemListeners<CryptoCustomerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private static final String TAG = "CustomerIdentityList";
     private CryptoCustomerIdentityModuleManager moduleManager;
@@ -75,7 +76,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            moduleManager = ((CryptoCustomerIdentitySubAppSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             onRefresh();
         } catch (Exception ex) {
@@ -235,7 +236,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     @Override
     public void onItemClickListener(CryptoCustomerIdentityInformation data, int position) {
-        appSession.setData(IDENTITY_INFO, data);
+        appSession.setData(FragmentsCommons.IDENTITY_INFO, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode(), appSession.getAppPublicKey());
     }
 
