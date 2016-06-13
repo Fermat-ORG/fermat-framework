@@ -134,7 +134,6 @@ public class ConnectionsWorldFragment
             //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -168,7 +167,6 @@ public class ConnectionsWorldFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -253,7 +251,6 @@ public class ConnectionsWorldFragment
         return rootView;
     }
 
-
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
@@ -306,7 +303,6 @@ public class ConnectionsWorldFragment
             worker.execute();
         }
     }
-
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),

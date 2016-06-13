@@ -30,7 +30,8 @@ import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterCon
  * @author Jose Cardozo josejcb (josejcb89@gmail.com)  on 08/01/16.
  * @version 1.0
  */
-public class ChatFermatAppConnection extends AppConnections<ReferenceAppFermatSession<ChatManager>> {
+public class ChatFermatAppConnection
+        extends AppConnections<ReferenceAppFermatSession<ChatManager>> {
     private ErrorManager errorManager;
 
     public ChatFermatAppConnection(Context activity) {
