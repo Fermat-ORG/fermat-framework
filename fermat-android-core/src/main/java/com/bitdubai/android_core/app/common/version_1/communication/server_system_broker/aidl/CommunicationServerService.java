@@ -81,7 +81,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     public static final String SERVER_NAME = "server_fermat";
 
 
-    private static String TAG = "CommunicationServerService";
+    private static String TAG = "FermatPlatformService";
     private static int BLOCK_SYZE = 1024 * 250;
 
     public int processingQueue = 0;

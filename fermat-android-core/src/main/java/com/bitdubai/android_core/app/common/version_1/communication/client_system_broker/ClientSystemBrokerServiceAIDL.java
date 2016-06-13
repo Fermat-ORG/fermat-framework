@@ -206,20 +206,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference){
-        try {
-            return iServerBrokerService.invoqueModuleMethod(
-                    serverIdentificationKey,
-                    dataId,
-                    pluginVersionReference.getPlatform().getCode(),
-                    pluginVersionReference.getLayers().getCode(),
-                    pluginVersionReference.getPlugins().getCode(),
-                    pluginVersionReference.getDeveloper().getCode(),
-                    pluginVersionReference.getVersion().toString(),
-                    method.getName(),
-                    parameters);
-        } catch (TransactionTooLargeException t) {
+        if(iServerBrokerService==null){
+            Log.e(TAG,"FermatPlatformService is not connected");
+        }else {
             try {
-                return iServerBrokerService.invoqueModuleLargeDataMethod(
+                return iServerBrokerService.invoqueModuleMethod(
                         serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
@@ -229,18 +220,31 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
+            } catch (TransactionTooLargeException t) {
+                try {
+                    return iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (RuntimeException e) {
-                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
