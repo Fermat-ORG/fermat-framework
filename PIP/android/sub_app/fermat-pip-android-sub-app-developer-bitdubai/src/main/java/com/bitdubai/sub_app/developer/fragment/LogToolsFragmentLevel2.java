@@ -24,25 +24,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 import com.bitdubai.sub_app.developer.common.StringUtils;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,27 +57,23 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubAppSession, ResourceProviderManager> {
+public class LogToolsFragmentLevel2 extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
-    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getKey();
-
+//    private static final String CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS = Fragments.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getKey();
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-
     private static final String ARG_POSITION = "position";
     View rootView;
-
     //    private LogTool logTool;
     private ErrorManager errorManager;
     ToolManager toolManager;
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
-
     private int loggerLevel = 2;
 
     /**
      * SubApp Session
      */
-//    private DeveloperSubAppSession developerSubAppSession;
+//    private DeveloperSubAppSessionReferenceApp developerSubAppSession;
     public static LogToolsFragmentLevel2 newInstance() {
         return new LogToolsFragmentLevel2();
     }
@@ -87,11 +82,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-//        if(super.appSession !=null){
-//            developerSubAppSession = (DeveloperSubAppSession)super.appSession;
-
         lstLoggers = (ArrayListLoggers) appSession.getData("list");
-//        }
         errorManager = appSession.getErrorManager();
         try {
             toolManager = appSession.getModuleManager();
@@ -108,7 +99,6 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
         pluginClasses = new HashMap<String, List<ClassHierarchyLevels>>();
     }
 
-
     private void changeLogLevel(PluginVersionReference pluginKey, LogLevel logLevel, String resource) {
         try {
 
@@ -122,9 +112,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
     }
 
     @Override
@@ -261,8 +249,8 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
                         appSession.setData("list", lst);
                         appSession.setData("level", level);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), R.id.logContainer, null);
-
+//                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), R.id.logContainer, null);
+                        changeActivity(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS, appSession.getAppPublicKey());
 
                     }
                 });
@@ -276,7 +264,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 boolean result = false;
-                                int itemId = menuItem.getItemId();
+                                int itemId = menuItem.getId();
                                 if (itemId == R.id.menu_no_logging) {
                                     //TODO: HAcer el cambio acá para que haga el changelevel
                                     changeLogLevel(item.pluginKey, LogLevel.NOT_LOGGING, item.classHierarchyLevels.getFullPath());
@@ -598,7 +586,7 @@ public class LogToolsFragmentLevel2 extends AbstractFermatFragment<DeveloperSubA
         }
 
     }
-//    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
+//    public void setDeveloperSubAppSession(DeveloperSubAppSessionReferenceApp developerSubAppSession) {
 //        this.developerSubAppSession = developerSubAppSession;
 //    }
 }

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -29,7 +31,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.holders.AccountListViewHolder;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.navigationDrawer.BankMoneyWalletNavigationViewPainter;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
@@ -42,7 +44,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by guillermo on 04/12/15.
  */
-public class AccountsListFragment extends FermatWalletListFragment<BankAccountNumber> implements FermatListItemListeners<BankAccountNumber>{
+public class AccountsListFragment extends FermatWalletListFragment<BankAccountNumber,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<BankAccountNumber>{
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -65,7 +67,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         setHasOptionsMenu(true);
         accountsList = new ArrayList<>();
         try {
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -84,7 +86,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankName());
-        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                 .setBannerRes(R.drawable.bw_banner_bank).setIconRes(R.drawable.bw_icon)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)

@@ -217,19 +217,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      * @param addressTo the address to validate
      * @return true if valid, false if it is not.
      */
-    public boolean isValidAddress(CryptoAddress addressTo) {
+    public boolean isValidAddress(CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) {
         /**
          * I extract the network Parameter from the address
          */
-        NetworkParameters networkParameters;
-        try {
-            networkParameters = getNetworkParametersFromAddress(addressTo.getAddress());
-        } catch (AddressFormatException e) {
-            /**
-             * If there is an error, I will use the default parameters.
-             */
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-        }
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * If the address is correct, then no exception raised.

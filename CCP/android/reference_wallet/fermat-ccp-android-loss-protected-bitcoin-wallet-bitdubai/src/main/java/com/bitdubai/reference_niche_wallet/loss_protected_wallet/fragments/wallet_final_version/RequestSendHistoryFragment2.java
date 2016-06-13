@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -23,13 +24,15 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +43,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 27/04/16.
  */
-public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>, View.OnClickListener, onRefreshList {
+public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedPaymentRequest>, View.OnClickListener, onRefreshList {
 
     /**
      * Session
      */
-    LossProtectedWalletSession referenceWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession;
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
@@ -84,7 +87,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (LossProtectedWalletSession) appSession;
+        referenceWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
@@ -92,7 +95,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-//                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+//                final FermatDrawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -266,21 +269,21 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     }
 
 
-    public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
+    public void setReferenceWalletSession(ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
 
     @Override
     public void onClick(View v) {
         try {
-            LossProtectedPaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
+            LossProtectedPaymentRequest paymentRequest = (LossProtectedPaymentRequest) referenceWalletSession.getData(SessionConstant.LAST_REQUEST_CONTACT);
             int id = v.getId();
             if (id == R.id.btn_refuse_request) {
 
                 lossProtectedWalletManager.refuseRequest(paymentRequest.getRequestId());
                 Toast.makeText(getActivity(), "Denegado", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.btn_accept_request) {
-                lossProtectedWalletManager.approveRequest(paymentRequest.getRequestId(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                lossProtectedWalletManager.approveRequest(paymentRequest.getRequestId(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
                 Toast.makeText(getActivity(), "Aceptado", Toast.LENGTH_SHORT).show();
             }
 

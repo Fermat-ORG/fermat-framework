@@ -15,7 +15,6 @@
 }*/
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.android.library'
 //apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
@@ -27,7 +26,7 @@ android {
 
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '21.1.2'
 
 
     defaultConfig {
@@ -94,20 +93,20 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-def packageName = 'org.fermat.ccp.android.loss.protected.wallet'
-def libraryVersion = '1.0.0'
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId packageName
-            version libraryVersion
-            artifactId project.getName()
-
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-        }
-    }
-}
+//def packageName = 'org.fermat.ccp.android.loss.protected.wallet'
+//def libraryVersion = '1.0.0'
+//
+//publishing {
+//    publications {
+//        aar(MavenPublication) {
+//            groupId packageName
+//            version libraryVersion
+//            artifactId project.getName()
+//
+//            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+//        }
+//    }
+//}
 
 /*artifactory {
     contextUrl = 'http://52.34.0.33:8081/artifactory'

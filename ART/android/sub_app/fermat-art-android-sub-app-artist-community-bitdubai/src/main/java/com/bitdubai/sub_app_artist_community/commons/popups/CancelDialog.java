@@ -16,14 +16,14 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.artist_community.R;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 
 /**
  * Created by Gabriel Araujo 29/04/2016.
  *
  */
-public class CancelDialog extends FermatDialog<ArtistSubAppSession, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -44,7 +44,7 @@ public class CancelDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
 
 
     public CancelDialog(Activity a,
-                        ArtistSubAppSession artistSubAppSession,
+                        ArtistSubAppSessionReferenceApp artistSubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         ArtistCommunityInformation artistCommunityInformation,
                         ArtistCommunitySelectableIdentity identity) {

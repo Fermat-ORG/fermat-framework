@@ -3,25 +3,21 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.common.navigation_draw
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.lang.ref.WeakReference;
-
-import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.DAP_ASSET_ISSUER_WALLET;
 
 /**
  * Created by frank on 12/9/15.
@@ -31,35 +27,23 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "IssuerNavigationView";
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation identityAssetIssuer;
-    AssetIssuerWalletSupAppModuleManager moduleManager;
-    AssetIssuerSession assetIssuerSession;
-    private ErrorManager errorManager;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
+    ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession;
 
-    public IssuerWalletNavigationViewPainter(Context activity, AssetIssuerSession assetIssuerSession) {
+    public IssuerWalletNavigationViewPainter(Context activity,
+                                             ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
+                                             FermatApplicationCaller applicationsHelper) {
+
         this.activity = new WeakReference<>(activity);
         this.assetIssuerSession = assetIssuerSession;
-
-        errorManager = assetIssuerSession.getErrorManager();
-
-        try {
-            moduleManager = assetIssuerSession.getModuleManager();
-            identityAssetIssuer = this.moduleManager.getActiveAssetIssuerIdentity();//(assetIssuerSession.getAppPublicKey());
-
-        } catch (FermatException ex) {
-            if (errorManager == null)
-                Log.e(TAG, ex.getMessage(), ex);
-            else
-                errorManager.reportUnexpectedWalletException(DAP_ASSET_ISSUER_WALLET,
-                        DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        }
+        this.applicationsHelper = new WeakReference<>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetIssuer);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), assetIssuerSession, applicationsHelper.get());
         } catch (CantGetIdentityAssetIssuerException e) {
             e.printStackTrace();
         }
@@ -79,7 +63,12 @@ public class IssuerWalletNavigationViewPainter implements NavigationViewPainter 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
 //        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_navigation_drawer_issuer_wallet_bottom, base, true);
-        return null;
+
+        //DAP V2
+        //return null;
+
+        //DAP V3
+        return (RelativeLayout) layoutInflater.inflate(R.layout.dap_v3_navigation_drawer_issuer_wallet_bottom, base, true);
     }
 
 //    @Override

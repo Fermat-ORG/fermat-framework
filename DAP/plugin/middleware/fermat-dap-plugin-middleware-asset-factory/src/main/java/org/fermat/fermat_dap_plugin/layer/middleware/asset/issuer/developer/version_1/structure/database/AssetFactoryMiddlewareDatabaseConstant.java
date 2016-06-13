@@ -31,6 +31,8 @@ public class AssetFactoryMiddlewareDatabaseConstant {
     public static final String ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN = "last_update_time";
     public static final String ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN = "asset_behavior";
     public static final String ASSET_FACTORY_IS_REDEEMABLE = "is_redeemable";
+    public static final String ASSET_FACTORY_IS_TRANSFERABLE = "is_transfer";
+    public static final String ASSET_FACTORY_IS_EXCHANGEABLE = "is_exchangeable";
     public static final String ASSET_FACTORY_EXPIRATION_DATE = "expiration_date";
     public static final String ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY = "wallet_public_key";
     public static final String ASSET_FACTORY_NETWORK_TYPE = "networkType";

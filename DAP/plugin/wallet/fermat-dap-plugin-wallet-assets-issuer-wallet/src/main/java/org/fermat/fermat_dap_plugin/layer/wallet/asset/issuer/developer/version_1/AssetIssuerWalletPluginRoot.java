@@ -200,6 +200,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
 
     @Override
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
+
         try {
             AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(
                     this,

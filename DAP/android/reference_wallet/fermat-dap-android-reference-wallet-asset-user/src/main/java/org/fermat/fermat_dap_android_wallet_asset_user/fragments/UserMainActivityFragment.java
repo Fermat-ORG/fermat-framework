@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -36,13 +37,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -63,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset>
+public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
 
@@ -77,9 +78,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
-    AssetUserSession assetUserSession;
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -99,8 +97,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-            assetUserSession = ((AssetUserSession) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -116,7 +113,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         super.initViews(layout);
 
         //Initialize settings
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
             settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -132,7 +128,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
 
             settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
             for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
                 } else {
@@ -171,7 +167,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         onRefresh();
@@ -189,7 +185,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setSubTitle(R.string.dap_user_wallet_welcome_subTitle)
                     .setBody(R.string.dap_user_wallet_welcome_body)
                     .setTextFooter(R.string.dap_user_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetUserIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 

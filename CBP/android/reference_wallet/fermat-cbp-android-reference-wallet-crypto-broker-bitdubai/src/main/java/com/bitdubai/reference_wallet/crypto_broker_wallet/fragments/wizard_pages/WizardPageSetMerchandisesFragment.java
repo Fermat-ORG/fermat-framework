@@ -36,7 +36,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
 import org.bitcoinj.utils.Fiat;
@@ -51,7 +51,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CBPInstalledWallet>, DialogInterface.OnDismissListener {
 
     // Constants
@@ -96,7 +96,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             try {
                 walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
             } catch (Exception ex) {
-                Object data = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+                Object data = appSession.getData(CryptoBrokerWalletSessionReferenceApp.CONFIGURED_DATA);
                 walletConfigured = (data != null);
             }
 

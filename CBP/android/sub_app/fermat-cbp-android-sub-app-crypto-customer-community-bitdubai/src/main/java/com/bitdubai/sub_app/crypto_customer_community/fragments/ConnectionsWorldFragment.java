@@ -35,7 +35,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements
+public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     //Constants

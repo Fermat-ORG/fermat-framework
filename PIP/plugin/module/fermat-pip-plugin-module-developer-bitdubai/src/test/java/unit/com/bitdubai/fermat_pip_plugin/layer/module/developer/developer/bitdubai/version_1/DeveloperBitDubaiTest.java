@@ -13,13 +13,13 @@ import org.junit.Test;
 public class DeveloperBitDubaiTest {
 
     @Test
-    public void constructorTest (){
+    public void constructorTest() {
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai.getPlugin());
     }
 
     @Test
-    public void getterTest(){
+    public void getterTest() {
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
         Assert.assertEquals(developerBitDubai.getAddress(), "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh");
 

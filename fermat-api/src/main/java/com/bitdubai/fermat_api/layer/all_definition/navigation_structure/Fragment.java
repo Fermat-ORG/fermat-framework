@@ -5,13 +5,22 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import java.io.Serializable;
 
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by Matias Furszyfer on 2015.07.17..
  */
 public class Fragment implements FermatFragment,Serializable {
 
+    /**
+     * Fragment type for FragmentFactory
+     */
     String type;
+    /**
+     * Fragment back if the user press the back button
+     */
     String fragmentBack;
-    Object[] context;
+    /**
+     * Owner field
+     */
+    private Owner owner;
 
     public void setBack(String fragmentBack)
     {
@@ -34,15 +43,11 @@ public class Fragment implements FermatFragment,Serializable {
         return this.fragmentBack;
     }
 
-
-
-    public void setContext(Object[] context){
-        this.context = context;
+    public Owner getOwner() {
+        return owner;
     }
 
-
-    public Object[] getContext(){
-        return this.context;
-
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

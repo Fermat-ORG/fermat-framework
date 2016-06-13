@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Matias Furszyfer on 2015.08.10..
  */
-public class CantSaveSubAppSettings extends FermatException{
+public class CantSaveSubAppSettings extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -27,11 +28,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerConnectionsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -48,7 +49,8 @@ import static android.widget.Toast.makeText;
  * Penelope Quintero
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
+public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";
     private static final int MAX = 20;
@@ -61,12 +63,10 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     private boolean isRefreshing = false;
     private View rootView;
     private IssuerConnectionsListAdapter adapter;
-    private AssetIssuerCommunitySubAppSession actorIssuerSubAppSession;
     private LinearLayout emptyView;
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
     private List<ActorIssuer> lstActorIssuers;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerCommunityConnectionsListFragment newInstance() {
         return new IssuerCommunityConnectionsListFragment();
@@ -76,10 +76,9 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-        manager = actorIssuerSubAppSession.getModuleManager();
+
+        manager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         lstActorIssuers = new ArrayList<>();
     }
 
@@ -111,7 +110,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActorAssetIssuerException {
@@ -229,7 +228,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
         try {
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(actorIssuerSubAppSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

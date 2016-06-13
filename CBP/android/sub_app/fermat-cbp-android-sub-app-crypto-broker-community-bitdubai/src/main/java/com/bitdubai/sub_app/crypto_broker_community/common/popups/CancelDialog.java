@@ -18,14 +18,14 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Alejandro Bicelis on 15/02/2016
  *
  */
-public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -46,7 +46,7 @@ public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
 
 
     public CancelDialog(Activity a,
-                        CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
+                        CryptoBrokerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
                         CryptoBrokerCommunitySelectableIdentity identity) {

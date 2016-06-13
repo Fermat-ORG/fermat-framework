@@ -8,12 +8,12 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.fragments.CreateRedeemPointIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.fragments.IdentityListFragment;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class RedeemPointIdentityFragmentFactory extends FermatFragmentFactory<RedeemPointIdentitySubAppSession, SubAppResourcesProviderManager, RedeemPointIdentityFragmentEnumType> {
+public class RedeemPointIdentityFragmentFactory extends FermatFragmentFactory<RedeemPointIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, RedeemPointIdentityFragmentEnumType> {
 
 
     @Override

@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_pip_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_pip_core.layer.agent.AgentLayer;
 import com.bitdubai.fermat_pip_core.layer.engine.EngineLayer;
+import com.bitdubai.fermat_pip_core.layer.external_api.ExtenalApiLayer;
 import com.bitdubai.fermat_pip_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_pip_core.layer.platform_service.PlatformServiceLayer;
 import com.bitdubai.fermat_pip_core.layer.sub_app_module.SubAppModuleLayer;
@@ -30,6 +31,7 @@ public final class PIPPlatform extends AbstractPlatform {
         try {
             registerLayer(new AgentLayer());
             registerLayer(new EngineLayer());
+            registerLayer(new ExtenalApiLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new PlatformServiceLayer());
             registerLayer(new SubAppModuleLayer());

@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -45,6 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -54,7 +56,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdap
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.SellInfo;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
@@ -74,7 +76,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends FermatWalletListFragment<User>
+public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
 
@@ -82,10 +84,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
     private Activity activity;
 
-
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
-    //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
 
@@ -94,7 +93,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-    //    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -123,13 +121,12 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            assetUserSession = ((AssetUserSession) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             activity = getActivity();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

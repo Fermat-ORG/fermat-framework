@@ -4,10 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 05/10/15.
  */
-public interface AssetUserWalletTransaction extends FermatManager {
+
+public interface AssetUserWalletTransaction extends FermatManager, Serializable {
+
     String getAssetPublicKey();
 
     String getActualTransactionHash();

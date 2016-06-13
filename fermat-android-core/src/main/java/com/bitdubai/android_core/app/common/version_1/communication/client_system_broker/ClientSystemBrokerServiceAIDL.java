@@ -21,6 +21,7 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -37,9 +38,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -49,11 +50,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private static final String TAG = "ClientBrokerServiceAIDL";
 //    private static final String KEY = "s";
-    private static final int THREADS_NUM = 3;
+    private static final int THREADS_NUM = 5;
 
     private final IBinder localBinder = new LocalBinder();
 
-    private ExecutorService poolExecutor;
+    private ThreadPoolExecutor poolExecutor;
     private ProxyFactory proxyFactory;
     private BufferChannelAIDL bufferChannelAIDL;
 
@@ -115,11 +116,17 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 };
                 Future<FermatModuleObjectWrapper>  objectFuture =poolExecutor.submit(callable);
                 try {
+                    Log.i(TAG,"Timeout method");
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
+                    Log.i(TAG,"Timeout method return");
                 }catch (TimeoutException e){
+                    //Method canceled and return an exception
                     objectFuture.cancel(true);
+                    poolExecutor.purge();
                     Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
-                    objectArrived = null;
+                    return new MethodTimeOutException();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }else{
                 /**
@@ -262,7 +269,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     public void onCreate() {
         super.onCreate();
         proxyFactory = new ProxyFactory();
-        poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
+        poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
         bufferChannelAIDL = new BufferChannelAIDL();
 
         Intent serviceIntent = new Intent(this, CommunicationServerService.class);
@@ -536,6 +543,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         //Log.i(TAG,"creating proxy");
         ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
+    }
+
+    @Override
+    public ModuleManager[] getModuleManager(PluginVersionReference[] pluginVersionReference) throws CantCreateProxyException {
+        ModuleManager[] moduleManagers = new ModuleManager[pluginVersionReference.length];
+        for (int i = 0; i < pluginVersionReference.length; i++) {
+            ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,pluginVersionReference[i]);
+            moduleManagers[i] = proxyFactory.createModuleManagerProxy(pluginVersionReference[i],mInvocationHandler);
+        }
+        return moduleManagers;
     }
 
 }

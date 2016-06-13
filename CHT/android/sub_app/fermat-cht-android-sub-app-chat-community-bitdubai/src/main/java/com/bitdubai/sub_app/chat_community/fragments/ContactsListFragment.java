@@ -2,13 +2,17 @@ package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -19,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -42,9 +47,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +64,7 @@ import java.util.List;
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ContactsListFragment
-        extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager>
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
@@ -65,7 +72,7 @@ public class ContactsListFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ChatUserSubAppSession chatUserSubAppSession;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ContactsListFragment";
@@ -77,7 +84,7 @@ public class ContactsListFragment
     private View rootView;
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
-    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerCommunityInformationArrayList;
+    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
     ImageView noData;
@@ -95,7 +102,7 @@ public class ContactsListFragment
         try {
             setHasOptionsMenu(true);
             //Get managers
-            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
            // settingsManager = moduleManager.getSettingsManager();
@@ -140,7 +147,7 @@ public class ContactsListFragment
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(),2, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
@@ -267,8 +274,8 @@ public class ContactsListFragment
 //                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
 //                                        contacticon.add(bmd.getBitmap());
 //                                        contactStatus.add(conta.getStatus());
-                                //}
-                                //}
+//                                }
+//                                }
                             }
                         }
                     }
@@ -297,7 +304,7 @@ public class ContactsListFragment
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show /*&&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)*/) {
+                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
@@ -308,7 +315,7 @@ public class ContactsListFragment
             rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {
+        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
@@ -326,7 +333,24 @@ public class ContactsListFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         appSession.setData(CHAT_USER_SELECTED, data);
-        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+//        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        if (Build.VERSION.SDK_INT < 23) {
+            ContactDialog contact = new ContactDialog(getActivity(), appSession, null);
+            contact.setProfileName(data.getAlias());
+            contact.setCountryText("Country" + " - " + "place"); //TODO completar los campos de "country" y "place" con la implementación de la geolocaclización.
+            ByteArrayInputStream bytes = new ByteArrayInputStream(data.getImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            contact.setProfilePhoto(bmd.getBitmap());
+            contact.show();
+        }else{
+            ContactDialog contact = new ContactDialog(getContext(), appSession, null);
+            contact.setProfileName(data.getAlias());
+            contact.setCountryText("Country" + " - " + "place"); //TODO completar los campos de "country" y "place" con la implementación de la geolocalización.
+            ByteArrayInputStream bytes = new ByteArrayInputStream(data.getImage());
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            contact.setProfilePhoto(bmd.getBitmap());
+            contact.show();
+        }
     }
 
     @Override
@@ -350,7 +374,7 @@ public class ContactsListFragment
 //    private boolean isRefreshing = false;
 //    private View rootView;
 //    private ContactsListAdapter adapter;
-//    private ChatUserSubAppSession chatUserSubAppSession;
+//    private ChatUserSubAppSessionReferenceApp chatUserSubAppSession;
 //    private LinearLayout emptyView;
 //    private ChatActorCommunitySubAppModuleManager moduleManager;
 //    private ErrorManager errorManager;
@@ -364,7 +388,7 @@ public class ContactsListFragment
 //    public void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setHasOptionsMenu(true);
-//        chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+//        chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
 //        moduleManager = chatUserSubAppSession.getModuleManager();
 //        errorManager = appSession.getErrorManager();
 //        lstChatUserInformations = new ArrayList<>();
@@ -476,12 +500,12 @@ public class ContactsListFragment
 //        Animation anim = AnimationUtils.loadAnimation(getActivity(),
 //                show ? android.R.anim.fade_in : android.R.anim.fade_out);
 //        if (show &&
-//                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+//                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.VISIBLE);
 //            if (adapter != null)
 //                adapter.changeDataSet(null);
-//        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+//        } else if (!show && emptyView.getShowAsAction() == View.VISIBLE) {
 //            emptyView.setAnimation(anim);
 //            emptyView.setVisibility(View.GONE);
 //        }

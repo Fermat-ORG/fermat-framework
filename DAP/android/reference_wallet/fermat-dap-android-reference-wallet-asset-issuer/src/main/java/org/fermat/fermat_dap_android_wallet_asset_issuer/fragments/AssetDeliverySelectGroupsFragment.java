@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.fragments;
 
-
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -26,12 +26,12 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.AssetDeliverySelectGroupsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Group;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
@@ -44,22 +44,16 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<Group>
+public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<Group, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<Group> {
 
     // Constants
     private static final String TAG = "AssetDeliverySelectGroupsFragment";
-
     // Fermat Managers
-    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
     // Data
     private List<Group> groups;
-
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
     //UI
     private View noUsersView;
 
@@ -73,12 +67,10 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
         setHasOptionsMenu(true);
 
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
+            moduleManager = appSession.getModuleManager();
 
-            moduleManager = assetIssuerSession.getModuleManager();
-
-            groups = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            groups = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

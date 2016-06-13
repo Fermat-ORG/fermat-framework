@@ -861,7 +861,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
                 chatMetadataRecord.setLocalActorType(senderType);
                 chatMetadataRecord.setMsgXML(msjContent);
-                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+                //if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+                if(!chatMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())){
                     chatMetadataRecord.setMessageStatus(messageStatus);
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
                     executorService.submit(new Runnable() {

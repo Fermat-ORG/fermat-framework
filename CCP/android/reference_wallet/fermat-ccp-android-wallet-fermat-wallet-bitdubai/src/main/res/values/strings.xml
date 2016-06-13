@@ -63,7 +63,7 @@
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
-    <!-- home_receive_main.xml -->
+    <!-- fermat_wallet_home_receive_main.xmlceive_main.xml -->
     <string name="no_transactions_text">No transactions</string>
     <!-- home_request_fragment_main.xml -->
     <string name="reason_text">Reason</string>
@@ -92,9 +92,9 @@
     <string name="footer_message_text">Footer Message</string>
     <!-- refresh_header.xml -->
     <string name="loading_text">Loading..........</string>
-    <!-- request_form_base.xml -->
+    <!-- fermat_wallet_request_form_baseuest_form_base.xml -->
     <string name="confirm_request_text">Confirm request</string>
-    <!-- send_form_base.xml -->
+    <!-- fermat_wallet_send_form_basesend_form_base.xml -->
     <string name="enter_name_here_text">Enter name here</string>
     <string name="bits_text">[bits]</string>
     <string name="balance_amount_0_text">0</string>

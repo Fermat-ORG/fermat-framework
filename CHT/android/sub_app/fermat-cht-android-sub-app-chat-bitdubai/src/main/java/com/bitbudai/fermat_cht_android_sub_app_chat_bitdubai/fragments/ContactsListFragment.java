@@ -24,12 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -37,7 +37,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
@@ -47,6 +46,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +60,9 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class ContactsListFragment extends AbstractFermatFragment implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
+public class ContactsListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
+        implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
 
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
@@ -91,7 +93,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
     ChatActorCommunitySelectableIdentity chatIdentity;
     PresentationDialog presentationDialog;
@@ -125,8 +127,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         super.onCreate(savedInstanceState);
 
         try{
-            chatSession=((ChatSession) appSession);
-            chatManager= chatSession.getModuleManager();
+            //chatSession=((ChatSessionReferenceApp) appSession);
+            chatManager= appSession.getModuleManager();
             //chatManager=moduleManager.getChatManager();
             chatManager.setAppPublicKey(appSession.getAppPublicKey());
             errorManager=appSession.getErrorManager();
@@ -188,11 +190,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             this.MAX = MAX;
             this.offset = offset;
         }
+
         @Override
         protected void onPostExecute(Void result) {
             //this.cancel(true);
-
-
             return;
         }
 
@@ -432,8 +433,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 return false;
             }
         });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+            String filterString = (String) appSession.getData("filterString");
             if (filterString.length() > 0) {
                 searchView.setQuery(filterString, true);
                 searchView.setIconified(false);
@@ -482,14 +483,14 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 
     private void setUpHelpChat(boolean checkButton) {
         try {
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cht_banner)
                     .setIconRes(R.drawable.chat_subapp)
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
-                    .setIsCheckEnabled(checkButton)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         } catch (Exception e) {
@@ -552,6 +553,6 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         adapter.getContactIcon(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] byteArray = stream.toByteArray();
         contact.setProfileImage(byteArray);
-        appSession.setData(ChatSession.CONTACT_DATA, contact);
+        appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
     }
 }

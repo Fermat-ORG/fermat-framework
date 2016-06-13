@@ -63,13 +63,12 @@
                 />
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
                     tools:ignore="ContentDescription"
                     android:src="@drawable/chat_banner_community" />
                 <!-- android:src="@drawable/community_banner" -->
@@ -84,7 +83,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
-                android:paddingTop="7sp"
+                android:paddingTop="7dp"
                 android:text="This app will allow you to find other chat users within the Fermat Network. Its main features include:"
                 android:textColor="#1d1d26"
                 android:textSize="14sp"
@@ -151,7 +150,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="You need to establish connections to other users first in order to add them as contacts. If you do not have an identity or profile, please create one to manage the community."
+                    android:text="If you do not have an identity or profile, please create one to manage the community."
                     android:textColor="#1d1d26"
                     android:textSize="12sp"
                     tools:ignore="HardcodedText" />

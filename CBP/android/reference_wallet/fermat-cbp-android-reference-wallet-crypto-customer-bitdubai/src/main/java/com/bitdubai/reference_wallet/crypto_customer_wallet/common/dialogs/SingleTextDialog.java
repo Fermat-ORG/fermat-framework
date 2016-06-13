@@ -11,13 +11,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 
 /**
  * Created by Yordin Alayn on 16.02.16.
  */
-public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
+public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>
         implements View.OnClickListener {
 
     private FermatEditText editTextView;
@@ -32,7 +32,7 @@ public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSession, 
     }
 
 
-    public SingleTextDialog(Activity activity, CryptoCustomerWalletSession fermatSession, ResourceProviderManager resources) {
+    public SingleTextDialog(Activity activity, CryptoCustomerWalletSessionReferenceApp fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
 
         hintStringResource = R.string.hint;

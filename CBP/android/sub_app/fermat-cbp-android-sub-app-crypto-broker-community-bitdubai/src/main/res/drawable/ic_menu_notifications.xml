@@ -5,7 +5,7 @@
         android:drawable="@drawable/ic_action_notification_crypto_broker"
         android:gravity="center" />
 
-    <!-- set a place holder Drawable so android:drawable isn't null -->
+    <!-- set a place holder FermatDrawable so android:drawable isn't null -->
     <item
         android:id="@+id/ic_badge"
         android:drawable="@drawable/ic_action_notification_crypto_broker" />

@@ -309,7 +309,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         );
         lstInstalledWallet.add(installedWallet);
 
-        /*installedWallet = new WalletManagerMiddlewareInstalledWallet(
+        installedWallet = new WalletManagerMiddlewareInstalledWallet(
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -327,7 +327,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
-        lstInstalledWallet.add(installedWallet);*/
+        lstInstalledWallet.add(installedWallet);
 
 
         installedWallet = new WalletManagerMiddlewareInstalledWallet(

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -44,7 +44,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private static final int TYPE_ITEM_AMOUNT_TO_SELL = 4;
     private static final int TYPE_FOOTER = 5;
 
-    private FermatSession session;
+    private ReferenceAppFermatSession session;
     private List<NegotiationStep> dataSet;
     private Activity activity;
     private CryptoCustomerWalletModuleManager walletManager;
@@ -54,7 +54,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
-    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoCustomerWalletModuleManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
+    public NegotiationDetailsAdapter(Activity activity, ReferenceAppFermatSession session, CryptoCustomerWalletModuleManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         this.activity = activity;
         this.session = session;
         this.dataSet = dataSet;

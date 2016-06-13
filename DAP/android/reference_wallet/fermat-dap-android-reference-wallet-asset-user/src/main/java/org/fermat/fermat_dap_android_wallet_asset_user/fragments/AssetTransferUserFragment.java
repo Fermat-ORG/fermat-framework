@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -32,12 +33,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetTransferUserAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
@@ -53,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 18/02/2016.
  */
-public class AssetTransferUserFragment extends FermatWalletListFragment<User>
+public class AssetTransferUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants
@@ -62,17 +64,12 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSession assetUserSession;
     // Data
     private List<User> users;
     private User userSelected;
     private Asset assetToTransfer;
     String digitalAssetPublicKey;
-
     private DigitalAsset digitalAsset;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     //UI
     private View noUsersView;
     private Toolbar toolbar;
@@ -88,8 +85,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSession) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
@@ -103,10 +99,9 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                 e.printStackTrace();
             }
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
             activity = getActivity();
-
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);

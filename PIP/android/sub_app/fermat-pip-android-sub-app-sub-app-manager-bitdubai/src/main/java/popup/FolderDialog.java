@@ -14,8 +14,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.manager.R;
-import com.bitdubai.sub_app.manager.fragment.session.DesktopSession;
-
+import com.bitdubai.sub_app.manager.fragment.session.DesktopSessionReferenceApp;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ import adapter.DesktopAdapter;
 /**
  * Created by mati on 2015.11.27..
  */
-public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesProviderManager>{
+public class FolderDialog extends FermatDialog<DesktopSessionReferenceApp, SubAppResourcesProviderManager> {
 
 
     private final List<Item> lstItems;
@@ -42,13 +41,13 @@ public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesPro
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public FolderDialog(Activity activity, DesktopSession fermatSession, SubAppResourcesProviderManager resources,List<Item> lstItems,DesktopHolderClickCallback desktopHolderClickCallback) {
+    public FolderDialog(Activity activity, DesktopSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback) {
         super(activity, fermatSession, resources);
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
     }
 
-    public FolderDialog(Activity activity, int themeResId, DesktopSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback) {
+    public FolderDialog(Activity activity, int themeResId, DesktopSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, String title, List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback) {
         super(activity, themeResId, fermatSession, resources);
         this.lstItems = lstItems;
         this.desktopHolderClickCallback = desktopHolderClickCallback;
@@ -67,7 +66,7 @@ public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesPro
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new DesktopAdapter(getActivity(), lstItems,desktopHolderClickCallback,DesktopAdapter.FOLDER);
+        adapter = new DesktopAdapter(getActivity(), lstItems, desktopHolderClickCallback, DesktopAdapter.FOLDER);
         recyclerView.setAdapter(adapter);
         int spacingInPixels = 20;
         recyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));

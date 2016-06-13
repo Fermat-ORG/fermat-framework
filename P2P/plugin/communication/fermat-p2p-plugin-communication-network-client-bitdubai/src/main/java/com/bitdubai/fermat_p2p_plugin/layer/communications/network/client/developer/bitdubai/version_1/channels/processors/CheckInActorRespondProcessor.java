@@ -2,15 +2,12 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 
 import javax.websocket.Session;
 
@@ -29,11 +26,11 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public CheckInActorRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public CheckInActorRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
+                networkClientCommunicationChannel,
                 PackageType.CHECK_IN_ACTOR_RESPOND
         );
     }

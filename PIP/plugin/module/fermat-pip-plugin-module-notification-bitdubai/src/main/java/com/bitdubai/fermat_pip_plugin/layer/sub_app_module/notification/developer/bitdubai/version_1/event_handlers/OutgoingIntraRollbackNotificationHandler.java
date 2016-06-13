@@ -25,13 +25,13 @@ public class OutgoingIntraRollbackNotificationHandler implements FermatEventHand
 //        OutgoingIntraRollbackNotificationEvent outgoingIntraRollbackNotificationEvent =(OutgoingIntraRollbackNotificationEvent) fermatEvent;
 
 
-     if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
             System.out.println("PROBANDO EVENTO Rollback, PARA NOTIFICACIONES 2");
             //TODO: acá hay que implementar el add al pool de notificaciones
 //                    notificationManager.addOutgoingRollbackNotification(outgoingIntraRollbackNotificationEvent.getSource(), outgoingIntraRollbackNotificationEvent.getActorId(),outgoingIntraRollbackNotificationEvent.getAmount());
-            }
-
-
         }
+
+
+    }
 }

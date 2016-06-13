@@ -19,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -30,12 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 import java.io.ByteArrayOutputStream;
 
@@ -62,7 +63,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private ReferenceWalletSession referenceWalletSession;
+    private ReferenceAppFermatSession<CryptoWallet> referenceWalletSession;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -94,7 +95,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
 
 
-    public CreateContactFragmentDialog(Activity a, ReferenceWalletSession referenceWalletSession, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
+    public CreateContactFragmentDialog(Activity a, ReferenceAppFermatSession referenceWalletSession, WalletContact walletContact, String userId,Bitmap contactImageBitmap,CreateContactDialogCallback createContactDialogCallback) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -226,7 +227,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             CryptoWallet cryptoWallet = referenceWalletSession.getModuleManager();
 
-            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet, blockchainNetworkType);
 
             String name =contact_name.getText().toString();
 
@@ -296,7 +297,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager());
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager(),blockchainNetworkType);
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
