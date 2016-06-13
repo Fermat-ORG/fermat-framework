@@ -3,13 +3,10 @@ package com.bitdubai.android_core.app.common.version_1.adapters;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
-
-import java.util.List;
 
 
 /**
@@ -19,34 +16,31 @@ import java.util.List;
 /**
  * ScreenPagerAdapter to add new subApp
  */
-public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUIAdapter {
+public class ScreenPagerAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FermatScreenAdapter<F> implements FermatUIAdapter<F> {
 
 
     private static final String TAG = "ScreenPagerAdapter";
-    private List<Fragment> fragments;
 
     /**
      * @param fm
      * @param fragments
      */
 
-    public ScreenPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
-        super(fm);
-
-        this.fragments = fragments;;
+    public ScreenPagerAdapter(FragmentManager fm, F[] fragments) {
+        super(fm, fragments);
     }
     /*
      * Return the Fragment associated with a specified position.
      */
     @Override
     public Fragment getItem(int position) {
-        if(fragments.isEmpty()){
+        if(fragments.length<1){
             Log.e(TAG,"fragmentos en desktop nulo");
         }
-        if(position>fragments.size()){
+        if(position>fragments.length){
             Log.e(TAG,"position mayor a cantidad de fragmentos en desktop");
         }
-        return this.fragments.get(position);
+        return this.fragments[position];
     }
 
     @Override
@@ -66,16 +60,13 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
              */
     @Override
     public int getCount() {
-        return this.fragments.size();
+        return this.fragments.length;
     }
 
-    public List<AbstractFermatFragmentInterface> getLstCurrentFragments() {
-        return (List<AbstractFermatFragmentInterface>)(List<?>) fragments;
-    }
 
-    public void changeData(List<Fragment> fragments) {
+    public void changeData(F[] fragments) {
         removeAllFragments();
-        this.fragments.clear();
+        this.fragments = null;
         this.fragments = fragments;
         notifyDataSetChanged();
     }
@@ -87,6 +78,7 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUI
             trans.remove(fragment);
             trans.commit();
         }
+        fragments = null;
     }
 
 

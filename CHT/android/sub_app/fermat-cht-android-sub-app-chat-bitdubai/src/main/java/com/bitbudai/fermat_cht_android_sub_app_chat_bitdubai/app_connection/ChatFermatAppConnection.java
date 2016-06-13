@@ -100,4 +100,18 @@ public class ChatFermatAppConnection extends AppConnections {
 //
 //        return notification;
     }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+        switch (id){
+            case 1:
+                resId = R.drawable.cht_help_icon;
+                break;
+            case 2:
+                resId = R.drawable.cht_ic_action_search;
+                break;
+        }
+        return resId;
+    }
 }

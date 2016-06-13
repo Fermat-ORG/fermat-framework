@@ -18,9 +18,9 @@ public class Fragment implements FermatFragment,Serializable {
      */
     String fragmentBack;
     /**
-     * This field will be used in case of a comboApp, when a developer want to reuse fragments from another app he have to know the app publicKey
+     * Owner field
      */
-    private String pulickKeyFragmentFrom;
+    private Owner owner;
 
     public void setBack(String fragmentBack)
     {
@@ -43,11 +43,11 @@ public class Fragment implements FermatFragment,Serializable {
         return this.fragmentBack;
     }
 
-    public String getPulickKeyFragmentFrom() {
-        return pulickKeyFragmentFrom;
+    public Owner getOwner() {
+        return owner;
     }
 
-    public void setFragmentFromApp(String appPublicKey) {
-        this.pulickKeyFragmentFrom = appPublicKey;
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 }

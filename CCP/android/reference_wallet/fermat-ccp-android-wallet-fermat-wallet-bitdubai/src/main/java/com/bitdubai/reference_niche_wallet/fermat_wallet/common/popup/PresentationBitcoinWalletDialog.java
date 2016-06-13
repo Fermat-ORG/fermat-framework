@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -33,7 +34,7 @@ import java.io.ByteArrayOutputStream;
  * Created by mati on 2015.11.27..
  */
 
-public class PresentationBitcoinWalletDialog extends FermatDialog<FermatWalletSessionReferenceApp,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession<FermatWallet>,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
     public static final int TYPE_PRESENTATION =1;
@@ -79,7 +80,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<FermatWalletSe
      * @param resources     parent class of WalletResources and SubAppResources
      */
 
-    public PresentationBitcoinWalletDialog(Activity activity, FermatWalletSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
 
         super(activity, fermatSession, resources);
         this.activity = activity;

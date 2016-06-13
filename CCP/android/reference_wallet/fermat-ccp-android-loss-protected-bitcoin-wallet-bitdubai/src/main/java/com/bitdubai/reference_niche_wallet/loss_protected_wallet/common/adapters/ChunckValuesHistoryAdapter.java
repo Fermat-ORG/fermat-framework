@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
@@ -99,9 +100,9 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         final int MAX_DECIMAL_FOR_BALANCE_TRANSACTION = 8;
         final int MIN_DECIMAL_FOR_BALANCE_TRANSACTION = 2;
 
-        LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
+        ActiveActorIdentityInformation intraUserLoginIdentity = null;
         try {
-            intraUserLoginIdentity = (LossProtectedWalletIntraUserIdentity) manager.getSelectedActorIdentity();
+            intraUserLoginIdentity =  manager.getSelectedActorIdentity();
 
         } catch (CantGetSelectedActorIdentityException e) {
             e.printStackTrace();

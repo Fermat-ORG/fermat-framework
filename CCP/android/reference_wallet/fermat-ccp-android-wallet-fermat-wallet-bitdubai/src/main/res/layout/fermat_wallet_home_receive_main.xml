@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient">
+    android:background="@drawable/background_white_gradient">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -27,14 +27,14 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginBottom="4dp"
             android:scaleType="fitXY"
-            android:src="@drawable/transaction_icon"
+            android:src="@drawable/fw_no_transactions_icon"
             android:contentDescription="@string/app_name" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/no_transactions_text"
-            android:textColor="#fff"
+            android:textColor="#54ACEC"
             android:textSize="20sp"/>
 
     </LinearLayout>
