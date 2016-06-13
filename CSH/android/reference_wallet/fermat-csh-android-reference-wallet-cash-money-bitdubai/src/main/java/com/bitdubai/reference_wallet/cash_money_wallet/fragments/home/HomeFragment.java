@@ -47,7 +47,7 @@ import java.util.List;
  * Created by Alejandro Bicelis on 12/9/2015.
  */
 public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransaction, ReferenceAppFermatSession<CashMoneyWalletModuleManager>, ResourceProviderManager>
-implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
+        implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.OnDismissListener {
 
     protected final String TAG = "HomeFragment";
     private Thread refresherThread;
@@ -439,9 +439,11 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
-            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
-                onRefresh();
-                break;
+            //Nod depending on broadcaster to update screen when transaction finished
+            //Instead im using determinate progressbars, updated by a refresher thread.
+            //case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+            //onRefresh();
+            //break;
             case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS:
                 Toast.makeText(getActivity(), "Transaction failed due to insufficient funds", Toast.LENGTH_SHORT).show();
 
@@ -455,5 +457,52 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 super.onUpdateViewOnUIThread(code);
         }
     }
+
+
+
+
+    /* Refresher thread code */
+    public final void startRefresh() {
+
+        if(!threadIsRunning) {
+            this.refresherThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (threadIsRunning)
+                        doRefresh();
+                }
+            });
+            threadIsRunning = true;
+            this.refresherThread.start();
+        }
+    }
+
+    public final void stopRefresh() {
+
+        if (threadIsRunning)
+            this.refresherThread.interrupt();
+        threadIsRunning = false;
+    }
+
+    private void doRefresh() {
+
+        while (threadIsRunning) {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException interruptedException) {
+                threadIsRunning = false;
+                return;
+            }
+
+            if (refresherThread.isInterrupted()) {
+                threadIsRunning = false;
+                return;
+            }
+
+            onRefresh();
+        }
+    }
+
 }
 
