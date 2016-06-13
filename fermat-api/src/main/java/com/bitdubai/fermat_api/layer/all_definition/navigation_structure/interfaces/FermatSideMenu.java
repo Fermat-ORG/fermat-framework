@@ -15,4 +15,8 @@ public interface FermatSideMenu  extends Serializable {
     boolean hasFooter();
 
     void clearSelected();
+
+    String getBackgroudColor();
+
+    String getNavigationIconColor();
 }

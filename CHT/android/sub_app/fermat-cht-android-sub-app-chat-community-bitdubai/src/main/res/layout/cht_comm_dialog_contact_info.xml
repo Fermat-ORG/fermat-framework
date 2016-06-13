@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="280dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CFD0D4"
+        android:src="@drawable/cht_comm_icon_user"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="#000000"
+            android:alpha="0.8"
+            />
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_white"
+            android:gravity="center_horizontal"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/profile_image"
+        android:background="#F9F9F9"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            >
+        <ImageView
+            android:id="@+id/geotac_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:src="@drawable/cht_comm_geotag_contact_icon"
+            />
+
+
+
+        <TextView
+             android:id="@+id/country_place"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="CountryText"
+             android:textSize="12sp"
+             android:textColor="#30d97a"
+
+             android:layout_centerVertical="true"
+             android:layout_toRightOf="@+id/geotac_icon"
+             android:layout_toEndOf="@+id/geotac_icon"/>
+    </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

@@ -67,8 +67,6 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment<Referenc
         errorManager = appSession.getErrorManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-
     }
 
     @Nullable

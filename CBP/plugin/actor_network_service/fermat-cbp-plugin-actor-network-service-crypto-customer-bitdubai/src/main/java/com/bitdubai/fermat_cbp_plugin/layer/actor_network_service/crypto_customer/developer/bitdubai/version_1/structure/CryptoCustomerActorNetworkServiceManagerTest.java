@@ -48,7 +48,8 @@ public final class CryptoCustomerActorNetworkServiceManagerTest implements Crypt
                     null,
                     null,
                     Actors.CBP_CRYPTO_CUSTOMER,
-                    cryptoCustomer.getImage()
+                    cryptoCustomer.getImage(),
+                    0,0
             );
 
         } catch (final ActorAlreadyRegisteredException| CantRegisterActorException e) {

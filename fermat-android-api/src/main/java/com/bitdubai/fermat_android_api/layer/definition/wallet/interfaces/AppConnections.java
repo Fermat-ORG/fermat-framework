@@ -63,7 +63,15 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         return ((FermatApplicationSession)(activity.get()).getApplicationContext()).getApplicationManager();
     }
 
-    public int getResource(String id) {
+    public int getResource(int id) {
         return 0;
+    }
+
+    public void clear() {
+        activity.clear();
+    }
+
+    public void setContext(Context context) {
+        this.activity = new WeakReference<Context>(context);
     }
 }

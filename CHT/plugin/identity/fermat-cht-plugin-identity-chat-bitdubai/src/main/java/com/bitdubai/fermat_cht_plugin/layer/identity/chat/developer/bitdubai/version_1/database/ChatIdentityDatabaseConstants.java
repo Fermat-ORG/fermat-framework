@@ -25,7 +25,9 @@ public class ChatIdentityDatabaseConstants {
     public static final String CHAT_COUNTRY_COLUMN_NAME                = "country"               ;
     public static final String CHAT_STATE_COLUMN_NAME                  = "state"                 ;
     public static final String CHAT_CONNECTION_STATE_COLUMN_NAME       = "connection_state"      ;
-    public static final String CHAT_CITY_COLUMN_NAME                   = "city"                   ;
+    public static final String CHAT_CITY_COLUMN_NAME                   = "city"                  ;
+    public static final String CHAT_ACCURACY_COLUMN_NAME               = "acuracy"                ;
+    public static final String CHAT_FRECUENCY_COLUMN_NAME              = "frecuency"              ;
 
     public static final String CHAT_FIRST_KEY_COLUMN                   = "public_key"            ;
 

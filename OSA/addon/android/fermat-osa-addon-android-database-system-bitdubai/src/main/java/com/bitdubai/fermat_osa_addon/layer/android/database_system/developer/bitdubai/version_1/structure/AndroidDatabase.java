@@ -117,7 +117,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     @Override
     public DatabaseTransaction newTransaction() {
-        return new AndroidDatabaseTransaction();
+        return new AndroidDatabaseTransaction(this);
     }
 
     /**

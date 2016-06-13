@@ -78,8 +78,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
 
                     networkServiceRoot.onNewMessageReceived(fermatMessage);
 
-                    fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
-                    networkServiceRoot.getNetworkServiceConnectionManager().getIncomingMessagesDao().update(fermatMessage);
+                    networkServiceRoot.getNetworkServiceConnectionManager().getIncomingMessagesDao().markAsRead(fermatMessage);
 
                 }
             }
