@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.identity.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 
 import java.io.Serializable;
 
@@ -53,5 +54,17 @@ public interface ChatIdentity  extends ActiveActorIdentityInformation, Serializa
      * @return the String
      */
     String getConnectionState();
+
+    /**
+     * This method return long with Acurancy
+     * @return the Long
+     */
+    long getAccuracy();
+
+    /**
+     * This method return enum with Frecuency
+     * @return the Enum Frecuency
+     */
+    Frecuency getFrecuency();
 
 }

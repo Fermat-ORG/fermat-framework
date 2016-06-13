@@ -47,7 +47,7 @@ import static android.widget.Toast.makeText;
 /**
  * Jinmy Bohorquez 15/02/2016.
  */
-public class AssetSellSelectUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetSellSelectUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants
@@ -56,12 +56,8 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User, 
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
     // Data
     private List<User> users;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     //UI
     private View noRPView;
     private Toolbar toolbar;
@@ -75,11 +71,10 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User, 
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

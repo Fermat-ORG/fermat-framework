@@ -46,7 +46,6 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment<Refere
 
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSettings settings = null;
 
     public static SettingsNotificationsFragment newInstance() {
         return new SettingsNotificationsFragment();

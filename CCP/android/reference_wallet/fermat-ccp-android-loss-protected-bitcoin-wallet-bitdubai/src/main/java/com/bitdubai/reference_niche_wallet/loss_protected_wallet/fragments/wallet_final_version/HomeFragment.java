@@ -276,11 +276,6 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-
-            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
-
-
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -297,6 +292,11 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
 
             setUp(inflater);
+
+
+      /*      final InputMethodManager imm;
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
             return rootView;
 
@@ -961,9 +961,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
     public static void hideSoftKeyboard(Activity activity) {
 
-
-
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+       InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if(activity.getCurrentFocus() != null)
          inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
