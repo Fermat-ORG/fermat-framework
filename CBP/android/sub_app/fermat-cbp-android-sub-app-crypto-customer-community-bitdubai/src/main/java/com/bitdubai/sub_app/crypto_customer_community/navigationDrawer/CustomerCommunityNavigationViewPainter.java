@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -21,7 +22,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.common.utils.FragmentsCommons;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -34,11 +34,11 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 public class CustomerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    private CryptoCustomerCommunitySubAppSessionReferenceApp subAppSession;
+    private ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> subAppSession;
     private ActiveActorIdentityInformation selectedActorIdentity;
 
 
-    public CustomerCommunityNavigationViewPainter(Context activity, CryptoCustomerCommunitySubAppSessionReferenceApp subAppSession) {
+    public CustomerCommunityNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> subAppSession) {
         this.activity = new WeakReference<>(activity);
         this.subAppSession = subAppSession;
     }
