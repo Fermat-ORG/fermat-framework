@@ -335,7 +335,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             }
                         });
                         blockchainDownloadInfoDialog.show();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -454,11 +454,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                                    circularProgressBar.setProgressValue2(getBalanceAverage());
-                                    circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-                                    circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-                                    circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+                                    try {
+                                        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                                        circularProgressBar.setProgressValue2(getBalanceAverage());
+                                        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
+                                        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
+                                        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         } catch (CantGetBalanceException e) {

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 
 import org.bitcoinj.core.AbstractBlockChain;
+import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
@@ -294,209 +295,268 @@ public abstract class CryptoVault {
 
     private Wallet tempWallet;
     AtomicBoolean booleanProperty;
+    SPVBlockStore chainStore;
+    BlockChain chain;
 
 
 
     public void importCryptoFromSeed(final NetworkParameters networkParameters,List<String> mnemonicCode,long creationTimeSeconds,@Nullable String userPhrase){
 
-        booleanProperty = new AtomicBoolean(false);
-
-        //todo, la frase no deberia ser null
-        DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonicCode,null,"",creationTimeSeconds);
-        tempWallet = Wallet.fromSeed(networkParameters,deterministicSeed);
-        try {
-            tempWallet.clearTransactions(0);
-            File chainFile = new File(pluginFileSystem.getAppPath()+"/"+creationTimeSeconds+"-restore-from-seed.spvchain");
-            if (chainFile.exists()) {
-                chainFile.delete();
+        if(tempWallet!=null){
+            //test reasons
+            System.out.println(tempWallet);
+            System.out.println("################################\n");
+            System.out.println("MatiImport spend cadidates");
+            for (TransactionOutput transactionOutput : tempWallet.calculateAllSpendCandidates()) {
+                System.out.println(transactionOutput);
             }
-            // Setting up the BlochChain, the BlocksStore and connecting to the network.
-            SPVBlockStore chainStore = new SPVBlockStore(networkParameters, chainFile);
-            BlockChain chain = new BlockChain(networkParameters, chainStore);
-            final PeerGroup peers = new PeerGroup(networkParameters, chain);
-            if (networkParameters == RegTestParams.get()){
-                FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
-                for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
-                    peers.addAddress(node.getPeerAddress());
+            System.out.println("MatiImport allowSpendingUnconfirmedTransactions");
+            tempWallet.allowSpendingUnconfirmedTransactions();
+
+            System.out.println("MatiImport transactions by time");
+            for (Transaction transaction : tempWallet.getTransactionsByTime()) {
+                System.out.println(transaction);
+            }
+
+
+
+            System.out.println("################################\n");
+        }else {
+            booleanProperty = new AtomicBoolean(false);
+
+            //todo, la frase no deberia ser null
+            DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonicCode, null, "", creationTimeSeconds);
+            tempWallet = Wallet.fromSeed(networkParameters, deterministicSeed);
+            try {
+                tempWallet.clearTransactions(0);
+                File chainFile = new File(pluginFileSystem.getAppPath() + "/" + creationTimeSeconds + "-restore-from-seed.spvchain");
+                if (chainFile.exists()) {
+                    chainFile.delete();
                 }
-            } else
-                peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
-            // Now we need to hook the wallet up to the blockchain and the peers. This registers event listeners that notify our wallet about new transactions.
-            chain.addWallet(tempWallet);
-            peers.addWallet(tempWallet);
-            DownloadProgressTracker bListener = new DownloadProgressTracker() {
-                @Override
-                public void doneDownload() {
-                    System.out.println("################################\n");
-                    System.out.println("MatiImport blockchain downloaded end");
-                    System.out.println("################################\n");
-                    booleanProperty.set(true);
-                }
-            };
-            peers.addEventListener(new PeerEventListener() {
-                @Override
-                public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
-
-                }
-
-                @Override
-                public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
-                    System.out.println("################################\n");
-                    System.out.println("MatiImport blockchain download, blocks left to download="+blocksLeft);
-                    System.out.println("################################\n");
-                }
-
-                @Override
-                public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-                    System.out.println("################################\n");
-                    System.out.println("MatiImport blockchain download start, blocks to download="+blocksLeft);
-                    System.out.println("################################\n");
-                }
-
-                @Override
-                public void onPeerConnected(Peer peer, int peerCount) {
-                    System.out.println("################################\n");
-                    System.out.println("MatiImport peer connected");
-                    System.out.println("################################\n");
-                }
-
-                @Override
-                public void onPeerDisconnected(Peer peer, int peerCount) {
-
-                }
-
-                @Override
-                public Message onPreMessageReceived(Peer peer, Message m) {
-                    return null;
-                }
-
-                @Override
-                public void onTransaction(Peer peer, Transaction t) {
-
-                }
-
-                @Nullable
-                @Override
-                public List<Message> getData(Peer peer, GetDataMessage m) {
-                    return null;
-                }
-            });
-
-
-            // Now we re-download the blockchain. This replays the chain into the wallet. Once this is completed our wallet should know of all its transactions and print the correct balance.
-            peers.start();
-            peers.startBlockChainDownload(bListener);
-
-            bListener.await();
-            // Print a debug message with the details about the wallet. The correct balance should now be displayed.
-            System.out.println(tempWallet.toString());
-            final Coin balance = tempWallet.getBalance();
-            System.out.println("MatiImport Wallet balance: " + balance);
-            chain.addListener(new BlockChainListener() {
-                @Override
-                public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-                    System.out.println("MatiImport notifyNewBestBlock: " + block);
-                    booleanProperty.set(true);
-                }
-
-                @Override
-                public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
-
-                }
-
-                @Override
-                public boolean isTransactionRelevant(Transaction tx) throws ScriptException {
-                    return false;
-                }
-
-                @Override
-                public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-
-                }
-
-                @Override
-                public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-                    return false;
-                }
-            });
-            if(balance.isZero()){
-                while(booleanProperty.get()==false) {
-                    try {
-                        TimeUnit.SECONDS.sleep(4);
-                    }catch (Exception e){
-                        e.printStackTrace();
+                // Setting up the BlochChain, the BlocksStore and connecting to the network.
+                chainStore = new SPVBlockStore(networkParameters, chainFile);
+                chain = new BlockChain(networkParameters, chainStore);
+                final PeerGroup peers = new PeerGroup(networkParameters, chain);
+                if (networkParameters == RegTestParams.get()) {
+                    FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
+                    for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()) {
+                        peers.addAddress(node.getPeerAddress());
                     }
-                }
+                } else
+                    peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+                // Now we need to hook the wallet up to the blockchain and the peers. This registers event listeners that notify our wallet about new transactions.
+                chain.addWallet(tempWallet);
+                peers.addWallet(tempWallet);
+                DownloadProgressTracker bListener = new DownloadProgressTracker() {
+                    @Override
+                    public void doneDownload() {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport blockchain downloaded end");
+                        System.out.println("################################\n");
+                        booleanProperty.set(true);
+                    }
+                };
 
-                        System.out.println("###############################################\n");
+                tempWallet.addEventListener(new AbstractWalletEventListener() {
+                    @Override
+                    public void onWalletChanged(Wallet wallet) {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport onWalletChanged="+wallet);
+                        System.out.println("################################\n");
+                        super.onWalletChanged(wallet);
+                    }
 
+                    @Override
+                    public void onChange() {
+                        super.onChange();
+                    }
+
+                    @Override
+                    public void onKeysAdded(List<ECKey> keys) {
+                        super.onKeysAdded(keys);
+                    }
+
+                    @Override
+                    public void onReorganize(Wallet wallet) {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport onReorganize="+wallet);
+                        System.out.println("################################\n");
+                        super.onReorganize(wallet);
+                    }
+                });
+                peers.addEventListener(new PeerEventListener() {
+                    @Override
+                    public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
+
+                    }
+
+                    @Override
+                    public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport blockchain download, blocks left to download=" + blocksLeft);
+                        System.out.println("################################\n");
+                    }
+
+                    @Override
+                    public void onChainDownloadStarted(Peer peer, int blocksLeft) {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport blockchain download start, blocks to download=" + blocksLeft);
+                        System.out.println("################################\n");
+                    }
+
+                    @Override
+                    public void onPeerConnected(Peer peer, int peerCount) {
+                        System.out.println("################################\n");
+                        System.out.println("MatiImport peer connected");
+                        System.out.println("################################\n");
+                    }
+
+                    @Override
+                    public void onPeerDisconnected(Peer peer, int peerCount) {
+
+                    }
+
+                    @Override
+                    public Message onPreMessageReceived(Peer peer, Message m) {
+                        return null;
+                    }
+
+                    @Override
+                    public void onTransaction(Peer peer, Transaction t) {
+
+                    }
+
+                    @Nullable
+                    @Override
+                    public List<Message> getData(Peer peer, GetDataMessage m) {
+                        return null;
+                    }
+                });
+
+
+                // Now we re-download the blockchain. This replays the chain into the wallet. Once this is completed our wallet should know of all its transactions and print the correct balance.
+                peers.start();
+                peers.startBlockChainDownload(bListener);
+
+                bListener.await();
+                // Print a debug message with the details about the wallet. The correct balance should now be displayed.
+                System.out.println(tempWallet.toString());
+                final Coin balance = tempWallet.getBalance();
+                System.out.println("MatiImport Wallet balance: " + balance);
+                chain.addListener(new BlockChainListener() {
+                    @Override
+                    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+                        System.out.println("MatiImport notifyNewBestBlock: " + block);
+                        booleanProperty.set(true);
+                    }
+
+                    @Override
+                    public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
+
+                    }
+
+                    @Override
+                    public boolean isTransactionRelevant(Transaction tx) throws ScriptException {
+                        return false;
+                    }
+
+                    @Override
+                    public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+
+                    }
+
+                    @Override
+                    public boolean notifyTransactionIsInBlock(Sha256Hash txHash, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
+                        return false;
+                    }
+                });
+                if (balance.isZero()) {
+                    while (booleanProperty.get() == false) {
                         try {
-                            /**
-                             * Own wallet get fresh address
-                             */
-                            Address destinationAddress = null;
-                            try {
-                                destinationAddress = Wallet.fromSeed(networkParameters, getVaultSeed()).freshReceiveAddress();
-                            } catch (InvalidSeedException e) {
-                                e.printStackTrace();
-                            }
-                            Coin fee = Coin.valueOf(10000);
-                            Wallet.SendRequest req = Wallet.SendRequest.to(
-                                    destinationAddress, balance.subtract(fee));
-                            req.fee = fee;
-                            Wallet.SendResult result = tempWallet.sendCoins(peers, req);
-                            if (result != null) {
-                                result.broadcastComplete.get();
-                                System.out.println("The money was sent!");
-                            } else {
-                                System.out.println("Something went wrong sending the money.");
-                            }
-                        } catch (InsufficientMoneyException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (Exception e){
+                            TimeUnit.SECONDS.sleep(4);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    System.out.println("###############################################\n");
+
+                    List<TransactionOutput> listUTXO = tempWallet.calculateAllSpendCandidates();
+
+                    if (listUTXO != null) {
+                        System.out.println("candidates=" + listUTXO.toArray());
+                    } else {
+                        System.out.println("candidates null");
+                    }
+
+                    try {
+                        /**
+                         * Own wallet get fresh address
+                         */
+                        Address destinationAddress = null;
+                        try {
+                            destinationAddress = Wallet.fromSeed(networkParameters, getVaultSeed()).freshReceiveAddress();
+                        } catch (InvalidSeedException e) {
+                            e.printStackTrace();
+                        }
+                        Coin fee = Coin.valueOf(10000);
+                        Wallet.SendRequest req = Wallet.SendRequest.to(
+                                destinationAddress, balance.subtract(fee));
+                        req.fee = fee;
+                        Wallet.SendResult result = tempWallet.sendCoins(peers, req);
+                        if (result != null) {
+                            result.broadcastComplete.get();
+                            System.out.println("The money was sent!");
+                        } else {
+                            System.out.println("Something went wrong sending the money.");
+                        }
+                    } catch (InsufficientMoneyException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 //                    }
 //                });
 
-            }else {
-
-                /**
-                 * Own wallet get fresh address
-                 */
-                Address destinationAddress = null;
-                try {
-                    destinationAddress = Wallet.fromSeed(networkParameters, getVaultSeed()).freshReceiveAddress();
-                } catch (InvalidSeedException e) {
-                    e.printStackTrace();
-                }
-                Coin fee = Coin.valueOf(10000);
-                Wallet.SendRequest req = Wallet.SendRequest.to(
-                        destinationAddress, balance.subtract(fee));
-                req.fee = fee;
-                Wallet.SendResult result = tempWallet.sendCoins(peers, req);
-                if (result != null) {
-                    result.broadcastComplete.get();
-                    System.out.println("The money was sent!");
                 } else {
-                    System.out.println("Something went wrong sending the money.");
-                }
-            }
 
-        } catch (BlockStoreException e) {
-            e.printStackTrace();
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
+                    /**
+                     * Own wallet get fresh address
+                     */
+                    Address destinationAddress = null;
+                    try {
+                        destinationAddress = Wallet.fromSeed(networkParameters, getVaultSeed()).freshReceiveAddress();
+                    } catch (InvalidSeedException e) {
+                        e.printStackTrace();
+                    }
+                    Coin fee = Coin.valueOf(10000);
+                    Wallet.SendRequest req = Wallet.SendRequest.to(
+                            destinationAddress, balance.subtract(fee));
+                    req.fee = fee;
+                    Wallet.SendResult result = tempWallet.sendCoins(peers, req);
+                    if (result != null) {
+                        result.broadcastComplete.get();
+                        System.out.println("The money was sent!");
+                    } else {
+                        System.out.println("Something went wrong sending the money.");
+                    }
+                }
+
+            } catch (BlockStoreException e) {
+                e.printStackTrace();
+            } catch (InsufficientMoneyException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
