@@ -506,10 +506,11 @@ public class ChatMiddlewareMonitorAgent implements
 
             System.out.println("12345 CHECKING ONLINE STATUS");
 
-            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+//            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
             for(ActionOnline actionOnline : onlineActions){
-                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+//                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+                boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
                 System.out.println("12345 is online " + isOnline);
                 if(isOnline) actionOnline.setLastOn(false);
@@ -524,12 +525,6 @@ public class ChatMiddlewareMonitorAgent implements
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         } catch (CantGetPendingActionListException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (CantListChatException e) {
             throw new CantGetPendingTransactionException(
                     e,
                     "Checking the incoming status pending transactions",
