@@ -46,13 +46,13 @@
             android:id="@+id/txt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black_overlay"
+            android:background="@color/black"
             android:gravity="start"
             android:paddingLeft="20dp"
-            android:paddingBottom="10dip"
+            android:paddingBottom="8dip"
             android:paddingRight="20dp"
-            android:paddingTop="10dip"
-            android:textColor="#ffffff"
+            android:paddingTop="8dip"
+            android:textColor="#FFD600"
             android:textSize="16sp"
             />
     </FrameLayout>

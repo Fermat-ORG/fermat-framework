@@ -43,7 +43,7 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.loss_contact_list_main_row, null);
+            v = vi.inflate(R.layout.loss_fragment_contacts_list_item, null);
         }
         if(position>=1){
             v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
