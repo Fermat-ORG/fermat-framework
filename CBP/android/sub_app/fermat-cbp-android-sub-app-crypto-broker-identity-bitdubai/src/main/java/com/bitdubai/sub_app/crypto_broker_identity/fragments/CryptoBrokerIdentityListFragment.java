@@ -21,29 +21,28 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
+import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation,ReferenceAppFermatSession>
+public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation,ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>>
         implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener{
 
     // Constants
@@ -64,8 +63,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     private PresentationDialog presentationDialog;
 
-    private IdentityBrokerPreferenceSettings subappSettings;
-
     private View layout;
 
     public static CryptoBrokerIdentityListFragment newInstance() {
@@ -78,7 +75,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         try {
             // setting up  module
-            moduleManager = ((CryptoBrokerIdentitySubAppSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             onRefresh();
         } catch (Exception ex) {
@@ -108,7 +105,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .build();
 
-        subappSettings = null;
+        IdentityBrokerPreferenceSettings subappSettings;
         try {
             subappSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e){ subappSettings = null; }
@@ -117,7 +114,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             subappSettings = new IdentityBrokerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.persistSettings(appSession.getAppPublicKey(),subappSettings);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), subappSettings);
             }catch (Exception ignore){
 
             }
@@ -230,7 +227,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
-        appSession.setData(IDENTITY_INFO, data);
+        appSession.setData(FragmentsCommons.IDENTITY_INFO, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode(), appSession.getAppPublicKey());
     }
 
