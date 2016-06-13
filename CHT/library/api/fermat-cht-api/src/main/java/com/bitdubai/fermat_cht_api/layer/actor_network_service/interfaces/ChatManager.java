@@ -52,6 +52,8 @@ public interface ChatManager extends FermatManager {
 
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
+    boolean isActorOnline(String publicKey);
+
 
 
 }
