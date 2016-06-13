@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -36,10 +37,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
-
-import org.bitcoinj.utils.Fiat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +50,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CBPInstalledWallet>, DialogInterface.OnDismissListener {
 
     // Constants
@@ -96,16 +95,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             try {
                 walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
             } catch (Exception ex) {
-                Object data = appSession.getData(CryptoBrokerWalletSessionReferenceApp.CONFIGURED_DATA);
+                Object data = appSession.getData(FragmentsCommons.CONFIGURED_DATA);
                 walletConfigured = (data != null);
             }
 
             if (walletConfigured) {
-                //getRuntimeManager().changeStartActivity(1);
                 return;
             } else {
-                //Delete potential previous configurations made by this wizard page
-                //So that they can be reconfigured cleanly
+                //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
                 moduleManager.clearAssociatedIdentities(appSession.getAppPublicKey());
 
                 final List<CBPInstalledWallet> installWallets = moduleManager.getCbpInstallWallets();

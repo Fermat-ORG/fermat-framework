@@ -12,23 +12,23 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
+public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
@@ -63,7 +63,6 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
         final Spinner countrySpinner = (Spinner) layout.findViewById(R.id.cbw_country_spinner);
         countrySpinner.setOnItemSelectedListener(this);
         countrySpinner.setAdapter(adapter);
-        //countrySpinner.setSelection(0);
 
         cityTextView = (FermatEditText) layout.findViewById(R.id.cbw_city_edit_text);
 
@@ -163,8 +162,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
     private List<String> getListOfCountryNames(Country[] countries) {
         List<String> data = new ArrayList<>();
 
-        for (int i = 0; i < countries.length; i++)
-            data.add(countries[i].getCountry());
+        for (Country country : countries) data.add(country.getCountry());
 
         return data;
     }
