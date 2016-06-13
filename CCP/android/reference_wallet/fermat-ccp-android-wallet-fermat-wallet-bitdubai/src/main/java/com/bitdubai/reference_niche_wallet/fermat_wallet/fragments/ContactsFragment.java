@@ -256,7 +256,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -267,7 +267,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
@@ -537,13 +537,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (isFromActionBarSend != null) {
                         if (isFromActionBarSend) {
                             referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
 
                         } else {
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
                         }
                     } else {
-                        changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                        changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
                     }
 
 
@@ -597,7 +597,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             walletContact.setName("");
             lauchCreateContactDialog(false);
         } else if (id == ID_BTN_INTRA_USER) {
-            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
+            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
         }
     }
 
