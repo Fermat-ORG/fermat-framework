@@ -77,7 +77,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
 
 
@@ -91,13 +91,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.ccw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyListViewsContainer.setVisibility(View.GONE);
-        }
     }
 
     private void configureToolbar() {
@@ -230,13 +223,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                     adapter.changeDataSet(openNegotiationList);
             }
         }
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyListViewsContainer.setVisibility(View.GONE);
-        }
+
+        showOrHideEmptyView();
     }
 
     @Override
@@ -257,6 +245,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             case CCW_CONTRACT_UPDATE_VIEW:
                 onRefresh();
                 break;
+        }
+    }
+
+    private void showOrHideEmptyView(){
+        if (openNegotiationList == null || openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 }

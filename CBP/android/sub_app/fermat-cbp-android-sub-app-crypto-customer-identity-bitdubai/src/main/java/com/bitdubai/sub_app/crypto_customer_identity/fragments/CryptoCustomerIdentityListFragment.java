@@ -58,6 +58,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
     // UI
     private View noMatchView;
+    View emptyListViewsContainer;
+
     private CryptoCustomerIdentityListFilter filter;
     private PresentationDialog presentationDialog;
 
@@ -75,7 +77,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         try {
             moduleManager = ((CryptoCustomerIdentitySubAppSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            identityInformationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            onRefresh();
         } catch (Exception ex) {
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
@@ -93,12 +95,9 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
         noMatchView = layout.findViewById(R.id.no_matches_crypto_customer_identity);
-        if (identityInformationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }
-        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+        emptyListViewsContainer  = layout.findViewById(R.id.no_crypto_customer_identities);
+
+        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.banner_identity_customer)
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
@@ -133,6 +132,16 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         configureToolbar();
+    }
+
+    private void showOrHideNoIdentitiesView(){
+        if (identityInformationList == null || identityInformationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
+        }
     }
 
     private void configureToolbar() {
@@ -246,6 +255,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
                     adapter.changeDataSet(identityInformationList);
             }
         }
+
+        showOrHideNoIdentitiesView();
     }
 
     @Override

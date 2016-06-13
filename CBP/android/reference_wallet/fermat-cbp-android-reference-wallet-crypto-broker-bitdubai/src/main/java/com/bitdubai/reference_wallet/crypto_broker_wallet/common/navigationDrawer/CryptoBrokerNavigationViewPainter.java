@@ -93,7 +93,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
             final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
             adapter.setStockTitle("Current Stock");
-            adapter.setStockTitle("Daily Earnings");
+            adapter.setEarningsTitle("Daily Earnings");
 
             return adapter;
         } catch (Exception e) {
