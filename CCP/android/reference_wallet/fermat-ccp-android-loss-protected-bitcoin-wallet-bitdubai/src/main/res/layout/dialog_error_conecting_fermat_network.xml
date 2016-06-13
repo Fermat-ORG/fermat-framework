@@ -17,7 +17,9 @@
             android:text="@string/fermat_network_offline_text"
             android:textColor="#fff"
             android:textSize="17sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
     </LinearLayout>
 
 
@@ -40,7 +42,9 @@
                 android:layout_height="wrap_content"
                 android:padding="2dp"
                 android:src="@drawable/icon_network_fermat"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
         </LinearLayout>
 
 
@@ -57,7 +61,9 @@
             android:text="@string/description_text"
             android:textColor="#000000"
             android:textSize="15sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/second_description"
@@ -71,7 +77,9 @@
             android:text="@string/second_description_text"
             android:textColor="#000000"
             android:textSize="15sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:focusable="false"
+            android:focusableInTouchMode="false"/>
 
         <View
             android:layout_width="match_parent"
@@ -98,7 +106,9 @@
                 android:textAllCaps="true"
                 android:textColor="#000000"
                 android:textSize="15sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:focusable="false"
+                />
 
             <View
                 android:layout_width="1dp"
@@ -118,7 +128,9 @@
                 android:textAllCaps="true"
                 android:textColor="#000000"
                 android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:focusable="false"
+               />
 
         </LinearLayout>
 

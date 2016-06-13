@@ -44,13 +44,15 @@
 
     <LinearLayout
         android:id="@+id/linear_create_contact"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
         android:paddingRight="50dp"
+
         >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton

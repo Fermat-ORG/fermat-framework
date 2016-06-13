@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+            <com.bitdubai.reference_niche_wallet.fermat_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -85,7 +85,7 @@
                 <ImageView
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    android:src="@drawable/contacts_empty_icon" />
+                    android:src="@drawable/fw_no_user_icon" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
