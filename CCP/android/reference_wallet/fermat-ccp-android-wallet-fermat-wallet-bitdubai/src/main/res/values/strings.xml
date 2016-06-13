@@ -14,7 +14,7 @@
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
     <string name="search_text">Search</string>
-    <!-- contact_detail_base.xml -->
+    <!-- fermat_contact_detail_baseil_base.xml -->
     <string name="matias_furszyfer_text">Matias Furszyfer</string>
     <string name="name_text">Name</string>
     <string name="address_text">Address</string>

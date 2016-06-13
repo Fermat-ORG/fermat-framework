@@ -5,7 +5,7 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_gradient"
+    android:background="#B3D100"
     android:orientation="vertical">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/search_contacts_container"
+
         android:orientation="horizontal">
 
         <ImageView
@@ -43,7 +43,7 @@
             android:hint="@string/search_hint"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="14sp" />
+            android:textSize="25sp" />
 
         <ImageButton
             android:id="@+id/clear_search_image_button"
@@ -58,7 +58,9 @@
         android:id="@+id/contacts_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background_white_gradient"
+        >
 
         <include layout="@layout/loading_empty_view" />
 
@@ -80,21 +82,24 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:background="@drawable/background_white_gradient"
+                >
 
                 <ImageView
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    android:src="@drawable/contacts_empty_icon" />
+                    android:src="@drawable/fw_no_user_icon" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="@string/click_me_to_search_text"
+                    android:textSize="16dp"
+                    android:text="@string/add_user_in_your_contact_list_text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="#fff"
+                    android:textColor="#54ACEC"
                     app:typeface="ROBOTO_REGULAR" />
 
             </LinearLayout>

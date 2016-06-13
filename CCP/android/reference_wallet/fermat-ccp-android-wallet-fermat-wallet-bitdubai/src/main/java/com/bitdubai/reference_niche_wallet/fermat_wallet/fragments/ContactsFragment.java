@@ -186,7 +186,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contac_main_act, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_contac_main_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -253,7 +253,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fermat_wallet_extra_user_button))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
@@ -264,7 +264,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fermat_wallet_intra_user_button))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
                 .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
@@ -597,7 +597,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             walletContact.setName("");
             lauchCreateContactDialog(false);
         } else if (id == ID_BTN_INTRA_USER) {
-            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
+            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
         }
     }
 

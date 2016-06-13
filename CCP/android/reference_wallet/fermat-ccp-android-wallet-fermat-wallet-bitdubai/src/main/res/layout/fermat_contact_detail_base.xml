@@ -10,16 +10,16 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:background="@color/accent_material_dark">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:adjustViewBounds="true"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
-            tools:src="@drawable/celine_profile_picture"
+            tools:src="@drawable/ic_profile_male"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -61,7 +61,7 @@
                 android:text="@string/name_text"
                 android:textColor="#12aca1"
                 android:layout_marginLeft="20dp"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:paddingTop="12dp"
                 app:typeface="ROBOTO_REGULAR"/>
 
@@ -100,13 +100,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#bbccc7"/>
+                android:background="@drawable/gradient"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/address_text"
-                android:textSize="12sp"
+                android:text="Fermats Address"
+                android:textSize="16sp"
                 android:textColor="#12aca1"
                 android:layout_marginLeft="16dp"
                 app:typeface="ROBOTO_REGULAR"
@@ -154,7 +154,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#bbccc7"/>
+                android:background="@drawable/gradient"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
