@@ -3307,6 +3307,31 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        //Owner
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(chatPublicKey);
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(0,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Delete All Chats");
+        optionMenuItem.setShowAsAction(-1);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
@@ -3316,7 +3341,7 @@ public class SubAppAppsGenerator {
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#075E55");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#47BF73");
+        runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
 //        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
 //        runtimeTabStrip.setDividerColor(0xFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3324,8 +3349,6 @@ public class SubAppAppsGenerator {
         //Tabs Chats
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(chatPublicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
@@ -3801,7 +3824,6 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
-
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
