@@ -116,13 +116,17 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 };
                 Future<FermatModuleObjectWrapper>  objectFuture =poolExecutor.submit(callable);
                 try {
+                    Log.i(TAG,"Timeout method");
                     objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
+                    Log.i(TAG,"Timeout method return");
                 }catch (TimeoutException e){
                     //Method canceled and return an exception
                     objectFuture.cancel(true);
                     poolExecutor.purge();
                     Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
                     return new MethodTimeOutException();
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }else{
                 /**

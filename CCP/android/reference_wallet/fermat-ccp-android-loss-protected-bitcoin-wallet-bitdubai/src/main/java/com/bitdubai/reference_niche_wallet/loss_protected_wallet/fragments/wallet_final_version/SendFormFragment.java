@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
@@ -267,7 +268,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
             super.onActivityCreated(savedInstanceState);
 
-            hideSoftKeyboard(getActivity());
+            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
 
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -315,7 +317,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 switch (position) {
                     case 0:
                         text = "[btc]";
-                        if (!amount.equals("") && amount != null){
+                        if (!amount.equals("") && amount != null) {
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -323,7 +325,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
 
@@ -339,7 +341,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
 
@@ -354,7 +356,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
                         break;
@@ -716,7 +718,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                             try {
-                                String notes = null;
+                                String notes = "";
                                 if (txt_notes.getText().toString().length() != 0) {
                                     notes = txt_notes.getText().toString();
                                 }
@@ -884,9 +886,16 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if(activity.getCurrentFocus() != null)
-         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+
+
+    @Override
+    public void onBackPressed() {
+
+
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
     }
 }

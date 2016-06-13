@@ -85,6 +85,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @throws CantGetAllLossProtectedWalletContactsException if something goes wrong
      */
 
+
     List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException;
 
 

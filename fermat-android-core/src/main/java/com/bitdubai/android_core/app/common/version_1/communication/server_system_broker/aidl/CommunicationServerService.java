@@ -523,12 +523,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
 
-        GetTask getTask = new GetTask(this, this);
-        getTask.setCallBack(this);
-        getTask.execute();
+            GetTask getTask = new GetTask(this, this);
+            getTask.setCallBack(this);
+            getTask.execute();
 
-        executorService = Executors.newFixedThreadPool(10);
+            executorService = Executors.newFixedThreadPool(5);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         clients = new HashMap<>();
         socketsClients = new HashMap<>();
 
