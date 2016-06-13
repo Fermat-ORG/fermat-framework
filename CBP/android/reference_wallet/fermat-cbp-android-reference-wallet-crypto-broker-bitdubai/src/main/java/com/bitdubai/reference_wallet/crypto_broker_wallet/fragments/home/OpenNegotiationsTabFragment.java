@@ -74,7 +74,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
 
 
@@ -88,13 +88,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            emptyListViewsContainer.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
     }
 
     private void configureToolbar() {
@@ -213,13 +206,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                     adapter.changeDataSet(openNegotiationList);
             }
         }
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            emptyListViewsContainer.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        showOrHideEmptyView();
     }
 
     @Override
@@ -242,6 +229,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 break;
         }
 
+    }
+
+    private void showOrHideEmptyView(){
+        if (openNegotiationList == null || openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            emptyListViewsContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
 

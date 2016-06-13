@@ -106,7 +106,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         homeTutorialPresentationDialog.setOnDismissListener(this);
 
         //Get wallet transactions, balances and currency
-        transactionList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
         getWalletBalances();
         getWalletCurrency();
     }
@@ -138,7 +138,6 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         //Set up no_transactions view
         noTransactionsView = layout.findViewById(R.id.no_transactions);
-        showOrHideNoTransactionsView(transactionList.isEmpty());
 
         layout.findViewById(R.id.fab_withdraw).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,8 +231,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         }
     }*/
 
-    private void showOrHideNoTransactionsView(boolean show) {
-        if (show) {
+    private void showOrHideNoTransactionsView(ArrayList<CashMoneyWalletTransaction> transactions) {
+        if (transactions == null || transactions.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             noTransactionsView.setVisibility(View.VISIBLE);
         } else {
@@ -261,13 +260,13 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 transactionList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
-
-                getWalletBalances();
-                updateWalletBalances();
-                handleWidhtrawalFabVisibilityAccordingToBalance();
-                showOrHideNoTransactionsView(transactionList.isEmpty());
             }
         }
+
+        getWalletBalances();
+        updateWalletBalances();
+        handleWidhtrawalFabVisibilityAccordingToBalance();
+        showOrHideNoTransactionsView(transactionList);
     }
 
     @Override
