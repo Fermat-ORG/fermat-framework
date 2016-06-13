@@ -392,11 +392,17 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(ImagesUtils.toByteArray(imageBitmap));
+            resource.setResourceBinayData(ImagesUtils.toByteArray(ConvertToBitMap(wizardMultimediaAssetImage)));
             resources.add(resource);
             asset.setResources(resources);
         } else
             asset.setResources(null);
+    }
+
+    private Bitmap ConvertToBitMap(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        return imageView.getDrawingCache();
     }
 
     private void setupUIData() {
