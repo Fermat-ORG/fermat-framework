@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -32,6 +31,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
+
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
@@ -65,8 +65,8 @@ public class SettingsNotificationsFragment extends FermatPreferenceFragment<Refe
         setHasOptionsMenu(true);
         try {
 
-        moduleManager = appSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
 
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         } catch (Exception e) {

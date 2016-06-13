@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ContractProperty implements Serializable{
+public class ContractProperty implements Serializable {
     String name;
     Object value;
 

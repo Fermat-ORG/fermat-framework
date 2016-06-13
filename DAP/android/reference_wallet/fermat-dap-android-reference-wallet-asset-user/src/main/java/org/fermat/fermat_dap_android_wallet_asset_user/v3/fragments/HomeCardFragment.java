@@ -55,7 +55,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

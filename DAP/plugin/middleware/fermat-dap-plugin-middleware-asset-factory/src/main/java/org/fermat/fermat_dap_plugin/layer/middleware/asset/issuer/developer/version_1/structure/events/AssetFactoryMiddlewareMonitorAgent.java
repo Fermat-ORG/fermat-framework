@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.ver
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -17,7 +18,6 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.AssetFactoryMiddlewarePluginRoot;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;

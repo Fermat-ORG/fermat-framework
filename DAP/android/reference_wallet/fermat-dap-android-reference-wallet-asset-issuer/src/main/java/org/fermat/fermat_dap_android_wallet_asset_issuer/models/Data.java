@@ -261,7 +261,7 @@ public class Data implements Serializable {
         List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
 
-        for (AssetIssuerWalletTransaction assetUserWalletTransaction :  assetUserWalletTransactions) {
+        for (AssetIssuerWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
             if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                 dapActor = assetUserWalletTransaction.getActorFrom();
             } else {

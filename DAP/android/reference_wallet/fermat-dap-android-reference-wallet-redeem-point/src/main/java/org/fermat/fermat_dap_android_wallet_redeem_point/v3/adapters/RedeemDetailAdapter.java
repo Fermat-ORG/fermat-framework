@@ -57,7 +57,7 @@ public class RedeemDetailAdapter extends PagerAdapter {
         res = item_view.getResources();
 
 
-        if (position == 0){
+        if (position == 0) {
             byte[] img = (digitalAsset.getImageActorUserFrom() == null) ? new byte[0] : digitalAsset.getImageActorUserFrom();
 
             BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(redeemDetailItemImageView,
@@ -66,7 +66,7 @@ public class RedeemDetailAdapter extends PagerAdapter {
 
             redeemDetailItemTextView.setText(digitalAsset.getActorUserNameFrom());
 
-        }else{
+        } else {
             byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
 
             BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(redeemDetailItemImageView,

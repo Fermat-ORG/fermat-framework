@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by franklin on 14/10/15.
  */
-public interface AssetRedeemPointWalletList extends Serializable{
+public interface AssetRedeemPointWalletList extends Serializable {
 
     DigitalAsset getDigitalAsset();
 

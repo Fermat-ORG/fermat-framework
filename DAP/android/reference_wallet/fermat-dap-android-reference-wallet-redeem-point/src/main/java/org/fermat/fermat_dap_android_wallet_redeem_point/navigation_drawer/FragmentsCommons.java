@@ -15,10 +15,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
-import com.squareup.picasso.Picasso;
-import org.fermat.fermat_dap_android_wallet_redeem_point.common.views.WalletRedeemUtils;
 
-import org.fermat.fermat_dap_android_wallet_redeem_point.util.BitmapWorkerTask;
+import org.fermat.fermat_dap_android_wallet_redeem_point.common.views.WalletRedeemUtils;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 

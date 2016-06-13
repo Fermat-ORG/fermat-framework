@@ -14,8 +14,6 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.v3.models.DigitalAssetH
 import org.fermat.fermat_dap_android_wallet_redeem_point.v3.util.Utils;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
-
-
 import java.util.LinkedHashMap;
 import java.util.List;
 

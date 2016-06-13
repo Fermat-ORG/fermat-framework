@@ -192,8 +192,7 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
         } catch (CantLoadWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantLoadWalletException("Error load Wallet ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
-        }
-        catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantGetTransactionsException("Error getting transactions ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
         }
