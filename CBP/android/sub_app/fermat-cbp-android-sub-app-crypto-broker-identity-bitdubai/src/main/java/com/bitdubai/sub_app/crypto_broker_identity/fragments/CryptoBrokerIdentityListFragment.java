@@ -103,6 +103,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
                 .setBody(R.string.cbp_broker_identity_welcome_body)
                 .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIsCheckEnabled(true)
                 .build();
 
         IdentityBrokerPreferenceSettings subappSettings;
