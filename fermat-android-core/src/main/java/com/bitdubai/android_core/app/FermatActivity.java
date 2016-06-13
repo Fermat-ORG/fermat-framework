@@ -149,7 +149,6 @@ import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
- * Update by Miguel Payarez on 2016.04.08
  */
 
 public abstract class FermatActivity extends AppCompatActivity implements
@@ -660,6 +659,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             for (int i=0;i<tabs.size();i++) {
                 Tab tab = tabs.get(i);
                 FermatFragment fragment = tab.getFragment();
+                //optionMenu
+                if(fragment.getOptionsMenu()!=null)addOptionMenuItems(fragment.getOptionsMenu());
                 String appPublicKey = fragment.getOwner().getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
                 AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
                 if (session instanceof ComboAppType2FermatSession) {
@@ -705,6 +706,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession referenceAppFermatSession, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment) {
         try {
             String fragment = runtimeFragment.getType();
+            if(runtimeFragment.getOptionsMenu()!=null)addOptionMenuItems(runtimeFragment.getOptionsMenu());
             if (fermatFragmentFactory != null) {
                 tabLayout.setVisibility(View.GONE);
                 pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -718,6 +720,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
             handleExceptionAndRestart();
         }
+    }
+
+    protected void addOptionMenuItems(OptionsMenu optionsMenu) {
+        optionsMenu.addMenuItems(optionsMenu.getMenuItems());
     }
 
     /**

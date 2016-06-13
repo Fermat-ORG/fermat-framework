@@ -42,7 +42,8 @@ public class OptionsMenu implements FermatMainMenu {
     /**
      * OptionsMenu class setters
      */
-    public void setMenuItems (List<OptionMenuItem> menuItems) {
-        this.menuItems = menuItems;
+
+    public void addMenuItems(List<? extends OptionMenuItem> menuItems) {
+        this.menuItems.addAll(menuItems);
     }
 }
