@@ -1,6 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -203,7 +202,7 @@ public class ChatListFragment
                 }
                 if (chatscounter==0)
                 {
-                    layout.setBackgroundResource(R.drawable.cht_background_color);
+                    //layout.setBackgroundResource(R.drawable.cht_background_color);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
                     getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
@@ -296,7 +295,7 @@ public class ChatListFragment
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
                 chatlistview();
             }else{
-                layout.setBackgroundResource(R.drawable.cht_background_color);
+                //layout.setBackgroundResource(R.drawable.cht_background_color);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);

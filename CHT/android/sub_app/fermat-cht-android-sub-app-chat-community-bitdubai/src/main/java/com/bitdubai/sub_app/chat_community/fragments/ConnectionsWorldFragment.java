@@ -36,11 +36,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
@@ -747,88 +745,4 @@ public class ConnectionsWorldFragment
                 break;
         }
     }
-
-//    private void updateButton(ChatActorCommunityInformation data) {
-//        try {
-//            String strConnectionState="";
-//            ConnectionState connectionState
-//                    = moduleManager.getActorConnectionState(data.getPublicKey());
-//            if(connectionState!=null)  {
-//                switch (connectionState) {
-//                    case BLOCKED_LOCALLY:
-//                    case BLOCKED_REMOTELY:
-//                    case CANCELLED_LOCALLY:
-//                    case CANCELLED_REMOTELY:
-//                        connectionRejected();
-//                        strConnectionState="BLOCKED";
-//                        break;
-//                    case CONNECTED:
-//                        disconnectRequest();
-//                        strConnectionState="CONNECTED";
-//                        break;
-//                    case NO_CONNECTED:
-//                    case DISCONNECTED_LOCALLY:
-//                    case DISCONNECTED_REMOTELY:
-//                    case ERROR:
-//                    case DENIED_LOCALLY:
-//                    case DENIED_REMOTELY:
-//                        connectRequest();
-//                        strConnectionState="DISCONNECTED";
-//                        break;
-//                    case PENDING_REMOTELY_ACCEPTANCE:
-//                        connectionSend();
-//                        strConnectionState="PENDING ACCEPTANCE";
-//                        break;
-//                    case PENDING_LOCALLY_ACCEPTANCE:
-//                        conectionAccept();
-//                        strConnectionState="PENDING ACCEPTANCE";
-//                        break;
-//                }
-//            }else  connectRequest();
-//        } catch (CantValidateActorConnectionStateException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private void connectionSend() {
-//        connectionRequestSend.setVisibility(View.VISIBLE);
-//        connect.setVisibility(View.GONE);
-//        disconnect.setVisibility(View.GONE);
-//        connectionRequestRejected.setVisibility(View.GONE);
-//        accept.setVisibility(View.GONE);
-//    }
-//
-//    private void conectionAccept(){
-//        connectionRequestSend.setVisibility(View.GONE);
-//        connect.setVisibility(View.GONE);
-//        disconnect.setVisibility(View.GONE);
-//        connectionRequestRejected.setVisibility(View.GONE);
-//        accept.setVisibility(View.VISIBLE);
-//        accept.setBackgroundResource(R.drawable.cht_comm_bg_shape_blue);
-//    }
-//
-//    private void connectRequest() {
-//        connectionRequestSend.setVisibility(View.GONE);
-//        connect.setVisibility(View.VISIBLE);
-//        disconnect.setVisibility(View.GONE);
-//        connectionRequestRejected.setVisibility(View.GONE);
-//        accept.setVisibility(View.GONE);
-//    }
-//
-//    private void disconnectRequest() {
-//        connectionRequestSend.setVisibility(View.GONE);
-//        connect.setVisibility(View.GONE);
-//        disconnect.setVisibility(View.VISIBLE);
-//        connectionRequestRejected.setVisibility(View.GONE);
-//        accept.setVisibility(View.GONE);
-//    }
-//
-//    private void connectionRejected() {
-//        connectionRequestSend.setVisibility(View.GONE);
-//        connect.setVisibility(View.GONE);
-//        disconnect.setVisibility(View.GONE);
-//        connectionRequestRejected.setVisibility(View.VISIBLE);
-//        accept.setVisibility(View.GONE);
-//    }
-
 }

@@ -64,31 +64,8 @@ public class ContactsListFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>
         implements ContactListAdapter.AdapterCallback, cht_dialog_connections.AdapterCallbackContacts {
 
-//    // Bundle key for saving previously selected search result item
-//    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
     private ContactListAdapter adapter; // The main query adapter
-    //private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
-//    private String mSearchTerm; // Stores the current search query term
-//
-//    //private OnContactsInteractionListener mOnContactSelectedListener;
-//
-//    // Stores the previously selected search item so that on a configuration change the same item
-//    // can be reselected again
-//    private int mPreviouslySelectedSearchItem = 0;
-// public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
-//    private ListView contactsContainer;
-    //private Contact contactl;//= new Contact();
-//
-//    // Whether or not the search query has changed since the last time the loader was refreshed
-//    private boolean mSearchQueryChanged;
-
-    // Whether or not this fragment is showing in a two-pane layout
-    //private boolean mIsTwoPaneLayout;
-
-    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
-    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-    //private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
     //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -273,17 +250,17 @@ public class ContactsListFragment
                     } else {
                         noData.setVisibility(View.VISIBLE);
                         noDatalabel.setVisibility(View.VISIBLE);
-                        layout.setBackgroundResource(R.drawable.cht_background_1);
+                        //layout.setBackgroundResource(R.drawable.cht_background_1);
                     }
                 }  else {
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
-                    layout.setBackgroundResource(R.drawable.cht_background_1);
+                    //layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
-                layout.setBackgroundResource(R.drawable.cht_background_1);
+                //layout.setBackgroundResource(R.drawable.cht_background_1);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -312,7 +289,7 @@ public class ContactsListFragment
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         noData.setVisibility(View.VISIBLE);
         noDatalabel.setVisibility(View.VISIBLE);
-        layout.setBackgroundResource(R.drawable.cht_background_1);
+        //layout.setBackgroundResource(R.drawable.cht_background_1);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
