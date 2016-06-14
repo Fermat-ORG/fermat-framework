@@ -200,7 +200,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                     Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
-            else if ( id == R.id.linear_layout_extra_user_receive){
+            /*else if ( id == R.id.linear_layout_extra_user_receive){
                 ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(
                         getActivity(),
                         cryptoWallet,
@@ -210,7 +210,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                         fermatWalletSessionReferenceApp.getAppPublicKey(),
                         blockchainNetworkType);
                 receiveFragmentDialog.show();
-            }
+            }*/
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
@@ -228,8 +228,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             text_view_address = (TextView) mFragmentView.findViewById(R.id.text_view_address);
             receive_button = (FermatButton) mFragmentView.findViewById(R.id.receive_button);
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
-            linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
-            img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
+            //linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
+            //img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
             linear_layout_extra_user_receive.setOnClickListener(this);
