@@ -12,10 +12,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -92,10 +95,16 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  */
                 pair = insertCheckedInActor(actorProfile);
 
-                if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey()))
+                if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
                     databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-                else
-                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+                }else {
+
+                    boolean hasChanges = validateProfileChange(actorProfile);
+
+                    if(hasChanges)
+                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+
+                }
 
                 /*
                  * CheckedActorsHistory into data base
@@ -220,6 +229,45 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
          * Save into the data base
          */
         return getDaoFactory().getCheckedActorsHistoryDao().createInsertTransactionStatementPair(checkedActorsHistory);
+
+    }
+
+    /**
+     * Validate if the profile register have changes
+     *
+     * @param actorProfile
+     * @return boolean
+     * @throws CantReadRecordDataBaseException
+     * @throws RecordNotFoundException
+     */
+    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
+
+        CheckedInActor checkedInActor = new CheckedInActor();
+        checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+        checkedInActor.setActorType(actorProfile.getActorType());
+        checkedInActor.setAlias(actorProfile.getAlias());
+        checkedInActor.setName(actorProfile.getName());
+        checkedInActor.setPhoto(actorProfile.getPhoto());
+        checkedInActor.setExtraData(actorProfile.getExtraData());
+        checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+        checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
+
+        //Validate if location are available
+        if (actorProfile.getLocation() != null){
+            checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
+            checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+        }else{
+            checkedInActor.setLatitude(0.0);
+            checkedInActor.setLongitude(0.0);
+        }
+
+        CheckedInActor actorsRegistered = getDaoFactory().getCheckedInActorDao().findById(actorProfile.getIdentityPublicKey());
+
+        if (!actorsRegistered.equals(checkedInActor)){
+            return Boolean.TRUE;
+        }else {
+            return Boolean.FALSE;
+        }
 
     }
 
