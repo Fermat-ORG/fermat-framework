@@ -346,15 +346,16 @@ public class ConnectionsWorldFragment
         try {
             moduleManager.exposeIdentityInWat();
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity, MAX, offset);
-            for(ChatActorCommunityInformation chat: result){
-                if(chat.getConnectionState()!= null){
-                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
-                        moduleManager.requestConnectionToChatActor(identity,chat);
-                        dataSet.add(chat);
-                    }else dataSet.add(chat);
-                }
-                else dataSet.add(chat);
-            }
+//            for(ChatActorCommunityInformation chat: result){
+//                if(chat.getConnectionState()!= null){
+//                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
+//                        moduleManager.requestConnectionToChatActor(identity,chat);
+//                        dataSet.add(chat);
+//                    }else dataSet.add(chat);
+//                }
+//                else dataSet.add(chat);
+//            }
+            dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
             e.printStackTrace();
