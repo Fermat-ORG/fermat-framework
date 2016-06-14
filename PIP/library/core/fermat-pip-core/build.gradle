@@ -86,6 +86,8 @@ dependencies {
     compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
     compile project(':fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai')
 
+    compile project(':fermat-pip-plugin-external-api-geolocation')
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
