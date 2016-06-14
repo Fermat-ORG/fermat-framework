@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 
+
 import org.fermatj.core.Block;
 import org.fermatj.core.BlockChain;
 import org.fermatj.core.FilteredBlock;
@@ -27,7 +28,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.Nullable;
+
 
 
 /**
@@ -80,7 +81,7 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
             }
 
             @Override
-            public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int i) {
+            public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int i) {
 
             }
 
@@ -109,7 +110,7 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
 
             }
 
-            @Nullable
+
             @Override
             public List<Message> getData(Peer peer, GetDataMessage getDataMessage) {
                 return null;

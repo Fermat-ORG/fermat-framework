@@ -8,7 +8,7 @@ import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransaction;
 
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+
 
 /**
  * Created by Yordin Alayn on 26.09.15.

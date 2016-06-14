@@ -8,8 +8,9 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.util.OperatingSystemCheck;
-import com.google.common.base.Stopwatch;
 
+
+import org.apache.commons.lang.time.StopWatch;
 import org.bouncycastle.util.encoders.Base64;
 
 import java.security.KeyFactory;
@@ -45,7 +46,7 @@ public class PruebaEnc {
 
             //System.getProperties().list(System.out);
 
-            Stopwatch stopwatch = Stopwatch.createStarted();
+            //StopWatchtch stopwatch = Stopwatch.createStarted();
 
             // Generate a 126-bit Digital Signature Algorithm (ECDH) key pair
            // generateKeys("ECDH", 126);

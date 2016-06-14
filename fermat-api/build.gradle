@@ -54,9 +54,6 @@ dependencies {
     compile 'org.kohsuke:github-api:1.69'
     compile 'com.carrotsearch:java-sizeof:0.0.5'
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
-    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
-        exclude module: 'scrypt'
-    }
     compile('com.thoughtworks.xstream:xstream:1.4.7') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
@@ -66,6 +63,8 @@ dependencies {
     compile 'com.madgag.spongycastle:core:1.54.0.0'
     compile 'com.madgag.spongycastle:prov:1.54.0.0'
     compile 'com.madgag.spongycastle:pkix:1.54.0.0'
+
+    compile project(':bitcoinj')
 
     testCompile 'com.thoughtworks.xstream:xstream:1.4.7'
     testCompile 'junit:junit:4.11'
