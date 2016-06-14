@@ -213,6 +213,7 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
                         BankTransactionStatus.PENDING));
         }
 
+        Collections.reverse(list);
         return list;
     }
 

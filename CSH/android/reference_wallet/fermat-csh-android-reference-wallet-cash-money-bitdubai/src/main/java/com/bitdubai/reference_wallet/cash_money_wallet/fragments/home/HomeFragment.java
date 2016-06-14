@@ -41,6 +41,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTran
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -314,6 +315,7 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
         if (moduleManager != null) {
             try {
                 List<CashMoneyWalletTransaction> pendingTransactions = moduleManager.getPendingTransactions();
+
                 if(!pendingTransactions.isEmpty())
                     startRefresh();
                 else
@@ -465,6 +467,8 @@ public class HomeFragment extends FermatWalletListFragment<CashMoneyWalletTransa
     public final void startRefresh() {
 
         if(!threadIsRunning) {
+            try { Thread.sleep(500); } catch (InterruptedException interruptedException) {}
+
             this.refresherThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
