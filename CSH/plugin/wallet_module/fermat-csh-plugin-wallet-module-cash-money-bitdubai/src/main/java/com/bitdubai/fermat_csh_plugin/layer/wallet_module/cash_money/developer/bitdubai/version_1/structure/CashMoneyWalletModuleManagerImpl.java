@@ -34,6 +34,8 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.b
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -143,6 +145,7 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
             transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
                     tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), transaction.getKey(), true));
         }
+        Collections.reverse(transactionList);
         return transactionList;
     }
 
