@@ -90,7 +90,16 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                  * CheckedInNetworkService into data base
                  */
                 pair = insertCheckedInNetworkService(networkServiceProfile);
-                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                if (!getDaoFactory().getCheckedInNetworkServiceDao().exists(networkServiceProfile.getIdentityPublicKey())) {
+
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                } else {
+
+                    if(validateProfileChange(networkServiceProfile))
+                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+                }
 
                 /*
                  * CheckedInNetworkServiceHistory into data base
@@ -152,24 +161,24 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
         /*
         * Create the checkedInNetworkService
         */
-            CheckedInNetworkService checkedInNetworkService = new CheckedInNetworkService();
-            checkedInNetworkService.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());
-            checkedInNetworkService.setClientIdentityPublicKey(networkServiceProfile.getClientIdentityPublicKey());
-            checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
+        CheckedInNetworkService checkedInNetworkService = new CheckedInNetworkService();
+        checkedInNetworkService.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());
+        checkedInNetworkService.setClientIdentityPublicKey(networkServiceProfile.getClientIdentityPublicKey());
+        checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
 
-            //Validate if location are available
-            if (networkServiceProfile.getLocation() != null) {
-                checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
-                checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
-            } else {
-                checkedInNetworkService.setLatitude(0.0);
-                checkedInNetworkService.setLongitude(0.0);
-            }
+        //Validate if location are available
+        if (networkServiceProfile.getLocation() != null) {
+            checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
+            checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
+        } else {
+            checkedInNetworkService.setLatitude(0.0);
+            checkedInNetworkService.setLongitude(0.0);
+        }
 
         /*
          * Save into the data base
          */
-          return  getDaoFactory().getCheckedInNetworkServiceDao().createInsertTransactionStatementPair(checkedInNetworkService);
+        return getDaoFactory().getCheckedInNetworkServiceDao().createInsertTransactionStatementPair(checkedInNetworkService);
 
     }
 
@@ -200,6 +209,42 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
          * Save into the data base
          */
         return getDaoFactory().getCheckedNetworkServicesHistoryDao().createInsertTransactionStatementPair(checkedNetworkServicesHistory);
+
+    }
+
+    /**
+     * Validate if the profile register have changes
+     *
+     * @param networkServiceProfile
+     * @return boolean
+     * @throws Exception
+     */
+    private boolean validateProfileChange(NetworkServiceProfile networkServiceProfile) throws Exception {
+
+               /*
+        * Create the checkedInNetworkService
+        */
+        CheckedInNetworkService checkedInNetworkService = new CheckedInNetworkService();
+        checkedInNetworkService.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());
+        checkedInNetworkService.setClientIdentityPublicKey(networkServiceProfile.getClientIdentityPublicKey());
+        checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
+
+        //Validate if location are available
+        if (networkServiceProfile.getLocation() != null) {
+            checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
+            checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
+        } else {
+            checkedInNetworkService.setLatitude(0.0);
+            checkedInNetworkService.setLongitude(0.0);
+        }
+
+        CheckedInNetworkService checkedInNetworkServiceRegistered = getDaoFactory().getCheckedInNetworkServiceDao().findById(networkServiceProfile.getIdentityPublicKey());
+
+        if (!checkedInNetworkServiceRegistered.equals(checkedInNetworkService)){
+            return Boolean.TRUE;
+        }else {
+            return Boolean.FALSE;
+        }
 
     }
 
