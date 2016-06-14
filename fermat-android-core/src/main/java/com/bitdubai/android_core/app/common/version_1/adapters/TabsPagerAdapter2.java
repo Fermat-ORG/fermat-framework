@@ -11,13 +11,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
  */
 public class TabsPagerAdapter2<F extends Fragment & AbstractFermatFragmentInterface> extends FermatScreenAdapter<F> implements FermatUIAdapter<F>{
 
-    private String[] titles;
-
     public TabsPagerAdapter2(FragmentManager fragmentManager,String[] tabsTitles,F[] fragments){
         super(fragmentManager,fragments);
         titles = tabsTitles;
-
     }
+
+    public TabsPagerAdapter2(FragmentManager fm, F[] fragments) {
+        super(fm, fragments);
+    }
+
     @Override
     public CharSequence getPageTitle(int position) {
         String title = "";

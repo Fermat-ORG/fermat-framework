@@ -62,7 +62,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
-
 /**
  * Created by rodrigo on 2/26/16.
  */
@@ -499,7 +498,7 @@ public abstract class CryptoVault {
                         } catch (InvalidSeedException e) {
                             e.printStackTrace();
                         }
-                        Coin fee = Coin.valueOf(10000);
+                        Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
                         Wallet.SendRequest req = Wallet.SendRequest.to(
                                 destinationAddress, balance.subtract(fee));
                         req.fee = fee;
@@ -519,8 +518,6 @@ public abstract class CryptoVault {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-//                    }
-//                });
 
                 } else {
 
@@ -533,7 +530,7 @@ public abstract class CryptoVault {
                     } catch (InvalidSeedException e) {
                         e.printStackTrace();
                     }
-                    Coin fee = Coin.valueOf(10000);
+                    Coin fee = Coin.valueOf(BitcoinNetworkConfiguration.FIXED_FEE_VALUE);
                     Wallet.SendRequest req = Wallet.SendRequest.to(
                             destinationAddress, balance.subtract(fee));
                     req.fee = fee;
@@ -548,12 +545,12 @@ public abstract class CryptoVault {
 
             } catch (BlockStoreException e) {
                 e.printStackTrace();
-            } catch (InsufficientMoneyException e) {
-                e.printStackTrace();
+//            } catch (InsufficientMoneyException e) {
+//                e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }

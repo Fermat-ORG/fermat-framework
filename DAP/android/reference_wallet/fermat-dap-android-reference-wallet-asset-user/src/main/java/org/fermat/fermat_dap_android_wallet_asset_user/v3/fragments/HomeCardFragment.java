@@ -55,7 +55,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.A
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -186,12 +185,14 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
                 int position = 0;
                 settings = new AssetUserSettings();
                 settings.setIsContactsHelpEnabled(true);
+                settings.setNotificationEnabled(true);
                 settings.setIsPresentationHelpEnabled(true);
                 settings.setNotificationEnabled(true);
+                settings.setAssetNotificationEnabled(true);
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {
@@ -235,7 +236,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset, ReferenceA
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
-                    .setImageLeft(R.drawable.asset_user_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.card_toolbar)
                     .setTitleTextColor(R.color.card_toolbar)
                     .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)

@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:textSize="16sp"
     android:gravity="center_horizontal"
-    android:textColor="#005580"
+    android:textColor="@color/redeem_card_titlebar"
     android:padding="5dip"
     />

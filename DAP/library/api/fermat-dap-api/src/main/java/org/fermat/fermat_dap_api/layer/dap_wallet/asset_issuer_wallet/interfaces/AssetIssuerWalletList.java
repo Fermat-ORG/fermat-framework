@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by franklin on 29/09/15.
  */
-public interface AssetIssuerWalletList extends Serializable{
+public interface AssetIssuerWalletList extends Serializable {
 
     org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset getDigitalAsset();
 

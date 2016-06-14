@@ -708,8 +708,7 @@ public final class AssetUserWalletDao {
     }
 
     private DatabaseTable getAssetUserWalletTable() {
-        DatabaseTable databaseTable = database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
-        return databaseTable;
+        return database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
     }
 
     private DatabaseTable getLockTable() {
