@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface FermatMainMenu  extends Serializable {
     List<OptionMenuItem> getMenuItems();
+
+
 }

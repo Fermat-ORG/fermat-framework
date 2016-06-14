@@ -36,7 +36,6 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 /**
@@ -69,7 +68,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
-    //private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
     private String strConnectionState = "UNKNOWN";
     private android.support.v7.widget.Toolbar toolbar;

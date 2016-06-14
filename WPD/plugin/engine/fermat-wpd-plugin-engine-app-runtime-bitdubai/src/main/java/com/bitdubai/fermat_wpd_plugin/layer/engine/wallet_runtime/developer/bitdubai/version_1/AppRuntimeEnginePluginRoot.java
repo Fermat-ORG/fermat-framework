@@ -5758,6 +5758,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
         Footer fermatFooter;
+        Tab runtimeTab;
 
 
         final String publicKey = ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode();
@@ -5766,11 +5767,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Apps consume
         runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
         runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeWalletNavigationStructure.addAppKeyToConsume(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 
+
+        //Home Activity
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CHT_COMBO_HOME.getCode());
         runtimeActivity.setType(Activities.CHT_COMBO_HOME);
-        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setColor("#F9F9F9");
 
         // title bar
         runtimeTitleBar = new TitleBar();
@@ -5779,27 +5784,58 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         //status bar
         runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#12aca1");
+        runtimeStatusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         // home fragment
-        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+
+        //Tabs
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#075E55");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#47BF73");
+//        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
+//        runtimeTabStrip.setDividerColor(0xFFFFFF);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        //Fragments
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CHATS");
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
+
+        //Tabs Contacts
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CONTACTS");
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey()));
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+
 
         //Owner
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        runtimeFragment.setOwner(owner);
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+//        Owner owner = new Owner();
+//        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+//        runtimeFragment.setOwner(owner);
+//        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+//        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);

@@ -14,17 +14,12 @@ import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 import java.util.List;
 
 /**
- * ContactsListAdapter
- *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
- * @version 1.0
+ * Created by roy on 13/06/16.
  */
+public class GeolocationAdapter extends FermatAdapter<ChatActorCommunityInformation, ContactsListHolder> {
 
-public class ContactsListAdapter
-        extends FermatAdapter<ChatActorCommunityInformation, ContactsListHolder> {
-
-    public ContactsListAdapter(Context context, List<ChatActorCommunityInformation> dataSet) {
-        super(context, dataSet);
+    public GeolocationAdapter(Context context, List<ChatActorCommunityInformation> dataset){
+        super(context, dataset);
     }
 
     @Override
@@ -34,7 +29,7 @@ public class ContactsListAdapter
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cht_comm_connection_list_item;
+        return R.layout.cht_comm_geolocation_results_item;
     }
 
     @Override
@@ -44,6 +39,7 @@ public class ContactsListAdapter
             if (data.getImage() != null && data.getImage().length > 0) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                //holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
         }
