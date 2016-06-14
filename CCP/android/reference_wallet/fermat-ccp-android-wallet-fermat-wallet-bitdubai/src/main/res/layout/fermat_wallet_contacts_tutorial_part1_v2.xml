@@ -5,14 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corners">
+    android:background="@drawable/background_white_gradient">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
-        android:background="@drawable/round_corner_line_dialog"
+        android:background="@drawable/background_navigation_drawer"
         android:fitsSystemWindows="true"
-        />
+        android:id="@+id/view" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
                     android:text="@string/txt_title_text"
                     android:paddingLeft="2dp"
                     android:textSize="20sp"
-                    android:textColor="#00a99d"
+                    android:textColor="#2481BA"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     android:paddingBottom="4dp"/>
 
@@ -61,7 +61,7 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"/>
+                android:background="@drawable/gradient"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
@@ -80,7 +80,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dad9d9"
+                android:background="@drawable/gradient"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
@@ -118,7 +118,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dad9d9"
+                android:background="@drawable/gradient"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"/>
 
@@ -152,7 +152,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dad9d9"
+                android:background="@drawable/gradient"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"/>
 
@@ -172,7 +172,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#dad9d9"
+                android:background="@drawable/gradient"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="5dp"
@@ -222,10 +222,12 @@
                     android:layout_gravity="center_horizontal" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/add_fermat_user"
                     android:text="@string/add_fermat_user_text"
+                    android:textColor="#fff"
+                    android:background="#009CD4"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
                     />
@@ -245,10 +247,12 @@
                     />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="@string/add_extra_user_text"
                     android:id="@+id/add_extra_user"
+                    android:textColor="#fff"
+                    android:background="#009CD4"
                     android:textSize="12dp"
                     android:layout_gravity="center_horizontal"
                     />
@@ -256,4 +260,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

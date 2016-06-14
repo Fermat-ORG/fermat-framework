@@ -103,7 +103,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private int offset = 0;
 
     private int MAX_PERCENTAGE = 100;
-    private int typeAmountSelected = 1;
+    private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
 
 
 
@@ -128,7 +128,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
         lossProtectedWalletSession = appSession;
 
         if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-            typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
         else
             appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
@@ -224,7 +224,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             info_into_progress = (TextView) rootView.findViewById(R.id.info_into_progress);
 
 
-            chunckAmount          = WalletUtils.formatBalanceString(transaction.getAmount(), typeAmountSelected);
+            chunckAmount          = WalletUtils.formatBalanceString(transaction.getAmount(), typeAmountSelected.getCode());
             chunckExchangeRate    = transaction.getExchangeRate();
             chunckAmountSpent     = getTotalSpent();
             chunckPercentageSpent = Integer.parseInt(WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction)));

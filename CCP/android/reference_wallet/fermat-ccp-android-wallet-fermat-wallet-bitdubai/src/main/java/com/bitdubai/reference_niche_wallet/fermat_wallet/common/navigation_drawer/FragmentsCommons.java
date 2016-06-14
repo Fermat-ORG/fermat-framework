@@ -34,7 +34,7 @@ public class FragmentsCommons {
 
         public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
 
-            View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+            View view = inflater.inflate(R.layout.fermat_wallet_navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {
                ActiveActorIdentityInformation identityInformation= fermatWalletSessionReferenceApp.getModuleManager().getSelectedActorIdentity();
