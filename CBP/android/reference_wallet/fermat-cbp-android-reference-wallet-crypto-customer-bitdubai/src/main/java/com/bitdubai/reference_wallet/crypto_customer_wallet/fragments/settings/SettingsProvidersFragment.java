@@ -30,10 +30,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -280,18 +278,6 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<ReferenceA
         }
 
         try {
-            //moduleManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
-
-            final CryptoCustomerWalletAssociatedSetting associatedWallet = moduleManager.newEmptyCryptoBrokerWalletAssociatedSetting();
-            associatedWallet.setId(UUID.randomUUID());
-            associatedWallet.setMoneyType(MoneyType.CRYPTO);
-            associatedWallet.setMerchandise(selectedBitcoinWallet.getCryptoCurrency());
-            associatedWallet.setPlatform(selectedBitcoinWallet.getPlatform());
-            associatedWallet.setWalletPublicKey(selectedBitcoinWallet.getWalletPublicKey());
-            associatedWallet.setCustomerPublicKey(appSession.getAppPublicKey());
-
-            moduleManager.saveWalletSettingAssociated(associatedWallet, appSession.getAppPublicKey());
-
 
             //Clear previous settings and then save new ones.
             moduleManager.clearCryptoCustomerWalletProviderSetting(appSession.getAppPublicKey());
