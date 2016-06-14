@@ -19,7 +19,7 @@ public enum CryptoCurrency implements Currency, Serializable {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITCOIN     ("BTC", "Bitcoin"),
-    FERMAT     ("FRM", "Fermat"),
+    FERMAT     ("FER", "Fermat"),
     DOGECOIN    ("DOGE", "Dogecoin"),
     ETHEREUM    ("ETH", "Ethereum"),
     LITECOIN    ("LTC", "Litecoin")
