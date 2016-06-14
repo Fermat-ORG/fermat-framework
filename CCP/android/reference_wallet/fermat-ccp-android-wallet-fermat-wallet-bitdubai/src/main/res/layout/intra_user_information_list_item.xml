@@ -15,7 +15,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <RelativeLayout
             android:layout_width="42dp"
@@ -43,19 +44,18 @@
         android:paddingRight="8dp"
         android:paddingStart="8dp"
         android:singleLine="true"
-        android:textColor="#FFFFFF"
-        tools:text="@string/matias_furszyfer_text" />
+        android:textColor="#2481BA"
+        tools:text="@string/matias_furszyfer_text"
+        android:fontFamily="hel"
+        />
 
-        <CheckBox
-            android:id="@+id/checkbox_connection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColorHint="@color/color_white"
-            android:buttonTint="@color/color_white"
-            android:width="30dp"
-            android:height="16dp"
-           />
+      <ImageView
+          android:layout_width="25sp"
+          android:layout_height="25sp"
+          android:background="@drawable/fw_add_floatting_buttom"
+          android:id="@+id/checkbox_connection"
+          android:layout_marginTop="10dp"
+          />
 
     </LinearLayout>
 
@@ -63,6 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
         android:layout_marginTop="8dp"
-        android:background="#FFFFFF" />
+        android:background="@drawable/gradient" />
 
 </LinearLayout>
