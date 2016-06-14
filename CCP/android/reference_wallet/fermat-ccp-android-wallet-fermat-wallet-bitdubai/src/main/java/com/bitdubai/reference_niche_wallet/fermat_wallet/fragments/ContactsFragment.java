@@ -256,7 +256,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
                 .setText("External User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -267,7 +267,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
                 .setText("Fermat User")
                 .setTextColor(Color.WHITE)
-                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
@@ -506,7 +506,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view, mListView, false);
+        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
         indexBarView.setData(mListView, mListItems, mListSectionPos);
         mListView.setIndexBarView(indexBarView);
 /*

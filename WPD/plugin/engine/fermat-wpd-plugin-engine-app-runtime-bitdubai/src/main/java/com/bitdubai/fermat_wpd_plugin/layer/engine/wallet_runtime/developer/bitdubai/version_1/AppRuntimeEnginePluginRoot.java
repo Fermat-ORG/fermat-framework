@@ -5994,7 +5994,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabel("Fermat wallet");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setFont("Helvetica.ttf");
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#009CD4");
 
@@ -6131,8 +6131,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //fin navigation
 
-        //fin navigation
-
+        runtimeActivity.setOptionsMenu(runtimeOptionsMenu);
 
         /**
          * Payment request Activity
@@ -6155,6 +6154,27 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setColor("#ffffff");
         //runtimeActivity.setColor("#d07b62");
 
+        /**
+         //         * Menu
+         //         */
+
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "fw_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_actionbar_send", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("New");
+        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#009CD4");
@@ -6707,7 +6727,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Navigation
 
         SideMenu runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#009CD4");
+        //runtimeSideMenu.setBackgroundColor("#009CD4");
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_FERMAT_WALLET.getCode());
+        runtimeSideMenu.setBackgroundDrawable(new FermatDrawable(1,"background_navigation_drawer",owner,SourceLocation.DEVELOPER_RESOURCES));
         runtimeSideMenu.setNavigationIconColor("#ffffff");
         runtimeSideMenu.setHasFooter(false);
 

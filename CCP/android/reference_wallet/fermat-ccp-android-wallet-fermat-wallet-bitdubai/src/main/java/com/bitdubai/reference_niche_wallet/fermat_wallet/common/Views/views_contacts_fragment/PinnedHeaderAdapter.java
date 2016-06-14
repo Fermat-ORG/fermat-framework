@@ -78,7 +78,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             }
         }
 
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica-neue.ttf");
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
         contactPositionItem = new HashMap<>();
 
 

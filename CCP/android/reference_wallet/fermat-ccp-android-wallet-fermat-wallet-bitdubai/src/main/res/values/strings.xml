@@ -55,7 +55,7 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
-    <!-- fragment_transaction_main.xml -->
+    <!-- fermat_transaction_mainml -->
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>

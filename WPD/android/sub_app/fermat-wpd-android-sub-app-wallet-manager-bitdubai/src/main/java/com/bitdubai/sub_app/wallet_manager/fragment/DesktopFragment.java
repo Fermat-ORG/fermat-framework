@@ -323,6 +323,9 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
 
 //TODO: Matias en este punto sa error de null point al arrancar y no muestra las wallets
             // Object arrived null in method: getInstalledWallets, this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.
+
+
+
             for(InstalledWallet installedWallet: lstInstalledWallet) {
                     if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode())) {
                         Item item = new Item(installedWallet);

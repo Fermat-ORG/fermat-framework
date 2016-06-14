@@ -287,6 +287,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         actionButton.setOnClickListener(this);
+
     }
 
     @Override
@@ -599,9 +600,24 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             walletContact = new WalletContact();
             walletContact.setName("");
             lauchCreateContactDialog(false);
-        } else if (id == ID_BTN_INTRA_USER) {
-            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY, lossWalletSession.getAppPublicKey());
+
+            if(actionMenu.isOpen())
+                actionMenu.close(true);
+            else
+                actionMenu.open(true);
         }
+        else
+            if (id == ID_BTN_INTRA_USER) {
+                changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY, lossWalletSession.getAppPublicKey());
+            }
+            else
+            {
+                //open buttons
+                if(actionMenu.isOpen())
+                    actionMenu.close(true);
+                else
+                      actionMenu.open(true);
+            }
     }
 
     @Override
