@@ -32,6 +32,9 @@
     <string name="dap_other_profile_dialog_description">Want to disconnect from</string>
     <string name="dap_other_profile_system_error_toast">Oooops! recovering from system error</string>
 
+    <string name="dap_community_redeem_point_search">Search</string>
+    <string name="action_community_redeem_point_search_hint">Redeem Point Name</string>
+
     <!--Connections Other Profile - End-->
 
     <!--Dialog Settings Notifications Help - Init-->
