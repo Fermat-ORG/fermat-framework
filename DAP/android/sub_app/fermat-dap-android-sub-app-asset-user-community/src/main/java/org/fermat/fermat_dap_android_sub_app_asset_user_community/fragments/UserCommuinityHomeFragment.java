@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +73,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
     protected final String TAG = "UserCommunityFragment";
 
     public static final String USER_SELECTED = "user";
+    private static final String SEARCH = "user_community_search";
     private static AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
@@ -98,6 +100,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
     private MenuItem menuItemSelect;
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
+    private SearchView searchView;
     private ExecutorService _executor;
 
     /**
@@ -158,7 +161,15 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
 
-                actors = dataSet;
+//                actors = dataSet;
+                for (int i=0; i<actors.size(); i++) {
+                    for (int j=0; j<dataSet.size(); j++) {
+                        if (dataSet.get(j).getActorPublicKey().equals(actors.get(i).getActorPublicKey())) {
+                            actors.set(i, dataSet.get(j));
+                        }
+                    }
+                }
+
                 boolean someSelected = false;
                 int selectedActors = 0;
                 int cheackeableActors = 0;
@@ -414,29 +425,55 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_community_user_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.action_community_user_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.changeDataSet(actors);
+                    adapter.getFilter().filter(s);
+                    appSession.setData(SEARCH, s);
+                }
+                return false;
+            }
+        });
+        if (appSession.getData(SEARCH) != null) {
+            String s = appSession.getData(SEARCH).toString();
+            searchView.setQuery(s, true);
+            if (s.length() > 0) searchView.setIconified(false);
+        }
+
         this.menu = menu;
 //        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 1, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         //}else if(actor.getDapConnectionState() == DAPConnectionState.CONNECTING){
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 1, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 2, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 3, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 4, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(5, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 5, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 3, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.getItem(0);
-        menuItemDisconnect = menu.getItem(1);
-        menuItemCancel = menu.getItem(2);
-        menuItemSelect = menu.getItem(3);
-        menuItemUnselect = menu.getItem(4);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 4, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 5, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menuItemConnect = menu.getItem(1);
+        menuItemDisconnect = menu.getItem(2);
+        menuItemCancel = menu.getItem(3);
+        menuItemSelect = menu.getItem(4);
+        menuItemUnselect = menu.getItem(5);
         restartButtons();
 
     }
@@ -847,6 +884,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
                         if (getActivity() != null && adapter != null) {
                             actors = (ArrayList<Actor>) result[0];
                             adapter.changeDataSet(actors);
+                            adapter.getFilter().filter(searchView.getQuery().toString());
                             if (actors.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
