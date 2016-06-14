@@ -1,9 +1,11 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/18/16.
  */
-public class SellInfo {
+public class SellInfo implements Serializable {
     private String assetsToSell;
     private String assetValue;
     private int assetValueCurrencyIndex;

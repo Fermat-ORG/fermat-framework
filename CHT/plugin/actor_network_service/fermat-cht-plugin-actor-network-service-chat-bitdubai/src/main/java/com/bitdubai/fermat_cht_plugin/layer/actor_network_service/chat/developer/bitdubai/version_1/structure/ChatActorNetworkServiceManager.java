@@ -380,9 +380,10 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         }
     }
 
-
-
-
+    @Override
+    public boolean isActorOnline(String publicKey) {
+        return false;
+    }
 
 
     private void sendMessage(final String jsonMessage      ,
