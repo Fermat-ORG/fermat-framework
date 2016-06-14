@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -35,12 +36,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
+import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
@@ -115,25 +120,27 @@ public class ConnectionsWorldFragment
             appSettings = null;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch (Exception e){ appSettings = null; }
+            } catch (Exception e) {
+                appSettings = null;
+            }
 
-            if(appSettings == null){
+            if (appSettings == null) {
                 appSettings = new ChatActorCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             //Check if a default identity is configured
-            try{
+            try {
                 moduleManager.getSelectedActorIdentity();
-            }catch (CantGetSelectedActorIdentityException e){
+            } catch (CantGetSelectedActorIdentityException e) {
                 //There are no identities in device
                 launchActorCreationDialog = true;
-            }catch (ActorIdentityNotSelectedException e){
+            } catch (ActorIdentityNotSelectedException e) {
                 //There are identities in device, but none selected
                 launchListIdentitiesDialog = true;
             }
@@ -151,16 +158,17 @@ public class ConnectionsWorldFragment
         try {
             rootView = inflater.inflate(R.layout.cht_comm_connections_world_fragment, container, false);
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 1, LinearLayoutManager.VERTICAL, false);
-            adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations);
+            layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
+            adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations,
+                    appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(layoutManager);
             rootView.setBackgroundColor(Color.parseColor("#f9f9f9"));
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-            noData=(ImageView) rootView.findViewById(R.id.nodata);
+            noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
@@ -171,7 +179,7 @@ public class ConnectionsWorldFragment
 
             showEmpty(true, emptyView);
 
-            if(launchActorCreationDialog) {
+            if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.chat_banner_community)
@@ -191,14 +199,14 @@ public class ConnectionsWorldFragment
                     }
                 });
                 presentationDialog.show();
-            } else if(launchListIdentitiesDialog) {
+            } else if (launchListIdentitiesDialog) {
                 PresentationChatCommunityDialog presentationChatCommunityDialog =
-                            new PresentationChatCommunityDialog(getActivity(),
+                        new PresentationChatCommunityDialog(getActivity(),
                                 appSession,
                                 null,
                                 moduleManager,
                                 PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
-                            );
+                        );
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -214,7 +222,6 @@ public class ConnectionsWorldFragment
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
         }
-
         return rootView;
     }
 
@@ -280,11 +287,11 @@ public class ConnectionsWorldFragment
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            emptyView.setBackgroundResource(R.drawable.cht_comm_background);
+            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            rootView.setBackgroundResource(R.drawable.cht_comm_background);
+            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else {
@@ -308,16 +315,14 @@ public class ConnectionsWorldFragment
         try {
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
 
-            System.out.println("****************** GETMORE DATA SYNCRHINIEZED RESULT SIZE: "+result.size());
-            for(ChatActorCommunityInformation chat: result){
-                if(chat.getConnectionState()!= null){
-                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
-                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
+            System.out.println("****************** GETMORE DATA SYNCRHINIEZED RESULT SIZE: " + result.size());
+            for (ChatActorCommunityInformation chat : result) {
+                if (chat.getConnectionState() != null) {
+                    if (chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), chat);
                         dataSet.add(chat);
-                    }else dataSet.add(chat);
-                }
-                else dataSet.add(chat);
-
+                    } else dataSet.add(chat);
+                } else dataSet.add(chat);
             }
             offset = dataSet.size();
         } catch (Exception e) {
@@ -329,24 +334,25 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-        try {
-            if (moduleManager.getSelectedActorIdentity() != null) {
-                appSession.setData(CHAT_USER_SELECTED, data);
-                changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-            } else {
-                showDialogHelp();//1
-            }
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
-        {
-            e.printStackTrace();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        try {
+//            if (moduleManager.getSelectedActorIdentity() != null) {
+//                appSession.setData(CHAT_USER_SELECTED, data);
+//                changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+//            } else {
+//                showDialogHelp();//1
+//            }
+//        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
+//        {
+//            e.printStackTrace();
+//        }catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
-    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {}
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
+    }
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
@@ -357,14 +363,15 @@ public class ConnectionsWorldFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-            if (id == R.id.action_help)
-                showDialogHelp();//0
-
-            if(id == 1){
-                showDialogHelp();
+            switch (id) {
+                case 3:
+                    showDialogHelp();
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
             }
-
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -382,10 +389,10 @@ public class ConnectionsWorldFragment
                 if (!moduleManager.getSelectedActorIdentity().getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
-                                appSession,
-                                null,
-                                moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
+                                    appSession,
+                                    null,
+                                    moduleManager,
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
                             );
                     presentationChatCommunityDialog.show();
 
@@ -461,6 +468,106 @@ public class ConnectionsWorldFragment
             presentationChatCommunityDialog.show();
 
             e.printStackTrace();
+        }
+    }
+
+    private void actionsDialog(int action, ChatActorCommunityInformation data) {
+        ConnectDialog connectDialog;
+        final ChatActorCommunityInformation dat = data;
+        switch (action) {
+            case 1://connect
+                CommonLogger.info(TAG, "User connection state " +
+                        data.getConnectionState());
+                try {
+                    connectDialog =
+                            new ConnectDialog(getActivity(), appSession, null,
+                                    data, moduleManager.getSelectedActorIdentity());
+                    connectDialog.setTitle("Connection Request");
+                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
+                    connectDialog.setUsername(data.getAlias());
+//                    connectDialog.setSecondDescription("a connection request?");
+                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //updateButton(dat);
+                        }
+                    });
+                    connectDialog.show();
+                } catch (CantGetSelectedActorIdentityException
+                        | ActorIdentityNotSelectedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2://Disconnect
+                CommonLogger.info(TAG, "User connection state " +
+                        data.getConnectionState());
+                final DisconnectDialog disconnectDialog;
+                try {
+                    disconnectDialog =
+                            new DisconnectDialog(getActivity(), appSession, null,
+                                    data, moduleManager.getSelectedActorIdentity());
+                    disconnectDialog.setTitle("Disconnect");
+                    disconnectDialog.setDescription("Do you want to disconnect from");
+                    disconnectDialog.setUsername(data.getAlias() + "?");
+                    disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //updateButton(dat);
+                        }
+                    });
+                    disconnectDialog.show();
+                } catch (CantGetSelectedActorIdentityException
+                        | ActorIdentityNotSelectedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 3://Accept Connection
+                try {
+                    AcceptDialog notificationAcceptDialog =
+                            new AcceptDialog(getActivity(), appSession, null,
+                                    data, moduleManager.getSelectedActorIdentity());
+                    notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //updateButton(dat);
+                        }
+                    });
+                    notificationAcceptDialog.show();
+
+                } catch (CantGetSelectedActorIdentityException
+                        | ActorIdentityNotSelectedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 4://Resend Connection
+                CommonLogger.info(TAG, "User connection state "
+                        + data.getConnectionState());
+                Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+                try {
+                    connectDialog =
+                            new ConnectDialog(getActivity(), appSession, null,
+                                    data, moduleManager.getSelectedActorIdentity());
+                    connectDialog.setTitle("Resend Connection Request");
+                    connectDialog.setDescription("Do you want to resend ");
+                    connectDialog.setUsername(data.getAlias());
+                    connectDialog.setSecondDescription("a connection request?");
+                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            //updateButton(dat);
+                        }
+                    });
+                    connectDialog.show();
+                } catch (CantGetSelectedActorIdentityException
+                        | ActorIdentityNotSelectedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 5://Reject Connection
+                CommonLogger.info(TAG, "User connection state "
+                        + data.getConnectionState());
+                Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

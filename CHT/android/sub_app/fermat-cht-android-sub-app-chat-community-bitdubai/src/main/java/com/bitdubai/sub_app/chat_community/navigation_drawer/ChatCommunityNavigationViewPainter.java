@@ -31,7 +31,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     private WeakReference<FermatApplicationCaller> applicationsHelper;
 
     public ChatCommunityNavigationViewPainter(Context activity,
-                                              ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
+                                         ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> subAppSession,
                                               FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
         this.subAppSession = subAppSession;
@@ -40,7 +40,6 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public View addNavigationViewHeader() {
-//    public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
         View headerView = null;
         try {
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()

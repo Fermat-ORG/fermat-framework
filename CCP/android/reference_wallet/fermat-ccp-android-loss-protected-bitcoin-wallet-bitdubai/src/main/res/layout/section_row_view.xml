@@ -20,15 +20,6 @@
         android:clickable="false"
         android:enabled="false"
         android:focusable="false"
-        tools:text="holas"
         android:fontFamily="roboto" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/gradient_line"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_alignParentBottom="true"/>
 
 </LinearLayout>

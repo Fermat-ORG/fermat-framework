@@ -105,7 +105,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private View rootView;
     private AutoCompleteTextView contactName;
     private EditText editTextAmount;
-    private ImageView imageView_contact;
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
@@ -125,7 +124,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
-    private FermatTextView txt_type;
+    private TextView txt_type;
     private ImageView spinnerArrow;
     BlockchainNetworkType blockchainNetworkType;
 
@@ -198,7 +197,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            setUpContactAddapter();
+            //setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
@@ -243,9 +242,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
-        imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
+
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
-        txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
+        txt_type = (TextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
         list.add("BTC");
@@ -345,9 +344,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         /**
          * Listeners
          */
-        imageView_contact.setOnClickListener(this);
+
         send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
         contactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -430,16 +428,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             cryptoWalletWalletContact = (FermatWalletWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (cryptoWalletWalletContact != null) {
-            try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
-                bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
-            } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            }
+
             contactName.setText(cryptoWalletWalletContact.getActorName());
 
-        } else {
-            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
 
     }

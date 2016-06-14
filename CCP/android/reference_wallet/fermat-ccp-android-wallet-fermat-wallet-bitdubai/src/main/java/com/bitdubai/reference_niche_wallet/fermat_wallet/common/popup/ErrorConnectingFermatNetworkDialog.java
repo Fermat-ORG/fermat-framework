@@ -13,8 +13,6 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
 
 /**
  * Created by Jose Manuel De Sousa Dos Santos on 2015.12.03
@@ -65,7 +63,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ReferenceAp
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_error_conecting_fermat_network;
+        return R.layout.fermat_wallet_dialog_error_conecting_fermat_network;
     }
 
     @Override

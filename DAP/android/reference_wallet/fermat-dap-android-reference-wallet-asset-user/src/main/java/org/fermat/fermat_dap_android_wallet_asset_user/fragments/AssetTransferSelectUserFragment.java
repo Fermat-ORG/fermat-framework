@@ -48,7 +48,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Jinmy Bohorquez on 18/02/2016.
  */
-public class AssetTransferSelectUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetTransferSelectUserFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
     // Constants
@@ -57,12 +57,8 @@ public class AssetTransferSelectUserFragment extends FermatWalletListFragment<Us
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
     // Data
     private List<User> users;
-
-    SettingsManager<AssetUserSettings> settingsManager;
-
     //UI
     private View noUsersView;
     private Toolbar toolbar;
@@ -76,11 +72,10 @@ public class AssetTransferSelectUserFragment extends FermatWalletListFragment<Us
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -132,7 +127,7 @@ public class AssetTransferSelectUserFragment extends FermatWalletListFragment<Us
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
-                setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
