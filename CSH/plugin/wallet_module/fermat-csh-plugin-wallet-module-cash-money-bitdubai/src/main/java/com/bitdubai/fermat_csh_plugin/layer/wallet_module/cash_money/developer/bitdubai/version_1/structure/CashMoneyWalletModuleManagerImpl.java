@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -136,9 +137,11 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
     public List<CashMoneyWalletTransaction> getPendingTransactions() {
 
         List<CashMoneyWalletTransaction> transactionList = new ArrayList<>();
-        for(CashTransactionParameters tp : agent.getQueuedTransactions()) {
+
+        for(Map.Entry<Long, CashTransactionParameters> transaction : agent.getQueuedTransactions().entrySet()) {
+            CashTransactionParameters tp = transaction.getValue();
             transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
-                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L, true));
+                    tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), transaction.getKey(), true));
         }
         return transactionList;
     }
