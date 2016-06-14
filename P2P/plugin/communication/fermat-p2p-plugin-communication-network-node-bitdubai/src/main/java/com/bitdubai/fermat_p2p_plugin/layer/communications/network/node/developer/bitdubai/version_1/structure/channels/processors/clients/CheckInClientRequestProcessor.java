@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -146,7 +147,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void checkInClient(final ClientProfile profile) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
+    private void checkInClient(final ClientProfile profile) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException, CantReadRecordDataBaseException {
 
         // create transaction for
         DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInClientDao().getNewTransaction();
@@ -172,7 +173,11 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
          * Save into the data base
          */
         pair = getDaoFactory().getCheckedInClientDao().createInsertTransactionStatementPair(checkedInClient);
-        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+        if(!getDaoFactory().getCheckedInClientDao().exists(checkedInClient.getIdentityPublicKey()))
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+        else
+            databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
 
         /*
          * ClientsRegistrationHistory into data base

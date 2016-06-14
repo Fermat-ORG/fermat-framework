@@ -90,7 +90,11 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                  * CheckedInNetworkService into data base
                  */
                 pair = insertCheckedInNetworkService(networkServiceProfile);
-                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                if(!getDaoFactory().getCheckedInNetworkServiceDao().exists(networkServiceProfile.getIdentityPublicKey()))
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                else
+                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
 
                 /*
                  * CheckedInNetworkServiceHistory into data base

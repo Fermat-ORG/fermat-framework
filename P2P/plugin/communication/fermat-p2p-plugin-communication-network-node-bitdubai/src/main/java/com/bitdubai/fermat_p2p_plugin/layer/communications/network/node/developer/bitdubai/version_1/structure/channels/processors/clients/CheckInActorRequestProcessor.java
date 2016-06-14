@@ -91,7 +91,11 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  * CheckedInActor into data base
                  */
                 pair = insertCheckedInActor(actorProfile);
-                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey()))
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                else
+                    databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
 
                 /*
                  * CheckedActorsHistory into data base
