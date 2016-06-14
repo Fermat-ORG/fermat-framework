@@ -3471,15 +3471,16 @@ public class SubAppAppsGenerator {
         chtChat.setPlatform(Platforms.CHAT_PLATFORM);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#075E55");
+
         //Activity Chat
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.changeActualStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#075E55");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3508,7 +3509,7 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(3,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -3525,8 +3526,6 @@ public class SubAppAppsGenerator {
         runtimeTabStrip.setTabsColor("#075E55");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
-//        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
-//        runtimeTabStrip.setDividerColor(0xFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats
@@ -3933,8 +3932,6 @@ public class SubAppAppsGenerator {
         Fragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-//        SideMenu runtimeSideMenu;
-//        MenuItem runtimeMenuItem;
 
         chtComm = new AppNavigationStructure();
         String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
@@ -3945,35 +3942,14 @@ public class SubAppAppsGenerator {
         statusBar = new StatusBar();
         statusBar.setColor("#075E54");
 
-//        runtimeSideMenu = new SideMenu();
-//        runtimeSideMenu.setBackgroundColor("#FFFFFF");
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Home");
-//        runtimeMenuItem.setIcon("cht_ic_home");
-//        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-//        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Contacts");
-//        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST);
-//        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-//
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Notifications");
-//        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
         //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setBackgroundColor("#f9f9f9");
-        runtimeActivity.setStatusBar(statusBar);
         chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
+
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("P2P Chat Community");

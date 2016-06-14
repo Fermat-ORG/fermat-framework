@@ -32,7 +32,6 @@ import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterCon
  */
 public class ChatFermatAppConnection
         extends AppConnections<ReferenceAppFermatSession<ChatManager>> {
-    private ErrorManager errorManager;
 
     public ChatFermatAppConnection(Context activity) {
         super(activity);
@@ -58,7 +57,6 @@ public class ChatFermatAppConnection
     public AbstractReferenceAppFermatSession getSession() {
         return new ChatSessionReferenceApp();
     }
-
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
