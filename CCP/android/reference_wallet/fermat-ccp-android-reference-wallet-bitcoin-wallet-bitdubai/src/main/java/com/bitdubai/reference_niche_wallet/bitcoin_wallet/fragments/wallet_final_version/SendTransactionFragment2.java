@@ -335,7 +335,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             }
                         });
                         blockchainDownloadInfoDialog.show();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -454,11 +454,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                                    circularProgressBar.setProgressValue2(getBalanceAverage());
-                                    circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-                                    circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-                                    circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+                                    try {
+                                        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                                        circularProgressBar.setProgressValue2(getBalanceAverage());
+                                        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
+                                        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
+                                        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+                                    }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                 }
                             });
                         } catch (CantGetBalanceException e) {
@@ -488,54 +492,58 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        pressed = true;
-                        before = System.currentTimeMillis();
+                    try {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            pressed = true;
+                            before = System.currentTimeMillis();
 
-                        //TODO fijatse que no se lancen mas de un hilo
-                        if (pressed){
-                            background = new Thread(new Runnable() {
-                                public void run() {
-                                    try {
-                                        // enter the code to be run while displaying the progressbar.
-                                        // This example is just going to increment the progress bar:
-                                        // So keep running until the progress value reaches maximum value
-                                        while (circularProgressBar.getprogress1() <= 300) {
-                                            // wait 500ms between each update
-                                            Thread.sleep(300);
-                                            // System.out.println(circularProgressBar.getprogress1());
-                                            // active the update handler
-                                            progressHandler.sendMessage(progressHandler.obtainMessage());
+                            //TODO fijatse que no se lancen mas de un hilo
+                            if (pressed) {
+                                background = new Thread(new Runnable() {
+                                    public void run() {
+                                        try {
+                                            // enter the code to be run while displaying the progressbar.
+                                            // This example is just going to increment the progress bar:
+                                            // So keep running until the progress value reaches maximum value
+                                            while (circularProgressBar.getprogress1() <= 300) {
+                                                // wait 500ms between each update
+                                                Thread.sleep(300);
+                                                // System.out.println(circularProgressBar.getprogress1());
+                                                // active the update handler
+                                                progressHandler.sendMessage(progressHandler.obtainMessage());
+                                            }
+                                            pressed = false;
+                                        } catch (java.lang.InterruptedException e) {
+                                            // if something fails do something smart
                                         }
-                                        pressed = false;
-                                    } catch (java.lang.InterruptedException e) {
-                                        // if something fails do something smart
                                     }
-                                }
-                            });
-                            background.start();
-                        }
+                                });
+                                background.start();
+                            }
 
-                    return true;
-
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        pressed = false;
-                        background.interrupt();
-                        after = System.currentTimeMillis();
-                        if (after - before < 2000) {
-                            changeBalanceType(txt_type_balance, txt_balance_amount);
-                            //System.out.println(System.currentTimeMillis());
-                            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                            circularProgressBar.setProgressValue2(getBalanceAverage());
-                            return true;
-                        }else {
-                            //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
-                            GET("",getActivity());
-                            progress1 = 1;
-                            circularProgressBar.setProgressValue(progress1);
                             return true;
 
+                        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                            pressed = false;
+                            background.interrupt();
+                            after = System.currentTimeMillis();
+                            if (after - before < 2000) {
+                                changeBalanceType(txt_type_balance, txt_balance_amount);
+                                //System.out.println(System.currentTimeMillis());
+                                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                                circularProgressBar.setProgressValue2(getBalanceAverage());
+                                return true;
+                            } else {
+                                //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
+                                GET("", getActivity());
+                                progress1 = 1;
+                                circularProgressBar.setProgressValue(progress1);
+                                return true;
+
+                            }
                         }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
 
                     return false;
