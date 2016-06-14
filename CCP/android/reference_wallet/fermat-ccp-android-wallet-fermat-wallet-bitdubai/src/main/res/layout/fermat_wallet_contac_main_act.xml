@@ -82,9 +82,8 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:background="@drawable/background_white_gradient"
-                >
+                android:visibility="visible"
+                android:background="@drawable/background_white_gradient">
 
                 <ImageView
                     android:layout_width="125dp"
