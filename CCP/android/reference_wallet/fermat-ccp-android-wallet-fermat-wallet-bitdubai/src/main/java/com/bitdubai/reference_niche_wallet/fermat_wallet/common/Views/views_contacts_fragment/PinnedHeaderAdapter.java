@@ -174,7 +174,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 }
 
                 holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-                holder.textView.setTypeface(tf);
+               // holder.textView.setTypeface(tf);
 
                 convertView.setTag(holder);
 //            } else {

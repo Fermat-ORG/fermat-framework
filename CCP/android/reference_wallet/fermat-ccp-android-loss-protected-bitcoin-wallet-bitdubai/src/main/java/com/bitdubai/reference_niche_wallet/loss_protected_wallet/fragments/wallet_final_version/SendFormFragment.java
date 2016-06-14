@@ -702,7 +702,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void sendCrypto() {
         try {
             //first check if have exchange rate info
-            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)!= 0){
+            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
+                    != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                     CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
                     if (validAddress != null) {
