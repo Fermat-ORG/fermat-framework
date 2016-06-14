@@ -4,8 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
@@ -174,6 +176,144 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
         } catch (final CantRequestListException e) {
 
             return null;
+
+        } catch (final Exception e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<ChatExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
+                    PlatformComponentType.ACTOR_CHAT, // PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,           // NetworkServiceType you want to find
+                    null,                                      // alias
+                    null,                                      // identityPublicKey
+                    deviceLocation,                                  // location
+                    null,                                      // distance
+                    null,                                      // name
+                    null,                                      // extraData
+                    null,                                      // offset
+                    null,                                      // max
+                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            );
+
+            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+
+            final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
+
+            for (final PlatformComponentProfile platformComponentProfile : list) {
+
+                System.out.println("************** I'm a chat searched: "+platformComponentProfile);
+//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+
+                byte[] imageByte;
+
+                JsonParser parser = new JsonParser();
+
+                Gson gson = new Gson();
+
+                JsonObject extraData = parser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+
+                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+
+                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
+
+                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
+                String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
+
+                if(imageString != null && !imageString.equals(""))
+                    imageByte = Base64.decode(imageString, Base64.DEFAULT);
+                else
+                    imageByte = null;
+
+                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city,status));
+            }
+
+            return chatExposingDataArrayList;
+
+        } catch (final CantRequestListException e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<ChatExposingData> getResultDistance(double distance) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
+                    PlatformComponentType.ACTOR_CHAT, // PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,           // NetworkServiceType you want to find
+                    null,                                      // alias
+                    null,                                      // identityPublicKey
+                    null,                                      // location
+                    distance,                                  // distance
+                    null,                                      // name
+                    null,                                      // extraData
+                    null,                                      // offset
+                    null,                                      // max
+                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            );
+
+            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+
+            final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
+
+            for (final PlatformComponentProfile platformComponentProfile : list) {
+
+                System.out.println("************** I'm a chat searched: "+platformComponentProfile);
+//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+
+                byte[] imageByte;
+
+                JsonParser parser = new JsonParser();
+
+                Gson gson = new Gson();
+
+                JsonObject extraData = parser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+
+                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+
+                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
+
+                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
+                String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
+
+                if(imageString != null && !imageString.equals(""))
+                    imageByte = Base64.decode(imageString, Base64.DEFAULT);
+                else
+                    imageByte = null;
+
+                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city,status));
+            }
+
+            return chatExposingDataArrayList;
+
+        } catch (final CantRequestListException e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 

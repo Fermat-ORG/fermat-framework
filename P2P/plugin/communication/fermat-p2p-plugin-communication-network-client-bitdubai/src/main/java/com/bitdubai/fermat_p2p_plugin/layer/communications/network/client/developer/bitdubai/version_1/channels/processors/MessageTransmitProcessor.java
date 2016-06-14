@@ -6,7 +6,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.google.gson.Gson;
 
 import javax.websocket.Session;
@@ -24,11 +24,11 @@ public class MessageTransmitProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public MessageTransmitProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public MessageTransmitProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
+                networkClientCommunicationChannel,
                 PackageType.MESSAGE_TRANSMIT
         );
     }

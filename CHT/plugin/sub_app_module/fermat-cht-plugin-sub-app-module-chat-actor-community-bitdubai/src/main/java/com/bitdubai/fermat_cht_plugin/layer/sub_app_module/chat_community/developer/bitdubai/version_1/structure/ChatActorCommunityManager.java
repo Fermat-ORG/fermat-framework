@@ -54,9 +54,22 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -442,6 +455,40 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         return ConnectionState.DISCONNECTED_REMOTELY;
     }
 
+    @Override
+    public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
+        return null;
+    }
+
+    @Override
+    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
+        return null;
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
+        return null;
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
+        return null;
+    }
+
+    @Override
+    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        return null;
+    }
+
+    @Override
+    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+        return null;
+    }
+
+    @Override
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return null;
+    }
 
 
     @Override
