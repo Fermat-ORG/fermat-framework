@@ -208,7 +208,7 @@ public class RedeemHomeCardFragment extends FermatWalletListFragment<DigitalAsse
                 return false;
             }
         });
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 2, "Help")
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
