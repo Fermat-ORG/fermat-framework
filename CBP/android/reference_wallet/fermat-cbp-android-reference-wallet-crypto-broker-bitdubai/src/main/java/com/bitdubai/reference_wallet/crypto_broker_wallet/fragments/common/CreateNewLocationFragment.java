@@ -36,7 +36,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
-    private Country[] countries;
+    private List<Country> countries = new ArrayList<>();
     private Country selectedCountry;
     private static int MAX_LENGHT_STATE = 30;
     private static int MAX_LENGHT_CITY = 30;
@@ -84,7 +84,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
 
         View layout = inflater.inflate(R.layout.cbw_fragement_create_new_location, container, false);
 
-        countries = Country.values();
+        for(Country c : Country.values()) {
+               if(c != Country.NONE)
+                   countries.add(c);
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getListOfCountryNames(countries));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -148,7 +151,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        selectedCountry = countries[position];
+        selectedCountry = countries.get(position);
     }
 
     @Override
@@ -207,11 +210,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<ReferenceA
         }
     }
 
-    private List<String> getListOfCountryNames(Country[] countries) {
+    private List<String> getListOfCountryNames(List<Country> countries) {
         List<String> data = new ArrayList<>();
-
-        for (Country country : countries) data.add(country.getCountry());
-
+        for (Country country : countries)
+            data.add(country.getCountry());
         return data;
     }
 
