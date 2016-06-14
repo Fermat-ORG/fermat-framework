@@ -374,8 +374,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     /* Refresher thread code */
     public final void startRefresh() {
-
         if(!threadIsRunning) {
+            try { Thread.sleep(500); } catch (InterruptedException interruptedException) {}
+
             this.refresherThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
