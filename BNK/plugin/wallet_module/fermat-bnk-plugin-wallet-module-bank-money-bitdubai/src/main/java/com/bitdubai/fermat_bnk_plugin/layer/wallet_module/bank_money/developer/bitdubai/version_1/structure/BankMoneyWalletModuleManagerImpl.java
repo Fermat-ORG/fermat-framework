@@ -28,8 +28,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -200,18 +200,19 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
     @Override
     public List<BankMoneyTransactionRecord> getPendingTransactions(String account) {
         List<BankMoneyTransactionRecord> list = new ArrayList<>();
-        final List<BankTransactionParameters> queuedTransactions = agent.getQueuedTransactions();
 
-        for (BankTransactionParameters data : queuedTransactions) {
-            if(account.equals(data.getAccount())) {
+        for (Map.Entry<Long, BankTransactionParameters> transaction : agent.getQueuedTransactions().entrySet()) {
+            BankTransactionParameters data = transaction.getValue();
+
+            if (account.equals(data.getAccount()))
                 list.add(new BankTransactionRecordImpl(
-                    data.getAmount(),
-                    data.getMemo(),
-                    new Date().getTime(),
-                    data.getTransactionType(),
-                    BankTransactionStatus.PENDING));
-            }
+                        data.getAmount(),
+                        data.getMemo(),
+                        transaction.getKey(),
+                        data.getTransactionType(),
+                        BankTransactionStatus.PENDING));
         }
+
         return list;
     }
 
