@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/dap_issuer_wallet_v3_card_outside_background"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/transactionActorImageLayout"
+        android:layout_width="67dp"
+        android:layout_height="67dp"
+        android:background="@drawable/bg_circular_user_list"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp">
+
+        <ImageView
+            android:id="@+id/transactionActorImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/transactionMemoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rollback asset transfered"
+        android:textSize="12sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/transactionActorImageLayout"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/transactionActorImageLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/transactionTypeByText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sent to"
+            android:textSize="12sp"
+            android:textColor="#607d8b"
+            android:fontFamily="regular"
+            android:layout_alignLeft="@+id/transactionActorNameText"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/transactionActorNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frank Contreras"
+            android:textSize="18sp"
+            android:textColor="#37474f"
+            android:fontFamily="regular"
+            android:textStyle="bold"
+            android:layout_below="@+id/transactionTypeByText"/>
+
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/transactionDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 Feb, 2016 12:30"
+        android:textSize="10sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/transactionQuantityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 Asset"
+        android:textSize="15sp"
+        android:textColor="@color/fab_material_red_500"
+        android:fontFamily="regular"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/transactionAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- 0.000001 BTC"
+        android:textSize="12sp"
+        android:textColor="@color/fab_material_red_500"
+        android:fontFamily="regular"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_below="@id/transactionQuantityText"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/transactionBalanceTypeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="regular"
+        android:textSize="10sp"
+        android:text="AVAILABLE"
+        android:textColor="@color/dap_issuer_wallet_black_text"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/transactionAmountText"
+        android:layout_marginRight="5dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/dap_issuer_wallet_v3_deliver_line"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="85dp"/>
+
+</RelativeLayout>

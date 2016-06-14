@@ -2,12 +2,13 @@ package org.fermat.fermat_dap_android_wallet_redeem_point.models;
 
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Jinmy on 01/12/16.
  */
-public class UserRedeemed {
+public class UserRedeemed implements Serializable {
     private String userName;
     private Timestamp redeemedDate;
     private String redeemedStatus;

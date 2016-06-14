@@ -54,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UserHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession, ResourceProviderManager>
+public class UserHistoryActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
@@ -63,12 +63,9 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
-
     // Data
     private List<DigitalAsset> digitalAssets;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
     private View noAssetsView;
@@ -83,11 +80,10 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         setHasOptionsMenu(true);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

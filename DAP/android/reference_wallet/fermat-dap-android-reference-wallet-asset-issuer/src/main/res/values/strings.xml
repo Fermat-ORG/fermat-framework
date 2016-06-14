@@ -7,10 +7,13 @@
     <string name="help">Help</string>
     <string name="dap_issuer_wallet_search">Search</string>
     <string name="dap_issuer_wallet_search_hint">Asset name</string>
+    <string name="dap_issuer_wallet_search_deliver_user_hint">User name</string>
+    <string name="dap_issuer_wallet_search_deliver_group_hint">Group name</string>
     <!-- -->
 
     <!-- empty list views -->
     <string name="no_assets_issuer">No Assets?</string>
+    <string name="no_assets_issuer_v3">NO ASSETS</string>
     <string name="no_assets_issuer_message">Don\'t  worry!\nAs an Asset Issuer you are able to create new ones using the Asset Factory.\nOnce created, all the assets you publish there, will be stored in this Asset Issuer Wallet.</string>
     <string name="no_assets_user">No Assets?</string>
     <string name="no_assets_user_message">Don\'t worry!\nUse the community app to connect to Asset Issuers and/or other Asset Users like you, and then you will be able to receive assets from them !</string>
@@ -18,7 +21,11 @@
     <string name="no_assets_redeem_point_message">Don\'t worry!\nTo act as a Redeem Point you need to use the Community App to connect your device to an Assets Issuer whose assets you want to redeem.</string>
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
+    <string name="no_users_v3">NO USERS</string>
+    <string name="no_groups_v3">NO GROUPS</string>
     <string name="no_transactions">No Transactions</string>
+    <string name="no_stats_v3">NO STATS</string>
+    <string name="no_transactions_v3">NO TRANSACTIONS</string>
     <!-- -->
 
     <!-- error messages -->
@@ -31,6 +38,7 @@
     <string name="dap_issuer_wallet_validate_assets_to_deliver">Please enter the number of assets to deliver</string>
     <string name="dap_issuer_wallet_validate_assets_to_deliver_greater">Value can\'t be greater than </string>
     <string name="dap_issuer_wallet_validate_no_available_assets">There is no assets to distribute</string>
+    <string name="dap_issuer_wallet_validate_no_available_assets_appropriate">There is no assets to appropriate</string>
     <string name="dap_issuer_wallet_validate_no_users_groups">No users/groups selected</string>
     <string name="dap_issuer_wallet_validate_not_enought_assets">There are not enough assets to distribute</string>
     <!-- -->
@@ -39,6 +47,8 @@
     <string name="dap_issuer_wallet_confirm_title">Confirm</string>
     <string name="dap_issuer_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
     <string name="dap_issuer_wallet_confirm_sure">Are you sure you want to do this? This action is irreversible</string>
+    <string name="dap_issuer_wallet_v3_appropriate_confirm">Are you sure you want to appropriate this asset? This action is irreversible</string>
+    <string name="dap_issuer_wallet_v3_distribute_confirm">Are you sure you want to deliver this asset? This action is irreversible</string>
     <!-- -->
 
     <!-- app messages -->
@@ -49,6 +59,8 @@
     <string name="dap_issuer_wallet_no_assets_delivered">No assets delivered</string>
     <string name="dap_issuer_wallet_no_assets_appropriated">No assets appropriated</string>
     <string name="dap_issuer_wallet_no_assets_redeemed">No assets redeemed</string>
+    <string name="dap_issuer_wallet_select_user">Can\'t select user, not enough available assets to deliver</string>
+    <string name="dap_issuer_wallet_select_group">Can\'t select group, not enough available assets to deliver</string>
     <!-- -->
 
     <!-- app strings -->
