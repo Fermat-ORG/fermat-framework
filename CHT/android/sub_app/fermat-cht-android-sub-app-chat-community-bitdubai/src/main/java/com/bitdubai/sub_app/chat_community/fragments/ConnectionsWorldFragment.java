@@ -33,10 +33,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
@@ -150,7 +148,6 @@ public class ConnectionsWorldFragment
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
@@ -225,7 +222,6 @@ public class ConnectionsWorldFragment
         return rootView;
     }
 
-
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
@@ -277,7 +273,6 @@ public class ConnectionsWorldFragment
             worker.execute();
         }
     }
-
 
     public void showEmpty(boolean show, View emptyView) {
 
@@ -334,20 +329,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-//        try {
-//            if (moduleManager.getSelectedActorIdentity() != null) {
-//                appSession.setData(CHAT_USER_SELECTED, data);
-//                changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-//            } else {
-//                showDialogHelp();//1
-//            }
-//        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
-//        {
-//            e.printStackTrace();
-//        }catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+
     }
 
     @Override

@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -25,26 +27,26 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ClosedNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.Map;
+import java.util.UUID;
 
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_CUSTOMER_WALLET;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY_QUANTITY;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.EXCHANGE_RATE;
-import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager> {
+public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
     
     private static final String TAG = "ClosedNegDetailsFrag";
     
@@ -64,7 +66,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
             final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             
-            negotiationInfo = moduleManager.getNegotiationInformation(appSession.getNegotiationId());
+            negotiationInfo = moduleManager.getNegotiationInformation(getNegotiationId());
 
         } catch (Exception ex) {
             // TODO: Just for test purposes
@@ -129,5 +131,10 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
             return ImagesUtils.getRoundedBitmap(res, customerImg);
         
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+    }
+
+    private UUID getNegotiationId() {
+        Object data = appSession.getData(FragmentsCommons.NEGOTIATION_ID);
+        return (data != null) ? (UUID) data : null;
     }
 }

@@ -62,7 +62,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
-
 /**
  * Created by rodrigo on 2/26/16.
  */

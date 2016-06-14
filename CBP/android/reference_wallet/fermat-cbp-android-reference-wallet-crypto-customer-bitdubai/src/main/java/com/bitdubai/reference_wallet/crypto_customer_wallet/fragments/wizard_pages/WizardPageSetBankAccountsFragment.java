@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -27,7 +28,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>
+public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
@@ -76,10 +77,10 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
             if(aux != null && aux instanceof Boolean)
                 hideHelperDialogs = (boolean) aux;
 
-            Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
+            Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             if (data == null) {
                 bankAccountList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST, bankAccountList);
+                appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else
                 bankAccountList = (List<BankAccountNumber>) data;
 
@@ -103,6 +104,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
                     .setSubTitle(R.string.ccw_wizard_accounts_dialog_sub_title)
                     .setBody(R.string.ccw_wizard_accounts_dialog_body)
                     .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                    .setIsCheckEnabled(true)
                     .build();
             presentationDialog.show();
         }

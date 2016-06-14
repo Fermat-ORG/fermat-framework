@@ -1,15 +1,15 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 
 
 /**
  * Created by nelson on 17/10/15.
  */
-public class TestCryptoBrokerIdentitySubAppSession extends CryptoBrokerIdentitySubAppSessionReferenceApp {
+public class TestCryptoBrokerIdentitySubAppSession extends ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager> {
     TestCryptoBrokerIdentityModuleManager testModuleManager;
 
     public TestCryptoBrokerIdentitySubAppSession(InstalledSubApp subApps, boolean isPublished) {

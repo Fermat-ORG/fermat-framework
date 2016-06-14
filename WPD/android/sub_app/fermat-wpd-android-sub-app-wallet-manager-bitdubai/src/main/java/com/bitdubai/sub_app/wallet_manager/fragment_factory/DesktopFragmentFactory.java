@@ -1,7 +1,8 @@
 package com.bitdubai.sub_app.wallet_manager.fragment_factory;
 
+import android.app.Fragment;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -23,9 +24,9 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
 
 
     @Override
-    public AbstractFermatFragmentInterface getFermatFragment(DesktopFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public Fragment getFermatFragment(DesktopFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        AbstractFermatFragmentInterface abstractFermatFragment = null;
+        Fragment abstractFermatFragment = null;
 
         switch (fragments){
             case DESKTOP_MAIN:

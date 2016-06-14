@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,32 +28,33 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.EditCustomerIdentityWorker;
+import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
-import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<CryptoCustomerIdentitySubAppSessionReferenceApp, ResourceProviderManager>
+public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager>
         implements FermatWorkerCallBack {
 
     // Constants
@@ -115,7 +118,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<C
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
-        CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(IDENTITY_INFO);
+        CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
         if (identityInfo != null) {
             cryptoCustomerPublicKey = identityInfo.getPublicKey();
             mCustomerName.setText(identityInfo.getAlias());
@@ -132,17 +135,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<C
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                 if (actualizable) {
-                    /*
-                    new AlertDialog.Builder(v.getContext())
-                            .setTitle("Save Changes?")
-                            .setMessage("You want to save changes?")
-                            .setNegativeButton(android.R.string.no, null)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface arg0, int arg1) {
-                                    editIdentityInfoInBackDevice();
-                                }
-                            }).create().show();
-                    */
                     actualizable = false;
                 }
             }
@@ -194,7 +186,20 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<C
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
-                    break;
+
+                    if (mCustomerImage != null && cryptoCustomerBitmap != null) {
+                        mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
+
+                        RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
+
+                        bitmapDrawable.setCornerRadius(360);
+                        bitmapDrawable.setAntiAlias(true);
+
+                        mCustomerImage.setImageDrawable(bitmapDrawable);
+
+                    }
+
+                break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
