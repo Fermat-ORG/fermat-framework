@@ -192,4 +192,18 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
         }
         this.appsKeyConsumed.add(appPublicKey);
     }
+
+    @Override
+    public String toString() {
+        return "AppNavigationStructure{" +
+                "appPublicKey='" + appPublicKey + '\'' +
+                ", appStructureType=" + appStructureType +
+                ", activities=" + activities +
+                ", lastActivity=" + lastActivity +
+                ", developer=" + developer +
+                ", actualStart='" + actualStart + '\'' +
+                ", platform=" + platform +
+                ", appsKeyConsumed=" + appsKeyConsumed +
+                '}';
+    }
 }

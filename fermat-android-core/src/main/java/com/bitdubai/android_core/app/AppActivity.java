@@ -342,7 +342,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             }else{
                 Log.e(TAG, "nextActivity null, activity code: " + activityName +
                         ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey()+
-                        " \n Extra info: \n LastActivity: "+lastActivity);
+                        " \n Extra info: \n LastActivity: "+lastActivity+" FermatStructure: "+fermatStructure +" AppBackPublicKey: "+appBackPublicKey);
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 handleExceptionAndRestart();
             }
