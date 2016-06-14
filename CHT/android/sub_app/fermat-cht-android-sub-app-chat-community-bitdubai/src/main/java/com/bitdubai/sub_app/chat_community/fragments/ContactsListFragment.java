@@ -239,41 +239,29 @@ public class ContactsListFragment
         @Override
         protected Void doInBackground(Void... params) {
             try {
-//               con = chatManager.listWorldChatActor(identity, MAX, offset);
-//                contactname.clear();
-//                contactid.clear();
-//                contacticon.clear();
-//                contactStatus.clear();
-
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
-                    if (con != null) {
-                        int size = con.size();
-                        if (size > 0) {
-                            for (ChatActorCommunityInformation conta:con) {
-                                if (conta.getConnectionState() != null) {
-                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
-                                        try {
-                                            moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
-                                        } catch (Exception e) {
-                                            if (errorManager != null)
-                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                        }
+                System.out.println("****************** doInBackground entering: ");
+                List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+                if (con != null) {
+                    int size = con.size();
+                    if (size > 0) {
+                        for (ChatActorCommunityInformation conta:con) {
+                            if (conta.getConnectionState() != null) {
+                                if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                                    try {
+                                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
+                                    } catch (Exception e) {
+                                        if (errorManager != null)
+                                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
                                 }
-//                                        contactname.add(conta.getAlias());
-//                                        contactid.add(conta.getPublicKey());
-//                                        ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
-//                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-//                                        contacticon.add(bmd.getBitmap());
-//                                        contactStatus.add(conta.getStatus());
-                                //}
-                                //}
                             }
                         }
                     }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("****************** doInBackground saling: ");
             return null;
         }
     }
