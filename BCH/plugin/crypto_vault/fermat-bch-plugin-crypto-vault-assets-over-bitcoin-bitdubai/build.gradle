@@ -9,5 +9,4 @@ dependencies {
     compile project(':fermat-dap-api')
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
-    compile project(':bitcoinj')
 }

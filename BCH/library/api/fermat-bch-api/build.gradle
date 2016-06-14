@@ -4,8 +4,9 @@ sourceCompatibility = 1.7
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':bitcoinj')
+    compile project(':fermatj')
     compile project(':fermat-api')
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.google.guava:guava:19.0'
+    compile 'org.bitcoinj:bitcoinj-core:0.13.6'
 }
