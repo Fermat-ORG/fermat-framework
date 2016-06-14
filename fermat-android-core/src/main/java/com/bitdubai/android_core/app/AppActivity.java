@@ -319,10 +319,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             }catch (Exception e){
                 e.printStackTrace();
-//                Log.e(TAG, "changeActivity error, Avisarle a Mati con este log:");
-//                Log.e(TAG,"FermatStructure PK: "+fermatStructure.getPublicKey());
-//                Log.e(TAG,"lastActivity: "+lastActivity);
-//                Log.e(TAG,"nextActivity code: "+activityName);
                 try {
                     //TODO: this is only because i am tired, remember to delete this.
                     fermatStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(appBackPublicKey);
@@ -344,7 +340,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
-                Log.e(TAG, "nextActivity null, activity code: " + activityName + "fermat structure: " + fermatStructure.getPublicKey());
+                Log.e(TAG, "nextActivity null, activity code: " + activityName +
+                        ". Please verify that the activity code exist in the fermat structure: " + fermatStructure.getPublicKey()+
+                        " \n Extra info: \n LastActivity: "+lastActivity);
+                Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                handleExceptionAndRestart();
             }
         } catch (Exception e) {
             if(activityName.equals("develop_mode"))
