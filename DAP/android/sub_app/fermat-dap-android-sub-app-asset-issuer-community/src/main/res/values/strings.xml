@@ -26,6 +26,9 @@
     <string name="dap_issuer_community_settings_notification_body">Here you can edit your notification settings configurations.</string>
     <!--Dialog Settings Notifications Help - End-->
 
+    <string name="dap_community_issuer_search">Search</string>
+    <string name="action_community_issuer_search_hint">Issuer Name</string>
+
     <string name="dap_issuer_community_opps_system_error">Oooops! recovering from system error</string>
     <string name="dap_issuer_community_system_error">Issuer Community system error</string>
 
