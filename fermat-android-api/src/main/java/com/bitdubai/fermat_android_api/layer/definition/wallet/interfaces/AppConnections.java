@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import android.content.Context;
+import android.view.View;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
@@ -63,9 +64,6 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         return ((FermatApplicationSession)(activity.get()).getApplicationContext()).getApplicationManager();
     }
 
-    public int getResource(int id) {
-        return 0;
-    }
 
     public void clear() {
         activity.clear();
@@ -73,5 +71,28 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
     public void setContext(Context context) {
         this.activity = new WeakReference<Context>(context);
+    }
+
+
+    /**
+     *  Method to share resources with other apps
+     * @param id
+     * @return
+     */
+
+    public int getResource(int id) {
+        return 0;
+    }
+
+
+    /**
+     *  Method to share Views with other apps
+     *
+     * @param activity
+     * @param resourceId
+     * @return
+     */
+    public View getSharedView(Context activity, int resourceId) {
+        return null;
     }
 }

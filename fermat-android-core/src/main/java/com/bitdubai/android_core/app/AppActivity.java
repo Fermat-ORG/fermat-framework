@@ -396,7 +396,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
             FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));
             FermatFragmentFactory fragmentFactory = fermatAppConnection.getFragmentFactory();
-            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources());
+            Fragment fragment = fragmentFactory.getFragment(fermatFragment.getType(),ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey),getAppResources(),fermatFragment);
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 //            FT.replace(R.id.fragment_container2, fragment);
