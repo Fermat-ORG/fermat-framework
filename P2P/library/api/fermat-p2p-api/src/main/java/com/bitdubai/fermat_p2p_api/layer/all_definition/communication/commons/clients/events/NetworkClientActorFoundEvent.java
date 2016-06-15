@@ -12,14 +12,14 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 13/05/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorFoundEvent extends AbstractEvent<P2pEventType> {
+public class NetworkClientActorFoundEvent extends AbstractEvent<P2pEventType> {
 
     /*
      * Represent the uriToNode
@@ -41,7 +41,7 @@ public class ActorFoundEvent extends AbstractEvent<P2pEventType> {
      *
      * @param p2pEventType
      */
-    public ActorFoundEvent(P2pEventType p2pEventType) {
+    public NetworkClientActorFoundEvent(P2pEventType p2pEventType) {
         super(p2pEventType);
     }
 

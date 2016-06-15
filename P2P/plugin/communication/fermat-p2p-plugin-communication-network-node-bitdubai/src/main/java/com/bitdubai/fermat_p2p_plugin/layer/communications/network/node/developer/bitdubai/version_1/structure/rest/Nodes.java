@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.google.gson.Gson;
@@ -31,7 +34,7 @@ public class Nodes implements RestFulServices {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(Profiles.class));
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(Nodes.class));
 
     /**
      * Represent the daoFactory
@@ -48,10 +51,12 @@ public class Nodes implements RestFulServices {
      */
     public Nodes(){
         super();
+        this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
+        this.gson = GsonProvider.getGson();
     }
 
     @GET
-    @Path("/node/registered/{id}")
+    @Path("/registered/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isNodeRegistered(@PathParam("id") String identityPublicKey){
 
