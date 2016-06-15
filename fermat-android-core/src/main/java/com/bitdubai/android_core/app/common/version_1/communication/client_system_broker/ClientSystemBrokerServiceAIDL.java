@@ -348,6 +348,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
+                try {
+                    iServerBrokerService.asBinder().unlinkToDeath(new IBinder.DeathRecipient() {
+                        @Override
+                        public void binderDied() {
+                            Log.e(TAG,"Binder unlinked");
+                        }
+                    }, 0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 //running socket receiver
                 Log.i(TAG, "Starting socket receiver");
                 LocalSocket localSocket = new LocalSocket();
