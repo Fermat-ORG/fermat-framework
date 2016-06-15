@@ -39,6 +39,7 @@
                 android:layout_alignBottom="@+id/chatSendButton"
                 android:layout_alignParentLeft="true"
                 android:layout_toStartOf="@+id/chatSendButton"
+                android:layout_toLeftOf="@+id/chatSendButton"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
                 android:layout_weight="1"
