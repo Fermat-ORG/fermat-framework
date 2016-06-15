@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -12,6 +14,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.filters.UserCommunityAdapterFilter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
@@ -21,7 +24,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
+public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> implements Filterable {
 
     List<ProgressTask> taskList = new ArrayList<>();
 
@@ -187,5 +190,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new UserCommunityAdapterFilter(this.dataSet, this);
     }
 }
