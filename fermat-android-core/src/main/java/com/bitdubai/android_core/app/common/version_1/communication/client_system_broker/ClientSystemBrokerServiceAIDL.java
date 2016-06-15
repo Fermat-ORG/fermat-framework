@@ -21,6 +21,7 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatPlatformServiceNotConnectedException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeDataRequestException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
@@ -204,10 +205,13 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             pluginVersionReference.getVersion().toString(),
                             method.getName(),
                             parameters);
-                } catch (RemoteException e) {
+                }catch (TransactionTooLargeException t1){
+                    Log.e(TAG,"Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                    objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy,method,t1));
+                }  catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (RuntimeException e) {
-                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in class " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -223,8 +227,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference){
+        FermatModuleObjectWrapper fermatModuleObjectWrapper = null;
         try {
-            return iServerBrokerService.invoqueModuleMethod(
+            fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
                     serverIdentificationKey,
                     dataId,
                     pluginVersionReference.getPlatform().getCode(),
@@ -236,7 +241,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     parameters);
         } catch (TransactionTooLargeException t) {
             try {
-                return iServerBrokerService.invoqueModuleLargeDataMethod(
+                fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleLargeDataMethod(
                         serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
@@ -246,12 +251,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
+            } catch (TransactionTooLargeException t1){
+                Log.e(TAG,"Method request too much data on the main thread, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy,method,t1));
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (RuntimeException e) {
                 Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                 e.printStackTrace();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (RemoteException e) {
@@ -260,7 +268,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             e.printStackTrace();
         }
 
-        return null;
+        return fermatModuleObjectWrapper;
     }
 
     @Override
@@ -340,15 +348,28 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
+                try {
+                    iServerBrokerService.asBinder().unlinkToDeath(new IBinder.DeathRecipient() {
+                        @Override
+                        public void binderDied() {
+                            Log.e(TAG,"Binder unlinked");
+                        }
+                    }, 0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 //running socket receiver
-                Log.i(TAG,"Starting socket receiver");
-                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
+                Log.i(TAG, "Starting socket receiver");
+                LocalSocket localSocket = new LocalSocket();
+                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,localSocket,bufferChannelAIDL);
                 mReceiverSocketSession.connect();
-                mReceiverSocketSession.start();
+                mReceiverSocketSession.startReceiving();
 
             } catch (RemoteException e) {
                 e.printStackTrace();
                 Log.e(TAG,"Cant run socket, register to server fail");
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
             try {

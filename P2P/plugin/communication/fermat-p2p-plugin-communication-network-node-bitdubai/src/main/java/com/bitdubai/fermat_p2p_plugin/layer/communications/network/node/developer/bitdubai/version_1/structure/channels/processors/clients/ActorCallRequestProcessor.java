@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
@@ -11,6 +10,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
@@ -88,7 +89,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(messageContent.getNetworkServiceType(), traceActor, ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString());
-                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -107,7 +108,7 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage());
-                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

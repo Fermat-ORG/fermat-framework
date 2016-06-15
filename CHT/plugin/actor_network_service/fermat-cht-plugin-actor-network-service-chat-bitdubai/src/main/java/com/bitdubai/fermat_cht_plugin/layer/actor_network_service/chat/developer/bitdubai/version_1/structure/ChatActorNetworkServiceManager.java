@@ -338,6 +338,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         }
     }
 
+    @Override
+    public boolean isActorOnline(String publicKey) {
+        return pluginRoot.isActorOnline(publicKey);
+    }
+
     private void sendMessage(final String jsonMessage      ,
                              final String identityPublicKey,
                              final Actors identityType     ,

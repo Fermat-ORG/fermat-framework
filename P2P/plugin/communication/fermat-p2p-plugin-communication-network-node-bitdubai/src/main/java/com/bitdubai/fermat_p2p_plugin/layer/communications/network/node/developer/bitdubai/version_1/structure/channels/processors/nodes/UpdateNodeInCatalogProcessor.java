@@ -2,11 +2,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
@@ -132,7 +132,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
                 }
 
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -142,7 +142,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
             }else {
 
                 updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "Invalid content type: "+messageContent.getMessageContentType(), nodeProfile, Boolean.FALSE);
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -164,7 +164,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.EXCEPTION, exception.getLocalizedMessage(), nodeProfile, Boolean.FALSE);
-                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
