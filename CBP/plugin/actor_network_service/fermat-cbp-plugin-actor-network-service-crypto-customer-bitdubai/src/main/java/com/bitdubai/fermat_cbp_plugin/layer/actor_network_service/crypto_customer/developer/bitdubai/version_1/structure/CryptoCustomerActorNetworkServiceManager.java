@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -24,16 +22,10 @@ import java.util.Collection;
 public final class CryptoCustomerActorNetworkServiceManager implements CryptoCustomerManager {
 
     private final CryptoCustomerActorNetworkServicePluginRoot pluginRoot;
-    private final ErrorManager                   errorManager                  ;
-    private final PluginVersionReference         pluginVersionReference        ;
 
-    public CryptoCustomerActorNetworkServiceManager(final CryptoCustomerActorNetworkServicePluginRoot pluginRoot,
-                                                    final ErrorManager errorManager,
-                                                    final PluginVersionReference pluginVersionReference) {
+    public CryptoCustomerActorNetworkServiceManager(final CryptoCustomerActorNetworkServicePluginRoot pluginRoot) {
 
         this.pluginRoot = pluginRoot;
-        this.errorManager                   = errorManager                  ;
-        this.pluginVersionReference         = pluginVersionReference        ;
     }
 
     @Override
@@ -54,12 +46,12 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
         } catch (final ActorAlreadyRegisteredException| CantRegisterActorException e) {
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Problem trying to register an identity component.");
 
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
         }
     }
@@ -78,7 +70,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
             );
         }catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
         }
     }
@@ -95,18 +87,18 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
         } catch (final CantExposeIdentityException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Problem trying to expose an identity.");
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Unhandled Exception.");
         }
     }
 
     @Override
     public final CryptoCustomerSearch getSearch() {
-        return new CryptoCustomerActorNetworkServiceSearch(pluginRoot, errorManager, pluginVersionReference);
+        return new CryptoCustomerActorNetworkServiceSearch(pluginRoot);
     }
 
 }
