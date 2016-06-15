@@ -96,7 +96,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                                      ChatManager chatActorNetworkServiceManager,
                                      ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot,
                                      PluginFileSystem pluginFileSystem, UUID pluginId,
-                                     PluginVersionReference pluginVersionReference) {
+                                     PluginVersionReference pluginVersionReference,
+                                     GeolocationManager geolocationManager) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
