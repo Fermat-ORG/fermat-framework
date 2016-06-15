@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -68,7 +67,7 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
     private final AssetFactorySubAppModulePluginRoot assetFactorySubAppModulePluginRoot;
 
     private BlockchainNetworkType selectedNetwork;
-//    AssetFactorySettings settings = null;
+    //    AssetFactorySettings settings = null;
     String publicKeyApp;
 
     /**
@@ -207,22 +206,6 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-//        if (selectedNetwork == null) {
-//            try {
-//                if (settings == null) {
-//                    settingsManager = getSettingsManager();
-//                }
-//                settings = settingsManager.loadAndGetSettings(SubAppsPublicKeys.DAP_FACTORY.getCode());
-//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-//            } catch (CantGetSettingsException exception) {
-//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-//                exception.printStackTrace();
-//            } catch (SettingsNotFoundException e) {
-//                //TODO: Only enter while the Active Actor Wallet is not open.
-//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-////                e.printStackTrace();
-//            }
-//        }
         return selectedNetwork;
     }
 

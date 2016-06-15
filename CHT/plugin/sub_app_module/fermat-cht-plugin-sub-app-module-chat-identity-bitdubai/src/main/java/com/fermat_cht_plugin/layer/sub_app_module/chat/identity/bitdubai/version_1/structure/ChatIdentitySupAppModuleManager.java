@@ -26,15 +26,13 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
 
     private ChatIdentityManager chatIdentityManager;
 
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
+
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
                                            UUID pluginId){
+
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
-        this.pluginFileSystem    = pluginFileSystem                         ;
-        this.pluginId            = pluginId;
 
     }
     /**

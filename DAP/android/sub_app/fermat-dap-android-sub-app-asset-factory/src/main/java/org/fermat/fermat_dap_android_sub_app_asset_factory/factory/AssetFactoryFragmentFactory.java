@@ -7,8 +7,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.AssetEditorFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.EditableAssetsFragment;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.PublishedAssetsFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFactoryFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFactoryNetworkFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.fragments.SettingsFactoryNotificationFragment;
@@ -19,6 +17,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_factory.v3.fragments.WizardCr
 import org.fermat.fermat_dap_android_sub_app_asset_factory.v3.fragments.WizardMultimediaFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.v3.fragments.WizardPropertiesFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.v3.fragments.WizardVerifyFragment;
+
 /**
  * AssetFactoryFragmentFactory
  *

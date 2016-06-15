@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/redeem_card_background">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/redeemDetailViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="330dp">
+
+        </android.support.v4.view.ViewPager>
+
+
+        <RelativeLayout
+            android:id="@+id/firstSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false">
+
+            <!--Redeem pending Section-->
+            <RelativeLayout
+                android:id="@+id/redeemDetailPendingV3Asset"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:visibility="visible"
+                android:elevation="1dp"
+                android:background="@color/color_white">
+
+                <ImageView
+                    android:id="@+id/cardDetailStatusImage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/wait"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="7dp"/>
+
+                <LinearLayout
+                    android:id="@+id/actionButtonsDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true">
+
+                    <ImageButton
+                        android:id="@+id/cardDetailRejectButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:src="@drawable/cancel_inactive"
+                        android:scaleType="centerCrop"
+                        android:layout_marginRight="18dp"/>
+
+                    <ImageButton
+                        android:id="@+id/cardDetailAcceptButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:src="@drawable/accept_inactive"
+                        android:scaleType="centerCrop"
+                        android:layout_marginRight="30dp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+            <!--Confirmed section-->
+            <RelativeLayout
+                android:id="@+id/confirmedDetailV3Asset"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/cardDetailConfirmedImage"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/received"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="9dp"
+                    android:visibility="invisible"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone">
+
+                    <ImageButton
+                        android:id="@+id/cardDetailDeliverButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@null"
+                        android:src="@drawable/delivery"
+                        android:scaleType="centerCrop"
+                        android:layout_marginRight="30dp"/>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/shadowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow">
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_marginTop="-30dp"
+            android:id="@+id/secondSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailDescriptionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Description Asset"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textColor="#546E7A"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailAssetValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0 BTC"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp"
+                android:textColor="#37474F"
+                android:layout_alignParentRight="true"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailDescription"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:maxHeight="60dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Una descripcion aleatoria de asset de prueba para rellenar este espacio"
+                android:fontFamily="sans-serif"
+                android:textSize="12sp"
+                android:textColor="#93A6B0"
+                android:layout_below="@+id/assetDetailDescriptionText"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="16 February, 2017"
+                android:fontFamily="sans-serif"
+                android:textSize="12sp"
+                android:textColor="#93A6B0"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/assetDetailAssetValue"
+                android:paddingTop="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/firstLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/line"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="8dp"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/thirdSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/detailIssuerImageLayout"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/bg_circular_home_redeem">
+
+                <ImageView
+                    android:id="@+id/detailIssuerImage"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    tools:ignore="ContentDescription"
+                    />
+
+            </RelativeLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailIssuerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Issuer Name"
+                android:fontFamily="sans-serif"
+                android:textSize="12sp"
+                android:textColor="#546E7A"
+                android:layout_toRightOf="@+id/detailIssuerImageLayout"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetIssuerAddress"
+                android:layout_width="235dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Direccion del Issuer de prueba, calle A, av 66, Sector los Teques"
+                android:fontFamily="sans-serif"
+                android:textSize="12sp"
+                android:textColor="#93A6B0"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@+id/detailIssuerImageLayout"
+                android:layout_below="@+id/assetDetailIssuerName"
+                android:layout_marginBottom="10dp"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

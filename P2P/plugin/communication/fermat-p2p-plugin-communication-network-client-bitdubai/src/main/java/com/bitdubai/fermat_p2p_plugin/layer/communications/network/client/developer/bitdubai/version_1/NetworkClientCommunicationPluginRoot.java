@@ -27,11 +27,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -48,7 +46,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -58,8 +55,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -531,8 +526,19 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         System.out.println("CALLING getNodesProfileFromConnectionHistory");
 
-        if(locationManager.getLocation() == null)
+        Location location = null;
+
+        try {
+
+            location = locationManager.getLocation();
+
+            if (location == null)
+                return null;
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
+        }
 
         NodeConnectionHistoryDao nodeConnectionHistoryDao = new NodeConnectionHistoryDao(dataBase);
         List<NodeConnectionHistory> nodeConnectionHistoryList;
@@ -541,7 +547,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         try {
             nodeConnectionHistoryList = nodeConnectionHistoryDao.findAll();
-            nodeConnectionHistoryListFiltered = applyGeoLocationFilter(locationManager.getLocation(), nodeConnectionHistoryList);
+            nodeConnectionHistoryListFiltered = applyGeoLocationFilter(location, nodeConnectionHistoryList);
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
             return null;
@@ -584,7 +590,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     private List<NodeConnectionHistory> applyGeoLocationFilter(Location clientLocation, List<NodeConnectionHistory> nodeConnectionHistoryList) {
 
-        if(nodeConnectionHistoryList != null)
+        if(nodeConnectionHistoryList == null)
             return null;
 
         /*

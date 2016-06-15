@@ -284,5 +284,17 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     public void setBottomNavigationMenu(FermatBottomNavigation bottomNavigationMenu) {
         this.bottomNavigationMenu = bottomNavigationMenu;
     }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "activityType='" + activityType + '\'' +
+                ", fragments=" + fragments +
+                ", lastFragment='" + lastFragment + '\'' +
+                ", startFragment='" + startFragment + '\'' +
+                ", backPublicKey='" + backPublicKey + '\'' +
+                ", backActivity=" + backActivity +
+                '}';
+    }
 }
 
