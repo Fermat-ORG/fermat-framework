@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_gray_light">
+    android:background="@drawable/background_white_gradient">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,6 +64,7 @@
                                 android:layout_alignLeft="@+id/txt_amount"
                                 android:layout_alignStart="@+id/txt_amount"
                                 android:layout_marginTop="5dp"
+                                android:textColor="@color/color_black"
                                 />
 
                             <TextView
@@ -76,7 +77,7 @@
                                 android:layout_toRightOf="@+id/textView4"
                                 android:layout_toEndOf="@+id/textView4"
                                 android:layout_marginTop="5dp"
-                                />
+                                android:textColor="@color/color_black" />
 
                         </LinearLayout>
 
@@ -95,7 +96,8 @@
                                 android:layout_below="@+id/textView4"
                                 android:layout_alignLeft="@+id/textView4"
                                 android:layout_alignStart="@+id/textView4"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:textColor="@color/color_black"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -105,7 +107,8 @@
                                 android:id="@id/txt_contactName"
                                 android:layout_below="@+id/txt_time"
                                 android:layout_toRightOf="@+id/textView4"
-                                android:layout_toEndOf="@+id/textView4" />
+                                android:layout_toEndOf="@+id/textView4"
+                                android:textColor="@color/color_black"/>
                         </LinearLayout>
 
 
@@ -117,7 +120,8 @@
                             android:id="@id/txt_notes"
                             android:layout_below="@+id/textView6"
                             android:layout_alignLeft="@+id/textView6"
-                            android:layout_alignStart="@+id/textView6" />
+                            android:layout_alignStart="@+id/textView6"
+                            android:textColor="@color/color_black"/>
 
                     </LinearLayout>
 

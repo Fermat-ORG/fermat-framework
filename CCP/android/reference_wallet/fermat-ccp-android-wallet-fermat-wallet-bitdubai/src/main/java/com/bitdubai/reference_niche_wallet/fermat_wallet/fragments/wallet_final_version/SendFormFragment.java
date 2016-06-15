@@ -480,7 +480,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                 blockchainNetworkType
                         );
                     } else {
@@ -497,7 +497,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         VaultType.CRYPTO_CURRENCY_VAULT,
                                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType
                                 );
                             } else {
@@ -518,11 +518,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     }
                 } catch (CantCreateWalletContactException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
 
                 } catch (ContactNameAlreadyExistsException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
 
 
@@ -636,7 +636,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         Actors.INTRA_USER,
                                         cryptoWalletWalletContact.getActorPublicKey(),
                                         cryptoWalletWalletContact.getActorType(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType,
                                         CryptoCurrency.BITCOIN
 
@@ -654,7 +654,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         } catch (CantSendFermatException e) {
-                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -696,7 +696,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
 
         } catch (Exception e) {

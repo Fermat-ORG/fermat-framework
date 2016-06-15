@@ -9,7 +9,8 @@
     android:paddingBottom="2dp"
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
-    android:paddingTop="2dp">
+    android:paddingTop="2dp"
+    android:background="@drawable/background_white_gradient">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"

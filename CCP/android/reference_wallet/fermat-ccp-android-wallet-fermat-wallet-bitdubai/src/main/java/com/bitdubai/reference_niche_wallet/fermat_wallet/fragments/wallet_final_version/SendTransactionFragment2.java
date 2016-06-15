@@ -2,14 +2,12 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
+
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,18 +27,18 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+
 import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -70,8 +68,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
@@ -685,7 +682,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
                     appSession.getAppPublicKey(),
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                     blockchainNetworkType
             );
             walletAddress = cryptoAddress.getAddress();

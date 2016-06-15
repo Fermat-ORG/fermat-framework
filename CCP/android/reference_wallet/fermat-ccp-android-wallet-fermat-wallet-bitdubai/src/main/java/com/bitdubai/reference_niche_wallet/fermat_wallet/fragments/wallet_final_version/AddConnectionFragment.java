@@ -168,7 +168,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
         final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_add_connection_selector)
+                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.fermat_add_connection_selector)
                 .build();
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
@@ -258,7 +258,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
 
@@ -393,7 +393,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         if(!isMenuVisible){
             isMenuVisible = true;
             menu.add(0, FermatWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
-                    .setIcon(R.drawable.button_add_connection)
+                    .setIcon(R.drawable.fermat_button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
     }

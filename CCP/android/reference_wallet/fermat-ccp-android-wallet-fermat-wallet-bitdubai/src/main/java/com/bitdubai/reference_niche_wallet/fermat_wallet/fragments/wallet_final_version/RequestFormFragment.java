@@ -387,7 +387,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                     VaultType.CRYPTO_CURRENCY_VAULT,
                                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                     blockchainNetworkType
                             );
                         }
@@ -641,7 +641,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    VaultType.CRYPTO_CURRENCY_VAULT,
                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                    appSession.getAppPublicKey(),
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    blockchainNetworkType
                            );
                            fermatWallet.sendCryptoPaymentRequest(

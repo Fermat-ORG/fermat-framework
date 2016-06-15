@@ -240,12 +240,12 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.fw_withdrawall_icon)
+      /*  menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.fw_withdrawall_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 
         menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
 
 
     }

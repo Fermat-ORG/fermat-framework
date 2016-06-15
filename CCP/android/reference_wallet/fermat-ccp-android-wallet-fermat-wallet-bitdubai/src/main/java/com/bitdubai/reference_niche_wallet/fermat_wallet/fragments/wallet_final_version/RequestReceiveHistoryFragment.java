@@ -167,13 +167,13 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
+      /*  menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
                 .setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
                 .setIcon(R.drawable.bit_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
 
     }
 
