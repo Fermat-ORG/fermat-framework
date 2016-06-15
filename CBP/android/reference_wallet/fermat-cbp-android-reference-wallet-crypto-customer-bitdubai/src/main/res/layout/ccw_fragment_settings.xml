@@ -28,11 +28,10 @@
             android:paddingTop="8dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:gravity="left"
                 android:text="My Locations"
                 android:textSize="20sp"
                 android:textColor="#949494"/>
@@ -79,7 +78,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:gravity="left"
                 android:text="Bank Accounts"
                 android:textSize="20sp"
                 android:textColor="#949494"/>
@@ -120,7 +118,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="WALLET MANAGEMENT"
             android:textSize="16dp"
             android:textColor="@color/white"/>
@@ -158,8 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:gravity="left"
-                android:text="Bitcoin Wallet and Providers"
+                android:text="Exchange Rate Providers"
                 android:textSize="20sp"
                 android:textColor="#949494"/>
 

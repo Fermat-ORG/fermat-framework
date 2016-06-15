@@ -19,6 +19,7 @@ public enum LocationSource implements FermatEnum {
     GPS           ("GPS"),
     NETWORK       ("NET"),
     IP_CALCULATED ("IPC"),
+    UNKNOWN       ("UNK"),
 
     ;
 
@@ -36,6 +37,7 @@ public enum LocationSource implements FermatEnum {
             case "GPS": return GPS;
             case "NET": return NETWORK;
             case "IPC": return IP_CALCULATED;
+            case "UNK": return UNKNOWN;
 
             default:
                 throw new InvalidParameterException(

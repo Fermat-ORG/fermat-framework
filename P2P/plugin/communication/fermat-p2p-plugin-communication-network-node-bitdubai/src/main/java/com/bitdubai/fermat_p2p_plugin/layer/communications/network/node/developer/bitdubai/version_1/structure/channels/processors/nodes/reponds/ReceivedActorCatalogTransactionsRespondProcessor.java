@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceiveActorCatalogTransactionsMsjRespond;
@@ -39,7 +41,7 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
      * @param channel
      * */
     public ReceivedActorCatalogTransactionsRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND);
+        super(channel, PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPONSE);
     }
 
     /**
@@ -66,10 +68,11 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
 
                     if (messageContent.getLateNotificationsCounter() > 0) {
 
-                        LOG.info("(messageContent.getLateNotificationsCounter() = "+messageContent.getLateNotificationsCounter());
+                        LOG.info("(messageContent.getLateNotificationsCounter() = " + messageContent.getLateNotificationsCounter());
 
                         NodesCatalog remoteNodesCatalog = (NodesCatalog) session.getUserProperties().get(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE);
                         remoteNodesCatalog.setLateNotificationsCounter(remoteNodesCatalog.getLateNotificationsCounter() + messageContent.getLateNotificationsCounter());
+                        getNetworkNodePluginRoot().getPropagateActorCatalogAgent().setSuccessfulPropagateCount(getNetworkNodePluginRoot().getPropagateActorCatalogAgent().getSuccessfulPropagateCount()+1);
                         getDaoFactory().getNodesCatalogDao().update(remoteNodesCatalog);
                     }
 
@@ -77,6 +80,19 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
 
                     LOG.info("MsgRespond status "+MsgRespond.STATUS.FAIL);
                     LOG.info("MsgRespond status "+messageContent.getDetails());
+                }
+
+
+                /*
+                 * If successful propagation is higher or equals to
+                 * the minimum required delete all pending transactions
+                 */
+                if (getNetworkNodePluginRoot().getPropagateActorCatalogAgent().getSuccessfulPropagateCount() >= PropagateActorCatalogAgent.MIN_SUCCESSFUL_PROPAGATION_COUNT) {
+
+                    LOG.info("Deleting all Transactions Pending For Propagation ");
+                    getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().deleteAll();
+                    LOG.info("Total Transactions Pending For Propagation = " + getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().getAllCount());
+                    getNetworkNodePluginRoot().getPropagateActorCatalogAgent().setSuccessfulPropagateCount(0);
                 }
 
                 session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Finish propagation actor catalog to this node"));

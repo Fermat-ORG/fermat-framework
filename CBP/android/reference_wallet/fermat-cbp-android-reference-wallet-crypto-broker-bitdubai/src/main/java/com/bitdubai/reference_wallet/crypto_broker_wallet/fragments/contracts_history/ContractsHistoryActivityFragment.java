@@ -26,8 +26,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Contrac
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractHistoryAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +45,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
  * @version 1.0
  * @since 18/11/2015
  */
-public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation,ReferenceAppFermatSession,ResourceProviderManager>
+public class ContractsHistoryActivityFragment extends FermatWalletListFragment<ContractBasicInformation, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Constants
@@ -71,7 +71,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -192,7 +192,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
-        appSession.setData(CryptoBrokerWalletSessionReferenceApp.CONTRACT_DATA, data);
+        appSession.setData(FragmentsCommons.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 

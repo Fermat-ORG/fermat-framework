@@ -3,14 +3,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -24,7 +24,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>ActorTraceDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -37,12 +37,12 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public ActorTraceDiscoveryQueryRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ActorTraceDiscoveryQueryRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPONSE
         );
     }
 
@@ -98,17 +98,17 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                 /*
                  * this is to filter the networkservice intermediate
                  */
-                ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
+                ((NetworkClientActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
 
                 /*
                  * this is to know who is the nodeprofile to send message
                  */
-                ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
+                ((NetworkClientActorFoundEvent) event).setActorProfile(result.getActorProfile());
 
                 /*
                  * this is to filter when the client is checkin in other node
                  */
-                ((ActorFoundEvent) event).setUriToNode(uriToNode);
+                ((NetworkClientActorFoundEvent) event).setUriToNode(uriToNode);
 
                  /*
                  * Raise the event

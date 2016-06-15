@@ -65,35 +65,24 @@ import java.util.UUID;
  * Edited by Miguel Rincon on 18/04/2016
  */
 public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommunitySettings> implements ChatActorCommunitySubAppModuleManager, Serializable {
-//public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
 
     private final ChatIdentityManager                      chatIdentityManager;
-    private ChatActorCommunityInformation                  chatActorCommunityManager             ;
     private final ChatActorConnectionManager               chatActorConnectionManager            ;
     private final ChatManager                              chatActorNetworkServiceManager        ;
     private String                                         subAppPublicKey                       ;
     private final ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot;
-    private final PluginFileSystem                         pluginFileSystem                      ;
-    private final UUID                                     pluginId                              ;
-    private final PluginVersionReference                   pluginVersionReference                ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
-        this.chatActorCommunityManager = chatActorCommunityManager;
         this.chatActorCommunitySubAppModulePluginRoot = chatActorCommunitySubAppModulePluginRoot;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-        this.pluginVersionReference= pluginVersionReference;
     }
 
     @Override
     public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
 
@@ -109,7 +98,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
                 actorConnections = search.getResult(Integer.MAX_VALUE, 0);
-            }//else linkedChatActorIdentity=null;
+            }
         } catch (CantListActorConnectionsException exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
@@ -121,8 +110,20 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
                     worldActor = worldActorList.get(i);
                     for (ChatActorConnection connectedActor : actorConnections) {
-                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId(), worldActor.getStatus()));
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
+                            worldActorList.set(
+                                    i,
+                                    new ChatActorCommunitySubAppModuleInformationImpl(
+                                            worldActor.getPublicKey(),
+                                            worldActor.getAlias(),
+                                            worldActor.getImage(),
+                                            connectedActor.getConnectionState(),
+                                            connectedActor.getConnectionId(),
+                                            worldActor.getStatus()
+                                    )
+                            );
+                            break;
+                        }
                     }
                 }
             }
@@ -157,8 +158,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(this.subAppPublicKey);
-            //appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.loadAndGetSettings(this.subAppPublicKey);
         }catch (CantGetSettingsException | SettingsNotFoundException e){
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             appSettings = null;
@@ -171,8 +171,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             if(identity.getActorType() != null)
                 appSettings.setLastSelectedActorType(identity.getActorType());
             try {
-                this.chatActorCommunitySubAppModuleManager.persistSettings(this.subAppPublicKey, appSettings);
-                //this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                this.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -350,12 +349,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         return chatActorCommunityInformationList;
     }
 
-
-
-
-
-
-
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
@@ -381,7 +374,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
-
         return chatActorCommunityInformationList;
     }
 
@@ -391,9 +383,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             List<ChatActorCommunityInformation> chatActorList;
             actorList = new ArrayList<>();
 
-            chatActorList = this.chatActorCommunitySubAppModuleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
-
-
+            chatActorList = this.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
 
             for (ChatActorCommunityInformation record : chatActorList)
                 actorList.add((new ChatActorCommunitySubAppModuleInformationImpl(
@@ -415,8 +405,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
         return actorList;
     }
-
-
 
     @Override
     public ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException {
@@ -442,15 +430,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         return ConnectionState.DISCONNECTED_REMOTELY;
     }
 
-
-
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
             appSettings = this.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-            //appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             appSettings = null;
@@ -472,7 +457,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             /*Do nothing*/
         }
 
-
         //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null) {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
@@ -489,13 +473,9 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                             selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(), i.getConnectionState());
                     }
                 }
-//                if(selectedIdentity == null)
-//                    throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;
             }
-//            else
-//                throw new ActorIdentityNotSelectedException("", null, "", "");
         }
 
         return null;
@@ -506,11 +486,10 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         //TODO: Revisar este metodo que hace aca
         chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null);
 
-
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
 
@@ -519,7 +498,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             appSettings.setLastSelectedActorType(Actors.CHAT);
 
             try {
-                this.chatActorCommunitySubAppModuleManager.persistSettings(this.subAppPublicKey, appSettings);
+                this.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -537,7 +516,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         int[] notifications = new int[4];
         try {
             if(getSelectedActorIdentity() != null)
-                notifications[2] = chatActorCommunitySubAppModuleManager.getChatActorWaitingYourAcceptanceCount(getSelectedActorIdentity().getPublicKey(),99,0).size();
+                notifications[2] = this.getChatActorWaitingYourAcceptanceCount(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
             else
                 notifications[2] = 0;
         } catch (CantGetSelectedActorIdentityException e) {
@@ -549,14 +528,5 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
         return notifications;
     }
-
-    public void exposeIdentityInWat(){
-        try {
-            chatActorNetworkServiceManager.exposeIdentitiesInWait();
-        } catch (CantExposeIdentityException e) {
-            e.printStackTrace();
-        }
-    }
-
 
 }

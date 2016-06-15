@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
@@ -66,13 +63,6 @@ public interface NetworkClientConnection {
     void actorTraceDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
-     * Through the method <code>sendPackageMessage</code> we can send message to other Client
-     *
-     * @param packageContent
-     */
-    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination) throws CantSendMessageException;
-
-    /**
      * Through the method <code>listRegisteredActorProfiles</code> we can get a list of registered actors
      * filtering them with an instance of discovery query parameters.
      *
@@ -93,6 +83,15 @@ public interface NetworkClientConnection {
     CommunicationChannels getCommunicationChannelType();
 
     void callActor(NetworkServiceProfile networkServiceProfile, ActorProfile actorProfile);
+
+    /**
+     * Through the method <code>isActorOnline</code> we can know if an actor is connected to the fermat network.
+     *
+     * @param publicKey of the actor
+     *
+     * @return a boolean value indicating if the actor is online.
+     */
+    Boolean isActorOnline(final String publicKey);
 
     /**
      * Through the method <code>isConnected</code> we can verify if the connection object is

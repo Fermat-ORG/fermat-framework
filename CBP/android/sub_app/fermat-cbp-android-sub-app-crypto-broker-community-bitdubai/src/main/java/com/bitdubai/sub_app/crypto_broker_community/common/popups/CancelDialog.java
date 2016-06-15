@@ -7,25 +7,25 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Alejandro Bicelis on 15/02/2016
- *
  */
-public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -45,13 +45,13 @@ public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
     CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public CancelDialog(Activity a,
-                        CryptoBrokerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
+    public CancelDialog(Activity activity,
+                        ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
                         SubAppResourcesProviderManager subAppResources,
                         CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
                         CryptoBrokerCommunitySelectableIdentity identity) {
 
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(activity, session, subAppResources);
 
         this.cryptoBrokerCommunityInformation = cryptoBrokerCommunityInformation;
         this.identity = identity;
@@ -65,15 +65,15 @@ public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
 
         mDescription = (FermatTextView) findViewById(R.id.description);
         mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
+        mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mDescription.setText(description!= null ? description : "");
-        mUsername.setText(username!= null ? username: "");
-        mTitle.setText(title != null ? title: "");
+        mDescription.setText(description != null ? description : "");
+        mUsername.setText(username != null ? username : "");
+        mTitle.setText(title != null ? title : "");
 
     }
 
@@ -126,7 +126,7 @@ public class CancelDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
             }
 
             dismiss();
-        }else if( i == R.id.negative_button){
+        } else if (i == R.id.negative_button) {
             dismiss();
         }
     }

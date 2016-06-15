@@ -27,6 +27,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -34,7 +35,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
@@ -109,15 +110,21 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private Integer nodesListPosition;
 
     /*
-     * Represent the communicationsNetworkClientChannel
+     * Represent the networkClientCommunicationChannel
      */
-    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
+    private NetworkClientCommunicationChannel networkClientCommunicationChannel;
 
    /*
     * is used to validate if it is connection to an external node
     * when receive check-in-client then send register all profile
     */
     private boolean isExternalNode;
+
+    /*
+     * Represent the nodeProfile, it is used to be save
+     * into table NodeConnectionHistory when the client is connected
+     */
+    private NodeProfile nodeProfile;
 
     /*
      * Constructor
@@ -128,7 +135,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair                           clientIdentity   ,
                                                 final NetworkClientCommunicationPluginRoot pluginRoot       ,
                                                 final Integer                              nodesListPosition,
-                                                final boolean                              isExternalNode   ){
+                                                final boolean                              isExternalNode   ,
+                                                final NodeProfile                          nodeProfile      ){
 
         URI uri = null;
         try {
@@ -150,7 +158,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
 
-        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this, isExternalNode);
+        this.networkClientCommunicationChannel = new NetworkClientCommunicationChannel(this, isExternalNode);
     }
 
     /*
@@ -243,7 +251,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            container.connectToServer(communicationsNetworkClientChannel, uri);
+            container.connectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,7 +278,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            container.connectToServer(communicationsNetworkClientChannel, uri);
+            container.connectToServer(networkClientCommunicationChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,8 +288,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     public boolean isConnected() {
 
         try {
-            if (communicationsNetworkClientChannel.getClientConnection() != null)
-                return communicationsNetworkClientChannel.getClientConnection().isOpen();
+            if (networkClientCommunicationChannel.getClientConnection() != null)
+                return networkClientCommunicationChannel.getClientConnection().isOpen();
         }catch (Exception e){
             return Boolean.FALSE;
         }
@@ -292,7 +300,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     @Override
     public boolean isRegistered() {
 
-        return communicationsNetworkClientChannel.isRegistered();
+        return networkClientCommunicationChannel.isRegistered();
     }
 
     /*
@@ -528,25 +536,21 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
     }
 
-    @Override
     public void sendPackageMessage(final PackageContent     packageContent              ,
                                    final NetworkServiceType networkServiceType          ,
-                                   final String             destinationIdentityPublicKey,
-                                   final String             clientDestination           ) throws CantSendMessageException {
+                                   final String             destinationIdentityPublicKey) throws CantSendMessageException {
 
         if (isConnected()){
 
             try {
 
-                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 networkServiceType,
                                 PackageType.MESSAGE_TRANSMIT,
                                 clientIdentity.getPrivateKey(),
-                                destinationIdentityPublicKey,
-                                clientDestination
-
+                                destinationIdentityPublicKey
                         )
                 );
 
@@ -577,7 +581,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
 
-                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                networkClientCommunicationChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 NetworkServiceType.UNDEFINED,
@@ -701,7 +705,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
-    private boolean isActorOnline(final ActorProfile actorProfile) {
+    private boolean isActorOnlineInTheSameNode(final ActorProfile actorProfile) {
 
         try {
             URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
@@ -717,7 +721,38 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
+                if (respondJsonObject.get("isOnline").getAsBoolean())
+                    return respondJsonObject.get("sameNode").getAsBoolean();
+                else
+                    return false;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public final Boolean isActorOnline(final String publicKey) {
+
+        try {
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + publicKey);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
                 return respondJsonObject.get("isOnline").getAsBoolean();
+
             } else {
                 return false;
             }
@@ -732,7 +767,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            if (isActorOnline(actorProfile)) {
+            if (isActorOnlineInTheSameNode(actorProfile)) {
 
                 NetworkClientCommunicationCall actorCall = new NetworkClientCommunicationCall(
                         networkServiceProfile.getNetworkServiceType(),
@@ -811,8 +846,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return uri;
     }
 
-    public CommunicationsNetworkClientChannel getCommunicationsNetworkClientChannel() {
-        return communicationsNetworkClientChannel;
+    public NetworkClientCommunicationChannel getNetworkClientCommunicationChannel() {
+        return networkClientCommunicationChannel;
     }
 
     public synchronized void addCall(NetworkClientCall networkClientCall) {
@@ -830,7 +865,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             try {
                 // if I can, i will close the session of the connection.
-                this.communicationsNetworkClientChannel.getClientConnection().close();
+                this.networkClientCommunicationChannel.getClientConnection().close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -840,5 +875,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     public String getNodeUrl() {
         return nodeUrl;
+    }
+
+    public NodeProfile getNodeProfile() {
+        return nodeProfile;
     }
 }

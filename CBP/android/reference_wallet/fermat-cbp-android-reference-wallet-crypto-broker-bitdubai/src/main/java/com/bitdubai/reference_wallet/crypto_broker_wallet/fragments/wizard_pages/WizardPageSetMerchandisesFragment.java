@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
@@ -36,7 +37,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
+public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CBPInstalledWallet>, DialogInterface.OnDismissListener {
 
     // Constants
@@ -94,16 +95,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             try {
                 walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
             } catch (Exception ex) {
-                Object data = appSession.getData(CryptoBrokerWalletSessionReferenceApp.CONFIGURED_DATA);
+                Object data = appSession.getData(FragmentsCommons.CONFIGURED_DATA);
                 walletConfigured = (data != null);
             }
 
             if (walletConfigured) {
-                //getRuntimeManager().changeStartActivity(1);
                 return;
             } else {
-                //Delete potential previous configurations made by this wizard page
-                //So that they can be reconfigured cleanly
+                //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
                 moduleManager.clearAssociatedIdentities(appSession.getAppPublicKey());
 
                 final List<CBPInstalledWallet> installWallets = moduleManager.getCbpInstallWallets();
@@ -224,6 +223,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .setIsCheckEnabled(true)
                             .build();
 
                 } else {
@@ -235,6 +235,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                             .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                             .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                             .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .setIsCheckEnabled(true)
                             .build();
                 }
 
@@ -287,10 +288,12 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                                     public void onDismiss(DialogInterface dialog) {
                                         if (!containWallet(selectedItem)) {
                                             FiatCurrency cashCurrency = getCashCurrency(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());
-                                            selectedItem.setCurrency(cashCurrency);
-                                            stockWallets.add(selectedItem);
-                                            adapter.changeDataSet(stockWallets);
-                                            showOrHideNoSelectedWalletsView();
+                                            if(cashCurrency != null) {
+                                                selectedItem.setCurrency(cashCurrency);
+                                                stockWallets.add(selectedItem);
+                                                adapter.changeDataSet(stockWallets);
+                                                showOrHideNoSelectedWalletsView();
+                                            }
                                         }
                                     }
                                 });
@@ -364,15 +367,20 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
-                        FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
-                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
-                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
                         if (!containWallet(selectedWallet)) {
-                            selectedWallet.setCurrency(currency_dialog);
-                            stockWallets.add(selectedWallet);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
+
+                            if(inputDialogCBP.getCreatedBankAccount() != null) {
+
+                                FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
+                                String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
+                                bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
+                                bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
+
+                                selectedWallet.setCurrency(currency_dialog);
+                                stockWallets.add(selectedWallet);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
                         }
                     }
                 });
@@ -514,21 +522,16 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     }
 
     private FiatCurrency getCashCurrency(String walletPublicKey) {
+
+        FiatCurrency currency;
+
         try {
-
-            return moduleManager.getCashCurrency(walletPublicKey);
-
+            currency = moduleManager.getCashCurrency(walletPublicKey);
         } catch (FermatException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-            else
-                Log.e(TAG, ex.getMessage(), ex);
+            currency = null;
         }
 
-        return null;
+        return currency;
     }
 
 }

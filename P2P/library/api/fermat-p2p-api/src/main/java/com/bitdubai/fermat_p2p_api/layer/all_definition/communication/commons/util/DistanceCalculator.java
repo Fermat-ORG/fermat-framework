@@ -1,13 +1,6 @@
-/*
- * @#DistanceCalculator.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator</code> has the
@@ -49,89 +42,6 @@ public class DistanceCalculator {
      * Represent the unit on nautical miles
      */
     public static String NAUTICAL_MILES = "N";
-
-    public static void main (String[] args) throws Exception
-    {
-
-        Location pointOne = new Location() {
-            @Override
-            public Double getAccuracy() {
-                return null;
-            }
-
-            @Override
-            public Double getAltitudeAccuracy() {
-                return null;
-            }
-
-            @Override
-            public Double getLatitude() {
-                return 32.9697;
-            }
-
-            @Override
-            public Double getLongitude() {
-                return -96.80322;
-            }
-
-            @Override
-            public Double getAltitude() {
-                return 0.0;
-            }
-
-            @Override
-            public Long getTime() {
-                return new Long(0);
-            }
-
-            @Override
-            public LocationSource getSource() {
-                return null;
-            }
-        };
-
-
-        Location pointTwo = new Location() {
-            @Override
-            public Double getAccuracy() {
-                return null;
-            }
-
-            @Override
-            public Double getAltitudeAccuracy() {
-                return null;
-            }
-
-            @Override
-            public Double getLatitude() {
-                return 29.46786;
-            }
-
-            @Override
-            public Double getLongitude() {
-                return -98.53506;
-            }
-
-            @Override
-            public Double getAltitude() {
-                return 0.0;
-            }
-
-            @Override
-            public Long getTime() {
-                return new Long(0);
-            }
-
-            @Override
-            public LocationSource getSource() {
-                return null;
-            }
-        };
-
-        System.out.println(distance(pointOne, pointTwo, DistanceCalculator.MILES) + " Miles\n");
-        System.out.println(distance(pointOne, pointTwo, DistanceCalculator.KILOMETERS) + " Kilometers\n");
-        System.out.println(distance(pointOne, pointTwo, DistanceCalculator.NAUTICAL_MILES) + " Nautical Miles\n");
-    }
 
     /**
      * This method calculate the distance between two location points

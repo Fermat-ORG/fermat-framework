@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorUnreachableEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallMsgRespond;
@@ -10,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationCall;
@@ -28,7 +29,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorTraceDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.ACTOR_CALL_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.ACTOR_CALL_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 19/05/2016.
  *
@@ -46,12 +47,12 @@ public class ActorCallRespondProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public ActorCallRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ActorCallRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.ACTOR_CALL_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.ACTOR_CALL_RESPONSE
         );
         this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
@@ -126,6 +127,22 @@ public class ActorCallRespondProcessor extends PackageProcessor {
 
                     }
 
+                } else {
+
+                    /*
+                     * Create a raise a new event whit the NETWORK_CLIENT_ACTOR_UNREACHABLE
+                     */
+                    FermatEvent actorUnreachable = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_UNREACHABLE);
+                    actorUnreachable.setSource(EventSource.NETWORK_CLIENT);
+
+                    ((NetworkClientActorUnreachableEvent) actorUnreachable).setActorProfile(result.getActorProfile());
+                    ((NetworkClientActorUnreachableEvent) actorUnreachable).setNetworkServiceType(actorCallMsgRespond.getNetworkServiceType());
+
+                    /*
+                     * Raise the event
+                     */
+                    System.out.println("ActorCallRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_UNREACHABLE");
+                    getEventManager().raiseEvent(actorUnreachable);
                 }
 
             } catch (Exception e) {

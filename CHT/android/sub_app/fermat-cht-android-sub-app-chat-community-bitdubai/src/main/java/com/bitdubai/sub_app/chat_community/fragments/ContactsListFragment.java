@@ -27,7 +27,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -39,8 +41,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
@@ -67,7 +67,6 @@ public class ContactsListFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ContactsListFragment";
@@ -97,10 +96,8 @@ public class ContactsListFragment
         try {
             setHasOptionsMenu(true);
             //Get managers
-            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-           // settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
             //Obtain Settings or create new Settings if first time opening subApp
@@ -242,41 +239,29 @@ public class ContactsListFragment
         @Override
         protected Void doInBackground(Void... params) {
             try {
-//               con = chatManager.listWorldChatActor(identity, MAX, offset);
-//                contactname.clear();
-//                contactid.clear();
-//                contacticon.clear();
-//                contactStatus.clear();
-
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
-                    if (con != null) {
-                        int size = con.size();
-                        if (size > 0) {
-                            for (ChatActorCommunityInformation conta:con) {
-                                if (conta.getConnectionState() != null) {
-                                    if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
-                                        try {
-                                            moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
-                                        } catch (Exception e) {
-                                            if (errorManager != null)
-                                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                        }
+                System.out.println("****************** doInBackground entering: ");
+                List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+                if (con != null) {
+                    int size = con.size();
+                    if (size > 0) {
+                        for (ChatActorCommunityInformation conta:con) {
+                            if (conta.getConnectionState() != null) {
+                                if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
+                                    try {
+                                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
+                                    } catch (Exception e) {
+                                        if (errorManager != null)
+                                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
                                 }
-//                                        contactname.add(conta.getAlias());
-//                                        contactid.add(conta.getPublicKey());
-//                                        ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
-//                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-//                                        contacticon.add(bmd.getBitmap());
-//                                        contactStatus.add(conta.getStatus());
-//                                }
-//                                }
                             }
                         }
                     }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("****************** doInBackground saling: ");
             return null;
         }
     }

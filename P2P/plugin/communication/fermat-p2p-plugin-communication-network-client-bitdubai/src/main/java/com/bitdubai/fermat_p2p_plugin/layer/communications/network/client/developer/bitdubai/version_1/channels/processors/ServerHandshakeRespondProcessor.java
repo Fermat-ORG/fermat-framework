@@ -9,7 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 
 import javax.websocket.Session;
 
@@ -26,12 +26,12 @@ public class ServerHandshakeRespondProcessor extends PackageProcessor{
     /**
      * Constructor whit parameter
      *
-     * @param communicationsNetworkClientChannel register
+     * @param networkClientCommunicationChannel register
      */
-    public ServerHandshakeRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ServerHandshakeRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
-                communicationsNetworkClientChannel,
-                PackageType.SERVER_HANDSHAKE_RESPOND
+                networkClientCommunicationChannel,
+                PackageType.SERVER_HANDSHAKE_RESPONSE
         );
     }
 
