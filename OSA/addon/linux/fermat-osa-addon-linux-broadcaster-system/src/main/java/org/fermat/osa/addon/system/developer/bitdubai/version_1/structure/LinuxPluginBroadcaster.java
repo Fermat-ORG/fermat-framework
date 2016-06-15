@@ -33,8 +33,7 @@ public class LinuxPluginBroadcaster implements Broadcaster {
     }
 
     @Override
-    public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle, String channelReceiversCode) {
         return 0;
     }
-
 }

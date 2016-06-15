@@ -342,7 +342,9 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_WALLET                      ("TWALLET"),
 
     //Init PIP
-    PIP_FERMAT_MONITOR                  ("PFM");
+    PIP_FERMAT_MONITOR                  ("PFM"),
+    NOMINATIM                           ("PNM")
+    ;
     //End PIP
 
     // End  new Plugins

@@ -6,27 +6,35 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
-import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.model.DeviceLocation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.AvailableNodes</code>
@@ -62,22 +70,52 @@ public class AvailableNodes implements RestFulServices {
         gson = new Gson();
     }
 
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String listAvailableNodesProfile(){
+    public Response listAvailableNodesProfile(@FormParam("latitude") String latitudeString, @FormParam("longitude") String longitudeString){
 
         JsonObject jsonObject = new JsonObject();
 
+        LOG.info("Executing listAvailableNodesProfile");
+        LOG.info("latitude = " + latitudeString + " longitude = " + longitudeString);
 
         try {
 
-            List<NodesCatalog> listNodesCatalog = daoFactory.getNodesCatalogDao().findAll();
+            /*
+             * Cast to Double the String Receive
+             */
 
-            if(listNodesCatalog != null) {
+            Double latitudeSource = Double.parseDouble(latitudeString);
+            Double longitudeSource = Double.parseDouble(longitudeString);
+
+            /*
+             * Get the locationSource to do the filter of Geolocation
+             */
+            Location locationSource = new NetworkNodeCommunicationDeviceLocation(
+                    latitudeSource ,
+                    longitudeSource,
+                    null     ,
+                    0        ,
+                    null     ,
+                    System.currentTimeMillis(),
+                    LocationSource.UNKNOWN
+            );
+
+            /*
+             * Get the node catalog list
+             */
+            List<NodesCatalog> nodesCatalogs = daoFactory.getNodesCatalogDao().findAll();
+
+            /*
+             * Filter and order
+             */
+            List<NodesCatalog> nodesCatalogsFiltered = applyGeoLocationFilter(locationSource, nodesCatalogs);
+
+            if(nodesCatalogsFiltered != null) {
 
                 List<NodeProfile> listNodeProfile = new ArrayList<>();
 
-                for (NodesCatalog nodesCatalog : listNodesCatalog) {
+                for (NodesCatalog nodesCatalog : nodesCatalogsFiltered.subList(0,5)) {
 
                     NodeProfile nodeProfile = new NodeProfile();
                     nodeProfile.setName((nodesCatalog.getName() != null ? nodesCatalog.getName() : null));
@@ -85,17 +123,16 @@ public class AvailableNodes implements RestFulServices {
                     nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
                     nodeProfile.setIdentityPublicKey(nodesCatalog.getIdentityPublicKey());
 
-                    if(nodesCatalog.getLastLatitude() != null && nodesCatalog.getLastLongitude() != null &&
-                            nodesCatalog.getLastLatitude() != 0 && nodesCatalog.getLastLongitude() != 0){
+                    if(nodesCatalog.getLastLocation() != null ){
 
-                        DeviceLocation location = new DeviceLocation(
-                                nodesCatalog.getLastLatitude() ,
-                                nodesCatalog.getLastLongitude(),
-                                null     ,
-                                null     ,
-                                null     ,
+                        Location location = new NetworkNodeCommunicationDeviceLocation(
+                                nodesCatalog.getLastLocation().getLatitude() ,
+                                nodesCatalog.getLastLocation().getLongitude(),
+                                0.0     ,
+                                0        ,
+                                0.0     ,
                                 System.currentTimeMillis(),
-                                LocationSource.IP_CALCULATED
+                                LocationSource.UNKNOWN
                         );
 
                         nodeProfile.setLocation(location);
@@ -107,7 +144,7 @@ public class AvailableNodes implements RestFulServices {
                 }
 
                 jsonObject.addProperty("success", Boolean.TRUE);
-                jsonObject.addProperty("data", gson.toJson(listNodeProfile));
+                jsonObject.addProperty("data", GsonProvider.getGson().toJson(listNodeProfile));
 
             }else{
 
@@ -116,12 +153,61 @@ public class AvailableNodes implements RestFulServices {
 
             }
 
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (Exception e) {
             jsonObject.addProperty("success", Boolean.FALSE);
             jsonObject.addProperty("message", gson.toJson(e));
         }
 
-       return gson.toJson(jsonObject);
+       return Response.status(200).entity(gson.toJson(jsonObject)).build();
     }
+
+
+    /**
+     *  Method that apply geo location filter to the list
+     *
+     * @param clientLocation
+     * @param nodesCatalogs
+     * @return List<NodesCatalog>
+     */
+    private List<NodesCatalog> applyGeoLocationFilter(Location clientLocation, List<NodesCatalog> nodesCatalogs) {
+
+        /*
+         * Hold the data ordered by distance
+         */
+        Map<Double, NodesCatalog> orderedByDistance = new TreeMap<>();
+
+        /*
+         * For each node
+         */
+        for (final NodesCatalog node: nodesCatalogs) {
+
+            /*
+             * If component has a geo location
+             */
+            if (node.getLastLocation().getLatitude() != null &&
+                    node.getLastLocation().getLongitude() != null){
+
+
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLatitude(node.getLastLocation().getLatitude());
+                nodeLocation.setLongitude(node.getLastLocation().getLongitude());
+
+                /*
+                 * Calculate the distance between the two points
+                 */
+                Double componentDistance = DistanceCalculator.distance(clientLocation, nodeLocation, DistanceCalculator.KILOMETERS);
+
+                /*
+                 * Add to the list
+                 */
+                orderedByDistance.put(componentDistance, node);
+
+            }
+
+        }
+
+        return new ArrayList<>(orderedByDistance.values());
+    }
+
 
 }
