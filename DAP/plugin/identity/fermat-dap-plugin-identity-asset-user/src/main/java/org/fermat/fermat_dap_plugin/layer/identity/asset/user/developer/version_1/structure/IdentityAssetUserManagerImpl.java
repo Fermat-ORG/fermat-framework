@@ -206,30 +206,4 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-//        try {
-//            List<IdentityAssetUser> identities = this.getIdentityAssetUsersFromCurrentDeviceUser();
-//            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-//        this.createNewIdentityAssetUser(name, profile_img);
-//    }
-
-//    @Override
-//    public void setAppPublicKey(String publicKey) {
-//
-//    }
-//
-//    @Override
-//    public int[] getMenuNotifications() {
-//        return new int[0];
-//    }
 }

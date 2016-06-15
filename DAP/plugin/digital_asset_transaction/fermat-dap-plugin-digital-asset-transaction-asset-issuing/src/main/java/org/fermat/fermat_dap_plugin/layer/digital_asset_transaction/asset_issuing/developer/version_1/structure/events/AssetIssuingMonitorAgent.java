@@ -47,6 +47,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.IssuingRecord;
 
 import java.util.List;
@@ -326,7 +327,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     outOfKeys = true;
                     return;
                 } else {
-                    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory assetMetadataFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, cryptoWalletManager);
+                    AssetMetadataFactory assetMetadataFactory = new AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, cryptoWalletManager);
                     Future<Boolean> result = executor.submit(assetMetadataFactory);
                 }
             }

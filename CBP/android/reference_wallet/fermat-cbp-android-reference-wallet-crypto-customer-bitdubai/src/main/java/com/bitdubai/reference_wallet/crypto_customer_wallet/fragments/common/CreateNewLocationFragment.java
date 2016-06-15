@@ -15,20 +15,24 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateNewLocationFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CreateNewLocationFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
     private Country[] countries;
@@ -121,7 +125,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
+        moduleManager =appSession.getModuleManager();
 
         configureToolbar();
 
@@ -173,7 +177,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
-            List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST);
+            List<String> locations = (List<String>) appSession.getData(FragmentsCommons.LOCATION_LIST);
             int pos = locations.size()-1;
             if(locations.get(pos).equals("settings")){
                 locations.remove(pos);

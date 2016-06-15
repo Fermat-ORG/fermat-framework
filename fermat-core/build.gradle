@@ -1,6 +1,5 @@
 apply plugin: 'java'
 
-
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
@@ -14,7 +13,6 @@ dependencies {
     /**
      * For doing the code more readable, please keep the elements in the file sorted alphabetically.
      */
-
     compile project(':fermat-api')
     compile project(':fermat-core-api')
     compile project(':fermat-art-core')
@@ -37,4 +35,3 @@ dependencies {
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
 }
-

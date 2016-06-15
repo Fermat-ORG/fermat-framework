@@ -31,7 +31,7 @@ public class CheckOutNetworkServiceRespondProcessor extends PackageProcessor {
     public CheckOutNetworkServiceRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.CHECK_OUT_NETWORK_SERVICE_RESPOND
+                PackageType.CHECK_OUT_NETWORK_SERVICE_RESPONSE
         );
     }
 

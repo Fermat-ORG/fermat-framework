@@ -1,9 +1,9 @@
 package com.bitdubai.sub_app.wallet_manager.fragment.settings;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.Preference;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatSettingsFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -31,7 +31,7 @@ public class MoreSettingsFragment extends AbstractFermatSettingsFragment<Desktop
     }
 
 
-    public static AbstractFermatFragmentInterface newInstance() {
+    public static Fragment newInstance() {
         return new MoreSettingsFragment();
     }
 

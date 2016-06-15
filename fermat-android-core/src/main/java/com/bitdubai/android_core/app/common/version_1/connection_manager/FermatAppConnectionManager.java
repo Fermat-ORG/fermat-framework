@@ -101,13 +101,13 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
             //DAP WALLETS
-            case "asset_issuer":
+            case "asset_issuer" :
                 fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
                 break;
-            case "asset_user":
+            case "asset_user"   :
                 fermatAppConnection = new WalletAssetUserFermatAppConnection(activity);
                 break;
-            case "redeem_point":
+            case "redeem_point" :
                 fermatAppConnection = new WalletRedeemPointFermatAppConnection(activity);
                 break;
             //DAP Sub Apps
@@ -132,6 +132,7 @@ public class FermatAppConnectionManager {
             case "public_key_dap_redeem_point_community":
                 fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
                 break;
+
             //PIP Sub Apps
             case "public_key_pip_developer_sub_app":
                 fermatAppConnection = new DeveloperFermatAppConnection(activity);
@@ -168,7 +169,10 @@ public class FermatAppConnectionManager {
             case "public_key_store":
                 fermatAppConnection = new WalletStoreFermatAppConnection(activity);
                 break;
-            // CHT Sub Apps
+
+
+
+//            // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
@@ -199,14 +203,13 @@ public class FermatAppConnectionManager {
             case "public_key_art_fan_identity":
                 fermatAppConnection = new ArtFanUserFermatAppConnection(activity);
                 break;
+
             case "public_key_art_artist_identity":
                 fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
                 break;
+
             case "public_key_art_music_player":
                 fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
-                break;
-            default:
-                fermatAppConnection = new EmptyFermatAppConnection(activity);
                 break;
         }
 

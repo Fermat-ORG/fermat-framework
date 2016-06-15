@@ -1,29 +1,21 @@
-/*
- * @#OutgoingMessageDataAccessObject.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -32,7 +24,6 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces.DAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -40,50 +31,26 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
 /**
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
  *
- * Created by Gabriel Araujo (gabe_512@hotmail.com)
- *
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class ChatMetadataRecordDAO implements DAO {
 
-    /**
-     * Represent the database
-     */
     private Database database;
 
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
-    private ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
-
-    /**
-     * Constructor
-     * @param database
-     * @param pluginDatabaseSystem
-     * @param pluginId
-     */
-    public ChatMetadataRecordDAO(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
+    public ChatMetadataRecordDAO(final Database database) {
         super();
         this.database = database;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
-        this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
     }
-    private void reportUnexpectedError(final Exception e) {
-        chatNetworkServicePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-    }
-
 
     /**
      * Return the DatabaseTable
@@ -94,35 +61,6 @@ public class ChatMetadataRecordDAO implements DAO {
         return getDatabase().getTable(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_TABLE);
     }
 
-    public List<ChatMetadataRecord> getNotificationByDestinationPublicKey(final String destinationPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
-
-
-        try {
-
-            List<ChatMetadataRecord> chatMetadataRecords = new ArrayList<>();
-            
-            DatabaseTable databaseTable =  getDatabaseTable();
-
-            databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_REMOTEACTORPUBKEY_COLUMN_NAME, destinationPublicKey, DatabaseFilterType.EQUAL);
-
-            databaseTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = databaseTable.getRecords();
-
-            for (DatabaseTableRecord record : records) {
-
-                chatMetadataRecords.add(constructFrom(record));
-            }
-            
-            return chatMetadataRecords;
-
-        } catch (CantLoadTableToMemoryException  exception) {
-            CantGetNotificationException cantGetNotificationException = new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-            reportUnexpectedError(cantGetNotificationException);
-            throw cantGetNotificationException;
-        }
-
-    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
@@ -153,7 +91,6 @@ public class ChatMetadataRecordDAO implements DAO {
         }
         catch (Exception e){
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
         return list;
@@ -178,7 +115,7 @@ public class ChatMetadataRecordDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
- 
+
             DatabaseTable databaseTable =  getDatabaseTable();
             databaseTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -212,7 +149,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -261,7 +197,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            reportUnexpectedError(cantInsertRecordDataBaseException);
             throw cantInsertRecordDataBaseException;
 
         }catch(Exception e){
@@ -271,7 +206,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself\n"+e.getMessage();
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(e.getMessage(), e, context, possibleCause);
-            reportUnexpectedError(cantInsertRecordDataBaseException);
             throw cantInsertRecordDataBaseException;
         }
 
@@ -325,7 +259,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -378,7 +311,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -427,7 +359,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -476,7 +407,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -533,7 +463,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
     }
@@ -588,7 +517,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
     }
@@ -679,7 +607,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            reportUnexpectedError(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -708,7 +635,6 @@ public class ChatMetadataRecordDAO implements DAO {
 
         } catch (Exception e) {
             CHTException chtException = new CHTException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-            reportUnexpectedError(chtException);
             throw chtException;
         }
     }
@@ -725,19 +651,15 @@ public class ChatMetadataRecordDAO implements DAO {
 
         } catch (CantGetNotificationException e) {
             CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error trying to get the notification.");
-            reportUnexpectedError(cantConfirmNotificationException);
             throw cantConfirmNotificationException;
         } catch (NotificationNotFoundException e) {
             CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Notification not found.");
-            reportUnexpectedError(cantConfirmNotificationException);
             throw cantConfirmNotificationException;
         } catch (CantUpdateRecordDataBaseException e) {
             CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error updating getDatabase().");
-            reportUnexpectedError(cantConfirmNotificationException);
             throw cantConfirmNotificationException;
         } catch (CantReadRecordDataBaseException e) {
             CantConfirmNotificationException cantConfirmNotificationException = new CantConfirmNotificationException(e, "notificationId:"+transactionID, "Error reading getDatabase().");
-            reportUnexpectedError(cantConfirmNotificationException);
             throw cantConfirmNotificationException;
         }
     }
@@ -776,7 +698,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            reportUnexpectedError(cantUpdateRecordDataBaseException);
             throw cantUpdateRecordDataBaseException;
 
         }
@@ -821,7 +742,6 @@ public class ChatMetadataRecordDAO implements DAO {
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            reportUnexpectedError(cantDeleteRecordDataBaseException);
             throw cantDeleteRecordDataBaseException;
 
         }
@@ -865,7 +785,6 @@ public class ChatMetadataRecordDAO implements DAO {
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
-            reportUnexpectedError(e);
             return null;
         }
 
@@ -929,10 +848,6 @@ public class ChatMetadataRecordDAO implements DAO {
         entityRecord.setIntegerValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME,                 chatMetadataRecord.getSentCount());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_XML_MSG_REPRESENTATION,                  chatMetadataRecord.getMsgXML());
 
-        /*
-         * return the new table record
-         */
-
     }
 
 
@@ -958,12 +873,9 @@ public class ChatMetadataRecordDAO implements DAO {
         } catch (CantLoadTableToMemoryException e) {
 
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-            reportUnexpectedError(cantUpdateRecordDataBaseException);
             throw cantUpdateRecordDataBaseException;
         }
     }
-
-
 
     public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantUpdateRecordDataBaseException {
 
@@ -994,7 +906,6 @@ public class ChatMetadataRecordDAO implements DAO {
 
         } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
-            reportUnexpectedError(cantUpdateRecordDataBaseException);
             throw cantUpdateRecordDataBaseException;
         }
     }

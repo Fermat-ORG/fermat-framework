@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
@@ -30,7 +31,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsDetailsPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, WalletResourcesProviderManager>
+public class EarningsActivityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, WalletResourcesProviderManager>
         implements FermatListItemListeners<EarningsPair> {
 
     // Constants

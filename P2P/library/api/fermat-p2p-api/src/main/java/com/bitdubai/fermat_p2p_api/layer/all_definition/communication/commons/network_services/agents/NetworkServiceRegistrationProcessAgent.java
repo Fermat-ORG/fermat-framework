@@ -112,9 +112,11 @@ public final class NetworkServiceRegistrationProcessAgent {
     }
 
     public void start() {
-        this.active = Boolean.TRUE;
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(toRegistration);
+        if (!getActive()) {
+            this.active = Boolean.TRUE;
+            executorService = Executors.newSingleThreadExecutor();
+            executorService.execute(toRegistration);
+        }
     }
 
     /*

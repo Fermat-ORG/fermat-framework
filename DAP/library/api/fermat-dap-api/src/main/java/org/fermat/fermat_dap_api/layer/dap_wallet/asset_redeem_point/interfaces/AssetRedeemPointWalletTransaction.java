@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by franklin on 14/10/15.
  */
-public interface AssetRedeemPointWalletTransaction extends Serializable{
+public interface AssetRedeemPointWalletTransaction extends Serializable {
 
     String getAssetPublicKey();
 

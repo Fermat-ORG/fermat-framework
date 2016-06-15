@@ -45,7 +45,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         this.referenceWalletSession =referenceWalletSession;
         //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica.ttf");
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
