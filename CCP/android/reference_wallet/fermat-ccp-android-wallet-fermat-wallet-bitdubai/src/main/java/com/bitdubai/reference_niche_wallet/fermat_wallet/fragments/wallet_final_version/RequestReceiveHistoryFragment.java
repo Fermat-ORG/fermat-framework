@@ -181,8 +181,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == FermatWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+            if(id == 2){
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
             }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
                 //setUpPresentation();
@@ -209,7 +209,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY);
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY);
             }
         };
         View view = new View(getActivity());

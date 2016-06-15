@@ -186,7 +186,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                 if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
                     fermatWalletSessionReferenceApp.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 }else{
                     Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
@@ -195,7 +195,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
                 if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     fermatWalletSessionReferenceApp.setData(SessionConstant.LAST_SELECTED_CONTACT, cryptoWalletWalletContact);
                     fermatWalletSessionReferenceApp.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 }else{
                     Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }

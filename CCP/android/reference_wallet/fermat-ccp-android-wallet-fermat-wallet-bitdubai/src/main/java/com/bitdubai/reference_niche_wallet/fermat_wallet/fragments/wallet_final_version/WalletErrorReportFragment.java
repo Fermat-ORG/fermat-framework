@@ -118,7 +118,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
             }
         });
 
@@ -206,7 +206,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
             @Override
             public void onClick(View v) {
                 try {
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 } catch (Exception e) {
                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
                 }

@@ -129,7 +129,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
 
             _executor = Executors.newFixedThreadPool(2);
@@ -559,7 +559,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
     }
@@ -661,7 +661,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
                            if (isFragmentFromDetail) onBack(null);
                            else
-                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }
@@ -696,7 +696,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
 
         } catch (CantGetSelectedActorIdentityException e) {

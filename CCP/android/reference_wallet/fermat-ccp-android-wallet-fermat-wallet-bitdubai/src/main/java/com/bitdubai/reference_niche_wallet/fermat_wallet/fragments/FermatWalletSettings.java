@@ -144,7 +144,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(10, "Received Regtest Bitcoins", "", 15, Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
 
            // list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
@@ -185,15 +185,29 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
 
+            if (preferenceSettingsItem.getId() == 11){
+                //receive Regtest test bitcoins
+                Runnable _longPressed = new Runnable() {
+                    public void run() {
+                        Log.i("info", "LongPress");
+                        Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
+                        GET("", getActivity());
+                    }
+                };
+
+                _longPressed.run();
+
+            }
+
             if (preferenceSettingsItem.getId() == 10) {
                 //export key show fragment
 
-                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_MNEMONIC_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
 
             } else if (preferenceSettingsItem.getId() == 9) {
                 //export key show fragment
 
-                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, fermatWalletSessionReferenceApp.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_OPEN_SEND_ERROR_REPORT, fermatWalletSessionReferenceApp.getAppPublicKey());
 
             }else if (preferenceSettingsItem.getId() == 11){
                 //send btc to loss protected
@@ -305,19 +319,6 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                 bitcoinWalletSettings.setNotificationEnabled(isChecked);
             }
 
-            if (preferenceSettingsItem.getId() == 10){
-                //receive Regtest test bitcoins
-                Runnable _longPressed = new Runnable() {
-                    public void run() {
-                        Log.i("info", "LongPress");
-                        Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
-                        GET("", getActivity());
-                    }
-                };
-
-                _longPressed.run();
-
-            }
 
 
             try {
