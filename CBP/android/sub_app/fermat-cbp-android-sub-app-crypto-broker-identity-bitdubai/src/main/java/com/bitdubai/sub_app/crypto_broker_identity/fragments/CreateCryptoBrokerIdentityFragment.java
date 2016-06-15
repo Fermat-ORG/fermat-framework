@@ -166,6 +166,8 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
+                        Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Broker Identity", Toast.LENGTH_SHORT).show();
+
                         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                     }
