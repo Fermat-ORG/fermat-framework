@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
@@ -83,6 +84,16 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException {
+        return null;
+    }
+
+    @Override
+    public long getAccuracy() {
+        return 0;
+    }
+
+    @Override
+    public Frecuency getFrecuency() {
         return null;
     }
 }

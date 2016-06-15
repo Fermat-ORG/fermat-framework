@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 
 /**
@@ -46,6 +47,9 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
+    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .NOMINATIM)
+    private GeolocationManager geolocationManager;
+
     CryptoBrokerCommunityManager moduleManager;
 
     public CryptoBrokerCommunitySubAppModulePluginRoot() {
@@ -62,7 +66,8 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
                     cryptoCustomerIdentityManager,
                     this,
                     pluginFileSystem,
-                    pluginId);
+                    pluginId,
+                    geolocationManager);
 
         return moduleManager;
     }
