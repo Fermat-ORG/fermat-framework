@@ -76,6 +76,7 @@ import java.util.UUID;
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  * Edited by Miguel Rincon on 18/04/2016
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 15/06/16.
  */
 public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommunitySettings> implements ChatActorCommunitySubAppModuleManager, Serializable {
 
@@ -108,7 +109,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
 
@@ -119,11 +120,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         try{
-            if(selectableIdentity!=null) {
-                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+            if(publicKey!=null && actorType!= null) {
+                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+                actorConnections = search.getResult(max, 0);
+//                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -328,14 +330,14 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
 
     @Override
-    public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
+    public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException {
 
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
         try {
-            if (selectedIdentity != null) {
+            if (publicKey!= null && actorType != null) {
                 final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
-                        selectedIdentity.getPublicKey(),
-                        selectedIdentity.getActorType()
+                        publicKey,
+                        actorType
                 );
 
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);

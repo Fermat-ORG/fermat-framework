@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -69,7 +70,7 @@ public class ContactsListFragment
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 2;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
@@ -80,6 +81,7 @@ public class ContactsListFragment
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private ChatActorCommunitySelectableIdentity identity;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
     ImageView noData;
@@ -121,7 +123,9 @@ public class ContactsListFragment
 
             //Check if a default identity is configured
             try{
-                moduleManager.getSelectedActorIdentity();
+                identity = moduleManager.getSelectedActorIdentity();
+                if(identity == null)
+                    launchListIdentitiesDialog  = true;
             }catch (CantGetSelectedActorIdentityException e){
                 //There are no identities in device
                 launchActorCreationDialog = true;
@@ -248,7 +252,7 @@ public class ContactsListFragment
 //                contacticon.clear();
 //                contactStatus.clear();
 
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
@@ -256,7 +260,7 @@ public class ContactsListFragment
                                 if (conta.getConnectionState() != null) {
                                     if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
                                         try {
-                                            moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
+                                            moduleManager.requestConnectionToChatActor(identity, conta);
                                         } catch (Exception e) {
                                             if (errorManager != null)
                                                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -286,8 +290,8 @@ public class ContactsListFragment
         backWorldList.execute();
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.listAllConnectedChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantListChatActorException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
+            dataSet.addAll(moduleManager.listAllConnectedChatActor(identity, MAX, offset));
+        } catch (CantListChatActorException e) {
             e.printStackTrace();
         }
 
