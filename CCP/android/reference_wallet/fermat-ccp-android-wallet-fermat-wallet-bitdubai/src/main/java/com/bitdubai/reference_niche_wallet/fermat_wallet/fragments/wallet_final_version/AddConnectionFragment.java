@@ -207,7 +207,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_add_connections_list;
+        return R.layout.fermat_wallet_fragment_add_connections_list;
     }
 
     @Override

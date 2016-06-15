@@ -83,7 +83,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="@drawable/background_white_gradient">
 
                 <ImageView
