@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetPrivateKeyException;
@@ -102,7 +103,7 @@ public class ChatIdentityDatabaseDao {
         return database;
     }
 
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -121,6 +122,8 @@ public class ChatIdentityDatabaseDao {
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
+            record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
 
             table.insertRecord(record);
 
@@ -179,7 +182,7 @@ public class ChatIdentityDatabaseDao {
     }
 
 
-    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
+    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -206,6 +209,9 @@ public class ChatIdentityDatabaseDao {
                 record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
                 record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
                 record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
+                record.setLongValue(ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME, accuracy);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME, frecuency.getCode());
+
                 table.updateRecord(record);
             }
 
@@ -262,7 +268,11 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
-                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME));
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
+                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        Frecuency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME)));
+
+                //chat.setLocalActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_TYPE_COLUMN_NAME)))
             }
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -316,7 +326,9 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
-                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME)));
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME),
+                        record.getLongValue( ChatIdentityDatabaseConstants.CHAT_ACCURACY_COLUMN_NAME),
+                        Frecuency.getByCode(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_FRECUENCY_COLUMN_NAME))));
             }
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));

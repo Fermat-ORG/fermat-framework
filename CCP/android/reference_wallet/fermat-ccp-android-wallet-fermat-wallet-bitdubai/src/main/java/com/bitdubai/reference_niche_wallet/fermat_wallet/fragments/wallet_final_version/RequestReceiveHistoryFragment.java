@@ -60,7 +60,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      */
     ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
-    String walletPublicKey = "reference_wallet";
+    String walletPublicKey = "fermat_wallet";
     /**
      * MANAGERS
      */
@@ -256,18 +256,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
-    @Override
-    public void onDrawerOpen() {
-        actionButton.setVisibility(View.GONE);
 
-    }
-
-    @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
-        actionButton.setVisibility(View.VISIBLE);
-
-    }
 
     @Override
     protected boolean hasMenu() {
@@ -276,7 +265,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     protected int getLayoutResource() {
+
         return R.layout.fermat_wallet_fragment_transaction_main;
+
     }
 
     @Override
@@ -382,7 +373,40 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
+    /*
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
+        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if(id == FermatWalletConstants.IC_ACTION_SEND){
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
+                return true;
+            }else if(id == FermatWalletConstants.IC_ACTION_HELP_PRESENTATION){
+               // setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+        } catch (Exception e) {
+            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void setReferenceWalletSession(FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp) {
         this.fermatWalletSessionReferenceApp = fermatWalletSessionReferenceApp;

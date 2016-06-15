@@ -22,6 +22,11 @@ public class Fragment implements FermatFragment,Serializable {
      */
     private Owner owner;
 
+    /**
+     * OptionsMenu to add or change to the Activity options
+     */
+    private OptionsMenu optionsMenu;
+
     public void setBack(String fragmentBack)
     {
         this.fragmentBack = fragmentBack;
@@ -45,6 +50,15 @@ public class Fragment implements FermatFragment,Serializable {
 
     public Owner getOwner() {
         return owner;
+    }
+
+    @Override
+    public OptionsMenu getOptionsMenu() {
+        return optionsMenu;
+    }
+
+    public void setOptionsMenu(OptionsMenu optionsMenu) {
+        this.optionsMenu = optionsMenu;
     }
 
     public void setOwner(Owner owner) {

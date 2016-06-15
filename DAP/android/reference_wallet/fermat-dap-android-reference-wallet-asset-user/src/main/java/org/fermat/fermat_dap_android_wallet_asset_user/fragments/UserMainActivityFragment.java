@@ -78,9 +78,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
-//    AssetUserSessionReferenceApp assetUserSession;
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -100,7 +97,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-//            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -117,7 +113,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         super.initViews(layout);
 
         //Initialize settings
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
             settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -172,7 +167,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         onRefresh();

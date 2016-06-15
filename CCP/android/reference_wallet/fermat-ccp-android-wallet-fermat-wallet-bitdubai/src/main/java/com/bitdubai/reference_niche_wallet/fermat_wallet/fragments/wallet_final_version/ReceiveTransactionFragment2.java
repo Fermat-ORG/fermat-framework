@@ -175,7 +175,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.bit_help_icon)
+                .setIcon(R.drawable.fw_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
@@ -203,7 +203,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.gradient);
         recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransaction!=null) {

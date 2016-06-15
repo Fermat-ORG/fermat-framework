@@ -90,6 +90,12 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
             case 1:
                 resId = R.drawable.cht_help_icon;
                 break;
+            case 2:
+                resId = R.drawable.cht_comm_ubication_icon;
+                break;
+            case 3:
+                resId = R.drawable.cht_comm_search_icon;
+                break;
         }
         return resId;
     }

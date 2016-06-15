@@ -74,6 +74,8 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, DatabaseDataType.STRING, 255, Boolean.FALSE);

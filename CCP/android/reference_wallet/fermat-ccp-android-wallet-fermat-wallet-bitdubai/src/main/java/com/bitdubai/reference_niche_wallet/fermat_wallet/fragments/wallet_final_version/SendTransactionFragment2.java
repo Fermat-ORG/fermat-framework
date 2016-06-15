@@ -371,7 +371,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
     private void setUp(LayoutInflater inflater){
         try {
-            setUpDonut(inflater);
+           // setUpDonut(inflater);
+            setUpChart(inflater);
             setUpScreen();
         }catch (Exception e){
             e.printStackTrace();
@@ -383,6 +384,40 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         if(emptyListViewsContainer!=null)
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
     String runningBalance;
+
+    private void setUpChart(LayoutInflater inflater){
+        final RelativeLayout container_header_balance = getToolbarHeader();
+        try{
+            container_header_balance.removeAllViews();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        final int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            container_header_balance.setBackgroundDrawable( getResources().getDrawable(R.drawable.background_white_gradient) );
+        } else {
+            container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
+        }
+
+        final View balances_chart = inflater.inflate(R.layout.fermat_wallet_chart_header,container_header_balance,true);
+        container_header_balance.setVisibility(View.VISIBLE);
+
+
+
+
+        /*chart.setDrawGridBackground(false);
+        chart.setDescription("");
+        chart.animateY(2000);
+        chart.setTouchEnabled(true);
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(false);
+        chart.setDoubleTapToZoomEnabled(false);
+        chart.setHighlightPerDragEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+        chart.setOnChartValueSelectedListener(this);
+        chart.fitScreen();*/
+    }
 
     private void setUpDonut(LayoutInflater inflater)  {
         try {
@@ -691,7 +726,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 

@@ -3,10 +3,12 @@ package org.fermat.fermat_dap_android_wallet_asset_user.models;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
+import java.io.Serializable;
+
 /**
  * Created by frank on 12/30/15.
  */
-public class RedeemPoint {
+public class RedeemPoint implements Serializable {
     private String name;
     private byte[] image;
     private String address;

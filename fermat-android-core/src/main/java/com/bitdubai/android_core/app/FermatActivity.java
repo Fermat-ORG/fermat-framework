@@ -149,7 +149,6 @@ import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
- * Update by Miguel Payarez on 2016.04.08
  */
 
 public abstract class FermatActivity extends AppCompatActivity implements
@@ -420,44 +419,52 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private <T extends FermatSideMenu> void paintSideMenu(Activity activity, T sideMenu,AppConnections appConnections) {
         try {
             if (sideMenu != null) {
-                    String backgroundColor = sideMenu.getBackgroudColor();
-                    if (backgroundColor != null) {
-                        navigationView.setBackgroundColor(Color.parseColor(backgroundColor));
-                    }
-                    if(sideMenu.getNavigationIconColor()!=null)
-                    if(sideMenu.getNavigationIconColor().equals("#ffffff")){
-                        mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
-                    }
+                String backgroundColor = sideMenu.getBackgroudColor();
+                if (backgroundColor != null) {
+                    navigationView.setBackgroundColor(Color.parseColor(backgroundColor));
+                }
+                if(sideMenu.getNavigationIconColor()!=null)
+                if(sideMenu.getNavigationIconColor().equals("#ffffff")){
+                    mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
+                }
 
-                    final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                        /**
-                         * Set header
-                         */
-                        FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
-                        /**
-                         * Set adapter
-                         */
-                        List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
+                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                /**
+                 * Set header
+                 */
+                FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
+                /**
+                 * Set adapter
+                 */
+                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
                 //todo: mejorar esto
-                        FermatAdapter mAdapter = (viewPainter!=null)?viewPainter.addNavigationViewAdapter():new NavMenuBasicAdapter(this,lstItems,((FermatBasicNavigationMenu)sideMenu).getBody());
-                        SideMenuBuilder.setAdapter(
-                                navigation_recycler_view,
-                                mAdapter,
-                                (viewPainter!=null)?viewPainter.addItemDecoration():null,
-                                (viewPainter!=null)?lstItems:((FermatBasicNavigationMenu)sideMenu).getBody().getMenuItems(),
-                                this,
-                                activity.getActivityType()
-                        );
-                        /**
-                         * Body
-                         */
-                        RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
-                        SideMenuBuilder.setBody(navigation_view_footer,sideMenu.hasFooter(),viewPainter,getLayoutInflater());
-                        /**
-                         * Background color
-                         */
-                        final RelativeLayout navigation_view_body_container = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
-                        SideMenuBuilder.setBackground(navigation_view_body_container, viewPainter, getResources());
+                FermatAdapter mAdapter = (viewPainter!=null)?viewPainter.addNavigationViewAdapter():new NavMenuBasicAdapter(this,lstItems,((FermatBasicNavigationMenu)sideMenu).getBody());
+                SideMenuBuilder.setAdapter(
+                        navigation_recycler_view,
+                        mAdapter,
+                        (viewPainter!=null)?viewPainter.addItemDecoration():null,
+                        (viewPainter!=null)?lstItems:((FermatBasicNavigationMenu)sideMenu).getBody().getMenuItems(),
+                        this,
+                        activity.getActivityType()
+                );
+                /**
+                 * Body
+                 */
+                RelativeLayout navigation_view_footer = (RelativeLayout) findViewById(R.id.navigation_view_footer);
+                SideMenuBuilder.setBody(navigation_view_footer,sideMenu.hasFooter(),viewPainter,getLayoutInflater());
+                /**
+                 * Background color
+                 */
+                final RelativeLayout navigation_view_body_container = (RelativeLayout) findViewById(R.id.navigation_view_body_container);
+                SideMenuBuilder.setBackground(navigation_view_body_container, viewPainter, getResources());
+
+                /**
+                 * Background drawable
+                 */
+                if (sideMenu.getBackgroundDrawable()!=null){
+                    FermatDrawable backgroundDrawableColor = sideMenu.getBackgroundDrawable();
+                    navigationView.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(this,backgroundDrawableColor.getId(), backgroundDrawableColor.getSourceLocation(),backgroundDrawableColor.getOwner().getOwnerAppPublicKey()));
+                }
             } else {
                 mDrawerLayout.setEnabled(false);
                 //test
@@ -538,6 +545,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 }
 
 
+                if(titleBar.getBackgroundDrawable()!=null){
+                    FermatDrawable backgroundDrawable = titleBar.getBackgroundDrawable();
+                    mToolbar.setBackgroundResource(ResourceLocationSearcherHelper.obtainRes(this,backgroundDrawable.getId(),backgroundDrawable.getSourceLocation(),backgroundDrawable.getOwner().getOwnerAppPublicKey()));
+                }
 
 
                 setActionBarProperties(title, activity);
@@ -660,6 +671,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
             for (int i=0;i<tabs.size();i++) {
                 Tab tab = tabs.get(i);
                 FermatFragment fragment = tab.getFragment();
+                //optionMenu
+                if(fragment.getOptionsMenu()!=null)addOptionMenuItems(fragment.getOptionsMenu());
                 String appPublicKey = fragment.getOwner().getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
                 AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
                 if (session instanceof ComboAppType2FermatSession) {
@@ -705,6 +718,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory,FermatSession referenceAppFermatSession, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment) {
         try {
             String fragment = runtimeFragment.getType();
+            if(runtimeFragment.getOptionsMenu()!=null)addOptionMenuItems(runtimeFragment.getOptionsMenu());
             if (fermatFragmentFactory != null) {
                 tabLayout.setVisibility(View.GONE);
                 pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -718,6 +732,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
             handleExceptionAndRestart();
         }
+    }
+
+    protected void addOptionMenuItems(OptionsMenu optionsMenu) {
+        optionsMenu.addMenuItems(optionsMenu.getMenuItems());
     }
 
     /**

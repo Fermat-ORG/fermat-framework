@@ -315,7 +315,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Offline");
 
 
-                intraUserInformation.setProfileImageNull();
+               // intraUserInformation.setProfileImageNull();
 
                 intraUserInformationModuleList.add(intraUserInformation);
             }
