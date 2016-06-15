@@ -344,7 +344,7 @@ public class ConnectionsWorldFragment
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            moduleManager.exposeIdentityInWat();
+            //moduleManager.exposeIdentityInWat();
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity, MAX, offset);
 //            for(ChatActorCommunityInformation chat: result){
 //                if(chat.getConnectionState()!= null){

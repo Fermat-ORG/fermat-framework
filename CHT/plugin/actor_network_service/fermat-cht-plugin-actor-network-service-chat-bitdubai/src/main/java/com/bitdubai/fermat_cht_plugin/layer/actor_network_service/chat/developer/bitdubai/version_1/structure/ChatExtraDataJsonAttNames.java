@@ -5,6 +5,8 @@ package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.develope
  */
 public class ChatExtraDataJsonAttNames {
 
+    public final static String IMG = "image";
+
     public final static String COUNTRY = "country";
 
     public final static String STATE = "state";
