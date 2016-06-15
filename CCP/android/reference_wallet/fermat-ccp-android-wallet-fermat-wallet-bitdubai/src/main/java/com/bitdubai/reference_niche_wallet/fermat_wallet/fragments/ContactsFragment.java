@@ -186,7 +186,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contac_main_act, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_contac_main_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -255,7 +255,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
                 .setText("External User")
-                .setTextColor(Color.WHITE)
+                .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
@@ -266,7 +266,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
                 .setText("Fermat User")
-                .setTextColor(Color.WHITE)
+                .setTextColor(Color.BLACK)
                 .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);

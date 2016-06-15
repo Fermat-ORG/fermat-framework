@@ -123,7 +123,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreate2", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -140,7 +140,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreateView:2", Toast.LENGTH_SHORT).show();
         }
         return container;
     }
@@ -157,7 +157,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! recovering from system error:onActivityCreated2", Toast.LENGTH_SHORT).show();
             fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -170,7 +170,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fermat_transaction_main;
+
+        return R.layout.fermat_wallet_fragment_transaction_main;
+
     }
 
     @Override

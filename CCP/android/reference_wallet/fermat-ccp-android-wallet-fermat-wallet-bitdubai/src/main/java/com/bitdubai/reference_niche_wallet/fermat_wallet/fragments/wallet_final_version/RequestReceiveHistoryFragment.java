@@ -24,6 +24,8 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -63,6 +65,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      * MANAGERS
      */
     private FermatWallet cryptoWallet;
+    private ErrorManager errorManager;
     /**
      * DATA
      */
@@ -95,8 +98,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        fermatWalletSessionReferenceApp = appSession;
 
+        fermatWalletSessionReferenceApp = appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
@@ -139,7 +142,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreate", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -155,9 +158,42 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             //setUp();
             return rootView;
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error:onCreateView", Toast.LENGTH_SHORT).show();
         }
         return container;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
+                .setIcon(R.drawable.ic_actionbar_send)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
+                .setIcon(R.drawable.bit_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            if(id == FermatWalletConstants.IC_ACTION_SEND){
+                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
+                return true;
+            }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
+                //setUpPresentation();
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
     private void setUp(){
         FrameLayout frameLayout = new FrameLayout(getActivity());
@@ -215,7 +251,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             super.onActivityCreated(savedInstanceState);
             lstPaymentRequest = new ArrayList<PaymentRequest>();
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! recovering from system error:onActivityCreated", Toast.LENGTH_SHORT).show();
             fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
@@ -229,7 +265,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fermat_transaction_main;
+
+        return R.layout.fermat_wallet_fragment_transaction_main;
+
     }
 
     @Override
@@ -335,7 +373,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
-
+    /*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
