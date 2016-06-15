@@ -9,13 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -63,18 +60,11 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) activity.get()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View container = inflater.inflate(R.layout.ccw_header_layout, viewGroup, true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            FrameLayout headerContainer = (FrameLayout) container.findViewById(R.id.ccw_header_layout_container);
-            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(headerContainer.getLayoutParams());
-            marginParams.topMargin = SizeUtils.convertDpToPixels(55, activity.get());
-            marginParams.height = SizeUtils.convertDpToPixels(90, activity.get());
+        LayoutInflater layoutInflater = (LayoutInflater) activity.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
-            headerContainer.setLayoutParams(layoutParams);
-        }
+        View container = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+                layoutInflater.inflate(R.layout.ccw_header_layout_pre_lollipop, viewGroup, true) :
+                layoutInflater.inflate(R.layout.ccw_header_layout, viewGroup, true);
 
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.ccw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
