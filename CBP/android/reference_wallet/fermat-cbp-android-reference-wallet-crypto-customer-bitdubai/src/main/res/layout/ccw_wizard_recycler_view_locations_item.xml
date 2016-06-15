@@ -21,7 +21,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/relativeLayout"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_title"
@@ -32,6 +34,17 @@
                 android:textSize="18dp"
                 android:layout_weight="1"
                 android:text="Location"/>
+
+            <ImageView
+                android:id="@+id/ccw_close_img_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ccw_action_content_clear"
+                android:layout_below="@+id/relativeLayout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp" />
 
         </RelativeLayout>
 
@@ -51,17 +64,6 @@
             android:singleLine="false"
             android:layout_toStartOf="@+id/ccw_close_img_button"
             android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/ccw_close_img_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="end|center_vertical"
-            android:src="@drawable/ccw_action_content_clear"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp" />
 
         <ImageView
             android:layout_width="match_parent"
