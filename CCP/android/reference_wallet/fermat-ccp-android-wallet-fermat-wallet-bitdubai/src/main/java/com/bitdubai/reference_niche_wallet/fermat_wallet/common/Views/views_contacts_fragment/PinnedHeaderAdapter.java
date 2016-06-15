@@ -78,7 +78,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             }
         }
 
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+
         contactPositionItem = new HashMap<>();
 
 
@@ -147,7 +149,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
-                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                        convertView = mLayoutInflater.inflate(R.layout.fermat_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
                         walletContact = (FermatWalletWalletContact) mListItems.get(position);
                         //guardo el contacto
@@ -174,7 +176,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 }
 
                 holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-                holder.textView.setTypeface(tf);
+               // holder.textView.setTypeface(tf);
 
                 convertView.setTag(holder);
 //            } else {

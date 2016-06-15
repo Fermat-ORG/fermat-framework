@@ -89,11 +89,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     @Override
     protected void bindHolder(final PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
 
-        try {
+       /* try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
         }catch (Exception e){
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
-        }
+        }*/
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), (int)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
         holder.getTxt_amount().setTypeface(tf) ;
@@ -213,7 +213,5 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             }
         });
     }
-
-
 
 }
