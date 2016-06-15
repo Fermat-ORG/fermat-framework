@@ -16,6 +16,7 @@ import java.util.List;
 public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
 
     protected F[] fragments;
+    protected String[] titles;
 
     public FermatScreenAdapter(FragmentManager fm,F[] fragments) {
         super(fm);
@@ -59,4 +60,13 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
             }
         }
     }
+
+    public void onFragmentFocus(int position){
+        fragments[position].onFragmentFocus();
+    }
+
+    public void setTitles(String[] titles) {
+        this.titles = titles;
+    }
+
 }

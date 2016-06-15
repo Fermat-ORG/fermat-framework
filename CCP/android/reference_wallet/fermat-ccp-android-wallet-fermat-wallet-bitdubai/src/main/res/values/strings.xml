@@ -9,7 +9,7 @@
     <string name="txt_amount_btc_text">1.4 BTC</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
-    <!-- connection_with_community_dialog.xml -->
+    <!-- fermat_wallet_connection_with_community_dialogmmunity_dialog.xml -->
     <string name="new_user_text">New User</string>
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
@@ -22,21 +22,21 @@
     <string name="share_address_text">Share address</string>
     <string name="request_text">Request</string>
     <string name="send_text">Send</string>
-    <!-- contacts_tutorial_part1_v2.xml -->
+    <!-- fermat_wallet_contacts_tutorial_part1_v2.xmll_part1_v2.xml -->
     <string name="txt_title_text">Add Contact Help</string>
     <string name="no_id_In_this_wallet_text">This wallet allows two different types of contacts:</string>
     <string name="no_id_Users_of_other_text_Fermat_wallets">Users of other Fermat wallets: you don\'t need to manually exchange addresses with them</string>
     <string name="no_id_Users_of_other_text_wallets_outside">Users of other wallets outside Fermat: You need to exchange addresses manually</string>
     <string name="no_id_Select_below_which_text">Select below which type of contact you want to add:</string>
     <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
-    <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
-    <string name="add_extra_user_text">Add External Contact</string>
-    <!-- create_contact_dialog.xml -->
+    <string name="add_fermat_user_text">Fermat Contact</string>
+    <string name="add_extra_user_text">External Contact</string>
+    <!-- fermat_wallet_create_contact_dialogcontact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
     <string name="set_name_text">Type name</string>
     <string name="set_address_text">Paste address</string>
     <string name="save_text">Save</string>
-    <!-- dialog_error_conecting_fermat_network.xml -->
+    <!-- fermat_wallet_dialog_error_conecting_fermat_network.xmlat_network.xml -->
     <string name="fermat_network_offline_text">Fermat Network Offline</string>
     <string name="description_text">You are not connected to</string>
     <string name="second_description_text">the fermat network.</string>
@@ -77,12 +77,12 @@
     <!-- pending_request_row.xml -->
     <string name="balance_amount_25_btc_text">25 btc</string>
     <string name="refuse_text">Refuse</string>
-    <!-- presentation_bitcoin_wallet_without_identities.xml -->
+    <!-- fermat_wallet_presentation_bitcoin_wallet_without_identities.xmlidentities.xml -->
     <string name="welcome_text">Welcome!</string>
     <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
 
     <string name="close_text">Close</string>
-    <!-- presentation_wallet.xml -->
+    <!-- fermat_wallet_presentation_wallet.xmlion_wallet.xml -->
     <string name="to_begin_choose_an_avatar_below_text">To begin, choose an avatar below. You might change it later with any picture and your own alias.</string>
     <string name="be_john_doe_text">Be John Doe</string>
     <string name="be_jane_doe__text">Be Jane Doe</string>

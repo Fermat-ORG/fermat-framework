@@ -27,7 +27,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -36,11 +38,10 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
@@ -67,9 +68,8 @@ public class ContactsListFragment
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
-    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 2;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
@@ -80,6 +80,7 @@ public class ContactsListFragment
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private ChatActorCommunitySelectableIdentity identity;
     private ChatActorCommunitySettings appSettings;
     TextView noDatalabel;
     ImageView noData;
@@ -97,10 +98,8 @@ public class ContactsListFragment
         try {
             setHasOptionsMenu(true);
             //Get managers
-            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-           // settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
             lstChatUserInformations = new ArrayList<>();
             //Obtain Settings or create new Settings if first time opening subApp
@@ -121,7 +120,9 @@ public class ContactsListFragment
 
             //Check if a default identity is configured
             try{
-                moduleManager.getSelectedActorIdentity();
+                identity = moduleManager.getSelectedActorIdentity();
+                if(identity == null)
+                    launchListIdentitiesDialog  = true;
             }catch (CantGetSelectedActorIdentityException e){
                 //There are no identities in device
                 launchActorCreationDialog = true;
@@ -242,13 +243,14 @@ public class ContactsListFragment
         @Override
         protected Void doInBackground(Void... params) {
             try {
+
 //               con = chatManager.listWorldChatActor(identity, MAX, offset);
 //                contactname.clear();
 //                contactid.clear();
 //                contacticon.clear();
 //                contactStatus.clear();
 
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
+                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
@@ -256,27 +258,20 @@ public class ContactsListFragment
                                 if (conta.getConnectionState() != null) {
                                     if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
                                         try {
-                                            moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(), conta);
+                                            moduleManager.requestConnectionToChatActor(identity, conta);
                                         } catch (Exception e) {
                                             if (errorManager != null)
                                                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                         }
                                     }
                                 }
-//                                        contactname.add(conta.getAlias());
-//                                        contactid.add(conta.getPublicKey());
-//                                        ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
-//                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-//                                        contacticon.add(bmd.getBitmap());
-//                                        contactStatus.add(conta.getStatus());
-//                                }
-//                                }
                             }
                         }
                     }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("****************** doInBackground saling: ");
             return null;
         }
     }
@@ -286,8 +281,8 @@ public class ContactsListFragment
         backWorldList.execute();
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.listAllConnectedChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantListChatActorException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
+            dataSet.addAll(moduleManager.listAllConnectedChatActor(identity, MAX, offset));
+        } catch (CantListChatActorException e) {
             e.printStackTrace();
         }
 

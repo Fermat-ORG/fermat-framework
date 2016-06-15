@@ -42,7 +42,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
@@ -224,7 +223,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment<Refer
             public void onClick(View v) {
                 //TODO: implementar logica de Buy
                 if (isValidBuy()) {
-                    new ConfirmDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
+                    new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
                             .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))

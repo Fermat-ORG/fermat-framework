@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 05/10/15.
  */
-public interface AssetUserWallet extends Serializable{
+public interface AssetUserWallet extends Serializable {
 
     //TODO:Documentar y manejo de excepciones
 

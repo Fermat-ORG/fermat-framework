@@ -31,7 +31,7 @@ public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWal
 
     List<BankMoneyTransactionRecord> getTransactions(String account) throws CantLoadBankMoneyWalletException;
 
-    List<BankMoneyTransactionRecord> getPendingTransactions();
+    List<BankMoneyTransactionRecord> getPendingTransactions(String account);
 
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;
 
