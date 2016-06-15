@@ -721,10 +721,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                if (respondJsonObject.get("isOnline").getAsBoolean())
-                    return respondJsonObject.get("sameNode").getAsBoolean();
-                else
-                    return false;
+                return respondJsonObject.get("isOnline").getAsBoolean() &&
+                        respondJsonObject.get("sameNode").getAsBoolean();
+
             } else {
                 return false;
             }

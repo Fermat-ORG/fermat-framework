@@ -34,11 +34,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantUpdateRegisteredActorException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -546,12 +548,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
 
             final ActorProfile actorProfile = constructActorProfile(actorAssetRedeemPointToRegister);
 
-            registerActor(
-                    actorProfile,
-                    0, 0
+            updateRegisteredActor(
+                    actorProfile
             );
 
-        } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
+        } catch (final CantUpdateRegisteredActorException e) {
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Problem trying to register an identity component.");
@@ -571,7 +572,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             if (actorAssetRedeemPointRegisteredList != null && !actorAssetRedeemPointRegisteredList.isEmpty())
                 actorAssetRedeemPointRegisteredList.clear();
 
-            com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters discoveryQueryParameters = new com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters(
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     Actors.DAP_ASSET_REDEEM_POINT.getCode(),
                     null,
                     null,
@@ -582,7 +583,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
                     null,
                     NetworkServiceType.UNDEFINED,
                     null,
-                    NetworkServiceType.ACTOR_CHAT
+                    NetworkServiceType.ASSET_REDEEM_POINT_ACTOR
             );
 
             final List<ActorProfile> list = getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
