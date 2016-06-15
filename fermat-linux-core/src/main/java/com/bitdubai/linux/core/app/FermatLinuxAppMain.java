@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.i
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_linux_core.OSAPlatform;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContext;
 
 import org.apache.commons.io.IOUtils;
@@ -64,55 +65,10 @@ public class FermatLinuxAppMain {
             System.out.println("- Starting process ...");
 
             /*
-             * Start the system
+             * Start the network node.
              */
 
-            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
-/*
-            CryptoBrokerIdentityModuleManager cryptoBrokerIdentity = (CryptoBrokerIdentityModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_IDENTITY, Developers.BITDUBAI, new Version()));
-            CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunity = (CryptoBrokerCommunitySubAppModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_COMMUNITY, Developers.BITDUBAI, new Version()));
-
-            List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities = cryptoBrokerCommunity.listSelectableIdentities();
-
-            if (listSelectableIdentities == null || listSelectableIdentities.isEmpty()) {
-
-                File file = new File("/home/lnacosta/Desktop/fragances/baby.png");
-
-                InputStream inputStream = new FileInputStream(file);
-
-                byte[] byteArray = IOUtils.toByteArray(inputStream);
-
-                CryptoBrokerIdentityInformation actor1 = cryptoBrokerIdentity.createCryptoBrokerIdentity("LINUXTEST1", byteArray);
-
-                cryptoBrokerIdentity.publishIdentity(actor1.getPublicKey());
-
-                CryptoBrokerIdentityInformation actor2 = cryptoBrokerIdentity.createCryptoBrokerIdentity("LINUXTEST2", byteArray);
-
-                cryptoBrokerIdentity.publishIdentity(actor2.getPublicKey());
-            }
-
-            listSelectableIdentities = cryptoBrokerCommunity.listSelectableIdentities();
-            System.out.println("listSelectableIdentities2 = "+listSelectableIdentities);
-            System.out.println("listSelectableIdentities2 quantity= "+listSelectableIdentities.size());
-
-            if (!listSelectableIdentities.isEmpty()) {
-                cryptoBrokerCommunity.setSelectedActorIdentity(listSelectableIdentities.get(0));
-
-                List<CryptoBrokerCommunityInformation> communityBrokersInformationList = cryptoBrokerCommunity.getCryptoBrokerSearch().getResult();
-
-                if (communityBrokersInformationList != null && !communityBrokersInformationList.isEmpty()) {
-
-                    for (CryptoBrokerCommunityInformation information : communityBrokersInformationList) {
-                        try {
-                            System.out.println("requesting connection to: " + information);
-                            cryptoBrokerCommunity.requestConnectionToCryptoBroker(listSelectableIdentities.get(0), information);
-                        } catch (ActorConnectionAlreadyRequestedException e) {
-                            System.out.println("already requested!!!");
-                        }
-                    }
-                }
-            }
-*/
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()));
 
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 

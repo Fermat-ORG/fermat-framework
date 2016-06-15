@@ -11,9 +11,9 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,6 +30,7 @@ public abstract class LocalSocketSession {
 
     // object to lock the thread until a message is received
     private final Lock waitMessageLocker;
+    private boolean isSenderActive;
 
 
     public LocalSocketSession(String pkIdentity,LocalSocket localSocket) {
@@ -38,11 +39,24 @@ public abstract class LocalSocketSession {
         waitMessageLocker = new Lock();
     }
 
-    public void start(){
+    public void startReceiving(){
         messageSize = new AtomicInteger(0);
         runner = new Thread(new SessionRunner());
         runner.start();
     }
+
+    public void startSender(){
+        if(objectOutputStream==null){
+            try {
+                objectOutputStream = new ObjectOutputStream(localSocket.getOutputStream());
+                isSenderActive = true;
+                objectOutputStream.flush();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void stop(){
         if(!runner.isInterrupted()) runner.interrupt();
@@ -54,21 +68,27 @@ public abstract class LocalSocketSession {
 
     public void clear() throws IOException {
         messageSize = null;
+        objectOutputStream.close();
         localSocket.close();
     }
 
 
     public abstract void onReceiveMessage(FermatModuleObjectWrapper object);
 
+    ObjectOutputStream objectOutputStream;
+
     public void sendMessage(String requestId,Object object){
         if(! (object instanceof Serializable)) throw new IllegalArgumentException("Object :"+object.getClass().getName()+" is nos Serializable");
         if(localSocket!=null){
             FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object,true,requestId);
-            ObjectOutput out = null;
+//            ObjectOutput out = null;
             try {
-                out = new ObjectOutputStream(localSocket.getOutputStream());
-                out.writeObject(fermatModuleObjectWrapper);
+                objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
+                e.printStackTrace();
+            }catch (IllegalBlockingModeException e){
+                e.printStackTrace();
+            } catch (Exception e){
                 e.printStackTrace();
             } finally {
 //                try {
@@ -101,10 +121,14 @@ public abstract class LocalSocketSession {
             try {
                 localSocket.connect(new LocalSocketAddress(CommunicationServerService.SERVER_NAME));
                 localSocket.setReceiveBufferSize(500000);
-                localSocket.setSoTimeout(6000);
+                localSocket.setSoTimeout(0);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+    }
+
+    public boolean isSenderActive() {
+        return isSenderActive;
     }
 
 
@@ -115,9 +139,9 @@ public abstract class LocalSocketSession {
             try {
                 if(localSocket!=null) {
                     InputStream inputStream = localSocket.getInputStream();
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                     while (true) {
                         while(messageSize.get()!=0){
-                            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                             Log.i(TAG, "Cantidad de mensajes a recibir: " + messageSize.get());
                             //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
                             FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();

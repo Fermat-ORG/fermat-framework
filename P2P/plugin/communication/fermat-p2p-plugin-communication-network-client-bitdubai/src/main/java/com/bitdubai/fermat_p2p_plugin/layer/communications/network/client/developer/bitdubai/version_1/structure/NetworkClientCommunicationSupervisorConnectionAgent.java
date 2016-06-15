@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.NetworkClientCommunicationChannel;
 
 import javax.websocket.Session;
 
@@ -67,15 +67,15 @@ public class NetworkClientCommunicationSupervisorConnectionAgent implements Runn
      * @return Session
      */
     private Session getConnection(){
-        return networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection().getCommunicationsNetworkClientChannel().getClientConnection();
+        return networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection().getNetworkClientCommunicationChannel().getClientConnection();
     }
 
     /**
-     * Get the CommunicationsNetworkClientChannel
-     * @return CommunicationsNetworkClientChannel
+     * Get the NetworkClientCommunicationChannel
+     * @return NetworkClientCommunicationChannel
      */
-    private CommunicationsNetworkClientChannel getCommunicationsNetworkClientChannel(){
-        return  networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection().getCommunicationsNetworkClientChannel();
+    private NetworkClientCommunicationChannel getCommunicationsNetworkClientChannel(){
+        return  networkClientCommunicationPluginRoot.getNetworkClientCommunicationConnection().getNetworkClientCommunicationChannel();
     }
 
 }

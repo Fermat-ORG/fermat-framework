@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -81,9 +80,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    protected ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     protected EventManager eventManager;
 
@@ -134,17 +130,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     protected List<FermatEventListener> listenersAdded;
 
-    /*
-     * Represents the listActorConnectIntoNode
-     */
-    protected Map<String, String> listActorConnectIntoNode;
-
-    /*
-     * Represents the listActorProfileConnectedInNode
-     */
-    protected Map<String, List<ActorProfile>> listActorProfileConnectedInNode;
-
-
     /**
      * Represents the networkServiceConnectionManager
      */
@@ -162,8 +147,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * Represents the NetworkServicePendingMessagesSupervisorAgent
      */
     private NetworkServicePendingMessagesSupervisorAgent networkServicePendingMessagesSupervisorAgent;
-
-    protected ActorProfile actorProfile;
 
     /**
      * Constructor with parameters
@@ -183,8 +166,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         this.registered            = Boolean.FALSE;
         this.listenersAdded        = new CopyOnWriteArrayList<>();
-        this.listActorConnectIntoNode = new HashMap<>();
-        this.listActorProfileConnectedInNode = new HashMap<>();
     }
 
     /**
@@ -246,7 +227,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             possibleCause += exception.getMessage();
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -283,7 +264,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -333,7 +314,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 /*
                  * The file cannot be created. We can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw new CantInitializeIdentityException(exception, "", "Unhandled Exception");
             }
 
@@ -343,7 +324,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /*
              * The file cannot be load. We can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
             throw new CantInitializeIdentityException(cantCreateFileException, "", "Error creating the identity file.");
 
         }
@@ -367,8 +348,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             location = null;
             // TODO MANAGE IN OTHER WAY...
-            errorManager.reportUnexpectedPluginException(
-                    this.getPluginVersionReference(),
+            this.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception
             );
@@ -399,7 +379,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
@@ -422,7 +402,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
             }
@@ -562,7 +542,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
-    public void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
+    /**
+     * Through this method you can handle the actor found event for the actor trace that you could have done.
+     *
+     * @param actorProfile an instance of the actor profile
+     */
+    public void handleActorFoundEvent(ActorProfile actorProfile){
 
     }
 
@@ -578,7 +563,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(incomingMessage);
 
-            networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
+            //TODO networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
             /*
              * process the new message receive
              */
@@ -738,7 +723,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     public synchronized void onNewMessageReceived(NetworkServiceMessage messageReceived) {
 
-        System.out.println("Me llego un nuevo mensaje"+ messageReceived);
+        System.out.println("Me llego un nuevo mensaje" + messageReceived);
     }
 
     public synchronized void onSentMessage(NetworkServiceMessage networkServiceMessage) {
@@ -747,10 +732,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         //networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
 
-        networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
-
         try {
-            networkServiceConnectionManager.getOutgoingMessagesDao().update(networkServiceMessage);
+            networkServiceConnectionManager.getOutgoingMessagesDao().markAsDelivered(networkServiceMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -774,6 +757,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
         return networkServiceConnectionManager;
+    }
+
+    public LocationManager getLocationManager() {
+
+        return locationManager;
     }
 
     /**

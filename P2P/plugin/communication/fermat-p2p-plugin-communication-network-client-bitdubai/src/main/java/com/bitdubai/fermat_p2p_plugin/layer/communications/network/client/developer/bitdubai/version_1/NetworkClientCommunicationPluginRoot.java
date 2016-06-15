@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,15 +25,24 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.daos.NodeConnectionHistoryDao;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.entities.NodeConnectionHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInitializeNetworkClientP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
@@ -45,11 +55,15 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -171,13 +185,17 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
-            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+            ClientContext.add(ClientContextItem.DATABASE, dataBase);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
+            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
 
-            //nodesProfileList = getNodesProfileList();
+            /*
+             * get NodesProfile List From NodesProfileConnectionHistory table
+             */
+            nodesProfileList = getNodesProfileFromConnectionHistory();
 
-            if(nodesProfileList != null && nodesProfileList.size() > 0){
+            if(nodesProfileList != null && nodesProfileList.size() >= 1){
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
@@ -186,21 +204,45 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                         identity,
                         this,
                         0,
-                        Boolean.FALSE
+                        Boolean.FALSE,
+                        nodesProfileList.get(0)
                 );
+
 
             }else {
 
-                networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                        NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
-                        eventManager,
-                        locationManager,
-                        identity,
-                        this,
-                        -1,
-                        Boolean.FALSE
-                );
+                /*
+                * get NodesProfile List From Restful in Seed Node
+                */
+                nodesProfileList = getNodesProfileList();
 
+                if (nodesProfileList != null && nodesProfileList.size() > 0) {
+
+                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                            nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
+                            eventManager,
+                            locationManager,
+                            identity,
+                            this,
+                            0,
+                            Boolean.FALSE,
+                            nodesProfileList.get(0)
+                    );
+
+                } else {
+
+                    networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                            NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
+                            eventManager,
+                            locationManager,
+                            identity,
+                            this,
+                            -1,
+                            Boolean.FALSE,
+                            null
+                    );
+
+                }
             }
 
             Thread thread = new Thread(){
@@ -431,7 +473,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     identity,
                     this,
                     i+1,
-                    Boolean.FALSE
+                    Boolean.FALSE,
+                    nodesProfileList.get(i+1)
             );
 
         }else{
@@ -443,7 +486,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     identity,
                     this,
                     -1,
-                    Boolean.FALSE
+                    Boolean.FALSE,
+                    null
             );
 
         }
@@ -481,23 +525,140 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     }
 
     /*
+     * get the NodesProfile List  from ConnectionHistory Table
+     */
+    private List<NodeProfile> getNodesProfileFromConnectionHistory() throws CantGetDeviceLocationException {
+
+        System.out.println("CALLING getNodesProfileFromConnectionHistory");
+
+        if(locationManager.getLocation() == null)
+            return null;
+
+        NodeConnectionHistoryDao nodeConnectionHistoryDao = new NodeConnectionHistoryDao(dataBase);
+        List<NodeConnectionHistory> nodeConnectionHistoryList;
+        List<NodeConnectionHistory> nodeConnectionHistoryListFiltered;
+        List<NodeProfile> nodeProfiles = null;
+
+        try {
+            nodeConnectionHistoryList = nodeConnectionHistoryDao.findAll();
+            nodeConnectionHistoryListFiltered = applyGeoLocationFilter(locationManager.getLocation(), nodeConnectionHistoryList);
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        if(nodeConnectionHistoryListFiltered != null){
+
+            nodeProfiles = new ArrayList<>();
+
+            for(NodeConnectionHistory nodeHistory : nodeConnectionHistoryListFiltered){
+
+                NodeProfile node = new NodeProfile();
+                node.setIdentityPublicKey(nodeHistory.getIdentityPublicKey());
+                node.setIp(nodeHistory.getIp());
+                node.setDefaultPort(nodeHistory.getDefaultPort());
+
+                final Double latitude = nodeHistory.getLatitude();
+                final Double longitude = nodeHistory.getLongitude();
+
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLongitude(longitude);
+                nodeLocation.setLatitude(latitude);
+
+                node.setLocation(nodeLocation);
+
+                nodeProfiles.add(node);
+
+            }
+        }
+
+        return nodeProfiles;
+    }
+
+    /**
+     *  Method that apply geo location filter to the list
+     *
+     * @param clientLocation
+     * @param nodeConnectionHistoryList
+     * @return List<NodeConnectionHistory>
+     */
+    private List<NodeConnectionHistory> applyGeoLocationFilter(Location clientLocation, List<NodeConnectionHistory> nodeConnectionHistoryList) {
+
+        if(nodeConnectionHistoryList != null)
+            return null;
+
+        /*
+         * Hold the data ordered by distance
+         */
+        Map<Double, NodeConnectionHistory> orderedByDistance = new TreeMap<>();
+
+        for(NodeConnectionHistory nodeHistory : nodeConnectionHistoryList){
+
+            /*
+             * If component has a geo location
+             */
+            if (nodeHistory.getLatitude() != 0.0 &&
+                    nodeHistory.getLongitude() != 0.0){
+
+                final Double latitude = nodeHistory.getLatitude();
+                final Double longitude = nodeHistory.getLongitude();
+
+                Location nodeLocation = new DeviceLocation();
+                nodeLocation.setLongitude(longitude);
+                nodeLocation.setLatitude(latitude);
+
+                /*
+                 * Calculate the distance between the two points
+                 */
+                Double componentDistance = DistanceCalculator.distance(clientLocation, nodeLocation, DistanceCalculator.KILOMETERS);
+
+                /*
+                 * Add to the list
+                 */
+                orderedByDistance.put(componentDistance, nodeHistory);
+
+            }
+
+        }
+
+        return new ArrayList<>(orderedByDistance.values());
+
+    }
+
+    /*
      * get the NodesProfile List in the webService of the NetworkNode Harcoded
      */
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;
+        List<NodeProfile> listServer = new ArrayList<>();
+
+        System.out.println("CALLING getNodesProfileList");
 
         try {
 
+            Double latitudeSource = ((locationManager.getLocation() != null && locationManager.getLocation().getLatitude() != null )? locationManager.getLocation().getLatitude() : 0.0);
+            Double longitudeSource = ((locationManager.getLocation() != null && locationManager.getLocation().getLongitude() != null )? locationManager.getLocation().getLongitude() : 0.0);
+
+            String formParameters = "latitude=" + latitudeSource + "&longitude=" + longitudeSource;
+
+
             URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/available/nodes");
             conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
             conn.setRequestProperty("Accept", "application/json");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(formParameters.getBytes());
+            os.flush();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String respond = reader.readLine();
 
-            if (conn.getResponseCode() == 200 && respond != null && respond.contains("data")) {
+            if (respond.contains("data")) {
 
                /*
                 * Decode into a json Object
@@ -505,16 +666,14 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 JsonParser parser = new JsonParser();
                 JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
-                Gson gson = new Gson();
-                List<NodeProfile> listServer = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                listServer = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
                 }.getType());
 
+                System.out.println("NetworkClientCommunicationPluginRoot - resultList.size() = " + listServer.size());
                 System.out.println(respondJsonObject);
 
-                return listServer;
-
             }else{
-                return null;
+                System.out.println("NetworkClientCommunicationConnection - Requested list is not available, resultList.size() = " + listServer.size());
             }
 
         }catch (Exception e){
@@ -524,6 +683,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             if (conn != null)
                 conn.disconnect();
         }
+
+        return listServer;
 
     }
 

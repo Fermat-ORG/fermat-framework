@@ -341,14 +341,17 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             try {
                 serverIdentificationKey = iServerBrokerService.register();
                 //running socket receiver
-                Log.i(TAG,"Starting socket receiver");
-                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
+                Log.i(TAG, "Starting socket receiver");
+                LocalSocket localSocket = new LocalSocket();
+                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,localSocket,bufferChannelAIDL);
                 mReceiverSocketSession.connect();
-                mReceiverSocketSession.start();
+                mReceiverSocketSession.startReceiving();
 
             } catch (RemoteException e) {
                 e.printStackTrace();
                 Log.e(TAG,"Cant run socket, register to server fail");
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
             try {

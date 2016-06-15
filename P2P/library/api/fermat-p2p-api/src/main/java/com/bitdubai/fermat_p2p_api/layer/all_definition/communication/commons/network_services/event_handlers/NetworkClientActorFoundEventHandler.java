@@ -45,7 +45,7 @@ public class NetworkClientActorFoundEventHandler implements FermatEventHandler<A
         if (this.networkService.isStarted() &&
                 this.networkService.getProfile().getNetworkServiceType() == fermatEvent.getNetworkServiceTypeIntermediate()) {
 
-            this.networkService.handleActorFoundEvent(fermatEvent.getUriToNode(), fermatEvent.getActorProfile());
+            this.networkService.handleActorFoundEvent(fermatEvent.getActorProfile());
         }
 
     }

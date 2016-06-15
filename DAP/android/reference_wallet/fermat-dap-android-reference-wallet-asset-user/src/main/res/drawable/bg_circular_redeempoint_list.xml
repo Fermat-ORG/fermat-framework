@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-        <solid android:color="@color/card_toolbar_trans" />
+        <solid android:color="@color/card_toolbar_trans_user_wallet" />
 
     <size
         android:width="90dp"

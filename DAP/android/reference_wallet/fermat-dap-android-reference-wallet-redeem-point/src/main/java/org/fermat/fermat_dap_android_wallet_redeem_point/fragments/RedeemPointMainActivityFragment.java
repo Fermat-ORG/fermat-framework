@@ -54,7 +54,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -111,7 +110,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
         //Initialize settings
         try {
-            moduleManager = appSession.getModuleManager();
             try {
                 settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -122,8 +120,10 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 int position = 0;
                 settings = new RedeemPointSettings();
                 settings.setIsContactsHelpEnabled(true);
+                settings.setNotificationEnabled(true);
                 settings.setIsPresentationHelpEnabled(true);
                 settings.setNotificationEnabled(true);
+                settings.setAssetNotificationEnabled(true);
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
@@ -185,7 +185,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
-                    .setImageLeft(R.drawable.redeem_point_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
                     .setTextNameLeft(R.string.dap_redeem_wallet_welcome_name_left)
