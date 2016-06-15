@@ -66,6 +66,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Cit
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -89,11 +90,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private final PluginFileSystem                         pluginFileSystem                      ;
     private final UUID                                     pluginId                              ;
     private final PluginVersionReference                   pluginVersionReference                ;
+    private final GeolocationManager                       geolocationManager                    ;
     //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
     //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
-    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
+    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference, GeolocationManager geolocationManager) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
@@ -103,6 +105,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.pluginVersionReference= pluginVersionReference;
+        this.geolocationManager = geolocationManager;
     }
 
     @Override
@@ -457,37 +460,37 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
     @Override
     public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
-        return null;
+        return geolocationManager.getCountryList();
     }
 
     @Override
     public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
-        return null;
+        return geolocationManager.getCountryDependencies(countryCode);
     }
 
     @Override
     public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
-        return null;
+        return geolocationManager.getCitiesByCountryCode(countryCode);
     }
 
     @Override
     public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
-        return null;
+        return geolocationManager.getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
     }
 
     @Override
     public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
-        return null;
+        return geolocationManager.getGeoRectangleByLocation(location);
     }
 
     @Override
     public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
-        return null;
+        return geolocationManager.getAddressByCoordinate(latitude, longitude);
     }
 
     @Override
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
-        return null;
+        return geolocationManager.getRandomGeoLocation();
     }
 
 
