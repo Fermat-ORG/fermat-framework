@@ -12,7 +12,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -69,7 +69,7 @@ public final class AssetSellerTransactionManager {
             } else {
                 throw new CantStartAssetSellTransactionException("We don't have that much assets");
             }
-        } catch (RecordsNotFoundException | CantExecuteLockOperationException | CantInsertRecordException | CantSendMessageException | CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
+        } catch (RecordsNotFoundException | CantExecuteLockOperationException | CantInsertRecordException | CantSendDAPMessageException | CantGetTransactionsException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantStartAssetSellTransactionException(e);
         }
     }
@@ -89,7 +89,7 @@ public final class AssetSellerTransactionManager {
         }
     }
 
-    private void sendMessage(AssetNegotiation negotiation, DAPActor from, DAPActor to) throws CantSetObjectException, CantSendMessageException {
+    private void sendMessage(AssetNegotiation negotiation, DAPActor from, DAPActor to) throws CantSetObjectException, CantSendDAPMessageException {
         DAPContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.WAITING_CONFIRMATION, negotiation);
         DAPMessage message = new DAPMessage(content, from, to, DAPMessageSubject.NEW_NEGOTIATION_STARTED);
         assetTransmission.sendMessage(message);

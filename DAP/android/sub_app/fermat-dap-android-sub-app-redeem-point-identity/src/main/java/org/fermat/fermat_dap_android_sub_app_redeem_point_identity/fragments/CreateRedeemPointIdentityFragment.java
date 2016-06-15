@@ -447,7 +447,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
+                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_actor) : brokerImageByteArray,
                                             brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
                                             brokerAddressStreetName, brokerAddressHouseNumber);
                                     publishResult(CREATE_IDENTITY_SUCCESS);

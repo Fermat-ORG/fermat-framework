@@ -30,7 +30,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import org.fermat.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -384,7 +384,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             System.out.println("REDEEM POINT REDEMPTION - " + message);
         }
 
-        private void updateStatusAndSendMessage(DistributionStatus status, DAPMessage message) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException, CantSetObjectException, CantSendMessageException, CantUpdateMessageStatusException {
+        private void updateStatusAndSendMessage(DistributionStatus status, DAPMessage message) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException, CantSetObjectException, CantSendDAPMessageException, CantUpdateMessageStatusException {
             AssetMetadataContentMessage content = (AssetMetadataContentMessage) message.getMessageContent();
             DigitalAssetMetadata metadata = content.getAssetMetadata();
             String transactionId = metadata.getGenesisTransaction();

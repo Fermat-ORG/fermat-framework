@@ -410,7 +410,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_user_identity) : brokerImageByteArray);
+                                    moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_actor) : brokerImageByteArray);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIdentityAssetUserException e) {
                                     e.printStackTrace();
