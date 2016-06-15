@@ -38,7 +38,11 @@ dependencies {
     compile project(':fermat-dap-plugin-identity-asset-user')
     compile project(':fermat-dap-plugin-identity-redeem-point')
 
+    compile project(':fermat-dap-plugin-metadata-digital-asset')
+
     compile project(':fermat-dap-plugin-middleware-asset-factory')
+
+    compile project(':fermat-dap-plugin-offer-asset-specific')
 
     compile project(':fermat-dap-plugin-network-service-asset-transmission')
 

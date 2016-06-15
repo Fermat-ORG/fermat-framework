@@ -20,6 +20,6 @@ public interface FermatActivityManager {
 
     AppsStatus getAppStatus();
 
-    public void selectApp(String appPublicKey) throws Exception;
+    void selectApp(String appPublicKey) throws Exception;
 
 }

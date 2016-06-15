@@ -3,13 +3,11 @@ package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.ver
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -17,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -32,6 +29,9 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptio
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,6 @@ import java.util.UUID;
  * Created by franklin on 07/09/15.
  */
 public final class AssetFactoryMiddlewareManager {
-
-    public static final String PATH_DIRECTORY = "assetFactory/resources";
 
     private final AssetIssuingManager assetIssuingManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -78,9 +76,9 @@ public final class AssetFactoryMiddlewareManager {
         this.identityAssetIssuerManager = identityAssetIssuerManager;
     }
 
-    private org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
+    private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
 
-        return new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+        return new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
     }
 
     private boolean areObjectsSettled(AssetFactory assetFactory) {
@@ -96,46 +94,49 @@ public final class AssetFactoryMiddlewareManager {
         return isBoolean;
     }
 
-    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException, CantCreateFileException, CantPersistFileException {
+    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException {
         try {
-            List<ContractProperty> contractProperties = new ArrayList<>();
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            contractProperties.add(redeemable);
-            contractProperties.add(expirationDate);
-            assetFactory.setContractProperties(contractProperties);
+//            List<ContractProperty> contractProperties = new ArrayList<>();
+//            ContractProperty redeemable;
+//            ContractProperty expirationDate;
+//            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+//            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+//            contractProperties.add(redeemable);
+//            contractProperties.add(expirationDate);
+//            assetFactory.setContractProperties(contractProperties);
+//            assetFactory.getContractProperties().add(expirationDate);
             try {
                 assetFactory.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
             } catch (CantGetAssetIssuerIdentitiesException cantCreateFileException) {
                 throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "Failed Identity Asset Issuer");
             }
+
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
-            if (assetFactory.getResources() != null) {
-                for (Resource resource : assetFactory.getResources()) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    imageFile.setContent(resource.getResourceBinayData());
-                    imageFile.persistToMedia();
-                }
-            }
+            getAssetFactoryMiddlewareDao().persistNewImageFactory(assetFactory);
+
+//            if (assetFactory.getResources() != null) {
+//                for (Resource resource : assetFactory.getResources()) {
+//                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//                    imageFile.setContent(resource.getResourceBinayData());
+//                    imageFile.persistToMedia();
+//                }
+//            }
         } catch (CantCreateFileException cantCreateFileException) {
             throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant create el file");
         } catch (CantPersistFileException cantPersistFileException) {
             throw new CantPersistFileException(CantPersistFileException.DEFAULT_MESSAGE, cantPersistFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant persist el file");
         }
-
     }
 
-    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException {
+    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, DatabaseOperationException, MissingAssetDataException {
         try {
             getAssetFactoryMiddlewareDao().markAssetFactoryData(assetFactory);
-        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException e) {
+        } catch (DatabaseOperationException | MissingAssetDataException e) {
             throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Mark Save Asset Factory");
         }
     }
 
-    private List<AssetFactory> getAssetFactories(DatabaseTableFilter... filters) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException {
+    private List<AssetFactory> getAssetFactories(DatabaseTableFilter... filters) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException {
         List<AssetFactory> assetFactories = new ArrayList<>();
 
         for (AssetFactory assetFactory : getAssetFactoryMiddlewareDao().getAssetFactoryList(filters)) {
@@ -614,8 +615,8 @@ public final class AssetFactoryMiddlewareManager {
         }
     }
 
-    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
-        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+    public byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException {
+        return getAssetFactoryMiddlewareDao().getImageFactory(resource);
     }
 
     public boolean isReadyToPublish(String asssetPublicKey) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantPublishAssetException {
@@ -658,8 +659,8 @@ public final class AssetFactoryMiddlewareManager {
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
                 digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
                 digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
-                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsExchangeable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsTransferable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());

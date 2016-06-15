@@ -135,6 +135,11 @@ public enum Activities implements FermatEnum {
     CWP_WALLET_DEVELOPER_TOOL_DATABASE("CWDTD"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST("CWDTDTL"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST("CWDTDTR"),
+
+    CWP_SUB_APP_DEVELOPER_LOG_TOOLS("CSADLT"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS("CSADLL1T"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS("CSADLL2T"),
+    CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS("CSADLL3T"),
     CWP_WALLET_FACTORY_MAIN("CWFM"),
     CWP_WALLET_FACTORY_EDIT_WALLET("CWFEW"),
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
@@ -145,6 +150,10 @@ public enum Activities implements FermatEnum {
     DAP_SUB_APP_ASSET_FACTORY_SETTINGS("DSAAFS"),
     DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN("DSAAFSNM"),
     DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS("DSAAFN"),
+    DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA("DSAAFWM"),
+    DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES("DSAAFWP"),
+    DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO("DSAAFWC"),
+    DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY("DSAAFWV"),
 
     DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL("DAIWAD"),
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
@@ -348,6 +357,7 @@ public enum Activities implements FermatEnum {
     //CHT
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_CREATE_IDENTITY("CHTCI"),
+    CHT_CHAT_GEOLOCATION_IDENTITY("CHTGI"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
     CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
@@ -531,6 +541,14 @@ public enum Activities implements FermatEnum {
                 return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST;
             case "CWDTDTR":
                 return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST;
+            case "CSADLT":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_TOOLS;
+            case "CSADLL1T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS;
+            case "CSADLL2T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS;
+            case "CSADLL3T":
+                return Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS;
             case "CWFM":
                 return Activities.CWP_WALLET_FACTORY_MAIN;
             case "CWFEW":
@@ -563,6 +581,14 @@ public enum Activities implements FermatEnum {
                 return DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN;
             case "DSAAFN":
                 return DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS;
+            case "DSAAFWM":
+                return DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA;
+            case "DSAAFWP":
+                return DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES;
+            case "DSAAFWC":
+                return DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO;
+            case "DSAAFWV":
+                return DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY;
             case "CWRWBWBV1C":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
@@ -837,6 +863,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
             case "CHTCI":
                 return Activities.CHT_CHAT_CREATE_IDENTITY;
+            case "CHTGI":
+                return Activities.CHT_CHAT_GEOLOCATION_IDENTITY;
             case "CHTBWOD":
                 return  Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL;
             case "CHTBWTD":

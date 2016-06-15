@@ -57,7 +57,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static android.widget.Toast.makeText;
 
@@ -78,9 +77,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
-//    AssetUserSessionReferenceApp assetUserSession;
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -100,7 +96,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-//            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -117,7 +112,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         super.initViews(layout);
 
         //Initialize settings
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
             settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
@@ -172,7 +166,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         onRefresh();
@@ -183,7 +177,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_user_wallet)
                     .setIconRes(R.drawable.asset_user_wallet)
-                    .setImageLeft(R.drawable.asset_user_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
                     .setTextNameLeft(R.string.dap_user_wallet_welcome_name_left)

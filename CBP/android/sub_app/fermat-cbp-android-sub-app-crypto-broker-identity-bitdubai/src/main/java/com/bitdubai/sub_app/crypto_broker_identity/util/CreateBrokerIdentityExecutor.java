@@ -1,13 +1,12 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 
 /**
  * Execute the method of the module manager to create a broker identity
@@ -40,14 +39,13 @@ public class CreateBrokerIdentityExecutor {
         identity = null;
     }
 
-    public CreateBrokerIdentityExecutor(ReferenceAppFermatSession session, String identityName, byte[] imageInBytes) {
+    public CreateBrokerIdentityExecutor(ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager> session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
 
         if (session != null) {
-            CryptoBrokerIdentitySubAppSessionReferenceApp subAppSession = (CryptoBrokerIdentitySubAppSessionReferenceApp) session;
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }
     }
 

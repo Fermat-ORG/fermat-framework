@@ -55,7 +55,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -127,6 +126,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 int position = 0;
                 settings = new AssetIssuerSettings();
                 settings.setIsContactsHelpEnabled(true);
+                settings.setNotificationEnabled(true);
                 settings.setIsPresentationHelpEnabled(true);
                 settings.setNotificationEnabled(true);
 
@@ -190,7 +190,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
-                    .setImageLeft(R.drawable.asset_issuer_identity)
+                    .setImageLeft(R.drawable.profile_actor)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
                     .setTextNameLeft(R.string.dap_issuer_wallet_welcome_name_left)
@@ -249,7 +249,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);

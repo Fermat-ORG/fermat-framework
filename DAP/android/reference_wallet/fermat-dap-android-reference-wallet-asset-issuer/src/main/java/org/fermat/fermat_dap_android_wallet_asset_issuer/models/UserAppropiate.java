@@ -2,21 +2,23 @@ package org.fermat.fermat_dap_android_wallet_asset_issuer.models;
 
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by Penny on 01/08/16.
  */
-public class UserAppropiate {
+public class UserAppropiate implements Serializable {
     private String userName;
-    private Timestamp appropiateDate;
+    private Date appropiateDate;
     private String appropiateStatus;
 
     public UserAppropiate() {
 
     }
 
-    public UserAppropiate(String userName, Timestamp appropiateDate, String appropiateStatus) {
+    public UserAppropiate(String userName, Date appropiateDate, String appropiateStatus) {
         this.userName = userName;
         this.appropiateDate = appropiateDate;
         this.appropiateStatus = appropiateStatus;
@@ -30,7 +32,7 @@ public class UserAppropiate {
         this.userName = userName;
     }
 
-    public Timestamp getAppropiateDate() {
+    public Date getAppropiateDate() {
         return appropiateDate;
     }
 

@@ -3,10 +3,12 @@ package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 
+import java.io.Serializable;
+
 /**
  * Created by franklin on 15/10/15.
  */
-public class AssetRedeemPointWalletBalance implements AssetRedeemPointWalletList {
+public class AssetRedeemPointWalletBalance implements AssetRedeemPointWalletList, Serializable {
 
     DigitalAsset digitalAsset;
     long quantityBookBalance;

@@ -7,22 +7,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,8 +28,6 @@ import java.util.Date;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/02/16.
  */
 public class ContractDetailViewHolder extends FermatViewHolder implements View.OnClickListener {
-    private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-
 
     //Constants
     private static final int PAYMENT_RECEPTION_IN_PROCESS = 1;
@@ -40,11 +36,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Managers
     ErrorManager errorManager;
     protected CryptoBrokerWalletModuleManager walletManager;
-    protected CryptoBrokerWalletSessionReferenceApp walletSession;
+    protected ReferenceAppFermatSession walletSession;
 
     //Data
     protected ContractDetail contractDetail;
-    protected int itemPosition;
     private ContractDetailActivityFragment fragment;
     int inProcessStatus = 0;
 
@@ -100,8 +95,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     //Confirm the payment from the customer
                     walletManager.ackPayment(contractDetail.getContractId());
 
-                    //itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
-                    //confirmButton.setVisibility(View.INVISIBLE);
                     Toast.makeText(this.parentFragment.getActivity(), "The payment has been delivered", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to PAYMENT_RECEPTION_IN_PROCESS
@@ -113,8 +106,6 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     //Send the merchandise to the customer
                     walletManager.submitMerchandise(contractDetail.getContractId());
 
-                    //itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
-                    //confirmButton.setVisibility(View.INVISIBLE);
                     Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
 
                     //Set internal status of this contract to MERCHANDISE_DELIVERY_IN_PROCESS
@@ -311,7 +302,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         this.walletManager=walletManager;
     }
 
-    public void setSession(CryptoBrokerWalletSessionReferenceApp session){
+    public void setSession(ReferenceAppFermatSession session){
         this.walletSession =session;
     }
 

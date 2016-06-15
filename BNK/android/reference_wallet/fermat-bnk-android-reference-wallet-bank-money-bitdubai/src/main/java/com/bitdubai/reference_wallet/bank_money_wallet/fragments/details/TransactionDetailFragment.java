@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -24,7 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 
 import java.text.DecimalFormat;
@@ -35,7 +36,7 @@ import java.util.UUID;
 /**
  * Created by memo on 19/01/16.
  */
-public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
+public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceAppFermatSession<BankMoneyWalletModuleManager>, ResourceProviderManager> implements View.OnClickListener, DialogInterface.OnDismissListener {
     private static final String TAG = "updatetransactionFragment";
 
     //Managers
@@ -69,7 +70,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
 
         try {
-            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -131,7 +132,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         if (i == R.id.bw_transaction_detail_delete_btn) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
         }else if(i == R.id.bw_transaction_detail_update_btn) {
-            transactionFragmentDialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSessionReferenceApp) appSession, getResources(), transactionRecord.getTransactionType(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getAmount(), transactionRecord.getMemo());
+            transactionFragmentDialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), appSession, getResources(), transactionRecord.getTransactionType(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getAmount(), transactionRecord.getMemo());
             transactionFragmentDialog.setOnDismissListener(this);
             transactionFragmentDialog.show();
         }

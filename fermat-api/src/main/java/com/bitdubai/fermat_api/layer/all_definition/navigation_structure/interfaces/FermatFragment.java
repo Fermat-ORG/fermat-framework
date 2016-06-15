@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
+
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Matias Furszyfer on 2015.07.20..
  */
 public interface FermatFragment {
 
@@ -9,6 +12,8 @@ public interface FermatFragment {
 
     String getBack();
 
-    String getPulickKeyFragmentFrom();
+    Owner getOwner();
+
+    OptionsMenu getOptionsMenu();
 
 }

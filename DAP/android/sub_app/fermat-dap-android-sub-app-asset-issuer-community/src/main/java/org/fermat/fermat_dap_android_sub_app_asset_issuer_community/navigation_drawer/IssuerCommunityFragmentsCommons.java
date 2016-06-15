@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.navigation_drawer;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,15 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.common.views.IssuerCommunityUtils;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * @author Created by mati on 2015.11.12..
@@ -33,24 +35,27 @@ public class IssuerCommunityFragmentsCommons {
         /**
          * Navigation view header
          */
-        View view = inflater.inflate(R.layout.dap_navigation_drawer_community_issuer_header, null, true);
+        RelativeLayout relativeLayout = new RelativeLayout(activity);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+        relativeLayout.setLayoutParams(layoutParams);
+        View view = inflater.inflate(R.layout.dap_navigation_drawer_community_issuer_header, relativeLayout, true);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
 
         try {
             ActiveActorIdentityInformation identityInformation = assetIssuerCommunitySubAppSession.getModuleManager().getActiveAssetIssuerIdentity();
 
-            RelativeLayout relativeLayout = new RelativeLayout(activity);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
-            relativeLayout.setLayoutParams(layoutParams);
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (identityInformation != null) {
                 if (identityInformation.getImage() != null) {
                     if (identityInformation.getImage().length > 0) {
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), 0, false);
-                        bitmapWorkerTask.execute(identityInformation.getImage());
+                        ByteArrayInputStream bytes = new ByteArrayInputStream(identityInformation.getImage());
+                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                        imageView.setImageBitmap(IssuerCommunityUtils.getCircleBitmap(bmd.getBitmap()));
                     } else
-                        Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
+                        imageView.setImageResource(R.drawable.profile_actor); //Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
                 } else
-                    Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
+                    imageView.setImageResource(R.drawable.profile_actor); //Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
+
+//                    Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identityInformation.getAlias());
             }

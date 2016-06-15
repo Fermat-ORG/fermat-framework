@@ -30,7 +30,8 @@ import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenc
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>> {
+public class ChatCommunityFermatAppConnection
+        extends AppConnections<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>> {
 
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ChatActorCommunitySelectableIdentity activeIdentity;
@@ -43,7 +44,6 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        //getChtActiveIdentity();
         return new ChatCommunityFragmentFactory();
     }
 
@@ -85,11 +85,17 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ReferenceAp
     }
 
     @Override
-    public int getResource(String id) {
+    public int getResource(int id) {
         int resId = 0;
         switch (id){
-            case "ic_welcome_dialog":
+            case 1:
                 resId = R.drawable.cht_help_icon;
+                break;
+            case 2:
+                resId = R.drawable.cht_comm_ubication_icon;
+                break;
+            case 3:
+                resId = R.drawable.cht_comm_search_icon;
                 break;
         }
         return resId;

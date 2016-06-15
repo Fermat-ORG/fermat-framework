@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by mati on 2016.02.10..
@@ -29,7 +30,8 @@ public class AppStatusListener implements AppStatusCallbackChanges {
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
         activityWeakReference.get().setAppStatus(appsStatus);
-        for (AbstractFermatFragmentInterface fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
+        List<AbstractFermatFragmentInterface> list = activityWeakReference.get().getAdapter().getLstCurrentFragments();
+        for (AbstractFermatFragmentInterface fragment : list) {
             try {
                 fragment.onUpdateViewOnUIThread(appsStatus.getCode());
             }catch (Exception e){

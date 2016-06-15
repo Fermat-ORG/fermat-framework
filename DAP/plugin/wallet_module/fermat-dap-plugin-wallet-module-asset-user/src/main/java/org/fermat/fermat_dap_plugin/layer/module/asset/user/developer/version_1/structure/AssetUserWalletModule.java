@@ -6,15 +6,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -380,7 +381,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
     }
 
     @Override
-    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
+    public byte[] getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException, CantGetResourcesException {
         return assetFactoryManager.getAssetFactoryResource(resource);
     }
 
@@ -593,6 +594,32 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetNegotiationsException(e);
+        }
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getAllTransactionByCryptoAddress(String walletPublicKey, CryptoAddress address) throws CantLoadWalletException, CantGetTransactionsException {
+        try {
+            return assetUserWalletManager.loadAssetUserWallet(walletPublicKey, selectedNetwork).getAllTransactions(address);
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantLoadWalletException("Error loading Wallet", e, "Method: getAllTransactionByCrptoAddress", "Class: AssetUserWalletModule");
+        } catch (CantGetTransactionsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException("Error getting transcactions", e, "Method: getAllTransactionByCrptoAddress", "Class: AssetUserWalletModule");
+        }
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getTransactionsForDisplay(String walletPublicKey, CryptoAddress cryptoAddress) throws CantLoadWalletException, CantGetTransactionsException {
+        try {
+            return assetUserWalletManager.loadAssetUserWallet(walletPublicKey, selectedNetwork).getTransactionsForDisplay(cryptoAddress);
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantLoadWalletException("Error loading Wallet", e, "Method: getTransactionsForDisplay", "Class: AssetUserWalletModule");
+        } catch (CantGetTransactionsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException("Error getting transcactions", e, "Method: getTransactionsForDisplay", "Class: AssetUserWalletModule");
         }
     }
 

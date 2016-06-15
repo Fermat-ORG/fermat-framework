@@ -1,9 +1,12 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.common.navigation_drawer;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
@@ -12,11 +15,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
-import org.fermat.fermat_dap_android_wallet_asset_issuer.util.BitmapWorkerTask;
+import org.fermat.fermat_dap_android_wallet_asset_issuer.common.views.WalletIssuerUtils;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * Created by Matias Furszyfer on 2015.11.12..
@@ -28,37 +32,30 @@ public class FragmentsCommons {
                                          ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager> assetIssuerSession,
                                          final FermatApplicationCaller applicationsHelper) throws CantGetIdentityAssetIssuerException {
 
-        View view = inflater.inflate(R.layout.dap_navigation_drawer_issuer_wallet_header, null, true);
+        //Dap v3
+        RelativeLayout relativeLayout = new RelativeLayout(activity);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
+        relativeLayout.setLayoutParams(layoutParams);
+        View view = inflater.inflate(R.layout.dap_v3_navigation_drawer_issuer_wallet_header, relativeLayout, true);
+        ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+
         try {
             ActiveActorIdentityInformation identityInformation = assetIssuerSession.getModuleManager().getActiveAssetIssuerIdentity();
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (identityInformation != null) {
                 if (identityInformation.getImage() != null) {
                     if (identityInformation.getImage().length > 0) {
-                        //BitmapFactory.Options options = new BitmapFactory.Options();
-                        //options.inScaled = true;
-                        //options.inSampleSize = 2;
-//                        imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetIssuer.getImage(), 0, identityAssetIssuer.getImage().length)));
-
-                        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView, activity.getResources(), false);
-                        bitmapWorkerTask.execute(identityInformation.getImage());
-
-                        //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
-                        //options.inBitmap = bitmap;
-                        //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
-                        //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
-                        //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
-                        //imageView.setImageBitmap(bitmap);
+                        ByteArrayInputStream bytes = new ByteArrayInputStream(identityInformation.getImage());
+                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                        imageView.setImageBitmap(WalletIssuerUtils.getCircleBitmap(bmd.getBitmap()));
                     } else
-                        Picasso.with(activity).load(R.drawable.banner_asset_issuer_wallet).into(imageView);
-                }
+                        imageView.setImageResource(R.drawable.profile_actor); //Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
+                } else
+                    imageView.setImageResource(R.drawable.profile_actor); //Picasso.with(activity).load(R.drawable.banner_asset_issuer_community).into(imageView);
+
+//                Picasso.with(activity).load(R.drawable.banner_asset_issuer_wallet).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identityInformation.getAlias());
-            } else {
-                Picasso.with(activity).load(R.drawable.banner_asset_issuer_wallet).into(imageView);
-                FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-                fermatTextView.setText(R.string.dap_identity_alias_default_text);
             }
 
             view.setOnClickListener(new View.OnClickListener() {
