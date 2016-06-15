@@ -20,34 +20,33 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.crypto_broker_community.common.views.Utils;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -56,17 +55,17 @@ import java.util.List;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
+
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
  *
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements SearchView.OnCloseListener,
-        SearchView.OnQueryTextListener,
-        ActionBar.OnNavigationListener,
-        AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
+public class ConnectionsFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+        implements ActionBar.OnNavigationListener, AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener,
+        FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
     private static final int MAX = 20;
     /**
@@ -79,14 +78,9 @@ public class ConnectionsFragment extends AbstractFermatFragment<CryptoBrokerComm
     private int offset = 0;
 
     private int mNotificationsCount = 0;
-    private SearchView mSearchView;
 
     private AppListAdapter adapter;
-    private boolean isStartList;
 
-    // recycler
-    private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
     //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -143,13 +137,11 @@ public class ConnectionsFragment extends AbstractFermatFragment<CryptoBrokerComm
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         try {
-
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
+            GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             recyclerView.setAdapter(adapter);
@@ -213,7 +205,7 @@ public class ConnectionsFragment extends AbstractFermatFragment<CryptoBrokerComm
                             cryptoBrokerCommunityInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
                             adapter.changeDataSet(cryptoBrokerCommunityInformationList);
                         }
-                    }else
+                    } else
                         showEmpty(true, emptyView);
 
                 }
@@ -295,37 +287,6 @@ Updates the count of notifications in the ActionBar.
     }
 
     @Override
-    public boolean onQueryTextSubmit(String alias) {
-
-        try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch();
-            cryptoBrokerCommunitySearch.addAlias(alias);
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        // This method does not exist
-        mSearchView.onActionViewCollapsed();
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-
-        return s.length() == 0 && isStartList;
-    }
-
-    @Override
-    public boolean onClose() {
-        if (!mSearchView.isActivated()) {
-        }
-
-        return true;
-    }
-
-    @Override
     public boolean onNavigationItemSelected(int position, long idItem) {
 
         try {
@@ -335,10 +296,9 @@ Updates the count of notifications in the ActionBar.
             selectableIdentity.select();
 
             return true;
-        } catch (CantListIdentitiesToSelectException e) {
-            e.printStackTrace();
-        } catch (CantSelectIdentityException e) {
-            e.printStackTrace();
+        } catch (CantListIdentitiesToSelectException | CantSelectIdentityException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         return false;
     }
@@ -351,10 +311,9 @@ Updates the count of notifications in the ActionBar.
 
             dataSet = moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             offset = dataSet.size();
-        } catch (CantListCryptoBrokersException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
         return dataSet;
@@ -366,7 +325,7 @@ Updates the count of notifications in the ActionBar.
         try {
             ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
             connectDialog.show();
-        } catch (CantGetSelectedActorIdentityException| ActorIdentityNotSelectedException e) {
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
 

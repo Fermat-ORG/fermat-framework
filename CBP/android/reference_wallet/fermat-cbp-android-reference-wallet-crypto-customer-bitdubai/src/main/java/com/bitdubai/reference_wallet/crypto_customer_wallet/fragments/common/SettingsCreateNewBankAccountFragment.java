@@ -12,16 +12,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,9 @@ import java.util.List;
 /**
  * Created by guillermo on 17/02/16.
  */
-public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class SettingsCreateNewBankAccountFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     // Data
     private FiatCurrency[] currencies;
     private FiatCurrency selectedCurrency;
@@ -78,7 +82,7 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
+        moduleManager = appSession.getModuleManager();
 
         configureToolbar();
 
@@ -121,7 +125,7 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
                 accountAliasEditText.getText().toString(), "");
 
         if (data.isAllDataFilled()) {
-            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
+            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             bankAccounts.add(data);
 
             if (moduleManager != null) {

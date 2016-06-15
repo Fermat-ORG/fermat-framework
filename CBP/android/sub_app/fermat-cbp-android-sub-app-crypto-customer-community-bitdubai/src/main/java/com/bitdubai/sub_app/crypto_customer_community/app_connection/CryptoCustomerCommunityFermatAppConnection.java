@@ -8,16 +8,17 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_community.navigationDrawer.CustomerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_customer_community.notifications.CommunityNotificationPainterBuilder;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -25,7 +26,7 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<CryptoCustomerCommunitySubAppSessionReferenceApp> {
+public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>> {
 
     public CryptoCustomerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -48,8 +49,8 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<C
     }
 
     @Override
-    public CryptoCustomerCommunitySubAppSessionReferenceApp getSession() {
-        return new CryptoCustomerCommunitySubAppSessionReferenceApp();
+    public ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> getSession() {
+        return getFullyLoadedSession();
     }
 
 

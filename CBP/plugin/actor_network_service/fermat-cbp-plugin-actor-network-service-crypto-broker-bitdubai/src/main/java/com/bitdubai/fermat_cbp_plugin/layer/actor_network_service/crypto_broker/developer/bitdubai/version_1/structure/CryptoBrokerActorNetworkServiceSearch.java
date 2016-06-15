@@ -1,22 +1,18 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
-
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceSearch</code>
@@ -26,12 +22,10 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
  */
 public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSearch {
 
-    private final CommunicationsClientConnection communicationsClientConnection;
-    private CryptoBrokerActorNetworkServicePluginRoot pluginRoot;
+    private final CryptoBrokerActorNetworkServicePluginRoot pluginRoot;
 
-    public CryptoBrokerActorNetworkServiceSearch(CommunicationsClientConnection communicationsClientConnection,
-                                                 CryptoBrokerActorNetworkServicePluginRoot pluginRoot) {
-        this.communicationsClientConnection = communicationsClientConnection;
+    public CryptoBrokerActorNetworkServiceSearch(final CryptoBrokerActorNetworkServicePluginRoot pluginRoot) {
+
         this.pluginRoot = pluginRoot;
     }
 
@@ -40,51 +34,39 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
         try {
 
-            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
-                    PlatformComponentType.ACTOR_CRYPTO_BROKER, // PlatformComponentType you want to find
-                    NetworkServiceType   .UNDEFINED,           // NetworkServiceType you want to find
-                    null,                                      // alias
-                    null,                                      // identityPublicKey
-                    null,                                      // location
-                    null,                                      // distance
-                    null,                                      // name
-                    null,                                      // extraData
-                    null,                                      // offset
-                    null,                                      // max
-                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_BROKER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.CRYPTO_BROKER
             );
 
-            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
-            for (final PlatformComponentProfile platformComponentProfile : list) {
+            for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto broker searched: "+platformComponentProfile);
-                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
-
-                byte[] imageByte;
-
-                if (platformComponentProfile.getExtraData() != null)
-                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                else
-                    imageByte = null;
-
-
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
             }
 
             return cryptoBrokerExposingDataList;
 
-        } catch (final CantRequestListException e) {
+        } catch (final CantRequestProfileListException e) {
 
-            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 
-            pluginRoot.reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
     }
