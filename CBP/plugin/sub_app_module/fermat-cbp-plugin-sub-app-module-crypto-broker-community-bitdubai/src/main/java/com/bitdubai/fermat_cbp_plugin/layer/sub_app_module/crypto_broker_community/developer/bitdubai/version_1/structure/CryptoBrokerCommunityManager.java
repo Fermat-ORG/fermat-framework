@@ -50,9 +50,23 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CryptoBrokerCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +86,7 @@ public class CryptoBrokerCommunityManager
     private final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ;
     private final PluginFileSystem                   pluginFileSystem                      ;
     private final UUID                               pluginId                              ;
+    private final GeolocationManager                 geolocationManager                    ;
 
     private       String                             subAppPublicKey                       ;
 
@@ -83,7 +98,8 @@ public class CryptoBrokerCommunityManager
                                         final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ,
                                         final CryptoBrokerCommunitySubAppModulePluginRoot pluginRoot                   ,
                                         final PluginFileSystem                   pluginFileSystem                      ,
-                                        final UUID                               pluginId) {
+                                        final UUID                               pluginId,
+                                        final GeolocationManager                 geolocationManager ) {
 
         super(pluginFileSystem, pluginId);
 
@@ -94,6 +110,7 @@ public class CryptoBrokerCommunityManager
         this.pluginRoot                             = pluginRoot                          ;
         this.pluginFileSystem                       = pluginFileSystem                      ;
         this.pluginId                               = pluginId                              ;
+        this.geolocationManager                     = geolocationManager                    ;
     }
 
 
@@ -479,7 +496,40 @@ public class CryptoBrokerCommunityManager
         return ConnectionState.DISCONNECTED_LOCALLY;
     }
 
+    @Override
+    public HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException {
+        return geolocationManager.getCountryList();
+    }
 
+    @Override
+    public List<CountryDependency> getCountryDependencies(String countryCode) throws CantGetCountryDependenciesListException, CantConnectWithExternalAPIException, CantCreateBackupFileException {
+        return geolocationManager.getCountryDependencies(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCode(String countryCode) throws CantGetCitiesListException {
+        return geolocationManager.getCitiesByCountryCode(countryCode);
+    }
+
+    @Override
+    public List<City> getCitiesByCountryCodeAndDependencyName(String countryName, String dependencyName) throws CantGetCitiesListException, CantCreateCountriesListException {
+        return getCitiesByCountryCodeAndDependencyName(countryName, dependencyName);
+    }
+
+    @Override
+    public GeoRectangle getGeoRectangleByLocation(String location) throws CantCreateGeoRectangleException {
+        return geolocationManager.getGeoRectangleByLocation(location);
+    }
+
+    @Override
+    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+        return geolocationManager.getAddressByCoordinate(latitude, longitude);
+    }
+
+    @Override
+    public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
+        return geolocationManager.getRandomGeoLocation();
+    }
 
 
     @Override
