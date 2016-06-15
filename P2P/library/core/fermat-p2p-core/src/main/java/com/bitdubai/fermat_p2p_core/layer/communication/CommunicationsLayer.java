@@ -24,8 +24,8 @@ public class CommunicationsLayer extends AbstractLayer {
 
         try {
 
-            //registerPlugin(new WsCloudClientPluginSubsystem());
-            //registerPlugin(new NetworkClientPluginSubsystem());
+            registerPlugin(new WsCloudClientPluginSubsystem());
+            registerPlugin(new NetworkClientPluginSubsystem());
             registerPlugin(new NetworkNodePluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
