@@ -32,9 +32,22 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorDisconnectingFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorCancellingFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,6 +107,31 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
 
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException;
 
+    HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException,
+            CantCreateBackupFileException,
+            CantCreateCountriesListException;
+
+    List<CountryDependency> getCountryDependencies(String countryCode)
+            throws CantGetCountryDependenciesListException,
+            CantConnectWithExternalAPIException,
+            CantCreateBackupFileException;
+
+    List<City> getCitiesByCountryCode(String countryCode)
+            throws CantGetCitiesListException;
+
+    List<City> getCitiesByCountryCodeAndDependencyName(
+            String countryName,
+            String dependencyName)
+            throws CantGetCitiesListException,
+            CantCreateCountriesListException;
+
+    GeoRectangle getGeoRectangleByLocation(String location)
+            throws CantCreateGeoRectangleException;
+
+    Address getAddressByCoordinate(float latitude, float longitude)
+            throws CantCreateAddressException;
+
+    GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
     @Override
     ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
