@@ -33,9 +33,6 @@ public interface ChatManager extends FermatManager {
 
     ChatSearch getSearch();
 
-    void exposeIdentitiesInWait() throws CantExposeIdentityException;
-
-
     void requestConnection(final ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException;
 
     void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException;
@@ -51,7 +48,5 @@ public interface ChatManager extends FermatManager {
     List<ChatConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
 
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
-
-
 
 }

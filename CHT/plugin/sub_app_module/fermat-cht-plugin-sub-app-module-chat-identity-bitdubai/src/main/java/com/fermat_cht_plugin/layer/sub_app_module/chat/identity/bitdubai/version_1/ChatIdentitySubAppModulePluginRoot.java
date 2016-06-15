@@ -52,19 +52,8 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
          */
         System.out.println("******* Init Chat Sup App Module Identity ******");
         chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
-        //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
-        //testMethod("Franklin Marcano", new byte[0]);
 
     }
-
-//    private void testMethod(String alias, byte[] profileImage)
-//    {
-//        try {
-//            chatIdentityManager.createNewIdentityChat(alias, profileImage);
-//        } catch (CantCreateNewChatIdentityException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-//        }
-//    }
 
     @Override
     public ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {

@@ -599,8 +599,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void deleteImageUri(Uri uri){
-            getActivity().getContentResolver().delete(uri,null,null);
+    private void deleteImageUri(Uri uri) {
+        getActivity().getContentResolver().delete(uri, null, null);
     }
 
     private byte[] convertImage(int resImage) {

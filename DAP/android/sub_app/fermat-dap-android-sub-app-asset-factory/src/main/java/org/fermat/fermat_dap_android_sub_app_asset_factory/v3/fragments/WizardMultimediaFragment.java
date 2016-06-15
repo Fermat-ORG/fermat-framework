@@ -51,10 +51,8 @@ import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
-import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -340,9 +338,9 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
 
     private void go(String code) {
 //        if (validate()) {
-            saveMultimedia();
-            appSession.setData("asset_factory", asset);
-            changeActivity(code, appSession.getAppPublicKey());
+        saveMultimedia();
+        appSession.setData("asset_factory", asset);
+        changeActivity(code, appSession.getAppPublicKey());
 //        }
     }
 
@@ -392,11 +390,17 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(ImagesUtils.toByteArray(imageBitmap));
+            resource.setResourceBinayData(ImagesUtils.toByteArray(ConvertToBitMap(wizardMultimediaAssetImage)));
             resources.add(resource);
             asset.setResources(resources);
         } else
             asset.setResources(null);
+    }
+
+    private Bitmap ConvertToBitMap(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        return imageView.getDrawingCache();
     }
 
     private void setupUIData() {

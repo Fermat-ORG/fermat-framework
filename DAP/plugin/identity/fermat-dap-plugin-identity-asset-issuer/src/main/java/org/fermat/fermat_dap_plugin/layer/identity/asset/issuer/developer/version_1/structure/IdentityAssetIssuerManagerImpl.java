@@ -189,30 +189,4 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
             throw new CantRegisterActorAssetIssuerException("CAN'T REGISTER IDENTITY TO ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
         }
     }
-
-//    @Override
-//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-//        try {
-//            List<IdentityAssetIssuer> identities = this.getIdentityAssetIssuersFromCurrentDeviceUser();
-//            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-//        this.createNewIdentityAssetIssuer(name, profile_img);
-//    }
-//
-//    @Override
-//    public void setAppPublicKey(String publicKey) {
-//
-//    }
-//
-//    @Override
-//    public int[] getMenuNotifications() {
-//        return new int[0];
-//    }
 }

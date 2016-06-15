@@ -144,6 +144,10 @@ public class HomeCardViewHolder extends FermatViewHolder {
             cardAppropriateButton.setVisibility(View.GONE);
             cardSellButton.setVisibility(View.GONE);
         }
+
+        cardRedeemButton.setVisibility((asset.isRedeemable()) ? View.VISIBLE : View.INVISIBLE);
+        cardTransferButton.setVisibility((asset.isTransferable()) ? View.VISIBLE : View.INVISIBLE);
+        cardSellButton.setVisibility((asset.isSaleable()) ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,

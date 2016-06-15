@@ -4,6 +4,7 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
     <color name="black_overlay_2">#59000000</color>
+    <color name="black_overlay_dap_v3">#22000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
     <color name="black">#000</color>
     <color name="gray">#797979</color>
@@ -28,4 +29,27 @@
     <color name="dap_redeem_point_wallet_blue_text">#00aeef</color>
     <color name="dap_redeem_point_wallet_black_text">#37474f</color>
     <!-- -->
+
+
+    <!--dap v3 colors-->
+    <color name="dap_V3_redeem_point_wallet_principal">#015581</color>
+    <color name="dap_V3_redeem_point_wallet_blue_text">#00aeef</color>
+    <color name="dap_V3_redeem_point_wallet_black_text">#37474f</color>
+    <color name="dap_V3_redeem_point_history_text">#90A4AE</color>
+    <color name="dap_V3_redeem_point_history_asset_quantity">#EF5350</color>
+    <color name="dap_V3_redeem_point_history_asset_username">#546E7A</color>
+    <color name="dap_V3_redeem_point_history_asset_name">#263238</color>
+    <color name="dap_V3_redeem_point_history_section_stroke">#90A4AE</color>
+    <color name="dap_V3_redeem_point_history_asset_stroke">#22424242</color>
+
+    <color name="redeem_card_background">#ffffff</color>
+    <color name="redeem_card_text_top_primary">#ffffff</color>
+    <color name="redeem_card_text_top_time">#A7FFEB</color>
+    <color name="redeem_card_background_back">#F5F6F7</color>
+    <color name="redeem_card_no_assets">#546E7A</color>
+
+    <!--cambiar popr los colores que son-->
+    <color name="redeem_card_toolbar">#ECECEC</color>
+    <color name="redeem_card_titlebar">#009688</color>
+
 </resources>
