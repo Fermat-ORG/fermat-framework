@@ -121,7 +121,7 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermat
                 resId = R.drawable.fw_help_icon;
                 break;
             case 3:
-                resId = R.drawable.ic_actionbar_send;
+                resId = R.drawable.fw_withdrawall_icon;
                 break;
 
         }

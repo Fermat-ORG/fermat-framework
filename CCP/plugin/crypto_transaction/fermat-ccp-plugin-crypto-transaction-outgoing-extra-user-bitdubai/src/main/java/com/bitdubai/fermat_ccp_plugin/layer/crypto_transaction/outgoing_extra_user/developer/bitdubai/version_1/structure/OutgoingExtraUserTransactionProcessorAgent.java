@@ -3,10 +3,15 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_u
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.InconsistentFundsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -18,6 +23,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMon
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
 
 import java.util.List;
 
@@ -187,6 +193,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
                 try {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
+                    roolback(transaction, true);
                 } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
                     reportUnexpectedError(e2);
                     continue;
@@ -203,6 +210,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 try {
 
                     dao.cancelTransaction(transaction, "There was a problem and the money was not sent.");
+                    roolback(transaction, true);
 
                 } catch (Exception exception) {
                     reportUnexpectedError(exception);
@@ -251,6 +259,61 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
     private void reportUnexpectedError(Exception e) {
         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
+
+
+    private void roolback(TransactionWrapper transaction, boolean credit) {
+        try {
+
+           if(transaction.getWalletPublicKey().equals(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode())) {
+               //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
+               CryptoWalletWallet cryptoWalletWallet = null;
+               try {
+                   cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
+
+                   //change transaction state to reversed and update balance to revert
+                   cryptoWalletWallet.revertTransaction(transaction, credit);
+
+                   //if the transaction is a payment request, rollback it state too
+                   notificateRollbackToGUI(transaction);
+                   if (transaction.getRequestId() != null)
+                       revertPaymentRequest(transaction.getRequestId());
+
+               } catch (CantLoadWalletsException e1) {
+                   e1.printStackTrace();
+               } catch (CantRevertTransactionException e1) {
+                   e1.printStackTrace();
+               }
+
+
+           }
+            if(transaction.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
+                BitcoinLossProtectedWallet bitcoinLossProtectedWallet = bitcoinLossProtectedWalletManager.loadWallet(transaction.getWalletPublicKey());
+
+                //change transaction state to reversed and update balance to revert
+                bitcoinLossProtectedWallet.revertTransaction(transaction, credit);
+
+                //if the transaction is a payment request, rollback it state too
+                notificateRollbackToGUI(transaction);
+                if (transaction.getRequestId() != null)
+                    revertPaymentRequest(transaction.getRequestId());
+
+            }
+                   // throw new OutgoingIntraActorWalletNotSupportedException("Roolback", null, "ReferenceWallet enum value: " + transaction.getReferenceWallet().toString(), " Roolback");
+        } catch (CantLoadWalletsException e) {
+            e.printStackTrace();
+       // } catch (OutgoingIntraActorWalletNotSupportedException e) {
+         //   e.printStackTrace();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void notificateRollbackToGUI(TransactionWrapper transactionWrapper){
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTIONREVERSE_" + transactionWrapper.getTransactionId().toString());
+
     }
 
 }
