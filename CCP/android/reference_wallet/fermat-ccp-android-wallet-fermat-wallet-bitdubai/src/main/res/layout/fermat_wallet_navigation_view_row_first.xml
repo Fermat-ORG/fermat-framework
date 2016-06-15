@@ -46,7 +46,7 @@
             android:id="@+id/txt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="#D9000000"
             android:gravity="start"
             android:paddingLeft="20dp"
             android:paddingBottom="8dip"
