@@ -61,6 +61,8 @@ public final class CryptoBrokerIdentityDatabaseFactory {
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 130, Boolean.FALSE);
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME        , DatabaseDataType.TEXT,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME,               DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME,              DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FIRST_KEY_COLUMN);
 
