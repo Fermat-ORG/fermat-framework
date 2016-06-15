@@ -121,7 +121,7 @@ public class CryptoBasicWalletTransactionExecutor implements com.bitdubai.fermat
             cryptoWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
             cryptoWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
             cryptoWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
-            cryptoWalletTransactionRecord.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            cryptoWalletTransactionRecord.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
             return cryptoWalletTransactionRecord;
 
         } catch (CantGetCryptoAddressBookRecordException e) {

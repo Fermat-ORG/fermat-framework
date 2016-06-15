@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
@@ -648,7 +649,40 @@ public class CryptoWalletBasicWalletDao {
         List<CryptoWalletTransaction> transactions = new ArrayList<>();
 
         for(DatabaseTableRecord record : records)
+        {
+            CryptoWalletTransaction transaction = constructBitcoinWalletTransactionFromRecord(record);
             transactions.add(constructBitcoinWalletTransactionFromRecord(record));
+
+          /*  if(transaction.getTransactionHash().equals("fab23065-5b3a-4ec1-8a51-6c9bae62bb36"))
+            {
+                try {
+                    long availableAmount =  transaction.getAmount();
+                    long bookAmount = 0 ;
+                    long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transaction.getBlockchainNetworkType());
+                    long bookRunningBalance = calculateBookRunningBalance(bookAmount, transaction.getBlockchainNetworkType());
+
+                    DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance, transaction.getBlockchainNetworkType());
+
+                    //Balance table - add filter by network type,
+                    DatabaseTable balanceTable = getBalancesTable();
+                    balanceTable.addStringFilter(CryptoWalletDatabaseConstants.CRYPTO_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE, transaction.getBlockchainNetworkType().getCode(), DatabaseFilterType.EQUAL);
+
+                    DatabaseTransaction dbTransaction = database.newTransaction();
+                    dbTransaction.addRecordToUpdate(balanceTable, balanceRecord);
+
+
+                    database.executeTransaction(dbTransaction);
+                } catch (DatabaseTransactionFailedException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }*/
+
+
+
+        }
+
 
         return transactions;
     }
