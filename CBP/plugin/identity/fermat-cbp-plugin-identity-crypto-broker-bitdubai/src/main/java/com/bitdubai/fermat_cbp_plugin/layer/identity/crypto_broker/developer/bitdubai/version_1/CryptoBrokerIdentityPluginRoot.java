@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
@@ -107,12 +108,14 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         }
     }
 
-    public final CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerIdentityException, CryptoBrokerIdentityAlreadyExistsException {
+    public final CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] image,
+                                                                 long accuracy,
+                                                                 Frecuency frecuency) throws CantCreateCryptoBrokerIdentityException, CryptoBrokerIdentityAlreadyExistsException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = new ECCKeyPair();
-            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE);
-            cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
+            CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency);
+            cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser, accuracy, frecuency);
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_broker_creado");
 
@@ -134,8 +137,10 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
     }
 
     @Override
-    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateBrokerIdentityException {
-        this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile);
+    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile,
+                                           long accuracy,
+                                           Frecuency frecuency) throws CantUpdateBrokerIdentityException {
+        this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile, accuracy, frecuency);
 
         try {
             CryptoBrokerIdentity broker = cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);
