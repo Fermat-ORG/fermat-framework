@@ -47,7 +47,7 @@ project(':fermat-osa-addon-android-broadcaster-system-bitdubai').projectDir = ne
 
 /*
  * linux osa core and addons
- *//*
+ */
 include ':fermat-osa-linux-core'
 project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
 
@@ -62,4 +62,4 @@ project(':fermat-osa-addon-linux-device-location-bitdubai').projectDir = new Fil
 
 include ':fermat-osa-addon-linux-broadcaster-system'
 project(':fermat-osa-addon-linux-broadcaster-system').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-broadcaster-system')
-*/
+/**/
