@@ -88,7 +88,11 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 		if (this == o) return true;
 		if (!(o instanceof CheckedInNetworkService)) return false;
 		CheckedInNetworkService that = (CheckedInNetworkService) o;
-		return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey());
+		return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+				Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
+				Objects.equals(getLatitude(), that.getLatitude()) &&
+				Objects.equals(getLongitude(), that.getLongitude()) &&
+				Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey());
 	}
 
 	@Override

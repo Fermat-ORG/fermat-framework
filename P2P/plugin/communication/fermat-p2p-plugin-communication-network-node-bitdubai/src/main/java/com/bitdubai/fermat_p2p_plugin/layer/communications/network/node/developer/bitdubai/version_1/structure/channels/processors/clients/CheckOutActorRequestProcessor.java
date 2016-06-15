@@ -85,9 +85,7 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
                 /*
                  * Load from Database
                  */
-                CheckedInActor checkedInActor = getDaoFactory().getCheckedInActorDao().findEntityByFilter(
-                        CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                        profileIdentity);
+                CheckedInActor checkedInActor = getDaoFactory().getCheckedInActorDao().findById(profileIdentity);
 
                 /*
                  * Validate if exist
