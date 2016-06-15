@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -63,8 +64,12 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        View container = ((LayoutInflater) activity.get()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.cbw_header_layout, viewGroup, true);
+        LayoutInflater layoutInflater = (LayoutInflater) activity.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View container = (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) ?
+                layoutInflater.inflate(R.layout.cbw_header_layout_pre_lollipop, viewGroup, true) :
+                layoutInflater.inflate(R.layout.cbw_header_layout, viewGroup, true);
+
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.cbw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 

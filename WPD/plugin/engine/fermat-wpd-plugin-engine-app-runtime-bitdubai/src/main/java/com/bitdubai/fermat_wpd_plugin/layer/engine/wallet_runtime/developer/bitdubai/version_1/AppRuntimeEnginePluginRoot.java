@@ -3194,6 +3194,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
         runtimeHeader.setExpandable(true);
+        runtimeHeader.setRemoveHeaderScroll(true);
         runtimeActivity.setHeader(runtimeHeader);
 
         runtimeFragment = new Fragment();
