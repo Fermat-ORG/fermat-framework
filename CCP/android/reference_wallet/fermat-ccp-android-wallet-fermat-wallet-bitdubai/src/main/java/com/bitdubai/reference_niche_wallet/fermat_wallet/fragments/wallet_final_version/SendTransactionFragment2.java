@@ -35,10 +35,14 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -48,6 +52,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -65,6 +70,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
@@ -83,10 +90,12 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -117,16 +126,21 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private List<FermatWalletModuleTransaction> lstFermatWalletTransactions;
     private TextView txt_type_balance;
     private TextView txt_balance_amount;
+    private TextView txt_Date_time;
+    private TextView txt_rate_amount;
     private long balanceAvailable;
     private View rootView;
     private List<FermatWalletModuleTransaction> lstCryptoWalletTransactionsAvailable;
     private long bookBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
-    private FermatTextView txt_balance_amount_type;
+    private TextView txt_type_balance_amount;
     private int progress1=1;
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
+
+
+    private UUID exchangeProviderId = null;
 
     private FermatWalletSettings fermatWalletSettings = null;
 
@@ -372,7 +386,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private void setUp(LayoutInflater inflater){
         try {
            // setUpDonut(inflater);
-            setUpChart(inflater);
+            setUpHeader(inflater);
             setUpScreen();
         }catch (Exception e){
             e.printStackTrace();
@@ -385,7 +399,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
     String runningBalance;
 
-    private void setUpChart(LayoutInflater inflater){
+    private void setUpHeader(LayoutInflater inflater) throws CantGetBalanceException {
         final RelativeLayout container_header_balance = getToolbarHeader();
         try{
             container_header_balance.removeAllViews();
@@ -402,9 +416,75 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         final View balances_chart = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
 
+
+
+        //Select all header Element
+        txt_balance_amount      = (TextView) rootView.findViewById(R.id.txt_balance_amount);
+        txt_type_balance_amount = (TextView) rootView.findViewById(R.id.txt_type_balance_amount);
+        txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
+        txt_Date_time           = (TextView) rootView.findViewById(R.id.txt_date_time);
+        txt_rate_amount         = (TextView) rootView.findViewById(R.id.txt_rate_amount);
+
+        final String date;
+        final String time;
+        SimpleDateFormat sdf1 = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("hh:ss a");
+
+        date = sdf1.format(System.currentTimeMillis());
+        time = sdf2.format(System.currentTimeMillis());
+
+        txt_Date_time.setText(time+" | "+date);
+
+        //Event Click For change the balance type
+        txt_type_balance.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+            }
+        });
+
+        //Event Click For change the balance type
+        txt_type_balance.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+            }
+        });
+
+        //Event for change the balance amount
+        txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                changeAmountType();
+            }
+        });
+        //Event for change the balance amount type
+        txt_type_balance_amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                changeAmountType();
+            }
+        });
+
+
+
+        long balance = 0;
+
+
+        if (balanceType.equals(BalanceType.AVAILABLE))
+            balance =  moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType);
+        else
+            //balance = moduleManager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType);
+
+        txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
+
     }
 
-    private void setUpDonut(LayoutInflater inflater)  {
+   /* private void setUpDonut(LayoutInflater inflater)  {
         try {
             final RelativeLayout container_header_balance = getToolbarHeader();
             try {
@@ -584,13 +664,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 e.printStackTrace();
             }
 
-            txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+            txt_type_balance_amount = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
         }
         catch (Exception e){
             e.printStackTrace();
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
         }
-    }
+    }*/
 
     private String getWalletAddress(String actorPublicKey) {
         String walletAddress="";
@@ -885,7 +965,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 break;
         }
 
-        txt_balance_amount_type.setText(moneyTpe);
+        txt_type_balance_amount.setText(moneyTpe);
         updateBalances();
     }
 
@@ -1108,5 +1188,105 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public void onLongItemClickListener(FermatWalletTransaction data, int position) {
 
     }
+
+
+
+   /* private void getAndShowMarketExchangeRateData(final View container) {
+
+        final int MAX_DECIMAL_FOR_RATE = 2;
+        final int MIN_DECIMAL_FOR_RATE = 2;
+
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground()  {
+
+                ExchangeRate rate = null;
+                try{
+
+                    //default Exchange rate Provider
+
+                    if(moduleManager.getExchangeProvider()==null) {
+                        List<ExchangeRateProvider> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+
+                        exchangeProviderId = providers.get(0).getProviderId();
+                        moduleManager.setExchangeProvider(exchangeProviderId);
+
+                    }
+                    else
+                    {
+                        exchangeProviderId =moduleManager.getExchangeProvider();
+                    }
+
+
+                    rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return rate;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    ExchangeRate rate = (ExchangeRate) result[0];
+                    if(rate != null)
+                    {
+                        // progressBar.setVisibility(View.GONE);
+                        txt_rate_amount.setText("1 BTC = " + String.valueOf(
+                                WalletUtils.formatAmountStringWithDecimalEntry(
+                                        rate.getPurchasePrice(),
+                                        MAX_DECIMAL_FOR_RATE,
+                                        MIN_DECIMAL_FOR_RATE)) + " USD");
+
+                        //get available balance to actual exchange rate
+                        actuaExchangeRate = Double.parseDouble(
+                                WalletUtils.formatAmountStringWithDecimalEntry(rate.getPurchasePrice(),
+                                        MAX_DECIMAL_FOR_RATE,
+                                        MIN_DECIMAL_FOR_RATE));
+
+                        appSession.setData(SessionConstant.ACTUAL_EXCHANGE_RATE, actuaExchangeRate);
+
+                        updateBalances();
+
+                    }
+                    else {
+                        ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                        dialog_error.show();
+                    }
+
+
+                }
+                else {
+                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    dialog_error.show();
+                    //makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                //  progressBar.setVisibility(View.GONE);
+
+                txt_rate_amount.setVisibility(View.GONE);
+
+                ErrorManager errorManager = appSession.getErrorManager();
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e("Exchange Rate", ex.getMessage(), ex);
+
+                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                dialog_error.show();
+            }
+        });
+
+        fermatWorker.execute();
+    }*/
 }
 

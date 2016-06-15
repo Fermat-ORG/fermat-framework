@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp">
+        android:layout_height="260dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,17 +18,33 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_orange_gradient"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FERMATORG"
+                        android:textSize="14sp"
+                        android:textColor="#fff"
+                        android:layout_marginLeft="5dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.5"
                     android:orientation="vertical"
-                    android:padding="25dp"
                     android:background="#000000"
                     android:gravity="center_horizontal|center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/txt_type_amount"
+                        android:id="@+id/txt_type_balance_amount"
                         android:text="FMTS"
                         android:textSize="16sp"
                         android:textColor="#787878"
@@ -39,7 +55,7 @@
                         android:id="@+id/txt_balance_amount"
                         android:textColor="#2FAEDC"
                         android:textSize="36sp"
-                        android:text="350.00"/>
+                        android:text="0.00"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -51,19 +67,54 @@
                 </LinearLayout>
 
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.5"
+                    android:padding="16dp"
                     android:orientation="vertical"
-                    android:background="@drawable/background_white_gradient"
-                    android:gravity="center_horizontal|center_vertical">
+                    android:background="@drawable/background_white_gradient">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_date_time"
+                        android:text="00:00 A | Month 00, 0000 "
+                        android:textSize="16sp"
+                        android:textColor="#2FAEDC"
+                        android:layout_marginLeft="5dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_rate_amount"
+                        android:textColor="#787878"
+                        android:textSize="36sp"
+                        android:text="0.00"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Current Rate"
+                        android:textSize="16sp"
+                        android:textColor="#2FAEDC"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"/>
 
 
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true">
+                    </Spinner>
 
-
-
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
