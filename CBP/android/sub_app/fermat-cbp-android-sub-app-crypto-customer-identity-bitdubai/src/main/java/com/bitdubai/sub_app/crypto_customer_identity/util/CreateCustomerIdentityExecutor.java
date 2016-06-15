@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_identity.util;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -53,7 +54,8 @@ public class CreateCustomerIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            identity = moduleManager.createCryptoCustomerIdentity(identityName, imageInBytes);
+            //TODO:NELSON Hay que pasarle los valores correcto al accuracy y la frecuencia
+            identity = moduleManager.createCryptoCustomerIdentity(identityName, imageInBytes,0, Frecuency.NONE);
 
         } catch (CouldNotCreateCryptoCustomerException ex) {
             if (errorManager != null)

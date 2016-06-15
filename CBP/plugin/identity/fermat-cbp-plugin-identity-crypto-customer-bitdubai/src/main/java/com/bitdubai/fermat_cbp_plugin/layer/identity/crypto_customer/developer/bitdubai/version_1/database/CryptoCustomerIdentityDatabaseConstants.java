@@ -21,6 +21,8 @@ public class CryptoCustomerIdentityDatabaseConstants {
     public static final String CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME = "alias";
     public static final String CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME = "is_published";
+    public static final String CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME               = "acuracy"                ;
+    public static final String CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME              = "frecuency"              ;
 
     public static final String CRYPTO_CUSTOMER_FIRST_KEY_COLUMN = "crypto_customer_public_key";
 
