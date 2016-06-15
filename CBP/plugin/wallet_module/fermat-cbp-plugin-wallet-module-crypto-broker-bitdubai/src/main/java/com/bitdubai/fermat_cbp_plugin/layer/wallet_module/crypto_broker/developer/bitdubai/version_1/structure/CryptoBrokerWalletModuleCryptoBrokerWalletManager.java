@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -747,7 +748,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
             for (CryptoCustomerActorConnection customer : customers) {
                 if (customer.getPublicKey().equalsIgnoreCase(customerPublicKey)) {
-                    return new CryptoBrokerWalletActorIdentity(customer.getPublicKey(), customer.getAlias(), customer.getImage());
+                    return new CryptoBrokerWalletActorIdentity(customer.getPublicKey(), customer.getAlias(), customer.getImage(), 0, Frecuency.NONE);
                 }
             }
 
@@ -1169,7 +1170,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
+        cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frecuency.NONE);
     }
 
     @Override

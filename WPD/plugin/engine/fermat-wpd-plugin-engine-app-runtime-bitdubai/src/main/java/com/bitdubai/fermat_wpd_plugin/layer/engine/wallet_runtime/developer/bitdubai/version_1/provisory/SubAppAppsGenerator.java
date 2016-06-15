@@ -3994,7 +3994,7 @@ public class SubAppAppsGenerator {
 
         //Tabs Browser
         runtimeTab = new Tab();
-        runtimeTab.setLabel("BROWSER");
+        runtimeTab.setLabel(" BROWSER ");
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -4026,7 +4026,7 @@ public class SubAppAppsGenerator {
 
         //Tabs Connections
         runtimeTab = new Tab();
-        runtimeTab.setLabel("CONNECTIONS");
+        runtimeTab.setLabel(" CONNECTIONS ");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
@@ -4139,7 +4139,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabelSize(18);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
