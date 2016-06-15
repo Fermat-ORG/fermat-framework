@@ -9,7 +9,6 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -41,6 +40,11 @@ public abstract class LocalSocketSession {
 
     public void startReceiving(){
         messageSize = new AtomicInteger(0);
+        try{
+            if(objectInputStream==null) objectInputStream = new ObjectInputStream(localSocket.getInputStream());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         runner = new Thread(new SessionRunner());
         runner.start();
     }
@@ -83,6 +87,8 @@ public abstract class LocalSocketSession {
             FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) object,true,requestId);
 //            ObjectOutput out = null;
             try {
+//                objectOutputStream.flush();
+                objectOutputStream.write(1);
                 objectOutputStream.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,49 +138,59 @@ public abstract class LocalSocketSession {
     }
 
 
+    ObjectInputStream objectInputStream;
+
     private class SessionRunner implements Runnable {
 
         @Override
         public void run() {
             try {
                 if(localSocket!=null) {
-                    InputStream inputStream = localSocket.getInputStream();
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    while (true) {
-                        while(messageSize.get()!=0){
-                            Log.i(TAG, "Cantidad de mensajes a recibir: " + messageSize.get());
-                            //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
-                            FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
-                            //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
-                            if(object!=null) {
-                                onReceiveMessage(object);
-                                messageSize.decrementAndGet();
-                            }else {
+//                        InputStream inputStream = localSocket.getInputStream();
+//                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+
+                        while (true) {
+//                            while (messageSize.get() != 0) {
+                                Log.i(TAG, "Cantidad de mensajes a recibir: " + messageSize.get());
+                                //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
+                                int read = objectInputStream.read();
+                                if(read!=-1) {
+                                    Log.i(TAG,"pidinedo objeto");
+                                    FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
+                                    //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
+                                    if (object != null) {
+                                        onReceiveMessage(object);
+                                        //messageSize.decrementAndGet();
+                                    } else {
+                                        Log.e(TAG,"Object receiver null");
+                                        TimeUnit.SECONDS.sleep(2);
+                                    }
+                                }else{
+                                    Log.e(TAG,"end of input stream");
+                                }
+//                            }
+                            if (messageSize.get() == 0) {
+                                Log.i(TAG, "Cleaning Socket");
+                                //if(objectInputStream!=null) {
+                                //objectInputStream.reset();
+                                //  objectInputStream.close();
+                                // objectInputStream = null;
+                                //}
+//                                boolean flag = false;
+//                                while (!flag) {
+//                                    waitMessageLocker.block();
+//                                    synchronized (waitMessageLocker) {
+//                                        Log.i(TAG, "Waiting for message..");
+//                                        waitMessageLocker.wait();
+//                                    }
+//
+//                                    if (!waitMessageLocker.getIsBlock()) {
+//                                        flag = true;
+//                                    }
+//                                }
                                 TimeUnit.SECONDS.sleep(2);
                             }
                         }
-                        if(messageSize.get()==0){
-                            Log.i(TAG, "Cleaning Socket");
-                            //if(objectInputStream!=null) {
-                                //objectInputStream.reset();
-                              //  objectInputStream.close();
-                               // objectInputStream = null;
-                            //}
-                            boolean flag = false;
-                            while(!flag) {
-                                waitMessageLocker.block();
-                                synchronized (waitMessageLocker){
-                                    Log.i(TAG, "Waiting for message..");
-                                    waitMessageLocker.wait();
-                                }
-
-                                if(!waitMessageLocker.getIsBlock()){
-                                    flag = true;
-                                }
-                            }
-                        }
-                    }
-
                 }
 
             } catch (IOException e) {
