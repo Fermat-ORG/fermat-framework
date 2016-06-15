@@ -615,22 +615,6 @@ public class ConnectionsWorldFragment
                     }
                 });
             }
-//        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-//            PresentationChatCommunityDialog presentationChatCommunityDialog =
-//                    new PresentationChatCommunityDialog(getActivity(),
-//                            appSession,
-//                            null,
-//                            moduleManager,
-//                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
-//                            applicationsHelper.get(), showIdentity*/);
-//            presentationChatCommunityDialog.show();
-//            presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                @Override
-//                public void onDismiss(DialogInterface dialog) {
-//                    //showCriptoUsersCache();
-//                }
-//            });
-//            e.printStackTrace();
         }catch (Exception e){
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
