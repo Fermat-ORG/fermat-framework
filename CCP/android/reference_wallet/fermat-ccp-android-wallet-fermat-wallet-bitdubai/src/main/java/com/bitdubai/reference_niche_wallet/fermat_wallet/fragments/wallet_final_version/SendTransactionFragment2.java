@@ -413,17 +413,17 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             container_header_balance.setBackground( getResources().getDrawable(R.drawable.background_white_gradient));
         }
 
-        final View balances_chart = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
+        final View header_layout = inflater.inflate(R.layout.fermat_wallet_home_header,container_header_balance,true);
         container_header_balance.setVisibility(View.VISIBLE);
 
 
 
         //Select all header Element
-        txt_balance_amount      = (TextView) rootView.findViewById(R.id.txt_balance_amount);
-        txt_type_balance_amount = (TextView) rootView.findViewById(R.id.txt_type_balance_amount);
-        txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
-        txt_Date_time           = (TextView) rootView.findViewById(R.id.txt_date_time);
-        txt_rate_amount         = (TextView) rootView.findViewById(R.id.txt_rate_amount);
+        txt_balance_amount      = (TextView) header_layout.findViewById(R.id.txt_balance_amount);
+        txt_type_balance_amount = (TextView) header_layout.findViewById(R.id.txt_type_balance_amount);
+        txt_type_balance        = (TextView) header_layout.findViewById(R.id.txt_type_balance);
+        txt_Date_time           = (TextView) header_layout.findViewById(R.id.txt_date_time);
+        txt_rate_amount         = (TextView) header_layout.findViewById(R.id.txt_rate_amount);
 
         final String date;
         final String time;
