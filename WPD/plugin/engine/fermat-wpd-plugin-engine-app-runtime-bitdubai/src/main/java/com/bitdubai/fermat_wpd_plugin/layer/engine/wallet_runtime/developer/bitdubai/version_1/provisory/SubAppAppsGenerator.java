@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
