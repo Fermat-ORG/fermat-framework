@@ -10,8 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +23,22 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 import com.squareup.picasso.Picasso;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession,ResourceProviderManager> {
-
+public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, ResourceProviderManager> {
+    public static final int SUCCESS = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
@@ -46,8 +47,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
 
     private EditText mBrokerName;
     private ImageView mBrokerImage;
-
-    private boolean actualizable;
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
@@ -66,14 +65,12 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
 
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actualizable = false;
                 createNewIdentityInBackDevice("onClick");
             }
         });
@@ -84,23 +81,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                if (actualizable) {
-                    /*
-                    if(!mBrokerName.getText().toString().trim().equals("")) {
-                        if (cryptoBrokerBitmap != null) {
-                            new AlertDialog.Builder(v.getContext())
-                                    .setTitle("Create Identity?")
-                                    .setMessage("You want to create identity?")
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface arg0, int arg1) {
-                                            createNewIdentityInBackDevice("onFocus");
-                                        }
-                                    }).create().show();
-                        }
-                    }
-                    */
-                }
             }
         });
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
@@ -118,7 +98,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
             }
         });
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -133,7 +113,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                         mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
                     }
 
-                break;
+                    break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
@@ -154,25 +134,44 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void createNewIdentityInBackDevice(String donde){
-        String brokerNameText = mBrokerName.getText().toString();
-        if(brokerNameText.trim().equals("")) {
+    private void createNewIdentityInBackDevice(final String donde) {
+        final String brokerNameText = mBrokerName.getText().toString();
+
+        if (brokerNameText.trim().isEmpty()) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
-        }else{
+        } else {
+
             if (cryptoBrokerBitmap == null) {
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            }else{
-                byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-                CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(appSession, brokerNameText, imgInBytes);
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        if( donde.equalsIgnoreCase("onClick") ){
+            } else {
+
+                FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, imgInBytes);
+
+                        return SUCCESS;
+                    }
+                };
+
+                fermatWorker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        if (donde.equalsIgnoreCase("onClick")) {
                             Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
                             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
                         }
-                    break;
-                }
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    }
+                });
+
+                fermatWorker.execute();
             }
         }
     }

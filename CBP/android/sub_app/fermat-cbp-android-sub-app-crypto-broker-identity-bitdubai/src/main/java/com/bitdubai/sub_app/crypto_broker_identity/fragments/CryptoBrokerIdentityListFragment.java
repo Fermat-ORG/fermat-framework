@@ -178,7 +178,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), moduleManager, errorManager, identityInformationList);
+            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), errorManager, identityInformationList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
