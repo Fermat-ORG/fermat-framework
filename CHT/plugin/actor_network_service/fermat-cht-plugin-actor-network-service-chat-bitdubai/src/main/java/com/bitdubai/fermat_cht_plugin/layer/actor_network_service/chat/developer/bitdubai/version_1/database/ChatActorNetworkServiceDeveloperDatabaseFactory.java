@@ -30,8 +30,6 @@ import java.util.UUID;
  */
 public class ChatActorNetworkServiceDeveloperDatabaseFactory {
 
-    private ErrorManager errorManager;
-
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
@@ -66,7 +64,6 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                     database = this.pluginDatabaseSystem.openDatabase(pluginId, tableId);
 
                 } catch (final CantOpenDatabaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
                     throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
@@ -79,7 +76,6 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                         database = cryptoBrokerActorNetworkServiceDatabaseFactory.createDatabase(pluginId, tableId);
 
                     } catch (final CantCreateDatabaseException z) {
-                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
 
                         throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
@@ -92,7 +88,6 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                     this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                 } catch (CantOpenDatabaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
                     throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
@@ -105,7 +100,6 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                         this.database = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                     } catch (CantCreateDatabaseException z) {
-                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
 
                         throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
@@ -247,7 +241,6 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
             return returnedRecords;
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             System.err.println(e.toString());
             return new ArrayList<>();

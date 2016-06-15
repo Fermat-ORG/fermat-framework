@@ -1,13 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
@@ -31,83 +25,65 @@ import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/05/2016.
+ *
+ * @author  lnacosta
+ * @version 1.0
+ * @since   Java JDK 1.7
  */
 public class ChatActorNetworkServiceManager implements ChatManager {
 
-
-    private final CommunicationsClientConnection communicationsClientConnection;
     private final ChatActorNetworkServiceDao chatActorNetworkServiceDao;
     private final ChatActorNetworkServicePluginRoot pluginRoot;
-    private final PluginVersionReference pluginVersionReference;
 
     /**
      * Executor
      */
-    ExecutorService executorService;
+    private final ExecutorService executorService;
 
-    private PlatformComponentProfile platformComponentProfile;
+    public ChatActorNetworkServiceManager(final ChatActorNetworkServiceDao chatActorNetworkServiceDao,
+                                          final ChatActorNetworkServicePluginRoot pluginRoot) {
 
-    public ChatActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
-                                          final ChatActorNetworkServiceDao chatActorNetworkServiceDao,
-                                          final ChatActorNetworkServicePluginRoot pluginRoot,
-                                          final PluginVersionReference pluginVersionReference) {
-
-        this.communicationsClientConnection = communicationsClientConnection;
         this.chatActorNetworkServiceDao = chatActorNetworkServiceDao;
         this.pluginRoot = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
         this.executorService = Executors.newFixedThreadPool(3);
     }
 
-    private ConcurrentHashMap<String, ChatExposingData> chatToExpose;
-
     @Override
     public void exposeIdentity(ChatExposingData chatExposingData) throws CantExposeIdentityException {
-        System.out.println("12345 expose Identity "+chatExposingData.getAlias());
+
         try {
 
-            if (!isRegistered()) {
+            pluginRoot.registerActor(
+                    chatExposingData.getPublicKey(),
+                    chatExposingData.getAlias(),
+                    chatExposingData.getAlias(),
+                    extraDataToJson(chatExposingData),
+                    null,
+                    Actors.CHAT,
+                    chatExposingData.getImage(),
+                    0, 0
+            );
 
-                addChatToExpose(chatExposingData);
-
-            } else {
-
-                final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        chatExposingData.getPublicKey(),
-                        (chatExposingData.getAlias()),
-                        (chatExposingData.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.ACTOR_CHAT,
-                        PlatformComponentType.ACTOR_CHAT,
-                        extraDataToJson(chatExposingData)
-                );
-
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
-
-                addChatToExpose(chatExposingData);
-            }
-
-        } catch (final CantRegisterComponentException e) {
+        } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Problem trying to register an identity component.");
 
-        } catch (final Exception e) {
+        } catch (final Exception e){
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -117,31 +93,16 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     @Override
     public void updateIdentity(ChatExposingData chatExposingData) throws CantExposeIdentityException {
         try {
-            if (isRegistered()) {
 
-
-                final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        chatExposingData.getPublicKey(),
-                        (chatExposingData.getAlias()),
-                        (chatExposingData.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_CHAT,
-                        extraDataToJson(chatExposingData));
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            communicationsClientConnection.updateRegisterActorProfile(platformComponentProfile.getNetworkServiceType(), platformComponentProfile);
-                        } catch (CantRegisterComponentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-                thread.start();
-            }
-        } catch (Exception e) {
+            pluginRoot.updateRegisteredActor(
+                    chatExposingData.getPublicKey(),
+                    chatExposingData.getAlias(),
+                    chatExposingData.getAlias(),
+                    null,
+                    extraDataToJson(chatExposingData),
+                    chatExposingData.getImage()
+            );
+        }catch (Exception e){
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
@@ -169,11 +130,8 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
     @Override
     public ChatSearch getSearch() {
-        return new ChatActorNetworkServiceSearch(communicationsClientConnection, pluginRoot.getErrorManager(), pluginVersionReference);
+        return new ChatActorNetworkServiceSearch(pluginRoot);
     }
-
-
-
 
     @Override
     public void requestConnection(ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException {
@@ -380,11 +338,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         }
     }
 
-
-
-
-
-
     private void sendMessage(final String jsonMessage      ,
                              final String identityPublicKey,
                              final Actors identityType     ,
@@ -396,82 +349,24 @@ public class ChatActorNetworkServiceManager implements ChatManager {
             public void run() {
 
                 try {
+                    ActorProfile sender = new ActorProfile();
+                    sender.setActorType(identityType.getCode());
+                    sender.setIdentityPublicKey(identityPublicKey);
+
+                    ActorProfile receiver = new ActorProfile();
+                    receiver.setActorType(actorType.getCode());
+                    receiver.setIdentityPublicKey(actorPublicKey);
+
                     pluginRoot.sendNewMessage(
-                            pluginRoot.getProfileSenderToRequestConnection(
-                                    identityPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType)
-                            ),
-                            pluginRoot.getProfileDestinationToRequestConnection(
-                                    actorPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType)
-                            ),
+                            sender,
+                            receiver,
                             jsonMessage
                     );
-                } catch (CantSendMessageException | InvalidParameterException e) {
+                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
                     pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         });
-    }
-
-    public final void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
-
-        this.platformComponentProfile = platformComponentProfile;
-
-        if (platformComponentProfile != null && chatToExpose != null && !chatToExpose.isEmpty()) {
-
-            try {
-
-                this.exposeIdentities(chatToExpose.values());
-
-            } catch (final CantExposeIdentitiesException e){
-
-                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
-        }
-    }
-
-    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
-
-        switch (type) {
-
-            case CHAT    : return PlatformComponentType.ACTOR_CHAT  ;
-
-            default: throw new InvalidParameterException(
-                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
-                    " type of actor not expected."
-            );
-        }
-    }
-
-    private boolean isRegistered() {
-        return platformComponentProfile != null;
-    }
-
-    private void addChatToExpose(final ChatExposingData chatExposingData) {
-
-        if (chatToExpose == null)
-            chatToExpose = new ConcurrentHashMap<>();
-
-        chatToExpose.putIfAbsent(chatExposingData.getPublicKey(), chatExposingData);
-    }
-
-    @Override
-    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
-        if(!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0){
-            for (ChatExposingData chatExposingData :
-                    chatToExpose.values()) {
-                System.out.println("12345 exposing identities in wait "+chatExposingData.getAlias());
-                exposeIdentity(chatExposingData);
-
-            }
-        }
-    }
-
-    public final boolean areIdentitiesToExpose(){
-        return (!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0);
     }
 
     private String buildJsonInformationMessage(final ChatConnectionRequest aer) {
@@ -499,7 +394,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     private String extraDataToJson(ChatExposingData chatExposingData){
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.IMG, Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT));
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.COUNTRY, chatExposingData.getCountry());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATE, chatExposingData.getState());
         jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.CITY, chatExposingData.getCity());
@@ -507,4 +401,5 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         return gson.toJson(jsonObjectContent);
     }
+
 }
