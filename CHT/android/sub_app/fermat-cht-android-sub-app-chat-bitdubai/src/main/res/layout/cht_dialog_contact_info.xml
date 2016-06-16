@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="#075e55"
+            android:background="#000000"
             android:alpha="0.9"
             />
 
