@@ -29,7 +29,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorTraceDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.ACTOR_CALL_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.ACTOR_CALL_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 19/05/2016.
  *
@@ -52,7 +52,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
     public ActorCallRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.ACTOR_CALL_RESPOND
+                PackageType.ACTOR_CALL_RESPONSE
         );
         this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }

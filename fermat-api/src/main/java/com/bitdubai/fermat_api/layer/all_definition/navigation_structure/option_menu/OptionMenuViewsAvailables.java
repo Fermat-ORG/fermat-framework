@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.builders.option_menu;
+package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu;
 
 /**
  * Created by Matias Furszyfer on 2016.06.09..

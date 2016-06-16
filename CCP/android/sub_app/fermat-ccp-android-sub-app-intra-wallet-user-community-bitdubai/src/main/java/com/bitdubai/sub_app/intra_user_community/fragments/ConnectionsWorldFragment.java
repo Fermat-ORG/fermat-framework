@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -34,7 +33,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
@@ -55,7 +53,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -640,17 +637,20 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
          try {
 
-
-            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
-                 dataSet.addAll(lstIntraUserInformations);
-                 getActivity().runOnUiThread(new Runnable() {
-                     public void run() {
-                         Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
-                     }
-                 });
+                 if(lstIntraUserInformations!=null) {
+                     dataSet.addAll(lstIntraUserInformations);
+                     getActivity().runOnUiThread(new Runnable() {
+                         public void run() {
+                             Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                         }
+                     });
+                 }else{
+                     Log.e(TAG,"Request null");
+                 }
              }
 
 
