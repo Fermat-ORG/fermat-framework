@@ -943,4 +943,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     public PropagateNodeCatalogAgent getPropagateNodeCatalogAgent() {
         return propagateNodeCatalogAgent;
     }
+
+    public LocationManager getLocationManager() {
+        return locationManager;
+    }
 }
