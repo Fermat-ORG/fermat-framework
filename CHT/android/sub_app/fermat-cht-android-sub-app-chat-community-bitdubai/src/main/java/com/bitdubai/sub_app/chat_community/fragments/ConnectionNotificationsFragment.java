@@ -136,7 +136,6 @@ public class ConnectionNotificationsFragment
             }
 
             //Check if a default identity is configured
-            //Check if a default identity is configured
             try{
                 identity = moduleManager.getSelectedActorIdentity();
                 if(identity == null)
