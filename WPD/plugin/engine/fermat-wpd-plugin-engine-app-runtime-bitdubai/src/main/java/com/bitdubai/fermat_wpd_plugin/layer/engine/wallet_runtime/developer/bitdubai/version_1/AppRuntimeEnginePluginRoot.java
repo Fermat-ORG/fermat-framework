@@ -5938,7 +5938,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
 //        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setOrder(0);
+        optionMenuItem.setOrder(2);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setGroupId(1);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -5964,12 +5965,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(4);
         optionMenuItem.setLabel("Location");
         optionMenuItem.setOrder(1);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(5);
         optionMenuItem.setLabel("Profile");
-        optionMenuItem.setOrder(2);
+        optionMenuItem.setOrder(0);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -6015,9 +6018,10 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
         runtimeFragment.setOwner(owner);
         runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+//        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
 
         //OptionMenu
         optionsMenu = new OptionsMenu();
@@ -6025,7 +6029,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         owner = new Owner();
         owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
         runtimeFragment.setOwner(owner);
-        menuItem.setFermatDrawable(new FermatDrawable(3,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);

@@ -4,7 +4,6 @@ import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.Lock;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 
@@ -14,7 +13,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.channels.IllegalBlockingModeException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Matias Furszyfer on 2016.05.01..
@@ -25,21 +23,18 @@ public abstract class LocalSocketSession {
     private String pkIdentity;
     private LocalSocket localSocket;
     private Thread runner;
-    private AtomicInteger messageSize;
 
     // object to lock the thread until a message is received
-    private final Lock waitMessageLocker;
     private boolean isSenderActive;
+    private boolean isReceiverActive;
 
 
     public LocalSocketSession(String pkIdentity,LocalSocket localSocket) {
         this.localSocket = localSocket;
         this.pkIdentity = pkIdentity;
-        waitMessageLocker = new Lock();
     }
 
     public void startReceiving(){
-        messageSize = new AtomicInteger(0);
         try{
             if(objectInputStream==null) objectInputStream = new ObjectInputStream(localSocket.getInputStream());
         }catch (Exception e){
@@ -67,13 +62,43 @@ public abstract class LocalSocketSession {
     }
 
     public void destroy() throws IOException {
+        stopReceiver();
+        stopSender();
         clear();
     }
 
     public void clear() throws IOException {
-        messageSize = null;
         objectOutputStream.close();
         localSocket.close();
+    }
+
+    public void stopSender(){
+        try {
+            if (isSenderActive) {
+                if (objectOutputStream != null) {
+                    objectOutputStream.close();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void stopReceiver(){
+        if(isReceiverActive){
+            try {
+                runner.interrupt();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            try {
+                if(objectInputStream!=null) {
+                    objectInputStream.close();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -114,11 +139,11 @@ public abstract class LocalSocketSession {
 
     public void addWaitingMessage(String dataId){
         Log.i(TAG,"Message arrive, unlocking wait..");
-        messageSize.incrementAndGet();
-        waitMessageLocker.unblock();
-        synchronized (waitMessageLocker){
-            waitMessageLocker.notify();
-        }
+//        messageSize.incrementAndGet();
+//        waitMessageLocker.unblock();
+//        synchronized (waitMessageLocker){
+//            waitMessageLocker.notify();
+//        }
     }
 
     public void connect() {
@@ -146,16 +171,11 @@ public abstract class LocalSocketSession {
         public void run() {
             try {
                 if(localSocket!=null) {
-//                        InputStream inputStream = localSocket.getInputStream();
-//                        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-
-                        while (true) {
-//                            while (messageSize.get() != 0) {
-                                Log.i(TAG, "Cantidad de mensajes a recibir: " + messageSize.get());
-                                //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
+                    isReceiverActive = true;
+                        while (isReceiverActive) {
                                 int read = objectInputStream.read();
                                 if(read!=-1) {
-                                    Log.i(TAG,"pidinedo objeto");
+                                    Log.i(TAG,"pidiendo objeto");
                                     FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
                                     //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
                                     if (object != null) {
@@ -167,29 +187,8 @@ public abstract class LocalSocketSession {
                                     }
                                 }else{
                                     Log.e(TAG,"end of input stream");
+                                    isReceiverActive = false;
                                 }
-//                            }
-                            if (messageSize.get() == 0) {
-                                Log.i(TAG, "Cleaning Socket");
-                                //if(objectInputStream!=null) {
-                                //objectInputStream.reset();
-                                //  objectInputStream.close();
-                                // objectInputStream = null;
-                                //}
-//                                boolean flag = false;
-//                                while (!flag) {
-//                                    waitMessageLocker.block();
-//                                    synchronized (waitMessageLocker) {
-//                                        Log.i(TAG, "Waiting for message..");
-//                                        waitMessageLocker.wait();
-//                                    }
-//
-//                                    if (!waitMessageLocker.getIsBlock()) {
-//                                        flag = true;
-//                                    }
-//                                }
-                                TimeUnit.SECONDS.sleep(2);
-                            }
                         }
                 }
 
