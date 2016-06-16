@@ -11,40 +11,40 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 16/05/16.
  */
-public class ChatP2PCompletedConnectionRegistrationEventHandler  implements FermatEventHandler<CompleteComponentRegistrationNotificationEvent> {
-
-    private ChatActorNetworkServicePluginRoot chatActorNetworkServicePluginRoot;
-
-    public ChatP2PCompletedConnectionRegistrationEventHandler(ChatActorNetworkServicePluginRoot chatActorNetworkServicePluginRoot) {
-
-        this.chatActorNetworkServicePluginRoot = chatActorNetworkServicePluginRoot;
-
-    }
-
-    @Override
-    public void handleEvent(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) throws FermatException {
-
-        if(chatActorNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED){
-
-            if(chatActorNetworkServicePluginRoot.getNetworkServiceProfile() != null){
-
-                if(completeComponentRegistrationNotificationEvent != null){
-
-                    chatActorNetworkServicePluginRoot.runExposeIdentityThread();
-
-                }
-
-            }else{
-
-                System.out.println("#####################################\nNetwork Service Profile Null");
-
-            }
-
-        }else{
-
-            System.out.println("####################################\n"+ chatActorNetworkServicePluginRoot.getNetworkServiceProfile().getName()+" no started");
-
-        }
-
-    }
-}
+//public class ChatP2PCompletedConnectionRegistrationEventHandler  implements FermatEventHandler<CompleteComponentRegistrationNotificationEvent> {
+//
+////    private ChatActorNetworkServicePluginRoot chatActorNetworkServicePluginRoot;
+////
+////    public ChatP2PCompletedConnectionRegistrationEventHandler(ChatActorNetworkServicePluginRoot chatActorNetworkServicePluginRoot) {
+////
+////        this.chatActorNetworkServicePluginRoot = chatActorNetworkServicePluginRoot;
+////
+////    }
+////
+////    @Override
+////    public void handleEvent(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) throws FermatException {
+////
+////        if(chatActorNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED){
+////
+////            if(chatActorNetworkServicePluginRoot.getNetworkServiceProfile() != null){
+////
+////                if(completeComponentRegistrationNotificationEvent != null){
+////
+////                    chatActorNetworkServicePluginRoot.runExposeIdentityThread();
+////
+////                }
+////
+////            }else{
+////
+////                System.out.println("#####################################\nNetwork Service Profile Null");
+////
+////            }
+////
+////        }else{
+////
+////            System.out.println("####################################\n"+ chatActorNetworkServicePluginRoot.getNetworkServiceProfile().getName()+" no started");
+////
+////        }
+////
+////    }
+//}
