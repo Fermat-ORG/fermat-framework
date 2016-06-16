@@ -23,7 +23,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInClientRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_CLIENT_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
@@ -46,7 +46,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
     public CheckInClientRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.CHECK_IN_CLIENT_RESPOND
+                PackageType.CHECK_IN_CLIENT_RESPONSE
         );
         nodeConnectionHistoryDao = new NodeConnectionHistoryDao((Database) ClientContext.get(ClientContextItem.DATABASE));
     }

@@ -47,7 +47,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Footer footer;
 
-    OptionsMenu optionsMenu;
+    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
 
     TabStrip tabStrip;
 
@@ -97,7 +97,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.sideMenu = sideMenu;
     }
 
-    public void setOptionsMenu(OptionsMenu optionsMenu) {
+    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 
@@ -153,7 +153,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public OptionsMenu getOptionsMenu() {
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
 

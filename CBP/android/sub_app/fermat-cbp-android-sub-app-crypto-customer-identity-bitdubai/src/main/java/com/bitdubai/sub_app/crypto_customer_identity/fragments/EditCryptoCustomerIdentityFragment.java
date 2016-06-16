@@ -32,7 +32,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -45,11 +44,9 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.util.EditCustomerIdentityWorker;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
-
 
 
 /**
@@ -68,7 +65,9 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private Bitmap cryptoCustomerBitmap = null;
     private byte[] cryptoCustomerImageByteArray = null;
     private String cryptoCustomerName = null;
-
+    private boolean actualizable;
+    private byte[] profileImage;
+    private String cryptoCustomerPublicKey;
 
     // Managers
     private ErrorManager errorManager;
@@ -76,14 +75,10 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     // UI
     private EditText mCustomerName;
     private ImageView mCustomerImage;
-
-    private boolean actualizable;
-
-    private byte[] profileImage;
-
-    private String cryptoCustomerPublicKey;
+    private View progressBar;
 
     private ExecutorService executor;
+
 
     public static EditCryptoCustomerIdentityFragment newInstance() {
         return new EditCryptoCustomerIdentityFragment();
@@ -95,8 +90,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
         try {
             errorManager = appSession.getErrorManager();
-        }catch (Exception e){
-            if(errorManager != null)
+        } catch (Exception e) {
+            if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             else
@@ -131,6 +126,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
     private void initViews(View layout) {
 
         actualizable = true;
+
+        progressBar = layout.findViewById(R.id.cci_progress_bar);
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
@@ -156,12 +153,13 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             bitmapDrawable.setAntiAlias(true);
             mCustomerImage.setImageDrawable(bitmapDrawable);
         }
-
         if(cryptoCustomerName != null)
             mCustomerName.setText(cryptoCustomerName);
 
+
         mCustomerName.requestFocus();
         mCustomerName.performClick();
+
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -171,19 +169,23 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 }
             }
         });
+
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
+
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadImageFromGallery();
             }
         });
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         configureToolbar();
     }
@@ -219,6 +221,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
                 break;
+
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
@@ -249,18 +252,20 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         byte[] imgInBytes;
         if (cryptoCustomerBitmap != null) {
             imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
-        }else{
+        } else {
             imgInBytes = profileImage;
         }
-        if(brokerNameText.trim().equals("")) {
+        if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name", Toast.LENGTH_LONG).show();
-        }else{
-            if(imgInBytes == null){
+        } else {
+            if (imgInBytes == null) {
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            }else{
-                if(cryptoCustomerPublicKey != null) {
+            } else {
+                if (cryptoCustomerPublicKey != null) {
                     CryptoCustomerIdentityInformationImpl identity = new CryptoCustomerIdentityInformationImpl(brokerNameText, cryptoCustomerPublicKey, imgInBytes, ExposureLevel.PUBLISH);
                     EditCustomerIdentityWorker EditIdentityWorker = new EditCustomerIdentityWorker(getActivity(), appSession, identity, this);
+
+                    progressBar.setVisibility(View.VISIBLE);
                     executor = EditIdentityWorker.execute();
                 }
             }
@@ -287,15 +292,11 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             executor.shutdown();
             executor = null;
         }
-        if (result.length > 0) {
-            int resultCode = (int) result[0];
-            if (resultCode == 1) {
-                Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
-            } else if (resultCode == 4) {
-                Toast.makeText(getActivity(), "Please check the submitted data", Toast.LENGTH_LONG).show();
-            }
-        }
+
+        progressBar.setVisibility(View.GONE);
+
+        Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -304,7 +305,11 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             executor.shutdown();
             executor = null;
         }
+
+        progressBar.setVisibility(View.GONE);
+
         Toast.makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
-        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
+                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
 }

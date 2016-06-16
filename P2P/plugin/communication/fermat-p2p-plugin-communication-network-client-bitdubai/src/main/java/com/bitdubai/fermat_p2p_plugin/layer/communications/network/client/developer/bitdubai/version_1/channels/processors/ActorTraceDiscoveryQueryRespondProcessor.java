@@ -24,7 +24,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>ActorTraceDiscoveryQueryRespondProcessor</code>
- * process all packages received the type <code>PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -42,7 +42,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
     public ActorTraceDiscoveryQueryRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND
+                PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPONSE
         );
     }
 

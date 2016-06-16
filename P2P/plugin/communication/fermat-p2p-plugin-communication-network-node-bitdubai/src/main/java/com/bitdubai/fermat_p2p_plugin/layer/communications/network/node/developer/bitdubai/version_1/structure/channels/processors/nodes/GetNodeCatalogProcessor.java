@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogMsjRequest;
@@ -79,7 +80,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.SUCCESS, GetNodeCatalogMsjRespond.STATUS.SUCCESS.toString(), nodesCatalogList, count);
-                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -99,7 +100,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, new Long(0));
-                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

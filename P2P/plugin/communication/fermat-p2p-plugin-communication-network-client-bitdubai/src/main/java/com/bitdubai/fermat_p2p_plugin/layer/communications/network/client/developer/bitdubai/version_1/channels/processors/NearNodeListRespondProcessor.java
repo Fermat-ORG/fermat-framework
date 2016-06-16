@@ -12,7 +12,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>NearNodeListRespondProcessor</code>
- * process all packages received the type <code>PackageType.NEAR_NODE_LIST_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.NEAR_NODE_LIST_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -32,7 +32,7 @@ public class NearNodeListRespondProcessor extends PackageProcessor {
     public NearNodeListRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.NEAR_NODE_LIST_RESPOND
+                PackageType.NEAR_NODE_LIST_RESPONSE
         );
 
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);

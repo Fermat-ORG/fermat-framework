@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util;
 
-
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 

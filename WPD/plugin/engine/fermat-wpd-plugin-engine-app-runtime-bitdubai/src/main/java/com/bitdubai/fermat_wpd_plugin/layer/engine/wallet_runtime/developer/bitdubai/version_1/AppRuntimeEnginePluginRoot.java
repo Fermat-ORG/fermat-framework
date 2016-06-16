@@ -22,8 +22,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -5871,7 +5872,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // title bar
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Home");
+        runtimeTitleBar.setLabel("Combo Chat");
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setFont("Roboto-Regular.ttf");
@@ -5896,7 +5897,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
 //        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
 //        runtimeTabStrip.setDividerColor(0xFFFFFF);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Fragments
         runtimeTab = new Tab();
@@ -5920,6 +5920,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.addTab(runtimeTab);
 
 
+        runtimeActivity.setTabStrip(runtimeTabStrip);
         //Owner
 //        Owner owner = new Owner();
 //        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
@@ -5930,14 +5931,52 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
 
         OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         owner = new Owner();
-        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        optionMenuItem.setFermatDrawable(new FermatDrawable(6,"ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+
+        //Help optionMenu
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+//        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setOrder(0);
+//        optionMenuItem.setGroupId(1);
+//        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
+
+
+        //Search optionMenu
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // World optionMenu
+        optionMenuItem = new OptionMenuItem(3);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_world", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("World");
+        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_PROFILE.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // World optionMenu
+        optionMenuItem = new OptionMenuItem(4);
+        optionMenuItem.setLabel("Location");
+        optionMenuItem.setOrder(1);
+//        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(5);
+        optionMenuItem.setLabel("Profile");
+        optionMenuItem.setOrder(2);
+//        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+
 
         // Add to navigation structure
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);

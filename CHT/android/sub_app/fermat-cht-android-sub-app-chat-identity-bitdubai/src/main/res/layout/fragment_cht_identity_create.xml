@@ -7,14 +7,13 @@
 
     <RelativeLayout
         android:id="@+id/cht_image_background"
-        android:layout_width="280px"
-        android:layout_height="280px"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:background="@drawable/bg_circular_cht"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp">
-
         <ImageView
             android:id="@+id/cht_image"
             android:background="#00000000"
@@ -25,7 +24,6 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             />
-
     </RelativeLayout>
 
 
@@ -63,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status"
-        android:textColor="#47BF73"
+        android:textColor="#09D261"
         android:id="@+id/statusView"
         android:layout_below="@+id/editTextName"
         android:layout_marginTop="20dp"
@@ -89,8 +87,8 @@
 
     <Button
         android:id="@+id/cht_button"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_width="188dp"
+        android:layout_height="38dp"
         android:layout_alignParentBottom="true"
         android:background="#00000000"
         android:drawableStart="@drawable/chort_buttom_accept"

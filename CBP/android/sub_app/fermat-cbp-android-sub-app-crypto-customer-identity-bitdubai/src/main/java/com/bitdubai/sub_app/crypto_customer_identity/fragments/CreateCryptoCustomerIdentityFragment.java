@@ -28,12 +28,15 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
@@ -56,6 +59,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     private EditText mCustomerName;
     private ImageView mCustomerImage;
+    private View progressBar;
 
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
@@ -89,6 +93,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     private void initViews(View layout) {
 
+        progressBar = layout.findViewById(R.id.cci_progress_bar);
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
 
@@ -106,6 +111,8 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
         mCustomerName.requestFocus();
         mCustomerName.performClick();
+
+
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -113,14 +120,16 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        ImageView camara = (ImageView) layout.findViewById(R.id.camara);
+
+        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
+
+        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +137,10 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        mCustomerName.requestFocus();
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         configureToolbar();
     }
@@ -151,7 +163,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_create) {
-            createNewIdentityInBackDevice("OnClick");
+            createNewIdentityInBackDevice();
         }
         return true;
     }
@@ -211,8 +223,8 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     /**
      * Crea una nueva identidad para un crypto customer
      */
-    private void createNewIdentityInBackDevice(String donde) {
-        String customerNameText = mCustomerName.getText().toString();
+    private void createNewIdentityInBackDevice() {
+        final String customerNameText = mCustomerName.getText().toString();
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
         } else {
@@ -220,26 +232,39 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
             } else {
 
-                final CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, cryptoCustomerImageByteArray);
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        if (donde.equalsIgnoreCase("OnClick")) {
-                            Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
-                        }
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                try {
-                                    appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
-                                } catch (CouldNotPublishCryptoCustomerException e) {
-                                    Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        }.start();
-                        break;
-                }
+                FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        CryptoCustomerIdentityInformation identity;
+                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray);
+                        appSession.getModuleManager().publishCryptoCustomerIdentity(identity.getPublicKey());
+
+                        return SUCCESS;
+                    }
+                };
+
+                fermatWorker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        progressBar.setVisibility(View.GONE);
+
+                        Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        progressBar.setVisibility(View.GONE);
+
+                        Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Customer Identity", Toast.LENGTH_SHORT).show();
+
+                        appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    }
+                });
+
+                progressBar.setVisibility(View.VISIBLE);
+                fermatWorker.execute();
             }
         }
     }

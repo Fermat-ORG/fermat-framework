@@ -876,7 +876,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             if (isRegister){
 
-                URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/node/registered/"+getIdentity().getPublicKey());
+                URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/registered/"+getIdentity().getPublicKey());
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setRequestProperty("Accept", "application/json");

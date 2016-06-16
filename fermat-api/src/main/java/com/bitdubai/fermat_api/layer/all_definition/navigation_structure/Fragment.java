@@ -25,7 +25,7 @@ public class Fragment implements FermatFragment,Serializable {
     /**
      * OptionsMenu to add or change to the Activity options
      */
-    private OptionsMenu optionsMenu;
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
 
     public void setBack(String fragmentBack)
     {
@@ -53,11 +53,11 @@ public class Fragment implements FermatFragment,Serializable {
     }
 
     @Override
-    public OptionsMenu getOptionsMenu() {
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
 
-    public void setOptionsMenu(OptionsMenu optionsMenu) {
+    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 

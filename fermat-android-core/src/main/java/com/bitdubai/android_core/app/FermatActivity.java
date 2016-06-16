@@ -109,8 +109,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
@@ -289,6 +291,19 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     int actionViewClass = menuItem.getActionViewClass();
                     if(actionViewClass!=-1){
                         item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+                    }
+                    if(menuItem.getOptionMenuPressEvent()!=null){
+                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+                                    //return true because i want to cancell the rest of the callback if this is an activity change
+                                    return true;
+                                }
+                            });
+                        }
                     }
                 }
             }
