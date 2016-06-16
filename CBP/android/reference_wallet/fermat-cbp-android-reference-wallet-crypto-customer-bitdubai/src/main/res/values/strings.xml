@@ -213,4 +213,5 @@
 
     <string name="ccw_insert_note">Insert Note</string>
     <string name="sending_to_the_broker">Sending to the Broker</string>
+    <string name="location">Location</string>
 </resources>

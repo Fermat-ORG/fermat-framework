@@ -18,7 +18,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:text="My Locations"
             android:textAllCaps="false"
             android:textColor="@color/white"
