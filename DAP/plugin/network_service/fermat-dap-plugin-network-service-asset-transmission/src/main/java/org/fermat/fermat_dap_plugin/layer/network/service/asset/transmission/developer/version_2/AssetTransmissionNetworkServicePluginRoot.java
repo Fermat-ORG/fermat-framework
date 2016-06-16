@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 
@@ -29,11 +30,18 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.DAPMessageDAO;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInitializeDAPMessageNetworkServiceDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException;
+import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +57,8 @@ import java.util.concurrent.Executors;
         layer = Layers.NETWORK_SERVICE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE)
-public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkService implements AssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers {
+public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkService implements
+        AssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers {
 
     //VARIABLE DECLARATION
     /**
@@ -60,11 +69,11 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
     /**
      * DAO
      */
-    private org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.DAPMessageDAO dapMessageDAO;
+    private DAPMessageDAO dapMessageDAO;
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
 
@@ -98,7 +107,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             dataBase = communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
             dapMessageDAO = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.DAPMessageDAO(dataBase);
             executorService = Executors.newFixedThreadPool(3);
@@ -107,12 +116,12 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInitializeDAPMessageNetworkServiceDatabaseException exception) {
+        } catch (CantInitializeDAPMessageNetworkServiceDatabaseException exception) {
 
             StringBuilder contextBuffer = new StringBuilder();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Asset User Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -139,7 +148,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
             dapMessageDAO.create(DAPMessage.fromXML(newFermatMessageReceive.getContent()), MessageStatus.NEW_RECEIVED);
-        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException e) {
+        } catch (CantInsertRecordDataBaseException e) {
             e.printStackTrace();
         }
     }
@@ -158,10 +167,10 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
     /**
      * @param dapMessage the message to be sent, this message has to contain both the actor
      *                   that sent the message and the actor that will receive the message.
-     * @throws CantSendMessageException
+     * @throws CantSendDAPMessageException
      */
     @Override
-    public void sendMessage(final DAPMessage dapMessage) throws CantSendMessageException {
+    public void sendMessage(final DAPMessage dapMessage) throws CantSendDAPMessageException {
 
         try {
             final DAPActor actorSender = dapMessage.getActorSender();
@@ -194,7 +203,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
                                 receiver,
                                 dapMessage.toXML()
                         );
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
+                    } catch (CantSendMessageException e) {
                         reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }
@@ -217,7 +226,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
             String context = contextBuffer.toString();
             String possibleCause = "Plugin was not registered";
 
-            CantSendMessageException cantSendMessage = new CantSendMessageException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, possibleCause);
+            CantSendDAPMessageException cantSendMessage = new CantSendDAPMessageException(CantSendDigitalAssetMetadataException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, possibleCause);
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantSendMessage);
 
@@ -237,7 +246,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
         if (dapMessageDAO == null) return Collections.EMPTY_LIST;
         try {
             return dapMessageDAO.findUnreadByType(type.getCode());
-        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException e) {
+        } catch (CantReadRecordDataBaseException e) {
             throw new CantGetDAPMessagesException();
         }
     }
@@ -247,7 +256,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
         if (dapMessageDAO == null) return Collections.EMPTY_LIST;
         try {
             return dapMessageDAO.findUnreadBySubject(subject.getCode());
-        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException e) {
+        } catch (CantReadRecordDataBaseException e) {
             throw new CantGetDAPMessagesException();
         }
     }
@@ -256,7 +265,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkSe
     public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
         try {
             dapMessageDAO.confirmDAPMessageReception(message);
-        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException e) {
+        } catch (CantUpdateRecordDataBaseException e) {
             throw new CantUpdateMessageStatusException();
         }
 

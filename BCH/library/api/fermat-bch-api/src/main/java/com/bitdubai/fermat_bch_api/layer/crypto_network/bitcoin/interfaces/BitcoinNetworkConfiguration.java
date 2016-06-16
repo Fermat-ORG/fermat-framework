@@ -38,7 +38,7 @@ public interface BitcoinNetworkConfiguration {
      * The minimun of Satoshis that we can send, to avoid dusty sends.
      * Dusty sends are considered invalid in the network
      */
-    long MIN_ALLOWED_SATOSHIS_ON_SEND = 5430;
+    long MIN_ALLOWED_SATOSHIS_ON_SEND = 35430;
 
     /**
      * Fixed fee value for outgoing transactions
