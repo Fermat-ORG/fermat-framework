@@ -29,7 +29,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.squareup.picasso.Picasso;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
@@ -55,7 +53,10 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
+    private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
+
     private Bitmap cryptoCustomerBitmap;
+    private byte[] cryptoCustomerImageByteArray;
 
     private EditText mCustomerName;
     private ImageView mCustomerImage;
@@ -136,29 +137,33 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_create) {
-            createNewIdentityInBackDevice("OnClick");
+            createNewIdentityInBackDevice();
         }
         return true;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
+
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
 
                     if (mCustomerImage != null && cryptoCustomerBitmap != null) {
-                        mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
+
+                        //Crop image
+                        //cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
+
+                        //Compress image
+                        cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
 
                         RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
-
                         bitmapDrawable.setCornerRadius(360);
                         bitmapDrawable.setAntiAlias(true);
-
                         mCustomerImage.setImageDrawable(bitmapDrawable);
-
                     }
 
                     break;
@@ -168,9 +173,11 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, mCustomerImage.getWidth(), mCustomerImage.getHeight(), true);
 
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mCustomerImage);
+                            //Compress image
+                            cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
+
+                            mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -204,7 +211,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     /**
      * Crea una nueva identidad para un crypto customer
      */
-    private void createNewIdentityInBackDevice(final String donde) {
+    private void createNewIdentityInBackDevice() {
         final String customerNameText = mCustomerName.getText().toString();
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
@@ -217,9 +224,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     @Override
                     protected Object doInBackground() throws Exception {
                         CryptoCustomerIdentityInformation identity;
-                        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
-
-                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, imgInBytes);
+                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray);
                         appSession.getModuleManager().publishCryptoCustomerIdentity(identity.getPublicKey());
 
                         return SUCCESS;
