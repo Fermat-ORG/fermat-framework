@@ -13,7 +13,7 @@ public class HardcodeConstants {
     /**
      * Represent the SERVER IP DEFAULT
      */
-    public static final String SERVER_IP_DEFAULT = "52.24.215.209";
+    public static final String SERVER_IP_DEFAULT = "52.40.221.93";
 
     /**
      * Represent the WS_PROTOCOL
