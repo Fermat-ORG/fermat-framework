@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -12,6 +14,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_redeem_point_community.filters.RedeemPointCommunityAdapterFilter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.holders.RedeemPointViewHolder;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
@@ -24,7 +27,7 @@ import java.util.List;
 /**
  * Created by Nerio on 21/10/15.
  */
-public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPointViewHolder> {
+public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPointViewHolder> implements Filterable {
 
     List<ProgressTask> taskList = new ArrayList<>();
 
@@ -189,5 +192,10 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new RedeemPointCommunityAdapterFilter(this.dataSet, this);
     }
 }

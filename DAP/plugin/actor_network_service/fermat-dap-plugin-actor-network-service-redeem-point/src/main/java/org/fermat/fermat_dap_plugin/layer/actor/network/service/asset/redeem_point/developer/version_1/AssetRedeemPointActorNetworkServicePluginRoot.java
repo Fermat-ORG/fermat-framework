@@ -1,9 +1,3 @@
-/*
- * @#AssetTransmissionPluginRoot.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -40,6 +34,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantUpdateRegisteredActorException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.google.gson.Gson;
@@ -54,7 +49,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkSe
 import org.fermat.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
@@ -139,6 +134,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
      * Executor
      */
     ExecutorService executorService;
+    boolean activeActor;
 
     /**
      * Constructor
@@ -317,7 +313,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT IN ACTOR ASSET REDEEM");
             reportUnexpectedError(e);
             e.printStackTrace();
-
         }
     }
 
@@ -446,7 +441,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -523,19 +518,15 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
     public void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
 
         try {
-
             registerActor(
                     constructActorProfile(actorAssetRedeemPointToRegister),
                     0, 0
             );
 
         } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
-
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Problem trying to register an identity component.");
-
-        } catch (final Exception e){
-
+        } catch (final Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Unhandled Exception.");
         }
@@ -545,7 +536,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
     public void updateActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException {
 
         try {
-
             final ActorProfile actorProfile = constructActorProfile(actorAssetRedeemPointToRegister);
 
             updateRegisteredActor(
@@ -558,6 +548,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Problem trying to register an identity component.");
 
         } catch (final Exception e){
+
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Unhandled Exception.");
@@ -606,14 +597,18 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
                         }
                     }
 
-                    ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
-                            actorProfile.getIdentityPublicKey(),
-                            actorProfile.getName(),
-                            actorProfile.getPhoto(),
-                            actorProfile.getLocation(),
-                            registeredIssuers);
+                    activeActor = this.isActorOnline(actorProfile.getIdentityPublicKey());
 
-                    actorAssetRedeemPointRegisteredList.add(actorAssetRedeemPoint);
+                    if (activeActor) {
+                        ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
+                                actorProfile.getIdentityPublicKey(),
+                                actorProfile.getName(),
+                                actorProfile.getPhoto(),
+                                actorProfile.getLocation(),
+                                registeredIssuers);
+
+                        actorAssetRedeemPointRegisteredList.add(actorAssetRedeemPoint);
+                    }
                 }
             } else {
                 return actorAssetRedeemPointRegisteredList;
@@ -637,7 +632,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
 
             CantRequestListActorAssetRedeemPointRegisteredException pluginStartException = new CantRequestListActorAssetRedeemPointRegisteredException(CantRequestListActorAssetRedeemPointRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            this.reportUnexpectedError(pluginStartException);
 
             throw pluginStartException;
         }
@@ -958,12 +953,8 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
         return assetRedeemNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
     }
 
-    private void reportUnexpectedError(final Exception e) {
-        reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-    }
-
     @Override
-    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+    public void sendMessage(DAPMessage dapMessage) throws CantSendDAPMessageException {
         receivePublicKeyExtended(dapMessage);
     }
 
@@ -1006,11 +997,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
 
     }
 
-    private void sendMessage(final String jsonMessage      ,
+    private void sendMessage(final String jsonMessage,
                              final String identityPublicKey,
-                             final Actors identityType     ,
-                             final String actorPublicKey   ,
-                             final Actors actorType        ) {
+                             final Actors identityType,
+                             final String actorPublicKey,
+                             final Actors actorType) {
 
         executorService.submit(new Runnable() {
             @Override
@@ -1030,17 +1021,15 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
                             receiver,
                             jsonMessage
                     );
-                } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException e) {
-                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (CantSendMessageException e) {
+                    reportUnexpectedError(e);
                 }
             }
         });
     }
 
     private ActorProfile constructActorProfile(ActorAssetRedeemPoint redeemPoint) {
-   /*
-    * Construct the profile
-    */
+
         Gson gson = new Gson();
 
         JsonObject jsonObject = new JsonObject();
@@ -1054,10 +1043,13 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
         actorProfile.setName(redeemPoint.getName());
         actorProfile.setAlias(redeemPoint.getName());
         actorProfile.setPhoto(redeemPoint.getProfileImage());
-        actorProfile.setActorType(Actors.DAP_ASSET_REDEEM_POINT.getCode());
+        actorProfile.setActorType(redeemPoint.getType().getCode());
         actorProfile.setExtraData(extraData);
 
         return actorProfile;
     }
 
+    private void reportUnexpectedError(final Exception e) {
+        reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
 }

@@ -418,7 +418,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
                         }
                     }
                 } else {
-                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
+                    throw new CantConnectToActorAssetException(CantConnectToActorAssetException.DEFAULT_MESSAGE, null, "There was an error connecting to Actors.", null);
                 }
             }
         } catch (CantAskConnectionActorAssetException e) {

@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +73,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     protected final String TAG = "IssuerCommunityFragment";
 
     public static final String ISSUER_SELECTED = "issuer";
+    private static final String SEARCH = "issuer_community_search";
     private static AssetIssuerCommunitySubAppModuleManager moduleManager;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
@@ -90,6 +92,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
     private MenuItem menuItemConnect;
+    private SearchView searchView;
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
@@ -155,7 +158,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
 
-                actors = dataSet;
+//                actors = dataSet;
+                for (int i=0; i<actors.size(); i++) {
+                    for (int j=0; j<dataSet.size(); j++) {
+                        if (dataSet.get(j).getRecord().getActorPublicKey().equals(actors.get(i).getRecord().getActorPublicKey())) {
+                            actors.set(i, dataSet.get(j));
+                        }
+                    }
+                }
+
                 boolean someSelected = false;
                 int selectedActors = 0;
                 int cheackeableActors = 0;
@@ -395,28 +406,52 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_community_issuer_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.changeDataSet(actors);
+                    adapter.getFilter().filter(s);
+                    appSession.setData(SEARCH, s);
+                }
+                return false;
+            }
+        });
+        if (appSession.getData(SEARCH) != null) {
+            String s = appSession.getData(SEARCH).toString();
+            searchView.setQuery(s, true);
+            if (s.length() > 0) searchView.setIconified(false);
+        }
+
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 1, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 2, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 3, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 4, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 
-        menuItemConnect = menu.getItem(0);
-        menuItemCancel = menu.getItem(1);
-        menuItemSelect = menu.getItem(2);
-        menuItemUnselect = menu.getItem(3);
+        menuItemConnect = menu.getItem(1);
+        menuItemCancel = menu.getItem(2);
+        menuItemSelect = menu.getItem(3);
+        menuItemUnselect = menu.getItem(4);
         restartButtons();
     }
 
@@ -684,6 +719,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                         if (getActivity() != null && adapter != null) {
                             actors = (ArrayList<ActorIssuer>) result[0];
                             adapter.changeDataSet(actors);
+                            adapter.getFilter().filter(searchView.getQuery().toString());
                             if (actors.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {

@@ -14,6 +14,10 @@ public class CantRegisterActorAssetUserException extends DAPException {
         super(message, cause, context, possibleReason);
     }
 
+    public CantRegisterActorAssetUserException(final Exception cause, final String context, final String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantRegisterActorAssetUserException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

@@ -1,8 +1,10 @@
 package org.fermat.fermat_dap_api.layer.all_definition.network_service_message;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 
 import java.util.List;
 
@@ -13,9 +15,9 @@ public interface DAPNetworkService {
     /**
      * @param dapMessage the message to be sent, this message has to contain both the actor
      *                   that sent the message and the actor that will receive the message.
-     * @throws CantSendMessageException
+     * @throws CantSendDAPMessageException
      */
-    void sendMessage(DAPMessage dapMessage) throws CantSendMessageException;
+    void sendMessage(DAPMessage dapMessage) throws CantSendDAPMessageException;
 
     /**
      * This method retrieves the list of new incoming and unread DAP Messages for a specific type.
@@ -34,7 +36,7 @@ public interface DAPNetworkService {
      * @return
      * @throws CantGetDAPMessagesException
      */
-    List<DAPMessage> getUnreadDAPMessageBySubject(org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws CantGetDAPMessagesException;
+    List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException;
 
-    void confirmReception(DAPMessage message) throws org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
+    void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException;
 }
