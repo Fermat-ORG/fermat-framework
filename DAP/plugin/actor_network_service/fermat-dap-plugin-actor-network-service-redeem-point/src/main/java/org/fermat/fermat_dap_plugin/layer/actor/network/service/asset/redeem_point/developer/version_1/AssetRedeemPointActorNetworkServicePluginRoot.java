@@ -547,7 +547,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException(e, null, "Problem trying to register an identity component.");
 
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -597,18 +597,14 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
                         }
                     }
 
-                    activeActor = this.isActorOnline(actorProfile.getIdentityPublicKey());
+                    ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
+                            actorProfile.getIdentityPublicKey(),
+                            actorProfile.getName(),
+                            actorProfile.getPhoto(),
+                            actorProfile.getLocation(),
+                            registeredIssuers);
 
-                    if (activeActor) {
-                        ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord(
-                                actorProfile.getIdentityPublicKey(),
-                                actorProfile.getName(),
-                                actorProfile.getPhoto(),
-                                actorProfile.getLocation(),
-                                registeredIssuers);
-
-                        actorAssetRedeemPointRegisteredList.add(actorAssetRedeemPoint);
-                    }
+                    actorAssetRedeemPointRegisteredList.add(actorAssetRedeemPoint);
                 }
             } else {
                 return actorAssetRedeemPointRegisteredList;
