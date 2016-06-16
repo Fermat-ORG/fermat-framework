@@ -254,7 +254,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                 }
                             }
                         });
-
                     }
                 });
             }
@@ -263,7 +262,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
-
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
@@ -296,7 +294,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         try {
             int id = item.getItemId();
             switch (id) {
-                //case MENU_HELP_ACTION:
                 case 2:
                     setUpDialog();
                     break;
@@ -311,7 +308,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -487,11 +483,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             //e.printStackTrace();
         }
     }
-    @Override
-    public void onBackPressed(){
-        saveAndGoBack();
-        super.onBackPressed();
-    }
+
+//    @Override
+//    public void onBackPressed(){
+//        saveAndGoBack();
+//        super.onBackPressed();
+//    }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
@@ -506,12 +503,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 matrix, false);
         return resizedBitmap;
     }
+
     public int dpToPx() {
         int dp = 150;
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
     }
+
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -699,7 +698,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
-
 
     private Bitmap getBitmap(String path) {
         Uri uri = Uri.fromFile(new File(path));

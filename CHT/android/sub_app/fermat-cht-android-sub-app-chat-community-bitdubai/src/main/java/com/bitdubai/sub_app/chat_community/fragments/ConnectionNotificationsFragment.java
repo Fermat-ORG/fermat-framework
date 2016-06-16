@@ -194,13 +194,23 @@ public class ConnectionNotificationsFragment
         return rootView;
     }
 
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
 
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            dataSet.addAll(moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-                    identity.getActorType(), MAX, offset));
+            List<ChatActorCommunityInformation> result;
+            if(identity != null) {
+                result = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+                    identity.getActorType(), MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
         } catch (Exception e) {

@@ -165,6 +165,11 @@ public class ContactsListFragment
         return rootView;
     }
 
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
 //        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), appSession.getModuleManager().getSelectedActorIdentity()));
         //AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
