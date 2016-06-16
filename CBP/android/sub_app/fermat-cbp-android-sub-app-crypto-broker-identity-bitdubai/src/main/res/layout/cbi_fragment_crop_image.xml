@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000">
+    android:background="#000000">
+
+    <com.edmodo.cropper.CropImageView
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cbi_crop_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        custom:fixAspectRatio="true"
+        custom:aspectRatioX="3"
+        custom:aspectRatioY="3"
+        custom:scaleType="fitCenter"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="horizontal">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/btnCancel"
+            android:id="@+id/cbi_cancel_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,7 +46,7 @@
             android:background="#e1e1e1" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/btnRotateCropper"
+            android:id="@+id/cbi_rotate_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -50,7 +66,7 @@
             android:background="#e1e1e1" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/btnCrop"
+            android:id="@+id/cbi_crop_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -66,16 +82,5 @@
 
     </LinearLayout>
 
-    <com.edmodo.cropper.CropImageView
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/CropImageView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        custom:fixAspectRatio="true"
-        custom:aspectRatioX="3"
-        custom:aspectRatioY="3"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        />
-</LinearLayout>
+
+</RelativeLayout>
