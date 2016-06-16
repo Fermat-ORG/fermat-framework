@@ -151,7 +151,7 @@ public class NetworkData {
                 jsonObject.addProperty("location", gson.toJson(location));
             }
 
-            jsonObject.addProperty("os","String, Operative System, not being used right now");
+            jsonObject.addProperty("os","Operative System, not being used right now");
             jsonObject.addProperty("networkServices",gson.toJson(getNetworkServicesCount()));
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
@@ -328,8 +328,8 @@ public class NetworkData {
 
                 for(CheckedInNetworkService CheckedInNetworkService : checkedInNetworkServiceList){
 
-                    if(!listNetworkServices.containsKey(NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType())))
-                        listNetworkServices.put(NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType()),NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType()));
+                    if(!listNetworkServices.containsKey(NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType())))
+                        listNetworkServices.put(NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType()),NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType()));
 
                 }
 
@@ -338,7 +338,7 @@ public class NetworkData {
             }
 
 
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (Exception e) {
 
         }
 
@@ -360,8 +360,8 @@ public class NetworkData {
 
                 for(CheckedInNetworkService CheckedInNetworkService : checkedInNetworkServiceList){
 
-                    if(!listNetworkServices.containsKey(NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType())))
-                        listNetworkServices.put(NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType()),NetworkServiceType.valueOf(CheckedInNetworkService.getNetworkServiceType()));
+                    if(!listNetworkServices.containsKey(NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType())))
+                        listNetworkServices.put(NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType()),NetworkServiceType.getByCode(CheckedInNetworkService.getNetworkServiceType()));
 
                 }
 
@@ -370,7 +370,7 @@ public class NetworkData {
             }
 
 
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (Exception e) {
 
         }
 
