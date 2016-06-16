@@ -229,7 +229,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceAppFe
             receive_button = (FermatButton) mFragmentView.findViewById(R.id.receive_button);
             send_button = (FermatButton) mFragmentView.findViewById(R.id.send_button);
             linear_layout_extra_user_receive = (LinearLayout) mFragmentView.findViewById(R.id.linear_layout_extra_user_receive);
-            //img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
+            img_update = (ImageView) mFragmentView.findViewById(R.id.img_update);
             send_button.setOnClickListener(this);
             receive_button.setOnClickListener(this);
             linear_layout_extra_user_receive.setOnClickListener(this);
