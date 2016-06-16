@@ -76,6 +76,51 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
+    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListCryptoCustomersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    alias,
+                    distance,
+                    null,
+                    publicKey,
+                    deviceLocation,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+            }
+
+            return cryptoCustomerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
     public List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoCustomersException {
 
         try {

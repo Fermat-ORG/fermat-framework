@@ -260,6 +260,57 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        try {
+            menu.clear();
+            if (optionsMenu != null) {
+                List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
+                for (int i=0;i< optionsMenuItems.size();i++) {
+                    OptionMenuItem menuItem = optionsMenuItems.get(i);
+                    int id = menuItem.getId();
+                    int groupId = menuItem.getGroupId();
+                    int order = menuItem.getOrder();
+                    int showAsAction = menuItem.getShowAsAction();
+                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                    FermatDrawable icon = menuItem.getFermatDrawable();
+                    if(icon!=null) {
+                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+                    }
+                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+                    int actionViewClass = menuItem.getActionViewClass();
+                    if(actionViewClass!=-1){
+                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+                    }
+                    if(menuItem.getOptionMenuPressEvent()!=null){
+                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+                                    //return true because i want to cancell the rest of the callback if this is an activity change
+                                    return true;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            return true;
+
+
+        } catch (Exception e) {
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            makeText(getApplicationContext(), "Oooops! recovering from system error",
+//                    LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     /**
      * Initialize the contents of the Activity's standard options menu
      *
@@ -317,8 +368,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
 
-        return super.onCreateOptionsMenu(menu);
-
+        return true;
     }
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
@@ -1642,8 +1692,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 try {
                     FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
                     final Activity activity = fermatStructure.getLastActivity();
-                    FermatSession referenceAppFermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), referenceAppFermatSession);
+                    FermatSession session = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), session);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

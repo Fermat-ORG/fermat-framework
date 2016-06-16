@@ -340,6 +340,11 @@ public class ConnectionsWorldFragment
     }
 
     @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
+    @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
 
     }
