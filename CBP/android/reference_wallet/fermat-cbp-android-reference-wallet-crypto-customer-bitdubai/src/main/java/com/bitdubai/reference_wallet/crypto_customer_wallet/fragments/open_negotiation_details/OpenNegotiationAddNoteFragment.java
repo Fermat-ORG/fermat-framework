@@ -12,16 +12,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
 
 /**
  * Created by Yordin Alayn on 29.01.16.
  */
-public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>{
+public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>{
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
@@ -62,7 +65,7 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
 
     private void bindData() {
 
-        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(CryptoCustomerWalletSessionReferenceApp.NEGOTIATION_DATA);
+        negotiationInfo = (CustomerBrokerNegotiationInformation) appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
 
     }
 

@@ -71,7 +71,7 @@ public class ChatExposingData {
 
     @Override
     public String toString() {
-        return "CryptoBrokerExposingData{" +
+        return "ChatExposingData{" +
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
                 ", image=" + Arrays.toString(image) +

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface FermatMainMenu  extends Serializable {
     List<OptionMenuItem> getMenuItems();
+
+
 }

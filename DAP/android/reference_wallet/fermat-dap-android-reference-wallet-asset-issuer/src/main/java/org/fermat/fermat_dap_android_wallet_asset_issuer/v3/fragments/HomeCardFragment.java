@@ -153,6 +153,9 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
             digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+            appSession.setData("asset_data", digitalAssets);
+
             showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 
 import android.content.Context;
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
@@ -11,14 +12,15 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
 import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE;
 
@@ -28,9 +30,8 @@ import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterCon
  * @author Jose Cardozo josejcb (josejcb89@gmail.com)  on 08/01/16.
  * @version 1.0
  */
-public class ChatFermatAppConnection extends AppConnections {
-    private ErrorManager errorManager;
-
+public class ChatFermatAppConnection
+        extends AppConnections<ReferenceAppFermatSession<ChatManager>> {
 
     public ChatFermatAppConnection(Context activity) {
         super(activity);
@@ -56,7 +57,6 @@ public class ChatFermatAppConnection extends AppConnections {
     public AbstractReferenceAppFermatSession getSession() {
         return new ChatSessionReferenceApp();
     }
-
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
@@ -110,6 +110,12 @@ public class ChatFermatAppConnection extends AppConnections {
                 break;
             case 2:
                 resId = R.drawable.cht_ic_action_search;
+                break;
+            case 3:
+                resId = R.drawable.cht_people_conections;
+                break;
+            case 4:
+                resId = R.drawable.cht_notifications;
                 break;
         }
         return resId;

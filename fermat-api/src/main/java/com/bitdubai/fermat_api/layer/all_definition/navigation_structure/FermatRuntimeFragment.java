@@ -11,10 +11,21 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment {
     private String fragmentCode;
     private String backCode;
 
+    // OptionMenu to add or change to the activity OptionsMenu
+    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
+
 
     public FermatRuntimeFragment(int id, Owner owner, SourceLocation sourceLocation, String fragmentCode) {
         super(id, owner, sourceLocation);
         this.fragmentCode = fragmentCode;
+    }
+
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
+        return optionsMenu;
+    }
+
+    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
+        this.optionsMenu = optionsMenu;
     }
 
     public void setFragmentCode(String fragmentCode) {

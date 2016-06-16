@@ -47,12 +47,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
+public class RequestReceiveHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>,onRefreshList {
 
     /**
      * Session
      */
-    FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
     String walletPublicKey = "reference_wallet";
     /**
@@ -91,7 +91,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
+        fermatWalletSessionReferenceApp = appSession;
 
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();

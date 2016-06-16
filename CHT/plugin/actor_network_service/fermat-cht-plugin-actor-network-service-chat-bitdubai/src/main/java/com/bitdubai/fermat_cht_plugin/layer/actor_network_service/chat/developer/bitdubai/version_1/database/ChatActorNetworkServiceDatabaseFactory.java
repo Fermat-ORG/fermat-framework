@@ -19,8 +19,6 @@ import java.util.UUID;
  */
 public class ChatActorNetworkServiceDatabaseFactory {
 
-    private ErrorManager errorManager;
-
     private final PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -54,7 +52,6 @@ public class ChatActorNetworkServiceDatabaseFactory {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
         } catch (final CantCreateDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             /**
              * I can not handle this situation.
              */
@@ -89,14 +86,12 @@ public class ChatActorNetworkServiceDatabaseFactory {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateTableException);
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
             return database;
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, invalidOwnerId);
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.

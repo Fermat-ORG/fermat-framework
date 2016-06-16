@@ -7,23 +7,24 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Alejandro Bicelis on 12/2/2016.
  */
-public class DisconnectDialog extends FermatDialog<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -44,12 +45,12 @@ public class DisconnectDialog extends FermatDialog<CryptoCustomerCommunitySubApp
 
 
     public DisconnectDialog(Activity a,
-                            CryptoCustomerCommunitySubAppSessionReferenceApp cryptoCustomerCommunitySubAppSession,
+                            ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> session,
                             SubAppResourcesProviderManager subAppResources,
                             CryptoCustomerCommunityInformation cryptoCustomerCommunityInformation,
                             CryptoCustomerCommunitySelectableIdentity identity) {
 
-        super(a, cryptoCustomerCommunitySubAppSession, subAppResources);
+        super(a, session, subAppResources);
 
         this.cryptoCustomerCommunityInformation = cryptoCustomerCommunityInformation;
         this.identity = identity;

@@ -12,9 +12,6 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 
 /**
@@ -55,7 +52,7 @@ public class ConnectionWithCommunityDialog extends FermatDialog<ReferenceAppFerm
 
     @Override
     protected int setLayoutId() {
-        return R.layout.connection_with_community_dialog;
+        return R.layout.fermat_wallet_connection_with_community_dialog;
     }
 
     @Override

@@ -30,20 +30,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:textColor="#FFFFFF"
-                android:textSize="18dp"
-                android:layout_weight="1"
+                android:textSize="14dp"
                 tools:text="Banesco"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:textColor="#FFFFFF"
-                android:textSize="18dp"
-                tools:text="01750123568965784236"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
+                android:textSize="14dp"
+                android:ellipsize="start"
+                tools:text="0000000000000000000000000"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
 
@@ -52,9 +51,11 @@
             android:layout_height="wrap_content"
             tools:text="Cuenta Familiar"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_alignTop="@+id/cbw_close_img_button"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="22dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="18dp"
             android:textSize="18dp"
             android:id="@+id/cbw_main_text"
             android:textColor="#085394" />

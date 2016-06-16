@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +47,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 27/04/16.
  */
-public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedPaymentRequest>, onRefreshList {
+public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<LossProtectedPaymentRequest,ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager> implements FermatListItemListeners<LossProtectedPaymentRequest>, onRefreshList {
 
     /**
      * Session
@@ -74,6 +75,8 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     FloatingActionMenu actionMenu;
     private LossProtectedWalletSettings lossProtectedWalletSettings;
 
+    private DialogInterface.OnDismissListener onDismissListener;
+
     BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -90,14 +93,14 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
+        referenceWalletSession = appSession;
 
         lstPaymentRequest = new ArrayList<>();
         try {
-            lossProtectedWalletManager = referenceWalletSession.getModuleManager();
+            lossProtectedWalletManager = appSession.getModuleManager();
 
             try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } catch (Exception e) {
 
@@ -314,6 +317,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public void setReferenceWalletSession(ReferenceAppFermatSession<LossProtectedWallet> referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
     }
+
 
 
 }

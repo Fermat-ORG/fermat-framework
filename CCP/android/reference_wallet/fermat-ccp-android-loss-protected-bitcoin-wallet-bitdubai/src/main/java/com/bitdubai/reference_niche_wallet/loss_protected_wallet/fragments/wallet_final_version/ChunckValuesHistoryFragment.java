@@ -124,7 +124,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
     private BalanceType balanceType = BalanceType.REAL;
 
-    private int typeAmountSelected = 1;
+    private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
 
     /**
      * Create a new instance of this fragment
@@ -152,7 +152,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 appSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, balanceType);
 
             if(appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED) != null)
-                typeAmountSelected = (int)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+                typeAmountSelected = (ShowMoneyType)appSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
             else
                 appSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
 
@@ -189,7 +189,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Recovering from system error - OnCreate " + ex.getMessage(), Toast.LENGTH_SHORT).show();
 
         }
 
@@ -209,7 +209,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             setUpHeader(inflater);
 
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Recovering from system error " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -270,12 +270,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             else
                 balance = lossProtectedWalletManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
-            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected));
+            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "recovering from system error: setUpHeader Exception",
+            makeText(getActivity(), "recovering from system error: setUpHeader Exception - " + e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -527,15 +527,15 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 WalletUtils.formatBalanceString(
                         (balanceType.getCode() == BalanceType.AVAILABLE.getCode())
                                 ? balanceAvailable : realBalance,
-                        typeAmountSelected)
+                        typeAmountSelected.getCode())
         );
     }
 
     private void changeAmountType(){
 
-        ShowMoneyType showMoneyType = (typeAmountSelected== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        ShowMoneyType showMoneyType = (typeAmountSelected.getCode()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
         lossProtectedWalletSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED,showMoneyType);
-        typeAmountSelected = showMoneyType.getCode();
+        typeAmountSelected = showMoneyType;
         String moneyTpe = "";
         switch (showMoneyType){
             case BITCOIN:
@@ -560,13 +560,13 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         try {
             if (balanceType.getCode().equals(BalanceType.AVAILABLE.getCode())) {
                 realBalance = loadBalance(BalanceType.REAL);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, typeAmountSelected));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.real_balance_text);
                 lossProtectedWalletSession.setData(SessionConstant.TYPE_BALANCE_SELECTED, BalanceType.REAL);
                 balanceType = BalanceType.REAL;
             } else if (balanceType.getCode().equals(BalanceType.REAL.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable,typeAmountSelected));
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable,typeAmountSelected.getCode()));
                 txt_type_balance.setText(R.string.available_balance_text);
                 balanceType = BalanceType.AVAILABLE;
                 lossProtectedWalletSession.setData(SessionConstant.TYPE_BALANCE_SELECTED,BalanceType.AVAILABLE);
