@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +28,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -40,12 +40,10 @@ import com.bitdubai.sub_app.crypto_customer_identity.R;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, ResourceProviderManager> {
-    private static final String TAG = "CreateCustomerIdentity";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -53,10 +51,11 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
-    private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
+    private static final String CUSTOMER_NAME = "Customer_name";
 
-    private Bitmap cryptoCustomerBitmap;
-    private byte[] cryptoCustomerImageByteArray;
+    private Bitmap cryptoCustomerBitmap = null;
+    private byte[] cryptoCustomerImageByteArray = null;
+    private String cryptoCustomerName = null;
 
     private EditText mCustomerName;
     private ImageView mCustomerImage;
@@ -67,28 +66,52 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         return new CreateCryptoCustomerIdentityFragment();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
+        if(appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE) != null)
+        {
+            cryptoCustomerImageByteArray = (byte[]) appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
+            cryptoCustomerBitmap = BitmapFactory.decodeByteArray(cryptoCustomerImageByteArray, 0, cryptoCustomerImageByteArray.length);
+            appSession.removeData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
+
+            cryptoCustomerName = (String) appSession.getData(CUSTOMER_NAME);
+            appSession.removeData(CUSTOMER_NAME);
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_customer_identity, container, false);
         initViews(rootLayout);
-
         return rootLayout;
     }
 
-    /**
-     * Inicializa las vistas de este Fragment
-     *
-     * @param layout el layout de este Fragment que contiene las vistas
-     */
     private void initViews(View layout) {
 
         progressBar = layout.findViewById(R.id.cci_progress_bar);
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
-        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
-        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
+
+
+        if(cryptoCustomerBitmap != null)
+        {
+            RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
+            bitmapDrawable.setCornerRadius(360);
+            bitmapDrawable.setAntiAlias(true);
+            mCustomerImage.setImageDrawable(bitmapDrawable);
+        }
+
+        if(cryptoCustomerName != null)
+            mCustomerName.setText(cryptoCustomerName);
+
+        mCustomerName.requestFocus();
+        mCustomerName.performClick();
+
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -97,6 +120,8 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
+
+        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,6 +129,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
+        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,21 +177,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
-
-                    if (mCustomerImage != null && cryptoCustomerBitmap != null) {
-
-                        //Crop image
-                        //cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
-
-                        //Compress image
-                        cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
-
-                        RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
-                        bitmapDrawable.setCornerRadius(360);
-                        bitmapDrawable.setAntiAlias(true);
-                        mCustomerImage.setImageDrawable(bitmapDrawable);
-                    }
-
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
@@ -173,11 +184,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-
-                            //Compress image
-                            cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
-
-                            mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -185,6 +191,12 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     }
                     break;
             }
+
+            //Go to CryptoCustomerImageCropperFragment so the user can crop (square) his picture
+            appSession.setData(CryptoCustomerImageCropperFragment.BACK_ACTIVITY, Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
+            appSession.setData(CryptoCustomerImageCropperFragment.ORIGINAL_IMAGE, cryptoCustomerBitmap);
+            appSession.setData(CUSTOMER_NAME, mCustomerName.getText().toString());
+            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
