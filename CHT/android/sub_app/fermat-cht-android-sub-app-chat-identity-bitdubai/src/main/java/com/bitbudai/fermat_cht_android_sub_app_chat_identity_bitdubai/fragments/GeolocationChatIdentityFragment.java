@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -55,6 +56,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     Toolbar toolbar;
     int acurracydata;
     Frecuency frecuencydata;
+    ChatIdentity identity;
 
     private ChatIdentityPreferenceSettings chatIdentitySettings;
 
@@ -83,9 +85,16 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
+
+            //Check if a default identity is configured
+            try{
+                identity = moduleManager.getIdentityChatUser();
+            }catch (Exception e){
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            }
+            
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
         }
         toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -179,7 +188,10 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                     Toast.makeText(getActivity(), "Acuraccy is empty, please add a value", Toast.LENGTH_SHORT).show();
                 } else {
                     acurracydata = Integer.parseInt(accuracy.getText().toString());
-                    executor = new GeolocationIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), moduleManager.getIdentityChatUser().getAlias(), moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState(), moduleManager.getIdentityChatUser().getCountry(), moduleManager.getIdentityChatUser().getState(), moduleManager.getIdentityChatUser().getCity(), frecuencydata, acurracydata);
+                    executor = new GeolocationIdentityExecutor(appSession, identity.getPublicKey(), identity.getAlias(),
+                            identity.getImage(), identity.getConnectionState(), 
+                            identity.getCountry(), identity.getState(), 
+                            identity.getCity(), frecuencydata, acurracydata);
                     int resultKey = executor.execute();
                     switch (resultKey) {
                         case SUCCESS:
@@ -193,7 +205,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                         }
 
                  }
-            }catch(CHTException e){
+            }catch(Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
             }
@@ -202,7 +214,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
 
     public boolean ExistIdentity() throws CHTException {
         try {
-            if (!moduleManager.getIdentityChatUser().getAlias().isEmpty()) {
+            if (!identity.getAlias().isEmpty()) {
                 Log.i("CHT EXIST IDENTITY", "TRUE");
                 return true;
             }
@@ -214,7 +226,8 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
     }
 
     public void setValues() throws CantGetChatIdentityException {
-            accuracy.setText(""+moduleManager.getIdentityChatUser().getAccuracy());
+        if(identity!=null)
+            accuracy.setText(""+identity.getAccuracy());
     }
 
 
