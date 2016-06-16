@@ -8,10 +8,6 @@
 include ':fermat-bch-api'
 project(':fermat-bch-api').projectDir = new File('BCH/library/api/fermat-bch-api')
 
-include ':fermatj'
-project(':fermatj').projectDir = new File('BCH/library/api/fermatj')
-
-
 include ':fermat-bch-core'
 project(':fermat-bch-core').projectDir = new File('BCH/library/core/fermat-bch-core')
 
