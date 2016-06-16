@@ -40,7 +40,6 @@
             android:textSize="18dp"
             android:gravity="center_vertical"
             android:layout_alignBottom="@+id/crypto_broker_image"
-            android:layout_alignParentStart="true"
             android:textColorHint="#ffffff">
             <requestFocus />
         </EditText>
@@ -54,7 +53,8 @@
             android:adjustViewBounds="false"
             android:background="#32ffffff"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
 
         <ImageView
             android:layout_width="70dp"
@@ -65,7 +65,8 @@
             android:background="#32ffffff"
             android:layout_above="@+id/camara"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp" />
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp" />
 
     </RelativeLayout>
 
