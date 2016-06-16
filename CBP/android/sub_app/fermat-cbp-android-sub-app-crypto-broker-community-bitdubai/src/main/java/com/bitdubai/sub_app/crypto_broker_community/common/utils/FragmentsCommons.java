@@ -2,11 +2,9 @@ package com.bitdubai.sub_app.crypto_broker_community.common.utils;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -26,7 +24,7 @@ public class FragmentsCommons {
         /**
          * Navigation view header
          */
-        ImageView imageView = (ImageView) headerView.findViewById(R.id.image_view_profile);
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.cbc_image_view_profile);
         if (identity != null) {
             if (identity.getImage() != null) {
                 if (identity.getImage().length > 0) {
@@ -35,11 +33,10 @@ public class FragmentsCommons {
                     Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
             } else
                 Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
-            FermatTextView fermatTextView = (FermatTextView) headerView.findViewById(R.id.txt_name);
+            FermatTextView fermatTextView = (FermatTextView) headerView.findViewById(R.id.cbc_txt_name);
             fermatTextView.setText(identity.getAlias());
 
-            headerView.findViewById(R.id.image_view_profile_container).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.image_view_profile_circular_progress_bar).setVisibility(View.GONE);
+            headerView.findViewById(R.id.cbc_image_view_profile_container).setVisibility(View.VISIBLE);
         }
     }
 }
