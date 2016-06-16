@@ -44,9 +44,10 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
 
     private Bitmap cryptoBrokerBitmap;
 
-
     private EditText mBrokerName;
     private ImageView mBrokerImage;
+    private View progressBar;
+
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
@@ -65,8 +66,20 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
+
+        progressBar = layout.findViewById(R.id.cbi_progress_bar);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        final Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
+        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
+
+        mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            }
+        });
 
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,30 +88,25 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
             }
         });
 
-        mBrokerName.requestFocus();
-        mBrokerName.performClick();
-        mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
-        });
-        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
-        camara.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
-        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadImageFromGallery();
             }
         });
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+        camara.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        mBrokerName.requestFocus();
+        mBrokerName.performClick();
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -158,14 +166,17 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                 fermatWorker.setCallBack(new FermatWorkerCallBack() {
                     @Override
                     public void onPostExecute(Object... result) {
-                        if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
-                        }
+                        progressBar.setVisibility(View.GONE);
+
+                        Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
+
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
                     }
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
+                        progressBar.setVisibility(View.GONE);
+
                         Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Broker Identity", Toast.LENGTH_SHORT).show();
 
                         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
@@ -173,6 +184,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                     }
                 });
 
+                progressBar.setVisibility(View.VISIBLE);
                 fermatWorker.execute();
             }
         }
