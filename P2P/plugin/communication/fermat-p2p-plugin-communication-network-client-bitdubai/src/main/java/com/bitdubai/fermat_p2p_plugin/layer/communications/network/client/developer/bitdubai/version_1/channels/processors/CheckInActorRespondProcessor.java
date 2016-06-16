@@ -13,7 +13,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>CheckInActorRespondProcessor</code>
- * process all packages received the type <code>PackageType.CHECK_IN_ACTOR_RESPOND</code><p/>
+ * process all packages received the type <code>PackageType.CHECK_IN_ACTOR_RESPONSE</code><p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
@@ -31,7 +31,7 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
     public CheckInActorRespondProcessor(final NetworkClientCommunicationChannel networkClientCommunicationChannel) {
         super(
                 networkClientCommunicationChannel,
-                PackageType.CHECK_IN_ACTOR_RESPOND
+                PackageType.CHECK_IN_ACTOR_RESPONSE
         );
     }
 
