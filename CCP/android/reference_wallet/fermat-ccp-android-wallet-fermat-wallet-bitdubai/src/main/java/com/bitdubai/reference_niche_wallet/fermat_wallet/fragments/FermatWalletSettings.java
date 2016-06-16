@@ -31,7 +31,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
@@ -447,15 +449,26 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                             cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                         } catch (Exception e) {
-                            e.printStackTrace();
-
+                           // e.printStackTrace();
+                            try {
+                                cryptoWalletWalletContact = fermatWalletModule.findWalletContactByName("regtest_bitcoins",appSession.getAppPublicKey(),fermatWalletModule.getSelectedActorIdentity().getPublicKey());
+                            } catch (CantFindWalletContactException e1) {
+                                e1.printStackTrace();
+                            } catch (WalletContactNotFoundException e1) {
+                                e1.printStackTrace();
+                            } catch (CantGetSelectedActorIdentityException e1) {
+                                e1.printStackTrace();
+                            } catch (ActorIdentityNotSelectedException e1) {
+                                e1.printStackTrace();
+                            }
                         }
 
-                        assert cryptoWalletWalletContact != null;
-                        String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                        HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
-                        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                        SetServerString = Client.execute(httpget, responseHandler);
+                        if (cryptoWalletWalletContact != null) {
+                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+                        }
 
                         response = SetServerString;
                     } catch (IOException e) {

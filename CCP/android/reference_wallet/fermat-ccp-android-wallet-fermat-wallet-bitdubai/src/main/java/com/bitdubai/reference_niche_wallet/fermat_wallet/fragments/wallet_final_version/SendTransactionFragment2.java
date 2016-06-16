@@ -115,7 +115,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private long before = 0;
     private long after = 0;
     private boolean pressed = false;
-    private CircularProgressBar circularProgressBar;
+
     private Thread background;
 
     // Fermat Managers
@@ -784,12 +784,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
-               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 
     }
@@ -801,7 +795,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
-            }else if(id == FermatWalletConstants.IC_ACTION_HELP_PRESENTATION){
+            }else{
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -1163,8 +1157,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
 
-                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                    circularProgressBar.setProgressValue2(getBalanceAverage());
+                   // circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                   // circularProgressBar.setProgressValue2(getBalanceAverage());
                 }
 
             }

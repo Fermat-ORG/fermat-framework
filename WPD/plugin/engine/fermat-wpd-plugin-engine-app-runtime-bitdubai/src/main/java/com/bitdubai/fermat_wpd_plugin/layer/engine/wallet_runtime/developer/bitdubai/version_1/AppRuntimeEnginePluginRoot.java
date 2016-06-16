@@ -4195,7 +4195,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         owner = new Owner();
-        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
@@ -4206,6 +4206,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "bit_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(2); //show always icon
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 //
@@ -4360,7 +4361,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(2);
         owner = new Owner();
-        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
+        owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "bit_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
@@ -4996,7 +4997,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(2); //show always icon
-
+        optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 //
 //        /**
@@ -5330,7 +5331,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "loss_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(2); //show always icon
-
+        optionsMenu.addMenuItem(optionMenuItem);
         runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeTitleBar = new TitleBar();
@@ -6260,6 +6261,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setFermatDrawable(new FermatDrawable(4, "fw_send_icon", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Send");
         optionMenuItem.setShowAsAction(2); //show always icon
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 

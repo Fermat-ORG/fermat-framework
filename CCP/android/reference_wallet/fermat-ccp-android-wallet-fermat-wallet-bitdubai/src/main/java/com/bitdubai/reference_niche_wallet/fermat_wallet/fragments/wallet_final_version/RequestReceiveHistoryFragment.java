@@ -178,7 +178,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_REQUEST_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
-            }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
+            }else {
                 //setUpPresentation();
                 return true;
             }
