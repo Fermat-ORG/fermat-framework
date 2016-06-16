@@ -5938,6 +5938,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setOrder(0);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setGroupId(1);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -5963,12 +5964,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem = new OptionMenuItem(4);
         optionMenuItem.setLabel("Location");
         optionMenuItem.setOrder(1);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(5);
         optionMenuItem.setLabel("Profile");
         optionMenuItem.setOrder(2);
+        optionMenuItem.setShowAsAction(4);
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
