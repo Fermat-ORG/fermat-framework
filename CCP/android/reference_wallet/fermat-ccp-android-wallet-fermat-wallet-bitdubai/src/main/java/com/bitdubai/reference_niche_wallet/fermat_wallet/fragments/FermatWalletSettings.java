@@ -447,6 +447,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                             cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                         } catch (Exception e) {
+                            e.printStackTrace();
 
                         }
 
@@ -458,6 +459,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
                         response = SetServerString;
                     } catch (IOException e) {
+                        e.printStackTrace();
 
                     }
 

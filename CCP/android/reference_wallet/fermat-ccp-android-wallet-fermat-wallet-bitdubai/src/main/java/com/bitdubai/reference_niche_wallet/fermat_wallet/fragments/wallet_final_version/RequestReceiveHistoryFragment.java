@@ -167,13 +167,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-      /*  menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
-                .setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.bit_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
 
     }
 
@@ -373,47 +367,14 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
-    /*
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.fw_withdrawall_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        try {
-            int id = item.getItemId();
-            if(id == FermatWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
-                return true;
-            }else if(id == FermatWalletConstants.IC_ACTION_HELP_PRESENTATION){
-               // setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            }
-        } catch (Exception e) {
-            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void setReferenceWalletSession(FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp) {
         this.fermatWalletSessionReferenceApp = fermatWalletSessionReferenceApp;
 
     }
 
-   /* @Override
+  /* @Override
    public void onClick(View v) {
         try {
             PaymentRequest paymentRequest = selectedItem;

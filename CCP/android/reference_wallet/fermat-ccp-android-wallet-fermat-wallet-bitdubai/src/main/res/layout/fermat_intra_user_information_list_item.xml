@@ -55,8 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:buttonTint="@drawable/checkbox_icon"
-            android:background="@drawable/checkboxblank_icon"
+            android:buttonTint="@drawable/bitcoinwcheckb_full"
+            android:background="@drawable/bitcoinwcheckb_empty"
             android:width="30dp"
             android:height="16dp"/>
 

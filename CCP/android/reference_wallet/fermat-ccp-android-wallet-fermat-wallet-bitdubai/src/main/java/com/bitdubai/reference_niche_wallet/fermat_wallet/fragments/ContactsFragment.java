@@ -348,7 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             int id = item.getItemId();
 
-            if (id == FermatWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == 3) {
                 setUpTutorial(true);
                 return true;
             }

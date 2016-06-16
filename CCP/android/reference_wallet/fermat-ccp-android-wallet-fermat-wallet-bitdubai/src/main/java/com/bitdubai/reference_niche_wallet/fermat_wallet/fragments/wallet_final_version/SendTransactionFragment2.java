@@ -798,7 +798,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == FermatWalletConstants.IC_ACTION_SEND){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else if(id == FermatWalletConstants.IC_ACTION_HELP_PRESENTATION){

@@ -356,7 +356,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
             int id = item.getItemId();
 
-            if (id == LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == 2) {
                 setUpTutorial(true);
                 return true;
             }
