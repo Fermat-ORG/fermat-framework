@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,12 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
+    private static final int IMAGE_WIDTH = 400;
+    private static final int IMAGE_HEIGHT = 400;
+    private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
+
     private Bitmap cryptoBrokerBitmap;
+    private byte[] cryptoBrokerImageByteArray;
 
     private EditText mBrokerName;
     private ImageView mBrokerImage;
@@ -111,25 +117,41 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
+
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
 
-                    if (mBrokerImage != null && cryptoBrokerBitmap != null) {
-                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
-                    }
+                    //Crop image
+                    //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
 
-                    break;
+                    //Compress image
+                    cryptoBrokerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoBrokerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
+
+                    if (mBrokerImage != null && cryptoBrokerBitmap != null)
+                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+
+                break;
+
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            Picasso.with(getActivity()).load(selectedImage).into(mBrokerImage);
+
+                            //Crop image
+                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
+
+                            //Compress image
+                            cryptoBrokerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoBrokerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
+
+                            if (mBrokerImage != null && cryptoBrokerBitmap != null)
+                                mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -138,6 +160,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                     break;
             }
         }
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -157,7 +180,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                     @Override
                     protected Object doInBackground() throws Exception {
                         byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, imgInBytes);
+                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray);
 
                         return SUCCESS;
                     }

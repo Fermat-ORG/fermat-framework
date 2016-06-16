@@ -55,7 +55,12 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
+    private static final int IMAGE_WIDTH = 400;
+    private static final int IMAGE_HEIGHT = 400;
+    private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
+
     private Bitmap cryptoCustomerBitmap;
+    private byte[] cryptoCustomerImageByteArray;
 
     private EditText mCustomerName;
     private ImageView mCustomerImage;
@@ -143,22 +148,26 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
+
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
 
                     if (mCustomerImage != null && cryptoCustomerBitmap != null) {
-                        mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
+
+                        //Crop image
+                        //cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
+
+                        //Compress image
+                        cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
 
                         RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
-
                         bitmapDrawable.setCornerRadius(360);
                         bitmapDrawable.setAntiAlias(true);
-
                         mCustomerImage.setImageDrawable(bitmapDrawable);
-
                     }
 
                     break;
@@ -168,9 +177,11 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, mCustomerImage.getWidth(), mCustomerImage.getHeight(), true);
 
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mCustomerImage);
+                            //Compress image
+                            cryptoCustomerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoCustomerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
+
+                            mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -217,9 +228,8 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     @Override
                     protected Object doInBackground() throws Exception {
                         CryptoCustomerIdentityInformation identity;
-                        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
 
-                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, imgInBytes);
+                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray);
                         appSession.getModuleManager().publishCryptoCustomerIdentity(identity.getPublicKey());
 
                         return SUCCESS;

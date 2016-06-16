@@ -91,7 +91,7 @@ public class CryptoBrokerCommunityManager
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
         this.cryptoBrokerActorNetworkServiceManager = cryptoBrokerActorNetworkServiceManager;
         this.cryptoCustomerIdentityManager          = cryptoCustomerIdentityManager         ;
-        this.pluginRoot                             = pluginRoot                          ;
+        this.pluginRoot                             = pluginRoot                            ;
         this.pluginFileSystem                       = pluginFileSystem                      ;
         this.pluginId                               = pluginId                              ;
     }
