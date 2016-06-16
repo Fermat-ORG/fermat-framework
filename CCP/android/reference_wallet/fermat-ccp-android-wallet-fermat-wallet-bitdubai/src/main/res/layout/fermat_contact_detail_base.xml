@@ -136,10 +136,19 @@
                     android:paddingBottom="7dip"
                     android:layout_gravity="end"
                     android:state_selected = "false"
-                    android:text="Tokens Wallet Addres"
+                    android:text="Addres"
                     app:typeface="ROBOTO_REGULAR"
                     android:layout_weight="1"
                     android:background="@null"/>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:padding="3dp"
+                    android:layout_height="32dp"
+
+                    android:visibility="visible"
+                    android:id="@+id/img_update"
+                    android:src="@drawable/ic_contact_update"/>
 
             </LinearLayout>
 
