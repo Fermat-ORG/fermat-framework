@@ -642,17 +642,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractActorNetwo
 //                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
 //                    }
 
-                    activeActor = this.isActorOnline(actorProfile.getIdentityPublicKey());
+                    ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(
+                            actorProfile.getIdentityPublicKey(),
+                            actorProfile.getName(),
+                            actorProfile.getPhoto(),
+                            actorProfile.getLocation());
 
-                    if (activeActor) {
-                        ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(
-                                actorProfile.getIdentityPublicKey(),
-                                actorProfile.getName(),
-                                actorProfile.getPhoto(),
-                                actorProfile.getLocation());
-
-                        actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
-                    }
+                    actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
                 }
             } else {
                 return actorAssetIssuerRegisteredList;
