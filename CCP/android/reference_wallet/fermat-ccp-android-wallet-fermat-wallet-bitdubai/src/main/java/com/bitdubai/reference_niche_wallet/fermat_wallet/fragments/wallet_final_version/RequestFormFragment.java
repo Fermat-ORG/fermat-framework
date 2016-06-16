@@ -547,16 +547,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             cryptoWalletWalletContact = (FermatWalletWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (cryptoWalletWalletContact != null) {
-            isFragmentFromDetail = true;
-            try {
-                if (cryptoWalletWalletContact.getProfilePicture() != null) {
-                    imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
 
-                } else
-                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            }
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
