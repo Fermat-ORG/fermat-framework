@@ -242,7 +242,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
             }else{
                 if(cryptoCustomerPublicKey != null) {
-                    CryptoCustomerIdentityInformationImpl identity = new CryptoCustomerIdentityInformationImpl(brokerNameText, cryptoCustomerPublicKey, imgInBytes, ExposureLevel.PUBLISH);
+                    CryptoCustomerIdentityInformationImpl identity = new CryptoCustomerIdentityInformationImpl(brokerNameText, cryptoCustomerPublicKey, imgInBytes, ExposureLevel.PUBLISH, 0, Frecuency.NONE);
                     EditCustomerIdentityWorker EditIdentityWorker = new EditCustomerIdentityWorker(getActivity(), appSession, identity, this);
 
                     progressBar.setVisibility(View.VISIBLE);

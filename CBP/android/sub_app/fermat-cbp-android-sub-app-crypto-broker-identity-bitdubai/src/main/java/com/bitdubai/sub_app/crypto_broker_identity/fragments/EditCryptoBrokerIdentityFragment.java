@@ -235,7 +235,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment<Ref
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
             } else {
                 if (cryptoBrokerPublicKey != null) {
-                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex, 0, Frecuency.NONE);
                     EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
 
                     progressBar.setVisibility(View.VISIBLE);
@@ -253,6 +253,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment<Ref
                 }
             }
         }
+    }
     }
 
     private void dispatchTakePictureIntent() {

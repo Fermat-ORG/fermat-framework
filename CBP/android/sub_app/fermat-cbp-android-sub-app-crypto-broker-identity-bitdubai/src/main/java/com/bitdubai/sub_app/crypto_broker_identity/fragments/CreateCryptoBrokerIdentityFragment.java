@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 
 
@@ -175,7 +176,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                 FermatWorker fermatWorker = new FermatWorker(getActivity()) {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray);
+                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray, 0, com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency.NONE);
 
                         return SUCCESS;
                     }

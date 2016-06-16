@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
@@ -224,7 +225,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     @Override
                     protected Object doInBackground() throws Exception {
                         CryptoCustomerIdentityInformation identity;
-                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray);
+                        identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray, 0, Frecuency.NONE);
                         appSession.getModuleManager().publishCryptoCustomerIdentity(identity.getPublicKey());
 
                         return SUCCESS;
