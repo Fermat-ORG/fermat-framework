@@ -50,13 +50,15 @@
         android:fontFamily="hel"
         />
 
-      <ImageView
-          android:layout_width="25sp"
-          android:layout_height="25sp"
-          android:background="@drawable/fw_add_floatting_buttom"
-          android:id="@+id/checkbox_connection"
-          android:layout_marginTop="10dp"
-          />
+        <CheckBox
+            android:id="@+id/checkbox_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:buttonTint="@drawable/checkbox_icon"
+            android:background="@drawable/checkboxblank_icon"
+            android:width="30dp"
+            android:height="16dp"/>
 
     </LinearLayout>
 

@@ -87,6 +87,34 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         try {
 
             fermatWalletModule = appSession.getModuleManager();
+
+            try {
+                bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
+
+                if (blockchainNetworkType == null) {
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                    } else {
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+                        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+
+                        try {
+                            fermatWalletSessionReferenceApp.getModuleManager().persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), bitcoinWalletSettings);
+                        } catch (CantPersistSettingsException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             //noinspection unchecked
         } catch (Exception e) {
@@ -109,7 +137,6 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         try {
 
 
-            bitcoinWalletSettings = fermatWalletModule.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
 
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
@@ -144,7 +171,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.GRAY));
 
            // list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
@@ -153,10 +180,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
            // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,30 +199,8 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
         try {
 
-            try {
-                bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                e.printStackTrace();
-            }
+
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-
-
-            if (preferenceSettingsItem.getId() == 11){
-                //receive Regtest test bitcoins
-                Runnable _longPressed = new Runnable() {
-                    public void run() {
-                        Log.i("info", "LongPress");
-                        Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
-                        GET("", getActivity());
-                    }
-                };
-
-                _longPressed.run();
-
-            }
-
             if (preferenceSettingsItem.getId() == 10) {
                 //export key show fragment
 
@@ -222,6 +224,13 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
                 openImportMnemonicScreen();
 
+            }
+            else if(preferenceSettingsItem.getId() == 13){
+
+                //receive Regtest test bitcoins
+               Log.i("info", "LongPress");
+               Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
+               GET("", getActivity());
             }
 
 
@@ -351,7 +360,6 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
     @Override
     public void dialogOptionSelected(String item, int position) {
 
-        BlockchainNetworkType blockchainNetworkType;
 
         switch (item) {
 
@@ -374,7 +382,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
 
         if (blockchainNetworkType == null) {
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {

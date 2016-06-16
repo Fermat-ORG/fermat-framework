@@ -219,7 +219,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             setUpContactAddapter();
 
-
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
 
             return rootView;
         } catch (Exception e) {
@@ -891,13 +894,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-        final InputMethodManager imm;
+
        /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
 
-        //Lineas para ocultar el teclado virtual (Hide keyboard)
-         imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editTextAmount.getWindowToken(), 0);
+
     }
 }
