@@ -59,6 +59,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     private EditText mCustomerName;
     private ImageView mCustomerImage;
+    private View progressBar;
 
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
@@ -82,10 +83,12 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
      */
     private void initViews(View layout) {
 
+        progressBar = layout.findViewById(R.id.cci_progress_bar);
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
-
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
-        mCustomerName.requestFocus();
+        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
+        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
+
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -93,14 +96,13 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
+
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +110,10 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        mCustomerName.requestFocus();
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         configureToolbar();
     }
@@ -224,14 +229,16 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 fermatWorker.setCallBack(new FermatWorkerCallBack() {
                     @Override
                     public void onPostExecute(Object... result) {
-                        if (donde.equalsIgnoreCase("OnClick")) {
-                            Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
-                        }
+                        progressBar.setVisibility(View.GONE);
+
+                        Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
                     }
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
+                        progressBar.setVisibility(View.GONE);
+
                         Toast.makeText(getActivity(), "An error occurred trying to create a Crypto Customer Identity", Toast.LENGTH_SHORT).show();
 
                         appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
@@ -239,6 +246,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     }
                 });
 
+                progressBar.setVisibility(View.VISIBLE);
                 fermatWorker.execute();
             }
         }
