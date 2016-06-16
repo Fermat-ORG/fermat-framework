@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 
 import org.bitcoinj.core.NetworkParameters;
@@ -16,6 +17,11 @@ public interface BitcoinNetworkConfiguration {
      * The network parameters of the default networt type selected for the platform.
      */
     NetworkParameters DEFAULT_NETWORK_PARAMETERS = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+
+    /**
+     * The crypto currency of this network
+     */
+    CryptoCurrency CRYPTO_CURRENCY = CryptoCurrency.BITCOIN;
 
     /**
      * Agent name and version
