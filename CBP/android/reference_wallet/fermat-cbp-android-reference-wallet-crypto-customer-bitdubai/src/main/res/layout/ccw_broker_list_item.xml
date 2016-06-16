@@ -22,17 +22,28 @@
         android:layout_marginRight="4dp"
         >
 
+        <!--<ImageView-->
+            <!--android:id="@+id/ccw_broker_image"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginEnd="10dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:contentDescription="@string/identity_img"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--tools:src="@drawable/ic_profile_male"/>-->
+
         <ImageView
             android:id="@+id/ccw_broker_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:contentDescription="@string/identity_img"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/ic_profile_male"/>
+            android:src="@android:drawable/sym_def_app_icon"
+            tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_merchandise_to_sell"
@@ -67,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="EXCHANGE RATE"
+            android:text="EXCHANGE RATEEE"
             android:textColor="#0D6DA3"
             android:layout_toEndOf="@+id/ccw_broker_image"
             android:layout_above="@+id/ccw_broker_exchange_rates"
