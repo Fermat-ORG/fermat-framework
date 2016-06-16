@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -58,12 +59,16 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         implements FermatWorkerCallBack {
 
     // Constants
-    private static final String TAG = "EditBrokerIdentity";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
+    private static final String CUSTOMER_NAME = "Customer_name";
 
-    // data
-    private Bitmap cryptoCustomerBitmap;
+
+    // DATA
+    private Bitmap cryptoCustomerBitmap = null;
+    private byte[] cryptoCustomerImageByteArray = null;
+    private String cryptoCustomerName = null;
+
 
     // Managers
     private ErrorManager errorManager;
@@ -97,6 +102,18 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
             else
                 Log.e("EditCustomerIdentity", e.getMessage(), e);
         }
+
+        //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
+        if(appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE) != null)
+        {
+            cryptoCustomerImageByteArray = (byte[]) appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
+            cryptoCustomerBitmap = BitmapFactory.decodeByteArray(cryptoCustomerImageByteArray, 0, cryptoCustomerImageByteArray.length);
+            appSession.removeData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
+
+            cryptoCustomerName = (String) appSession.getData(CUSTOMER_NAME);
+            appSession.removeData(CUSTOMER_NAME);
+        }
+
     }
 
     @Override
@@ -119,17 +136,32 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
         CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
+
+        //Coming from List activity
         if (identityInfo != null) {
             cryptoCustomerPublicKey = identityInfo.getPublicKey();
             mCustomerName.setText(identityInfo.getAlias());
             mCustomerName.selectAll();
-            mCustomerName.requestFocus();
-            mCustomerName.performClick();
             profileImage = identityInfo.getProfileImage();
             ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bmd.getBitmap()));
         }
+
+        //Coming from cropper activity
+        if(cryptoCustomerBitmap != null)
+        {
+            RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
+            bitmapDrawable.setCornerRadius(360);
+            bitmapDrawable.setAntiAlias(true);
+            mCustomerImage.setImageDrawable(bitmapDrawable);
+        }
+
+        if(cryptoCustomerName != null)
+            mCustomerName.setText(cryptoCustomerName);
+
+        mCustomerName.requestFocus();
+        mCustomerName.performClick();
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -186,19 +218,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoCustomerBitmap = (Bitmap) extras.get("data");
-
-                    if (mCustomerImage != null && cryptoCustomerBitmap != null) {
-                        mCustomerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap));
-
-                        RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
-
-                        bitmapDrawable.setCornerRadius(360);
-                        bitmapDrawable.setAntiAlias(true);
-
-                        mCustomerImage.setImageDrawable(bitmapDrawable);
-
-                    }
-
                 break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
@@ -206,8 +225,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, mCustomerImage.getWidth(), mCustomerImage.getHeight(), true);
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mCustomerImage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -215,6 +232,13 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                     }
                     break;
             }
+
+            //Go to CryptoCustomerImageCropperFragment so the user can crop (square) his picture
+            appSession.setData(CryptoCustomerImageCropperFragment.BACK_ACTIVITY, Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
+            appSession.setData(CryptoCustomerImageCropperFragment.ORIGINAL_IMAGE, cryptoCustomerBitmap);
+            appSession.setData(CUSTOMER_NAME, mCustomerName.getText().toString());
+            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
+
         }
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
