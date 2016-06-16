@@ -366,16 +366,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
-//            Log.i(TAG,"invoqueModuleMethod");
-//            Log.i(TAG,platformCode);
-//            Log.i(TAG,layerCode);
-//            Log.i(TAG,pluginsCode);
-//            Log.i(TAG,version);
-//            Log.i(TAG,method);
-//            Log.i(TAG,"Parameters");
-//            for (ModuleObjectParameterWrapper parameter : parameters) {
-//                Log.i(TAG, parameter.toString());
-//            }
             Object returnModuleObject = null;
             PluginVersionReference pluginVersionReference =  null;
             try {
@@ -395,43 +385,44 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            chunkAndSendData(dataId, clientKey, aidlObject);
 //            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
 
-
-
+            FermatModuleObjectWrapper fermatModuleObjectWrapper = null;
             try {
-
                 if (returnModuleObject instanceof Exception) {
-                    return new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
                 } else {
                     if (!(returnModuleObject instanceof Serializable)) {
                         if (returnModuleObject != null) {
                             NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
                             // return the exception
-                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                            sendLargeData(dataId, clientKey, fermatModuleObjectWrapper);
+                        }else{
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         }
                     }else {
                         Serializable aidlObject = (Serializable) returnModuleObject;
                         try {
                             sendLargeData(dataId, clientKey, aidlObject);
-                            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         } catch (Exception e) {
-                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
+                            sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
+                            e.printStackTrace();
                         }
                     }
-
                 }
             } catch (Exception e) {
 //                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
                 try {
-                    sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
+                    sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
                 } catch (Exception e1) {
                     Log.e(TAG,"Error, please contact furszy and show him the stacktrace below");
                     e1.printStackTrace();
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e1);
                 }
-//                new FermatModuleObjectWrapper(dataId, null, true, e);
             }
-
-            return new FermatModuleObjectWrapper(null, true, dataId);
-
+            return fermatModuleObjectWrapper;
         }
 
         @Override

@@ -464,7 +464,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //                        actorAssetIssuer);
 //                assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
 ////                this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
-//            } catch (CantSendMessageException e) {
+//            } catch (CantSendDAPMessageException e) {
 //                throw new CantConnectToActorAssetException("CAN'T SEND MESSAGE TO ACTOR ASSET ISSUER", e, "", "");
 //            } catch (CantSetObjectException e) {
 //                e.printStackTrace();
