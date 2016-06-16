@@ -6,9 +6,11 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -49,10 +51,13 @@ import java.util.UUID;
 
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 15/06/16.
  */
 public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatActorCommunitySettings> {
 
-    List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
+
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    List<ChatActorCommunityInformation> listWorldChatActor(String PublicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
 
     List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException, CantListChatIdentityException;
 
@@ -79,8 +84,7 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
                                                                          final int                                     max             ,
                                                                          final int                                     offset          ) throws CantListChatActorException;
 
-    List<ChatActorCommunityInformation> listChatActorPendingLocalAction    (final ChatActorCommunitySelectableIdentity selectedIdentity,
-                                                                               final int max,
+    List<ChatActorCommunityInformation> listChatActorPendingLocalAction    (final String publicKey, final Actors actorType,                                                                              final int max,
                                                                                final int offset) throws CantListChatActorException;
 
 

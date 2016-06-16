@@ -641,12 +641,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
              if(userList != null)
                 dataSet.addAll(userList);
              else {
-                 dataSet.addAll(lstIntraUserInformations);
-                 getActivity().runOnUiThread(new Runnable() {
-                     public void run() {
-                         Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
-                     }
-                 });
+                 if(lstIntraUserInformations!=null) {
+                     dataSet.addAll(lstIntraUserInformations);
+                     getActivity().runOnUiThread(new Runnable() {
+                         public void run() {
+                             Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                         }
+                     });
+                 }else{
+                     Log.e(TAG,"Request null");
+                 }
              }
 
 

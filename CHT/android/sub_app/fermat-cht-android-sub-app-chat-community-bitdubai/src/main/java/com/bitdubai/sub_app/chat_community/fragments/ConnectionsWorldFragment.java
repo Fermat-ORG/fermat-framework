@@ -29,12 +29,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -72,7 +70,7 @@ public class ConnectionsWorldFragment
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 2;
     protected final String TAG = "Recycler Base";
 
     //Managers
@@ -320,8 +318,16 @@ public class ConnectionsWorldFragment
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
 
-            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity, MAX, offset);
-
+            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
+//            for(ChatActorCommunityInformation chat: result){
+//                if(chat.getConnectionState()!= null){
+//                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
+//                        moduleManager.requestConnectionToChatActor(identity,chat);
+//                        dataSet.add(chat);
+//                    }else dataSet.add(chat);
+//                }
+//                else dataSet.add(chat);
+//            }
             dataSet.addAll(result);
 
             offset = dataSet.size();
