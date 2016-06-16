@@ -818,7 +818,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Insert NodesCatalog into data base
              */
             pair = daoFactory.getNodesCatalogDao().createUpdateTransactionStatementPair(nodeCatalog);
-            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+            databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
 
             // create the node catalog transaction
             NodesCatalogTransaction transaction = new NodesCatalogTransaction();

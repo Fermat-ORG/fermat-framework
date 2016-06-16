@@ -15,12 +15,12 @@ project(':fermat-p2p-core').projectDir = new File('P2P/library/core/fermat-p2p-c
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 */
-
+/*
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-communication-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
-/*
+*/
 include ':fermat-p2p-plugin-communication-network-node-bitdubai'
 project(':fermat-p2p-plugin-communication-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-node-bitdubai')
-*/
+
 include ':fermat-p2p-plugin-communication-network-client-bitdubai'
 project(':fermat-p2p-plugin-communication-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-client-bitdubai')
