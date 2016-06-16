@@ -21,6 +21,8 @@ public interface ChatActorCommunitySearch extends Serializable {
 
     List<ChatActorCommunityInformation> getResultDistance(double distance) throws CantGetChtActorSearchResult;
 
+    List<ChatActorCommunityInformation> getResultAlias(String alias) throws CantGetChtActorSearchResult;
+
     String getAlias();
 
     String getPublicKey();

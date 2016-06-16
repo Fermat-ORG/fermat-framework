@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 
@@ -39,6 +40,12 @@ public abstract class CryptoCustomerSearch {
      * @throws CantListCryptoCustomersException  if something goes wrong.
      */
     public abstract List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultDistance(double distance) throws CantListCryptoCustomersException;
+
+    public abstract List<CryptoCustomerExposingData> getResultAlias(String alias) throws CantListCryptoCustomersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
