@@ -68,13 +68,17 @@ public class FermatAppConnectionManager {
         if (activity == null) Log.e(TAG, "Activity null");
         if (openConnections.containsKey(publicKey)) {
             fermatAppConnection = openConnections.get(publicKey);
-            if (fermatAppConnection.getContext() != null) {
-                if (!fermatAppConnection.getContext().equals(activity)) {
-                    fermatAppConnection.clear();
+            if(fermatAppConnection!=null) {
+                if (fermatAppConnection.getContext() != null) {
+                    if (!fermatAppConnection.getContext().equals(activity)) {
+                        fermatAppConnection.clear();
+                        fermatAppConnection.setContext(activity);
+                    }
+                } else {
                     fermatAppConnection.setContext(activity);
                 }
-            } else {
-                fermatAppConnection.setContext(activity);
+            }else{
+                Log.e(TAG,"AppConnection null, please check this in the FermatAppConnectionManager class");
             }
             return fermatAppConnection;
         }
@@ -211,6 +215,9 @@ public class FermatAppConnectionManager {
             case "public_key_art_music_player":
                 fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
                 break;
+            default:
+                fermatAppConnection = new EmptyFermatAppConnection(activity);
+                break;
         }
 
         if (!openConnections.containsKey(publicKey)) {
@@ -230,7 +237,7 @@ public class FermatAppConnectionManager {
                 e.printStackTrace();
             }
         }
-        fermatAppConnection.setFullyLoadedSession(session);
+        if(fermatAppConnection!=null) fermatAppConnection.setFullyLoadedSession(session);
         return fermatAppConnection;
     }
 
