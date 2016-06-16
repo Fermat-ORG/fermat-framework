@@ -6,8 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,12 +22,10 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
-
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
@@ -40,22 +37,39 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
-    private static final int IMAGE_WIDTH = 400;
-    private static final int IMAGE_HEIGHT = 400;
-    private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
+    private static final String BROKER_NAME = "Broker_name";
 
-    private Bitmap cryptoBrokerBitmap;
-    private byte[] cryptoBrokerImageByteArray;
-
+    private Bitmap cryptoBrokerBitmap = null;
+    private byte[] cryptoBrokerImageByteArray = null;
+    private String cryptoBrokerName = null;
 
     private EditText mBrokerName;
     private ImageView mBrokerImage;
 
-    private boolean actualizable;
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        //If we landed here from CryptoBrokerImageCropperFragment, save the cropped Image.
+        if(appSession.getData(CryptoBrokerImageCropperFragment.CROPPED_IMAGE) != null)
+        {
+            cryptoBrokerImageByteArray = (byte[]) appSession.getData(CryptoBrokerImageCropperFragment.CROPPED_IMAGE);
+            cryptoBrokerBitmap = BitmapFactory.decodeByteArray(cryptoBrokerImageByteArray, 0, cryptoBrokerImageByteArray.length);
+            appSession.removeData(CryptoBrokerImageCropperFragment.CROPPED_IMAGE);
+
+            cryptoBrokerName = (String) appSession.getData(BROKER_NAME);
+            appSession.removeData(BROKER_NAME);
+
+        }
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,23 +78,17 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         return rootLayout;
     }
 
-    /**
-     * Inicializa las vistas de este Fragment
-     *
-     * @param layout el layout de este Fragment que contiene las vistas
-     */
-    private void initViews(View layout) {
-        actualizable = true;
-        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        Button botonG = (Button) layout.findViewById(R.id.create_crypto_broker_button);
 
-        botonG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actualizable = false;
-                createNewIdentityInBackDevice("onClick");
-            }
-        });
+    private void initViews(View layout) {
+        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+
+        if(cryptoBrokerBitmap != null)
+            mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
+
+        if(cryptoBrokerName != null)
+            mBrokerName.setText(cryptoBrokerName);
 
         mBrokerName.requestFocus();
         mBrokerName.performClick();
@@ -88,40 +96,32 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                if (actualizable) {
-                    /*
-                    if(!mBrokerName.getText().toString().trim().equals("")) {
-                        if (cryptoBrokerBitmap != null) {
-                            new AlertDialog.Builder(v.getContext())
-                                    .setTitle("Create Identity?")
-                                    .setMessage("You want to create identity?")
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface arg0, int arg1) {
-                                            createNewIdentityInBackDevice("onFocus");
-                                        }
-                                    }).create().show();
-                        }
-                    }
-                    */
-                }
             }
         });
-        final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
-        camara.setOnClickListener(new View.OnClickListener() {
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewIdentityInBackDevice("onClick");
+            }
+        });
+
+
+        final ImageView cameraImageView = (ImageView) layout.findViewById(R.id.camara);
+        cameraImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dispatchTakePictureIntent();
             }
         });
-        final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
-        galeria.setOnClickListener(new View.OnClickListener() {
+        final ImageView galleryImageView = (ImageView) layout.findViewById(R.id.galeria);
+        galleryImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadImageFromGallery();
             }
         });
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
@@ -134,17 +134,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
-
-                    //Crop image
-                    //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
-
-                    //Compress image
-                    cryptoBrokerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoBrokerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
-
-                    if (mBrokerImage != null && cryptoBrokerBitmap != null)
-                        mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
-
-                break;
+                    break;
 
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
@@ -152,23 +142,19 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-
-                            //Crop image
-                            //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, IMAGE_WIDTH, IMAGE_HEIGHT, true);
-
-                            //Compress image
-                            cryptoBrokerImageByteArray = ImagesUtils.toCompressedByteArray(cryptoBrokerBitmap, IMAGE_COMPRESSION_PERCENTAGE);
-
-                            if (mBrokerImage != null && cryptoBrokerBitmap != null)
-                                mBrokerImage.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
-
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "There has been an error loading the image", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
+
+            //Go to CryptoBrokerImageCropper so the user can crop (square) his picture
+            appSession.setData(CryptoBrokerImageCropperFragment.BACK_ACTIVITY, Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
+            appSession.setData(CryptoBrokerImageCropperFragment.ORIGINAL_IMAGE, cryptoBrokerBitmap);
+            appSession.setData(BROKER_NAME, mBrokerName.getText().toString());
+            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -211,4 +197,5 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
+
 }
