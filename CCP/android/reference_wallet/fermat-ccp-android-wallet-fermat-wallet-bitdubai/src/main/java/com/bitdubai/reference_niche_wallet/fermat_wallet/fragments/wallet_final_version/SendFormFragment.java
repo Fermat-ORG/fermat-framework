@@ -197,7 +197,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            //setUpContactAddapter();
+            setUpContactAddapter();
 
             //(Hide keyboard)
             final InputMethodManager imm;
@@ -252,6 +252,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         txt_type = (TextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");

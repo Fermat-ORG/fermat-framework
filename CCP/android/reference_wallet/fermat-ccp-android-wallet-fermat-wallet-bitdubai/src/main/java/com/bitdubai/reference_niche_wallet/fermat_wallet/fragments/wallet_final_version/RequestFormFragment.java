@@ -251,6 +251,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
@@ -462,6 +463,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
          */
 
         send_button.setOnClickListener(this);
+
+        send_button.setOnClickListener(this);
       /**
          *  Amount observer
          */
@@ -548,13 +551,18 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             cryptoWalletWalletContact = (FermatWalletWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (cryptoWalletWalletContact != null) {
+
             isFragmentFromDetail = true;
+
 
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
             setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+
          }
+
+
     }
 
 
