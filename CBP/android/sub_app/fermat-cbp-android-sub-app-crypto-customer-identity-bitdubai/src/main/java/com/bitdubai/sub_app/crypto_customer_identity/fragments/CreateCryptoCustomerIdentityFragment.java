@@ -29,7 +29,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.squareup.picasso.Picasso;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
@@ -55,8 +53,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
-    private static final int IMAGE_WIDTH = 400;
-    private static final int IMAGE_HEIGHT = 400;
     private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
 
     private Bitmap cryptoCustomerBitmap;
@@ -141,7 +137,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_create) {
-            createNewIdentityInBackDevice("OnClick");
+            createNewIdentityInBackDevice();
         }
         return true;
     }
@@ -215,7 +211,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     /**
      * Crea una nueva identidad para un crypto customer
      */
-    private void createNewIdentityInBackDevice(final String donde) {
+    private void createNewIdentityInBackDevice() {
         final String customerNameText = mCustomerName.getText().toString();
         if (customerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "The alias must not be empty", Toast.LENGTH_LONG).show();
@@ -228,7 +224,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                     @Override
                     protected Object doInBackground() throws Exception {
                         CryptoCustomerIdentityInformation identity;
-
                         identity = appSession.getModuleManager().createCryptoCustomerIdentity(customerNameText, cryptoCustomerImageByteArray);
                         appSession.getModuleManager().publishCryptoCustomerIdentity(identity.getPublicKey());
 

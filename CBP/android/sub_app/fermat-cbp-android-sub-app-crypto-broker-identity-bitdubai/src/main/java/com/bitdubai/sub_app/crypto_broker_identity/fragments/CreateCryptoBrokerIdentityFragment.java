@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.squareup.picasso.Picasso;
 
 
 /**
@@ -43,8 +41,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
-    private static final int IMAGE_WIDTH = 400;
-    private static final int IMAGE_HEIGHT = 400;
     private static final int IMAGE_COMPRESSION_PERCENTAGE = 25;
 
     private Bitmap cryptoBrokerBitmap;
@@ -90,7 +86,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewIdentityInBackDevice("onClick");
+                createNewIdentityInBackDevice();
             }
         });
 
@@ -165,7 +161,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void createNewIdentityInBackDevice(final String donde) {
+    private void createNewIdentityInBackDevice() {
         final String brokerNameText = mBrokerName.getText().toString();
 
         if (brokerNameText.trim().isEmpty()) {
@@ -179,7 +175,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                 FermatWorker fermatWorker = new FermatWorker(getActivity()) {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                         appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray);
 
                         return SUCCESS;
