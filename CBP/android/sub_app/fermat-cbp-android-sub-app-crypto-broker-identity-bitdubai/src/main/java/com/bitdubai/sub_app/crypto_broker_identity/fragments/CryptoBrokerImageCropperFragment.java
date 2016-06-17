@@ -95,7 +95,6 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
 
                 //Scale it to default size (IMAGE_WIDTH x IMAGE_HEIGHT)
                 croppedImage = Bitmap.createScaledBitmap(croppedImage, IMAGE_WIDTH, IMAGE_HEIGHT, true);
-                byte[] croppedImageByteArray2 = ImagesUtils.toByteArray(croppedImage);
 
                 //Compress it
                 byte[] croppedImageByteArray = ImagesUtils.toCompressedByteArray(croppedImage, IMAGE_COMPRESSION_PERCENTAGE);
