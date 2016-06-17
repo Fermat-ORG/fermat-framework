@@ -1001,7 +1001,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
 
 
-   private void getAndShowMarketExchangeRateData(final View container) {
+/*   private void getAndShowMarketExchangeRateData(final View container) {
 
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
@@ -1098,5 +1098,5 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         fermatWorker.execute();
     }
-}
+*/}
 

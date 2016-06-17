@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1;
 
+
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -204,7 +205,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
            // logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation started...", null, null);
 
-            if(walletModuleCryptoWallet == null) {
+          /*  if(walletModuleCryptoWallet == null) {
                 walletModuleCryptoWallet = new FermatWalletWalletModuleManager(
                         cryptoWalletManager,
                         cryptoAddressBookManager,
@@ -225,7 +226,8 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         walletManagerManager,transferIntraWalletUsersManager);
 
                 walletModuleCryptoWallet.initialize();
-            }
+
+            }*/
 
             logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation finished successfully.", null, null);
 

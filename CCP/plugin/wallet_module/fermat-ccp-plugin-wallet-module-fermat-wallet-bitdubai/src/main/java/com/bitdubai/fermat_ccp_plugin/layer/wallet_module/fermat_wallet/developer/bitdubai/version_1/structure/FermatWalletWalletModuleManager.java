@@ -177,6 +177,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 @PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_FERMAT_WALLET)
+
 public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWalletSettings> implements FermatWallet,Serializable {
 
     private final CryptoWalletManager bitcoinWalletManager          ;
@@ -245,6 +246,10 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
     private WalletContactsRegistry walletContactsRegistry;
+
+  /*  public FermatWalletWalletModuleManager(CryptoWalletManager cryptoWalletManager, CryptoAddressBookManager cryptoAddressBookManager, CryptoAddressesManager cryptoAddressesNSManager, CryptoPaymentManager cryptoPaymentManager, CryptoVaultManager cryptoVaultManager, ErrorManager errorManager, ExtraUserManager extraUserManager, IntraWalletUserActorManager intraWalletUserActorManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, OutgoingExtraUserManager outgoingExtraUserManager, OutgoingIntraActorManager outgoingIntraActorManager, WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem, EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster, WalletManagerManager walletManagerManager, TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
+        super(cryptoWalletManager, cryptoAddressBookManager, cryptoAddressesNSManager, cryptoPaymentManager, cryptoVaultManager, errorManager, extraUserManager, intraWalletUserActorManager, intraWalletUserIdentityManager, outgoingExtraUserManager, outgoingIntraActorManager, walletContactsManager, pluginId, pluginFileSystem, eventManager, bitcoinNetworkManager, broadcaster, walletManagerManager, transferIntraWalletUsersManager);
+    }*/
 
 
     public final void initialize() throws CantInitializeCryptoWalletManagerException {

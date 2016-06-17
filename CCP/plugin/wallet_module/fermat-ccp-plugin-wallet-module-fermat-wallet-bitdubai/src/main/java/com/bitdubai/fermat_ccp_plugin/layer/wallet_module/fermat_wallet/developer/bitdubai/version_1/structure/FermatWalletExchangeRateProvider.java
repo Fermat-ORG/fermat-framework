@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * Created by Daniel González (danielgonzalez252@gmail.com) on 16/06/16.
+ * Created by Daniel González on 16/06/16.
  */
 public class FermatWalletExchangeRateProvider implements ExchangeRateProvider, Serializable {
 
