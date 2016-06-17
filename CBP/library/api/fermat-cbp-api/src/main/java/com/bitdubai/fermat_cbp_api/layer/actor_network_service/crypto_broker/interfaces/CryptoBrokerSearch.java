@@ -41,7 +41,7 @@ public abstract class CryptoBrokerSearch {
      */
     public abstract List<CryptoBrokerExposingData> getResult() throws CantListCryptoBrokersException;
 
-    public abstract List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoBrokersException;
 
     public abstract List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoBrokersException;
 
