@@ -77,7 +77,7 @@ import java.util.concurrent.Future;
  */
 //TODO: le tengo que poner un timeout para desconectar los clientes y no abusen de Fermat, seguramente se pueda controlar esto por un token que me envia
 //TODO:   haciendo que paguen una cierta cantidad de satoshis por utilizar Fermat como servicio en background
-public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
+public class PlatformService extends Service implements FermatWorkerCallBack, BroadcastInterface {
 
     public static final String SERVER_NAME = "server_fermat";
 
@@ -267,35 +267,42 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
     }
 
-    private final IServerBrokerService.Stub mBinder = new IServerBrokerService.Stub() {
+    private final IPlatformService.Stub mBinder = new IPlatformService.Stub() {
 
 
         public String register() {
-            final String clientKey = UUID.randomUUID().toString();
-            if (serverThread == null) {
-                serverThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            LocalSocket localSocket = localServerSocket.accept();
-                            localSocket.setSendBufferSize(500000);
-//                            localSocket.setSoTimeout(0);
-                            LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(clientKey, localSocket);
+            String clientKey = null;
+            try {
+                clientKey = UUID.randomUUID().toString();
+
+                if (serverThread == null) {
+                    final String finalClientKey = clientKey;
+                    serverThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
                             try {
-                                localServerSocketSession.startSender();
-                            }catch (Exception e){
+                                LocalSocket localSocket = localServerSocket.accept();
+                                localSocket.setSendBufferSize(500000);
+//                            localSocket.setSoTimeout(0);
+                                LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(finalClientKey, localSocket);
+                                try {
+                                    localServerSocketSession.startSender();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                socketsClients.put(finalClientKey, localServerSocketSession);
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            socketsClients.put(clientKey, localServerSocketSession);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+
                         }
+                    });
+                }
+                serverThread.start();
 
-                    }
-                });
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            serverThread.start();
-
             return clientKey;
         }
 
@@ -518,6 +525,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "OnCreate");
+        android.os.Debug.waitForDebugger();
         fermatSystem = FermatSystem.getInstance();
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
@@ -832,6 +840,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         }
 
         // Indicate that app was loaded.
+        Log.i(TAG,"PlatformService running");
         isFermatSystemRunning = true;
         Intent intent = new Intent();
         intent.setAction("org.fermat.SYSTEM_RUNNING");

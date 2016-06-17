@@ -4,6 +4,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identit
  * Created by natalia on 16/09/15.
  */
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 
 import java.io.Serializable;
@@ -22,5 +23,8 @@ public interface CryptoCustomerIdentityInformation extends Serializable{
 
     boolean isPublished();
 
+    long getAccuracy();
+
+    Frecuency getFrecuency();
 }
 

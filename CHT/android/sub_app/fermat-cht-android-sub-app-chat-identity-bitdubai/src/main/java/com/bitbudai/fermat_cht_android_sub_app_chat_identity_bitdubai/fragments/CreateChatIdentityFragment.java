@@ -56,6 +56,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -97,6 +98,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
     private Uri imageToUploadUri;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
+    ChatIdentity identity;
 
     public static CreateChatIdentityFragment newInstance() {
         return new CreateChatIdentityFragment();
@@ -104,13 +106,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -127,6 +126,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
+            }
+
+            //Check if a default identity is configured
+            try{
+                identity = moduleManager.getIdentityChatUser();
+            }catch (Exception e){
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
         } catch (Exception e) {
             if(errorManager!=null)
@@ -210,11 +216,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
             } else {
-                bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+                bitmap = BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                 mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-                mChatName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
-                String state = moduleManager.getIdentityChatUser().getConnectionState();
+                mChatName.setText(identity.getAlias().toString());
+                String state = identity.getConnectionState();
                 mChatConnectionState.setText(state);
                 botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +260,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                                 }
                             }
                         });
-
                     }
                 });
             }
@@ -263,7 +268,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
     }
-
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
@@ -296,12 +300,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         try {
             int id = item.getItemId();
             switch (id) {
-                //case MENU_HELP_ACTION:
                 case 2:
                     setUpDialog();
                     break;
                 case 1:
-                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+                    if(identity!=null)
+                        changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+                    else
+                        setUpDialog();
                     break;
             }
         } catch (Exception e) {
@@ -311,7 +317,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -487,11 +492,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             //e.printStackTrace();
         }
     }
-    @Override
-    public void onBackPressed(){
-        saveAndGoBack();
-        super.onBackPressed();
-    }
+
+//    @Override
+//    public void onBackPressed(){
+//        saveAndGoBack();
+//        super.onBackPressed();
+//    }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();
@@ -506,12 +512,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 matrix, false);
         return resizedBitmap;
     }
+
     public int dpToPx() {
         int dp = 150;
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
     }
+
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -564,11 +572,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         }
         if (chatBitmap == null) {
             // Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            chatBitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+            chatBitmap = BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length);
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, moduleManager.getIdentityChatUser().getImage(), state);
+                executor = new EditIdentityExecutor(appSession, identity.getPublicKey(), chatNameText, identity.getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -583,7 +591,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         }
                         break;
                 }
-            } catch (CHTException e) {
+            } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
             }
@@ -591,7 +599,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             byte[] imgInBytes = ImagesUtils.toByteArray(chatBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(appSession, moduleManager.getIdentityChatUser().getPublicKey(), chatNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
+                executor = new EditIdentityExecutor(appSession, identity.getPublicKey(), chatNameText, imgInBytes,
+                        identity.getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -606,7 +615,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                         }
                         break;
                 }
-            } catch (CHTException e) {
+            } catch (Exception e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
             }
@@ -652,7 +661,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     public boolean ExistIdentity() throws CHTException {
         try {
-            if (!moduleManager.getIdentityChatUser().getAlias().isEmpty()) {
+            if (!identity.getAlias().isEmpty()) {
                 Log.i("CHT EXIST IDENTITY", "TRUE");
                // Log.i("Acuraccy data",""+moduleManager.getIdentityChatUser().getAccuracy());
                 return true;
@@ -699,7 +708,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
-
 
     private Bitmap getBitmap(String path) {
         Uri uri = Uri.fromFile(new File(path));

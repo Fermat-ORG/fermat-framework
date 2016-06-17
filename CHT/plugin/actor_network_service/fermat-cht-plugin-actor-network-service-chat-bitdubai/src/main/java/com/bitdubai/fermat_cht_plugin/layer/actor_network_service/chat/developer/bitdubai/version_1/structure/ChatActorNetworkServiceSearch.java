@@ -272,4 +272,61 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             throw new CantListChatException(e, "", "Unhandled error.");
         }
     }
+
+    @Override
+    public List<ChatExposingData> getResultAlias(String alias) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CHAT.getCode(),
+                    alias,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.ACTOR_CHAT
+            );
+
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<ChatExposingData> chatExposingDataArrayList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                JsonParser parser = new JsonParser();
+
+                Gson gson = new Gson();
+
+                JsonObject extraData = parser.parse(actorProfile.getExtraData()).getAsJsonObject();
+
+                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+
+                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+
+                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
+                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
+
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+            }
+
+            return chatExposingDataArrayList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
 }

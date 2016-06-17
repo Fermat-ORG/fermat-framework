@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
@@ -55,11 +56,11 @@ public class CryptoBrokerIdentityModuleManagerImpl
     }
 
     @Override
-    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerException {
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image, long accuracy, Frecuency frecuency) throws CantCreateCryptoBrokerException {
 
         try {
 
-            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(alias, image);
+            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(alias, image, accuracy, frecuency);
             return converIdentityToInformation(identity);
 
         } catch (CantCreateCryptoBrokerIdentityException e) {
@@ -71,7 +72,7 @@ public class CryptoBrokerIdentityModuleManagerImpl
 
     @Override
     public void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity)  throws CantUpdateBrokerIdentityException {
-        this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage());
+        this.identityManager.updateCryptoBrokerIdentity(cryptoBrokerIdentity.getAlias(), cryptoBrokerIdentity.getPublicKey(), cryptoBrokerIdentity.getProfileImage(), cryptoBrokerIdentity.getAccuracy(), cryptoBrokerIdentity.getFrecuency());
     }
 
     @Override
@@ -130,7 +131,7 @@ public class CryptoBrokerIdentityModuleManagerImpl
     }
 
     private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
-        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel());
+        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.getExposureLevel(), identity.getAccuracy(), identity.getFrecuency());
     }
 
 
