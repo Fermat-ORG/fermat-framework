@@ -10,9 +10,11 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CryptoBrokerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.EditCryptoBrokerIdentityFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.GeolocationBrokerIdentityFragment;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT;
 import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT;
+import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY_FRAGMENT;
 import static com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT;
 
 /**
@@ -30,6 +32,8 @@ public class CryptoBrokerIdentityFragmentFactory extends FermatFragmentFactory<R
 
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
             return EditCryptoBrokerIdentityFragment.newInstance();
+        if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY_FRAGMENT)
+            return GeolocationBrokerIdentityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
     }

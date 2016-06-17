@@ -10,9 +10,11 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateCryptoCustomerIdentityFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.EditCryptoCustomerIdentityFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.GeolocationCustomerIdentityFragment;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT;
 import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT;
+import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY_FRAGMENT;
 import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT;
 
 /**
@@ -32,6 +34,8 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory
 
         if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
             return EditCryptoCustomerIdentityFragment.newInstance();
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY_FRAGMENT)
+            return GeolocationCustomerIdentityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
     }

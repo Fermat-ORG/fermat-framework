@@ -537,6 +537,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 //            //runtimeActivity.setColor("#d07b62");
 //
 //
+//
+//
 //            runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
 //            runtimeStatusBar.setColor("#72af9c");
 //
