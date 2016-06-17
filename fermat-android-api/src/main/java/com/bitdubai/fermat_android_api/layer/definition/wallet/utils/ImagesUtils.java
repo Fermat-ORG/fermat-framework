@@ -109,6 +109,34 @@ public class ImagesUtils {
         return stream.toByteArray();
     }
 
+    /**
+     * Bitmap to compressed byte[]
+     *
+     * @param bitmap Bitmap
+     * @param quality int
+     * @return byte array
+     */
+    public static byte[] toCompressedByteArray(Bitmap bitmap, int quality) {
+        return toCompressedByteArray(bitmap, quality, Bitmap.CompressFormat.JPEG);
+    }
+
+
+    /**
+     * Bitmap to compressed byte[]
+     *
+     * @param bitmap Bitmap
+     * @param quality int
+     * @param format Bitmap.CompressFormat
+     * @return byte array
+     */
+    public static byte[] toCompressedByteArray(Bitmap bitmap, int quality, Bitmap.CompressFormat format) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(format, quality, stream);
+        return stream.toByteArray();
+    }
+
+
+
 
     public static Bitmap cropImage(Bitmap srcBmp){
         Bitmap dstBmp = null;

@@ -672,14 +672,14 @@ public enum Activities implements FermatEnum {
             case "CBPCCWSML":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS;
             case "CBPCCWCNLIS":
-                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;            
+                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
             case "CBPCCWCD":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS;
             case "CBPCCWSBAS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
             case "CBPCCWP":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
-                case "CBPCCWCNBAIS":
+            case "CBPCCWCNBAIS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS;
 
             case "DAPAUCAM":
@@ -709,7 +709,7 @@ public enum Activities implements FermatEnum {
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACCIEI":
-                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;           
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
 
             case "CBPSACBCCF":
                 return CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS;
@@ -968,7 +968,7 @@ public enum Activities implements FermatEnum {
             case "CWRWLPWBV1S":
                 return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SETTINGS;
             case "CWRWLPWBV1SW":
-                  return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
+                return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
             case "CWRWLPWBV1CV":
                 return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES;
             case "CCPBLPWCVD":

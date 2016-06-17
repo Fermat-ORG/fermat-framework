@@ -45,7 +45,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor.SUCCESS;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
             }
 
             checkIdentity();
-            
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }

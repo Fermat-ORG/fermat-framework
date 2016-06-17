@@ -68,7 +68,6 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
     long acurracydata;
     Frecuency frecuencydata;
     CryptoCustomerIdentity identity;
-    final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
     private IdentityCustomerPreferenceSettings chatIdentitySettings;
 
     public static GeolocationCustomerIdentityFragment newInstance() {
@@ -96,7 +95,7 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
             }
 
             checkIdentity();
-            
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
@@ -121,6 +120,8 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
         //Check if a default identity is configured
         if(identity==null){
             try{
+                final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
                 if(identityInfo != null){
                     return;
                 }
@@ -207,6 +208,8 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
     private void saveIdentityGeolocation(String donde) throws CantGetChatIdentityException {
         GeolocationIdentityExecutor executor = null;
         try {
+            final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
             if (accuracy.getText().length() == 0) {
                 Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
             } else {
@@ -247,6 +250,7 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
 
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
+        final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
         if(identityInfo!=null){
             accuracy.setText(""+identityInfo.getAccuracy());
             if (!identityInfo.getFrecuency().equals(null)) {
