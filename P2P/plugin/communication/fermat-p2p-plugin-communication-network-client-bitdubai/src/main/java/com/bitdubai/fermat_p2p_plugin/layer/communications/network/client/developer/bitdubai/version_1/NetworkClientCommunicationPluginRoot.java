@@ -530,13 +530,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         try {
 
-            location = locationManager.getLocation();
+            location = (locationManager != null && locationManager.getLocation()  != null)  ?  locationManager.getLocation()  : null ;
 
             if (location == null)
                 return null;
 
         } catch (Exception exception) {
-            exception.printStackTrace();
+            //exception.printStackTrace();
             return null;
         }
 
@@ -549,7 +549,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             nodeConnectionHistoryList = nodeConnectionHistoryDao.findAll();
             nodeConnectionHistoryListFiltered = applyGeoLocationFilter(location, nodeConnectionHistoryList);
         } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
             return null;
         }
 
