@@ -73,7 +73,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoBrokersException {
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
@@ -83,10 +83,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     null,
                     publicKey,
                     deviceLocation,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
