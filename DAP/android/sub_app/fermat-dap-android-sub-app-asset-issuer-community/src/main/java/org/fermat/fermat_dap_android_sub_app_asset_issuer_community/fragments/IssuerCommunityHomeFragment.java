@@ -434,24 +434,20 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
 
         menuItemConnect = menu.getItem(1);
         menuItemCancel = menu.getItem(2);
         menuItemSelect = menu.getItem(3);
         menuItemUnselect = menu.getItem(4);
+
         restartButtons();
     }
 
