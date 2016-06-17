@@ -44,6 +44,7 @@
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:paddingStart="8dp"
         android:singleLine="true"
         android:textColor="#54ACEC"
         tools:text="@string/matias_furszyfer_text"

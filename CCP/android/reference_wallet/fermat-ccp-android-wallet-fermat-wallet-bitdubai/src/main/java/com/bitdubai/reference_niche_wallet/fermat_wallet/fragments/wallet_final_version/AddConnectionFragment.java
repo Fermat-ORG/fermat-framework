@@ -90,8 +90,6 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             errorManager = fermatWalletSessionReferenceApp.getErrorManager();
 
 
-
-            intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
