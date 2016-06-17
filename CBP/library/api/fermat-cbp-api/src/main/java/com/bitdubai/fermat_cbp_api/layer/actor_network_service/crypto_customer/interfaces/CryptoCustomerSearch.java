@@ -41,7 +41,7 @@ public abstract class CryptoCustomerSearch {
      */
     public abstract List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException;
 
-    public abstract List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListCryptoCustomersException;
+    public abstract List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoCustomersException;
 
     public abstract List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoCustomersException;
 

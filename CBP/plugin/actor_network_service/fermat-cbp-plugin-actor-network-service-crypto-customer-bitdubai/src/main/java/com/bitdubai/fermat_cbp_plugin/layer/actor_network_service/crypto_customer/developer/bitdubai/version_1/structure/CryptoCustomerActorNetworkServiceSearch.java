@@ -76,7 +76,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoCustomersException {
 
         try {
 
@@ -87,10 +87,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     publicKey,
                     deviceLocation,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 
