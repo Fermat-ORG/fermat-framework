@@ -124,6 +124,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
+    List<Cities> getCities(String filter);
+
     @Override
     ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;
 

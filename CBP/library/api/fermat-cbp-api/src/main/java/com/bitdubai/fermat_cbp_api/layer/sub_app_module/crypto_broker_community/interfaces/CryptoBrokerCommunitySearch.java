@@ -16,7 +16,7 @@ public interface CryptoBrokerCommunitySearch extends Serializable {
 
     List<CryptoBrokerCommunityInformation> getResult() throws CantGetCryptoBrokerSearchResult;
 
-    List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantGetCryptoBrokerSearchResult;
+    List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoBrokerSearchResult;
 
     List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoBrokerSearchResult;
 

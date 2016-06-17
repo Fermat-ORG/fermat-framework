@@ -54,12 +54,12 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
-    public List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantGetCryptoBrokerSearchResult {
+    public List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoBrokerSearchResult {
         try {
 
             CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(publicKey, deviceLocation, distance, alias);
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
 
             final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
 
