@@ -2809,14 +2809,14 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
-        OptionsMenu optionsMenu = new OptionsMenu();
+       // OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem menuItem = new OptionMenuItem(1);
         Owner owner2 = new Owner();
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
@@ -2976,7 +2976,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();

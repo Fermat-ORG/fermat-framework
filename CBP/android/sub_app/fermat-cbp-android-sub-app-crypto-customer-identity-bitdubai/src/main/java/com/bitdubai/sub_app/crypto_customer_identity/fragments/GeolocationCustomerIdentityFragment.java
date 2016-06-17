@@ -250,7 +250,9 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
 
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
+
         final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
         if(identityInfo!=null){
             accuracy.setText(""+identityInfo.getAccuracy());
             if (!identityInfo.getFrecuency().equals(null)) {

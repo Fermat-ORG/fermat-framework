@@ -41,13 +41,13 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor.SUCCESS;
 import java.util.ArrayList;
 import java.util.List;
+import com.bitdubai.sub_app.crypto_broker_identity.R;
 
 /**
  * FERMAT-ORG
