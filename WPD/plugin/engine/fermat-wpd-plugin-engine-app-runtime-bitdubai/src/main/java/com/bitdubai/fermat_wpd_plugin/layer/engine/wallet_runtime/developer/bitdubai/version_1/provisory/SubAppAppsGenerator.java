@@ -618,6 +618,18 @@ public class SubAppAppsGenerator {
              */
 
             /**
+             * DAP ASSET ISSUER IDENTITY
+             */
+            createAssetIssuerIdentitySubAppNavigationStructure();
+            /**
+             * DAP ASSET USER IDENTITY
+             */
+            createAssetUserIdentitySubAppNavigationStructure();
+            /**
+             * DAP ASSET REDEEM POINT IDENTITY
+             */
+            createAssetRedeemPointIdentitySubAppNavigationStructure();
+            /**
              * DAP ASSET FACTORY
              */
             createAssetFactorySubAppNavigationStructure();
@@ -625,12 +637,10 @@ public class SubAppAppsGenerator {
              * DAP ASSET ISSUER COMMUNITY
              */
             createAssetIssuerCommunitySubAppNavigationStructure();
-
             /**
              * DAP ASSET USER COMMUNITY
              */
             createAssetUserCommunitySubAppNavigationStructure();
-
             /**
              * DAP REDEEM POINT COMMUNITY
              */
@@ -916,196 +926,6 @@ public class SubAppAppsGenerator {
 
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
-            /**
-             * DAP IDENTITIES
-             */
-
-            /**
-             * DAP ISSUER IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Issuer Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Issuer Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-
-            /**
-             * DAP USER IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_USER.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("User Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New User Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-            /**
-             * REDEEM POINT IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Redeem Point Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Redeem Point Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
         } catch (Exception e) {
             String message = FermatException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
@@ -1205,7 +1025,281 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
     }
 
+    private void createAssetIssuerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("Issuer Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset Issuer Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
+    private void createAssetUserIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_USER.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
+//
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("User Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset User Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
+    private void createAssetRedeemPointIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
+//
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("Redeem Point Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new Fragment();
+//            runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Redeem Point Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
     private void createAssetFactorySubAppNavigationStructure() throws InvalidParameterException {
+
         AppNavigationStructure dapFactory;
         Activity runtimeActivity;
         Tab runtimeTab;
@@ -1215,11 +1309,18 @@ public class SubAppAppsGenerator {
         Fragment runtimeFragment;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
+
         String toolbarColor = "#4B5E75";
         String statusBarColor = "#3f5b77";
 
-        String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
         dapFactory = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(dapFactoryPublicKey);
 
         dapFactory.setPublicKey(dapFactoryPublicKey);
         dapFactory.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1244,8 +1345,6 @@ public class SubAppAppsGenerator {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Draft");
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(dapFactoryPublicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -1281,6 +1380,22 @@ public class SubAppAppsGenerator {
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapFactory.addActivity(runtimeActivity);
         dapFactory.changeActualStartActivity(Activities.DAP_MAIN.getCode());
@@ -1402,20 +1517,35 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
         runtimeActivity.setColor(toolbarColor);
 
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Multimedia");
         runtimeTitleBar.setColor(toolbarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem = new MenuItem();
+//
+//        leftIconMenuItem.setFermatDrawable(new FermatDrawable(10, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1426,20 +1556,35 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
         runtimeActivity.setColor(toolbarColor);
 
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Properties");
         runtimeTitleBar.setColor(toolbarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem2 = new MenuItem();
+//
+//        leftIconMenuItem2.setFermatDrawable(new FermatDrawable(11, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem2.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem2);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1450,20 +1595,35 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
         runtimeActivity.setColor(toolbarColor);
 
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto");
         runtimeTitleBar.setColor("#1d1d25");
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem3 = new MenuItem();
+//
+//        leftIconMenuItem3.setFermatDrawable(new FermatDrawable(12, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem3.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem3);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1474,20 +1634,35 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
         runtimeActivity.setColor(toolbarColor);
 
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Verify");
         runtimeTitleBar.setColor(toolbarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem4 = new MenuItem();
+//
+//        leftIconMenuItem4.setFermatDrawable(new FermatDrawable(13, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem4.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem4);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1502,8 +1677,13 @@ public class SubAppAppsGenerator {
         Fragment runtimeFragment;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
-
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
         String communityIssuerPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityIssuerPublicKey);
 
         dapAssetIssuerCommunity = new AppNavigationStructure();
 
@@ -1561,6 +1741,52 @@ public class SubAppAppsGenerator {
 //        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        optionsMenu = new OptionsMenu();
+
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Connect");
+        menuItem.setOrder(0);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Cancel Connecting");
+        menuItem.setOrder(1);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(3);
+//        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Select All");
+        menuItem.setOrder(2);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(4);
+//        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Unselect All");
+        menuItem.setOrder(3);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(5);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(6);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -2298,94 +2524,6 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
-    private void createTkyArtistIdentityNavigationStructure() throws InvalidParameterException {
-        AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
-        Activity runtimeActivity;
-        StatusBar statusBar;
-
-
-
-
-        String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
-        runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
-        // Activity: Create New Identity
-        runtimeActivity = new Activity();
-
-        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
-        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
-        //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-        runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY.getCode());
-
-        TitleBar runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Tokenly Identity");
-        runtimeTitleBar.setColor("#1189a4");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setLabelSize(18);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
-        runtimeActivity.setStatusBar(statusBar);
-
-        Fragment runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-
-        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
-    }
-
-    private void createArtArtistIdentitySubAgracppNavigationStructure() throws InvalidParameterException {
-        AppNavigationStructure artArtistIdentity;
-        Activity runtimeActivity;
-        TitleBar runtimeTitleBar;
-        StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
-
-        String IdentityArtistPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
-
-        artArtistIdentity = new AppNavigationStructure();
-
-        artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
-        artArtistIdentity.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
-
-        runtimeActivity = new Activity();
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
-
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Artist Identity");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
-
-/*
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        */
-
-        artArtistIdentity.addActivity(runtimeActivity);
-
-        listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
-    } //ArtArtistIdentity
-
     private void createRedeemPointCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetRedeemPointCommunity;
         Activity runtimeActivity;
@@ -2689,6 +2827,94 @@ public class SubAppAppsGenerator {
 
         listSubApp.put(dapAssetRedeemPointCommunity.getPublicKey(), dapAssetRedeemPointCommunity);
     }
+
+    private void createTkyArtistIdentityNavigationStructure() throws InvalidParameterException {
+        AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
+        Activity runtimeActivity;
+        StatusBar statusBar;
+
+
+
+
+        String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+        runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+
+        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
+        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
+        //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY.getCode());
+
+        TitleBar runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Tokenly Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        Fragment runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+    }
+
+    private void createArtArtistIdentitySubAgracppNavigationStructure() throws InvalidParameterException {
+        AppNavigationStructure artArtistIdentity;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+
+        String IdentityArtistPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+
+        artArtistIdentity = new AppNavigationStructure();
+
+        artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
+        artArtistIdentity.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+
+        runtimeActivity = new Activity();
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Artist Identity");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
+
+/*
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        */
+
+        artArtistIdentity.addActivity(runtimeActivity);
+
+        listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
+    } //ArtArtistIdentity
 
     private void createCryptoCustomerIdentitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure runtimeSubApp;
@@ -3519,19 +3745,19 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -3549,9 +3775,10 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
