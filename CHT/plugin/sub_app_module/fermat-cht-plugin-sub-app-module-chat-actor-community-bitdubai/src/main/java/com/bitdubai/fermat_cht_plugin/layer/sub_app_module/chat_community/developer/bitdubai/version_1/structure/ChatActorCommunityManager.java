@@ -12,11 +12,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -29,7 +27,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
@@ -76,6 +73,7 @@ import java.util.UUID;
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  * Edited by Miguel Rincon on 18/04/2016
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 15/06/16.
  */
 public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommunitySettings> implements ChatActorCommunitySubAppModuleManager, Serializable {
 
@@ -85,7 +83,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private String                                         subAppPublicKey                       ;
     private final ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot;
 
-    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
+    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager,
+                                     ChatActorConnectionManager chatActorConnectionManager,
+                                     ChatManager chatActorNetworkServiceManager,
+                                     ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot,
+                                     PluginFileSystem pluginFileSystem, UUID pluginId,
+                                     PluginVersionReference pluginVersionReference) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
@@ -94,8 +97,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
-
+    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
 
@@ -106,64 +108,69 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         try{
-            if(selectableIdentity!=null) {
-                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+            if(publicKey!=null && actorType!= null) {
+                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
-            }
+                actorConnections = search.getResult(max, 0);
+//                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         ChatActorCommunityInformation worldActor;
-        if(actorConnections != null && worldActorList != null){
-            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
-                for (int i = 0; i < worldActorList.size(); i++) {
-
-                    worldActor = worldActorList.get(i);
-                    for (ChatActorConnection connectedActor : actorConnections) {
-                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
-                            worldActorList.set(
-                                    i,
-                                    new ChatActorCommunitySubAppModuleInformationImpl(
-                                            worldActor.getPublicKey(),
-                                            worldActor.getAlias(),
-                                            worldActor.getImage(),
-                                            connectedActor.getConnectionState(),
-                                            connectedActor.getConnectionId(),
-                                            worldActor.getStatus()
-                                    )
-                            );
-                            break;
-                        }
-                    }
+//<<<<<<< HEAD
+//        if(actorConnections != null && worldActorList != null){
+//            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
+//                for (int i = 0; i < worldActorList.size(); i++) {
+//
+//                    worldActor = worldActorList.get(i);
+//                    for (ChatActorConnection connectedActor : actorConnections) {
+//                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
+//                            worldActorList.set(
+//                                    i,
+//                                    new ChatActorCommunitySubAppModuleInformationImpl(
+//                                            worldActor.getPublicKey(),
+//                                            worldActor.getAlias(),
+//                                            worldActor.getImage(),
+//                                            connectedActor.getConnectionState(),
+//                                            connectedActor.getConnectionId(),
+//                                            worldActor.getStatus()
+//                                    )
+//                            );
+//                            break;
+//                        }
+//                    }
+//=======
+        if(actorConnections != null && worldActorList != null
+                && actorConnections.size() > 0 && worldActorList.size() > 0) {
+            for (int i = 0; i < worldActorList.size(); i++) {
+                worldActor = worldActorList.get(i);
+                for (ChatActorConnection connectedActor : actorConnections) {
+                    if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
+                        worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId(), worldActor.getStatus()));
                 }
             }
         }
-
         return worldActorList;
     }
 
     @Override
-    public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException, CantListChatIdentityException {
+    public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities()
+            throws CantListChatIdentitiesToSelectException, CantListChatIdentityException {
 
         List<ChatActorCommunitySelectableIdentity> selectableIdentities = null;
         try {
             selectableIdentities = new ArrayList<>();
-
             final List<ChatIdentity> chatActorIdentity = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
-
             for (final ChatIdentity chi : chatActorIdentity)
                 selectableIdentities.add(new ChatActorCommunitySelectableIdentityImpl(chi));
-
 
         } catch (CantListChatIdentityException exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
-
         return selectableIdentities;
-
     }
 
     @Override
@@ -332,14 +339,14 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
 
     @Override
-    public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
+    public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException {
 
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
         try {
-            if (selectedIdentity != null) {
+            if (publicKey!= null && actorType != null) {
                 final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
-                        selectedIdentity.getPublicKey(),
-                        selectedIdentity.getActorType()
+                        publicKey,
+                        actorType
                 );
 
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
