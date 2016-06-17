@@ -196,8 +196,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.gradient);
-        recyclerView.addItemDecoration(itemDecoration);
+        //RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.gradient);
+       // recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransaction!=null) {
             if (lstFermatWalletTransaction.isEmpty()) {
@@ -286,7 +286,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
         } catch (Exception e){
             e.printStackTrace();
         }
-        return data;
+        return lstCryptoWalletTransactionsAvailable;
     }
 
     @Override
