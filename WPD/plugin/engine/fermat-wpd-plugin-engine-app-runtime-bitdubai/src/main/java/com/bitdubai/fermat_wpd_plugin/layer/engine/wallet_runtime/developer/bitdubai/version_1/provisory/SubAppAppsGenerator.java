@@ -3948,22 +3948,18 @@ public class SubAppAppsGenerator {
         Tab runtimeTab;
 
         chtComm = new AppNavigationStructure();
-        String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
+        final String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
         chtComm.setPublicKey(communityPublicKey);
         chtComm.setPlatform(Platforms.CHAT_PLATFORM);
-        listSubApp.put(chtComm.getPublicKey(), chtComm);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#075E54");
+        //listSubApp.put(chtComm.getPublicKey(), chtComm);
 
         //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setBackgroundColor("#f9f9f9");
-        chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-
-        runtimeActivity.setStatusBar(statusBar);
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setColor("#F9F9F9");
+        //chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("P2P Chat Community");
@@ -3973,14 +3969,18 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#075E54");
+        runtimeActivity.setStatusBar(statusBar);
+
         //Owner
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(communityPublicKey);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
 
         //runtimeActivity.setSideMenu(runtimeSideMenu);
         //chtComm.addActivity(runtimeActivity);
@@ -3990,7 +3990,6 @@ public class SubAppAppsGenerator {
         runtimeTabStrip.setTabsColor("#075E54");
         runtimeTabStrip.setTabsTextColor("#F9F9F9");
         runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Browser
         runtimeTab = new Tab();
@@ -3998,12 +3997,16 @@ public class SubAppAppsGenerator {
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuBrowser = new OptionsMenu();
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3,"ic_search",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
         optionMenuItemBrowser.setShowAsAction(2);
+        optionMenuItemBrowser.setActionViewClass(100);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(2);
@@ -4020,34 +4023,31 @@ public class SubAppAppsGenerator {
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
 
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
-
         //Tabs Connections
         runtimeTab = new Tab();
         runtimeTab.setLabel(" CONNECTIONS ");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Search");
+        optionMenuItemConn.setActionViewClass(100);
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        optionMenuItemConn = new OptionMenuItem(2);
+        optionMenuItemConn = new OptionMenuItem(22);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
-        optionMenuItemConn.setShowAsAction(1);
+        optionMenuItemConn.setShowAsAction(4);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         runtimeFragment.setOptionsMenu(optionsMenuConn);
 
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
 
         //Tabs Notifications
         runtimeTab = new Tab();
@@ -4055,6 +4055,11 @@ public class SubAppAppsGenerator {
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
@@ -4065,10 +4070,10 @@ public class SubAppAppsGenerator {
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
 
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
 
         chtComm.addActivity(runtimeActivity);
+        chtComm.changeActualStartActivity(runtimeActivity.getType().getCode());
+
         listSubApp.put(chtComm.getPublicKey(), chtComm);
 //
 //        // Activity: Connection
