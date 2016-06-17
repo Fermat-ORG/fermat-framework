@@ -32,6 +32,10 @@ public class FermatModuleObjectWrapper implements Parcelable,Serializable {
         this.object = object;
     }
 
+    public FermatModuleObjectWrapper(Exception e){
+        this.e = e;
+    }
+
     protected FermatModuleObjectWrapper(Parcel in) {
         Serializable moduleObjectSerializable = in.readSerializable();
 //        this.object = new FermatModuleObject(moduleObjectSerializable);

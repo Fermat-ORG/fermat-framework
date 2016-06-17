@@ -1,14 +1,8 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces;
 
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransaction;
-
-import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by Yordin Alayn on 26.09.15.

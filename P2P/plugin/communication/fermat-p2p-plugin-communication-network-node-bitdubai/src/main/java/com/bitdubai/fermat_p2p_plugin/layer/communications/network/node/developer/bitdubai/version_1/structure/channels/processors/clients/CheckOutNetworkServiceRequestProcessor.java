@@ -88,9 +88,7 @@ public class CheckOutNetworkServiceRequestProcessor extends PackageProcessor {
                 /*
                 * Load from Database
                 */
-                CheckedInNetworkService checkedInNetworkService = getDaoFactory().getCheckedInNetworkServiceDao().findEntityByFilter(
-                        CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                        profileIdentity);
+                CheckedInNetworkService checkedInNetworkService = getDaoFactory().getCheckedInNetworkServiceDao().findById(profileIdentity);
 
                 /*
                  * Validate if exist
