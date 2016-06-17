@@ -85,7 +85,7 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
         this.frecuency = frecuency;
     }
 
-    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) {
+    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
