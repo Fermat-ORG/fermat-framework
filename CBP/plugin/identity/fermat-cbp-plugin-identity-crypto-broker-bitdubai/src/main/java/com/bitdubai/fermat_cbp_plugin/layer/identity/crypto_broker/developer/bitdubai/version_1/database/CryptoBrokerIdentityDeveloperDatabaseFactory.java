@@ -123,6 +123,8 @@ public class CryptoBrokerIdentityDeveloperDatabaseFactory {//implements DealsWit
         cryptoBrokerColumns.add(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME);
         cryptoBrokerColumns.add(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         cryptoBrokerColumns.add(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME);
+        cryptoBrokerColumns.add(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
+        cryptoBrokerColumns.add(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME);
         /**
          * Table Crypto Broker addition.
          */

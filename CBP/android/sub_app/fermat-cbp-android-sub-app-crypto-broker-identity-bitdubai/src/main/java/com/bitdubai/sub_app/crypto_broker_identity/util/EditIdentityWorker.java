@@ -40,6 +40,7 @@ public class EditIdentityWorker extends FermatWorker {
         if ( identity == null ) {
             return INVALID_ENTRY_DATA;
         } else {
+            //TODO:NELSON Hay que pasarle los valores correcto al accuracy y la frecuencia al objeto identity
             moduleManager.updateCryptoBrokerIdentity(identity);
             if (valueChanged) {
                 if (identity.isPublished()) {
