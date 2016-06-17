@@ -34,11 +34,14 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -69,6 +72,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.ReceivetransactionsAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.FermatWalletConstants;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.animation.AnimationManager;
@@ -78,6 +82,8 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.Presentati
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.WalletUtils;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
+
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -1188,7 +1194,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
 
 
-   /* private void getAndShowMarketExchangeRateData(final View container) {
+   private void getAndShowMarketExchangeRateData(final View container) {
 
         final int MAX_DECIMAL_FOR_RATE = 2;
         final int MIN_DECIMAL_FOR_RATE = 2;
@@ -1252,15 +1258,15 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     }
                     else {
-                        ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                        dialog_error.show();
+                        //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                        //dialog_error.show();
                     }
 
 
                 }
                 else {
-                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                    dialog_error.show();
+                    //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    //dialog_error.show();
                     //makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1278,12 +1284,12 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
 
-                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
-                dialog_error.show();
+                //ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                //dialog_error.show();
             }
         });
 
         fermatWorker.execute();
-    }*/
+    }
 }
 

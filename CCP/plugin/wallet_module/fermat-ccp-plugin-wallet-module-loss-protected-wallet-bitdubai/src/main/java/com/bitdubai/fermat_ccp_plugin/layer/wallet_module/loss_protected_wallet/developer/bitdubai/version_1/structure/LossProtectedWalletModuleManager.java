@@ -181,7 +181,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProtectedWalletSettings> implements LossProtectedWallet,Serializable {
 
-    private final BitcoinLossProtectedWalletManager bitcoinWalletManager          ;
+    private final BitcoinLossProtectedWalletManager bitcoinWalletManager       ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
@@ -2068,7 +2068,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         }
 
         @Override
-    public  List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
+          public  List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
             CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
