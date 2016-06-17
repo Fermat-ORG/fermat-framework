@@ -60,6 +60,9 @@ dependencies {
 //    compile 'de.mindpipe.android:android-logging-log4j:1.0.3'
     compile 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5'
 
+    compile('org.bitcoinj:bitcoinj-core:0.13.3') {
+        exclude module: 'scrypt'
+    }
 //    compile 'com.madgag.spongycastle:core:1.54.0.0'
 //    compile 'com.madgag.spongycastle:prov:1.54.0.0'
 //    compile 'com.madgag.spongycastle:pkix:1.54.0.0'
