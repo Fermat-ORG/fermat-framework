@@ -38,7 +38,7 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<Refe
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_BROKER_IDENTITY,
@@ -70,15 +70,15 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<Refe
 
     @Override
     public int getResource(int id) {
-        int resId = 0;
-        switch (id){
+        switch (id) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
-                resId = R.drawable.add_identity;
-                break;
+                return R.drawable.add_identity;
+
             case FragmentsCommons.HELP_OPTION_MENU_ID:
-                resId = R.drawable.help_icon_identity_broker;
-                break;
+                return R.drawable.help_icon_identity_broker;
+
+            default:
+                return 0;
         }
-        return resId;
     }
 }

@@ -37,8 +37,10 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
+import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +74,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
 
         //If we landed here from CryptoCustomerImageCropperFragment, save the cropped Image.
-        if(appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE) != null)
-        {
+        if (appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE) != null) {
             cryptoCustomerImageByteArray = (byte[]) appSession.getData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
             cryptoCustomerBitmap = BitmapFactory.decodeByteArray(cryptoCustomerImageByteArray, 0, cryptoCustomerImageByteArray.length);
             appSession.removeData(CryptoCustomerImageCropperFragment.CROPPED_IMAGE);
@@ -98,15 +99,14 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
 
 
-        if(cryptoCustomerBitmap != null)
-        {
+        if (cryptoCustomerBitmap != null) {
             RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), cryptoCustomerBitmap);
             bitmapDrawable.setCornerRadius(360);
             bitmapDrawable.setAntiAlias(true);
             mCustomerImage.setImageDrawable(bitmapDrawable);
         }
 
-        if(cryptoCustomerName != null)
+        if (cryptoCustomerName != null)
             mCustomerName.setText(cryptoCustomerName);
 
         mCustomerName.requestFocus();
@@ -157,12 +157,11 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.crypto_customer_identity_new_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_create) {
+        if (item.getItemId() == FragmentsCommons.CREATE_IDENTITY_MENU_ID) {
             createNewIdentityInBackDevice();
         }
         return true;

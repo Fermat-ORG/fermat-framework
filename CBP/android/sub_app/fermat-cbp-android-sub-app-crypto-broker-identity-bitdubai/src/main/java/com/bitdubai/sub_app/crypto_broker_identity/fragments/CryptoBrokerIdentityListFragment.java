@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -151,12 +149,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         toolbar.setBackgroundResource(R.color.background_toolbar);
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        //inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
     }
 
     @Override
