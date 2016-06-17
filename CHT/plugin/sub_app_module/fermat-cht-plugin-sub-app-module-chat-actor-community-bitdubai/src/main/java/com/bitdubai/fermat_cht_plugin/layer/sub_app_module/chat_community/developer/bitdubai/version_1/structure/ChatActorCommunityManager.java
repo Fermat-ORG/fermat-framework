@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
@@ -496,6 +497,14 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return geolocationManager.getRandomGeoLocation();
+    }
+
+    @Override
+    public List<Cities> getCities(String filter) {
+        //Recorrer mapa
+        //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
+        //que es lo que retorno ya lleno
+        return null;
     }
 
     @Override
