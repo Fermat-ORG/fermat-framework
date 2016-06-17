@@ -5,9 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.params.TestNet3Params;
-import org.bouncycastle.util.test.Test;
+//import org.bouncycastle.util.test.Test;
 
 /**
  * Created by rodrigo on 9/19/15.

@@ -53,5 +53,11 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
         return TimeFrequency.MONTHLY;
     }
 
+
+    //test
+    public static void main(String[] args){
+
+    }
+
 }
 
