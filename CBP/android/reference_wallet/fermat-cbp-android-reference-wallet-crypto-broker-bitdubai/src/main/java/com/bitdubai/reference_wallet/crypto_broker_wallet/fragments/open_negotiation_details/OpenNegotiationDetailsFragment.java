@@ -12,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -194,11 +192,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private List<IndexInfoSummary> getActualExchangeRates() {
         Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
         return (data != null) ? (List<IndexInfoSummary>) data : null;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.cbw_open_negotiation_details_menu, menu);
     }
 
     @Override
