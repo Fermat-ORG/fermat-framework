@@ -493,7 +493,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
                     case ERROR_IMAGE_VIEW:
-                        WarningCircle.setVisibility(View.VISIBLE);
+                        //WarningCircle.setVisibility(View.VISIBLE);
                         Toast.makeText(getActivity(), "ERROR_IMAGE_VIEW", Toast.LENGTH_LONG).show();
                         break;
                     case ERROR_USER_DATA:
