@@ -44,7 +44,7 @@ import static android.widget.Toast.makeText;
  * Created by root on 18/05/16.
  */
 public class SendTransactionHistoryFragment
-        extends FermatWalletListFragment<LossProtectedWalletTransaction,ReferenceAppFermatSession,ResourceProviderManager>
+        extends FermatWalletListFragment<LossProtectedWalletTransaction,ReferenceAppFermatSession<LossProtectedWallet>,ResourceProviderManager>
         implements FermatListItemListeners<LossProtectedWalletTransaction>, onRefreshList {
 
     /**
@@ -89,15 +89,15 @@ public class SendTransactionHistoryFragment
 
         super.onCreate(savedInstanceState);
 
-        lossProtectedWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
+        lossProtectedWalletSession =  appSession;
 
         lstWalletTransaction = new ArrayList<>();
         try {
-            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
+            lossProtectedWalletManager = appSession.getModuleManager();
 
 
             try {
-                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
                 this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
             } catch (CantGetSettingsException e) {
@@ -220,6 +220,7 @@ public class SendTransactionHistoryFragment
                 e.printStackTrace();
             }
         }
+
 
 
         return lstTransaction;

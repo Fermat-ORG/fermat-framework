@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -54,9 +55,9 @@ public class DisconnectDialog
     private CharSequence   title       ;
 
     private final ChatActorCommunityInformation chatUserInformation;
-    private final ChatActorCommunitySelectableIdentity identity            ;
+    private final ChatActorCommunitySelectableIdentity identity;
 
-    public DisconnectDialog(final Activity activity,
+    public DisconnectDialog(final Context activity,
                             final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                             final SubAppResourcesProviderManager subAppResources,
                             final ChatActorCommunityInformation chatUserInformation,
@@ -65,7 +66,7 @@ public class DisconnectDialog
         super(activity, chatUserSubAppSession, subAppResources);
 
         this.chatUserInformation = chatUserInformation;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
 
 
@@ -83,7 +84,7 @@ public class DisconnectDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+//        mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
 
     }

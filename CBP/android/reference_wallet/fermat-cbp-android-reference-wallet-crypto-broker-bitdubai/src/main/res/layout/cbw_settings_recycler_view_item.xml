@@ -41,6 +41,6 @@
         android:layout_weight="2"
         android:textColor="@color/cbw_wizard_color"
         android:textSize="14sp"
-        tools:text="300.0"/>
+        tools:text="300.0" />
 
 </LinearLayout>

@@ -39,7 +39,8 @@ public class CashWalletAsyncTransactionAgent extends AsyncTransactionAgent<CashT
                 cashMoneyWalletModuleManagerImpl.doCreateCashWithdrawalTransaction(transaction);
 
             //Send Broadcast to android wallet so it can refresh the screen
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
+            //Not depending on this broadcaster anymore.
+            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
 
         }catch(CantCreateDepositTransactionException e){
             //Send Broadcast to android wallet so it can refresh the screen, indicating an error

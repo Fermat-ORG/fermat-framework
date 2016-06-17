@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -391,7 +392,7 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
@@ -505,10 +506,11 @@ public class ChatMiddlewareMonitorAgent implements
 
             System.out.println("12345 CHECKING ONLINE STATUS");
 
-            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+//            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
             for(ActionOnline actionOnline : onlineActions){
-                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+//                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+                boolean isOnline = chatActorNetworkServiceManager.isActorOnline(actionOnline.getPublicKey());
                 actionOnline.setValue(isOnline);
                 System.out.println("12345 is online " + isOnline);
                 if(isOnline) actionOnline.setLastOn(false);
@@ -523,12 +525,6 @@ public class ChatMiddlewareMonitorAgent implements
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         } catch (CantGetPendingActionListException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (CantListChatException e) {
             throw new CantGetPendingTransactionException(
                     e,
                     "Checking the incoming status pending transactions",

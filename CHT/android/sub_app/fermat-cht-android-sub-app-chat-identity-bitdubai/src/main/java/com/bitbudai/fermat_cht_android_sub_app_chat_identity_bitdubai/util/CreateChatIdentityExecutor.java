@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -63,8 +64,8 @@ public class CreateChatIdentityExecutor {
 
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
-            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState);
+            //TODO: Lozada revisa
+            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE);
 
 
         } catch (CantCreateNewChatIdentityException e) {

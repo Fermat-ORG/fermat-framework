@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * Created by Matias Furszyfer on 2016.03.28..
  */
-public interface FermatUIAdapter {
+public interface FermatUIAdapter<F extends AbstractFermatFragmentInterface> {
 
-    List<AbstractFermatFragmentInterface> getLstCurrentFragments();
+    List<F> getLstCurrentFragments();
 
 }

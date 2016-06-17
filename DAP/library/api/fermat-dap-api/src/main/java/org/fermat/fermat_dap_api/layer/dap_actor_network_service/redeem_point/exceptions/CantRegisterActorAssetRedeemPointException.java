@@ -12,6 +12,10 @@ public class CantRegisterActorAssetRedeemPointException extends org.fermat.ferma
         super(message, cause, context, possibleReason);
     }
 
+    public CantRegisterActorAssetRedeemPointException(final Exception cause, final String context, final String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantRegisterActorAssetRedeemPointException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

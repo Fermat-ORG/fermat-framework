@@ -26,16 +26,20 @@ public class BufferChannelAIDL {
     public void addFullDataAndNotificateArrive(String id, Serializable data){
         Log.i(TAG, "Notification object arrived");
         if(data!=null) Log.i(TAG, data.toString());
-        Lock lock = locks1.get(id);
-        if(lock!=null) {
-            synchronized (lock) {
-                buffer.put(id, (data != null) ? data : new EmptyObject());
-                //locks.get(id).release();
-                lock.unblock();
-                lock.notify();
+        if (!locks1.containsKey(id)) {
+            buffer.put(id, (data != null) ? data : new EmptyObject());
+        }else {
+            Lock lock = locks1.get(id);
+            if (lock != null) {
+                synchronized (lock) {
+                    buffer.put(id, (data != null) ? data : new EmptyObject());
+                    //locks.get(id).release();
+                    lock.unblock();
+                    lock.notify();
+                }
+            } else {
+                Log.e(TAG, "lOCK IS NULL,FOR ID:" + id + " DATA ARRIVED: " + ((data != null) ? data.getClass() + " " + data.toString() : "null") + " PLEASE TALK WITH FURSZY .class: " + getClass().getName() + " line:" + new Throwable().getStackTrace()[0].getLineNumber());
             }
-        }else{
-            Log.e(TAG,"lOCK IS NULL,FOR ID:"+id+" DATA ARRIVED: "+((data!=null)?data.getClass()+" "+data.toString():"null")+" PLEASE TALK WITH FURSZY .class: "+getClass().getName()+" line:"+new Throwable().getStackTrace()[0].getLineNumber());
         }
     }
 
@@ -62,7 +66,7 @@ public class BufferChannelAIDL {
 
     public Object getBufferObject(String id){
         try {
-            lockObject(id);
+            if (!buffer.containsKey(id)) lockObject(id);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (Exception e){

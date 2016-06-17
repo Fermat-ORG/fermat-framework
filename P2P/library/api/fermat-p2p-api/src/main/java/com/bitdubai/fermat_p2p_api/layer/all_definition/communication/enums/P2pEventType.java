@@ -6,7 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorUnreachableEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
@@ -168,7 +169,10 @@ public enum P2pEventType implements FermatEventEnum {
         public NetworkClientRegisteredEvent getNewEvent() { return new NetworkClientRegisteredEvent(this); }
     },
     NETWORK_CLIENT_ACTOR_FOUND("NCAF"){
-        public ActorFoundEvent getNewEvent() { return new ActorFoundEvent(this); }
+        public NetworkClientActorFoundEvent getNewEvent() { return new NetworkClientActorFoundEvent(this); }
+    },
+    NETWORK_CLIENT_ACTOR_UNREACHABLE("NCAD"){
+        public NetworkClientActorUnreachableEvent getNewEvent() { return new NetworkClientActorUnreachableEvent(this); }
     },
     NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT("NCNWT"){
         public NetworkClientNewMessageTransmitEvent getNewEvent() { return new NetworkClientNewMessageTransmitEvent(this); }

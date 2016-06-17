@@ -40,7 +40,8 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
      * @return the intra user created
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
-    RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException;
+    RedeemPointIdentity createNewRedeemPoint(String alias,
+                                             byte[] profileImage) throws CantCreateNewRedeemPointException;
 
 
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,

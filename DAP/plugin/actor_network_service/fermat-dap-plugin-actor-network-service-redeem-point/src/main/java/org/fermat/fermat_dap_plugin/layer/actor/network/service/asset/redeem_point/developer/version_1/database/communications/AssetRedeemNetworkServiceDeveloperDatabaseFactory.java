@@ -285,14 +285,4 @@ public class AssetRedeemNetworkServiceDeveloperDatabaseFactory {//implements Dea
         database.closeDatabase();
         return returnedRecords;
     }
-
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
 }

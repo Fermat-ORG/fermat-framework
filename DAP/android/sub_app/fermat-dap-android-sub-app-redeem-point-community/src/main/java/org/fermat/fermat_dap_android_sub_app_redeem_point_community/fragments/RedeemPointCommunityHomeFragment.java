@@ -298,7 +298,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_redeem_point)
+                .setBannerRes(R.drawable.banner_redeem_point_community)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)

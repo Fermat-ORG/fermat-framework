@@ -67,6 +67,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -81,7 +82,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     public static final String SERVER_NAME = "server_fermat";
 
 
-    private static String TAG = "CommunicationServerService";
+    private static String TAG = "FermatPlatformService";
     private static int BLOCK_SYZE = 1024 * 250;
 
     public int processingQueue = 0;
@@ -245,11 +246,21 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         }
     }
 
+    Executor singleThreadSender = Executors.newSingleThreadExecutor();
+
     private void sendLargeData(String dataId, String clientKey, Serializable data) {
         try {
             Log.i(TAG,"Socket sending response to client");
             LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
-            localServerSocketSession.sendMessage(dataId, data);
+            if(localServerSocketSession!=null) {
+                if (!localServerSocketSession.isSenderActive()) {
+                    localServerSocketSession.startSender();
+                }
+                localServerSocketSession.sendMessage(dataId, data);
+                Log.i(TAG, "Socket response sent");
+            }else {
+                Log.e(TAG,"Channel null, \n ExtraInfo: clientKey= "+clientKey+" \n clients set: "+socketsClients.keySet());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -268,7 +279,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         try {
                             LocalSocket localSocket = localServerSocket.accept();
                             localSocket.setSendBufferSize(500000);
+//                            localSocket.setSoTimeout(0);
                             LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(clientKey, localSocket);
+                            try {
+                                localServerSocketSession.startSender();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
                             socketsClients.put(clientKey, localServerSocketSession);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -523,12 +540,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
 
-        GetTask getTask = new GetTask(this, this);
-        getTask.setCallBack(this);
-        getTask.execute();
+            GetTask getTask = new GetTask(this, this);
+            getTask.setCallBack(this);
+            getTask.execute();
 
-        executorService = Executors.newFixedThreadPool(10);
+            executorService = Executors.newFixedThreadPool(5);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         clients = new HashMap<>();
         socketsClients = new HashMap<>();
 

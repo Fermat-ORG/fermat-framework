@@ -234,7 +234,7 @@ public class NavigationStructureFactory {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Negotiations");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
@@ -243,7 +243,7 @@ public class NavigationStructureFactory {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Contracts");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
+//        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());

@@ -8,18 +8,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Managers
     ErrorManager errorManager;
     protected CryptoCustomerWalletModuleManager walletManager;
-    protected CryptoCustomerWalletSessionReferenceApp walletSession;
+    protected ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> walletSession;
 
     //Data
     protected ContractDetail contractDetail;
@@ -312,7 +312,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         this.walletManager = walletManager;
     }
 
-    public void setSession(CryptoCustomerWalletSessionReferenceApp session) {
+    public void setSession(ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> session) {
         this.walletSession = session;
     }
 

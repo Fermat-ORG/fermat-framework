@@ -20,12 +20,9 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_CONNECTION_STATE_COLUMN_NAME = "connection_state";
     public static final String ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
-    //public static final String ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
-    //public static final String ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String ASSET_USER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
     public static final String ASSET_USER_ACTOR_TYPE_COLUMN_NAME = "actor_type";
-    //public static final String ASSET_USER_NETWORK_TYPE_COLUMN_NAME = "network_type";
 
     public static final String ASSET_USER_FIRST_KEY_COLUMN = ASSET_USER_PUBLIC_KEY_COLUMN_NAME;
 
@@ -55,7 +52,6 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_GROUP_ID_COLUMN_NAME = "group_id";
     public static final String ASSET_USER_GROUP_NAME_COLUMN_NAME = "group_name";
-
 
     public static final String ASSET_USER_GROUP_FIRST_KEY_COLUMN = ASSET_USER_GROUP_ID_COLUMN_NAME;
 

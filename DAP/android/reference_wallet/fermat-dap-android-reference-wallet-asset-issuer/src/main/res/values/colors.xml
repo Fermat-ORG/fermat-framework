@@ -33,4 +33,37 @@
     <color name="dap_issuer_wallet_delivered_list_redeemed"></color>
     <color name="dap_issuer_wallet_delivered_list_unused"></color>
     -->
+
+    <color name="card_toolbar_trans">#AAFAFAFA</color>
+    <color name="dap_issuer_wallet_v3_toolbar_top">#161616</color>
+    <color name="dap_issuer_wallet_v3_toolbar">#212121</color>
+    <color name="dap_issuer_wallet_v3_tabs">#212121</color>
+    <color name="dap_issuer_wallet_v3_card_top">#E53935</color>
+    <color name="dap_issuer_wallet_v3_card_top_text">#FFEBEE</color>
+    <color name="dap_issuer_wallet_v3_card_outside_background">#FFFFFF</color>
+    <color name="dap_issuer_wallet_v3_card_text_principal">#424242</color>
+    <color name="dap_issuer_wallet_v3_card_text_sec_1">#757575</color>
+    <color name="dap_issuer_wallet_v3_card_text_sec_2">#BDBDBD</color>
+    <color name="dap_issuer_wallet_v3_card_button_enabled">#F5F5F5</color>
+    <color name="dap_issuer_wallet_v3_card_line">#F5F5F5</color>
+    <color name="dap_issuer_wallet_v3_deliver_text">#757575</color>
+    <color name="dap_issuer_wallet_v3_deliver_letter_text">#424242</color>
+    <color name="dap_issuer_wallet_v3_deliver_button">#FAFAFA</color>
+    <color name="dap_issuer_wallet_v3_deliver_button_text">#536DFE</color>
+    <color name="dap_issuer_wallet_v3_deliver_button_outside_background">#F4F4F4</color>
+    <color name="dap_issuer_wallet_v3_deliver_button_background">#FAFAFA</color>
+    <color name="dap_issuer_wallet_v3_deliver_button_border">#616161</color>
+    <color name="dap_issuer_wallet_v3_deliver_line">#BDBDBD</color>
+    <color name="dap_issuer_wallet_v3_dialog">#212121</color>
+    <color name="dap_issuer_wallet_v3_no_assets_text">#939598</color>
+    <color name="dap_issuer_wallet_v3_stats_text_sec_1">#424242</color>
+    <color name="dap_issuer_wallet_v3_stats_text_sec_2">#C5CAE9</color>
+    <color name="dap_issuer_wallet_v3_stats_text_inactive">#BDBDBD</color>
+    <color name="dap_issuer_wallet_v3_stats_text_active">#8C9EFF</color>
+    <color name="dap_issuer_wallet_v3_no_stats_background">#FFFFFF</color>
+    <color name="dap_issuer_wallet_v3_no_stats_text">#939598</color>
+    <color name="dap_issuer_wallet_v3_stats_spinner_text">#BDBDBD</color>
+    <color name="dap_issuer_wallet_v3_stats_spinner_background">#FAFAFA</color>
+    <color name="dap_issuer_wallet_v3_transactions_line">#F5F5F5</color>
+    <color name="text_hint_color">#8C9EFF</color>
 </resources>

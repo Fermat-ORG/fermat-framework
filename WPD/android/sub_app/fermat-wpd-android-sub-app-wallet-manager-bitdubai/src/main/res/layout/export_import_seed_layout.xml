@@ -90,6 +90,7 @@
         android:paddingTop="28dp"
         android:textColor="#000"
         android:hint="Your Mnemonic code will appair here"
+        android:textIsSelectable="true"
         tools:text="This is a technique used by me to prove that i'm am working really really good"
         />
 

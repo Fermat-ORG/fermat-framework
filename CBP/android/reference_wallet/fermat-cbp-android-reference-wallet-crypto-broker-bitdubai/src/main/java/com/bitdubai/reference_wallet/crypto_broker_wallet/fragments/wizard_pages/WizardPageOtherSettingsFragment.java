@@ -1,35 +1,34 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
 
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v7.widget.RecyclerView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 
 /**
  * Created by Lozadaa on 20/01/16.
  */
-public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> {
+public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> {
     private static final String TAG = "WizardPageOtherSettings";
     private int spreadValue;
     private boolean automaticRestock;
@@ -37,8 +36,6 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Cryp
 
     // UI
     boolean hideHelperDialogs = false;
-    private View emptyView;
-    private RecyclerView recyclerView;
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -89,6 +86,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Cryp
                     .setSubTitle(R.string.cbw_wizard_other_settings_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_other_settings_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .setIsCheckEnabled(true)
                     .build();
             presentationDialog.show();
         }
@@ -134,7 +132,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Cryp
 
 
     private void saveSettingAndGoNextStep() {
-        CryptoBrokerWalletSettingSpread walletSetting = null;
+        CryptoBrokerWalletSettingSpread walletSetting;
         try {
             walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
@@ -142,7 +140,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<Cryp
             walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
             moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
-            appSession.setData(CryptoBrokerWalletSessionReferenceApp.CONFIGURED_DATA, true);
+            appSession.setData(FragmentsCommons.CONFIGURED_DATA, true);
             // TODO Solo para testing, eliminar despues
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
         } catch (FermatException ex) {

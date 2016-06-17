@@ -193,13 +193,13 @@ public class WalletStoreListItem implements Serializable {
                     R.drawable.banner_crypto_broker,
                     R.drawable.banner_asset_issuer_wallet,
                     R.drawable.banner_asset_user_wallet,
-                    R.drawable.banner_redeem_point,
+                    R.drawable.banner_redeem_point_wallet,
                     R.drawable.banner_bitcoin_wallet,
                     R.drawable.banner_crypto_customer_wallet,
                     R.drawable.banner_crypto_broker,
                     R.drawable.banner_asset_issuer_wallet,
                     R.drawable.banner_asset_user_wallet,
-                    R.drawable.banner_redeem_point};
+                    R.drawable.banner_redeem_point_wallet};
 
             //ArrayList<List<Bitmap>> walletScreenshots = createListOfScreenshots(res);
 

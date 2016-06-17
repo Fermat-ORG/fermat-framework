@@ -45,9 +45,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No people online"
+            android:text="No Users"
             android:id="@+id/nodatalabel"
-            android:textColor="#D1D3D4"
+            android:textColor="#BCBEC0"
             android:textStyle="normal"
             android:textSize="12pt"
             android:layout_below="@+id/nodata"

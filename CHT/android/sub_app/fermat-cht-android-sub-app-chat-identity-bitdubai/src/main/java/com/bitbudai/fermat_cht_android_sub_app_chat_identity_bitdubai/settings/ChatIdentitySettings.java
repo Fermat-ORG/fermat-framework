@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * ChatIdentitySettings
  *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
+ * @author Richard Lozada (Lozadaa) (rlozada808@gmail.com) on 30/12/15.
  * @version 1.0
  */
 public class ChatIdentitySettings implements SubAppSettings, Serializable {

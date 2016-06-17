@@ -134,6 +134,8 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE);

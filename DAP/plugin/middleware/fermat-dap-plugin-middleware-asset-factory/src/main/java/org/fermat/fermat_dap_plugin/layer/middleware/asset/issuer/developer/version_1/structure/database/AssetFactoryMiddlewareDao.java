@@ -1,10 +1,13 @@
 package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -21,15 +24,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryRecord;
 
 import java.sql.Timestamp;
@@ -95,6 +102,9 @@ public class AssetFactoryMiddlewareDao {
         record.setLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
         record.setLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN, assetFactory.getTotalQuantity());
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, String.valueOf(assetFactory.getIsRedeemable()));
+        record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE, String.valueOf(assetFactory.getIsTransferable()));
+        record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE, String.valueOf(assetFactory.getIsExchangeable()));
+
         if (assetFactory.getExpirationDate() != null) {
             record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, assetFactory.getExpirationDate().toString());
         } else
@@ -156,7 +166,9 @@ public class AssetFactoryMiddlewareDao {
                                                             String publicKey,
                                                             String name,
                                                             String signature) throws DatabaseOperationException, MissingAssetDataException {
+
         DatabaseTable databaseTable = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ID_COLUMN, UUID.randomUUID().toString());
@@ -168,7 +180,9 @@ public class AssetFactoryMiddlewareDao {
         return record;
     }
 
-    private DatabaseTransaction addResourceRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addResourceRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
 
         if (assetFactory.getResources() != null) {
@@ -189,33 +203,30 @@ public class AssetFactoryMiddlewareDao {
         return transaction;
     }
 
-    private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
         if (assetFactory.getContractProperties() != null) {
             for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
                 DatabaseTableRecord record = getContractDataRecord(assetFactory.getAssetPublicKey(), contractProperties.getName(),
                         contractProperties.getValue() != null ? contractProperties.getValue().toString() : null);
-                DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
-//                filter.setValue(contractProperties.getName());
-                if (isNewRecord(table, filter))
-                    //New Records
-                    transaction.addRecordToInsert(table, record);
-                else {
-                    //update Records
-                    table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                    transaction.addRecordToUpdate(table, record);
-                }
+                transaction.addRecordToInsert(table, record);
             }
         }
 
         return transaction;
     }
 
-    private DatabaseTransaction addIdentityIssuerRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+    private DatabaseTransaction addIdentityIssuerRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory)
+            throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException {
+
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
-        DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getAssetPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+        DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getAssetPublicKey(),
+                assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+
         DatabaseTableFilter filter = getIdentityAssetPublicKeyFilter(assetFactory.getAssetPublicKey());
         if (isNewRecord(table, filter))
             //New Records
@@ -288,6 +299,27 @@ public class AssetFactoryMiddlewareDao {
         return table.getRecords();
     }
 
+    private List<ContractProperty> getAssetFactoryContractList(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
+        final List<DatabaseTableRecord> contractData = getContractsData(assetFactoryPublicKey);
+        List<ContractProperty> contractProperties = new ArrayList<>();
+        for (DatabaseTableRecord record : contractData) {
+            String contractName = record.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN);
+            String contractValue = record.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN);
+            if (contractName != null && contractName.length() > 0 && contractValue != null && contractValue.length() > 0) {
+                if (contractName.equals(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE)) {
+                    contractProperties.add(new ContractProperty(contractName, (contractValue == null || contractValue.equals("null")) ? contractValue : Timestamp.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.REDEEMABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.TRANSFERABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                } else if (contractName.equals(DigitalAssetContractPropertiesConstants.SALEABLE)) {
+                    contractProperties.add(new ContractProperty(contractName, Boolean.valueOf(contractValue)));
+                }
+            }
+        }
+        return contractProperties;
+    }
+
     private List<DatabaseTableRecord> getAssetFactoryData(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
         for (DatabaseTableFilter filter : filters) {
@@ -312,7 +344,7 @@ public class AssetFactoryMiddlewareDao {
         assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
         assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
         assetFactory.setWalletPublicKey(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
-        org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity assetIssuerIdentity = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity();
+        AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
         assetIssuerIdentity.setAlias(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN));
         assetIssuerIdentity.setPublicKey(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
         assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
@@ -332,8 +364,25 @@ public class AssetFactoryMiddlewareDao {
 
 
         assetFactory.setIsRedeemable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE)));
+        assetFactory.setIsTransferable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_TRANSFERABLE)));
+        assetFactory.setIsExchangeable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_EXCHANGEABLE)));
 
         return assetFactory;
+    }
+
+    private void removeAssetFactoryContractData(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
+        try {
+            database = openDatabase();
+
+            DatabaseTable tableContracts = getDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
+            tableContracts.addStringFilter(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getAssetPublicKey(), DatabaseFilterType.EQUAL);
+            tableContracts.loadToMemory();
+            for (DatabaseTableRecord record : tableContracts.getRecords()) {
+                tableContracts.deleteRecord(record);
+            }
+        } catch (Exception exception) {
+            throw new CantDeleteAsserFactoryException(exception, "Error delete Contracts of the Asset Factory", "Asset Factory Contracts - Delete");
+        }
     }
 
     public void removeAssetFactory(AssetFactory assetFactory, boolean removeResources) throws CantDeleteAsserFactoryException {
@@ -379,7 +428,6 @@ public class AssetFactoryMiddlewareDao {
 
     public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
 
-
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -399,8 +447,10 @@ public class AssetFactoryMiddlewareDao {
             }
 
             // I wil add the Contracts to the transaction if there are any
-            if (assetFactory.getContractProperties() != null)
+            if (assetFactory.getContractProperties() != null) {
+                removeAssetFactoryContractData(assetFactory);
                 transaction = addContractRecordsToTransaction(transaction, assetFactory);
+            }
             // I wil add the resources to the transaction if there are any
             if (assetFactory.getResources() != null)
                 transaction = addResourceRecordsToTransaction(transaction, assetFactory);
@@ -443,6 +493,67 @@ public class AssetFactoryMiddlewareDao {
         }
     }
 
+    public void persistNewImageFactory(AssetFactory assetFactory) throws CantPersistFileException {
+        try {
+//            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+//                    DeviceDirectory.LOCAL_USERS.getName(),
+//                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+//                    FilePrivacy.PRIVATE,
+//                    FileLifeSpan.PERMANENT
+//            );
+//
+//            file.setContent(profileImage);
+//
+//            file.persistToMedia();
+            if (assetFactory.getResources() != null) {
+                for (Resource resource : assetFactory.getResources()) {
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId,
+                            DeviceDirectory.LOCAL_USERS.getName(),
+//                        PATH_DIRECTORY,
+                            resource.getId().toString(),
+                            FilePrivacy.PRIVATE,
+                            FileLifeSpan.PERMANENT);
+
+                    imageFile.setContent(resource.getResourceBinayData());
+                    imageFile.persistToMedia();
+                }
+            }
+        } catch (CantPersistFileException e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", e, "Error creating file.", null);
+        } catch (Exception e) {
+            throw new CantPersistFileException("CAN'T PERSIST IMAGE ", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public byte[] getImageFactory(Resource resource) throws CantGetResourcesException {
+        byte[] profileImage;
+        try {
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    resource.getId().toString(),
+//                    AssetIssuerIdentityPluginRoot.ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            profileImage = file.getContent();
+
+        } catch (CantLoadFileException e) {
+            throw new CantGetResourcesException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            profileImage = new byte[0];
+            // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
+        } catch (Exception e) {
+            throw new CantGetResourcesException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
+        }
+
+        return profileImage;
+    }
+
     public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter... filters) throws DatabaseOperationException, InvalidParameterException, CantCreateFileException {
         try {
             openDatabase();
@@ -452,7 +563,7 @@ public class AssetFactoryMiddlewareDao {
             for (DatabaseTableRecord assetFactoriesRecord : getAssetFactoryData(filters)) {
 
                 final AssetFactory assetFactory = getAssetFactory(assetFactoriesRecord);
-                org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity assetIssuerIdentity = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity();
+                AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
                 // I will add the indetity issuer information from database
                 for (final DatabaseTableRecord identityIssuerRecords : getIdentityIssuerData(assetFactory.getAssetPublicKey())) {
                     assetIssuerIdentity.setPublicKey(identityIssuerRecords.getStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
@@ -479,10 +590,18 @@ public class AssetFactoryMiddlewareDao {
                     } catch (InvalidParameterException e) {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                    resource.setResourceBinayData(imageFile.getContent());
+//                    getImageFactory(resource);
+//                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId,
+//                            DeviceDirectory.LOCAL_USERS.getName(),
+//                            resource.getId().toString(),
+//                            FilePrivacy.PRIVATE,
+//                            FileLifeSpan.PERMANENT);
+
+                    resource.setResourceBinayData(getImageFactory(resource));//imageFile.getContent());
                     resources.add(resource);
                 }
+
+                assetFactory.setContractProperties(getAssetFactoryContractList(assetFactory.getAssetPublicKey()));
 
                 assetFactory.setResources(resources);
                 assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
@@ -490,11 +609,9 @@ public class AssetFactoryMiddlewareDao {
                 assetFactoryList.add(assetFactory);
             }
 
-
             return assetFactoryList;
         } catch (Exception e) {
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " + filters.toString(), null);
         }
-
     }
 }

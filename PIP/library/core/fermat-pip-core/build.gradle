@@ -42,7 +42,7 @@ task matiJar(type: OneJar) {
 //    rootDir = "../../"
 //    mainClassName = 'com.bitdubai.fermat_pip_core.PIPPlatform'
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
-    additionalDir = file('src/main/resources/one-jar.properties')
+    additionalDir = file('src/main/resources/pip-one-jar.properties')
 
 }
 

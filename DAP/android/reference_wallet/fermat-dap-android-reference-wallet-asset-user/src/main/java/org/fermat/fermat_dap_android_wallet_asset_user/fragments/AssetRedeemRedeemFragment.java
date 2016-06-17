@@ -33,19 +33,16 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetRedeemPointAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
@@ -57,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Penelope Quintero on 18/02/2016.
  */
-public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     // Constants
@@ -66,7 +63,6 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
     // Data
     private List<RedeemPoint> redeemPoints;
     private RedeemPoint redeemPointSelect;
@@ -74,7 +70,6 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     private Asset assetToRedeem;
     private DigitalAsset digitalAsset;
     String digitalAssetPublicKey;
-    SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -91,8 +86,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
@@ -105,7 +99,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                 e.printStackTrace();
             }
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            redeemPoints = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
             activity = getActivity();
 
@@ -153,7 +147,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help")
         //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -165,7 +159,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
-                setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
                 if (redeemPointSelect != null) {

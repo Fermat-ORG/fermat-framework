@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -27,7 +28,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -49,13 +49,13 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "BrokerNavigationView";
 
     private CryptoBrokerWalletModuleManager moduleManager;
-    private CryptoBrokerWalletSessionReferenceApp session;
+    private ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private CryptoBrokerIdentity actorIdentity;
     private WeakReference<Context> activity;
     private ErrorManager errorManager;
     private NumberFormat numberFormat;
 
-    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSessionReferenceApp session) {
+    public CryptoBrokerNavigationViewPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session) {
         this.activity = new WeakReference<>(activity);
         this.session = session;
 
@@ -93,7 +93,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
             final CryptoBrokerNavigationViewAdapter adapter = new CryptoBrokerNavigationViewAdapter(activity.get(), stockData, earningsData);
             adapter.setStockTitle("Current Stock");
-            adapter.setStockTitle("Daily Earnings");
+            adapter.setEarningsTitle("Daily Earnings");
 
             return adapter;
         } catch (Exception e) {

@@ -6,12 +6,13 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/11/16.
  */
-public class Transaction {
+public class Transaction implements Serializable {
     private byte[] actorImage;
     private String actorName;
     private TransactionType transactionType;

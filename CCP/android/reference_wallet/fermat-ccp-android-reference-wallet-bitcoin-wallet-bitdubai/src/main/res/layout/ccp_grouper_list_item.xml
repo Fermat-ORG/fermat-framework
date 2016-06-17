@@ -60,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:gravity="end"
             android:orientation="vertical"
             android:paddingRight="30dp"
@@ -90,7 +91,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:textAlignment="textEnd"
             android:gravity="end"
             android:orientation="vertical"
             android:paddingRight="15dp">

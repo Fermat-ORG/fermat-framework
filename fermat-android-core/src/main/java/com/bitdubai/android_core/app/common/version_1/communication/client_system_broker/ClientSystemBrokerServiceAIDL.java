@@ -19,8 +19,10 @@ import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatPlatformServiceNotConnectedException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -37,9 +39,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -49,11 +51,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private static final String TAG = "ClientBrokerServiceAIDL";
 //    private static final String KEY = "s";
-    private static final int THREADS_NUM = 3;
+    private static final int THREADS_NUM = 5;
 
     private final IBinder localBinder = new LocalBinder();
 
-    private ExecutorService poolExecutor;
+    private ThreadPoolExecutor poolExecutor;
     private ProxyFactory proxyFactory;
     private BufferChannelAIDL bufferChannelAIDL;
 
@@ -102,40 +104,57 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         /**
          * Method detail if the developer want something specific
          */
-        final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
-        final ModuleObjectParameterWrapper[] parametersTemp = parameters;
-        if(methodDetail!=null) {
-            long methdTimeout = methodDetail.timeout();
-            if (methdTimeout != -1) {
-                final Callable<FermatModuleObjectWrapper> callable = new Callable<FermatModuleObjectWrapper>() {
-                    @Override
-                    public FermatModuleObjectWrapper call() throws Exception {
-                        return requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,methodDetail.looType());
+        try {
+            final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
+            final ModuleObjectParameterWrapper[] parametersTemp = parameters;
+            if (methodDetail != null) {
+                long methdTimeout = methodDetail.timeout();
+                if (methdTimeout != -1) {
+                    final Callable<FermatModuleObjectWrapper> callable = new Callable<FermatModuleObjectWrapper>() {
+                        @Override
+                        public FermatModuleObjectWrapper call() throws Exception {
+                            try {
+                                return requestModuleObjetc(dataId, proxy, method, parametersTemp, pluginVersionReference, methodDetail.looType());
+                            } catch (FermatPlatformServiceNotConnectedException e) {
+                                e.printStackTrace();
+                                tryReconnect();
+                            }
+                            return null;
+                        }
+                    };
+                    Future<FermatModuleObjectWrapper> objectFuture = poolExecutor.submit(callable);
+                    try {
+                        Log.i(TAG, "Timeout method");
+                        objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
+                        Log.i(TAG, "Timeout method return");
+                    } catch (TimeoutException e) {
+                        //Method canceled and return an exception
+                        objectFuture.cancel(true);
+                        poolExecutor.purge();
+                        Log.i(TAG, "Timeout launched wainting for method: " + method.getName() + "in module: " + pluginVersionReference.toString3() + " ,this will return null");
+                        return new MethodTimeOutException();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                };
-                Future<FermatModuleObjectWrapper>  objectFuture =poolExecutor.submit(callable);
-                try {
-                    objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
-                }catch (TimeoutException e){
-                    objectFuture.cancel(true);
-                    Log.i(TAG,"Timeout launched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3()+ " ,this will return null");
-                    objectArrived = null;
+                } else {
+                    /**
+                     * Normal data request
+                     * todo: capaz tengo que dividir esto, dividir el background del main, que el segundo canal sea bidireccional...
+                     */
+                    MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper()) ? MethodDetail.LoopType.MAIN : MethodDetail.LoopType.BACKGROUND;
+                    objectArrived = requestModuleObjetc(dataId, proxy, method, parametersTemp, pluginVersionReference, loopType);
                 }
-            }else{
+            } else {
                 /**
                  * Normal data request
                  * todo: capaz tengo que dividir esto, dividir el background del main, que el segundo canal sea bidireccional...
                  */
-                MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
-                objectArrived = requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,loopType);
+                //MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
+                objectArrived = requestModuleObjetc(dataId, proxy, method, parametersTemp, pluginVersionReference, null);
             }
-        }else{
-            /**
-             * Normal data request
-             * todo: capaz tengo que dividir esto, dividir el background del main, que el segundo canal sea bidireccional...
-             */
-            //MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
-            objectArrived = requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,null);
+        }catch (FermatPlatformServiceNotConnectedException e){
+            e.printStackTrace();
+            tryReconnect();
         }
         Log.i(TAG,"SendMessage return from server");
         if(objectArrived!=null){
@@ -163,8 +182,13 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }
     }
 
+
     private FermatModuleObjectWrapper requestModuleObjetc(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference,MethodDetail.LoopType loopType){
         FermatModuleObjectWrapper objectArrived = null;
+        if(iServerBrokerService==null) {
+            Log.e(TAG, "FermatPlatformService is not connected");
+            throw new FermatPlatformServiceNotConnectedException();
+        }
         if(loopType!=null) {
             if (loopType == MethodDetail.LoopType.BACKGROUND) {
                 if(Looper.myLooper() == Looper.getMainLooper()) return new FermatModuleObjectWrapper(dataId,null,true,new InvalidMethodExecutionException(proxy,method,"The MethodDetail annotation have background thread value and this method is invoqued in the main thread."));
@@ -235,6 +259,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -261,17 +286,22 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     @Override
     public void onCreate() {
         super.onCreate();
-        proxyFactory = new ProxyFactory();
-        poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
-        bufferChannelAIDL = new BufferChannelAIDL();
+        try {
+            proxyFactory = new ProxyFactory();
+            poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
+            bufferChannelAIDL = new BufferChannelAIDL();
 
-        Intent serviceIntent = new Intent(this, CommunicationServerService.class);
-        serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
-        doBindService(serviceIntent);
+            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
+            doBindService(serviceIntent);
 
 //        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
 //        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
 //        doBindMessengerService(serviceIntent2);
+        }catch (Exception e){
+            Log.e(TAG,"Error creating client, please contact to Furszy");
+            e.printStackTrace();
+        }
     }
 
 
@@ -284,7 +314,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     @Override
     public void onDestroy() {
-        if(mIsBound){
+        if(mPlatformServiceIsBound){
             doUnbindService();
         }
 
@@ -296,29 +326,32 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private IServerBrokerService iServerBrokerService = null;
     /** Flag indicating whether we have called bind on the service. */
-    boolean mIsBound;
+    boolean mPlatformServiceIsBound;
 
     /**
      * Class for interacting with the main interface of the service.
      */
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mPlatformServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
-            mIsBound = true;
+            mPlatformServiceIsBound = true;
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
                 //running socket receiver
-                Log.i(TAG,"Starting socket receiver");
-                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
+                Log.i(TAG, "Starting socket receiver");
+                LocalSocket localSocket = new LocalSocket();
+                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,localSocket,bufferChannelAIDL);
                 mReceiverSocketSession.connect();
-                mReceiverSocketSession.start();
+                mReceiverSocketSession.startReceiving();
 
             } catch (RemoteException e) {
                 e.printStackTrace();
                 Log.e(TAG,"Cant run socket, register to server fail");
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
             try {
@@ -333,7 +366,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             // This is called when the connection with the service has been
             // unexpectedly disconnected -- that is, its process crashed.
             iServerBrokerService = null;
-            mIsBound = false;
+            mPlatformServiceIsBound = false;
             Log.e(TAG, "ISERVERBROKERSERVICE disconnected");
 
 
@@ -344,7 +377,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         try {
             //Log.d(TAG, "Before init intent.componentName");
             //Log.d(TAG, "Before bindService");
-            if (bindService(intent, mConnection, BIND_AUTO_CREATE)){
+            if (bindService(intent, mPlatformServiceConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE returned true");
             } else {
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE returned false");
@@ -354,15 +387,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         } catch (Exception e){
             e.printStackTrace();
         }
-        //mIsBound = true;
+        //mPlatformServiceIsBound = true;
         Log.d(TAG, "Binding.");
     }
 
     void doUnbindService() {
-        if (mIsBound) {
+        if (mPlatformServiceIsBound) {
             // Detach our existing connection.
-            unbindService(mConnection);
-            mIsBound = false;
+            unbindService(mPlatformServiceConnection);
+            mPlatformServiceIsBound = false;
             Log.d(TAG, "Unbinding.");
         }
     }
@@ -512,7 +545,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         } catch (Exception e){
             e.printStackTrace();
         }
-        //mIsBound = true;
+        //mPlatformServiceIsBound = true;
         Log.d(TAG, "Binding.");
     }
 
@@ -526,6 +559,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
 
+    private void tryReconnect() {
+        if(!mPlatformServiceIsBound){
+            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
+            doBindService(serviceIntent);
+        }else{
+            Log.e(TAG,"Trying to reconnect when the PlatformService is connected, contact to furszy");
+        }
+    }
 
 
     /**

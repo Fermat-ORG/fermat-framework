@@ -17,6 +17,17 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
+    public static final String CONTRACT_DATA = "CONTRACT_DATA";
+    public static final String NEGOTIATION_DATA = "NEGOTIATION_DATA";
+    public static final String CONFIGURED_DATA = "CONFIGURED_DATA";
+    public static final String LOCATION_LIST = "LOCATION_LIST";
+    public static final String BANK_ACCOUNT_LIST = "BANK_ACCOUNT_LIST";
+    public static final String BROKER_ACTOR = "BROKER_ACTOR";
+    public static final String CURRENCY_TO_BUY = "CURRENCY_TO_BUY";
+    public static final String QUOTES = "QUOTES";
+    public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
+    public static final String NEGOTIATION_ID = "NEGOTIATION_ID";
+
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {
             case 1:

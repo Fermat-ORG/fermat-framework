@@ -26,6 +26,11 @@ public class MenuItem implements FermatMenuItem {
 
     //This could be an icon or whatever the develoer want
     private FermatDrawable fermatDrawable;
+    // background color when is selected
+    private String backgroundSelectedColor;
+    //text color
+    private String textColor;
+    private String selectedTextColor;
 
     /**
      * SideMenu class constructors
@@ -111,5 +116,29 @@ public class MenuItem implements FermatMenuItem {
 
     public FermatDrawable getFermatDrawable() {
         return fermatDrawable;
+    }
+
+    public void backgroundSelectedColor(String color) {
+        this.backgroundSelectedColor = color;
+    }
+
+    public String getBackgroundSelectedColor() {
+        return backgroundSelectedColor;
+    }
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
+
+    public String getTextColor() {
+        return textColor;
+    }
+
+    public String getSelectedTextColor() {
+        return selectedTextColor;
+    }
+
+    public void setSelectedTextColor(String selectedTextColor) {
+        this.selectedTextColor = selectedTextColor;
     }
 }
