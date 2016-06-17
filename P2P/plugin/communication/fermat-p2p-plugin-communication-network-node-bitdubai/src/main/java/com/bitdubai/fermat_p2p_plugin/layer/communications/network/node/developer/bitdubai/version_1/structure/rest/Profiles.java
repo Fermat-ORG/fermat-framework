@@ -146,6 +146,25 @@ public class Profiles implements RestFulServices {
             }
         }
 
+          /*
+         * Apply pagination
+         */
+        if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
+
+            /*
+             * Apply pagination
+             */
+            if (profileList.size() > discoveryQueryParameters.getMax() &&
+                    profileList.size() > discoveryQueryParameters.getOffset()){
+                profileList =  profileList.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
+            }else if (profileList.size() > 100) {
+                profileList = profileList.subList(discoveryQueryParameters.getOffset(), 100);
+            }
+
+        }else if (profileList.size() > 100) {
+            profileList = profileList.subList(0, 100);
+        }
+
         return profileList;
     }
 
