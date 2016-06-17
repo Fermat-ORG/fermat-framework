@@ -170,7 +170,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
      * @throws CantListChatException
      */
     @Override
-    public List<ChatExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListChatException {
+    public List<ChatExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListChatException {
 
         try {
 
@@ -181,10 +181,10 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                     null,
                     publicKey,
                     deviceLocation,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.ACTOR_CHAT
             );
 
