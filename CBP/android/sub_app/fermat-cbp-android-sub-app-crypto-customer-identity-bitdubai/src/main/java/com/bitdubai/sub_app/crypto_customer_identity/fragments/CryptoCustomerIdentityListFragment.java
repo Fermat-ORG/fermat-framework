@@ -168,15 +168,11 @@ public class CryptoCustomerIdentityListFragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.crypto_customer_identity_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
-        }
-        if (item.getItemId() == R.id.action_help) {
+        if (item.getItemId() == FragmentsCommons.HELP_OPTION_MENU_ID) {
             presentationDialog.show();
         }
         return true;

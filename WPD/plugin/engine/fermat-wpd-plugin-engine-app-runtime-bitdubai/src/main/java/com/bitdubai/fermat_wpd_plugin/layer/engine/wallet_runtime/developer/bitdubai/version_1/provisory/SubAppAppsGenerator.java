@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
@@ -28,17 +29,19 @@ import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
 
+
 /**
  * Created by mati on 2016.05.09..
  */
 public class SubAppAppsGenerator {
 
 
-    public  HashMap<String,AppNavigationStructure> listSubApp ;
+    public HashMap<String, AppNavigationStructure> listSubApp;
 
     public SubAppAppsGenerator() {
         listSubApp = new HashMap<>();
     }
+
     /*
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
@@ -46,7 +49,6 @@ public class SubAppAppsGenerator {
     public void factoryReset() throws Exception {
 
         try {
-
 
 
             AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
@@ -686,7 +688,6 @@ public class SubAppAppsGenerator {
             //createArtArtistIdentitySubAppNavigationStructure();
 
 
-
             runtimeSubApp = new AppNavigationStructure();
 
             String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
@@ -715,8 +716,6 @@ public class SubAppAppsGenerator {
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
 
 
             /**
@@ -760,7 +759,6 @@ public class SubAppAppsGenerator {
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
-
             //createTkyArtistIdentityNavigationStructure();
             /**
              * Start ART
@@ -776,8 +774,6 @@ public class SubAppAppsGenerator {
              */
 
             createArtistCommunitySubAppNavigationStructure();
-
-
 
 
             /**
@@ -2304,8 +2300,6 @@ public class SubAppAppsGenerator {
         StatusBar statusBar;
 
 
-
-
         String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
         runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
         // Activity: Create New Identity
@@ -2691,17 +2685,24 @@ public class SubAppAppsGenerator {
     }
 
     private void createCryptoCustomerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final int CREATE_IDENTITY_MENU_ID = 3;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
         Fragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
-        String publicKey = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
 
         runtimeSubApp = new AppNavigationStructure();
 
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         runtimeSubApp.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -2725,17 +2726,53 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: ImageCropper
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
         // Activity: Create New Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2751,6 +2788,17 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(CREATE_IDENTITY_MENU_ID, "action_create", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
@@ -2761,7 +2809,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2778,22 +2826,25 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.         CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
     }
 
     private void createCryptoBrokerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
         TitleBar runtimeTitleBar;
         Fragment runtimeFragment;
 
-        String publicKey = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
-
         runtimeSubApp = new AppNavigationStructure();
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
         // Activity: List of identities
@@ -2816,17 +2867,53 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - List of identities Activity
+        OptionsMenu optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        OptionMenuItem optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: ImageCropper
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
         // Activity: Create New Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2852,7 +2939,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3510,7 +3597,7 @@ public class SubAppAppsGenerator {
         //Tabs Chats
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
-        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
@@ -3519,19 +3606,19 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
         optionMenuItem.setShowAsAction(-1);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -3549,13 +3636,13 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -4001,19 +4088,19 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuBrowser = new OptionsMenu();
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2,"location",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Location");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Help");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
@@ -4033,13 +4120,13 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Search");
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         optionMenuItemConn = new OptionMenuItem(2);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(1);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
@@ -4058,7 +4145,7 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
-        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
         optionMenuItemNot.setShowAsAction(1);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
@@ -4151,7 +4238,7 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtComm.getPublicKey(), chtComm);
     }
 
-    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException{
+    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException {
 
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
@@ -4184,7 +4271,7 @@ public class SubAppAppsGenerator {
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(chatIdentityPublicKey);
 
-        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
         leftIconMenuItem.setAppLinkPublicKey("back");
         runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
 
@@ -4198,12 +4285,12 @@ public class SubAppAppsGenerator {
         OptionMenuItem menuItem = new OptionMenuItem(1);
         Owner owner2 = new Owner();
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
