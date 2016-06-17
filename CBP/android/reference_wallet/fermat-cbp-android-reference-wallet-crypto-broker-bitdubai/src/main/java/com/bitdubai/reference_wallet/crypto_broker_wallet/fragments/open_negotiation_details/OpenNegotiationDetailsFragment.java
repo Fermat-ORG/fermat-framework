@@ -198,12 +198,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.cbw_open_negotiation_details_menu, menu);
+//        inflater.inflate(R.menu.cbw_open_negotiation_details_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.cbw_action_cancel_negotiation) {
+        if (item.getItemId() == FragmentsCommons.CANCEL_NEGOTIATION_OPTION_MENU_ID) {
             TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
             dialog.configure(R.string.cbw_cancel_negotiation, R.string.cbw_reason);
             dialog.setTextFreeInputType(true);
