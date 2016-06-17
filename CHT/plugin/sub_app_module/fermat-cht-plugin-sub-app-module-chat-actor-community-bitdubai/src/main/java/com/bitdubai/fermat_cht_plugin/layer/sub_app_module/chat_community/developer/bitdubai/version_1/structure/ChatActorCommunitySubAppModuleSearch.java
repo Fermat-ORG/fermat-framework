@@ -102,6 +102,27 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
     }
 
     @Override
+    public List<ChatActorCommunityInformation> getResultAlias(String alias) throws CantGetChtActorSearchResult {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultAlias(alias);
+
+            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
+
+            for(ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+
+            return chatActorLocalCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
     public String getAlias() {
         return null;
     }

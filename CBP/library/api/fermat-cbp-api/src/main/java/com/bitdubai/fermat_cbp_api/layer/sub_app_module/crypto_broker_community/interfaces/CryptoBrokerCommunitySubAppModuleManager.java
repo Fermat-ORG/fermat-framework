@@ -15,8 +15,21 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateGeoRectangleException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCountryDependenciesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -190,5 +203,31 @@ public interface CryptoBrokerCommunitySubAppModuleManager
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
+
+    HashMap<String, Country> getCountryList() throws CantConnectWithExternalAPIException,
+            CantCreateBackupFileException,
+            CantCreateCountriesListException;
+
+    List<CountryDependency> getCountryDependencies(String countryCode)
+            throws CantGetCountryDependenciesListException,
+            CantConnectWithExternalAPIException,
+            CantCreateBackupFileException;
+
+    List<City> getCitiesByCountryCode(String countryCode)
+            throws CantGetCitiesListException;
+
+    List<City> getCitiesByCountryCodeAndDependencyName(
+            String countryName,
+            String dependencyName)
+            throws CantGetCitiesListException,
+            CantCreateCountriesListException;
+
+    GeoRectangle getGeoRectangleByLocation(String location)
+            throws CantCreateGeoRectangleException;
+
+    Address getAddressByCoordinate(float latitude, float longitude)
+            throws CantCreateAddressException;
+
+    GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
 }
