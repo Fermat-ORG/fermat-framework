@@ -156,15 +156,12 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
+        //inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
-        }
-        if (item.getItemId() == R.id.action_help) {
+        if (item.getItemId() == FragmentsCommons.HELP_OPTION_MENU_ID) {
             presentationDialog.show();
         }
         return true;

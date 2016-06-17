@@ -15,7 +15,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
+import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
+
 
 /**
  * Created by Nelson Ramirez
@@ -63,5 +66,19 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<Refe
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+        switch (id){
+            case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
+                resId = R.drawable.add_identity;
+                break;
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                resId = R.drawable.help_icon_identity_broker;
+                break;
+        }
+        return resId;
     }
 }
