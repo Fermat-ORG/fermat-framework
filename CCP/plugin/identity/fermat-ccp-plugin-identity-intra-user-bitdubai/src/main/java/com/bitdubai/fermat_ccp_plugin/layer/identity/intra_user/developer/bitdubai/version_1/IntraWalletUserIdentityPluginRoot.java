@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
@@ -161,7 +162,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
 
-            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage,0,Frecuency.NONE);
 
             //registerIdentities();
             //registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
@@ -187,7 +188,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
             intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage);
 
-            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage);
+            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage,0,Frecuency.NONE);
 
             registerIdentities();
 
