@@ -197,7 +197,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            //setUpContactAddapter();
+            setUpContactAddapter();
+
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
 
             return rootView;
         } catch (Exception e) {
@@ -247,6 +252,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         txt_type = (TextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
@@ -263,7 +269,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 String newAmount = "";
                 if(bitcoinConverter != null) {
                     switch (position) {
-                        case 0:
+                        case 1:
                             text = "[btc]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
@@ -274,7 +280,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
 
                             break;
-                        case 1:
+                        case 2:
                             text = "[bits]";
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -285,7 +291,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
 
                             break;
-                        case 2:
+                        case 3:
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);

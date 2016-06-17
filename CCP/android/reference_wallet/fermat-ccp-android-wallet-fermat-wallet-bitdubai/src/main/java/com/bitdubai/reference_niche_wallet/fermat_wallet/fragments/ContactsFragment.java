@@ -348,7 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             int id = item.getItemId();
 
-            if (id == FermatWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == 3) {
                 setUpTutorial(true);
                 return true;
             }
@@ -502,13 +502,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-        View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
-        mListView.setPinnedHeaderView(pinnedHeaderView);
+      //  View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
+      //  mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
-        indexBarView.setData(mListView, mListItems, mListSectionPos);
-        mListView.setIndexBarView(indexBarView);
+       // IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
+       // indexBarView.setData(mListView, mListItems, mListSectionPos);
+       // mListView.setIndexBarView(indexBarView);
 /*
         // set preview text view
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
@@ -836,7 +836,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                               // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));

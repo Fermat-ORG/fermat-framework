@@ -121,7 +121,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     private long before = 0;
     private long after = 0;
     private boolean pressed = false;
-    private CircularProgressBar circularProgressBar;
+
     private Thread background;
 
     // Fermat Managers
@@ -167,7 +167,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             @Override
             public void run() {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                    final Drawable drawable = getResources().getDrawable(R.drawable.background_white_gradient, null);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -400,7 +400,6 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         int[] emptyOriginalPos = new int[2];
         if(emptyListViewsContainer!=null)
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
-    String runningBalance;
 
     private void setUpHeader(LayoutInflater inflater) throws CantGetBalanceException {
         final RelativeLayout container_header_balance = getToolbarHeader();
@@ -485,197 +484,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
         txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
 
+        updateBalances();
     }
 
-   /* private void setUpDonut(LayoutInflater inflater)  {
-        try {
-            final RelativeLayout container_header_balance = getToolbarHeader();
-            try {
-                container_header_balance.removeAllViews();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Bitmap bitmap;
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inScaled = true;
-                    options.inSampleSize = 3;
-                    try {
-                        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header,options);
-    //                    bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
-                        final Bitmap finalBitmap = bitmap;
-                        if(finalBitmap!=null) {
-                            Runnable runnableHandler = new Runnable() {
-                                @Override
-                                public void run() {
-                                    container_header_balance.setBackground(new BitmapDrawable(getResources(), finalBitmap));
-                                }
-                            };
-                            handler.post(runnableHandler);
-                        }
-                    }catch (OutOfMemoryError e){
-                        e.printStackTrace();
-                        System.gc();
-                    }
-                }
-            };
-
-            Thread thread = new Thread(runnable);
-            thread.start();
-            final View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
-            container_header_balance.setVisibility(View.VISIBLE);
-            circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
-
-                _executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            runningBalance = WalletUtils.formatBalanceStringNotDecimal(
-                                    moduleManager.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(),
-                                    blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                                    circularProgressBar.setProgressValue2(getBalanceAverage());
-                                    circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-                                    circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-                                    circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
-                                }
-                            });
-                        } catch (CantGetBalanceException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
-
-            txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
-
-            // handler for the background updating
-            final Handler progressHandler = new Handler() {
-                public void handleMessage(Message msg) {
-                    progress1++;
-                    try {
-                        circularProgressBar.setProgressValue(progress1);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
-            txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        pressed = true;
-                        before = System.currentTimeMillis();
-
-                        //TODO fijatse que no se lancen mas de un hilo
-                        if (pressed){
-                            background = new Thread(new Runnable() {
-                                public void run() {
-                                    try {
-                                        // enter the code to be run while displaying the progressbar.
-                                        // This example is just going to increment the progress bar:
-                                        // So keep running until the progress value reaches maximum value
-                                        while (circularProgressBar.getprogress1() <= 300) {
-                                            // wait 500ms between each update
-                                            Thread.sleep(300);
-                                            // System.out.println(circularProgressBar.getprogress1());
-                                            // active the update handler
-                                            progressHandler.sendMessage(progressHandler.obtainMessage());
-                                        }
-                                        pressed = false;
-                                    } catch (java.lang.InterruptedException e) {
-                                        // if something fails do something smart
-                                    }
-                                }
-                            });
-                            background.start();
-                        }
-
-                    return true;
-
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        pressed = false;
-                        background.interrupt();
-                        after = System.currentTimeMillis();
-                        if (after - before < 2000) {
-                            changeBalanceType(txt_type_balance, txt_balance_amount);
-                            //System.out.println(System.currentTimeMillis());
-                            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                            circularProgressBar.setProgressValue2(getBalanceAverage());
-                            return true;
-                        }else {
-                            //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
-                            GET("",getActivity());
-                            progress1 = 1;
-                            circularProgressBar.setProgressValue(progress1);
-                            return true;
-
-                        }
-                    }
-
-                    return false;
-                }
-            });
-
-            txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-            txt_balance_amount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeAmountType();
-                }
-            });
-
-            txt_amount_type.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    changeAmountType();
-                }
-            });
-
-            txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-            try {
-                _executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            final long balance = moduleManager.getBalance(
-                                    balanceType, appSession.getAppPublicKey(), blockchainNetworkType);
-
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, typeAmountSelected.getCode()));
-                                }
-                            });
-                        } catch (CantGetBalanceException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            txt_type_balance_amount = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-        }
-    }*/
-
-    private String getWalletAddress(String actorPublicKey) {
+    /*private String getWalletAddress(String actorPublicKey) {
         String walletAddress="";
         //noinspection TryWithIdenticalCatches
         try {
@@ -703,9 +515,9 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
             e.printStackTrace();
         }
         return walletAddress;
-    }
+    }*/
 
-    public void GET(@SuppressWarnings("UnusedParameters") String url, final Context context){
+    /*public void GET(@SuppressWarnings("UnusedParameters") String url, final Context context){
         final Handler mHandler = new Handler();
         try {
             if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
@@ -783,19 +595,13 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.fw_help_icon)
-               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 
     }
@@ -804,10 +610,10 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == FermatWalletConstants.IC_ACTION_SEND){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
-            }else if(id == FermatWalletConstants.IC_ACTION_HELP_PRESENTATION){
+            }else{
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -823,8 +629,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
-        recyclerView.addItemDecoration(itemDecoration);
+        //RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+       // recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransactions!=null) {
             if (lstFermatWalletTransactions.isEmpty()) {
@@ -909,7 +715,7 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
         } catch (Exception e){
             e.printStackTrace();
         }
-        return data;
+        return lstCryptoWalletTransactionsAvailable;
     }
 
     @Override
@@ -1156,7 +962,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
 
-                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+                //toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+                toolBar.setBackground(getResources().getDrawable(R.drawable.background_navigation_drawer));
 
                // makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
@@ -1169,8 +976,8 @@ public class SendTransactionFragment2 extends FermatWalletListFragment<FermatWal
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
 
-                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                    circularProgressBar.setProgressValue2(getBalanceAverage());
+                   // circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                   // circularProgressBar.setProgressValue2(getBalanceAverage());
                 }
 
             }

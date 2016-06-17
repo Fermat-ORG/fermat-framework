@@ -707,24 +707,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_menu_help_icon)
-               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
+            if (id == 2) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
-            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION){
+            } else
+            {
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

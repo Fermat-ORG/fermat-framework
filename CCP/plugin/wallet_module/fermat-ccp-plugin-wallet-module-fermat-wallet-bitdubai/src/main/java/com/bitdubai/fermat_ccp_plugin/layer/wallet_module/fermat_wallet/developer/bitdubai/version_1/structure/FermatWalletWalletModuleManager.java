@@ -1482,8 +1482,9 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
-            case BASIC_WALLET_BITCOIN_WALLET:
+            case BASIC_WALLET_FERMAT_WALLET:
                 return cryptoVaultManager.getAddress(blockchainNetworkType);
+
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }

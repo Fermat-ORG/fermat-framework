@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal"
         >
 
         <RelativeLayout
@@ -38,7 +39,7 @@
         android:id="@+id/intra_user_alias"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:layout_weight="1"
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
@@ -50,13 +51,15 @@
         android:fontFamily="hel"
         />
 
-      <ImageView
-          android:layout_width="25sp"
-          android:layout_height="25sp"
-          android:background="@drawable/fw_add_floatting_buttom"
-          android:id="@+id/checkbox_connection"
-          android:layout_marginTop="10dp"
-          />
+    <CheckBox
+            android:id="@+id/checkbox_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:buttonTint="@drawable/bitcoinwcheckb_full"
+            android:background="@drawable/bitcoinwcheckb_empty"
+            android:width="30dp"
+            android:height="16dp"/>
 
     </LinearLayout>
 

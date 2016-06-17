@@ -206,7 +206,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             method.getName(),
                             parameters);
                 }catch (TransactionTooLargeException t1){
-                    Log.e(TAG,"Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                    Log.e(TAG, "Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
                     objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy,method,t1));
                 }  catch (RemoteException e) {
                     e.printStackTrace();

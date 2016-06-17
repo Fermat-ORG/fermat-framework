@@ -41,7 +41,7 @@ public class AddConnectionsAdapter extends FermatAdapter<FermatWalletIntraUserAc
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.fermat_intra_user_information_list_item;
+        return R.layout.fermat_wallet_intra_user_information_list_item;
     }
 
     @Override
@@ -106,6 +106,7 @@ public class AddConnectionsAdapter extends FermatAdapter<FermatWalletIntraUserAc
                 addConnectionCallback.setSelected(data, selected);
                 if (selected) {
                     holder.checkbox_connection.setChecked(true);
+                    holder.checkbox_connection.setBackground(ContextCompat.getDrawable(context,R.drawable.checkbox_icon));
                    // FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
                     addConnectionCallback.addMenuEnabled();
                     holder.container_data.setBackgroundColor(Color.parseColor("#666666"));

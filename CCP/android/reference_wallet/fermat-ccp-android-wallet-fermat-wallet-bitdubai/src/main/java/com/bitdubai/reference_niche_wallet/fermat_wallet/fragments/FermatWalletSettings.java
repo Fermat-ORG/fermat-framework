@@ -31,7 +31,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.CantRequestFermatAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
@@ -87,6 +89,34 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         try {
 
             fermatWalletModule = appSession.getModuleManager();
+
+            try {
+                bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
+
+                if (blockchainNetworkType == null) {
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                    } else {
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+
+                        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+
+                        try {
+                            fermatWalletSessionReferenceApp.getModuleManager().persistSettings(fermatWalletSessionReferenceApp.getAppPublicKey(), bitcoinWalletSettings);
+                        } catch (CantPersistSettingsException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+
+
+            } catch (CantGetSettingsException e) {
+                e.printStackTrace();
+            } catch (SettingsNotFoundException e) {
+                e.printStackTrace();
+            }
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             //noinspection unchecked
         } catch (Exception e) {
@@ -109,7 +139,6 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
         try {
 
 
-            bitcoinWalletSettings = fermatWalletModule.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
 
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
@@ -144,7 +173,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
             list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.GRAY));
 
            // list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
@@ -153,10 +182,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
            // list.add(new PreferenceSettingsLinkText(12, "Import Mnemonic code", "",15,Color.GRAY));
 
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,30 +201,8 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
         try {
 
-            try {
-                bitcoinWalletSettings = fermatWalletSessionReferenceApp.getModuleManager().loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey());
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                e.printStackTrace();
-            }
+
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-
-
-            if (preferenceSettingsItem.getId() == 11){
-                //receive Regtest test bitcoins
-                Runnable _longPressed = new Runnable() {
-                    public void run() {
-                        Log.i("info", "LongPress");
-                        Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
-                        GET("", getActivity());
-                    }
-                };
-
-                _longPressed.run();
-
-            }
-
             if (preferenceSettingsItem.getId() == 10) {
                 //export key show fragment
 
@@ -222,6 +226,13 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
                 openImportMnemonicScreen();
 
+            }
+            else if(preferenceSettingsItem.getId() == 13){
+
+                //receive Regtest test bitcoins
+               Log.i("info", "LongPress");
+               Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
+               GET("", getActivity());
             }
 
 
@@ -351,7 +362,6 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
     @Override
     public void dialogOptionSelected(String item, int position) {
 
-        BlockchainNetworkType blockchainNetworkType;
 
         switch (item) {
 
@@ -374,7 +384,7 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
 
         if (blockchainNetworkType == null) {
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
@@ -439,17 +449,30 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
                             cryptoWalletWalletContact = fermatWalletModule.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                         } catch (Exception e) {
-
+                           // e.printStackTrace();
+                            try {
+                                cryptoWalletWalletContact = fermatWalletModule.findWalletContactByName("regtest_bitcoins",appSession.getAppPublicKey(),fermatWalletModule.getSelectedActorIdentity().getPublicKey());
+                            } catch (CantFindWalletContactException e1) {
+                                e1.printStackTrace();
+                            } catch (WalletContactNotFoundException e1) {
+                                e1.printStackTrace();
+                            } catch (CantGetSelectedActorIdentityException e1) {
+                                e1.printStackTrace();
+                            } catch (ActorIdentityNotSelectedException e1) {
+                                e1.printStackTrace();
+                            }
                         }
 
-                        assert cryptoWalletWalletContact != null;
-                        String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                        HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
-                        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                        SetServerString = Client.execute(httpget, responseHandler);
+                        if (cryptoWalletWalletContact != null) {
+                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
+                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
+                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                            SetServerString = Client.execute(httpget, responseHandler);
+                        }
 
                         response = SetServerString;
                     } catch (IOException e) {
+                        e.printStackTrace();
 
                     }
 

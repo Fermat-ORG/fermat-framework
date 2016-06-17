@@ -152,7 +152,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         convertView = mLayoutInflater.inflate(R.layout.fermat_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
                         walletContact = (FermatWalletWalletContact) mListItems.get(position);
-                        //guardo el contacto
+                        //save contact
                         contactPositionItem.put(position, walletContact);
                         try {
                             if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
@@ -170,8 +170,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 //                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
                         break;
                     case TYPE_SECTION:
-                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                        text = (String) mListItems.get(position);
+                      /*  convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                        text = (String) mListItems.get(position);*/
                         break;
                 }
 
