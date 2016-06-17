@@ -23,7 +23,7 @@ apply from: 'android_toolbox/settings.gradle'
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment', ':fermat-ccp-android-wallet-fermat-wallet-bitdubai', ':fermat-ccp-plugin-wallet-module-fermat-wallet-bitdubai'
 
 include ':fermat-android-core'
-//include ':fermat-linux-core'
+include ':fermat-linux-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
