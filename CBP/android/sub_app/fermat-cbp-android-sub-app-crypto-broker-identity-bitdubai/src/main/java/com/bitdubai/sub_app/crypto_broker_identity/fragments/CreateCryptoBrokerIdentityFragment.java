@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 
@@ -46,7 +47,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
     private String cryptoBrokerName = null;
 
     private EditText mBrokerName;
-    private ImageView mBrokerImage;
     private View progressBar;
 
 
@@ -86,7 +86,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         progressBar = layout.findViewById(R.id.cbi_progress_bar);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        ImageView mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
         if(cryptoBrokerBitmap != null)
             mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
@@ -182,7 +182,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
                 FermatWorker fermatWorker = new FermatWorker(getActivity()) {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray);
+                        appSession.getModuleManager().createCryptoBrokerIdentity(brokerNameText, cryptoBrokerImageByteArray, 0, Frecuency.NONE);
 
                         return SUCCESS;
                     }

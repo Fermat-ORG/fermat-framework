@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
@@ -26,7 +27,9 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      *
      * @throws CantCreateCryptoCustomerIdentityException if something goes wrong.
      */
-    CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoCustomerIdentityException;
+    CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage,
+                                                        long accuracy,
+                                                        Frecuency frecuency) throws CantCreateCryptoCustomerIdentityException;
 
     /**
      * The method <code>listAllCryptoCustomerFromCurrentDeviceUser</code> is used to list all the Customer Identity
@@ -41,7 +44,9 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      * @param publicKey
      * @param imageProfile
      */
-    void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException;
+    void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
+                                      long accuracy,
+                                      Frecuency frecuency) throws CantUpdateCustomerIdentityException;
 
     /**
      * The method <code>getCryptoCustomerIdentity</code> is used to get an specific customer Identity

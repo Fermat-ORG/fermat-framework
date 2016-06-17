@@ -123,6 +123,8 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory {//implements DealsW
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME);
 
         /**
          * Table Crypto Customer addition.

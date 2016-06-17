@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -272,15 +273,25 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment<Ref
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
             } else {
                 if (cryptoBrokerPublicKey != null) {
-                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex, 0, Frecuency.NONE);
                     EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
 
                     progressBar.setVisibility(View.VISIBLE);
 
+            }else{
+                if(cryptoBrokerPublicKey != null) {
+                    if(d.equalsIgnoreCase("onClick")){
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());
+                    }
+                    Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
+                    //TODO: Revisar este caso Nelson
+                    CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex, 0, Frecuency.NONE);
+                    EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), (ReferenceAppFermatSession) appSession, identity, this);
                     executor = EditIdentityWorker.execute();
                 }
             }
         }
+    }
     }
 
     private void dispatchTakePictureIntent() {

@@ -3620,7 +3620,7 @@ public class SubAppAppsGenerator {
         optionMenuItem = new OptionMenuItem(3);
         optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(-1);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
@@ -3658,7 +3658,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3684,7 +3684,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3710,7 +3710,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         //chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3736,7 +3736,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3793,7 +3793,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3819,7 +3819,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3845,7 +3845,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3871,7 +3871,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3897,7 +3897,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3923,7 +3923,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3949,7 +3949,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILELIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILELIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3975,7 +3975,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -4001,7 +4001,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -4081,7 +4081,7 @@ public class SubAppAppsGenerator {
 
         //Tabs Browser
         runtimeTab = new Tab();
-        runtimeTab.setLabel("BROWSER");
+        runtimeTab.setLabel("   BROWSER   ");
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
@@ -4113,7 +4113,7 @@ public class SubAppAppsGenerator {
 
         //Tabs Connections
         runtimeTab = new Tab();
-        runtimeTab.setLabel("CONNECTIONS");
+        runtimeTab.setLabel(" CONNECTIONS ");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
@@ -4217,7 +4217,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         //runtimeActivity.setColor("#FF0B46F0");
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
 
@@ -4226,7 +4226,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabelSize(18);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -4301,6 +4301,33 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
 
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(chatIdentityPublicKey);
+        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#075E54");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
