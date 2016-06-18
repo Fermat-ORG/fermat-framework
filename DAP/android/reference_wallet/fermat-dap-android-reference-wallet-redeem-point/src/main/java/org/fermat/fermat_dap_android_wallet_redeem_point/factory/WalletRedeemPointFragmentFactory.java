@@ -14,7 +14,7 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.RedeemPointSt
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsMainNetworkFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsNotificationsFragment;
-import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
+import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSessionReferenceApp;
 
 /**
  * WalletRedeemPointFragmentFactory
@@ -22,7 +22,7 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSes
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSession,WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
+public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<RedeemPointSessionReferenceApp, WalletResourcesProviderManager, WalletRedeemPointFragmentsEnumType> {
 
 
     @Override
@@ -62,7 +62,7 @@ public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<Rede
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return currentFragment;

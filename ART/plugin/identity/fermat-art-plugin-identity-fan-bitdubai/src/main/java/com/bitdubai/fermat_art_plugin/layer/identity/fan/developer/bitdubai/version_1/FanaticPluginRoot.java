@@ -286,7 +286,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_art_plugin.layer.identity.Fanatic.developer.bitdubai.version_1.FanaticPluginRoot");
+        returnedClasses.add("FanaticPluginRoot");
         /**
          * I return the values.
          */

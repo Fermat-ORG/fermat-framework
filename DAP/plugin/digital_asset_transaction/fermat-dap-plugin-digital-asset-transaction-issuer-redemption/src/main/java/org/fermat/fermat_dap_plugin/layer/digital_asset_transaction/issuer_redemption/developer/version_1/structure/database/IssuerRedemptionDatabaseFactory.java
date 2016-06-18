@@ -72,8 +72,8 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_USER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME,DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             table.addIndex(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_FIRST_KEY_COLUMN);
 
@@ -81,7 +81,7 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating " + IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME + " table", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
@@ -98,7 +98,7 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
                 //Create the table
                 databaseFactory.createTable(ownerId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+ IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating " + IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME + " table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {

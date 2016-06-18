@@ -4,7 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.fragments.CreateArtistIndetityFragment;
-import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
+import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSessionReferenceApp;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  */
 
 
-public class ArtistIdentityFragmentFactory extends FermatFragmentFactory<ArtistIdentitySubAppSession, SubAppResourcesProviderManager, ArtistIdentityEnumType> {
+public class ArtistIdentityFragmentFactory extends FermatFragmentFactory<ArtistIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, ArtistIdentityEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(ArtistIdentityEnumType fragments) throws FragmentNotFoundException {

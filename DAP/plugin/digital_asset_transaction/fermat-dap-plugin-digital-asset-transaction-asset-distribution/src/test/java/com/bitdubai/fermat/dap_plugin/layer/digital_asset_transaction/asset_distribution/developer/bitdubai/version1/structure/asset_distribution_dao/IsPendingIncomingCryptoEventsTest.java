@@ -41,7 +41,7 @@ public class IsPendingIncomingCryptoEventsTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -51,27 +51,27 @@ public class IsPendingIncomingCryptoEventsTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
 
     @Test
-    public void isPendingIncomingCryptoEventsTest () throws CantExecuteQueryException {
+    public void isPendingIncomingCryptoEventsTest() throws CantExecuteQueryException {
         boolean isPending = mockAssetDistributionDao.isPendingIncomingCryptoEvents();
         Assert.assertTrue(isPending);
     }
 
-   @Test
+    @Test
     public void isPendingIncomingCryptoEventsThrowsCantExecuteQueryException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
 
-       try {
-           mockAssetDistributionDao.isPendingIncomingCryptoEvents();
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantExecuteQueryException);
-       }
+        try {
+            mockAssetDistributionDao.isPendingIncomingCryptoEvents();
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantExecuteQueryException);
+        }
     }
 }

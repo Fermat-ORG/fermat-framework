@@ -1,17 +1,18 @@
 package com.bitdubai.fermat_wpd_api.all_definition;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.AppStructureType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,32 +25,24 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     /**
      * AppNavigationStructure identifiers
      */
-
-    private String publicKey;
-
+    private String appPublicKey;
+    /**
+     * App Structure Type, default is Reference App
+     */
+    private AppStructureType appStructureType = AppStructureType.REFERENCE;
     /**
      * Screens in a AppNavigationStructure
      */
-
     private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
-
-    /**
-     * Activity used to block something
-     */
-    private Activities blockActivity;
-
     /**
      * Last active screen
      */
-
     private Activities lastActivity;
-
-    private int size;
-
 
     private DeveloperIdentity developer;
     private String actualStart;
     private Platforms platform;
+    private List<String> appsKeyConsumed;
 
     /**
      * AppNavigationStructure constructor
@@ -70,16 +63,6 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
     @Override
-    public FermatApps getFermatApp() {
-        return null;
-    }
-
-    @Override
-    public FermatAppType getFermatAppType() {
-        return FermatAppType.WALLET;
-    }
-
-    @Override
     public Platforms getPlatform() {
         return platform;
     }
@@ -90,7 +73,7 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
 
     @Override
     public String getPublicKey() {
-        return publicKey;
+        return appPublicKey;
     }
 
 
@@ -140,8 +123,8 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
     }
 
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey=publicKey;
+    public void setPublicKey(String appPublicKey) {
+        this.appPublicKey=appPublicKey;
     }
 
     @Override
@@ -181,13 +164,6 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
         activities.put(activity.getType(), activity);
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 
     public DeveloperIdentity getDeveloper() {
         return developer;
@@ -195,5 +171,25 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
 
     public void setDeveloper(DeveloperIdentity developer) {
         this.developer = developer;
+    }
+
+    public void setAppStructureType(AppStructureType appStructureType) {
+        this.appStructureType = appStructureType;
+    }
+
+    public AppStructureType getAppStructureType() {
+        return appStructureType;
+    }
+
+    @Override
+    public List<String> getAppsKeyConsumed() {
+        return appsKeyConsumed;
+    }
+
+    public void addAppKeyToConsume(String appPublicKey){
+        if(appsKeyConsumed==null){
+            appsKeyConsumed = new ArrayList<>();
+        }
+        this.appsKeyConsumed.add(appPublicKey);
     }
 }

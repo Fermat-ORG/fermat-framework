@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -22,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +36,6 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
@@ -48,7 +45,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.popup.PresentationTokenlyArtistUserIdentityDialog;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSession;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSessionReferenceApp;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
@@ -86,7 +83,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private TkyIdentitySubAppSession tkyIdentitySubAppSession;
+    private TkyIdentitySubAppSessionReferenceApp tkyIdentitySubAppSession;
     private byte[] ArtistImageByteArray;
     private TokenlyArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -129,7 +126,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            tkyIdentitySubAppSession = (TkyIdentitySubAppSession) appSession;
+            tkyIdentitySubAppSession = (TkyIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = tkyIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);

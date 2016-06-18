@@ -17,7 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppSelectableIdentitiesListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
  * @author lnacosta
  * @version 1.0.0
  */
-public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements FermatListItemListeners<CryptoBrokerCommunitySelectableIdentity> {
 
 
@@ -41,7 +41,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
 
     public ListIdentitiesDialog(final Context activity,
-                                final CryptoBrokerCommunitySubAppSession subAppSession,
+                                final CryptoBrokerCommunitySubAppSessionReferenceApp subAppSession,
                                 final SubAppResourcesProviderManager subAppResources) {
 
         super(activity, subAppSession, subAppResources);

@@ -3,20 +3,15 @@ package com.bitdubai.sub_app.chat_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.view.View;
-import android.widget.Filter;
-import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -194,7 +189,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //    }
 
 //    @Override
-//    public long getItemId(int position) {
+//    public long getId(int position) {
 //        return position;
 //    }
 //

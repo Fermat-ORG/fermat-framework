@@ -8,8 +8,8 @@ import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
  */
 public interface ToolManager extends FermatManager {
 
-DatabaseTool getDatabaseTool() throws com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetDataBaseTool;
+    DatabaseTool getDatabaseTool() throws com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetDataBaseTool;
 
-LogTool getLogTool() throws CantGetLogTool;
+    LogTool getLogTool() throws CantGetLogTool;
 
 }

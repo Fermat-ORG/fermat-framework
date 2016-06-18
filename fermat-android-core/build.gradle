@@ -88,13 +88,12 @@ dependencies {
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
     //compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.1', ext: 'aar')
-    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
+//    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
     compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-wallet-fermat-wallet-bitdubai')
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
     compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
-    compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     /*
      *Sub APPs on the pipeline
      */
@@ -145,6 +144,7 @@ dependencies {
     compile project(':fermat-art-android-sub-app-music-player-bitdubai')
     //WPD
     compile project(':fermat-wpd-android-sub-app-store-bitdubai')
+    compile project(':fermat-wpd-android-sub-app-wallet-manager-bitdubai')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
@@ -157,7 +157,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
     //widget
-    compile project(':bitcoin_exchange_widget')
+//    compile project(':bitcoin_exchange_widget')
     compile 'ch.acra:acra:4.6.2'
     configurations {
         all {

@@ -5,6 +5,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="black_overlay_2">#59000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
+    <color name="btn_drawer_overlay">#009CD4</color>
     <color name="green">#8bba9e</color>
 
     <color name="teal_400">#26a69a</color>

@@ -58,7 +58,7 @@ public class SetAssetTransmissionManagerTest {
         try {
             assetDistributionMonitorAgent.setAssetTransmissionManager(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }

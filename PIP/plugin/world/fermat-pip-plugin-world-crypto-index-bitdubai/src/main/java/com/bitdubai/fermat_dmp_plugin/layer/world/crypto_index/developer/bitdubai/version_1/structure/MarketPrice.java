@@ -31,8 +31,10 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     CryptoIndexDao cryptoIndexDao;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
+
     /**
      * Get Historical ExchangeRate From CryptoProvidersManager
+     *
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time
@@ -42,33 +44,32 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     public double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) throws CantGetHistoricalExchangeRateException, HistoricalExchangeRateNotFoundException {
         List<Double> priceList = new ArrayList<>();
         try {
-        for (Providers provider : Providers.values()) {
-            CryptoIndexProvider cryptoIndexProvider = provider.getProviderInstance();
-            //
-            if (cryptoIndexProvider.getHistoricalExchangeRate(cryptoCurrency, fiatCurrency, time) != 0) {
-                priceList.add(cryptoIndexProvider.getHistoricalExchangeRate(cryptoCurrency, fiatCurrency, time));
+            for (Providers provider : Providers.values()) {
+                CryptoIndexProvider cryptoIndexProvider = provider.getProviderInstance();
+                //
+                if (cryptoIndexProvider.getHistoricalExchangeRate(cryptoCurrency, fiatCurrency, time) != 0) {
+                    priceList.add(cryptoIndexProvider.getHistoricalExchangeRate(cryptoCurrency, fiatCurrency, time));
+                }
             }
-        }
             Collections.sort(priceList);
             if (priceList.isEmpty()) {
                 throw new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE, null, "Ger Market Price ", "Empty List Price");
             }
 
-            marketExchangeRate=getBestMarketPrice(priceList);
-            } catch (FiatCurrencyNotSupportedException e) {
-                e.printStackTrace();
-            } catch (CryptoCurrencyNotSupportedException e) {
-                e.printStackTrace();
-            } catch (CantGetMarketPriceException e) {
-                e.printStackTrace();
-            }
+            marketExchangeRate = getBestMarketPrice(priceList);
+        } catch (FiatCurrencyNotSupportedException e) {
+            e.printStackTrace();
+        } catch (CryptoCurrencyNotSupportedException e) {
+            e.printStackTrace();
+        } catch (CantGetMarketPriceException e) {
+            e.printStackTrace();
+        }
 
 
         return marketExchangeRate;
     }
 
     /**
-     *
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time
@@ -100,6 +101,7 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
 
     /**
      * Return the best market price returns
+     *
      * @param fiatCurrency
      * @param cryptoCurrency
      * @param time
@@ -110,47 +112,48 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     @Override
     public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
 
-        try{
+        try {
 
-        List<Double> priceList = new ArrayList<>();
+            List<Double> priceList = new ArrayList<>();
 
-        for (Providers provider : Providers.values()) {
-            CryptoIndexProvider cryptoIndexProvider = provider.getProviderInstance();
-           //
+            for (Providers provider : Providers.values()) {
+                CryptoIndexProvider cryptoIndexProvider = provider.getProviderInstance();
+                //
                 priceList.add(cryptoIndexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, time));
                 Collections.sort(priceList);
-                if (priceList.isEmpty()){
-                    throw new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,null,"Ger Market Price ","Empty List Price");
+                if (priceList.isEmpty()) {
+                    throw new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE, null, "Ger Market Price ", "Empty List Price");
                 }
-        }
-            marketExchangeRate=getBestMarketPrice(priceList);
+            }
+            marketExchangeRate = getBestMarketPrice(priceList);
         } catch (CantGetMarketPriceException cantGetMarketPriceException) {
-            new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE,cantGetMarketPriceException,"Crypto Index GetMarketPrice","Can't Get Market Price Exception");
+            new CantGetMarketPriceException(CantGetMarketPriceException.DEFAULT_MESSAGE, cantGetMarketPriceException, "Crypto Index GetMarketPrice", "Can't Get Market Price Exception");
         }
         return marketExchangeRate;
     }
 
-    public double getBestMarketPrice(List<Double> priceList ) {
+    public double getBestMarketPrice(List<Double> priceList) {
         /**
          * Get the average
          */
         double average = 0;
-        double bestPrice=0;
-        for (int i=0; i< priceList.size();i++){
-            average=average+priceList.get(i);
+        double bestPrice = 0;
+        for (int i = 0; i < priceList.size(); i++) {
+            average = average + priceList.get(i);
         }
-        average=average/priceList.size();
+        average = average / priceList.size();
         /**
          * Through the FOR loop I get best price close to the average
          */
-        for (int i=0;i<priceList.size();i++){
-            if (priceList.get(i)<=average & priceList.get(i)>=bestPrice){
-                bestPrice=priceList.get(i);
+        for (int i = 0; i < priceList.size(); i++) {
+            if (priceList.get(i) <= average & priceList.get(i) >= bestPrice) {
+                bestPrice = priceList.get(i);
             }
         }
         return marketExchangeRate = bestPrice;
     }
-    public CryptoIndex getBestPrice(List<CryptoIndex> indexList, FiatCurrency fiatCurrency,CryptoCurrency cryptoCurrency){
+
+    public CryptoIndex getBestPrice(List<CryptoIndex> indexList, FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) {
         long time = 0;
 
         try {
@@ -162,7 +165,7 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
                 //
                 priceList.add(cryptoIndexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, time));
                 Collections.sort(priceList);
-                if (priceList.isEmpty()){
+                if (priceList.isEmpty()) {
                     System.out.println("");
                 }
             }

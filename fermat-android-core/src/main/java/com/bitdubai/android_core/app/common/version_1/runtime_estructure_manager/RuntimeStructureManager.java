@@ -36,7 +36,7 @@ public class RuntimeStructureManager implements FermatRuntime {
         try {
             FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
             fermatStructure.changeActualStartActivity(activityCode);
-            ApplicationSession.getInstance().getAppManager().selectRuntimeManager(fermatStructure.getFermatAppType()).recordNAvigationStructure(fermatStructure);
+            ApplicationSession.getInstance().getAppManager().selectRuntimeManager(ApplicationSession.getInstance().getAppManager().getApp(fermatStructure.getPublicKey()).getAppType()).recordNAvigationStructure(fermatStructure);
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(fermatActivity.get().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();

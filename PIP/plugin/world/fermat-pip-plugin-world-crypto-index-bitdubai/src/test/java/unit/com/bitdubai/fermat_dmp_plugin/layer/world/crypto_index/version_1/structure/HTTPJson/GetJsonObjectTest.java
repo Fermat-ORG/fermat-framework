@@ -24,17 +24,18 @@ public class GetJsonObjectTest {
     HTTPJson htppJson = new HTTPJson();
 
     @Before
-    public void setValues() throws Exception{
-        inputStreamTest=htppJson.getInputStream("http://api.cryptocoincharts.info/tradingPair/btc_usd");
-        bufferedReaderTest=htppJson.getBufferedReader(inputStreamTest);
+    public void setValues() throws Exception {
+        inputStreamTest = htppJson.getInputStream("http://api.cryptocoincharts.info/tradingPair/btc_usd");
+        bufferedReaderTest = htppJson.getBufferedReader(inputStreamTest);
     }
+
     @Test
     public void TestGetJsonObject_successful() throws Exception {
         jsonObjectTest = htppJson.getJsonObject(bufferedReaderTest);
         Assertions.assertThat(jsonObjectTest).isNotNull();
     }
 
-    public void TestGetJsonObject_ThrowCantGetJsonObject() throws Exception{
+    public void TestGetJsonObject_ThrowCantGetJsonObject() throws Exception {
         catchException(htppJson).getJsonObject(bufferedReaderTestExceptios);
         Assertions.assertThat((Throwable) caughtException()).isNotNull();
     }

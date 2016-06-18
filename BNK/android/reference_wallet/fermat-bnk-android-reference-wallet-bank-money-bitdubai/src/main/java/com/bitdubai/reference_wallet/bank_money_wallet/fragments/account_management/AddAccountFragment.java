@@ -26,7 +26,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         try {
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
             bankAccounts = moduleManager.getAccounts();
 
             errorManager = appSession.getErrorManager();

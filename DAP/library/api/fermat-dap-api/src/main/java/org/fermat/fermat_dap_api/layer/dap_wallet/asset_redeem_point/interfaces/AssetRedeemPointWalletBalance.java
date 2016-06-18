@@ -11,12 +11,12 @@ import java.util.List;
  */
 public interface AssetRedeemPointWalletBalance {
     //TODO: Documentar
-    long getBalance()  throws CantCalculateBalanceException;
+    long getBalance() throws CantCalculateBalanceException;
 
     List<AssetRedeemPointWalletList> getAssetIssuerWalletBalances() throws CantCalculateBalanceException;
 
     void debit(org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType) throws CantRegisterDebitException; //TODO: Debemos de definir la estructura de la transaccion
 
-    void credit(org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType)  throws CantRegisterCreditException; //TODO: Debemos de definir la estructura de la transaccion
+    void credit(org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType) throws CantRegisterCreditException; //TODO: Debemos de definir la estructura de la transaccion
 
 }

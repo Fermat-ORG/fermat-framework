@@ -19,8 +19,8 @@ public class GetCurrentIndexTest {
 
     CryptoProvidersManager cryptoProvidersManager = new CryptoProvidersManager();
     private CryptoIndex cryptoIndex;
-    private CryptoCurrency cryptoCurrency ;
-    private FiatCurrency fiatCurrency ;
+    private CryptoCurrency cryptoCurrency;
+    private FiatCurrency fiatCurrency;
     String providers;
 
     @Before
@@ -32,7 +32,7 @@ public class GetCurrentIndexTest {
     }
 
     @Test
-    public void TestGetCurrentIndex() throws Exception{
+    public void TestGetCurrentIndex() throws Exception {
 
         System.out.println(cryptoIndex.getProviderDescription());
         System.out.println(cryptoIndex.getPurchasePrice());
@@ -47,8 +47,9 @@ public class GetCurrentIndexTest {
         Assertions.assertThat(cryptoIndex.getSalePrice()).isNotNull();
         Assertions.assertThat(cryptoIndex.getTimestamp()).isNotNull();
     }
+
     @Test
-    public void TestGetCurrentIndex_FiatCurrencyNotSupportedException() throws Exception{
+    public void TestGetCurrentIndex_FiatCurrencyNotSupportedException() throws Exception {
 
         fiatCurrency = FiatCurrency.getByCode("USD");
         cryptoIndex = cryptoProvidersManager.getCurrentIndex(cryptoCurrency, fiatCurrency);

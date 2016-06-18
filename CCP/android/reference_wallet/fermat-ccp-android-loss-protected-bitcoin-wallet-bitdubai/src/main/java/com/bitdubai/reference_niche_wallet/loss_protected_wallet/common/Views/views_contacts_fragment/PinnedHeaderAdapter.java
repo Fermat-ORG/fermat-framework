@@ -163,17 +163,20 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                             Picasso.with(mContext).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(holder.imageView);
                         }
                         text = walletContact.getActorName();
+                        convertView.setTag(holder);
                           break;
                     case TYPE_SECTION:
-                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                        text = (String) mListItems.get(position);
+                       // convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                       // text = (String) mListItems.get(position);
+                        //
+
+                        //convertView.setTag(holder);
                         break;
                 }
 
-                holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-                holder.textView.setTypeface(tf);
+            holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+            holder.textView.setTypeface(tf);
 
-                convertView.setTag(holder);
             if (text.equals("")) {
                 Object o = mListItems.get(0);
                 if (o instanceof LossProtectedWalletContact) {

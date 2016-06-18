@@ -43,7 +43,7 @@ public class UpdateDigitalAssetCryptoStatusByGenesisTransactionTest {
     List<DatabaseTableRecord> records, recordsForException;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -56,13 +56,13 @@ public class UpdateDigitalAssetCryptoStatusByGenesisTransactionTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void updateDigitalAssetCryptoStatusByGenesisTransactionTest () throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateDigitalAssetCryptoStatusByGenesisTransactionTest() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
     }
@@ -74,7 +74,7 @@ public class UpdateDigitalAssetCryptoStatusByGenesisTransactionTest {
         try {
             mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
         }
     }
@@ -87,7 +87,7 @@ public class UpdateDigitalAssetCryptoStatusByGenesisTransactionTest {
         try {
             mockAssetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantCheckAssetDistributionProgressException);
             Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
         }

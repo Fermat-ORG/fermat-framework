@@ -28,7 +28,7 @@ public class SetEventManagerTest {
     }
 
     @Test
-    public void setEventManagerTest (){
+    public void setEventManagerTest() {
         assetDistributionRecorderService.setEventManager(eventManager);
     }
 }

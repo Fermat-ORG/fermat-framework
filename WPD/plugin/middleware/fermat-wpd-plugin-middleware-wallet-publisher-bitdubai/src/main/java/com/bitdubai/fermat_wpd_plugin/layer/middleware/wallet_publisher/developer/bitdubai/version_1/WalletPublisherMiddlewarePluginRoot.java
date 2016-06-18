@@ -282,7 +282,8 @@ public class WalletPublisherMiddlewarePluginRoot extends AbstractPlugin implemen
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot");
+        returnedClasses.add("WalletPublisherMiddlewarePluginRoot");
+
         return returnedClasses;
     }
 

@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -26,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,12 +62,12 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
             //Try to load appSession data
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST);
             if(data == null) {
 
                 //Get saved locations from settings
@@ -78,7 +77,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 }
 
                 //Save locations to appSession data
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+                appSession.setData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }

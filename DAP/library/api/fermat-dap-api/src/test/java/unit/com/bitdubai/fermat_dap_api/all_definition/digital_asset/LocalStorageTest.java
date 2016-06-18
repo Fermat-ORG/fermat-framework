@@ -36,32 +36,32 @@ public class LocalStorageTest {
 
     @Test
     public void parseXMLTest() throws CantDefineContractPropertyException {
-        DigitalAssetMetadata digitalAssetMetadata=getDigitalAssetMetadataForTest();
-        String xmlDAM=digitalAssetMetadata.toString();
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataForTest();
+        String xmlDAM = digitalAssetMetadata.toString();
         System.out.println(xmlDAM);
-        DigitalAssetMetadata recoveredDigitalAssetMetadata=new DigitalAssetMetadata();
-        recoveredDigitalAssetMetadata=(DigitalAssetMetadata) XMLParser.parseXML(xmlDAM, recoveredDigitalAssetMetadata);
-        if(recoveredDigitalAssetMetadata instanceof DigitalAssetMetadata){
+        DigitalAssetMetadata recoveredDigitalAssetMetadata = new DigitalAssetMetadata();
+        recoveredDigitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(xmlDAM, recoveredDigitalAssetMetadata);
+        if (recoveredDigitalAssetMetadata instanceof DigitalAssetMetadata) {
             System.out.println("DAM is correct");
         }
-        DigitalAsset digitalAsset=recoveredDigitalAssetMetadata.getDigitalAsset();
-        if(digitalAsset instanceof DigitalAsset){
+        DigitalAsset digitalAsset = recoveredDigitalAssetMetadata.getDigitalAsset();
+        if (digitalAsset instanceof DigitalAsset) {
             System.out.println("DA is correct");
         }
     }
 
     private DigitalAssetMetadata getDigitalAssetMetadataForTest() throws CantDefineContractPropertyException {
-        DigitalAsset mockedDigitalAsset=getDigitalAssetForTesting();
-        DigitalAssetMetadata mockedDigitalAssetMetadata=new DigitalAssetMetadata();
+        DigitalAsset mockedDigitalAsset = getDigitalAssetForTesting();
+        DigitalAssetMetadata mockedDigitalAssetMetadata = new DigitalAssetMetadata();
         mockedDigitalAssetMetadata.setDigitalAsset(mockedDigitalAsset);
 //        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-        String hash=mockedDigitalAssetMetadata.getDigitalAssetHash();
+        String hash = mockedDigitalAssetMetadata.getDigitalAssetHash();
         System.out.println("DAM - HASH: " + hash);
         return mockedDigitalAssetMetadata;
     }
 
-    private IdentityAssetIssuer getIdentityAssetIssuerForTesting(){
-        IdentityAssetIssuer identityAssetIssuer=new IdentityAssetIssuer() {
+    private IdentityAssetIssuer getIdentityAssetIssuerForTesting() {
+        IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
             @Override
             public String getAlias() {
                 return "Franklin Marcano";
@@ -102,20 +102,20 @@ public class LocalStorageTest {
     }
 
     private DigitalAsset getDigitalAssetForTesting() throws CantDefineContractPropertyException {
-        DigitalAsset mockedDigitalAsset=new DigitalAsset();
+        DigitalAsset mockedDigitalAsset = new DigitalAsset();
         //Genesis Address
-        CryptoAddress testCryptoAddress=new CryptoAddress();
+        CryptoAddress testCryptoAddress = new CryptoAddress();
         testCryptoAddress.setAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv");
         testCryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
         mockedDigitalAsset.setGenesisAddress(testCryptoAddress);
         //Identity
-        IdentityAssetIssuer testIdentity=getIdentityAssetIssuerForTesting();
+        IdentityAssetIssuer testIdentity = getIdentityAssetIssuerForTesting();
         mockedDigitalAsset.setIdentityAssetIssuer(testIdentity);
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
-        Expiration date - we choose 90 days from now, you can change for testing
-        Timestamp expirationDateTimestamp=getExpirationDate(90);
+        Expiration date -we choose 90 days from now, you can change for testing
+        Timestamp expirationDateTimestamp = getExpirationDate(90);
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         mockedDigitalAsset.setContract(contract);
         //Description
@@ -163,9 +163,8 @@ public class LocalStorageTest {
         return mockedDigitalAsset;
     }
 
-    private ActorAssetUser getActorAssetUserForTest(){
-        ActorAssetUser mockedActorAssetUser=new ActorAssetUser()
-        {
+    private ActorAssetUser getActorAssetUserForTest() {
+        ActorAssetUser mockedActorAssetUser = new ActorAssetUser() {
             @Override
             public String getPublicLinkedIdentity() {
                 return new ECCKeyPair().getPublicKey();
@@ -257,18 +256,18 @@ public class LocalStorageTest {
      * @param daysFromNow days to add to present date.
      * @return
      */
-    private Timestamp getExpirationDate(int daysFromNow){
-        if(daysFromNow<0){
-            daysFromNow=Math.abs(daysFromNow);
+            private Timestamp getExpirationDate(int daysFromNow) {
+                if (daysFromNow < 0) {
+                    daysFromNow = Math.abs(daysFromNow);
+                }
+                if (daysFromNow == 0) {
+                    daysFromNow = 90;
+                }
+                Date date = new Date();
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTimeInMillis(date.getTime());
+                calendar.add(calendar.DATE, daysFromNow);
+                date = new Date(calendar.getTimeInMillis());
+                return new Timestamp(date.getTime());
+            }
         }
-        if(daysFromNow==0){
-            daysFromNow=90;
-        }
-        Date date=new Date();
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(date.getTime());
-        calendar.add(calendar.DATE, daysFromNow);
-        date=new Date(calendar.getTimeInMillis());
-        return new Timestamp(date.getTime());
-    }
-}

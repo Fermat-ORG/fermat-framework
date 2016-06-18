@@ -400,7 +400,12 @@ public enum Activities implements FermatEnum {
     DESKTOP_MORE_SETTINGS("DMS"),
 
 
-    DESKTOP_WIZZARD_WELCOME("DWW")
+    DESKTOP_WIZZARD_WELCOME("DWW"),
+
+
+    //Combo Chat
+    CHT_COMBO_HOME("CHTCH"),
+    CHT_COMBO_PROFILE("CHTCP"),
     ;
 
     private String code;
@@ -1033,6 +1038,10 @@ public enum Activities implements FermatEnum {
                 return DESKTOP_SETTING_IMPORT_KEY;
             case "DMS":
                 return DESKTOP_MORE_SETTINGS;
+            case "CHTCH":
+                return CHT_COMBO_HOME;
+            case "CHTCP":
+                return CHT_COMBO_PROFILE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

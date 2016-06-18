@@ -38,20 +38,20 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.EditCustomerIdentityWorker;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
-import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession.IDENTITY_INFO;
+import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<CryptoCustomerIdentitySubAppSession, ResourceProviderManager>
+public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<CryptoCustomerIdentitySubAppSessionReferenceApp, ResourceProviderManager>
         implements FermatWorkerCallBack {
 
     // Constants

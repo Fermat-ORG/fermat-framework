@@ -52,6 +52,7 @@ public class SaveLastRateExchangeTest {
     private void setUpIds() {
         testOwnerId = UUID.randomUUID();
     }
+
     private void setUpMockitoGeneralRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
@@ -60,6 +61,7 @@ public class SaveLastRateExchangeTest {
         when(mockTable.getEmptyRecord()).thenReturn(mockTableRecord);
         when(mockTable.getRecords()).thenReturn(mockRecords);
     }
+
     @Before
     public void setUp() throws Exception {
         setUpIds();
@@ -68,14 +70,16 @@ public class SaveLastRateExchangeTest {
         cryptoIndexDao.initializeDatabase();
         setUpMockitoGeneralRules();
     }
+
     @Test
     public void TestSaveLastRateExchange_successful() throws Exception {
-      catchException(cryptoIndexDao).saveLastRateExchange("BTC", "USD", 1);
-     assertThat(CatchException.<Exception>caughtException()).isNull();
+        catchException(cryptoIndexDao).saveLastRateExchange("BTC", "USD", 1);
+        assertThat(CatchException.<Exception>caughtException()).isNull();
     }
+
     @Test
-    public void TestSaveLastRateExchange_ThrowCantSaveLastRateExchangeException() throws Exception{
-   catchException(cryptoIndexDao).saveLastRateExchange(null, null, 2);
-     assertThat(CatchException.<Exception>caughtException()).isNotNull();
+    public void TestSaveLastRateExchange_ThrowCantSaveLastRateExchangeException() throws Exception {
+        catchException(cryptoIndexDao).saveLastRateExchange(null, null, 2);
+        assertThat(CatchException.<Exception>caughtException()).isNotNull();
     }
 }

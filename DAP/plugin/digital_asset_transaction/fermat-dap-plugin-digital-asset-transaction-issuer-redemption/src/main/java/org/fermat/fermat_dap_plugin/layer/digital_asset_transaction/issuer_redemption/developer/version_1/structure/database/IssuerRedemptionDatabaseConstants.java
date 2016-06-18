@@ -14,8 +14,8 @@ public class IssuerRedemptionDatabaseConstants {
     public static final String ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_USER_ID_COLUMN_NAME = "user_id";
     public static final String ASSET_ISSUER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
-    public static final String ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_issuer_bitcoin_address";
-    public static final String ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME="redemption_id";
+    public static final String ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME = "actor_issuer_bitcoin_address";
+    public static final String ASSET_ISSUER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME = "redemption_id";
 
     public static final String ASSET_ISSUER_REDEMPTION_FIRST_KEY_COLUMN = "genesis_transaction";
 

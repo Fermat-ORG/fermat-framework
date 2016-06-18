@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by Nerio on 18/07/15.
@@ -25,16 +24,17 @@ public class SettersTest {
         testPluginId = UUID.randomUUID();
 
     }
+
     @Test
-    public void testSetErrorManager(){
-        DeveloperSubAppModulePluginRoot root  = new DeveloperSubAppModulePluginRoot();
+    public void testSetErrorManager() {
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         ErrorManager errorManager = mock(ErrorManager.class);
         root.setErrorManager(errorManager);
     }
 
     @Test
-    public void testSetUUID(){
-        DeveloperSubAppModulePluginRoot root  = new DeveloperSubAppModulePluginRoot();
+    public void testSetUUID() {
+        DeveloperSubAppModulePluginRoot root = new DeveloperSubAppModulePluginRoot();
         root.setId(testPluginId);
     }
 }

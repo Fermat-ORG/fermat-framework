@@ -6,11 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -22,9 +18,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -76,6 +72,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.AssetUserWalletModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,26 +88,26 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager {
+public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager, Serializable {
 
-    private final AssetUserWalletManager            assetUserWalletManager;
-    private final AssetAppropriationManager         assetAppropriationManager;
-    private final UserRedemptionManager             userRedemptionManager;
-    private final IdentityAssetUserManager          identityAssetUserManager;
-    private final AssetTransferManager              assetTransferManager;
-    private final ErrorManager                      errorManager;
-    private final EventManager                      eventManager;
-    private final Broadcaster                       broadcaster;
-//    private final UUID                              pluginId;
+    private final AssetUserWalletManager assetUserWalletManager;
+    private final AssetAppropriationManager assetAppropriationManager;
+    private final UserRedemptionManager userRedemptionManager;
+    private final IdentityAssetUserManager identityAssetUserManager;
+    private final AssetTransferManager assetTransferManager;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    //    private final UUID                              pluginId;
 //    private final PluginFileSystem                  pluginFileSystem;
-    private final ActorAssetRedeemPointManager      actorAssetRedeemPointManager;
-    private final WalletManagerManager              walletMiddlewareManager;
-    private final AssetFactoryManager               assetFactoryManager;
-    private final ActorAssetUserManager             actorAssetUserManager;
-    private final AssetBuyerManager                 assetBuyerManager;
-    private final AssetSellerManager                assetSellerManager;
+    private final ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+    private final WalletManagerManager walletMiddlewareManager;
+    private final AssetFactoryManager assetFactoryManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final AssetBuyerManager assetBuyerManager;
+    private final AssetSellerManager assetSellerManager;
     private final CryptoWalletManager cryptoWalletManager;
-    private final AssetUserWalletModulePluginRoot   assetUserWalletModulePluginRoot;
+    private final AssetUserWalletModulePluginRoot assetUserWalletModulePluginRoot;
 
     private BlockchainNetworkType selectedNetwork;
     AssetUserSettings settings = null;
@@ -123,7 +120,7 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
         selectedUsersToDeliver = new ArrayList<>();
     }
 
-    private SettingsManager<AssetUserSettings> settingsManager;
+//    private SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager,
                                  AssetAppropriationManager assetAppropriationManager,
@@ -146,24 +143,24 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
 
         super(pluginFileSystem, pluginId);
 
-        this.assetUserWalletManager             = assetUserWalletManager;
-        this.assetAppropriationManager          = assetAppropriationManager;
-        this.userRedemptionManager              = userRedemptionManager;
-        this.identityAssetUserManager           = identityAssetUserManager;
-        this.assetTransferManager               = assetTransferManager;
-        this.errorManager                       = errorManager;
-        this.broadcaster                        = broadcaster;
-        this.eventManager                       = eventManager;
+        this.assetUserWalletManager = assetUserWalletManager;
+        this.assetAppropriationManager = assetAppropriationManager;
+        this.userRedemptionManager = userRedemptionManager;
+        this.identityAssetUserManager = identityAssetUserManager;
+        this.assetTransferManager = assetTransferManager;
+        this.errorManager = errorManager;
+        this.broadcaster = broadcaster;
+        this.eventManager = eventManager;
 //        this.pluginId                           = pluginId;
 //        this.pluginFileSystem                   = pluginFileSystem;
-        this.actorAssetRedeemPointManager       = actorAssetRedeemPointManager;
-        this.walletMiddlewareManager            = walletMiddlewareManager;
-        this.assetFactoryManager                = assetFactoryManager;
-        this.actorAssetUserManager              = actorAssetUserManager;
-        this.assetBuyerManager                  = assetBuyerManager;
-        this.assetSellerManager                 = assetSellerManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
+        this.walletMiddlewareManager = walletMiddlewareManager;
+        this.assetFactoryManager = assetFactoryManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.assetBuyerManager = assetBuyerManager;
+        this.assetSellerManager = assetSellerManager;
         this.cryptoWalletManager = cryptoWalletManager;
-        this.assetUserWalletModulePluginRoot    = assetUserWalletModulePluginRoot;
+        this.assetUserWalletModulePluginRoot = assetUserWalletModulePluginRoot;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
@@ -398,21 +395,21 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-        if (selectedNetwork == null) {
-            try {
-                if (settings == null) {
-                    settingsManager = getSettingsManager();
-                }
-                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_USER_WALLET.getCode());
-                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                //TODO: Only enter while the Active Actor Wallet is not open.
-                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_USER_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException e) {
 //                e.printStackTrace();
-            }
-        }
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
         return selectedNetwork;
     }
 

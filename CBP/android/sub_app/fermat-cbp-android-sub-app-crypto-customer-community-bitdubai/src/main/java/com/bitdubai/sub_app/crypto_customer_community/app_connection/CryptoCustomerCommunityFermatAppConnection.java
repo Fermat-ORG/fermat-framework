@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_community.navigationDrawer.CustomerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_customer_community.notifications.CommunityNotificationPainterBuilder;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -25,7 +25,7 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<CryptoCustomerCommunitySubAppSession> {
+public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<CryptoCustomerCommunitySubAppSessionReferenceApp> {
 
     public CryptoCustomerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -37,19 +37,19 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<C
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_CUSTOMER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public CryptoCustomerCommunitySubAppSession getSession() {
-        return new CryptoCustomerCommunitySubAppSession();
+    public CryptoCustomerCommunitySubAppSessionReferenceApp getSession() {
+        return new CryptoCustomerCommunitySubAppSessionReferenceApp();
     }
 
 

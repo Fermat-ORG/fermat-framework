@@ -14,12 +14,12 @@ public class DeveloperModuleDatabaseObjectFactory implements DeveloperObjectFact
 
     @Override
     public DeveloperDatabase getNewDeveloperDatabase(String name, String Id) {
-       return new DeveloperModuleDeveloperDatabase(name,Id);
+        return new DeveloperModuleDeveloperDatabase(name, Id);
     }
 
     @Override
     public DeveloperDatabaseTable getNewDeveloperDatabaseTable(String name, List<String> columnNames) {
-        return new DeveloperModuleDeveloperDatabaseTable(name,columnNames) {
+        return new DeveloperModuleDeveloperDatabaseTable(name, columnNames) {
         };
     }
 

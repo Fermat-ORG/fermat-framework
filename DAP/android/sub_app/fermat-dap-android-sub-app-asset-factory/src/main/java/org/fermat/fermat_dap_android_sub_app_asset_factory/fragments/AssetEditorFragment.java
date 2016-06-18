@@ -35,6 +35,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
@@ -52,11 +53,11 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Re
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.BitcoinsSpinnerAdapter;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
@@ -85,7 +86,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  *
  * @author Francisco Vasquez
  */
-public class AssetEditorFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class AssetEditorFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetFactoryModuleManager>, ResourceProviderManager> implements View.OnClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -94,10 +95,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
     private AssetFactoryModuleManager moduleManager;
-    AssetFactorySession assetFactorySession;
     private ErrorManager errorManager;
     private AssetFactory asset;
-
 
     private View rootView;
     private FermatEditText nameView;
@@ -141,8 +140,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         setHasOptionsMenu(true);
 
         try {
-            assetFactorySession = ((AssetFactorySession) appSession);
-            moduleManager = assetFactorySession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             if (!isEdit) {
@@ -403,7 +401,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetFactory.IC_ACTION_EDITOR_ASSET, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -441,7 +439,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                         if (isAttached) {
                             imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, takePicture.getWidth(), takePicture.getHeight(), true);
-                            if(imageBitmap != null){
+                            if (imageBitmap != null) {
                                 hasResource = true;
 //                                Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(takePicture);
                             }
@@ -474,7 +472,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if(!contextMenuInUse) {
+        if (!contextMenuInUse) {
             switch (item.getItemId()) {
                 case CONTEXT_MENU_CAMERA:
                     dispatchTakePictureIntent();

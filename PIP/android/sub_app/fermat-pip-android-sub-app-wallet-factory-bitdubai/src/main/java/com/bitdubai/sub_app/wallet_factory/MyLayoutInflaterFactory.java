@@ -5,14 +5,11 @@ package com.bitdubai.sub_app.wallet_factory;
  */
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 //import com.bitdubai.sub_app.wallet_factory.common.MyApplication;
 
@@ -35,13 +32,13 @@ public class MyLayoutInflaterFactory implements LayoutInflater.Factory {
                         // set the background drawable if you want that
                         //or keep it default -- either an image, border
                         //gradient, drawable, etc.
-                       // view.setBackgroundResource(R.drawable.banner_kid_yellow_blue);
-                      //  ((TextView) view).setTextSize(20);
+                        // view.setBackgroundResource(R.drawable.banner_kid_yellow_blue);
+                        //  ((TextView) view).setTextSize(20);
 
                         // set the text color
-                       // Typeface face = MyApplication.getDefaultTypeface();
-                       // ((TextView) view).setTypeface(face);
-                       // ((TextView) view).setTextColor(Color.WHITE);
+                        // Typeface face = MyApplication.getDefaultTypeface();
+                        // ((TextView) view).setTypeface(face);
+                        // ((TextView) view).setTextColor(Color.WHITE);
                     }
                 });
                 return view;

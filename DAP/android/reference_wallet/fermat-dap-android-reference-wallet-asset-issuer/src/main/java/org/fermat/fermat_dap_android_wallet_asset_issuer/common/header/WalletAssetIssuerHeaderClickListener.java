@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by Matias Furszyfer on 2015.11.16..
  */
-public class WalletAssetIssuerHeaderClickListener implements View.OnClickListener{
+public class WalletAssetIssuerHeaderClickListener implements View.OnClickListener {
 
     public WalletAssetIssuerHeaderClickListener() {
     }

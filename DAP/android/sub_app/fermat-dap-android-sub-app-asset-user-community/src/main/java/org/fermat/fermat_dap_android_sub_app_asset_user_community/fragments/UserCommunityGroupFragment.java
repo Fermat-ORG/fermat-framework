@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.software.shell.fab.ActionButton;
 
@@ -35,7 +37,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.Group
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.GroupViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CreateGroupFragmentDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -49,13 +50,11 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 06/01/16.
  */
-public class UserCommunityGroupFragment extends AbstractFermatFragment implements
+public class UserCommunityGroupFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserSettings settings = null;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
-
     private static final int MAX = 20;
 
     private List<Group> groups;
@@ -72,8 +71,6 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private int offset = 0;
     private CreateGroupFragmentDialog dialog;
 
-
-//    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -89,8 +86,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         setHasOptionsMenu(true);
         try {
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
-            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -106,7 +102,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GroupCommunityAdapter(getActivity()){
+        adapter = new GroupCommunityAdapter(getActivity()) {
             @Override
             protected void bindHolder(GroupViewHolder holder, final Group data, int position) {
                 super.bindHolder(holder, data, position);
@@ -272,9 +268,9 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         return super.onOptionsItemSelected(item);
     }
 
-    private void lauchCreateGroupDialog(){
+    private void lauchCreateGroupDialog() {
         dialog = new CreateGroupFragmentDialog(
-                getActivity(), moduleManager,null);
+                getActivity(), moduleManager, null);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -35,13 +36,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
-import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
@@ -63,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAsset>
+public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAsset, ReferenceAppFermatSession<AssetIssuerWalletSupAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<DigitalAsset> {
 
     // Constants
@@ -73,8 +74,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
     AssetIssuerSettings settings = null;
-    AssetIssuerSession assetIssuerSession;
-//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -99,8 +98,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             appSession.setData("users", null);
 
-            assetIssuerSession = ((AssetIssuerSession) appSession);
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -117,11 +115,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         //Initialize settings
         try {
-            assetIssuerSession = ((AssetIssuerSession) appSession);
-            moduleManager = assetIssuerSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
 
             try {
-                settings = moduleManager.loadAndGetSettings(assetIssuerSession.getAppPublicKey());
+                settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
@@ -135,7 +132,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
                 settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
                 for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    if (networkType.getCode().equals(BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                         settings.setBlockchainNetworkPosition(position);
                         break;
                     } else {
@@ -145,8 +142,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
 //                try {
                 if (moduleManager != null) {
-                    moduleManager.persistSettings(assetIssuerSession.getAppPublicKey(), settings);
-                    moduleManager.setAppPublicKey(assetIssuerSession.getAppPublicKey());
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                     moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                 }
 //                } catch (CantPersistSettingsException e) {
@@ -177,10 +174,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             _executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                    digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     showOrHideNoAssetsView(digitalAssets.isEmpty());
                 }
-                });
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,7 +187,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), assetIssuerSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setBannerRes(R.drawable.banner_asset_issuer_wallet)
                     .setIconRes(R.drawable.asset_issuer)
                     .setImageLeft(R.drawable.asset_issuer_identity)
@@ -200,18 +197,18 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setSubTitle(R.string.dap_issuer_wallet_welcome_subTitle)
                     .setBody(R.string.dap_issuer_wallet_welcome_body)
                     .setTextFooter(R.string.dap_issuer_wallet_welcome_Footer)
-                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.TYPE_PRESENTATION_WITH_ONE_IDENTITY : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
 
             presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = assetIssuerSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                    Object o = appSession.getData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
                     if (o != null) {
                         if ((Boolean) (o)) {
                             //invalidate();
-                            assetIssuerSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
+                            appSession.removeData(SessionConstantsAssetIssuer.PRESENTATION_IDENTITY_CREATED);
                         }
                     }
                     try {
@@ -265,7 +262,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(assetIssuerSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -403,8 +400,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
-        assetIssuerSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, assetIssuerSession.getAppPublicKey());
+        appSession.setData("asset_data", data);
+        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override

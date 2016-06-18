@@ -227,7 +227,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.ArtistIdentityPluginRoot");
+        returnedClasses.add("ArtistIdentityPluginRoot");
         /**
          * I return the values.
          */

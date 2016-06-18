@@ -20,8 +20,9 @@ public interface MarketPriceInterface {
     double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency,
                                      FiatCurrency fiatCurrency,
                                      long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException, CantGetHistoricalExchangeRateException, HistoricalExchangeRateNotFoundException;
+
     double getHistoricalExchangeRateFromDatabase(CryptoCurrency cryptoCurrency,
-                                     FiatCurrency fiatCurrency,
-                                     long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException, CantGetHistoricalExchangeRateException, HistoricalExchangeRateNotFoundException;
+                                                 FiatCurrency fiatCurrency,
+                                                 long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException, CantGetHistoricalExchangeRateException, HistoricalExchangeRateNotFoundException;
 
 }

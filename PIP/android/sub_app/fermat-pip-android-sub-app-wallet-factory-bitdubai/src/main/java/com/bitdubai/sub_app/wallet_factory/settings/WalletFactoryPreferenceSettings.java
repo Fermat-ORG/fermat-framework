@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 2015.08.24..
  */
-public class WalletFactoryPreferenceSettings implements SubAppSettings{
+public class WalletFactoryPreferenceSettings implements SubAppSettings {
     /**
      * This method let us know the default language of a wallet
      *

@@ -25,7 +25,7 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
 
         if (this.assetActorIssuerPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if(fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
+            if (fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
                 System.out.println("ACTOR ASSET ISSUER RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
 
                 NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;

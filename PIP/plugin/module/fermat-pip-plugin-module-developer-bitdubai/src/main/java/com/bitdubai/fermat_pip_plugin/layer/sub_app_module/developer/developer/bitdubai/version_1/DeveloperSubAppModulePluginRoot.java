@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -16,21 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.basic_classes.BasicSubAppSettings;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleDatabaseTool;
-import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperModuleLogTool;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperSubAppModuleManager;
 
 import java.util.ArrayList;
@@ -65,20 +55,20 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     DeveloperSubAppModuleManager developerSubAppModuleManager;
 
     private ConcurrentHashMap<PluginVersionReference, Plugin> databaseManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference , Addon> databaseManagersOnAddons ;
+    private ConcurrentHashMap<AddonVersionReference, Addon> databaseManagersOnAddons;
 
     private ConcurrentHashMap<PluginVersionReference, Plugin> logManagersOnPlugins;
-    private ConcurrentHashMap<AddonVersionReference , Addon> logManagersOnAddons ;
+    private ConcurrentHashMap<AddonVersionReference, Addon> logManagersOnAddons;
 
     public DeveloperSubAppModulePluginRoot() {
 
         super(new PluginVersionReference(new Version()));
 
         databaseManagersOnPlugins = new ConcurrentHashMap<>();
-        databaseManagersOnAddons  = new ConcurrentHashMap<>();
+        databaseManagersOnAddons = new ConcurrentHashMap<>();
 
         logManagersOnPlugins = new ConcurrentHashMap<>();
-        logManagersOnAddons  = new ConcurrentHashMap<>();
+        logManagersOnAddons = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -160,7 +150,7 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     }
 
     @Override
-    public void addDatabaseManager(final PluginVersionReference       pluginVersionReference      ,
+    public void addDatabaseManager(final PluginVersionReference pluginVersionReference,
                                    final Plugin databaseManagerForDevelopers) {
 
         databaseManagersOnPlugins.put(
@@ -170,7 +160,7 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     }
 
     @Override
-    public void addDatabaseManager(final AddonVersionReference        addonVersionReference       ,
+    public void addDatabaseManager(final AddonVersionReference addonVersionReference,
                                    final Addon databaseManagerForDevelopers) {
 
         databaseManagersOnAddons.put(
@@ -180,7 +170,7 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     }
 
     @Override
-    public void addLogManager(final PluginVersionReference  pluginVersionReference ,
+    public void addLogManager(final PluginVersionReference pluginVersionReference,
                               final Plugin logManagerForDevelopers) {
 
         logManagersOnPlugins.put(
@@ -190,7 +180,7 @@ public class DeveloperSubAppModulePluginRoot extends AbstractModule<BasicSubAppS
     }
 
     @Override
-    public void addLogManager(final AddonVersionReference   addonVersionReference  ,
+    public void addLogManager(final AddonVersionReference addonVersionReference,
                               final Addon logManagerForDevelopers) {
 
         logManagersOnAddons.put(

@@ -27,7 +27,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
@@ -76,10 +76,10 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
             if(aux != null && aux instanceof Boolean)
                 hideHelperDialogs = (boolean) aux;
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
+            Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
             if (data == null) {
                 bankAccountList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
+                appSession.setData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST, bankAccountList);
             } else
                 bankAccountList = (List<BankAccountNumber>) data;
 

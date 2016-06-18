@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -45,6 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -54,7 +56,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdap
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.SellInfo;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
@@ -74,7 +76,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Jinmy Bohorquez on 15/02/2016.
  */
-public class UserSellAssetFragment extends FermatWalletListFragment<User>
+public class UserSellAssetFragment extends FermatWalletListFragment<User, ReferenceAppFermatSession, ResourceProviderManager>
         implements FermatListItemListeners<User> {
 
 
@@ -84,7 +86,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
 
     private AssetUserWalletSubAppModuleManager moduleManager;
-    AssetUserSession assetUserSession;
+    AssetUserSessionReferenceApp assetUserSession;
     //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
@@ -94,7 +96,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-//    SettingsManager<AssetUserSettings> settingsManager;
+    //    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -123,14 +125,14 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            assetUserSession = ((AssetUserSession) appSession);
+            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
             moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             activity = getActivity();
 
             users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
@@ -138,7 +140,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         }
 
     }
-//    private List<User> getUsers(){
+
+    //    private List<User> getUsers(){
 //        List<User> users = new ArrayList<>();
 //        try {
 //            users = Data.getConnectedUsers(moduleManager);
@@ -165,7 +168,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         eraseButton = layout.findViewById(R.id.eraseButton);
 
 
-
         userToSelectText = (FermatEditText) layout.findViewById(R.id.userToSelectText);
 
         TextWatcher filterTextWatcher = new TextWatcher() {
@@ -177,7 +179,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 (((UserSelectorAdapter) getAdapter()).getFilter()).filter(s);
-                if(s.length() > 0){
+                if (s.length() > 0) {
                     eraseButton.setVisibility(View.VISIBLE);
                 } else {
                     eraseButton.setVisibility(View.INVISIBLE);
@@ -340,19 +342,20 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         }
         return layoutManager;
     }
+
     @Override
     public void onItemClickListener(User data, int position) {
         appSession.setData("user_selected", data);
 
-        for(User user :users){
-            if(!data.equals(user)){
+        for (User user : users) {
+            if (!data.equals(user)) {
                 user.setSelected(false);
             } else {
                 data.setSelected(!data.isSelected());
-                if(data.isSelected()){
+                if (data.isSelected()) {
                     userSelected = data;
                     userToSelectText.setText(data.getName());
-                }else{
+                } else {
                     userSelected = null;
                     userToSelectText.setText("");
 
@@ -367,6 +370,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     public void onLongItemClickListener(User data, int position) {
 
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -381,7 +385,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -390,7 +393,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -448,8 +451,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
                         Toast.LENGTH_SHORT).show();
                 return false;
             }
-        }
-        else {
+        } else {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -474,7 +476,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         Object selectedItem = assetCurrencySpinner.getSelectedItem();
         String bitcoinStr = assetPrice.getText().toString();
 
-        if (selectedItem != null && bitcoinStr.length() > 0 ) {
+        if (selectedItem != null && bitcoinStr.length() > 0) {
             BitcoinConverter.Currency from = (BitcoinConverter.Currency) selectedItem;
             double amount = Double.parseDouble(assetPrice.getText().toString());
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
@@ -504,7 +506,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -515,8 +517,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -524,14 +526,13 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
-
 
 
     private void refreshUIData() {
@@ -592,6 +593,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             }
         }
     }
+
     private void showOrHideNoUsersView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
@@ -601,7 +603,6 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             noUsersView.setVisibility(View.GONE);
         }
     }
-
 
 
 }

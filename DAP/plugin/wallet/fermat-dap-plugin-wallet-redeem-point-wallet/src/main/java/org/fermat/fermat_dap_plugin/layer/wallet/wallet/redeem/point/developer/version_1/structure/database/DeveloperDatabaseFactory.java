@@ -20,7 +20,7 @@ public class DeveloperDatabaseFactory {
     String pluginId;
     List<String> walletsRedeemPoint;
 
-    public DeveloperDatabaseFactory (String pluginId, List<String> walletsRedeemPoint){
+    public DeveloperDatabaseFactory(String pluginId, List<String> walletsRedeemPoint) {
         this.pluginId = pluginId;
         this.walletsRedeemPoint = walletsRedeemPoint;
     }
@@ -31,7 +31,7 @@ public class DeveloperDatabaseFactory {
          * Remember that a database name in this plug-in is the internal wallet id.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        for(String databaseName : this.walletsRedeemPoint)
+        for (String databaseName : this.walletsRedeemPoint)
             databases.add(developerObjectFactory.getNewDeveloperDatabase(databaseName, this.pluginId));
         return databases;
     }
@@ -65,7 +65,7 @@ public class DeveloperDatabaseFactory {
         /**
          * assetRedeemPointWalletColumns table
          */
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_NAME, assetWalletRedeemPointColumns);
+        DeveloperDatabaseTable cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TABLE_NAME, assetWalletRedeemPointColumns);
         tables.add(cryptoTransactionsTable);
 
         /**
@@ -84,7 +84,7 @@ public class DeveloperDatabaseFactory {
         /**
          * AssetIssuerWalletTotalBalanceColumns table
          */
-        DeveloperDatabaseTable  assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME, assetRedeemPointWalletTotalBalancesColumns);
+        DeveloperDatabaseTable assetIssuerWalletWalletTotalBalances = developerObjectFactory.getNewDeveloperDatabaseTable(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_NAME, assetRedeemPointWalletTotalBalancesColumns);
         tables.add(assetIssuerWalletWalletTotalBalances);
 
 
@@ -107,7 +107,7 @@ public class DeveloperDatabaseFactory {
         return tables;
     }
 
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -119,12 +119,12 @@ public class DeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -144,7 +144,7 @@ public class DeveloperDatabaseFactory {
              */
             database.closeDatabase();
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
             database.closeDatabase();
             return returnedRecords;
         }

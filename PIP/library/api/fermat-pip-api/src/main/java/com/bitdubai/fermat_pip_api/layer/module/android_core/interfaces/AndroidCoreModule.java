@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 /**
  * Created by natalia on 19/01/16.
  */
-public interface AndroidCoreModule  extends ModuleManager<AndroidCoreSettings,ActiveActorIdentityInformation>,ModuleSettingsImpl<AndroidCoreSettings> {
+public interface AndroidCoreModule extends ModuleManager<AndroidCoreSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AndroidCoreSettings> {
 
 
     NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException;

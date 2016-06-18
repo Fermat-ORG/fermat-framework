@@ -17,43 +17,40 @@ import java.util.List;
 
 /**
  * Created by Jinmy Bohorqprivate void doSell(final String assetPublicKey, final User user, final long amountPerUnity, final long amountTotal, final int quantityToSell) {
- final ProgressDialog dialog = new ProgressDialog(activity);
- dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
- dialog.setCancelable(false);
- dialog.show();
- FermatWorker task = new FermatWorker() {
-@Override
-protected Object doInBackground() throws Exception {
-moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, digitalAsset.getAssetPublicKey());
-return true;
-}
-};
-
- task.setContext(activity);
- task.setCallBack(new FermatWorkerCallBack() {
-@Override
-public void onPostExecute(Object... result) {
-dialog.dismiss();
-if (activity != null) {
-//                    refreshUIData();
-Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
-changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
-}
-}
-
-@Override
-public void onErrorOccurred(Exception ex) {
-dialog.dismiss();
-if (activity != null)
-Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
-Toast.LENGTH_SHORT).show();
-}
-});
- task.execute();
- }uez on 17/03/16.
+ * final ProgressDialog dialog = new ProgressDialog(activity);
+ * dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+ * dialog.setCancelable(false);
+ * dialog.show();
+ * FermatWorker task = new FermatWorker() {
+ *
+ * @Override protected Object doInBackground() throws Exception {
+ * moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, digitalAsset.getAssetPublicKey());
+ * return true;
+ * }
+ * };
+ * <p/>
+ * task.setContext(activity);
+ * task.setCallBack(new FermatWorkerCallBack() {
+ * @Override public void onPostExecute(Object... result) {
+ * dialog.dismiss();
+ * if (activity != null) {
+ * //                    refreshUIData();
+ * Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+ * changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+ * }
+ * }
+ * @Override public void onErrorOccurred(Exception ex) {
+ * dialog.dismiss();
+ * if (activity != null)
+ * Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+ * Toast.LENGTH_SHORT).show();
+ * }
+ * });
+ * task.execute();
+ * }uez on 17/03/16.
  */
-public class UserSelectorAdapter  extends FermatAdapter<User, AssetSellSelectUserHolder>
-implements Filterable{
+public class UserSelectorAdapter extends FermatAdapter<User, AssetSellSelectUserHolder>
+        implements Filterable {
 
     private AssetUserWalletSubAppModuleManager manager;
     private List<User> users;
@@ -78,7 +75,7 @@ implements Filterable{
     @Override
     protected void bindHolder(AssetSellSelectUserHolder holder, User data, int position) {
         holder.bind(data);
-        if (data.isSelected()){
+        if (data.isSelected()) {
             holder.userLayout.setVisibility(View.VISIBLE);
         } else {
             holder.userLayout.setVisibility(View.INVISIBLE);

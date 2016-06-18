@@ -24,13 +24,15 @@ public enum TransactionStatus {
 
     private String code;
 
-    TransactionStatus (String code) {
+    TransactionStatus(String code) {
         this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public static TransactionStatus getByCode(String code)throws InvalidParameterException {
+    public static TransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "RXC":
                 return TransactionStatus.CRYPTO_SENT;

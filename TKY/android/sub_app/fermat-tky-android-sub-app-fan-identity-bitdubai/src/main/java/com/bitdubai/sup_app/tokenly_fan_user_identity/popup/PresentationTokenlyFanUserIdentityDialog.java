@@ -16,12 +16,12 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 import com.bitdubai.sub_app.fan_identity.R;
-import com.bitdubai.sup_app.tokenly_fan_user_identity.session.TokenlyFanUserIdentitySubAppSession;
+import com.bitdubai.sup_app.tokenly_fan_user_identity.session.TokenlyFanUserIdentitySubAppSessionReferenceApp;
 
 /**
  * @author Jose manuel De Sousa
  */
-public class PresentationTokenlyFanUserIdentityDialog extends FermatDialog<TokenlyFanUserIdentitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationTokenlyFanUserIdentityDialog extends FermatDialog<TokenlyFanUserIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     private final Activity activity;
     private FermatButton startCommunity;
@@ -35,7 +35,7 @@ public class PresentationTokenlyFanUserIdentityDialog extends FermatDialog<Token
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public PresentationTokenlyFanUserIdentityDialog(Activity activity, TokenlyFanUserIdentitySubAppSession fermatSession, SubAppResourcesProviderManager resources, final TokenlyFanIdentityManagerModule moduleManager) {
+    public PresentationTokenlyFanUserIdentityDialog(Activity activity, TokenlyFanUserIdentitySubAppSessionReferenceApp fermatSession, SubAppResourcesProviderManager resources, final TokenlyFanIdentityManagerModule moduleManager) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.moduleManager = moduleManager;

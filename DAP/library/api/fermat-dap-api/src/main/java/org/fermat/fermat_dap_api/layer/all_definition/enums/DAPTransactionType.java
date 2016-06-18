@@ -12,14 +12,16 @@ public enum DAPTransactionType {
 
     private String code;
 
-    DAPTransactionType(String code){
-        this.code=code;
+    DAPTransactionType(String code) {
+        this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public DAPTransactionType getByCode(String code)throws InvalidParameterException {
-        switch (code){
+    public DAPTransactionType getByCode(String code) throws InvalidParameterException {
+        switch (code) {
             case "DS":
                 return DAPTransactionType.DISTRIBUTION;
             case "TX":

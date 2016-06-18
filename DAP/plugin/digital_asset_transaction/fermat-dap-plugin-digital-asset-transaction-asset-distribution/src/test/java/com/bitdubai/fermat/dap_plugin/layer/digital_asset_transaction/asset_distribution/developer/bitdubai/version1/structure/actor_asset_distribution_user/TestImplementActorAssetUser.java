@@ -12,16 +12,16 @@ import org.junit.Test;
 public class TestImplementActorAssetUser {
 
     @Test
-    public void implementationTest(){
-        ActorAssetUser actorAssetUser=new MockActorAssetUser();
+    public void implementationTest() {
+        ActorAssetUser actorAssetUser = new MockActorAssetUser();
         System.out.println(actorAssetUser.getActorPublicKey());
-        ActorAssetDistributionUser actorAssetDistributionUser= new  ActorAssetDistributionUser();
+        ActorAssetDistributionUser actorAssetDistributionUser = new ActorAssetDistributionUser();
         actorAssetDistributionUser.setActorAssetUser(actorAssetUser);
         System.out.println(actorAssetDistributionUser.getActorPublicKey());
-        String actorXML= XMLParser.parseObject(actorAssetDistributionUser);
+        String actorXML = XMLParser.parseObject(actorAssetDistributionUser);
         System.out.println(actorXML);
-        ActorAssetUser newActorAssetUser= actorAssetDistributionUser;
-        actorXML= XMLParser.parseObject(newActorAssetUser);
+        ActorAssetUser newActorAssetUser = actorAssetDistributionUser;
+        actorXML = XMLParser.parseObject(newActorAssetUser);
         System.out.println(actorXML);
     }
 

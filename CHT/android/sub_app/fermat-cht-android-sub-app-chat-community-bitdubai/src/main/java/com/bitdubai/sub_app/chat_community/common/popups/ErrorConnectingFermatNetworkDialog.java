@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
 
@@ -20,8 +22,10 @@ import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwo
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ChatUserSubAppSession,
-        SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog
+        extends FermatDialog<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>,
+        SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     /**
      * Interfaces
@@ -44,7 +48,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ChatUserSub
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
-                                              final ChatUserSubAppSession chatUserSubAppSession,
+                                              final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
         super(a, chatUserSubAppSession, subAppResources);

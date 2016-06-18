@@ -16,10 +16,10 @@ public class AssetUserWalletDatabaseConstant {
     public static final String ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME = "cryptoAddress";
     public static final String ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String ASSET_WALLET_USER_ADDRESS_TO_COLUMN_NAME = "addressTo";
-    public static final String ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME= "actorFrom";
-    public static final String ASSET_WALLET_USER_ACTOR_TO_COLUMN_NAME= "actorTo";
-    public static final String ASSET_WALLET_USER_ACTOR_FROM_TYPE_COLUMN_NAME= "actorFromType";
-    public static final String ASSET_WALLET_USER_ACTOR_TO_TYPE_COLUMN_NAME= "actorToType";
+    public static final String ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME = "actorFrom";
+    public static final String ASSET_WALLET_USER_ACTOR_TO_COLUMN_NAME = "actorTo";
+    public static final String ASSET_WALLET_USER_ACTOR_FROM_TYPE_COLUMN_NAME = "actorFromType";
+    public static final String ASSET_WALLET_USER_ACTOR_TO_TYPE_COLUMN_NAME = "actorToType";
     public static final String ASSET_WALLET_USER_AMOUNT_COLUMN_NAME = "amount";
     public static final String ASSET_WALLET_USER_TYPE_COLUMN_NAME = "type";
     public static final String ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME = "balanceType";

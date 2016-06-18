@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 28/09/15.
  */
-public class CantPublishAssetFactoy extends FermatException{
+public class CantPublishAssetFactoy extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -17,6 +17,6 @@ public class CantPublishAssetFactoy extends FermatException{
     static final String DEFAULT_MESSAGE = "There was an error Save Asset Factory.";
 
     public CantPublishAssetFactoy(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

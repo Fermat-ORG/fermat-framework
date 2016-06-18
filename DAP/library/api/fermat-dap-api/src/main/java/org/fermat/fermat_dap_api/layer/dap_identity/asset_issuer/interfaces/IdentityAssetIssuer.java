@@ -20,6 +20,7 @@ public interface IdentityAssetIssuer extends ActiveActorIdentityInformation, Ser
 
     /**
      * This method let an intra user sign a message with his unique private key
+     *
      * @param message the message to sign
      * @return the signature
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException

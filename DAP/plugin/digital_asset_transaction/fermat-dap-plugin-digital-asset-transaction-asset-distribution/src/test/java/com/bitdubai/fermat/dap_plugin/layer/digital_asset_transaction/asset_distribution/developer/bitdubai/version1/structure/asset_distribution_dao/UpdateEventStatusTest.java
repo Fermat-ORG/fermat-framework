@@ -42,7 +42,7 @@ public class UpdateEventStatusTest {
     List<DatabaseTableRecord> records, recordsForException;
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
 
         pluginId = UUID.randomUUID();
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
@@ -55,25 +55,25 @@ public class UpdateEventStatusTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
         when(databaseTable.getRecords()).thenReturn(records);
     }
 
     @Test
-    public void updateEventStatusTest () throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateEventStatusTest() throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         mockAssetDistributionDao.updateEventStatus("eventId");
     }
 
-   @Test
+    @Test
     public void updateEventStatusThrowsCantExecuteQueryException() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenThrow(new CantOpenDatabaseException("error"));
-       try {
-           mockAssetDistributionDao.updateEventStatus("eventId");
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantExecuteQueryException);
-       }
+        try {
+            mockAssetDistributionDao.updateEventStatus("eventId");
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantExecuteQueryException);
+        }
     }
 
     @Test
@@ -83,7 +83,7 @@ public class UpdateEventStatusTest {
         try {
             mockAssetDistributionDao.updateEventStatus("eventId");
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantExecuteQueryException);
             Assert.assertTrue(ex.getCause() instanceof UnexpectedResultReturnedFromDatabaseException);
         }

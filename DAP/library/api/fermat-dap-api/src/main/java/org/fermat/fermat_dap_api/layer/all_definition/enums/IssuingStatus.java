@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum IssuingStatus implements FermatEnum {
     NOT_PUBLISHED("NP"),
-    ACTOR_ISSUER_NULL ("AIN"),
+    ACTOR_ISSUER_NULL("AIN"),
     DATABASE_EXCEPTION("DAEX"),
     DIGITAL_ASSET_INCOMPLETE("DAIN"),
     FILESYSTEM_EXCEPTION("FIEX"),

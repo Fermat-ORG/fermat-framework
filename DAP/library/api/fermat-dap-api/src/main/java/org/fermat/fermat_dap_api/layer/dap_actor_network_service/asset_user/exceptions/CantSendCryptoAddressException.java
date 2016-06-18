@@ -14,7 +14,7 @@ package org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exc
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantSendCryptoAddressException  extends org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException {
+public class CantSendCryptoAddressException extends org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException {
 
 
     public static final String DEFAULT_MESSAGE = "CAN'T SEND CRYPTO ADDRESS";

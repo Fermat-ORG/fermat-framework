@@ -58,22 +58,24 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
 
             ImageView contact_profile_image = (ImageView) v.findViewById(R.id.contact_profile_image);
             try {
+
                 if (contact.profileImage != null) {
+
                     if (contact.profileImage.length > 0) {
                         contact_profile_image.setImageDrawable(ImagesUtils.getRoundedBitmap(getContext().getResources(), contact.profileImage));
-                    } else
-                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
-                } else
-                    Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+                    } else Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
+
+                } else Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
 
                 if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.LOLLIPOP){
                     contact_name.setTextSize(14);
                     contact_profile_image.setMaxHeight(40);
                     contact_profile_image.setMaxWidth(40);
                 }
-               }catch (Exception e){
+
+            }catch (Exception e){
                 Picasso.with(getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contact_profile_image);
-        }
+            }
         }
         return v;
     }
@@ -82,13 +84,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         return filteredData.size();
     }
 
-    public WalletContact getItem(int position) {
-        return filteredData.get(position);
-    }
+    public WalletContact getItem(int position) { return filteredData.get(position); }
 
-    public long getItemId(int position) {
-        return position;
-    }
+    public long getItemId(int position) { return position; }
 
     @Override
     public Filter getFilter() {

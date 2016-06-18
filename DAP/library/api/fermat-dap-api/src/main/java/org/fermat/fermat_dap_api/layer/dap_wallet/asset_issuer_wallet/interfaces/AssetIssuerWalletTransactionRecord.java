@@ -13,17 +13,25 @@ public interface AssetIssuerWalletTransactionRecord {
 
     //TODO: Definir bien las propiedades
     DigitalAsset getDigitalAsset();
+
     String getDigitalAssetPublicKey();
+
     String getName();
+
     String getDescription();
+
     String getGenesisBlock();
 
     CryptoAddress getAddressFrom();
+
     String getActorFromPublicKey();
+
     Actors getActorFromType();
 
     CryptoAddress getAddressTo();
+
     String getActorToPublicKey();
+
     Actors getActorToType();
 
     String getIdTransaction();

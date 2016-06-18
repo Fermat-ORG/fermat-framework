@@ -9,7 +9,7 @@ public class CantCheckAssetDistributionProgressException extends DAPException {
     public static final String DEFAULT_MESSAGE = "There was an error checking the Assets Distribution progress.";
 
     public CantCheckAssetDistributionProgressException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantCheckAssetDistributionProgressException(final String message) {

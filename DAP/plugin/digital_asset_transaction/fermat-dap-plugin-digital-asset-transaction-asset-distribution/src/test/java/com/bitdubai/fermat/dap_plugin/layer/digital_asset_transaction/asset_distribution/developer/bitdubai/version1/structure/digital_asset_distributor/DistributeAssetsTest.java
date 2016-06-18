@@ -73,12 +73,12 @@ public class DistributeAssetsTest {
 
     private FilePrivacy FILE_PRIVACY;
     private FileLifeSpan FILE_LIFE_SPAN;
-    private String fileName= "file.xml";
+    private String fileName = "file.xml";
     private String digitalAssetFileStoragePath = "digital-asset-transmission/digital-asset";
 
 
     @Before
-    public void init () throws Exception {
+    public void init() throws Exception {
         FILE_PRIVACY = FilePrivacy.getByCode(FilePrivacy.PUBLIC.getCode());
         FILE_LIFE_SPAN = FileLifeSpan.getByCode(FileLifeSpan.PERMANENT.getCode());
         pluginId = UUID.randomUUID();
@@ -92,12 +92,12 @@ public class DistributeAssetsTest {
         digitalAssetDistributor.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         digitalAssetDistributor.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
 
-                mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
+        mockDigitalAssetMetadata = new MockDigitalAssetMetadataForTesting();
 
         genesisTransaction = new CryptoTransaction();
         String typeCoin = CryptoCurrency.BITCOIN.getCode();
         BalanceType typeBalance = BalanceType.getByCode("AVAILABLE");
-        System.out.println("Type coin: "+typeCoin);
+        System.out.println("Type coin: " + typeCoin);
         CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(typeCoin);
         CryptoAddress addressFrom = new CryptoAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv", cryptoCurrency);
         CryptoAddress addressTo = new CryptoAddress("mxJJSdXdKQLS4NeX6Y8tXFFoNASQnBShtv", cryptoCurrency);
@@ -107,11 +107,11 @@ public class DistributeAssetsTest {
         genesisTransaction.setCryptoCurrency(cryptoCurrency);
         genesisTransaction.setCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
         genesisTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-        listGenesisTransaction =  new ArrayList<CryptoTransaction>();
+        listGenesisTransaction = new ArrayList<CryptoTransaction>();
         listGenesisTransaction.add(genesisTransaction);
-        cryptoTransaction=new CryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction(),
+        cryptoTransaction = new CryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction(),
                 mockDigitalAssetMetadata.getDigitalAsset().getGenesisAddress(),
-                addressTo,CryptoCurrency.BITCOIN, 100000,CryptoStatus.ON_BLOCKCHAIN);
+                addressTo, CryptoCurrency.BITCOIN, 100000, CryptoStatus.ON_BLOCKCHAIN);
         cryptoTransaction.setOp_Return(mockDigitalAssetMetadata.getDigitalAssetHash());
         digitalAssetDistributor.cryptoTransaction = cryptoTransaction;
 
@@ -126,18 +126,18 @@ public class DistributeAssetsTest {
     }
 
     @Test
-    public void distributeAssetsTest () throws CantDistributeDigitalAssetsException {
+    public void distributeAssetsTest() throws CantDistributeDigitalAssetsException {
         digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
     }
 
     @Test
-    public void distributeAssetsTestThrowsCCantDistributeDigitalAssetsExceptionTest () throws CantDistributeDigitalAssetsException, CantGetCryptoTransactionException {
+    public void distributeAssetsTestThrowsCCantDistributeDigitalAssetsExceptionTest() throws CantDistributeDigitalAssetsException, CantGetCryptoTransactionException {
         when(bitcoinNetworkManager.getCryptoTransaction(mockDigitalAssetMetadata.getGenesisTransaction())).thenReturn(null);
 
         try {
             digitalAssetDistributor.distributeAssets(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantDistributeDigitalAssetsException);
         }
     }

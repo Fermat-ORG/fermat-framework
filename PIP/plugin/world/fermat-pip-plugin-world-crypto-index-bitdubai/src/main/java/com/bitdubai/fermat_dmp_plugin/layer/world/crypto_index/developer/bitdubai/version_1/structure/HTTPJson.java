@@ -89,7 +89,6 @@ public class HTTPJson {
     }
 
     /**
-     *
      * @param reader
      * @return
      * @throws CantGetJsonObjectException
@@ -107,12 +106,12 @@ public class HTTPJson {
         }
         return stringBuilder.toString();
     }
-        /**
-     *
+
+    /**
      * @param url
      * @return
      */
-    public JSONArray GetJsonArray(String url){
+    public JSONArray GetJsonArray(String url) {
         BufferedReader bufferedReader = null;
         InputStream inputStream = null;
         JSONArray jsonArray = null;
@@ -120,8 +119,8 @@ public class HTTPJson {
         try {
             inputStream = getInputStream(url);
             bufferedReader = getBufferedReader(inputStream);
-            String json=JsonToString(bufferedReader);
-           jsonArray=new JSONArray(json);
+            String json = JsonToString(bufferedReader);
+            jsonArray = new JSONArray(json);
             return jsonArray;
         } catch (CantGetInputStreamException cantGetInputStreamException) {
             cantGetInputStreamException.printStackTrace();

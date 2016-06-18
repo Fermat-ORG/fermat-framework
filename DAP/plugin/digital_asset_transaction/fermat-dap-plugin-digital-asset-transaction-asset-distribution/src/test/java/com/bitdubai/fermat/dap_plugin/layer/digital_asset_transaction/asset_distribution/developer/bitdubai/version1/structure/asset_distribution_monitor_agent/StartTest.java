@@ -73,7 +73,7 @@ public class StartTest {
         setUpGeneralMockitoRules();
     }
 
-    private void setUpGeneralMockitoRules() throws Exception{
+    private void setUpGeneralMockitoRules() throws Exception {
         when(pluginDatabaseSystem.createDatabase(pluginId, userPublicKey)).thenReturn(database);
         when(database.getDatabaseFactory()).thenReturn(databaseFactory);
         when(databaseFactory.newTableFactory(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME)).thenReturn(table);

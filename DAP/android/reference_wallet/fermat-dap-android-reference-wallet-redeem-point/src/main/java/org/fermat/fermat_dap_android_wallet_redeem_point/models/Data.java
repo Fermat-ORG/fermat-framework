@@ -27,7 +27,7 @@ public class Data {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
-        if(assets != null) {
+        if (assets != null) {
             for (AssetRedeemPointWalletList asset : assets) {
                 digitalAsset = new DigitalAsset();
                 digitalAsset.setAssetPublicKey(asset.getDigitalAsset().getPublicKey());

@@ -16,7 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppSelectableIdentitiesListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 18/02/2016.
  */
-public class ListIdentitiesDialog extends FermatDialog<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ListIdentitiesDialog extends FermatDialog<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements FermatListItemListeners<CryptoCustomerCommunitySelectableIdentity> {
 
     /**
@@ -40,7 +40,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoCustomerCommunitySu
     private CryptoCustomerCommunitySubAppModuleManager manager;
 
     public ListIdentitiesDialog(final Context activity,
-                                final CryptoCustomerCommunitySubAppSession subAppSession,
+                                final CryptoCustomerCommunitySubAppSessionReferenceApp subAppSession,
                                 final SubAppResourcesProviderManager subAppResources) {
 
         super(

@@ -32,6 +32,7 @@ public class MockActorAssetUser implements ActorAssetUser {
     public long getRegistrationDate() {
         return 0;
     }
+
     @Override
     public byte[] getProfileImage() {
         return new byte[0];
@@ -59,7 +60,10 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
-    public Location getLocation() {return null;}
+    public Location getLocation() {
+        return null;
+    }
+
     @Override
     public Genders getGenders() {
         return null;

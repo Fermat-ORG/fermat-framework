@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,12 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.sub_app.shop_manager.R;
-//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import android.support.v4.app.Fragment;
+
+//import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 /**
  * Created by Natalia on 12/01/2015.
@@ -136,11 +137,10 @@ public class ShopDesktopFragment extends Fragment {
         }
 
         //@SuppressWarnings("unchecked")
-     //   ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_shop_desktop_fragment_grid_item ,mlist);
+        //   ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_shop_desktop_fragment_grid_item, mlist);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
-
 
 
         return gridView;
@@ -150,7 +150,7 @@ public class ShopDesktopFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 
@@ -187,7 +187,6 @@ public class ShopDesktopFragment extends Fragment {
     }
 
 
-
     public class AppListAdapter extends ArrayAdapter<App> {
 
 
@@ -214,12 +213,10 @@ public class ShopDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(item.company);
-          //  holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            //  holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
-
-            switch (item.picture)
-            {
+            switch (item.picture) {
                 case "wallet_store_cover_photo_girl":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_pink);
                     holder.imageView.setTag("ShopsActivity|1");

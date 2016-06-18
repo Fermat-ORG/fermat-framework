@@ -9,7 +9,7 @@ import org.junit.Test;
  */
 public class NewMockActorAssetUserForTesting {
     @Test
-    public void mockActorAssetUserForTesting(){
+    public void mockActorAssetUserForTesting() {
         new MockActorAssetUserForTesting();
     }
 }

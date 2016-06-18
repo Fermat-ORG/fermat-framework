@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by rodrigo on 9/4/15.
  */
 public enum State {
-    DRAFT ("DFT"),
-    FINAL ("FIN"),
-    PENDING_FINAL ("PFI");
+    DRAFT("DFT"),
+    FINAL("FIN"),
+    PENDING_FINAL("PFI");
 
     private String code;
 
@@ -16,9 +16,11 @@ public enum State {
         this.code = code;
     }
 
-    public String getCode() { return this.code ; }
+    public String getCode() {
+        return this.code;
+    }
 
-    public static State getByCode(String code)throws InvalidParameterException {
+    public static State getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "DFT":
                 return State.DRAFT;

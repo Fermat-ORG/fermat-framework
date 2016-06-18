@@ -1,16 +1,15 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import android.app.Activity;
-import android.util.Log;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSessionReferenceApp.IDENTITY_INFO;
 
 /**
  * Created by angel on 20/1/16.
@@ -24,13 +23,13 @@ public class EditIdentityWorker extends FermatWorker {
     private CryptoBrokerIdentityInformation identityInfo;
     private CryptoBrokerIdentityInformation identity;
 
-    public EditIdentityWorker(Activity context, FermatSession session, CryptoBrokerIdentityInformation identity, FermatWorkerCallBack callBack) {
+    public EditIdentityWorker(Activity context, ReferenceAppFermatSession session, CryptoBrokerIdentityInformation identity, FermatWorkerCallBack callBack) {
         super(context, callBack);
 
         this.identity = identity;
 
         if (session != null) {
-            CryptoBrokerIdentitySubAppSession subAppSession = (CryptoBrokerIdentitySubAppSession) session;
+            CryptoBrokerIdentitySubAppSessionReferenceApp subAppSession = (CryptoBrokerIdentitySubAppSessionReferenceApp) session;
             identityInfo = (CryptoBrokerIdentityInformation) subAppSession.getData(IDENTITY_INFO);
             this.moduleManager = subAppSession.getModuleManager();
         }

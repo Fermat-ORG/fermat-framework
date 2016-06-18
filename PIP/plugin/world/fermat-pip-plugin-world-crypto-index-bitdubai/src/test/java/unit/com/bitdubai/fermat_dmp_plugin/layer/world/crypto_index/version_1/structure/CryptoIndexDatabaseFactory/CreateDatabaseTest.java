@@ -45,11 +45,11 @@ public class CreateDatabaseTest {
     @Mock
     private CryptoIndexDatabaseFactory cryptoIndexDatabaseFactory;
 
-    private void setUpIds(){
+    private void setUpIds() {
         testOwnerId = UUID.randomUUID();
     }
 
-    private void setUpMockitoGeneralRules() throws Exception{
+    private void setUpMockitoGeneralRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_TABLE_NAME)).thenReturn(mockCryptoIndexTableFactory);
@@ -58,14 +58,14 @@ public class CreateDatabaseTest {
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpIds();
         setUpMockitoGeneralRules();
     }
 
     @Test
-    public void TestCreateDatabase() throws Exception{
-       // testOwnerId=UUID.randomUUID();
+    public void TestCreateDatabase() throws Exception {
+        // testOwnerId=UUID.randomUUID();
         cryptoIndexDatabaseFactory = new CryptoIndexDatabaseFactory(mockPluginDatabaseSystem);
         Database checkDatabase = cryptoIndexDatabaseFactory.createDatabase(testOwnerId, "CryptoIndexList");
         System.out.println(checkDatabase);

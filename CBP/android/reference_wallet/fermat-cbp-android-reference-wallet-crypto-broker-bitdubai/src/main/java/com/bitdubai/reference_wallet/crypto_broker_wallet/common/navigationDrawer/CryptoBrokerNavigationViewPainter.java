@@ -27,7 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.lang.ref.WeakReference;
@@ -49,13 +49,13 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private static final String TAG = "BrokerNavigationView";
 
     private CryptoBrokerWalletModuleManager moduleManager;
-    private CryptoBrokerWalletSession session;
+    private CryptoBrokerWalletSessionReferenceApp session;
     private CryptoBrokerIdentity actorIdentity;
     private WeakReference<Context> activity;
     private ErrorManager errorManager;
     private NumberFormat numberFormat;
 
-    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSession session) {
+    public CryptoBrokerNavigationViewPainter(Context activity, CryptoBrokerWalletSessionReferenceApp session) {
         this.activity = new WeakReference<>(activity);
         this.session = session;
 

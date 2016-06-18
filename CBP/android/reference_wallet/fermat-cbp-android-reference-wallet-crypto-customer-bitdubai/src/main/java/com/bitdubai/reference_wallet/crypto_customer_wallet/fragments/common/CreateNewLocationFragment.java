@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +121,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
 
         configureToolbar();
 
@@ -174,7 +173,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
-            List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST);
             int pos = locations.size()-1;
             if(locations.get(pos).equals("settings")){
                 locations.remove(pos);

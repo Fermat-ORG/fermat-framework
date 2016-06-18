@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -65,7 +66,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Co
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -104,7 +105,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * Wallet session
      */
-    LossProtectedWalletSession lossWalletSession;
+    ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
     // unsorted list items
     List<LossProtectedWalletContact> mItems;
     // array list to store section positions
@@ -159,7 +160,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         try {
             _executor = Executors.newFixedThreadPool(2);
-            lossWalletSession = (LossProtectedWalletSession) appSession;
+            lossWalletSession = (ReferenceAppFermatSession<LossProtectedWallet>) appSession;
             setHasOptionsMenu(true);
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             errorManager = appSession.getErrorManager();
@@ -364,7 +365,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             protected Object doInBackground()  {
                 try {
                     walletContactRecords = lossProtectedWalletManager.listWalletContacts(
-                            lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+                            lossWalletSession.getAppPublicKey(), lossProtectedWalletManager.getSelectedActorIdentity().getPublicKey());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -389,6 +390,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     makeText(getActivity(), "Cant't Get Contact List.", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onErrorOccurred(Exception ex) {
                 makeText(getActivity(), "Cant't Get Contact List. " + ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -509,9 +511,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view_loss, mListView, false);
-        indexBarView.setData(mListView, mListItems, mListSectionPos);
-        mListView.setIndexBarView(indexBarView);
+        //IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view_loss, mListView, false);
+        //indexBarView.setData(mListView, mListItems, mListSectionPos);
+        //mListView.setIndexBarView(indexBarView);
 
         // for configure pinned header view on onrefresh change
         mListView.setOnScrollListener(this);
@@ -522,12 +524,12 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
 
-                    lossWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    lossWalletSession.setData(SessionConstant.CONTACT_ACCOUNT_NAME, String.valueOf(adapter.getItem(position)));
 
                     if (position == 1)
-                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT, adapterView.getItemAtPosition(position));
                     else
-                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT, adapterView.getItemAtPosition(position));
 
 
                     Boolean isFromActionBarSend = (Boolean) lossWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
@@ -606,6 +608,29 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         //TODO: set obtained position after populating
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
         //}
+        try{
+            if(isScrolled)
+            {
+                actionButton.setVisibility(View.GONE);
+                button1.setVisibility(View.GONE);
+                button2.setVisibility(View.GONE);
+
+            }
+            else
+            {
+                FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+                actionButton.setVisibility(View.VISIBLE);
+
+            }
+
+        }
+        catch(Exception e)
+        {
+
+        }
+
+
+
     }
 
     private void lauchCreateContactDialog(boolean withImage) {
@@ -812,7 +837,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                               // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));
@@ -831,6 +856,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         @Override
         protected void onPostExecute(Void result) {
+            isRefreshing = false;
             if (!isCancelled()) {
                 if (mListItems.isEmpty()) {
                     showEmptyText(mListView, mLoadingView, mEmptyView);
@@ -860,7 +886,13 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         private void showEmptyText(View contentView, View loadingView, View emptyView) {
             contentView.setVisibility(View.GONE);
             loadingView.setVisibility(View.GONE);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+            try
+            {
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

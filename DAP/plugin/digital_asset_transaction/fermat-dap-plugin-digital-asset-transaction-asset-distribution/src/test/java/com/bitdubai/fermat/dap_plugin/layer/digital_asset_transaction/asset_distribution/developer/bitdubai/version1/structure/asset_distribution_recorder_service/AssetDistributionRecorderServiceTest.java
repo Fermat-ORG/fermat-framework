@@ -20,12 +20,13 @@ public class AssetDistributionRecorderServiceTest {
     @Mock
     private EventManager eventManager;
     private AssetDistributionRecorderService assetDistributionRecorderService;
+
     @Test
-    public void assetDistributionRecorderServiceThrowsCantSetObjectExceptionTest () throws CantStartServiceException {
+    public void assetDistributionRecorderServiceThrowsCantSetObjectExceptionTest() throws CantStartServiceException {
         try {
             assetDistributionRecorderService = new AssetDistributionRecorderService(null, eventManager);
             fail("The method didn't throw when I expected it to");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantStartServiceException);
         }
 

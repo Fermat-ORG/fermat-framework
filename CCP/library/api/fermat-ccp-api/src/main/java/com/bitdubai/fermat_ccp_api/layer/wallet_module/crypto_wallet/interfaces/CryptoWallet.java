@@ -286,7 +286,7 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
      * @param cryptoAddress to validate
      * @return boolean value, true if positive, false if negative.
      */
-    boolean isValidAddress(CryptoAddress cryptoAddress);
+    boolean isValidAddress(CryptoAddress cryptoAddress,BlockchainNetworkType blockchainNetworkType);
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 

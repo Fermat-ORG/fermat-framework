@@ -107,7 +107,7 @@
                 android:fontFamily="ROBOTO"
                 android:textSize="16sp"
                 android:textColor="#fff"
-                android:text="Earnings and losts for today:"/>
+                android:text="Total earnings and losts:"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -157,7 +157,7 @@
                     android:textSize="16sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_amount_lost_or_earn"
-                    android:text="U$D 0.00 earning"/>
+                    android:text="U$D 0.00"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -167,18 +167,30 @@
         android:layout_height="match_parent"
         android:padding="28dp"
         android:background="@drawable/home_background">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="22dp"
-                android:background="@drawable/graphic"
+
                 android:orientation="vertical">
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
-                    />
+                    android:layout_marginLeft="27dp"
+                    android:background="@drawable/tabla_new">
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -187,7 +199,7 @@
                     android:textColor="#fff"
                     android:visibility="gone"
                     android:id="@+id/noDataInChart"/>
-            </LinearLayout>
+            </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

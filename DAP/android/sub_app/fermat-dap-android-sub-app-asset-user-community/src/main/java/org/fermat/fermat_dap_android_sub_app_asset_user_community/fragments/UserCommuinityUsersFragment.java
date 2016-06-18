@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAdapter;
@@ -35,7 +37,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserVi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -51,12 +52,11 @@ import static android.widget.Toast.makeText;
 
 /**
  * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
- *
  */
-public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCommuinityUsersFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>, ResourceProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
-    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
 
     private static final int MAX = 20;
@@ -76,8 +76,6 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
     private MenuItem menuItemAdd;
     private Menu menu;
 
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     /**
      * Flags
      */
@@ -94,8 +92,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         try {
             group = (Group) appSession.getData("group_selected");
 
-            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
-            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -301,7 +298,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
 
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                    dataSet.add((new Actor(record)));
+                dataSet.add((new Actor(record)));
             }
         }
         return dataSet;
@@ -315,8 +312,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_USERS) {
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            }
-            else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
+            } else if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_ADD_USERS) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
                 dialog.setMessage("Adding users to group...");
                 dialog.setCancelable(false);

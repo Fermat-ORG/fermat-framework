@@ -113,7 +113,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot");
+        returnedClasses.add("CustomerOfflinePaymentPluginRoot");
+
         return returnedClasses;
     }
 

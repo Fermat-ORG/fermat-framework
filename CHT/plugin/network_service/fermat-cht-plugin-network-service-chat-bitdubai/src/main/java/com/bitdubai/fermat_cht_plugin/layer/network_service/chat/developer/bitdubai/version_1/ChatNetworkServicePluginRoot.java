@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -75,6 +76,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -118,6 +120,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     private long reprocessTimer =  300000; //five minutes
 
     private Timer timer = new Timer();
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
      * Executor
@@ -689,16 +693,40 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         return chatNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-
-
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("ChatNetworkServicePluginRoot");
+//        returnedClasses.add("EncodeMsjContent");
+//        returnedClasses.add("ChatTransmissionJsonAttNames");
+//        returnedClasses.add("ChatMetadataRecord");
+
+        return returnedClasses;
     }
+
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        try{
+            /*
+         * I will check the current values and update the LogLevel in those which is different
+         */
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
 
+            /*
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+                if (ChatNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    ChatNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    ChatNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    ChatNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
+            }
+        } catch (Exception exception){
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -833,7 +861,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
                 chatMetadataRecord.setLocalActorType(senderType);
                 chatMetadataRecord.setMsgXML(msjContent);
-                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+                //if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+                if(!chatMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())){
                     chatMetadataRecord.setMessageStatus(messageStatus);
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
                     executorService.submit(new Runnable() {

@@ -7,8 +7,9 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -21,16 +22,16 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.LossProtectedWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.LossProtectedWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.LossProtectedWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
 
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class LossProtectedWalletFermatAppConnection extends AppConnections<LossProtectedWalletSession>{
+public class LossProtectedWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession>{
 
     private LossProtectedWallet moduleManager = null;
-    private LossProtectedWalletSession lossWalletSession;
+    private ReferenceAppFermatSession<LossProtectedWallet> lossWalletSession;
 
     public LossProtectedWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -42,19 +43,19 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_LOSS_PROTECTED_WALLET,
                 Developers.BITDUBAI,
                 new Version()
-            );
+            )};
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new LossProtectedWalletSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return (AbstractReferenceAppFermatSession) this.getFullyLoadedSession();
     }
 
     @Override

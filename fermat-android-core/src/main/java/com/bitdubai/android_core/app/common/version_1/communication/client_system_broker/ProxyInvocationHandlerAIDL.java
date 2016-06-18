@@ -14,13 +14,11 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
     private static final String TAG = "ProxyHandler";
 
     private ClientSystemBrokerServiceAIDL clientSystemBrokerService;
-    private String responseStr;
     private PluginVersionReference pluginVersionReference;
 
 
-    public ProxyInvocationHandlerAIDL(ClientSystemBrokerServiceAIDL clientSystemBrokerService, String responseStr, PluginVersionReference pluginVersionReference) {
+    public ProxyInvocationHandlerAIDL(ClientSystemBrokerServiceAIDL clientSystemBrokerService, PluginVersionReference pluginVersionReference) {
         this.clientSystemBrokerService = clientSystemBrokerService;
-        this.responseStr = responseStr;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -35,7 +33,6 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
 
         Object returnedObject = clientSystemBrokerService.sendMessage(
                                     pluginVersionReference,
-                                    responseStr,
                                    proxy,
                                    method,
                                    args);

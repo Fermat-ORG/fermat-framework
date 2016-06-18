@@ -34,16 +34,16 @@ public final class DAPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new ActorLayer()                  );
-            registerLayer(new ActorNetworkServiceLayer()    );
+            registerLayer(new ActorLayer());
+            registerLayer(new ActorNetworkServiceLayer());
             registerLayer(new DigitalAssetTransactionLayer());
-            registerLayer(new FundsTransactionLayer()       );
-            registerLayer(new IdentityLayer()               );
-            registerLayer(new MiddlewareLayer()             );
-            registerLayer(new NetworkServiceLayer()         );
-            registerLayer(new SubAppModuleLayer()           );
-            registerLayer(new WalletLayer()                 );
-            registerLayer(new WalletModuleLayer()           );
+            registerLayer(new FundsTransactionLayer());
+            registerLayer(new IdentityLayer());
+            registerLayer(new MiddlewareLayer());
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new SubAppModuleLayer());
+            registerLayer(new WalletLayer());
+            registerLayer(new WalletModuleLayer());
 
         } catch (CantRegisterLayerException e) {
 

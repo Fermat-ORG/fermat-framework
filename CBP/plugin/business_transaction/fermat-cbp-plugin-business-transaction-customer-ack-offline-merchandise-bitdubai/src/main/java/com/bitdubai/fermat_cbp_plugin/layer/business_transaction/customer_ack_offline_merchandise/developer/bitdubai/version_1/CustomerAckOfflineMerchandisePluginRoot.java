@@ -102,7 +102,8 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.CustomerAckOfflineMerchandisePluginRoot");
+        returnedClasses.add("CustomerAckOfflineMerchandisePluginRoot");
+
         return returnedClasses;
     }
 

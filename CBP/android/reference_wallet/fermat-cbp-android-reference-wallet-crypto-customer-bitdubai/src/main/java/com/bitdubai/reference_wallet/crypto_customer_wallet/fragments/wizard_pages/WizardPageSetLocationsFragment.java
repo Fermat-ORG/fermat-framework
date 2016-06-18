@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -24,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
@@ -71,10 +72,10 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             if(aux != null && aux instanceof Boolean)
                 hideHelperDialogs = (boolean) aux;
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST);
             if (data == null) {
                 locationList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+                appSession.setData(CryptoCustomerWalletSessionReferenceApp.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
@@ -97,7 +98,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreateView(inflater, container, savedInstanceState);
 
         if(!hideHelperDialogs) {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                     .setIconRes(R.drawable.cbp_crypto_customer)

@@ -1,13 +1,13 @@
 package com.bitdubai.sub_app.crypto_customer_identity.util;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by nelson on 19/10/15.
@@ -37,12 +37,12 @@ public class CreateCustomerIdentityExecutor {
         identity = null;
     }
 
-    public CreateCustomerIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
+    public CreateCustomerIdentityExecutor(ReferenceAppFermatSession session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
 
         if (session != null) {
-            CryptoCustomerIdentitySubAppSession subAppSession = (CryptoCustomerIdentitySubAppSession) session;
+            CryptoCustomerIdentitySubAppSessionReferenceApp subAppSession = (CryptoCustomerIdentitySubAppSessionReferenceApp) session;
             this.moduleManager = subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
         }

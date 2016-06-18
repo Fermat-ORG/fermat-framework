@@ -9,7 +9,7 @@ public class CantCheckAssetUserRedemptionProgressException extends DAPException 
     public static final String DEFAULT_MESSAGE = "There was an error checking the Asset User Redemption progress.";
 
     public CantCheckAssetUserRedemptionProgressException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantCheckAssetUserRedemptionProgressException(final String message) {

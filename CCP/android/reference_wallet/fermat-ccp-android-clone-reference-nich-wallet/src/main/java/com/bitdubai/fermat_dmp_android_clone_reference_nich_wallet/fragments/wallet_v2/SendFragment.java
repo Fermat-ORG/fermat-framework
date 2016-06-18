@@ -25,7 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.custom_anim.Fx;
-import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSessionReferenceApp;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 
 
@@ -57,7 +57,7 @@ public  class SendFragment extends AbstractFermatFragment {
 
     private String[][] transactions_whens;
 
-    ReferenceWalletSession referenceWalletSession;
+    ReferenceWalletSessionReferenceApp referenceWalletSession;
 
     CryptoWallet cryptoWallet;
 
@@ -82,7 +82,7 @@ public  class SendFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = (ReferenceWalletSessionReferenceApp) appSession;
 
         try {
 

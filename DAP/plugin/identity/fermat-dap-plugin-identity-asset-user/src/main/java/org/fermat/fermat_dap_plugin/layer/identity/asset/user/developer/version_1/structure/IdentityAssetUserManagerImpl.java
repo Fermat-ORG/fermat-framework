@@ -1,7 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -138,14 +137,14 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
     public boolean hasAssetUserIdentity() throws CantListAssetUsersException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-        return getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0;
-    } catch (CantGetLoggedInDeviceUserException e) {
-        throw new CantListAssetUsersException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-    } catch (CantListAssetUserIdentitiesException e) {
-        throw new CantListAssetUsersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
-    } catch (Exception e) {
-        throw new CantListAssetUsersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
-    }
+            return getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListAssetUsersException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        } catch (CantListAssetUserIdentitiesException e) {
+            throw new CantListAssetUsersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
+        } catch (Exception e) {
+            throw new CantListAssetUsersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+        }
     }
 
     public IdentityAssetUser getIdentityAssetUser() throws CantGetAssetUserIdentitiesException {

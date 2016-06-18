@@ -11,7 +11,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.ContractDetailViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.List;
 
@@ -27,11 +27,11 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
 
     private Context context;
     private List<ContractDetail> dataSet;
-    private CryptoCustomerWalletSession walletSession;
+    private CryptoCustomerWalletSessionReferenceApp walletSession;
     private CryptoCustomerWalletModuleManager walletManager;
     private ContractDetailActivityFragment fragment;
 
-    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, CryptoCustomerWalletSession walletSession,
+    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, CryptoCustomerWalletSessionReferenceApp walletSession,
                                  CryptoCustomerWalletModuleManager walletManager, ContractDetailActivityFragment fragment) {
         this.context = context;
         this.dataSet = dataSet;

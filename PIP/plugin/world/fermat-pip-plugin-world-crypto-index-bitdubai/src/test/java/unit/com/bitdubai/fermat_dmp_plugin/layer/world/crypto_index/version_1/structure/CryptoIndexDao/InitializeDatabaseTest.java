@@ -51,20 +51,21 @@ public class InitializeDatabaseTest {
     @Mock
     private CryptoIndexDao cryptoIndexDao;
 
-    private void setUpIds(){
+    private void setUpIds() {
         testOwnerId = UUID.randomUUID();
     }
 
     @Test
-    public void TestInitializeDatabaseTest_successful() throws Exception{
+    public void TestInitializeDatabaseTest_successful() throws Exception {
         setUpIds();
         when(mockPluginDatabaseSystem.openDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
         cryptoIndexDao = new CryptoIndexDao(mockPluginDatabaseSystem, testOwnerId);
         catchException(cryptoIndexDao).initializeDatabase();
         Assertions.assertThat(caughtException()).isNull();
     }
+
     @Test
-    public void TestInitializeDatabaseTest_ThrowCantInitializeCryptoIndexDatabaseException() throws Exception{
+    public void TestInitializeDatabaseTest_ThrowCantInitializeCryptoIndexDatabaseException() throws Exception {
         when(mockPluginDatabaseSystem.openDatabase(testOwnerId, CryptoIndexDatabaseConstants.CRYPTO_INDEX_DATABASE_NAME)).thenReturn(mockDatabase);
         cryptoIndexDao = new CryptoIndexDao(null, null);
         catchException(cryptoIndexDao).initializeDatabase();

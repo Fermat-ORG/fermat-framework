@@ -20,7 +20,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
         return plugin;
     }
 
-    public DeveloperBitDubai () {
+    public DeveloperBitDubai() {
 
         /**
          * I will choose from the different versions of my implementations which one to start. Now there is only one, so

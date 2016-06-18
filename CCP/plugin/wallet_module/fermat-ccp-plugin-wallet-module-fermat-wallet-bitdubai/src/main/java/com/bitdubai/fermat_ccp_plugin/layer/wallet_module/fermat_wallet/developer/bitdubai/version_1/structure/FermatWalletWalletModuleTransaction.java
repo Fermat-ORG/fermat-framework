@@ -7,6 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletModuleTransaction;
 
@@ -44,7 +45,7 @@ public class FermatWalletWalletModuleTransaction implements FermatWalletModuleTr
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
 
-    public FermatWalletWalletModuleTransaction(final FermatWalletTransaction fermatWalletTransaction,
+    public FermatWalletWalletModuleTransaction(final CryptoWalletTransaction fermatWalletTransaction,
                                                final UUID contactId,
                                                final Actor involvedActor) {
 

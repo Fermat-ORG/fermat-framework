@@ -15,6 +15,7 @@ public class NewReceiveExtendedNotificationEventListener implements FermatEventL
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *

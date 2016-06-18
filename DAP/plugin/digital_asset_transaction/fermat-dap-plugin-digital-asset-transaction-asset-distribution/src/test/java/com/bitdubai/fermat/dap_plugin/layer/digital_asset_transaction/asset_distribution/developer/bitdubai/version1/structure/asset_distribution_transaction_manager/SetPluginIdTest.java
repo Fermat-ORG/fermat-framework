@@ -45,20 +45,20 @@ public class SetPluginIdTest {
                 pluginFileSystem);
     }
 
-   @Test
+    @Test
     public void setPluginIdThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginIdThrowsCantSetObjectExceptionTest()");
 
-       try {
-           mockAssetDistributionTransactionManager.setPluginId(null);
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantSetObjectException);
-       }
+        try {
+            mockAssetDistributionTransactionManager.setPluginId(null);
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
     }
 
     @Test
-    public void setPluginIdNoExceptionTest() throws CantSetObjectException{
+    public void setPluginIdNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginIdNoExceptionTest()");
         mockAssetDistributionTransactionManager.setPluginId(UUID.randomUUID());
     }

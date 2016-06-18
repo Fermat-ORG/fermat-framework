@@ -5,7 +5,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 /**
  * Created by root on 06/10/15.
  */
-public class CantRequestListAssetTransmissionNetworkServiceException  extends DAPException {
+public class CantRequestListAssetTransmissionNetworkServiceException extends DAPException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T REQUEST LIST ASSET TRANSMISSION NETWORK SERVICE";
 

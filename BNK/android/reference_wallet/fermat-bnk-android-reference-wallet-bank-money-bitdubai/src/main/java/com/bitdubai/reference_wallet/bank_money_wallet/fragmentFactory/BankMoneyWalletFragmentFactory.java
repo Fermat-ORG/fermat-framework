@@ -11,12 +11,12 @@ import com.bitdubai.reference_wallet.bank_money_wallet.fragments.home.AccountsLi
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.setup.SetupFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.details.AccountDetailFragment;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragments.details.TransactionDetailFragment;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 
 /**
  * Created by Guillermo on 04/12/15.
  */
-public class BankMoneyWalletFragmentFactory extends FermatFragmentFactory<BankMoneyWalletSession,WalletResourcesProviderManager, BankMoneyWalletFragmentsEnumType> {
+public class BankMoneyWalletFragmentFactory extends FermatFragmentFactory<BankMoneyWalletSessionReferenceApp,WalletResourcesProviderManager, BankMoneyWalletFragmentsEnumType> {
     @Override
     public AbstractFermatFragment getFermatFragment(BankMoneyWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {

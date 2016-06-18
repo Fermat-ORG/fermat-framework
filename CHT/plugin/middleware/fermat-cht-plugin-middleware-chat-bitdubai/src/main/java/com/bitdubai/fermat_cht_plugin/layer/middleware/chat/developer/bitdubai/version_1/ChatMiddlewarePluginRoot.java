@@ -189,7 +189,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         try{
-            returnedClasses.add("com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot");
+            returnedClasses.add("ChatMiddlewarePluginRoot");
             return returnedClasses;
         } catch (Exception exception){
             reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,

@@ -45,5 +45,5 @@ public class AssetRedeemRedeemPointHolder extends FermatViewHolder {
         addressText = (FermatTextView) itemView.findViewById(R.id.selectedRedeemPointAddress);
         cityText = (FermatTextView) itemView.findViewById(R.id.selectedRedeemPointCity);
     }
-    
+
 }

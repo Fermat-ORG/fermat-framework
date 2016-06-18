@@ -17,7 +17,7 @@ public interface AppropriationTransactionRecord {
     BlockchainNetworkType networkType();
 
     String genesisTransaction();
-    
+
     org.fermat.fermat_dap_api.layer.all_definition.enums.AppropriationStatus status();
 
     org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset();

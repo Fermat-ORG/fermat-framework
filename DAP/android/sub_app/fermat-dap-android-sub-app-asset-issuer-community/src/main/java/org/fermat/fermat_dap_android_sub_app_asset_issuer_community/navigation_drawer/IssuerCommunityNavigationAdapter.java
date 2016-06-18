@@ -29,11 +29,11 @@ public class IssuerCommunityNavigationAdapter extends FermatAdapter<MenuItem, Is
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
+    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener) {
 
     }
 
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
+    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener) {
 
     }
 
@@ -96,7 +96,7 @@ public class IssuerCommunityNavigationAdapter extends FermatAdapter<MenuItem, Is
 //                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
 //                    break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

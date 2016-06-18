@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantGetClasessHierarchyAddons extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "THE LOGTOOL HAS TRIGGERED AN EXCEPTION";
+
     public CantGetClasessHierarchyAddons(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

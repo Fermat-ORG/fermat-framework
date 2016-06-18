@@ -2,7 +2,6 @@ package org.fermat.fermat_dap_plugin.layer.sub_app_module.asset_issuer_identity.
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
@@ -12,11 +11,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.interfaces.AssetIssuerIdentityModuleManager;
 
@@ -25,21 +19,16 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- *
  * Created by nerio on 14/5/2016.
  */
 public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<IssuerIdentitySettings> implements AssetIssuerIdentityModuleManager, Serializable {
 
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
     private final IdentityAssetIssuerManager identityAssetIssuerManager;
 
     public AssetIssuerIdentitySubAppModuleManager(IdentityAssetIssuerManager identityAssetIssuerManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
         super(pluginFileSystem, pluginId);
 
         this.identityAssetIssuerManager = identityAssetIssuerManager;
-        this.pluginFileSystem    = pluginFileSystem;
-        this.pluginId            = pluginId;
     }
 
     @Override

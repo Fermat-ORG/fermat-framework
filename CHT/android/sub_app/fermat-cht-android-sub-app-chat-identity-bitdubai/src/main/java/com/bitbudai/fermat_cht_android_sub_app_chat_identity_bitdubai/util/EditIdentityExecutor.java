@@ -2,8 +2,8 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
 import android.util.Log;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySessionReferenceApp;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
@@ -35,16 +35,16 @@ public class EditIdentityExecutor {
         this.identityConnectionState = identityConnectionState;
     }
 
-    public EditIdentityExecutor(FermatSession session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
+    public EditIdentityExecutor(ReferenceAppFermatSession<ChatIdentityModuleManager> session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
         this(imageInBytes, Publickey ,identityName, identityConnectionState);
         identity = null;
         if (session != null) {
-            ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
-            this.moduleManager = subAppSession.getModuleManager();
-            this.errorManager = subAppSession.getErrorManager();
+            //ChatIdentitySessionReferenceApp subAppSession = (ChatIdentitySessionReferenceApp) session;
+            //Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
+            this.moduleManager = session.getModuleManager();
+            this.errorManager = session.getErrorManager();
         }else{
-            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
+            //Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }
 

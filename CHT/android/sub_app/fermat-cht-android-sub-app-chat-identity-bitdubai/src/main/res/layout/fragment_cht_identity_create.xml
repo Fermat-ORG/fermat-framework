@@ -22,7 +22,9 @@
             android:contentDescription="ignore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            />
 
     </RelativeLayout>
 
@@ -31,35 +33,35 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="User Name"
         android:layout_marginTop="24dp"
         android:id="@+id/textViewChtTitle"
-        android:textColor="#47BF73"
+        android:textColor="#09D261"
         android:fontFamily="h"
         android:layout_below="@+id/cht_image_background"
         android:layout_centerHorizontal="true" />
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
         android:ems="10"
-        android:textColor="#808080"
         android:id="@+id/editTextName"
-        android:hint="User Name"
-        android:textColorHint="#808080"
+        android:hint="Name"
+        android:textColor="#808080"
         android:foregroundTint="#808080"
         android:layout_below="@+id/textViewChtTitle"
         android:drawableTint="#808080"
         android:maxLength="25"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:gravity="center"
+        />
+            <!--android:textAlignment="center"/>-->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Status"
         android:textColor="#47BF73"
         android:id="@+id/statusView"
@@ -67,6 +69,7 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         />
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
 
     <EditText
         android:layout_width="wrap_content"
@@ -80,7 +83,9 @@
         android:foregroundTint="#808080"
         android:layout_below="@+id/statusView"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+        android:gravity="center"
+        />
+        <!--android:textAlignment="center"/>-->
 
     <Button
         android:id="@+id/cht_button"
@@ -89,6 +94,7 @@
         android:layout_alignParentBottom="true"
         android:background="#00000000"
         android:drawableStart="@drawable/chort_buttom_accept"
+        android:drawableLeft="@drawable/chort_buttom_accept"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:layout_marginLeft="16dp"
@@ -96,7 +102,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:layout_alignEnd="@+id/editTextStatus"
-        android:layout_alignStart="@+id/editTextStatus" />
+        android:layout_alignRight="@+id/editTextStatus"
+        android:layout_alignStart="@+id/editTextStatus"
+        android:layout_alignLeft="@+id/editTextStatus" />
 
     <Button
         android:id="@+id/btnRotate"
@@ -111,7 +119,10 @@
         android:layout_marginRight="16dp"
         android:layout_above="@+id/cht_button"
         android:layout_alignStart="@+id/editTextStatus"
-        android:layout_alignEnd="@+id/editTextStatus" />
+        android:layout_alignLeft="@+id/editTextStatus"
+        android:layout_alignEnd="@+id/editTextStatus"
+        android:layout_alignRight="@+id/editTextStatus"
+        />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -119,7 +130,9 @@
         android:id="@+id/placeholdImg"
         android:visibility="gone"
         android:layout_alignTop="@+id/cht_image_background"
-        android:layout_alignEnd="@+id/statusView" />
+        android:layout_alignEnd="@+id/statusView"
+        android:layout_alignRight="@+id/statusView"
+        />
 
 
 </RelativeLayout>

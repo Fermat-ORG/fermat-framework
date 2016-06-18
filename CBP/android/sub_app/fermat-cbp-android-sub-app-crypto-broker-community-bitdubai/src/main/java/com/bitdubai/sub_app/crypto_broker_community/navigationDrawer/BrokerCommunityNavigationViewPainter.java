@@ -21,7 +21,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -34,10 +34,10 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    CryptoBrokerCommunitySubAppSession subAppSession;
+    CryptoBrokerCommunitySubAppSessionReferenceApp subAppSession;
     private ActiveActorIdentityInformation selectedActorIdentity;
 
-    public BrokerCommunityNavigationViewPainter(Context activity, CryptoBrokerCommunitySubAppSession subAppSession) {
+    public BrokerCommunityNavigationViewPainter(Context activity, CryptoBrokerCommunitySubAppSessionReferenceApp subAppSession) {
         this.activity = new WeakReference<>(activity);
         this.subAppSession = subAppSession;
 

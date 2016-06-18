@@ -8,15 +8,14 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CreateCryptoCustomerIdentityFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 import com.bitdubai.sub_app.crypto_customer_identity.fragments.EditCryptoCustomerIdentityFragment;
-import com.bitdubai.sub_app.crypto_customer_identity.preference_settings.CryptoCustomerIdentityPreferenceSettings;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSessionReferenceApp;
 
 import static com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentsEnumType.*;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSession, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
+public class CryptoCustomerIdentityFragmentFactory extends FermatFragmentFactory<CryptoCustomerIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, CryptoCustomerIdentityFragmentsEnumType> {
 
 
     @Override

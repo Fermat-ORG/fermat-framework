@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * The Class <code>package com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesSubAppResourcesDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
- *
+ * <p/>
  * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 03/08/15.
  *
  * @version 1.0

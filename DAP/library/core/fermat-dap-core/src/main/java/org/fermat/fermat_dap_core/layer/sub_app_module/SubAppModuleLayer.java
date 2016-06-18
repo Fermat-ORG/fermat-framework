@@ -29,15 +29,15 @@ public class SubAppModuleLayer extends AbstractLayer {
 
         try {
 
-            registerPlugin(new AssetFactoryPluginSubsystem()        );
+            registerPlugin(new AssetFactoryPluginSubsystem());
             registerPlugin(new AssetIssuerCommunityPluginSubsystem());
             registerPlugin(new AssetIssuerIdentityPluginSubsystem());
-            registerPlugin(new AssetUserCommunityPluginSubsystem()  );
-            registerPlugin(new AssetUserIdentityPluginSubsystem()   );
+            registerPlugin(new AssetUserCommunityPluginSubsystem());
+            registerPlugin(new AssetUserIdentityPluginSubsystem());
             registerPlugin(new RedeemPointCommunityPluginSubsystem());
-            registerPlugin(new RedeemPointIdentityPluginSubsystem() );
+            registerPlugin(new RedeemPointIdentityPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

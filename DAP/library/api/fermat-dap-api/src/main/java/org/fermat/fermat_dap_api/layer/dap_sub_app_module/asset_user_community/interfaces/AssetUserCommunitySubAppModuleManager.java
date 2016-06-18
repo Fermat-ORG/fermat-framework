@@ -38,7 +38,8 @@ import java.util.List;
  * Created by Nerio on 13/10/15.
  */
 
-public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings> {
+public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<AssetUserSettings,
+        ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings>, Serializable {
 
     DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
 
@@ -53,8 +54,10 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetException;
 
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>createGroup</code> Register a group in database Actor Asset User
+     *
      * @param groupName
      * @throws CantCreateAssetUserGroupException
      */
@@ -62,6 +65,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>renameGroup</code> Update a group name in database Actor Asset User
+     *
      * @param assetUserGroup
      * @throws CantUpdateAssetUserGroupException
      */
@@ -69,6 +73,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>deleteGroup</code> Delete a group in database Actor Asset User
+     *
      * @param assetUserGroupId
      * @throws CantDeleteAssetUserGroupException
      */
@@ -76,13 +81,15 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>addActorAssetUserToGroup</code> Add a user to a group
+     *
      * @param actorAssetUserGroupMember
      * @throws CantCreateAssetUserGroupException
      */
-    void addActorAssetUserToGroup (ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
+    void addActorAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
 
     /**
      * The method <code>removeActorAssetUserFromGroup</code> Remove a user from group
+     *
      * @param assetUserGroupMember
      * @throws CantCreateAssetUserGroupException
      */
@@ -90,6 +97,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>getGroups</code> Returns a list of groups
+     *
      * @return
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException
      */
@@ -98,14 +106,16 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>getListActorAssetUserByGroups</code> Returns a list of groups by name
+     *
      * @param groupId
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListGroupsByActorAssetUser</code> Returns a list of groups by asset user
+     *
      * @param actorAssetUserPublicKey
      * @return
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException
@@ -114,6 +124,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     /**
      * The method <code>getGroup</code> Returns a group by id
+     *
      * @param groupId
      * @return
      * @throws org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException

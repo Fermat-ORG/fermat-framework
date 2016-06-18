@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPrefer
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletModuleManagerImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,15 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("BankMoneyWalletModulePluginRoot");
+//        returnedClasses.add("BankWalletAsyncTransactionAgent");
+//        returnedClasses.add("BankTransactionRecordImpl");
+//        returnedClasses.add("BankTransactionParametersImpl");
+//        returnedClasses.add("BankMoneyWalletModuleManagerImpl");
+//        returnedClasses.add("BankAccountNumberImpl");
+
+        return returnedClasses;
     }
 
     @Override

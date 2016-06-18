@@ -36,7 +36,7 @@ public class GetDatabaseTableListTest {
     private SubAppResourcesNetworkServiceDeveloperDatabaseFactory subAppResourcesNetworkServiceDeveloperDatabaseFactory;
 
     @Test
-    public void getDatabaseTableListTest() throws Exception{
+    public void getDatabaseTableListTest() throws Exception {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

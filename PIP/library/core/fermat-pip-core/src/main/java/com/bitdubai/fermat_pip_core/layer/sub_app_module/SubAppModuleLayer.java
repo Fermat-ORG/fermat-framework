@@ -24,7 +24,6 @@ public class SubAppModuleLayer extends AbstractLayer {
         try {
 
             registerPlugin(new DeveloperPluginSubsystem());
-        //    registerPlugin(new NotificationPluginSubsystem());
             registerPlugin(new AndroidCorePluginSubsystem());
 
         } catch (CantRegisterPluginException e) {

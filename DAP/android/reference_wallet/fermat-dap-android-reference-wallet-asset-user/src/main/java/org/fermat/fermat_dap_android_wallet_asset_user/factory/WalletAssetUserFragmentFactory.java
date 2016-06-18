@@ -17,7 +17,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.fragments.SettingsMainNet
 import org.fermat.fermat_dap_android_wallet_asset_user.fragments.SettingsNotificationsFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.fragments.UserHistoryActivityFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.fragments.UserSellAssetFragment;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
+import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.fragments.DetailFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.fragments.HomeFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.fragments.RedeemPointsFragment;
@@ -30,7 +30,7 @@ import org.fermat.fermat_dap_android_wallet_asset_user.v3.fragments.Transactions
  * @author Francisco Vasquez on 15/09/15.
  * @version 1.0
  */
-public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetUserSession,WalletResourcesProviderManager, WalletAssetUserFragmentsEnumType> {
+public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetUserSessionReferenceApp, WalletResourcesProviderManager, WalletAssetUserFragmentsEnumType> {
 
 
     @Override
@@ -100,7 +100,7 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return currentFragment;

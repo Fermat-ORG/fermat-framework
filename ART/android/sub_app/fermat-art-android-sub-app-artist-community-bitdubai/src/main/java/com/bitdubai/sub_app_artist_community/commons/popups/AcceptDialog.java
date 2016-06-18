@@ -15,14 +15,14 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.artist_community.R;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -42,7 +42,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
 
     public AcceptDialog(
             Activity a,
-            ArtistSubAppSession artistSubAppSession,
+            ArtistSubAppSessionReferenceApp artistSubAppSession,
             SubAppResourcesProviderManager subAppResources,
             ArtistCommunityInformation artistCommunityInformation,
             ArtistCommunitySelectableIdentity identity) {
@@ -55,7 +55,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
 
     public AcceptDialog(
             Activity a,
-            ArtistSubAppSession artistSubAppSession,
+            ArtistSubAppSessionReferenceApp artistSubAppSession,
             SubAppResourcesProviderManager subAppResources,
             UUID connectionId,
             String alias,

@@ -39,6 +39,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ import java.util.regex.Pattern;
 
 })
 
-@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.LOSS_PROTECTED_WALLET)
 
 public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossProtectedWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers{
@@ -170,7 +171,11 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("LossProtectedWalletModulePluginRoot");
+        returnedClasses.add("LossProtectedWalletModuleManager");
+
+        return returnedClasses;
     }
 
     @Override

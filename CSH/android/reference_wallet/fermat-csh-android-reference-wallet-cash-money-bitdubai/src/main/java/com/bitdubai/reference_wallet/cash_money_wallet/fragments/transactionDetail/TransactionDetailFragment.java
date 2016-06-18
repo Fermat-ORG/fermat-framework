@@ -25,7 +25,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -36,7 +36,7 @@ import java.util.UUID;
 public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
 
     // Fermat Managers
-    private CashMoneyWalletSession walletSession;
+    private CashMoneyWalletSessionReferenceApp walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
@@ -65,7 +65,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         super.onCreate(savedInstanceState);
 
         try {
-            walletSession = ((CashMoneyWalletSession) appSession);
+            walletSession = ((CashMoneyWalletSessionReferenceApp) appSession);
             moduleManager = walletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
@@ -144,7 +144,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         }if (i == R.id.csh_transaction_detail_delete_btn) {
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }else if(i == R.id.csh_transaction_detail_update_btn) {
-            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
+            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSessionReferenceApp) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
             transactionFragmentDialog.setOnDismissListener(this);
             transactionFragmentDialog.show();
         }

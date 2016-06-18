@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -26,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.NumberInputFilter;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CashMoneyWalletSession cashMoneyWalletSession;
+    private CashMoneyWalletSessionReferenceApp cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
     BigDecimal optionalAmount;
@@ -73,7 +72,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
     };
 
-    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
+    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSessionReferenceApp cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;

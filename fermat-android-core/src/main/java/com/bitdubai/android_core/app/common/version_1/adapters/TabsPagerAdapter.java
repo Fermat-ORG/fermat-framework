@@ -11,6 +11,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragmentInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -31,7 +32,7 @@ import java.util.List;
     private Context context;
     private FermatFragmentFactory fragmentFactory;
     private TabStrip tabStrip;
-    private FermatSession fermatSession;
+    private FermatSession referenceAppFermatSession;
     private ResourceProviderManager resourcesProviderManager;
 
 
@@ -40,7 +41,7 @@ import java.util.List;
     public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,ResourceProviderManager walletResourcesProviderManager) {
         super(fm);
         this.context=context;
-        this.fermatSession=walletSession;
+        this.referenceAppFermatSession =walletSession;
         this.fragmentFactory = walletFragmentFactory;
         this.tabStrip=null;
         this.onlyFragment = fragment;
@@ -53,11 +54,11 @@ import java.util.List;
                             Context applicationContext,
                             FermatFragmentFactory fermatFragmentFactory,
                             TabStrip tabStrip,
-                            FermatSession fermatSession,
+                            FermatSession referenceAppFermatSession,
                             ResourceProviderManager resourceProviderManager) {
         super(fragmentManager);
         this.context=applicationContext;
-        this.fermatSession=fermatSession;
+        this.referenceAppFermatSession = referenceAppFermatSession;
         this.fragmentFactory = fermatFragmentFactory;
         this.tabStrip=tabStrip;
         this.resourcesProviderManager =resourceProviderManager;
@@ -126,7 +127,7 @@ import java.util.List;
             }
             try {
                 if(fragmentFactory !=null){
-                    currentFragment= fragmentFactory.getFragment(fragmentCodeType, fermatSession, resourcesProviderManager);
+                    currentFragment= fragmentFactory.getFragment(fragmentCodeType, referenceAppFermatSession, resourcesProviderManager);
                     if(currentFragment instanceof AbstractFermatFragmentInterface){
                         lstCurrentFragments.add((AbstractFermatFragmentInterface) currentFragment);
                     }

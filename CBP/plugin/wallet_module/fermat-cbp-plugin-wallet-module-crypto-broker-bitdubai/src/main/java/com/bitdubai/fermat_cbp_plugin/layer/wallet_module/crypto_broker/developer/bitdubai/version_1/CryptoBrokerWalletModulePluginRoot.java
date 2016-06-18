@@ -187,7 +187,28 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("CryptoBrokerWalletModulePluginRoot");
+//        returnedClasses.add("SingleValueStepImp");
+//        returnedClasses.add("NegotiationBankAccountImpl");
+//        returnedClasses.add("ExchangeRateStepImp");
+//        returnedClasses.add("CustomerBrokerSaleNegotiationImpl");
+//        returnedClasses.add("CurrencyPairImpl");
+//        returnedClasses.add("CryptoBrokerWalletSettingSpreadImpl");
+//        returnedClasses.add("CryptoBrokerWalletProviderSettingImpl");
+//        returnedClasses.add("CryptoBrokerWalletModuleIndexInfoSummary");
+//        returnedClasses.add("CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation");
+//        returnedClasses.add("CryptoBrokerWalletModuleCryptoBrokerWalletManager");
+//        returnedClasses.add("CryptoBrokerWalletModuleContractBasicInformation");
+//        returnedClasses.add("CryptoBrokerWalletModuleClauseInformation");
+//        returnedClasses.add("CryptoBrokerWalletAssociatedSettingImpl");
+//        returnedClasses.add("CryptoBrokerWalletActorIdentity");
+//        returnedClasses.add("ClauseImpl");
+//        returnedClasses.add("CBPInstalledWalletImpl");
+//        returnedClasses.add("BankAccountNumberImpl");
+//        returnedClasses.add("AmountToSellStepImp");
+
+        return returnedClasses;
     }
 
     @Override

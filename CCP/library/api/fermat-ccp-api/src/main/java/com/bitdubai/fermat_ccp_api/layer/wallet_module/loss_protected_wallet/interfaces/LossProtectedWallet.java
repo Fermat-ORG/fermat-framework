@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -61,6 +62,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -82,6 +84,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      *
      * @throws CantGetAllLossProtectedWalletContactsException if something goes wrong
      */
+
     List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey, String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException;
 
 
@@ -655,6 +658,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @return
      * @throws CantListLossProtectedTransactionsException
      */
+
     List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                    final TransactionType transactionType,
                                                                                    String walletPublicKey,

@@ -46,7 +46,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.FermatWalletSettings;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -73,8 +74,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      *  Deals with crypto wallet interface
      */
     private FermatWallet fermatWallet;
-    private FermatWalletSession appSession;
-
+    private FermatWalletSessionReferenceApp appSession;
     /**
      * Deals with error manager interface
      */
@@ -104,7 +104,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     public SendToLossProtectedWalletDialog(Activity activity,
                                            FermatWallet fermatWallet,
-                                           FermatWalletSession appSession,
+                                           FermatWalletSessionReferenceApp appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);

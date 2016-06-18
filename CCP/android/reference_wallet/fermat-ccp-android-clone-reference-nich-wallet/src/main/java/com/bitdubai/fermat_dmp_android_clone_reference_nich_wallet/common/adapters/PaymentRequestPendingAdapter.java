@@ -9,7 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.holders.PaymentRequestItemViewHolder;
-import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
+import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSessionReferenceApp;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
     //private WalletStoreItemPopupMenuListener menuClickListener;
 
     ViewInflater viewInflater;
-    ReferenceWalletSession referenceWalletSession;
+    ReferenceWalletSessionReferenceApp referenceWalletSession;
 
-    public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSession referenceWalletSession) {
+    public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSessionReferenceApp referenceWalletSession) {
         super(context, dataSet,viewInflater,referenceWalletSession.getResourceProviderManager());
         this.referenceWalletSession = referenceWalletSession;
         this.viewInflater = viewInflater;

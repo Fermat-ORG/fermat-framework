@@ -23,6 +23,6 @@ public class RedeemPointCommunityNotificationsHolder extends FermatViewHolder {
     public RedeemPointCommunityNotificationsHolder(View itemView) {
         super(itemView);
         userName = (FermatTextView) itemView.findViewById(R.id.username);
-        userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
+        userAvatar = (ImageView) itemView.findViewById(R.id.imageView_avatar);
     }
 }

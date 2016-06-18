@@ -22,12 +22,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +127,7 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
-        moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+        moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
 
         return layout;
     }
@@ -171,7 +170,7 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         if (data.isAllDataFilled()) {
 
-            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
+            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
             bankAccounts.add(data);
 
             if (moduleManager != null) {

@@ -17,7 +17,8 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -25,7 +26,6 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -40,7 +40,7 @@ import com.bitdubai.sub_app.wallet_store.common.workers.DetailedCatalogItemWorke
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType;
-import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
+import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
@@ -49,12 +49,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.LANGUAGE_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.SKIN_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.WALLET_VERSION;
 
 
 /**
@@ -63,7 +63,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MainActivityFragment extends FermatListFragment<WalletStoreListItem>
+public class MainActivityFragment extends FermatListFragment<WalletStoreListItem,ReferenceAppFermatSession>
         implements FermatListItemListeners<WalletStoreListItem>, OnMenuItemClickListener {
 
     /**
@@ -71,7 +71,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
      */
     private static WalletStoreModuleManager moduleManager;
     private static ErrorManager errorManager;
-    WalletStoreSubAppSession walletStoreSubAppSession;
+    WalletStoreSubAppSessionReferenceApp walletStoreSubAppSession;
     BasicWalletSettings settings = null;
     /**
      * DATA
@@ -104,7 +104,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            walletStoreSubAppSession = ((WalletStoreSubAppSession) appSession);
+            walletStoreSubAppSession = ((WalletStoreSubAppSessionReferenceApp) appSession);
             moduleManager = walletStoreSubAppSession.getModuleManager();
             errorManager = walletStoreSubAppSession.getErrorManager();
 
@@ -141,7 +141,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         configureToolbar();
         BasicWalletSettings preferenceSettings = getPreferenceSettings();
 
-        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+        presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession).
                 setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
                 setBannerRes(R.drawable.banner_app_store).
                 setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
@@ -198,12 +198,12 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     public ArrayList<WalletStoreListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletStoreListItem> data;
 
-        Object walletList = appSession.getData(WalletStoreSubAppSession.WALLET_LIST);
+        Object walletList = appSession.getData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST);
         if (walletList != null) {
             data = (ArrayList<WalletStoreListItem>) walletList;
         } else {
             data = WalletStoreListItem.getTestData(getResources());
-            appSession.setData(WalletStoreSubAppSession.WALLET_LIST, data);
+            appSession.setData(WalletStoreSubAppSessionReferenceApp.WALLET_LIST, data);
         }
 
 //        try {
@@ -324,7 +324,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 dialog = UtilsFuncs.INSTANCE.showProgressDialog(dialog, getActivity(), R.string.installing_message, R.string.wait_please_message);
 
                 InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager, dialog);
-                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, (SubAppsSession) appSession);
+                InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, (FermatSession) appSession);
                 if (executor != null)
                     executor.shutdownNow();
                 executor = installWalletWorker.execute();
@@ -340,7 +340,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             }
         };
 
-        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
+        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (FermatSession) appSession, item, activity, callBack);
         worker.execute();
     }
 
@@ -381,7 +381,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 }
             };
 
-            final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
+            final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (FermatSession) appSession, item, activity, callBack);
             worker.execute();
         }
     }

@@ -32,10 +32,10 @@ public enum EventType implements FermatEventEnum {
             return new MaxTimeOutNotificationReachedEventListener(fermatEventMonitor);
         }
 
-    public FermatEvent getNewEvent() {
-        return new MaxTimeOutNotificationReachedEvent();
-    }
-};
+        public FermatEvent getNewEvent() {
+            return new MaxTimeOutNotificationReachedEvent();
+        }
+    };
 
 
     private final String code;
@@ -65,10 +65,10 @@ public enum EventType implements FermatEventEnum {
         return this.code;
     }
 
-        @Override
-        public Platforms getPlatform() {
-            return Platforms.PLUG_INS_PLATFORM;
-        }
-
-
+    @Override
+    public Platforms getPlatform() {
+        return Platforms.PLUG_INS_PLATFORM;
     }
+
+
+}

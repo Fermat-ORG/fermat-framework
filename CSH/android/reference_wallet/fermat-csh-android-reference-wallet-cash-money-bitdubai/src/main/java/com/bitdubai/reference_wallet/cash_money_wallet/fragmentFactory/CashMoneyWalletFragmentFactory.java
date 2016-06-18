@@ -8,12 +8,12 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_wallet.cash_money_wallet.fragments.home.HomeFragment;
 import com.bitdubai.reference_wallet.cash_money_wallet.fragments.setup.SetupFragment;
 import com.bitdubai.reference_wallet.cash_money_wallet.fragments.transactionDetail.TransactionDetailFragment;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 /**
  * Created by Alejandro Bicelis on 12/9/2015.
  */
-public class CashMoneyWalletFragmentFactory extends FermatFragmentFactory<CashMoneyWalletSession, WalletResourcesProviderManager, CashMoneyWalletFragmentsEnumType> {
+public class CashMoneyWalletFragmentFactory extends FermatFragmentFactory<CashMoneyWalletSessionReferenceApp, WalletResourcesProviderManager, CashMoneyWalletFragmentsEnumType> {
     @Override
     public AbstractFermatFragment getFermatFragment(CashMoneyWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
         if (fragment == null) {

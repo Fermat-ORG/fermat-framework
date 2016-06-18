@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.reference_wallet.fan_wallet.R;
-import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSessionReferenceApp;
 
 import java.lang.ref.WeakReference;
 
@@ -26,13 +26,13 @@ import java.lang.ref.WeakReference;
 public class FanWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "FanrWalletHeader";
 
-    private final FanWalletSession session;
+    private final FanWalletSessionReferenceApp session;
     private final WeakReference<Context> activity;
     private ErrorManager errorManager;
     private FanWalletModule moduleManager;
 
 
-    public FanWalletHeaderPainter(Context activity, FanWalletSession fullyLoadedSession) {
+    public FanWalletHeaderPainter(Context activity, FanWalletSessionReferenceApp fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 

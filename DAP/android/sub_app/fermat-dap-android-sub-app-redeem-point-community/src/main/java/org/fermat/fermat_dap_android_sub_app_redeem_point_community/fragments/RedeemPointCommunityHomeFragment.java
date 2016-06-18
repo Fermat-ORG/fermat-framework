@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityAdapter;
@@ -42,7 +44,6 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.ConnectDialog;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.popup.DisconnectDialog;
-import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -55,13 +56,15 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
 /**
  * changed by jinmy Bohorquez on 11/02/16
  */
-public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
+public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<RedeemPointCommunitySubAppModuleManager>, ResourceProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {
@@ -70,7 +73,6 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private static RedeemPointCommunitySubAppModuleManager moduleManager;
-    AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     RedeemPointSettings settings = null;
     private int redeemNotificationsCount = 0;
 
@@ -96,7 +98,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemCancel;
 
-//    SettingsManager<RedeemPointSettings> settingsManager;
+    private ExecutorService _executor;
 
     /**
      * Flags
@@ -111,26 +113,27 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            _executor = Executors.newFixedThreadPool(2);
+
             setHasOptionsMenu(true);
 
             actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
-            assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
-            moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
-                settings = assetRedeemPointCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey());
+                settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
 
-            if (assetRedeemPointCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (appSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (settings == null) {
                     settings = new RedeemPointSettings();
                     settings.setIsPresentationHelpEnabled(true);
-                    assetRedeemPointCommunitySubAppSession.getModuleManager().persistSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey(), settings);
+                    appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
                 }
             }
 
@@ -275,6 +278,19 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 }
             }
         }, 500);
+
+        isRefreshing = true;
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMoreData();
+                    isRefreshing = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         return rootView;
     }
@@ -473,7 +489,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             if (actorsSelected.size() > 0) {
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -560,7 +576,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+                disconnectDialog = new DisconnectDialog(getActivity(), appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -642,7 +658,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();
@@ -713,7 +729,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -842,7 +858,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(REDEEM_POINT_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetRedeemPointCommunitySubAppSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

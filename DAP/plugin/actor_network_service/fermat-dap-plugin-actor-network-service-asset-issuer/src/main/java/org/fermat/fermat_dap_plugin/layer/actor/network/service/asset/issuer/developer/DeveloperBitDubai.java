@@ -22,7 +22,7 @@ import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.dev
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.issuer.developer.bitdubai.DeveloperBitDubai</code> is
  * the responsible to initialize the plugin.
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rrequena) on 17/07/15.
  * Updated by lnacosta (laion.cj91@gmail.com) on 11/11/2015.
  */

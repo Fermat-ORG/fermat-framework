@@ -3,7 +3,7 @@ package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_po
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- *  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException</code> is
+ * * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException</code> is
  * throw when error occurred updating new record in a table of the data base
  * <p/>
  * Created by franklin on 17/10/15.

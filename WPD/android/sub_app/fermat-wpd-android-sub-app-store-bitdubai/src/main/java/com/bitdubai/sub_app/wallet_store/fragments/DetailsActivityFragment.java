@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -36,9 +36,9 @@ import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
 import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
 import static com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSessionReferenceApp.PREVIEW_IMGS;
 
 
 /**
@@ -89,7 +89,7 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
 //    public void setSubAppsSession(SubAppsSession subAppsSession) {
 //        super.setSubAppsSession(subAppsSession);
 //
-//        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+//        WalletStoreSubAppSessionReferenceApp session = (WalletStoreSubAppSessionReferenceApp) subAppsSession;
 //        moduleManager = session.getModuleManager();
 //        errorManager = subAppsSession.getErrorManager();
 //    }
@@ -191,7 +191,7 @@ public class DetailsActivityFragment extends AbstractFermatFragment {
                 getActivity(), errorManager, dialog, installButton, uninstallButton);
 
         InstallWalletWorker installWalletWorker = new InstallWalletWorker(
-                getActivity(), callback, moduleManager, (SubAppsSession) appSession);
+                getActivity(), callback, moduleManager, (FermatSession) appSession);
 
         if (executor != null) {
             executor.shutdownNow();

@@ -35,7 +35,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentOld extends AbstractFermatFragment implements FermatCallback{
+public class AvailableProjectsFragmentOld extends AbstractFermatFragment implements FermatCallback {
 
     /**
      * Views

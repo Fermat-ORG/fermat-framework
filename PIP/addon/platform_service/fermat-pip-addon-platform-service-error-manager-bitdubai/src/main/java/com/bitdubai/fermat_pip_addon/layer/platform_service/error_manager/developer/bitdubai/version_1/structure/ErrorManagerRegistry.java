@@ -12,9 +12,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,15 +23,15 @@ import java.util.List;
  * Esta clase maneja un archivo con las excepciones recibidas x cada developer. Siempre agrega informacion al archivo.
  * No mantiene el arvhico abierto porque no sabe la frecuencia con la que recibira nuevas excepciones y ademas, porque
  * el Report Agent puede llegar a renombrarlo una vez que logre transmitirlo al developer.
- * 
+ * <p/>
  * Entonces en el fondo, lo que maneja son los archivos aun no transmitidos.
- * 
- * 
- * Tambien maneja un segundo archivo donde lista el plugin, la severidad declarada , para que el agente decida en base a 
+ * <p/>
+ * <p/>
+ * Tambien maneja un segundo archivo donde lista el plugin, la severidad declarada , para que el agente decida en base a
  * eso cuando debe transmitir la informacion al Developer.
  * * *
- * * * * * 
- * * * * * * 
+ * * * * *
+ * * * * * *
  */
 public class ErrorManagerRegistry {
 
@@ -45,11 +45,11 @@ public class ErrorManagerRegistry {
     private PlatformDatabaseSystem platformDatabaseSystem;
     private Database errorManagerDB;
 
-    public ErrorManagerRegistry(){
+    public ErrorManagerRegistry() {
     }
 
-    public ErrorManagerRegistry(String value){
-        if(value == null)
+    public ErrorManagerRegistry(String value) {
+        if (value == null)
             throw new IllegalArgumentException();
 
     }
@@ -127,10 +127,9 @@ public class ErrorManagerRegistry {
     */
 
     public void initialize() throws FermatException {
-        try{
+        try {
             this.errorManagerDB = this.platformDatabaseSystem.openDatabase(ErrorManagerDatabaseConstants.EXCEPTION_DATABASE_NAME);
-        }
-        catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
             ErrorManagerDatabaseFactory databasefactory = new ErrorManagerDatabaseFactory();
             databasefactory.setPlatformDatabaseSystem(this.platformDatabaseSystem);
 
@@ -140,15 +139,14 @@ public class ErrorManagerRegistry {
                 throw new RuntimeException();
             }
 
-        }
-        catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new FermatException(FermatException.DEFAULT_MESSAGE, cantOpenDatabaseException, "This is a bad design decision", "We shouldn't depend on the creation of this database");
         }
     }
 
 
     public void createNewErrorRegistry(String componentType, String componentName, String severity,
-                                String exceptionMessage, long sent, long timeStampMillis) {
+                                       String exceptionMessage, long sent, long timeStampMillis) {
         this.componentType = componentType;
         this.componentName = componentName;
         this.severity = severity;
@@ -162,7 +160,7 @@ public class ErrorManagerRegistry {
     /*
     * Adds a new ErrorRegistry into the database
     */
-    public void addNewErrorRegistry(){
+    public void addNewErrorRegistry() {
         //TODO: how is this supposed to work???????
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
@@ -175,7 +173,7 @@ public class ErrorManagerRegistry {
     /*
     * Marks an ErrorRegistry as Sent [1] and updates the registry of the database
     */
-    public void markErrorRegistryAsSent(){
+    public void markErrorRegistryAsSent() {
         this.sent = 1L;
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
@@ -188,11 +186,11 @@ public class ErrorManagerRegistry {
     /*
     * Gets a List of ErrorRegistry from the database with the flag Sent equals to 0
     */
-    public List getListOfErrorRegistryNotSent(){
+    public List getListOfErrorRegistryNotSent() {
         List<DatabaseTableRecord> emRecords = errorManagerDB.getTable(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME).getRecords();
         List<ErrorManagerRegistry> listErrorRegistryNotSent = new LinkedList<ErrorManagerRegistry>();
-        for(DatabaseTableRecord dbr : emRecords){
-            if(dbr.getLongValue(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SENT_COLUMN_NAME)==0L) {
+        for (DatabaseTableRecord dbr : emRecords) {
+            if (dbr.getLongValue(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SENT_COLUMN_NAME) == 0L) {
                 ErrorManagerRegistry emr = new ErrorManagerRegistry();
                 emr.createNewErrorRegistry(
                         dbr.getStringValue(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_COMPONENT_TYPE_COLUMN_NAME),

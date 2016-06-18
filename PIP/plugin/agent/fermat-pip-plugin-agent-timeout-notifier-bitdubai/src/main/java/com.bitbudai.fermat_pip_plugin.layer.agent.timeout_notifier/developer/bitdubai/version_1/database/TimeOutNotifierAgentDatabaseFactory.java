@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOut NotifierAgentDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOut NotifierAgentDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
  *
  * @version 1.0
@@ -41,7 +41,7 @@ public class TimeOutNotifierAgentDatabaseFactory {
     /**
      * Create the database
      *
-     * @param ownerId      the owner id
+     * @param ownerId the owner id
      * @return Database
      * @throws CantCreateDatabaseException
      */

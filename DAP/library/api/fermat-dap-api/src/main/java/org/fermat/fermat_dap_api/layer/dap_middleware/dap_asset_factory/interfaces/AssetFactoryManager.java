@@ -27,6 +27,7 @@ import java.util.List;
  */
 public interface AssetFactoryManager extends FermatManager {
     //Getters
+
     /**
      * This method returns the information stored about the Asset Factory
      */
@@ -53,6 +54,7 @@ public interface AssetFactoryManager extends FermatManager {
     PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     //CRUD
+
     /**
      * This method create an empty object AssetFactory
      */
@@ -86,7 +88,7 @@ public interface AssetFactoryManager extends FermatManager {
     /**
      * TThis method list all wallet installed in device, start the transaction
      */
-    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     /**
      * TThis method check what all information is complete the Asset Factory

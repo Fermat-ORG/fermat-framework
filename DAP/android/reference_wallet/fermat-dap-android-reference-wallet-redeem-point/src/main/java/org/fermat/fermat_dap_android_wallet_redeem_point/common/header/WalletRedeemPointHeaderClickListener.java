@@ -5,7 +5,7 @@ import android.view.View;
 /**
  * Created by Matias Furszyfer on 2015.11.16..
  */
-public class WalletRedeemPointHeaderClickListener implements View.OnClickListener{
+public class WalletRedeemPointHeaderClickListener implements View.OnClickListener {
 
     public WalletRedeemPointHeaderClickListener() {
     }

@@ -24,6 +24,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
 
     private AssetDistributionDao assetDistributionDao = Mockito.mock(AssetDistributionDao.class);
     ReceivedNewDigitalAssetMetadataNotificationEvent event;
+
     @Before
     public void init() throws Exception {
 //        EventType eventType = EventType.getByCode(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS.getCode());
@@ -34,7 +35,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
     }
 
     @Test
-    public void receivedNewDigitalAssetMetadataNotificationrEventTest () throws CantSaveEventException {
+    public void receivedNewDigitalAssetMetadataNotificationrEventTest() throws CantSaveEventException {
 //        assetDistributionRecorderService.receivedTransactionStatusNotificationrEvent(event);
     }
 

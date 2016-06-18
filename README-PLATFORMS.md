@@ -20,7 +20,7 @@ so that each Super Layer is able to consume the previous ones. An example of thi
 The '_Fermat BCH_' Super Layer is only able to consume the '_Fermat OSA_' Super Layer, and the '_Fermat P2P_' Super Layer
 is able to consume the previously mentioned Super Layers.
 
-As a reference, please enter the [fermat web's] (http://fermat.org/) '_Architecture_' segment, in which you will be able to see all the previously mentioned relationships.
+As a reference, please enter the [fermat developer web's] (http://dev.fermat.org/) '_Architecture_' segment, in which you will be able to see all the previously mentioned relationships.
 
 Before we move forward with other topics, we think it will be useful to point out the system **Layout**, in order for you to be able to put altogether the concepts of this document. It goes as follows:
 

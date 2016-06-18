@@ -64,7 +64,7 @@ public class SetDigitalAssetDistributionVaultTest {
         try {
             assetDistributionMonitorAgent.setDigitalAssetDistributionVault(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }
@@ -74,7 +74,7 @@ public class SetDigitalAssetDistributionVaultTest {
         try {
             assetDistributionMonitorAgent = new AssetDistributionMonitorAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey, null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }

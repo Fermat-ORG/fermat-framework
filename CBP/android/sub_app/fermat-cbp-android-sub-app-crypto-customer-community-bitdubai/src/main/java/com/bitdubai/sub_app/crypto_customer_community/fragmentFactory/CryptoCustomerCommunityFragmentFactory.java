@@ -9,13 +9,13 @@ import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionNotifi
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactory<CryptoCustomerCommunitySubAppSession,SubAppResourcesProviderManager, CryptoCustomerCommunityFragmentsEnumType> {
+public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactory<CryptoCustomerCommunitySubAppSessionReferenceApp,SubAppResourcesProviderManager, CryptoCustomerCommunityFragmentsEnumType> {
 
 
     @Override

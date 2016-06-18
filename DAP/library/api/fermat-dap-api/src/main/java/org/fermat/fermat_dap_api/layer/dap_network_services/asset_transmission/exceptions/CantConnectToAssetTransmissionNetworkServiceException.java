@@ -3,7 +3,7 @@ package org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.
 /**
  * Created by root on 06/10/15.
  */
-public class CantConnectToAssetTransmissionNetworkServiceException  extends org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException {
+public class CantConnectToAssetTransmissionNetworkServiceException extends org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T CONNECT TO ASSET TRANSMISSION NETWORK SERVICE";
 

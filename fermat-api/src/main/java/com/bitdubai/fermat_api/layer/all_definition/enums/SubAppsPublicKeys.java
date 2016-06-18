@@ -105,6 +105,8 @@ public enum SubAppsPublicKeys implements FermatEnum {
             //TODO TKY PLATAFORM
             case "public_key_tky_artist_identity":          return TKY_ARTIST_IDENTITY      ;
             case "sub_app_tky_fan_create_identity":         return TKY_FAN_IDENTITY         ;
+
+
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

@@ -165,7 +165,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot");
+        returnedClasses.add("OpenContractPluginRoot");
+
         return returnedClasses;
     }
 

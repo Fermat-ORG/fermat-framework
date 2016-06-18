@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -27,7 +27,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -49,7 +49,7 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
 
 
     public ConnectDialog(final Activity                                activity                          ,
-                         final CryptoBrokerCommunitySubAppSession      cryptoBrokerCommunitySubAppSession,
+                         final CryptoBrokerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
                          final SubAppResourcesProviderManager          subAppResources                   ,
                          final CryptoBrokerCommunityInformation        information                       ,
                          final CryptoBrokerCommunitySelectableIdentity identity                          ) {

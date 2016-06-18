@@ -40,7 +40,7 @@ public class AssetRedeemPointAdapter extends FermatAdapter<RedeemPoint, AssetRed
     @Override
     protected void bindHolder(final AssetRedeemRedeemPointHolder holder, final RedeemPoint redeemPoint, int position) {
         holder.nameText.setText(redeemPoint.getName());
-        if(redeemPoint.getActorAssetRedeemPoint().getAddress() != null) {
+        if (redeemPoint.getActorAssetRedeemPoint().getAddress() != null) {
             holder.addressText.setText(String.format("%s %s", redeemPoint.getActorAssetRedeemPoint().getAddress().getStreetName(), redeemPoint.getActorAssetRedeemPoint().getAddress().getHouseNumber()));
             holder.cityText.setText(redeemPoint.getActorAssetRedeemPoint().getAddress().getCityName());
         }

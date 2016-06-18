@@ -30,7 +30,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsDetailsPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager>
+public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, WalletResourcesProviderManager>
         implements FermatListItemListeners<EarningsPair> {
 
     // Constants

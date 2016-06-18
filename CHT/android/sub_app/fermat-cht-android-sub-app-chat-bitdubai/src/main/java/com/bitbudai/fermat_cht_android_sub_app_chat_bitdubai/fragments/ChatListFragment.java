@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,11 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,12 +70,13 @@ import java.util.UUID;
  *
  */
 
-public class ChatListFragment extends AbstractFermatFragment{
+public class ChatListFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
     private ChatManager chatManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
-    private ChatSession chatSession;
+    private ReferenceAppFermatSession<ChatManager> chatSession;
     ChatListAdapter adapter;
     ChatActorCommunitySelectableIdentity chatIdentity;
     ListView list;
@@ -230,8 +232,8 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onCreate(savedInstanceState);
 
         try {
-            chatSession = ((ChatSession) appSession);
-            chatManager = chatSession.getModuleManager();
+            //chatSession = ((ChatSessionReferenceApp) appSession);
+            chatManager = appSession.getModuleManager();
             //chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
@@ -318,14 +320,14 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     private void setUpHelpChat(boolean checkButton) {
         try {
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            presentationDialog = new PresentationDialog.Builder(getActivity(), (ReferenceAppFermatSession) appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.cht_banner)
                     .setIconRes(R.drawable.chat_subapp)
                     .setSubTitle(R.string.cht_chat_subtitle)
                     .setBody(R.string.cht_chat_body)
                     .setTextFooter(R.string.cht_chat_footer)
-                    .setIsCheckEnabled(checkButton)
+                    .setIsCheckEnabled(false)
                     .build();
             presentationDialog.show();
         } catch (Exception e) {
@@ -372,7 +374,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -387,7 +388,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
-                    appSession.setData(ChatSession.CONTACT_DATA, contact);
+                    appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch(Exception e)
                 {
@@ -430,6 +431,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onUpdateViewOnUIThread(code);
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
+            chatlistview();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
     }
@@ -458,8 +460,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                return false;
            }
         });
-        if (chatSession.getData("filterString") != null) {
-           String filterString = (String) chatSession.getData("filterString");
+        if (appSession.getData("filterString") != null) {
+           String filterString = (String) appSession.getData("filterString");
            if (filterString.length() > 0) {
                searchView.setQuery(filterString, true);
                searchView.setIconified(false);
@@ -493,7 +495,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         if (id == R.id.menu_delete_all_chats) {
             try {
                 if(chatId!= null && chatId.size()>0){
-                    final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                    final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                     alert.setTextTitle("Delete All Chats");
                     alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                     alert.setType("delete-chats");
@@ -541,7 +543,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         try{
             // Set the info of chat selected in session
-            appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
+            appSession.setData(ChatSessionReferenceApp.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
         }catch(CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){
@@ -555,7 +557,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         int id =item.getItemId();
         if (id == R.id.menu_delete_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                 alert.setTextTitle("Delete Chat");
                 alert.setTextBody("Do you want to delete this chat?");
                 alert.setType("delete-chat");
@@ -580,7 +582,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
         if (id == R.id.menu_clean_chat) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager, errorManager);
                 alert.setTextTitle("Clean Chat");
                 alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
                 alert.setType("clean-chat");
@@ -603,7 +605,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null, chatManager,errorManager);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
                 alert.setType("delete-chats");

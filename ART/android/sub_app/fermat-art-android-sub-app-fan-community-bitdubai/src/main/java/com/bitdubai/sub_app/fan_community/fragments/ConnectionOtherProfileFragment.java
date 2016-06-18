@@ -34,7 +34,7 @@ import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.commons.popups.AcceptDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.DisconnectDialog;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,7 +44,7 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
 public class ConnectionOtherProfileFragment extends
-        AbstractFermatFragment<FanCommunitySubAppSession,
+        AbstractFermatFragment<FanCommunitySubAppSessionReferenceApp,
                 SubAppResourcesProviderManager>
         implements
         Dialog.OnDismissListener,

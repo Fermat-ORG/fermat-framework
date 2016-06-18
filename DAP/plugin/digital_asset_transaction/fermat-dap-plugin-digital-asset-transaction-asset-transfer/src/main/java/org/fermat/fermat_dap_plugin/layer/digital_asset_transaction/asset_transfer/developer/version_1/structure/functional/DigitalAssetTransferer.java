@@ -1,10 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -71,10 +69,10 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
 
     public DigitalAssetTransferer(AssetVaultManager assetVaultManager,
                                   AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot,
-                                  UUID pluginId, 
-                                  PluginFileSystem pluginFileSystem, 
+                                  UUID pluginId,
+                                  PluginFileSystem pluginFileSystem,
                                   BitcoinNetworkManager bitcoinNetworkManager) {
-        
+
         super(pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
         this.assetTransferDigitalAssetTransactionPluginRoot = assetTransferDigitalAssetTransactionPluginRoot;

@@ -7,6 +7,7 @@
 package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -1166,7 +1167,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     @Override
     public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException {
         try {
-            if(incomingNotificationsDao == null)
+            if (incomingNotificationsDao == null)
                 incomingNotificationsDao = new IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
 
@@ -1240,7 +1241,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName().equals(AssetRedeemNetworkServiceDatabaseConstants.DATA_BASE_NAME))
+        if (developerDatabase.getName().equals(AssetRedeemNetworkServiceDatabaseConstants.DATA_BASE_NAME))
             return new AssetRedeemNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
             return new AssetRedeemNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
@@ -1253,12 +1254,34 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("AssetRedeemPointActorNetworkServicePluginRoot");
+
+        return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        try {
+            /*
+         * I will check the current values and update the LogLevel in those which is different
+         */
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
 
+            /*
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+                if (AssetRedeemPointActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    AssetRedeemPointActorNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    AssetRedeemPointActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    AssetRedeemPointActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
+            }
+        } catch (Exception exception) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     private void reportUnexpectedError(final Exception e) {

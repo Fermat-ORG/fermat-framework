@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerCommunityAdapter;
@@ -41,7 +43,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.interfaces.A
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -54,13 +56,15 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
 /**
  * Created by francisco on 21/10/15.
  */
-public class IssuerCommunityHomeFragment extends AbstractFermatFragment implements
+public class IssuerCommunityHomeFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetIssuerCommunitySubAppModuleManager>, ResourceProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener,
         FermatListItemListeners<ActorIssuer> {
@@ -69,10 +73,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager moduleManager;
-    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
-
     private static ErrorManager errorManager;
 
     // recycler
@@ -94,8 +96,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
-//    SettingsManager<AssetIssuerSettings> settingsManager;
-
+    private ExecutorService _executor;
     /**
      * Flags
      */
@@ -109,26 +110,27 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            _executor = Executors.newFixedThreadPool(2);
+
             setHasOptionsMenu(true);
 
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             try {
-                settings = assetIssuerCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+                settings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
 
-            if (assetIssuerCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            if (appSession.getAppPublicKey() != null) //the identity not exist yet
             {
                 if (settings == null) {
                     settings = new AssetIssuerSettings();
                     settings.setIsPresentationHelpEnabled(true);
-                    assetIssuerCommunitySubAppSession.getModuleManager().persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
+                    appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), settings);
                 }
             }
 
@@ -219,9 +221,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         onRefresh();
 
         //Initialize settings
-//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -233,8 +234,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             try {
                 if (moduleManager != null) {
-                    moduleManager.persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
-                    moduleManager.setAppPublicKey(assetIssuerCommunitySubAppSession.getAppPublicKey());
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 }
 
             } catch (CantPersistSettingsException e) {
@@ -253,12 +254,25 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             }
         }, 500);
 
+        isRefreshing = true;
+        _executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMoreData();
+                    isRefreshing = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         return rootView;
     }
 
     private void setUpPresentation(boolean checkButton) {
 //        try {
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), assetIssuerCommunitySubAppSession)
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                 .setBannerRes(R.drawable.banner_asset_issuer_community)
                 .setIconRes(R.drawable.asset_issuer_comunity)
                 .setVIewColor(R.color.dap_community_issuer_view_color)
@@ -444,7 +458,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
             if (toConnect.size() > 0) {
                 ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
+                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -520,7 +534,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null) {
+            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();
@@ -591,7 +605,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         try {
 
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -722,7 +736,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onItemClickListener(ActorIssuer data, int position) {
         appSession.setData(ISSUER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetIssuerCommunitySubAppSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

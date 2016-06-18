@@ -7,8 +7,9 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
  */
 public class CantSaveDAPMessageException extends DAPException {
     public static final String DEFAULT_MESSAGE = "Cannot save the event.";
+
     public CantSaveDAPMessageException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
 }

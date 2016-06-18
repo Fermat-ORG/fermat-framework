@@ -4,10 +4,11 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
@@ -57,8 +58,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -85,9 +84,8 @@ import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.
  * Created by franklin on 15.12.15
  */
 public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends FermatAgent {
-    //TODO: Documentar y manejo de excepciones.
     private Thread agentThread;
-    private final ErrorManager errorManager;
+    private final AbstractPlugin pluginRoot;
     private final CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
     private final UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao dao;
     private final OpenContractManager openContractManager;
@@ -105,7 +103,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
     private long lastNotificationTime = 0;
 
-    public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
+    public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(AbstractPlugin pluginRoot,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
                                                                       PluginDatabaseSystem pluginDatabaseSystem,
                                                                       UUID pluginId,
@@ -119,7 +117,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                                                       CryptoMoneyRestockManager cryptoMoneyRestockManager,
                                                                       Broadcaster broadcaster) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
         this.openContractManager = openContractManager;
         this.closeContractManager = closeContractManager;
@@ -225,8 +223,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             changeTransactionStatusFromInMerchandiseSubmitToCompleted(brokerWalletPublicKey);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

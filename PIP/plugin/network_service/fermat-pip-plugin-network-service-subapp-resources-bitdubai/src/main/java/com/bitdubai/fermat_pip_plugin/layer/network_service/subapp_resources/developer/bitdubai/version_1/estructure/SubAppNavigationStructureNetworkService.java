@@ -16,22 +16,20 @@ public class SubAppNavigationStructureNetworkService implements SubAppNavigation
      * Constructor
      */
 
-    public SubAppNavigationStructureNetworkService(UUID subAppNavigationStructureId){
+    public SubAppNavigationStructureNetworkService(UUID subAppNavigationStructureId) {
         this.subAppNavigationStructureId = subAppNavigationStructureId;
     }
 
 
     /**
-     *
      * @return
      */
     @Override
     public UUID getNavigationStructureId() {
-        return  this.subAppNavigationStructureId;
+        return this.subAppNavigationStructureId;
     }
 
     /**
-     *
      * @return
      * @throws CantGetSubAppNavigationStructureException
      */

@@ -11,17 +11,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
  */
-public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -39,7 +38,7 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
 
 
     public AcceptDialog(Activity a,
-                        CryptoCustomerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
+                        CryptoCustomerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
                         SubAppResourcesProviderManager subAppResources,
                         LinkedCryptoCustomerIdentity cryptoCustomerInformation,
                         CryptoCustomerCommunitySelectableIdentity identity) {

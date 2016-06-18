@@ -2,15 +2,15 @@ package com.bitdubai.sub_app.wallet_factory.utils;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Extension of FragmentStatePagerAdapter which intelligently caches
  * all active fragments and manages the fragment lifecycles.
  * Usage involves extending from SmartFragmentStatePagerAdapter as you would any other PagerAdapter.
- *
+ * <p/>
  * Created by Nicolas on 01/05/2015.
  */
 public abstract class SmartFragmentStatePagerAdapter extends FragmentStatePagerAdapter {

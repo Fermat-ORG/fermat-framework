@@ -53,13 +53,13 @@ public class SetAssetTransmissionNetworkServiceManagerTest {
         try {
             mockAssetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }
 
     @Test
-    public void setAssetTransmissionNetworkServiceManagerNoExceptionTest() throws CantSetObjectException{
+    public void setAssetTransmissionNetworkServiceManagerNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setAssetTransmissionNetworkServiceManagerNoExceptionTest()");
         mockAssetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(mockAssetTransmissionNetworkServiceManager);
     }

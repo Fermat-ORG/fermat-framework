@@ -7,7 +7,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings.EarningsDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.HashMap;
 
@@ -19,10 +19,10 @@ public class EarningsDetailsPageAdapter extends FragmentStatePagerAdapter {
 
     private HashMap<Integer, EarningsDetailsFragment> map;
     private EarningsPair earningsPair;
-    private CryptoBrokerWalletSession session;
+    private CryptoBrokerWalletSessionReferenceApp session;
     private boolean earningsPairChanged;
 
-    public EarningsDetailsPageAdapter(FragmentManager fragmentManager, EarningsPair earningsPair, CryptoBrokerWalletSession session) {
+    public EarningsDetailsPageAdapter(FragmentManager fragmentManager, EarningsPair earningsPair, CryptoBrokerWalletSessionReferenceApp session) {
         super(fragmentManager);
 
         this.earningsPair = earningsPair;

@@ -199,9 +199,9 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin implement
         List<String> returnedClasses = new ArrayList<>();
 
         returnedClasses.add("WalletContactsMiddlewarePluginRoot");
-        returnedClasses.add("WalletContactsMiddlewareRegistry");
-        returnedClasses.add("WalletContactsMiddlewareSearch");
-        returnedClasses.add("WalletContactsMiddlewareRecord");
+//        returnedClasses.add("WalletContactsMiddlewareRegistry");
+//        returnedClasses.add("WalletContactsMiddlewareSearch");
+//        returnedClasses.add("WalletContactsMiddlewareRecord");
         return returnedClasses;
     }
 

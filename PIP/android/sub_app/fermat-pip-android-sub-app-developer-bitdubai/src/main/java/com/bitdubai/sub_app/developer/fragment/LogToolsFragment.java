@@ -21,23 +21,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.module.developer.ClassHierarchyLevels;
-import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetLogToolException;
-import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.LogTool;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,20 +51,13 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends AbstractFermatFragment {
+public class LogToolsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<ToolManager>, ResourceProviderManager> {
 
     private ErrorManager errorManager;
-
-    private DeveloperSubAppSession developerSubAppSession;
-
+    ToolManager toolManager;
     View rootView;
-
-    private LogTool logTool;
-
     private ArrayListLoggers lstLoggers;
-
     private GridView gridView;
-
     Typeface tf;
 
     public static LogToolsFragment newInstance() {
@@ -76,20 +68,18 @@ public class LogToolsFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (super.appSession != null) {
-            developerSubAppSession = (DeveloperSubAppSession) super.appSession;
-        }
 
+        errorManager = appSession.getErrorManager();
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        if (developerSubAppSession != null)
-            errorManager = developerSubAppSession.getErrorManager();
+
         try {
-            ToolManager toolManager = developerSubAppSession.getModuleManager();
-            logTool = toolManager.getLogTool();
-        } catch (CantGetLogToolException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            toolManager = appSession.getModuleManager();
+
+//            logTool = toolManager.getLogTool();
+//        } catch (CantGetLogToolException e) {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+//            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -105,7 +95,7 @@ public class LogToolsFragment extends AbstractFermatFragment {
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             data.put(resource, logLevel);
-            logTool.setNewLogLevelInClass(plugin, data);
+            appSession.getModuleManager().setNewLogLevelInClass(plugin, data);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -122,13 +112,13 @@ public class LogToolsFragment extends AbstractFermatFragment {
             // Get ListView object from xml
             gridView = (GridView) rootView.findViewById(R.id.gridView);
 
-            List<PluginVersionReference> plugins = logTool.getAvailablePluginList();
-            List<AddonVersionReference> addons = logTool.getAvailableAddonList();
+            List<PluginVersionReference> plugins = appSession.getModuleManager().getAvailablePluginList();
+            List<AddonVersionReference> addons = appSession.getModuleManager().getAvailableAddonList();
 
 
             for (PluginVersionReference plugin : plugins) {
 
-                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)) {
+                for (ClassHierarchyLevels classes : appSession.getModuleManager().getClassesHierarchyPlugins(plugin)) {
                     //loading de loggers class
                     Loggers log = new Loggers();
 
@@ -208,7 +198,7 @@ public class LogToolsFragment extends AbstractFermatFragment {
 
                         //set the next fragment and params
 
-                        developerSubAppSession.setData("list", lst);
+                        appSession.setData("list", lst);
 
                         ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), R.id.logContainer, null);
 

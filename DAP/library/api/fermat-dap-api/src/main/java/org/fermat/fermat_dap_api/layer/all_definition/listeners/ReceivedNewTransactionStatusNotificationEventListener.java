@@ -15,6 +15,7 @@ public class ReceivedNewTransactionStatusNotificationEventListener implements Fe
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+
     /**
      * Constructor with parameters
      *

@@ -23,7 +23,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockBarChartPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.lang.ref.WeakReference;
@@ -41,11 +41,11 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
 
     private final List<StockStatisticsData> data;
     private final WeakReference<Context> activity;
-    private final CryptoBrokerWalletSession session;
+    private final CryptoBrokerWalletSessionReferenceApp session;
     private FermatTextView stockCurrency;
     private FermatTextView stockQuantity;
 
-    public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+    public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSessionReferenceApp fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 

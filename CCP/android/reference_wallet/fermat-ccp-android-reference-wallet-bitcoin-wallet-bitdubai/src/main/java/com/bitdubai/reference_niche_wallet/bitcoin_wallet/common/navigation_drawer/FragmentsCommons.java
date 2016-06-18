@@ -12,15 +12,15 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -28,11 +28,13 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
-        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceWalletSession referenceWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+
+        public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ReferenceAppFermatSession<CryptoWallet> referenceWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+
             View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             try {
-               ActiveActorIdentityInformation identityInformation= referenceWalletSession.getIntraUserModuleManager();
+               ActiveActorIdentityInformation identityInformation= referenceWalletSession.getModuleManager().getSelectedActorIdentity();
                 ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
                 if (identityInformation != null) {
                     if (identityInformation.getImage() != null) {
@@ -63,9 +65,9 @@ public class FragmentsCommons {
                 return view;
             }catch (OutOfMemoryError outOfMemoryError){
                 Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
-            } catch (CantGetCryptoWalletException e) {
+            } catch (CantGetSelectedActorIdentityException e) {
                 e.printStackTrace();
-            } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            } catch (ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
             return view;

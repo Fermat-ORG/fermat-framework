@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
     //Managers
     ErrorManager errorManager;
     protected CryptoCustomerWalletModuleManager walletManager;
-    protected CryptoCustomerWalletSession walletSession;
+    protected CryptoCustomerWalletSessionReferenceApp walletSession;
 
     //Data
     protected ContractDetail contractDetail;
@@ -312,7 +312,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         this.walletManager = walletManager;
     }
 
-    public void setSession(CryptoCustomerWalletSession session) {
+    public void setSession(CryptoCustomerWalletSessionReferenceApp session) {
         this.walletSession = session;
     }
 

@@ -1,15 +1,11 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,7 +40,7 @@ public interface RedeemPointIdentityManager extends FermatManager, Serializable 
      * @return the intra user created
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
-    RedeemPointIdentity createNewRedeemPoint(String alias,  byte[] profileImage) throws CantCreateNewRedeemPointException;
+    RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException;
 
 
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,

@@ -49,6 +49,6 @@ public class UserRedeemedListHolder extends FermatViewHolder {
     }
 
     private void setupColor(UserRedeemed userRedeemed) {
-            redeemedListRedeemedStatus.setTextColor(Color.parseColor("#013572"));
+        redeemedListRedeemedStatus.setTextColor(Color.parseColor("#013572"));
     }
 }

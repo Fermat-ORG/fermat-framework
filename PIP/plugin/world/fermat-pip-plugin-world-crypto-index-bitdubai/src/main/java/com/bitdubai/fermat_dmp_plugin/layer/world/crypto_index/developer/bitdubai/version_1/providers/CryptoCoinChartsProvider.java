@@ -8,7 +8,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.HistoricalExchangeRateNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexProvider;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.InterfaceUrlAPI;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.HTTPJson;
 
 import org.json.JSONException;
@@ -18,7 +17,9 @@ import org.json.JSONException;
  */
 public class CryptoCoinChartsProvider implements CryptoIndexProvider {
 
-   public String getUrlAPI(String pair){return "http://api.cryptocoincharts.info/tradingPair/"+ pair;}
+    public String getUrlAPI(String pair) {
+        return "http://api.cryptocoincharts.info/tradingPair/" + pair;
+    }
 
 
     @Override

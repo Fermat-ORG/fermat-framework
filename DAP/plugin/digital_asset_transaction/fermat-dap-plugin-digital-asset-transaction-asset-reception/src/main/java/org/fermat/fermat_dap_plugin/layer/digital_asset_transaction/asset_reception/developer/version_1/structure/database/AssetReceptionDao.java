@@ -196,6 +196,7 @@ public class AssetReceptionDao {
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_SENDER_TYPE_COLUMN_NAME,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME));
     }
+
     /**
      * This method returns a String value from the fieldCode, filtered by value in indexColumn
      *

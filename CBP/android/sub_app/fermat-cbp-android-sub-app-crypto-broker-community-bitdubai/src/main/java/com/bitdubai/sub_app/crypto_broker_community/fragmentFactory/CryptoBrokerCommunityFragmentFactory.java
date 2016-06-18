@@ -9,7 +9,7 @@ import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherPro
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -17,7 +17,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
+public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
 
 
     @Override

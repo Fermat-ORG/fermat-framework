@@ -15,9 +15,20 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
      * The method <code>getPhrase</code> returns the phrase created by the intra user
      * @return string phrase object
      */
-
     String getPhrase();
 
+    /**
+     * The method <code>getAccuracy</code> returns the phrase created by the intra user
+     * @return string phrase object
+     */
+    Long getAccuracy();
+
+    /**
+     * The method <code>getFrecuency</code> returns the phrase created by the intra user
+     * @return string phrase object
+     */
+    Enum getFrecuency();
+    
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image
      *

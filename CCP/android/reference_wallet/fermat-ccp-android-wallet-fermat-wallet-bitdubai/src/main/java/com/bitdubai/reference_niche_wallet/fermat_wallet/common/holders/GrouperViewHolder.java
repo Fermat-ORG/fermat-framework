@@ -101,7 +101,8 @@ public class GrouperViewHolder extends ParentViewHolder {
 
             }else if(fermatWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
 
-                Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
+                //cannot find symbol variable loss_protected
+                //Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
 
             } else
                 Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);

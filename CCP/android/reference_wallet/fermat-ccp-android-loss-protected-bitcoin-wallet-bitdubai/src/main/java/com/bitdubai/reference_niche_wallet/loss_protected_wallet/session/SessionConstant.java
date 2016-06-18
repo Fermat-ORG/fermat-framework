@@ -11,4 +11,12 @@ public class SessionConstant {
     public static final String CREATE_EXTRA_USER = "create_extra_user";
     public static final String PRESENTATION_SCREEN_ENABLED = "presentation_screen_enabled";
     public static final String BACK_WITHOUT_IDENTITY = "back_without_identity";
+
+    public static final String TYPE_BALANCE_SELECTED = "typeBalanceSelected";
+    public static final String TYPE_AMOUNT_SELECTED = "typeAmountSelected";
+    public static final String ACTUAL_EXCHANGE_RATE = "actuaExchangeRate";
+    public static final String LAST_SELECTED_CONTACT = "lastSelectedContact";
+    public static final String LAST_REQUEST_CONTACT = "LastRequestSelected";
+    public static final String TRANSACTION_DETAIL_ID = "TransactionDetailId";
+    public static final String CONTACT_ACCOUNT_NAME = "setAccountName";
 }

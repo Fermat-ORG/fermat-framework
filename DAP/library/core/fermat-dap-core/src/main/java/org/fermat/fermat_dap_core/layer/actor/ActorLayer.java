@@ -27,7 +27,7 @@ public class ActorLayer extends AbstractLayer {
             registerPlugin(new org.fermat.fermat_dap_core.layer.actor.asset_user.AssetUserPluginSubsystem());
             registerPlugin(new org.fermat.fermat_dap_core.layer.actor.redeem_point.RedeemPointPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

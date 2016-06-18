@@ -1,4 +1,22 @@
+//buildscript {
+//    repositories {
+//        maven {
+//            url 'http://52.34.0.33:8081/artifactory/plugins-release'
+//            credentials {
+//                username = "fermat"
+//                password = "fermat"
+//            }
+//            name = "maven-main-cache"
+//        }
+//    }
+//    dependencies {
+//        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:3.0.1"
+//    }
+//}
+
 apply plugin: 'java'
+//apply plugin: 'maven-publish'
+//apply plugin: "com.jfrog.artifactory"
 
 sourceCompatibility = 1.7
 version = '1.0'
@@ -15,3 +33,28 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
+
+//
+//artifactory {
+//    contextUrl = "http://52.34.0.33:8081/artifactory/"
+//    publish {
+//        repository {
+//            repoKey = 'libs-snapshot-local'
+//            username = "fermat"
+//            password = "fermat"
+//            maven = true
+//
+//        }
+//        defaults {
+//            publications ('mavenJava')
+//        }
+//    }
+//}
+//
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//}

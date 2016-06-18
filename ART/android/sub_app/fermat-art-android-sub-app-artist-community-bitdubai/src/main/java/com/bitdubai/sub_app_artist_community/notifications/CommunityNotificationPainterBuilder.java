@@ -1,14 +1,14 @@
 package com.bitdubai.sub_app_artist_community.notifications;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.artist_community.R;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 import java.util.List;
 
@@ -18,11 +18,11 @@ import java.util.List;
 public class CommunityNotificationPainterBuilder {
     public static NotificationPainter getNotification(
             final String code,
-            AbstractFermatSession session) {
+            AbstractReferenceAppFermatSession session) {
         NotificationPainter notification = null;
         int lastListIndex;
         if(session!=null){
-            ArtistSubAppSession artistSubAppSession = (ArtistSubAppSession) session;
+            ArtistSubAppSessionReferenceApp artistSubAppSession = (ArtistSubAppSessionReferenceApp) session;
             ArtistCommunitySubAppModuleManager moduleManager = artistSubAppSession.getModuleManager();
             try{
                 ArtistActorConnectionNotificationType notificationType = ArtistActorConnectionNotificationType.getByCode(code);

@@ -7,8 +7,9 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -21,16 +22,18 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWal
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
 
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class FermatWalletAppConnection extends AppConnections<FermatWalletSession>{
+
+public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermatSession<FermatWallet>>{
 
     private FermatWallet moduleManager = null;
-    private FermatWalletSession referenceWalletSession;
+    private ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
+
 
     public FermatWalletAppConnection(Context activity) {
         super(activity);
@@ -42,19 +45,20 @@ public class FermatWalletAppConnection extends AppConnections<FermatWalletSessio
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return  new PluginVersionReference[]{ new PluginVersionReference(
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                 Layers.WALLET_MODULE,
                 Plugins.CRYPTO_FERMAT_WALLET,
                 Developers.BITDUBAI,
                 new Version()
-            );
+            )};
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new FermatWalletSession();
+
+    public AbstractReferenceAppFermatSession getSession() {
+        return new FermatWalletSessionReferenceApp();
     }
 
     @Override

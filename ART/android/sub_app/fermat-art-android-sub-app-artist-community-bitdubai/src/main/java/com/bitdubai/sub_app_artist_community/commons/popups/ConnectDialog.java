@@ -19,12 +19,12 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.excepti
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.artist_community.R;
-import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSessionReferenceApp;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<ArtistSubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -46,7 +46,7 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
 
 
     public ConnectDialog(final Activity activity                          ,
-                         final ArtistSubAppSession      artistSubAppSession,
+                         final ArtistSubAppSessionReferenceApp artistSubAppSession,
                          final SubAppResourcesProviderManager          subAppResources                   ,
                          final ArtistCommunityInformation        information                       ,
                          final ArtistCommunitySelectableIdentity identity                          ) {

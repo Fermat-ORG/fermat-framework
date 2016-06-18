@@ -22,12 +22,12 @@ public class DeniedPaymentRequestNotificationHandler implements FermatEventHandl
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-         DeniedPaymentRequestNotificationEvent deniedPaymentRequestNotificationEvent =(DeniedPaymentRequestNotificationEvent) fermatEvent;
+        DeniedPaymentRequestNotificationEvent deniedPaymentRequestNotificationEvent = (DeniedPaymentRequestNotificationEvent) fermatEvent;
 
 
         if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
-            notificationManager.addDeniedRequestPaymentNotification(deniedPaymentRequestNotificationEvent.getSource(), deniedPaymentRequestNotificationEvent.getCryptoCurrency(),deniedPaymentRequestNotificationEvent.getAmount());
+            notificationManager.addDeniedRequestPaymentNotification(deniedPaymentRequestNotificationEvent.getSource(), deniedPaymentRequestNotificationEvent.getCryptoCurrency(), deniedPaymentRequestNotificationEvent.getAmount());
         }
 
 

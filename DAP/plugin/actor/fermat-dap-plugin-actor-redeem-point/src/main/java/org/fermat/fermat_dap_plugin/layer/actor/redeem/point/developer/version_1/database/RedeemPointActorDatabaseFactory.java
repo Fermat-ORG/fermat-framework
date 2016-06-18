@@ -32,9 +32,9 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
-        try{
-            database = this.pluginDatabaseSystem.createDatabase(ownerId,databaseName);
-        }catch (CantCreateDatabaseException exception){
+        try {
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+        } catch (CantCreateDatabaseException exception) {
             /**
              * I can not handle this situation.
              */
@@ -70,12 +70,12 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
             //COLUMAS DE CRYPTOADDRESS
-           // table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            // table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
             //table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             //COLUMNAS DE LOCATION
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

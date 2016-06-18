@@ -31,12 +31,13 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWa
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
+public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
 
     //TODO DOCUMENT ALL THESE METHODS WHEN THEY'RE IMPLEMENTED.
 

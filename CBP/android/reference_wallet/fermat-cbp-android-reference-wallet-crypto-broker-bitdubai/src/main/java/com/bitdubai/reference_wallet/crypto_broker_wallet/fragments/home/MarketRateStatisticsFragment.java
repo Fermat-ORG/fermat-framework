@@ -20,7 +20,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -42,7 +42,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
 
     private String buy, sell, currencyPair, providerName;
     private IndexInfoSummary indexInfo;
-    private CryptoBrokerWalletSession session;
+    private CryptoBrokerWalletSessionReferenceApp session;
     private Activity activity;
 
     public static MarketRateStatisticsFragment newInstance() {
@@ -75,7 +75,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
      * @param indexInfo info for the chart
      * @param session   the app session
      */
-    public void bind(IndexInfoSummary indexInfo, CryptoBrokerWalletSession session, Activity activity) {
+    public void bind(IndexInfoSummary indexInfo, CryptoBrokerWalletSessionReferenceApp session, Activity activity) {
         this.indexInfo = indexInfo;
         this.session = session;
         this.activity = activity;

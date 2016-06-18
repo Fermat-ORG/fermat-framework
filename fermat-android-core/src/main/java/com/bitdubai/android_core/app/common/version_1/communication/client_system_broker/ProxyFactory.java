@@ -21,7 +21,7 @@ public class ProxyFactory {
 
     private static final String TAG = "ProxyFactory";
 
-    private Map<PluginVersionReference,ModuleManager> openModules;
+    private Map<Class,ModuleManager> openModules;
 
     public ProxyFactory() {
         this.openModules = new HashMap<>();
@@ -38,6 +38,7 @@ public class ProxyFactory {
                         clazz.getClassLoader(),
                         clazz.getInterfaces(),
                         invocationHandler);
+                openModules.put(clazz,moduleManager);
             } catch (CantGetModuleManagerException e) {
                 try {
                     Class clazz = FermatSystem.getInstance().getModuleManager3(pluginVersionReference);
@@ -46,6 +47,7 @@ public class ProxyFactory {
                             clazz.getClassLoader(),
                             clazz.getInterfaces(),
                             invocationHandler);
+                    openModules.put(clazz,moduleManager);
                 }catch (Exception e2) {
                     Log.e(TAG,"Cant get module manager in platform, please check if your plugin is connected, pluginVersionReference: "+pluginVersionReference.toString3());
                     throw new CantCreateProxyException("Cant get module manager from system", e, "factory", "");
@@ -65,8 +67,28 @@ public class ProxyFactory {
         return moduleManager;
     }
 
+    public ModuleManager createModuleManagerProxy(Class<ModuleManager> moduleManagerClass,InvocationHandler invocationHandler) throws CantCreateProxyException {
+        ModuleManager moduleManager = null;
+        if(moduleManagerClass==null) throw new RuntimeException("ModuleManagerClass is null, please check this");
+        if(!openModules.containsKey(moduleManagerClass)) {
+            try {
+                moduleManager = (ModuleManager) Proxy.newProxyInstance(
+                        moduleManagerClass.getClassLoader(),
+                        moduleManagerClass.getInterfaces(),
+                        invocationHandler);
+                openModules.put(moduleManagerClass,moduleManager);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            moduleManager = openModules.get(moduleManagerClass);
+        }
+        return moduleManager;
+    }
+
     public ModuleManager disposalModuleManager(PluginVersionReference pluginVersionReference){
-        return openModules.remove(pluginVersionReference);
+        //todo: tengo que ir guardando un historial de pedidos con el pluginVersionReference o ver como obtener la clase del core sin tanto lio.
+        return null;// openModules.remove(pluginVersionReference);
     }
 
 

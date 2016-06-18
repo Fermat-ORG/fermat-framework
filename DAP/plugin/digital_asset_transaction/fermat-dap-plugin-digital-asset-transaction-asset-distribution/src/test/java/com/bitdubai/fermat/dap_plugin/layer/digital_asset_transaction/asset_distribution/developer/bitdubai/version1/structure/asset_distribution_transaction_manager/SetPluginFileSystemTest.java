@@ -43,19 +43,19 @@ public class SetPluginFileSystemTest {
                 pluginFileSystem);
     }
 
-   @Test
+    @Test
     public void setPluginFileSystemThrowsCantSetObjectExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginFileSystemThrowsCantSetObjectExceptionTest()");
-       try {
-           mockAssetDistributionTransactionManager.setPluginFileSystem(null);
-           fail("The method didn't throw when I expected it to");
-       }catch (Exception ex) {
-           Assert.assertTrue(ex instanceof CantSetObjectException);
-       }
+        try {
+            mockAssetDistributionTransactionManager.setPluginFileSystem(null);
+            fail("The method didn't throw when I expected it to");
+        } catch (Exception ex) {
+            Assert.assertTrue(ex instanceof CantSetObjectException);
+        }
     }
 
     @Test
-    public void setPluginFileSystemNoExceptionTest() throws CantSetObjectException{
+    public void setPluginFileSystemNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setPluginFileSystemNoExceptionTest()");
         mockAssetDistributionTransactionManager.setPluginFileSystem(pluginFileSystem);
     }

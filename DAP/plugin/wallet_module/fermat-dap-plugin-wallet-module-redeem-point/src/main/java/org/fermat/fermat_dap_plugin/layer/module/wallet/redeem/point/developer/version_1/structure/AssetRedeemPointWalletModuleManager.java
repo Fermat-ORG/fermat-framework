@@ -6,10 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -32,6 +28,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWa
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.version_1.AssetRedeemPointWalletModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,18 +41,18 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.REDEEM_POINT)
-public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule {
+public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule, Serializable {
 
-    private final AssetRedeemPointWalletManager             assetRedeemPointWalletManager;
-    private final RedeemPointIdentityManager                redeemPointIdentityManager;
-    private final ErrorManager                              errorManager;
-    private final EventManager                              eventManager;
-    private final Broadcaster                               broadcaster;
-//    private final UUID                                      pluginId;
+    private final AssetRedeemPointWalletManager assetRedeemPointWalletManager;
+    private final RedeemPointIdentityManager redeemPointIdentityManager;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    //    private final UUID                                      pluginId;
 //    private final PluginFileSystem                          pluginFileSystem;
-    private final AssetRedeemPointWalletModulePluginRoot    assetRedeemPointWalletModulePluginRoot;
+    private final AssetRedeemPointWalletModulePluginRoot assetRedeemPointWalletModulePluginRoot;
 
-    private SettingsManager<RedeemPointSettings> settingsManager;
+    //    private SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
     private BlockchainNetworkType selectedNetwork;
     String publicKeyApp;
@@ -71,13 +68,13 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
         super(pluginFileSystem, pluginId);
 
-        this.assetRedeemPointWalletManager          = assetRedeemPointWalletManager;
-        this.redeemPointIdentityManager             = redeemPointIdentityManager;
+        this.assetRedeemPointWalletManager = assetRedeemPointWalletManager;
+        this.redeemPointIdentityManager = redeemPointIdentityManager;
 //        this.pluginId                               = pluginId;
 //        this.pluginFileSystem                       = pluginFileSystem;
-        this.errorManager                           = errorManager;
-        this.eventManager                           = eventManager;
-        this.broadcaster                            = broadcaster;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.broadcaster = broadcaster;
         this.assetRedeemPointWalletModulePluginRoot = assetRedeemPointWalletModulePluginRoot;
     }
 
@@ -138,22 +135,22 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public BlockchainNetworkType getSelectedNetwork() {
-        if (selectedNetwork == null) {
-            try {
-                if (settings == null) {
-                    settingsManager = getSettingsManager();
-                }
-                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_REDEEM_WALLET.getCode());
-                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-            } catch (CantGetSettingsException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                exception.printStackTrace();
-            } catch (SettingsNotFoundException e) {
-                //TODO: Only enter while the Active Actor Wallet is not open.
-                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-//                e.printStackTrace();
-            }
-        }
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_REDEEM_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException exception) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//                exception.printStackTrace();
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
         return selectedNetwork;
     }
 
@@ -171,7 +168,7 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        redeemPointIdentityManager.createNewRedeemPoint(name,profile_img);
+        redeemPointIdentityManager.createNewRedeemPoint(name, profile_img);
     }
 
 

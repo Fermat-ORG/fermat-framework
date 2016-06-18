@@ -26,7 +26,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMon
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
 public class SetupFragment extends AbstractFermatFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     // Fermat Managers
-    private CashMoneyWalletSession walletSession;
+    private CashMoneyWalletSessionReferenceApp walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -65,7 +65,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         super.onCreate(savedInstanceState);
 
         try {
-            walletSession = ((CashMoneyWalletSession) appSession);
+            walletSession = ((CashMoneyWalletSessionReferenceApp) appSession);
             moduleManager = walletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 

@@ -42,20 +42,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 import com.bitdubai.sub_app.art_fan_identity.R;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSessionReferenceApp;
 import com.squareup.picasso.Picasso;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
-import com.bitdubai.sub_app.art_fan_identity.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -66,10 +60,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
-import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
 import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
 import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
-import com.squareup.picasso.Picasso;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -89,7 +81,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private ArtFanUserIdentitySubAppSession artFanUserIdentitySubAppSession;
+    private ArtFanUserIdentitySubAppSessionReferenceApp artFanUserIdentitySubAppSession;
     private byte[] fanImageByteArray;
     private FanIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
@@ -126,7 +118,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSession) appSession;
+            artFanUserIdentitySubAppSession = (ArtFanUserIdentitySubAppSessionReferenceApp) appSession;
             moduleManager = artFanUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);

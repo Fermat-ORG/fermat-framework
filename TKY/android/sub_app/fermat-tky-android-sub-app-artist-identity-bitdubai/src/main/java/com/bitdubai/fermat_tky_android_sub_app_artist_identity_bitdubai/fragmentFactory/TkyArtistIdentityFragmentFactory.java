@@ -6,14 +6,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.fragments.TokenlyArtistIdentityCreateProfile;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.fragments.TkyIdentityHomeFragment;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSession;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.TkyIdentitySubAppSessionReferenceApp;
 
 /**
  * Created by Juan Sulbaran sulbaranja@gmail.com on 21/03/16.
  */
 
 
-public class TkyArtistIdentityFragmentFactory extends FermatFragmentFactory<TkyIdentitySubAppSession, SubAppResourcesProviderManager, TkyArtistIdentityEnumType> {
+public class TkyArtistIdentityFragmentFactory extends FermatFragmentFactory<TkyIdentitySubAppSessionReferenceApp, SubAppResourcesProviderManager, TkyArtistIdentityEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(TkyArtistIdentityEnumType fragments) throws FragmentNotFoundException {

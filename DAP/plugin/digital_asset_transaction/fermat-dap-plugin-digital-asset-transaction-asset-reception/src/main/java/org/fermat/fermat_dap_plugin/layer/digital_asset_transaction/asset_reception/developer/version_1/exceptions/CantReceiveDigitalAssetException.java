@@ -9,7 +9,7 @@ public class CantReceiveDigitalAssetException extends DAPException {
     static final String DEFAULT_MESSAGE = "There was an error Receiving Digital Asset to asset wallet.";
 
     public CantReceiveDigitalAssetException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantReceiveDigitalAssetException(final String message) {

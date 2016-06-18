@@ -541,7 +541,8 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.NetworkServiceNegotiationTransmissionNew");
+        returnedClasses.add("NetworkServiceNegotiationTransmissionNew");
+
         return returnedClasses;
     }
 

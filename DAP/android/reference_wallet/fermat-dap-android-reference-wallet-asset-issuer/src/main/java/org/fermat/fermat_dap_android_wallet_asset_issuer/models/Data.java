@@ -19,14 +19,16 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by frank on 12/9/15.
  */
-public class Data {
+public class Data implements Serializable {
 
     public static List<DigitalAsset> getAllDigitalAssets(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
@@ -41,7 +43,7 @@ public class Data {
                     digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
                     digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
                     digitalAsset.setAvailableBalance(balance.getAvailableBalance());
-                    Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                    Date expirationDate = (Date) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
                     digitalAsset.setExpDate(expirationDate);
 
                     List<Resource> resources = balance.getDigitalAsset().getResources();

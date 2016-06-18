@@ -23,7 +23,7 @@ public class NetworkServiceLayer extends AbstractLayer {
 
             registerPlugin(new org.fermat.fermat_dap_core.layer.network_service.asset_transmission.AssetTransmissionPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

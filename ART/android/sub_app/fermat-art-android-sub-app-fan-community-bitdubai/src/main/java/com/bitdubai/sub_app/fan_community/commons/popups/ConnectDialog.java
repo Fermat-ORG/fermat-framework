@@ -18,12 +18,12 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.R;
-import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
-public class ConnectDialog extends FermatDialog<FanCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<FanCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -45,7 +45,7 @@ public class ConnectDialog extends FermatDialog<FanCommunitySubAppSession, SubAp
 
 
     public ConnectDialog(final Activity activity,
-                         final FanCommunitySubAppSession fanCommunitySubAppSession,
+                         final FanCommunitySubAppSessionReferenceApp fanCommunitySubAppSession,
                          final SubAppResourcesProviderManager subAppResources,
                          final FanCommunityInformation information,
                          final FanCommunitySelectableIdentity identity) {

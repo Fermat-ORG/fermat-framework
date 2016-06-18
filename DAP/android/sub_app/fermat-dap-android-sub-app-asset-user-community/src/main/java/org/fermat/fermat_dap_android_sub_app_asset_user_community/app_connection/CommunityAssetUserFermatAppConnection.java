@@ -7,8 +7,9 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -19,16 +20,15 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.factory.CommunityUserFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.navigation_drawer.UserCommunityNavigationViewPainter;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSession;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.AssetUserCommunitySubAppSessionReferenceApp;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetUserCommunitySubAppSession> {
+public class CommunityAssetUserFermatAppConnection extends AppConnections<ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager>> {
 
-    private AssetUserCommunitySubAppModuleManager manager;
-    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    ReferenceAppFermatSession<AssetUserCommunitySubAppModuleManager> assetUserCommunitySubAppSession;
 
     public CommunityAssetUserFermatAppConnection(Context activity) {
         super(activity);
@@ -40,25 +40,24 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
     }
 
     @Override
-    public PluginVersionReference getPluginVersionReference() {
-        return new PluginVersionReference(
+    public PluginVersionReference[] getPluginVersionReference() {
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ASSET_USER_COMMUNITY,
                 Developers.BITDUBAI,
                 new Version()
-        );
+        )};
     }
 
     @Override
-    public AbstractFermatSession getSession() {
-        return new AssetUserCommunitySubAppSession();
+    public AbstractReferenceAppFermatSession getSession() {
+        return new AssetUserCommunitySubAppSessionReferenceApp();
     }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new UserCommunityNavigationViewPainter(getContext(), null);
+        return new UserCommunityNavigationViewPainter(getContext(), getFullyLoadedSession(), getApplicationManager());
     }
 
     @Override
@@ -75,14 +74,19 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         try {
+            boolean enabledNotification = true;
             this.assetUserCommunitySubAppSession = this.getFullyLoadedSession();
 
-            if (assetUserCommunitySubAppSession != null)
-                    manager = assetUserCommunitySubAppSession.getModuleManager();
+//            if (assetUserCommunitySubAppSession != null)
+//                if (assetUserCommunitySubAppSession.getModuleManager() != null) {
+//                    enabledNotification = assetUserCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey()).getNotificationEnabled();
+//                }
 
-                return UserCommunityBuildNotificationPainter.getNotification(manager, code, Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
+//            if (assetUserCommunitySubAppSession != null)
 
-        } catch(Exception e) {
+            return UserCommunityBuildNotificationPainter.getNotification(assetUserCommunitySubAppSession.getModuleManager(), code, Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

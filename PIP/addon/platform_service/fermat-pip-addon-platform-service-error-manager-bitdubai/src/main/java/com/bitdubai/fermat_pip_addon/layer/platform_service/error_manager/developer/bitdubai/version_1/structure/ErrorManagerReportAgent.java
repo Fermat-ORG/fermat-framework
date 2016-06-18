@@ -24,13 +24,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 /**
- * Esta clase lo que hace es leer el arvhivo con las ultimas excepciones de cada Developer, y luego determina si en algun 
+ * Esta clase lo que hace es leer el arvhivo con las ultimas excepciones de cada Developer, y luego determina si en algun
  * caso hay necesidad de transmitir la informacion al Developer.
- * 
+ * <p/>
  * Si la hay intenta la transmision y si lo logra elimina la informacion transmitida.
- * 
- * 
- * 
+ * <p/>
+ * <p/>
+ * <p/>
  * * * * * * * * .
  */
 public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDatabaseSystem {
@@ -51,7 +51,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
     @Override
     public void start() throws CantStartAgentException {
 
-        this.errorReportAgent = new ErrorReportAgent ();
+        this.errorReportAgent = new ErrorReportAgent();
 
         this.errorReportAgent.setPlatformDatabaseSystem(this.platformDatabaseSystem);
 
@@ -79,7 +79,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         this.errorManagerRegistry = errorManagerRegistry;
     }
 
-    private class ErrorReportAgent implements DealsWithPlatformDatabaseSystem, Runnable, ConnectivityState  {
+    private class ErrorReportAgent implements DealsWithPlatformDatabaseSystem, Runnable, ConnectivityState {
 
         private static final int SLEEP_TIME = 5000;
 
@@ -106,7 +106,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         /**
          * initialize the Agent.
          */
-        private void initialize()  {
+        private void initialize() {
             /* Update the List of Error Registries not sent */
             loadNotSentErrorRegistries();
         }
@@ -120,7 +120,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
             this.platformDatabaseSystem = platformDatabaseSystem;
         }
 
-        public PlatformDatabaseSystem getPlatformDatabaseSystem(){
+        public PlatformDatabaseSystem getPlatformDatabaseSystem() {
             return this.platformDatabaseSystem;
         }
 
@@ -169,9 +169,9 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
             /* I check if WiFI connection is enabled and if the list of items to send has at least one item */
             if (wifiConnectionEnabled() && !listErrorManagerRegistryToSend.isEmpty()) {
 
-                for(ErrorManagerRegistry emr : listErrorManagerRegistryToSend){
+                for (ErrorManagerRegistry emr : listErrorManagerRegistryToSend) {
 
-                    if(sendExceptionToServer(emr)){
+                    if (sendExceptionToServer(emr)) {
                         emr.markErrorRegistryAsSent();
                     }
 
@@ -189,21 +189,21 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         }
 
 
-        private void loadNotSentErrorRegistries(){
+        private void loadNotSentErrorRegistries() {
             //Load the ErrorManagerRegistry list of objects not sent
             listErrorManagerRegistryToSend = errorManagerRegistry.getListOfErrorRegistryNotSent();
         }
 
-        private boolean sendExceptionToServer(ErrorManagerRegistry emr){
+        private boolean sendExceptionToServer(ErrorManagerRegistry emr) {
             /*
             * Construction of the URL for the POST
             */
             String url = "http://www.fermatwallet.com/devExceptionReport?";
-            String parameters = "COMPONENT_TYPE="+emr.getComponentType()+"&";
-            parameters = parameters.concat("COMPONENT_NAME="+emr.getComponentName()+" & ");
-            parameters = parameters.concat("SEVERITY="+emr.getSeverity()+" & ");
-            parameters = parameters.concat("MESSAGE="+emr.getExceptionMessage()+" &         ");
-            parameters = parameters.concat("TIMESTAMP="+String.valueOf(emr.getTimeStampMillis()));
+            String parameters = "COMPONENT_TYPE=" + emr.getComponentType() + "&";
+            parameters = parameters.concat("COMPONENT_NAME=" + emr.getComponentName() + " & ");
+            parameters = parameters.concat("SEVERITY=" + emr.getSeverity() + " & ");
+            parameters = parameters.concat("MESSAGE=" + emr.getExceptionMessage() + " &         ");
+            parameters = parameters.concat("TIMESTAMP=" + String.valueOf(emr.getTimeStampMillis()));
             /**
              * Sends the exception to the server using an URL
              */

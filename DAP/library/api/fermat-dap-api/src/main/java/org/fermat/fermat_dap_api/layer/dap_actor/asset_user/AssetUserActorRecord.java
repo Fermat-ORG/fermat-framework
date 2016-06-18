@@ -18,55 +18,55 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String                  publicLinkedIdentity    ;
-    private String                  actorPublicKey          ;
-    private String                  name                    ;
-    private String                  age                     ;
-    private Genders                 genders                 ;
-    private DAPConnectionState      dapConnectionState      ;
-    private Location                location                ;
-    private Double                  locationLatitude        ;
-    private Double                  locationLongitude       ;
-    private long                    registrationDate        ;
-    private long                    lastConnectionDate      ;
-    private CryptoAddress           cryptoAddress           ;
-    private BlockchainNetworkType   blockchainNetworkType   ;
-    private Actors                  actorsType              = Actors.DAP_ASSET_USER;
-    private byte[]                  profileImage            ;
+    private String publicLinkedIdentity;
+    private String actorPublicKey;
+    private String name;
+    private String age;
+    private Genders genders;
+    private DAPConnectionState dapConnectionState;
+    private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
+    private long registrationDate;
+    private long lastConnectionDate;
+    private CryptoAddress cryptoAddress;
+    private BlockchainNetworkType blockchainNetworkType;
+    private Actors actorsType = Actors.DAP_ASSET_USER;
+    private byte[] profileImage;
 
 
     /**
      * Constructor
      */
-    public AssetUserActorRecord(){
+    public AssetUserActorRecord() {
 
     }
 
     /**
-     *  Method for Set Actor in Actor Network Service User
+     * Method for Set Actor in Actor Network Service User
      */
     public AssetUserActorRecord(String actorPublicKey,
                                 String name,
                                 byte[] profileImage,
                                 Location location) {
 
-        this.name                   = name                                  ;
-        this.actorPublicKey         = actorPublicKey                        ;
+        this.name = name;
+        this.actorPublicKey = actorPublicKey;
 
         this.setProfileImage(profileImage);
 
         if (location != null) {
-            this.locationLatitude   = location.getLatitude()                ;
-            this.locationLongitude  = location.getLongitude()               ;
-        }else{
-            this.locationLatitude   = (double) 0                            ;
-            this.locationLongitude  = (double) 0                            ;
+            this.locationLatitude = location.getLatitude();
+            this.locationLongitude = location.getLongitude();
+        } else {
+            this.locationLatitude = (double) 0;
+            this.locationLongitude = (double) 0;
         }
 
-        this.genders                = Genders.INDEFINITE                    ;
+        this.genders = Genders.INDEFINITE;
 //        if(!age.isEmpty())
 //            this.age = age;
-        this.dapConnectionState     = DAPConnectionState.REGISTERED_ONLINE  ;
+        this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
 
     }
 
@@ -84,29 +84,29 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final Actors actorsType,
                                 final byte[] profileImage) {
 
-        this.actorPublicKey         =       actorPublicKey          ;
-        this.name                   =       name                    ;
+        this.actorPublicKey = actorPublicKey;
+        this.name = name;
         if (age != null)
-            this.age                =       age                     ;
+            this.age = age;
         if (genders != null)
-            this.genders            =       genders                 ;
+            this.genders = genders;
         if (dapConnectionState != null)
-            this.dapConnectionState     =       dapConnectionState      ;
+            this.dapConnectionState = dapConnectionState;
 
         if (locationLatitude != -1)
-            this.locationLatitude       = locationLatitude          ;
-        if(locationLongitude != -1)
-            this.locationLongitude      = locationLongitude         ;
+            this.locationLatitude = locationLatitude;
+        if (locationLongitude != -1)
+            this.locationLongitude = locationLongitude;
 
-        if(cryptoAddress != null)
-            this.cryptoAddress          = cryptoAddress             ;
-        if(blockchainNetworkType != null)
-            this.blockchainNetworkType  =    blockchainNetworkType  ;
+        if (cryptoAddress != null)
+            this.cryptoAddress = cryptoAddress;
+        if (blockchainNetworkType != null)
+            this.blockchainNetworkType = blockchainNetworkType;
 
-        this.registrationDate       =       registrationDate        ;
-        this.lastConnectionDate     =       lastConnectionDate      ;
+        this.registrationDate = registrationDate;
+        this.lastConnectionDate = lastConnectionDate;
 
-        this.actorsType             =       actorsType              ;
+        this.actorsType = actorsType;
 
         this.setProfileImage(profileImage);
 
@@ -228,8 +228,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setGenders(Genders genders) {
-        if(genders != null)
-           this.genders = genders;
+        if (genders != null)
+            this.genders = genders;
         else
             this.genders = Genders.INDEFINITE;
     }
@@ -274,8 +274,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setConnectionState(DAPConnectionState dapConnectionState) {
-        if(dapConnectionState != null)
-           this.dapConnectionState = dapConnectionState;
+        if (dapConnectionState != null)
+            this.dapConnectionState = dapConnectionState;
         else
             this.dapConnectionState = DAPConnectionState.REGISTERED_LOCALLY;
     }
@@ -290,9 +290,9 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setLocation(Location location) {
-        if(location != null) {
+        if (location != null) {
             this.location = location;
-        }else{
+        } else {
             this.locationLatitude = (double) 0;
             this.locationLongitude = (double) 0;
         }
@@ -337,7 +337,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        if(profileImage != null)
+        if (profileImage != null)
             this.profileImage = profileImage.clone();
         else
             this.profileImage = new byte[0];
@@ -354,7 +354,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        if(cryptoAddress != null)
+        if (cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
     }
 
@@ -369,7 +369,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
-        if(blockchainNetworkType != null)
+        if (blockchainNetworkType != null)
             this.blockchainNetworkType = blockchainNetworkType;
     }
 
@@ -386,45 +386,46 @@ public class AssetUserActorRecord implements ActorAssetUser {
         Gson gson = new Gson();
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("publicLinkedIdentity",  publicLinkedIdentity);
-        jsonObject.addProperty("actorPublicKey",        actorPublicKey);
-        jsonObject.addProperty("name",                  name);
-        jsonObject.addProperty("age",                   age);
-        jsonObject.addProperty("genders",               genders.toString());
-        jsonObject.addProperty("registrationDate",      registrationDate);
-        jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
-        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
-        jsonObject.addProperty("location",              location.toString());
-        jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
-        jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
-        jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
+        jsonObject.addProperty("publicLinkedIdentity", publicLinkedIdentity);
+        jsonObject.addProperty("actorPublicKey", actorPublicKey);
+        jsonObject.addProperty("name", name);
+        jsonObject.addProperty("age", age);
+        jsonObject.addProperty("genders", genders.toString());
+        jsonObject.addProperty("registrationDate", registrationDate);
+        jsonObject.addProperty("lastConnectionDate", lastConnectionDate);
+        jsonObject.addProperty("dapConnectionState", dapConnectionState.toString());
+        jsonObject.addProperty("location", location.toString());
+        jsonObject.addProperty("locationLatitude", locationLatitude.toString());
+        jsonObject.addProperty("locationLongitude", locationLongitude.toString());
+        jsonObject.addProperty("cryptoAddress", cryptoAddress.toString());
         jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
-        jsonObject.addProperty("actorsType",            actorsType.toString());
-        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("actorsType", actorsType.toString());
+        jsonObject.addProperty("profileImage", Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
+
     @Override
     public String toString() {
         String profileImageUser = null;
-        if(profileImage != null)
+        if (profileImage != null)
             profileImageUser = Base64.encodeToString(profileImage, Base64.DEFAULT);
 
         return "AssetUserActorRecord{" +
-                "publicLinkedIdentity='"    + publicLinkedIdentity + '\'' +
-                ", actorPublicKey='"        + actorPublicKey + '\'' +
-                ", name='"                  + name + '\'' +
-                ", age='"                   + age + '\'' +
-                ", genders="                + genders +
-                ", dapConnectionState="     + dapConnectionState +
-                ", location="               + location +
-                ", locationLatitude="       + locationLatitude +
-                ", locationLongitude="      + locationLongitude +
-                ", registrationDate="       + registrationDate +
-                ", lastConnectionDate="     + lastConnectionDate +
-                ", cryptoAddress="          + cryptoAddress +
-                ", blockchainNetworkType="  + blockchainNetworkType +
-                ", actorsType="             + actorsType +
-                ", profileImage="           + profileImageUser +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", genders=" + genders +
+                ", dapConnectionState=" + dapConnectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", registrationDate=" + registrationDate +
+                ", lastConnectionDate=" + lastConnectionDate +
+                ", cryptoAddress=" + cryptoAddress +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                ", actorsType=" + actorsType +
+                ", profileImage=" + profileImageUser +
                 '}';
     }
 }

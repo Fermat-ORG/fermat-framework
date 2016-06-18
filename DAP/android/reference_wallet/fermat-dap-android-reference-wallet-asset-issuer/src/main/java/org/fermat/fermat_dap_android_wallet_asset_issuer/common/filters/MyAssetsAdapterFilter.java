@@ -32,7 +32,7 @@ public class MyAssetsAdapterFilter extends Filter {
         int count = list.size();
         final ArrayList<DigitalAsset> nlist = new ArrayList<>(count);
 
-        String filterableString ;
+        String filterableString;
         DigitalAsset digitalAsset;
 
         for (int i = 0; i < count; i++) {

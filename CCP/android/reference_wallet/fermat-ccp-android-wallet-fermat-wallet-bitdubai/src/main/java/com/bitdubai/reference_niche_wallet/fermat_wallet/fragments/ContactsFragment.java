@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -64,7 +65,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.HeaderType
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSession;
+
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -88,7 +89,8 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager> implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
+
 
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -110,7 +112,9 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
     /**
      * Wallet session
      */
-    FermatWalletSession referenceWalletSession;
+
+    ReferenceAppFermatSession<FermatWallet> referenceWalletSession;
+
     // unsorted list items
     List<FermatWalletWalletContact> mItems;
     // array list to store section positions
@@ -160,14 +164,16 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (FermatWalletSession) appSession;
+
+        referenceWalletSession = appSession;
+
         setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);
         try {
-        fermatWallet = (FermatWallet) appSession.getModuleManager();
+        fermatWallet = appSession.getModuleManager();
 
 
         } catch (Exception e) {
@@ -330,9 +336,10 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
 
         super.onCreateOptionsMenu(menu, inflater);
 
+
         menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
+
     }
 
     @Override
@@ -363,8 +370,8 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                           if (walletContactRecords.isEmpty()) {
+                            walletContactRecords = fermatWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), fermatWallet.getSelectedActorIdentity().getPublicKey());
+                            if (walletContactRecords.isEmpty()) {
                                 mEmptyView.setVisibility(View.VISIBLE);
                                 mListView.setVisibility(View.GONE);
                             } else {
@@ -373,9 +380,7 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
                                 rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                             }
                             refreshAdapter();
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -519,12 +524,12 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
 
-                    referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    referenceWalletSession.setData(SessionConstant.CONTACT_ACCOUNT_NAME,String.valueOf(adapter.getItem(position)));
 
                     if (position == 1)
-                        referenceWalletSession.setLastContactSelected((FermatWalletWalletContact) adapterView.getItemAtPosition(position));
+                        referenceWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT,adapterView.getItemAtPosition(position));
                     else
-                        referenceWalletSession.setLastContactSelected((FermatWalletWalletContact) adapterView.getItemAtPosition(position));
+                        referenceWalletSession.setData(SessionConstant.LAST_SELECTED_CONTACT, adapterView.getItemAtPosition(position));
 
 
                     Boolean isFromActionBarSend = (Boolean) referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
@@ -577,9 +582,6 @@ public class ContactsFragment extends AbstractFermatFragment<FermatWalletSession
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(FermatWalletSession appSession) {
-        this.appSession = appSession;
-    }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;

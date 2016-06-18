@@ -5,16 +5,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -25,16 +20,13 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankTransactionParametersImpl;
-import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
-import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,7 +69,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
 
         try {
-            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            moduleManager = ((BankMoneyWalletSessionReferenceApp) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -139,7 +131,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         if (i == R.id.bw_transaction_detail_delete_btn) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
         }else if(i == R.id.bw_transaction_detail_update_btn) {
-            transactionFragmentDialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionRecord.getTransactionType(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getAmount(), transactionRecord.getMemo());
+            transactionFragmentDialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSessionReferenceApp) appSession, getResources(), transactionRecord.getTransactionType(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getAmount(), transactionRecord.getMemo());
             transactionFragmentDialog.setOnDismissListener(this);
             transactionFragmentDialog.show();
         }

@@ -11,10 +11,10 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 /**
  * Created by Matias Furszyfer on 2015.11.16..
  */
-public class WalletAssetIssuerHeaderFactory extends HeaderFactory<WalletAssetIssuerHeaderClickListener> implements HeaderFactoryInterface{
+public class WalletAssetIssuerHeaderFactory extends HeaderFactory<WalletAssetIssuerHeaderClickListener> implements HeaderFactoryInterface {
 
     /**
-     *  UI components
+     * UI components
      */
     private CircularProgressBar circularProgressBar;
     private FermatTextView txt_type_balance;
@@ -26,7 +26,7 @@ public class WalletAssetIssuerHeaderFactory extends HeaderFactory<WalletAssetIss
     }
 
     @Override
-    public void constructHeader(LayoutInflater layoutInflater,ViewGroup header) {
+    public void constructHeader(LayoutInflater layoutInflater, ViewGroup header) {
         circularProgressBar = (CircularProgressBar) header.findViewById(R.id.progress);
         txt_type_balance = (FermatTextView) header.findViewById(R.id.txt_type_balance);
         txt_amount_type = (FermatTextView) header.findViewById(R.id.txt_balance_amount_type);

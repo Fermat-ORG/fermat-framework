@@ -50,13 +50,13 @@ public class SetErrorManagerTest {
         try {
             mockAssetDistributionTransactionManager.setErrorManager(null);
             fail("The method didn't throw when I expected it to");
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             Assert.assertTrue(ex instanceof CantSetObjectException);
         }
     }
 
     @Test
-    public void setErrorManagerNoExceptionTest() throws CantSetObjectException{
+    public void setErrorManagerNoExceptionTest() throws CantSetObjectException {
         System.out.println("Probando metodo setErrorManagerNoExceptionTest()");
         mockAssetDistributionTransactionManager.setErrorManager(errorManager);
     }

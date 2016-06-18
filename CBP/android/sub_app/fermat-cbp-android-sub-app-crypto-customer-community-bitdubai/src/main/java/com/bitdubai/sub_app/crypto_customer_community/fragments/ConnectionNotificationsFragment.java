@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager>
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity>, AcceptDialog.OnDismissListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";
@@ -54,7 +54,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private CryptoCustomerCommunitySubAppSession cryptoCustomerCommunitySubAppSession;
+    private CryptoCustomerCommunitySubAppSessionReferenceApp cryptoCustomerCommunitySubAppSession;
     private LinearLayout emptyView;
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;

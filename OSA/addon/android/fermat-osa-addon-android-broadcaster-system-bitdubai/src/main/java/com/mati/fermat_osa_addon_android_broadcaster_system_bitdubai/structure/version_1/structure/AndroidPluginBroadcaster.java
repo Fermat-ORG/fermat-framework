@@ -32,7 +32,8 @@ public class AndroidPluginBroadcaster implements Broadcaster{
     }
 
     @Override
-    public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
+    public int publish(BroadcasterType broadcasterType, FermatBundle bundle,String channelReceiversCode) {
+        //todo: tema channel receivers code, armar channels que escuchen eventos
         return androidCoreBroadcasterUtil.publish(broadcasterType,bundle);
 
     }

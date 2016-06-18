@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -144,6 +145,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     String deviceUserPublicKey = "walletDevice";
     String walletPublicKey = "reference_wallet";
     String lossProtectedwalletPublicKey = "loss_protected_wallet";
+    String fermatWalletPublicKey = "fermat_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -174,6 +176,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
         boolean existWalletLoss = false;
+        boolean existFermatWallet = false;
         try {
 
             //load user's wallets ids
@@ -187,6 +190,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                     existWallet = true;
                 if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
                     existWalletLoss = true;
+                if (mapEntry.getValue().toString().equals(fermatWalletPublicKey))
+                    existFermatWallet = true;
             }
 
 
@@ -203,6 +208,30 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
                     try {
                         this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
+
+            if (!existFermatWallet) {
+                //Create new Fermat Wallet
+
+                try {
+
+                    cryptoWalletManager.createWallet(fermatWalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), fermatWalletPublicKey);
+
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(fermatWalletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
@@ -481,7 +510,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
          * I will generate the file content.
          */
 
-        //fileContent+= deviceUserPublicKey + "," + walletId + ";";
+        fileContent+= deviceUserPublicKey + "," + walletId + ";";
 
         StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
@@ -489,7 +518,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         while (iterator.hasNext()) {
             Map.Entry pair = (Map.Entry) iterator.next();
             stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
-            iterator.remove();
+            //iterator.remove();
         }
 
 
@@ -847,10 +876,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
-
-
+        returnedClasses.add("WalletManagerModulePluginRoot");
+//        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
         /**
          * I return the values.
          */
@@ -922,6 +949,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     }
 
     @Override
+    @moduleManagerInterfacea(moduleManager = WalletManagerModule.class)
     public ModuleManager<DesktopManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         return this;
     }

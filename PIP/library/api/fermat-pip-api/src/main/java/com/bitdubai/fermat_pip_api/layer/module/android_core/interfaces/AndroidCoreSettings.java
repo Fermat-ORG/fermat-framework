@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.02.15..
  */
-public class AndroidCoreSettings implements FermatSettings,Serializable {
+public class AndroidCoreSettings implements FermatSettings, Serializable {
 
     AppsStatus appsStatus;
     boolean isHelpEnabled;

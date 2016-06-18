@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -27,6 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
+import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.version_1.structure.AssetFactorySupAppModuleManager;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
-    private AssetFactorySupAppModuleManager assetFactorySupAppModuleManager;
+    private AssetFactoryModuleManager assetFactorySupAppModuleManager;
 
     public AssetFactorySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -224,7 +224,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 
     @Override
 //    @moduleManagerInterfacea(moduleManager = AssetFactorySupAppModuleManager.class)
-    public ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public AssetFactoryModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
 //            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation started...", null, null);
 

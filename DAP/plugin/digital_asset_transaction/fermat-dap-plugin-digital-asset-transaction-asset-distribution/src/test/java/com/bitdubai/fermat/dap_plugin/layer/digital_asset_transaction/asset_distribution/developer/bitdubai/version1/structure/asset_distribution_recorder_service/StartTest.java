@@ -38,13 +38,13 @@ public class StartTest {
     @Mock
     private FermatEventListener fermatEventListener1;
     @Mock
-    private  FermatEventListener fermatEventListener2;
+    private FermatEventListener fermatEventListener2;
     @Mock
     private FermatEventListener fermatEventListener3;
     @Mock
-    private  FermatEventListener fermatEventListener4;
+    private FermatEventListener fermatEventListener4;
     @Mock
-    private  FermatEventListener fermatEventListener5;
+    private FermatEventListener fermatEventListener5;
     @Mock
     private ErrorManager errorManager;
     private UUID pluginId;
@@ -62,17 +62,18 @@ public class StartTest {
         assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         setUpMockitoRules();
     }
+
     private void setUpMockitoRules() throws Exception {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE)).thenReturn(database);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener1);
-        when(eventManager.getNewListener( EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
+        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener2);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);
     }
 
     @Test
-    public void startRecordServiceSucces () throws CantStartServiceException {
+    public void startRecordServiceSucces() throws CantStartServiceException {
         assetDistributionRecorderService.start();
         ServiceStatus serviceStatus = assetDistributionRecorderService.getStatus();
         Assert.assertEquals(ServiceStatus.STARTED, serviceStatus);
