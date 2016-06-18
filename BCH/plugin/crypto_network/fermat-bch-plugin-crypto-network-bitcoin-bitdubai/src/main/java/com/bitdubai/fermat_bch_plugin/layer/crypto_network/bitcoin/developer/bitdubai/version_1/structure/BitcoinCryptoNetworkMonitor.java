@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
@@ -79,6 +81,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final BitcoinCryptoNetworkDatabaseDao dao;
+    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
     private ContextPropagatingThreadFactory contextPropagatingThreadFactory;
 
 
@@ -538,7 +541,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
+            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE,BITCOIN,  wallet, tx)){
                 try {
                     dao.saveCryptoTransaction(cryptoTransaction, transactionId);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -593,7 +596,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * store the transaction as Pending submit in the transactions table
                  */
-                CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx);
+                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, BITCOIN );
                 cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                 dao.saveCryptoTransaction(cryptoTransaction, transactionId);
 

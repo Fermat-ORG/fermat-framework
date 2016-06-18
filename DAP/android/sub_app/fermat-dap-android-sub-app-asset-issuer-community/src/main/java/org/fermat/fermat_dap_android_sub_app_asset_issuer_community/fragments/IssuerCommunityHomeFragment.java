@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +73,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     protected final String TAG = "IssuerCommunityFragment";
 
     public static final String ISSUER_SELECTED = "issuer";
+    private static final String SEARCH = "issuer_community_search";
     private static AssetIssuerCommunitySubAppModuleManager moduleManager;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
@@ -90,6 +92,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
     private MenuItem menuItemConnect;
+    private SearchView searchView;
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
@@ -155,7 +158,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
             @Override
             public void onDataSetChanged(List<ActorIssuer> dataSet) {
 
-                actors = dataSet;
+//                actors = dataSet;
+                for (int i = 0; i < actors.size(); i++) {
+                    for (int j = 0; j < dataSet.size(); j++) {
+                        if (dataSet.get(j).getRecord().getActorPublicKey().equals(actors.get(i).getRecord().getActorPublicKey())) {
+                            actors.set(i, dataSet.get(j));
+                        }
+                    }
+                }
+
                 boolean someSelected = false;
                 int selectedActors = 0;
                 int cheackeableActors = 0;
@@ -395,28 +406,52 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_community_issuer_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
-        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.changeDataSet(actors);
+                    adapter.getFilter().filter(s);
+                    appSession.setData(SEARCH, s);
+                }
+                return false;
+            }
+        });
+        if (appSession.getData(SEARCH) != null) {
+            String s = appSession.getData(SEARCH).toString();
+            searchView.setQuery(s, true);
+            if (s.length() > 0) searchView.setIconified(false);
+        }
 
-        menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 1, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//
+//        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(2, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 2, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 3, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(4, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 4, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-
-        menuItemConnect = menu.getItem(0);
-        menuItemCancel = menu.getItem(1);
-        menuItemSelect = menu.getItem(2);
-        menuItemUnselect = menu.getItem(3);
+        menuItemConnect = menu.getItem(1);
+        menuItemCancel = menu.getItem(2);
+        menuItemSelect = menu.getItem(3);
+        menuItemUnselect = menu.getItem(4);
         restartButtons();
     }
 
@@ -425,189 +460,366 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
         int id = item.getItemId();
 
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL) {
+        try {
+            switch (id) {
+                case 1://CONNECT
+                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
+                    for (ActorIssuer actorIssuer : actors) {
+                        if (actorIssuer.selected)
+                            toConnect.add(actorIssuer.getRecord());
+                    }
 
-            for (ActorIssuer actorIssuer : actors) {
-                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
-                    actorIssuer.selected = true;
-            }
-            adapter.changeDataSet(actors);
-            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-            menuItemConnect.setVisible(true);
-            menuItemSelect.setVisible(false);
-            menuItemUnselect.setVisible(true);
+                    if (toConnect.size() > 0) {
+                        ConnectDialog connectDialog;
+                        connectDialog = new ConnectDialog(getActivity(), appSession, null) {
+                            @Override
+                            public void onClick(View v) {
+                                int i = v.getId();
+                                if (i == R.id.positive_button) {
+                                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                                    dialog.setMessage(getString(R.string.connecting));
+                                    dialog.setCancelable(false);
+                                    dialog.show();
+                                    FermatWorker worker = new FermatWorker() {
+                                        @Override
+                                        protected Object doInBackground() throws Exception {
+                                            List<ActorAssetIssuer> toConnect = new ArrayList<>();
+                                            for (ActorIssuer actorIssuer : actors) {
+                                                if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
+                                                    toConnect.add(actorIssuer.getRecord());
+                                                }
+                                            }
+                                            //// TODO: 20/11/15 get Actor asset issuer
+                                            moduleManager.askActorAssetIssuerForConnection(toConnect);
 
-        }
-
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL) {
-
-            for (ActorIssuer actorIssuer : actors) {
-                actorIssuer.selected = false;
-            }
-            adapter.changeDataSet(actors);
-            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-            restartButtons();
-        }
-
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
-            List<ActorAssetIssuer> toConnect = new ArrayList<>();
-            for (ActorIssuer actorIssuer : actors) {
-                if (actorIssuer.selected)
-                    toConnect.add(actorIssuer.getRecord());
-            }
-
-            if (toConnect.size() > 0) {
-                ConnectDialog connectDialog;
-                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
-                    @Override
-                    public void onClick(View v) {
-                        int i = v.getId();
-                        if (i == R.id.positive_button) {
-                            final ProgressDialog dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage(getString(R.string.connecting));
-                            dialog.setCancelable(false);
-                            dialog.show();
-                            FermatWorker worker = new FermatWorker() {
-                                @Override
-                                protected Object doInBackground() throws Exception {
-                                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
-                                    for (ActorIssuer actorIssuer : actors) {
-                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
-                                            toConnect.add(actorIssuer.getRecord());
-                                        }
-                                    }
-                                    //// TODO: 20/11/15 get Actor asset issuer
-                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
-
-                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                                    sendLocalBroadcast(broadcast);
+                                            Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                                            broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                            sendLocalBroadcast(broadcast);
 
 //                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
-                                    return true;
-                                }
-                            };
-                            worker.setContext(getActivity());
-                            worker.setCallBack(new FermatWorkerCallBack() {
-                                @Override
-                                public void onPostExecute(Object... result) {
-                                    dialog.dismiss();
-                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
-                                    restartButtons();
-                                    if (swipeRefreshLayout != null)
-                                        swipeRefreshLayout.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                onRefresh();
-                                            }
-                                        });
+                                            return true;
+                                        }
+                                    };
+                                    worker.setContext(getActivity());
+                                    worker.setCallBack(new FermatWorkerCallBack() {
+                                        @Override
+                                        public void onPostExecute(Object... result) {
+                                            dialog.dismiss();
+                                            Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+                                            restartButtons();
+                                            if (swipeRefreshLayout != null)
+                                                swipeRefreshLayout.post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        onRefresh();
+                                                    }
+                                                });
+                                        }
+
+                                        @Override
+                                        public void onErrorOccurred(Exception ex) {
+                                            dialog.dismiss();
+                                            Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    });
+                                    worker.execute();
+                                    dismiss();
+                                } else if (i == R.id.negative_button) {
+                                    dismiss();
                                 }
 
-                                @Override
-                                public void onErrorOccurred(Exception ex) {
-                                    dialog.dismiss();
-                                    Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
-
-                                }
-                            });
-                            worker.execute();
-                            dismiss();
-                        } else if (i == R.id.negative_button) {
-                            dismiss();
-                        }
-
+                            }
+                        };
+                        connectDialog.setTitle(R.string.connection_request_title);
+                        connectDialog.setDescription(getString(R.string.connection_request_desc));
+                        connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+                                " Issuers" : actorsToConnect.get(0).getName());
+                        connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
+                        connectDialog.show();
+                        return true;
+                    } else {
+                        Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
+                        return false;
                     }
-                };
-                connectDialog.setTitle(R.string.connection_request_title);
-                connectDialog.setDescription(getString(R.string.connection_request_desc));
-                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
-                        " Issuers" : actorsToConnect.get(0).getName());
-                connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
-                connectDialog.show();
-                return true;
-            } else {
-                Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
-                return false;
-            }
-        }
+//                    break;
+                case 2://Cancel Connecting
+                    CancelDialog cancelDialog;
 
-        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
-            CancelDialog cancelDialog;
+                    cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
+                        @Override
+                        public void onClick(View v) {
+                            int i = v.getId();
+                            if (i == R.id.positive_button) {
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
-                @Override
-                public void onClick(View v) {
-                    int i = v.getId();
-                    if (i == R.id.positive_button) {
-
-                        final ProgressDialog dialog = new ProgressDialog(getActivity());
-                        dialog.setMessage("Canceling, please wait...");
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        FermatWorker worker = new FermatWorker() {
-                            @Override
-                            protected Object doInBackground() throws Exception {
+                                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                                dialog.setMessage("Canceling, please wait...");
+                                dialog.setCancelable(false);
+                                dialog.show();
+                                FermatWorker worker = new FermatWorker() {
+                                    @Override
+                                    protected Object doInBackground() throws Exception {
 
 
-                                for (ActorIssuer actor : actorsConnecting) {
-                                    //TODO revisar si esto es asi
-                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
-                                }
+                                        for (ActorIssuer actor : actorsConnecting) {
+                                            //TODO revisar si esto es asi
+                                            moduleManager.cancelActorAssetIssuer(actor.getRecord());
+                                        }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
-                                return true;
-                            }
-                        };
-                        worker.setContext(getActivity());
-                        worker.setCallBack(new FermatWorkerCallBack() {
-                            @Override
-                            public void onPostExecute(Object... result) {
-                                dialog.dismiss();
-                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
-                                restartButtons();
-                                if (swipeRefreshLayout != null)
-                                    swipeRefreshLayout.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            onRefresh();
-                                        }
-                                    });
-                            }
+                                        return true;
+                                    }
+                                };
+                                worker.setContext(getActivity());
+                                worker.setCallBack(new FermatWorkerCallBack() {
+                                    @Override
+                                    public void onPostExecute(Object... result) {
+                                        dialog.dismiss();
+                                        Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                        restartButtons();
+                                        if (swipeRefreshLayout != null)
+                                            swipeRefreshLayout.post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    onRefresh();
+                                                }
+                                            });
+                                    }
 
-                            @Override
-                            public void onErrorOccurred(Exception ex) {
-                                dialog.dismiss();
+                                    @Override
+                                    public void onErrorOccurred(Exception ex) {
+                                        dialog.dismiss();
                                     /*TODO aun no se que error deberia ir aqui*/
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
+                                    }
+                                });
+                                worker.execute();
+
+
+                                dismiss();
+                            } else if (i == R.id.negative_button) {
+                                dismiss();
                             }
-                        });
-                        worker.execute();
-
-
-                        dismiss();
-                    } else if (i == R.id.negative_button) {
-                        dismiss();
+                        }
+                    };
+                    cancelDialog.setTitle("Cancel request");
+                    cancelDialog.setDescription("Do you want to cancel connection with ");
+                    cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                            " Issuers" : actorsConnecting.get(0).getRecord().getName());
+                    //connectDialog.setSecondDescription("a connection request");
+                    cancelDialog.show();
+                    return true;
+//                break;
+                case 3://Select All
+                    for (ActorIssuer actorIssuer : actors) {
+                        if (actorIssuer.getRecord().getExtendedPublicKey() == null)
+                            actorIssuer.selected = true;
                     }
-                }
-            };
-            cancelDialog.setTitle("Cancel request");
-            cancelDialog.setDescription("Do you want to cancel connection with ");
-            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
-                    " Issuers" : actorsConnecting.get(0).getRecord().getName());
-            //connectDialog.setSecondDescription("a connection request");
-            cancelDialog.show();
-            return true;
-        }
-        try {
-
-            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                    adapter.changeDataSet(actors);
+                    adapter.getAdapterChangeListener().onDataSetChanged(actors);
+                    menuItemConnect.setVisible(true);
+                    menuItemSelect.setVisible(false);
+                    menuItemUnselect.setVisible(true);
+                    break;
+                case 4://Unselect All
+                    for (ActorIssuer actorIssuer : actors) {
+                        actorIssuer.selected = false;
+                    }
+                    adapter.changeDataSet(actors);
+                    adapter.getAdapterChangeListener().onDataSetChanged(actors);
+                    restartButtons();
+                    break;
+                case 5://case IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION:
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL) {
+//
+//            for (ActorIssuer actorIssuer : actors) {
+//                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
+//                    actorIssuer.selected = true;
+//            }
+//            adapter.changeDataSet(actors);
+//            adapter.getAdapterChangeListener().onDataSetChanged(actors);
+//            menuItemConnect.setVisible(true);
+//            menuItemSelect.setVisible(false);
+//            menuItemUnselect.setVisible(true);
+//
+//        }
+//
+//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL) {
+//
+//            for (ActorIssuer actorIssuer : actors) {
+//                actorIssuer.selected = false;
+//            }
+//            adapter.changeDataSet(actors);
+//            adapter.getAdapterChangeListener().onDataSetChanged(actors);
+//            restartButtons();
+//        }
+//
+//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
+//            List<ActorAssetIssuer> toConnect = new ArrayList<>();
+//            for (ActorIssuer actorIssuer : actors) {
+//                if (actorIssuer.selected)
+//                    toConnect.add(actorIssuer.getRecord());
+//            }
+//
+//            if (toConnect.size() > 0) {
+//                ConnectDialog connectDialog;
+//                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int i = v.getId();
+//                        if (i == R.id.positive_button) {
+//                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                            dialog.setMessage(getString(R.string.connecting));
+//                            dialog.setCancelable(false);
+//                            dialog.show();
+//                            FermatWorker worker = new FermatWorker() {
+//                                @Override
+//                                protected Object doInBackground() throws Exception {
+//                                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
+//                                    for (ActorIssuer actorIssuer : actors) {
+//                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
+//                                            toConnect.add(actorIssuer.getRecord());
+//                                        }
+//                                    }
+//                                    //// TODO: 20/11/15 get Actor asset issuer
+//                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+//
+////                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
+//                                    return true;
+//                                }
+//                            };
+//                            worker.setContext(getActivity());
+//                            worker.setCallBack(new FermatWorkerCallBack() {
+//                                @Override
+//                                public void onPostExecute(Object... result) {
+//                                    dialog.dismiss();
+//                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+//                                    restartButtons();
+//                                    if (swipeRefreshLayout != null)
+//                                        swipeRefreshLayout.post(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                onRefresh();
+//                                            }
+//                                        });
+//                                }
+//
+//                                @Override
+//                                public void onErrorOccurred(Exception ex) {
+//                                    dialog.dismiss();
+//                                    Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
+//
+//                                }
+//                            });
+//                            worker.execute();
+//                            dismiss();
+//                        } else if (i == R.id.negative_button) {
+//                            dismiss();
+//                        }
+//
+//                    }
+//                };
+//                connectDialog.setTitle(R.string.connection_request_title);
+//                connectDialog.setDescription(getString(R.string.connection_request_desc));
+//                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
+//                        " Issuers" : actorsToConnect.get(0).getName());
+//                connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
+//                connectDialog.show();
+//                return true;
+//            } else {
+//                Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//        }
+//
+//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
+//            CancelDialog cancelDialog;
+//
+//            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
+//                @Override
+//                public void onClick(View v) {
+//                    int i = v.getId();
+//                    if (i == R.id.positive_button) {
+//
+//                        final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                        dialog.setMessage("Canceling, please wait...");
+//                        dialog.setCancelable(false);
+//                        dialog.show();
+//                        FermatWorker worker = new FermatWorker() {
+//                            @Override
+//                            protected Object doInBackground() throws Exception {
+//
+//
+//                                for (ActorIssuer actor : actorsConnecting) {
+//                                    //TODO revisar si esto es asi
+//                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
+//                                }
+//
+//                                    /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);*/
+//                                return true;
+//                            }
+//                        };
+//                        worker.setContext(getActivity());
+//                        worker.setCallBack(new FermatWorkerCallBack() {
+//                            @Override
+//                            public void onPostExecute(Object... result) {
+//                                dialog.dismiss();
+//                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+//                                restartButtons();
+//                                if (swipeRefreshLayout != null)
+//                                    swipeRefreshLayout.post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            onRefresh();
+//                                        }
+//                                    });
+//                            }
+//
+//                            @Override
+//                            public void onErrorOccurred(Exception ex) {
+//                                dialog.dismiss();
+//                                    /*TODO aun no se que error deberia ir aqui*/
+////                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+//                                Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
+////                                ex.printStackTrace();
+//                            }
+//                        });
+//                        worker.execute();
+//
+//
+//                        dismiss();
+//                    } else if (i == R.id.negative_button) {
+//                        dismiss();
+//                    }
+//                }
+//            };
+//            cancelDialog.setTitle("Cancel request");
+//            cancelDialog.setDescription("Do you want to cancel connection with ");
+//            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+//                    " Issuers" : actorsConnecting.get(0).getRecord().getName());
+//            //connectDialog.setSecondDescription("a connection request");
+//            cancelDialog.show();
+//            return true;
+//        }
+
+//            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), R.string.dap_issuer_community_system_error,
@@ -684,6 +896,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                         if (getActivity() != null && adapter != null) {
                             actors = (ArrayList<ActorIssuer>) result[0];
                             adapter.changeDataSet(actors);
+                            adapter.getFilter().filter(searchView.getQuery().toString());
                             if (actors.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
