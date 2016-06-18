@@ -5,9 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.params.TestNet3Params;
-import org.bouncycastle.util.test.Test;
+//import org.bouncycastle.util.test.Test;
 
 /**
  * Created by rodrigo on 9/19/15.
@@ -44,7 +42,7 @@ public interface BitcoinNetworkConfiguration {
      * The minimun of Satoshis that we can send, to avoid dusty sends.
      * Dusty sends are considered invalid in the network
      */
-    long MIN_ALLOWED_SATOSHIS_ON_SEND = 5430;
+    long MIN_ALLOWED_SATOSHIS_ON_SEND = 35430;
 
     /**
      * Fixed fee value for outgoing transactions
