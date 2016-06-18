@@ -50,8 +50,6 @@ public class CreateCryptoBrokerIdentityFragment
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
-    private static final String BROKER_NAME = "Broker_name";
-
     private Bitmap cryptoBrokerBitmap = null;
     private byte[] identityImgByteArray = null;
     private String cryptoBrokerName = null;
@@ -81,9 +79,9 @@ public class CreateCryptoBrokerIdentityFragment
             appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
         }
 
-        if (appSession.getData(BROKER_NAME) != null) {
-            cryptoBrokerName = (String) appSession.getData(BROKER_NAME);
-            appSession.removeData(BROKER_NAME);
+        if (appSession.getData(FragmentsCommons.BROKER_NAME) != null) {
+            cryptoBrokerName = (String) appSession.getData(FragmentsCommons.BROKER_NAME);
+            appSession.removeData(FragmentsCommons.BROKER_NAME);
         }
     }
 
@@ -146,10 +144,11 @@ public class CreateCryptoBrokerIdentityFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID) {
-            appSession.setData(BROKER_NAME, mBrokerName.getText().toString());
+            appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
             appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
 
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY, appSession.getAppPublicKey());
+            return true;
         }
 
         return false;
@@ -183,7 +182,7 @@ public class CreateCryptoBrokerIdentityFragment
             //Go to CryptoBrokerImageCropper so the user can crop (square) his picture
             appSession.setData(FragmentsCommons.BACK_ACTIVITY, Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
             appSession.setData(FragmentsCommons.ORIGINAL_IMAGE, cryptoBrokerBitmap);
-            appSession.setData(BROKER_NAME, mBrokerName.getText().toString());
+            appSession.setData(FragmentsCommons.BROKER_NAME, mBrokerName.getText().toString());
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER, appSession.getAppPublicKey());
         }
 
@@ -221,10 +220,10 @@ public class CreateCryptoBrokerIdentityFragment
 
         progressBar.setVisibility(View.GONE);
 
-        if(appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
+        if (appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
             appSession.removeData(FragmentsCommons.ACCURACY_DATA);
 
-        if(appSession.getData(FragmentsCommons.FREQUENCY_DATA) != null)
+        if (appSession.getData(FragmentsCommons.FREQUENCY_DATA) != null)
             appSession.removeData(FragmentsCommons.FREQUENCY_DATA);
 
         Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();

@@ -73,10 +73,13 @@ public class CryptoBrokerIdentityFermatAppConnection extends AppConnections<Refe
         switch (id) {
             case FragmentsCommons.ADD_IDENTITY_OPTION_MENU_ID:
                 return R.drawable.add_identity;
+
             case FragmentsCommons.HELP_OPTION_MENU_ID:
                 return R.drawable.help_icon_identity_broker;
+
             case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
                 return R.drawable.cbp_id_geolocation_icon;
+
             default:
                 return 0;
         }
