@@ -104,7 +104,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
             List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
 
-            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+//            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
 
             if(messages != null) {
 

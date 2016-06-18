@@ -11,8 +11,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -29,8 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -39,19 +35,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -75,10 +70,13 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDisconnectConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.IncomingNotificationDao;
 import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.OutgoingNotificationDao;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,7 +106,7 @@ import java.util.concurrent.Executors;
         layer = Layers.ACTOR_NETWORK_SERVICE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE)
-public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements
+public class AssetIssuerActorNetworkServicePluginRoot extends AbstractActorNetworkService implements
         AssetIssuerActorNetworkServiceManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -120,35 +118,9 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     protected final static String DAP_IMG_ISSUER = "DAP_IMG_ISSUER";
 
-//    /**
-//     * DealsWithLogger interface member variable
-//     */
-//    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+    private AssetIssuerNetworkServiceDeveloperDatabaseFactory assetIssuerNetworkServiceDeveloperDatabaseFactory;
 
-    /**
-     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
-     */
-    private org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDeveloperDatabaseFactory assetIssuerNetworkServiceDeveloperDatabaseFactory;
-
-    /**
-     * Represent the communicationRegistrationProcessNetworkServiceAgent
-     */
-//    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
-
-    /**
-     * Represent the communicationNetworkServiceConnectionManager
-     */
-//    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-
-    /**
-     * Represent the actorAssetIssuerRegisteredList
-     */
     private List<ActorAssetIssuer> actorAssetIssuerRegisteredList;
-
-    /**
-     * Represent the actorAssetIssuerPendingToRegistration
-     */
-    private List<PlatformComponentProfile> actorAssetIssuerPendingToRegistration;
 
     /**
      * DAO
@@ -163,6 +135,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
      * Executor
      */
     ExecutorService executorService;
+    boolean activeActor;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -175,17 +148,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         super(
                 new PluginVersionReference(new Version()),
                 EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER,
-                PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.ASSET_ISSUER_ACTOR,
-                "Actor Network Service Asset Issuer",
-                null
+                NetworkServiceType.ASSET_ISSUER_ACTOR
         );
         this.actorAssetIssuerRegisteredList = new ArrayList<>();
-        this.actorAssetIssuerPendingToRegistration = new ArrayList<>();
     }
 
     @Override
-    protected void onStart() {
+    protected void onActorNetworkServiceStart() {
         try {
         /*
          * Initialize the data base
@@ -194,12 +163,11 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         /*
          * Initialize Developer Database Factory
          */
-            assetIssuerNetworkServiceDeveloperDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            assetIssuerNetworkServiceDeveloperDatabaseFactory = new AssetIssuerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             assetIssuerNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
             incomingNotificationsDao = new IncomingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
-
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
 
             executorService = Executors.newFixedThreadPool(2);
@@ -222,7 +190,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     @Override
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
+    public void onNewMessageReceived(NetworkServiceMessage newFermatMessageReceive) {
         try {
             System.out.println("ACTOR ASSET ISSUER MENSAJE ENTRANTE A JSON: " + newFermatMessageReceive.toJson());
 
@@ -269,7 +237,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     // close connection, sender is the destination
                     System.out.println("ACTOR ASSET ISSUER THE CONNECTION WAS CHANGE TO DONE" + assetUserNetworkServiceRecord.getActorSenderAlias());
 
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(assetUserNetworkServiceRecord.getActorSenderPublicKey());
                     System.out.println("ACTOR ASSET ISSUER THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + assetUserNetworkServiceRecord.getActorSenderAlias());
                     break;
 
@@ -330,14 +297,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         System.out.println("Actor Asset Issuer Llegaron mensajes!!!!");
 
         try {
-            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(newFermatMessageReceive);
-        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
+            getNetworkServiceConnectionManager().getIncomingMessagesDao().markAsRead(newFermatMessageReceive);
+        } catch (CantUpdateRecordDataBaseException | RecordNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onSentMessage(FermatMessage messageSent) {
+    public void onSentMessage(NetworkServiceMessage messageSent) {
         try {
             ActorAssetNetworkServiceRecord assetUserNetworkServiceRecord = ActorAssetNetworkServiceRecord.fronJson(messageSent.getContent());
 
@@ -359,26 +326,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
             System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT IN ACTOR ASSET ISSUER");
-            e.printStackTrace();
-
-        }
-    }
-
-    @Override
-    protected void onNetworkServiceRegistered() {
-        try {
-            //TODO Test this functionality
-            for (PlatformComponentProfile platformComponentProfile : actorAssetIssuerPendingToRegistration) {
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("AssetIssuerActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
-            }
-        } catch (Exception e) {
+            reportUnexpectedError(e);
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
+    public void handleActorUnreachable(ActorProfile remoteParticipant) {
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
@@ -432,31 +386,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             for (final ActorAssetNetworkServiceRecord cpr : lstActorRecord) {
 
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendNewMessage(
-//                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
-//                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
-//                                    cpr.toJson());
-
-                                    getProfileSenderToRequestConnection(
-                                            cpr.getActorSenderPublicKey(),
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(cpr.getActorSenderType())
-                                    ),
-                                    getProfileDestinationToRequestConnection(
-                                            cpr.getActorDestinationPublicKey(),
-                                            NetworkServiceType.UNDEFINED,
-                                            platformComponentTypeSelectorByActorType(cpr.getActorDestinationType())
-                                    ),
-                                    cpr.toJson());
-                        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                sendMessage(
+                        cpr.toJson(),
+                        cpr.getActorSenderPublicKey(),
+                        cpr.getActorSenderType(),
+                        cpr.getActorDestinationPublicKey(),
+                        cpr.getActorDestinationType()
+                );
             }
         } catch (CantGetActorAssetNotificationException e) {
             System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
@@ -465,32 +401,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }
-    }
-
-    @Override
-    protected void reprocessMessages() {
-//        try {
-//            outgoingNotificationDao.changeStatusNotSentMessage();
-//        } catch (CantGetActorAssetNotificationException e) {
-//            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
-//            e.printStackTrace();
-//        }
-    }
-
-    @Override
-    protected void reprocessMessages(String identityPublicKey) {
-//        try {
-//            outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
-//        } catch (CantGetActorAssetNotificationException e) {
-//            System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
-//            e.printStackTrace();
-//        }
     }
 
     private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
@@ -573,7 +483,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -581,7 +491,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -589,14 +499,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseFactory assetIssuerNetworkServiceDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            AssetIssuerNetworkServiceDatabaseFactory assetIssuerNetworkServiceDatabaseFactory = new AssetIssuerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = assetIssuerNetworkServiceDatabaseFactory.createDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = assetIssuerNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -620,11 +530,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
                 if (!record.getActorAssetProtocolState().getCode().equals(ActorAssetProtocolState.WAITING_RESPONSE.getCode())) {
                     if (record.getSentCount() > 10) {
-                        //  if(record.getSentCount() > 20)
-                        //  {
-                        //reprocess at two hours
-                        //  reprocessTimer =  2 * 3600 * 1000;
-                        // }
 
                         record.setActorAssetProtocolState(ActorAssetProtocolState.WAITING_RESPONSE);
                         record.setSentCount(1);
@@ -658,84 +563,21 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         }
     }
 
-    /**
-     * Mark the message as read
-     *
-     * @param fermatMessage
-     */
-    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-        try {
-            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().update(fermatMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void registerActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
 
         try {
-            if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
-                /*
-                 * Construct the profile
-                 */
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
-                String extraData = gson.toJson(jsonObject);
+            registerActor(
+                    constructActorProfile(actorAssetIssuerToRegister),
+                    0, 0
+            );
 
-                final PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        actorAssetIssuerToRegister.getActorPublicKey(),
-                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
-                        actorAssetIssuerToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        extraData);
-                /*
-                 * ask to the communication cloud client to register
-                 */
-                /**
-                 * I need to add this in a new thread other than the main android thread
-                 */
-                if (!actorAssetIssuerPendingToRegistration.contains(platformComponentProfileAssetIssuer)) {
-                    actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetIssuer);
-                }
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            communicationsClientConnection.registerComponentForCommunication(
-                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
-                            onComponentRegistered(platformComponentProfileAssetIssuer);
-                        } catch (CantRegisterComponentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, "ACTOR ASSET ISSUER REGISTER-ACTOR");
-                thread.start();
-            }
-        } catch (Exception e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantRegisterActorAssetIssuerException pluginStartException = new CantRegisterActorAssetIssuerException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
+        } catch (final ActorAlreadyRegisteredException | CantRegisterActorException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRegisterActorAssetIssuerException(e, null, "Problem trying to register an identity component.");
+        } catch (final Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRegisterActorAssetIssuerException(e, null, "Unhandled Exception.");
         }
     }
 
@@ -743,57 +585,20 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public void updateActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
 
         try {
-            if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
-                /*
-                 * Construct the profile
-                 */
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(DAP_IMG_ISSUER, Base64.encodeToString(actorAssetIssuerToRegister.getProfileImage(), Base64.DEFAULT));
-                String extraData = gson.toJson(jsonObject);
+            final ActorProfile actorProfile = constructActorProfile(actorAssetIssuerToRegister);
 
-                final PlatformComponentProfile platformComponentProfileAssetIssuer = communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        actorAssetIssuerToRegister.getActorPublicKey(),
-                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
-                        actorAssetIssuerToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        extraData);
+            updateRegisteredActor(
+                    actorProfile.getIdentityPublicKey(),
+                    actorProfile.getName(),
+                    actorProfile.getName(),
+                    actorProfile.getLocation(),
+                    actorProfile.getExtraData(),
+                    actorProfile.getPhoto()
+            );
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            communicationsClientConnection.updateRegisterActorProfile(
-                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileAssetIssuer);
-                            onComponentRegistered(platformComponentProfileAssetIssuer);
-                        } catch (CantRegisterComponentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, "ACTOR ASSET ISSUER UPDATE-ACTOR");
-                thread.start();
-            }
-        } catch (Exception e) {
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantRegisterActorAssetIssuerException pluginStartException = new CantRegisterActorAssetIssuerException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
+        } catch (final Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRegisterActorAssetIssuerException(e, null, "Unhandled Exception.");
         }
     }
 
@@ -801,51 +606,47 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
 
         try {
-            if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty()) {
+            if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty())
                 actorAssetIssuerRegisteredList.clear();
-            }
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.DAP_ASSET_ISSUER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    null,
+                    NetworkServiceType.ASSET_ISSUER_ACTOR
+            );
 
-            DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).
-                    constructDiscoveryQueryParamsFactory(
-                            PlatformComponentType.ACTOR_ASSET_ISSUER,   //applicant = who made the request
-                            NetworkServiceType.UNDEFINED,               //NetworkServiceType you want to find
-                            null,                                       // alias
-                            null,                                       // identityPublicKey
-                            null,                                       // location
-                            null,                                       // distance
-                            null,                                       // name
-                            null,                                       // extraData
-                            null,                                       // offset
-                            null,                                       // max
-                            null,                       // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                            null);
+            final List<ActorProfile> list = getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
-            List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).requestListComponentRegistered(discoveryQueryParametersAssetUser);
 
-            if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+            if (list != null && !list.isEmpty()) {
 
-                for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
-
-                    String profileImage = "";
-                    byte[] imageByte = null;
-                    if (Validate.isValidString(platformComponentProfile.getExtraData())) {
-                        try {
-                            JsonParser jParser = new JsonParser();
-                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-
-                            profileImage = jsonObject.get(DAP_IMG_ISSUER).getAsString();
-                        } catch (Exception e) {
-                            profileImage = platformComponentProfile.getExtraData();
-                        }
-                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
-                    }
-
+                for (ActorProfile actorProfile : list) {
+//                    String profileImage = "";
+//                    byte[] imageByte = null;
+//                    if (Validate.isValidString(platformComponentProfile.getExtraData())) {
+//                        try {
+//                            JsonParser jParser = new JsonParser();
+//                            JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+//
+//                            profileImage = jsonObject.get(DAP_IMG_ISSUER).getAsString();
+//                        } catch (Exception e) {
+//                            profileImage = platformComponentProfile.getExtraData();
+//                        }
+//                        imageByte = Base64.decode(profileImage, Base64.DEFAULT);
+//                    }
 
                     ActorAssetIssuer actorAssetIssuerNew = new AssetIssuerActorRecord(
-                            platformComponentProfile.getIdentityPublicKey(),
-                            platformComponentProfile.getName(),
-                            imageByte,
-                            platformComponentProfile.getLocation());
+                            actorProfile.getIdentityPublicKey(),
+                            actorProfile.getName(),
+                            actorProfile.getPhoto(),
+                            actorProfile.getLocation());
 
                     actorAssetIssuerRegisteredList.add(actorAssetIssuerNew);
                 }
@@ -853,12 +654,12 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 return actorAssetIssuerRegisteredList;
             }
 
-        } catch (CantRequestListException e) {
+        } catch (CantRequestProfileListException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append("networkClientManager: " + networkClientManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -915,27 +716,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     null
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                assetIssuerNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    assetIssuerNetworkServiceRecord.toJson(),
+                    assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorSenderType(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationType()
+            );
             // Sending message to the destination
         } catch (final CantCreateActorAssetNotificationException e) {
             reportUnexpectedError(e);
@@ -990,28 +777,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     null
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Sending message to the destination
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        messageToSend.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(messageToSend.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        messageToSend.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(messageToSend.getActorDestinationType())
-                                ),
-                                messageToSend.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    messageToSend.toJson(),
+                    messageToSend.getActorSenderPublicKey(),
+                    messageToSend.getActorSenderType(),
+                    messageToSend.getActorDestinationPublicKey(),
+                    messageToSend.getActorDestinationType()
+            );
+
         } catch (Exception e) {
             reportUnexpectedError(e);
             throw new CantAcceptConnectionActorAssetException("ERROR ACTOR ASSET ISSUER NS WHEN ACCEPTING CONNECTION", e, "", "Generic Exception");
@@ -1044,28 +817,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    // Sending message to the destination
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                actorNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    actorNetworkServiceRecord.toJson(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorDestinationType()
+            );
+
         } catch (Exception e) {
             reportUnexpectedError(e);
             throw new CantDenyConnectionActorAssetException("ERROR DENY CONNECTION TO ACTOR ASSET ISSUER", e, "", "Generic Exception");
@@ -1121,28 +880,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     null
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    // Sending message to the destination
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(actorNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                actorNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    actorNetworkServiceRecord.toJson(),
+                    actorNetworkServiceRecord.getActorSenderPublicKey(),
+                    actorNetworkServiceRecord.getActorSenderType(),
+                    actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                    actorNetworkServiceRecord.getActorDestinationType()
+            );
+
         } catch (Exception e) {
             reportUnexpectedError(e);
             throw new CantDisconnectConnectionActorAssetException("ERROR DISCONNECTING ACTOR ASSET ISSUER ", e, "", "Generic Exception");
@@ -1176,28 +921,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
             outgoingNotificationDao.createNotification(assetIssuerNetworkServiceRecord);
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    // Sending message to the destination
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                assetIssuerNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    assetIssuerNetworkServiceRecord.toJson(),
+                    assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorSenderType(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationType()
+            );
+
         } catch (Exception e) {
             reportUnexpectedError(e);
             throw new CantCancelConnectionActorAssetException("ERROR CANCEL CONNECTION TO ACTOR ASSET ISSUER ", e, "", "Generic Exception");
@@ -1210,7 +941,6 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             if (incomingNotificationsDao == null)
                 incomingNotificationsDao = new IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
-
 
         } catch (CantGetActorAssetNotificationException e) {
             reportUnexpectedError(e);
@@ -1232,36 +962,22 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     @Override
-    public void onComponentRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
+    protected void onActorRegistered(ActorProfile actorProfile) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_ISSUER) {
-            System.out.print("ACTOR ASSET ISSUER REGISTRADO: " + platformComponentProfileRegistered.getAlias());
-        }
+        ActorAssetIssuer actorAssetIssuerNewRegistered = new AssetIssuerActorRecord(
+                actorProfile.getIdentityPublicKey(),
+                actorProfile.getName(),
+                actorProfile.getPhoto(),
+                actorProfile.getLocation());
 
-        /*
-         * If is a actor registered
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_ISSUER &&
-                platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
+        System.out.println("ACTOR ASSET ISSUER REGISTRADO en A.N.S - Enviando Evento de Notificacion");
 
-            Location loca = null;
+        FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION);
+        event.setSource(EventSource.ACTOR_ASSET_ISSUER);
 
-            ActorAssetIssuer actorAssetIssuerNewRegistered = new AssetIssuerActorRecord(
-                    platformComponentProfileRegistered.getIdentityPublicKey(),
-                    platformComponentProfileRegistered.getName(),
-                    new byte[0],
-//                    convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),
-                    loca);
+        ((ActorAssetIssuerCompleteRegistrationNotificationEvent) event).setActorAssetIssuer(actorAssetIssuerNewRegistered);
 
-            System.out.println("ACTOR ASSET ISSUER REGISTRADO en A.N.S - Enviando Evento de Notificacion");
-
-            FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION);
-            event.setSource(EventSource.ACTOR_ASSET_ISSUER);
-
-            ((ActorAssetIssuerCompleteRegistrationNotificationEvent) event).setActorAssetIssuer(actorAssetIssuerNewRegistered);
-
-            eventManager.raiseEvent(event);
-        }
+        eventManager.raiseEvent(event);
     }
 
     private void startTimer() {
@@ -1325,7 +1041,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
     }
 
     private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void buildSendMessage(ActorNotification actorNotification) {
@@ -1355,30 +1071,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     null
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-//                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                assetIssuerNetworkServiceRecord.toJson());
-                                getProfileSenderToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                assetIssuerNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    assetIssuerNetworkServiceRecord.toJson(),
+                    assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorSenderType(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationType()
+            );
+
             // Sending message to the destination
         } catch (final CantCreateActorAssetNotificationException e) {
             reportUnexpectedError(e);
@@ -1415,35 +1115,70 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                     extendedXML
             );
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-//                                getProfileSenderToRequestConnection(assetIssuerNetworkServiceRecord.getActorSenderPublicKey()),
-//                                getProfileDestinationToRequestConnection(assetIssuerNetworkServiceRecord.getActorDestinationPublicKey()),
-//                                assetIssuerNetworkServiceRecord.toJson());
-                                getProfileSenderToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorSenderType())
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        platformComponentTypeSelectorByActorType(assetIssuerNetworkServiceRecord.getActorDestinationType())
-                                ),
-                                assetIssuerNetworkServiceRecord.toJson());
-                    } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException | InvalidParameterException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            sendMessage(
+                    assetIssuerNetworkServiceRecord.toJson(),
+                    assetIssuerNetworkServiceRecord.getActorSenderPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorSenderType(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationPublicKey(),
+                    assetIssuerNetworkServiceRecord.getActorDestinationType()
+            );
             // Sending message to the destination
         } catch (final CantCreateActorAssetNotificationException e) {
             reportUnexpectedError(e);
             e.printStackTrace();
         }
+    }
+
+    private void sendMessage(final String jsonMessage,
+                             final String identityPublicKey,
+                             final Actors identityType,
+                             final String actorPublicKey,
+                             final Actors actorType) {
+
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ActorProfile sender = new ActorProfile();
+                    sender.setActorType(identityType.getCode());
+                    sender.setIdentityPublicKey(identityPublicKey);
+
+                    ActorProfile receiver = new ActorProfile();
+                    receiver.setActorType(actorType.getCode());
+                    receiver.setIdentityPublicKey(actorPublicKey);
+
+                    sendNewMessage(
+                            sender,
+                            receiver,
+                            jsonMessage
+                    );
+                } catch (CantSendMessageException e) {
+                    reportUnexpectedError(e);
+                }
+            }
+        });
+    }
+
+    private ActorProfile constructActorProfile(ActorAssetIssuer actorAssetIssuer) {
+
+//        Gson gson = new Gson();
+
+//        JsonObject jsonObject = new JsonObject();
+//        jsonObject.addProperty(DAP_REGISTERED_ISSUERS, gson.toJson(redeemPoint.getRegisteredIssuers()));
+//
+//        String extraData = gson.toJson(jsonObject);
+
+        ActorProfile actorProfile = new ActorProfile();
+
+        actorProfile.setIdentityPublicKey(actorAssetIssuer.getActorPublicKey());
+        actorProfile.setName(actorAssetIssuer.getName());
+        actorProfile.setAlias(actorAssetIssuer.getName());
+        actorProfile.setPhoto(actorAssetIssuer.getProfileImage());
+        actorProfile.setActorType(actorAssetIssuer.getType().getCode());
+        actorProfile.setExtraData("");
+
+        return actorProfile;
     }
 
     /**

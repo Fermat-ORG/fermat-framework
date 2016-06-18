@@ -9,8 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +39,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
@@ -136,7 +134,6 @@ public class ConnectionNotificationsFragment
             }
 
             //Check if a default identity is configured
-            //Check if a default identity is configured
             try{
                 identity = moduleManager.getSelectedActorIdentity();
                 if(identity == null)
@@ -194,13 +191,23 @@ public class ConnectionNotificationsFragment
         return rootView;
     }
 
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
 
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            dataSet.addAll(moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
-                    identity.getActorType(), MAX, offset));
+            List<ChatActorCommunityInformation> result;
+            if(identity != null) {
+                result = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+                    identity.getActorType(), MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -325,9 +332,9 @@ public class ConnectionNotificationsFragment
         onRefresh();
     }
 
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

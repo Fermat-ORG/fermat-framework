@@ -447,7 +447,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
+                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_actor) : brokerImageByteArray,
                                             brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
                                             brokerAddressStreetName, brokerAddressHouseNumber);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
@@ -675,18 +675,28 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_redeem_identity_menu_main, menu);
-        menu.add(0, SessionConstants.IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstants.IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_redeem_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
+            int id = item.getItemId();
 
-            if (item.getItemId() == SessionConstants.IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION) {
+            switch (id) {
+                //case IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION:
+                case 2:
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+//            if (item.getItemId() == SessionConstants.IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
