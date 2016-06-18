@@ -38,7 +38,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
                     cryptoCustomer.getAlias(),
                     cryptoCustomer.getAlias(),
                     null,
-                    null,
+                    cryptoCustomer.getLocation(),
                     Actors.CBP_CRYPTO_CUSTOMER,
                     cryptoCustomer.getImage(),
                     0,0
@@ -64,7 +64,7 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
                     actor.getPublicKey(),
                     actor.getAlias(),
                     actor.getAlias(),
-                    null,
+                    actor.getLocation(),
                     null,
                     actor.getImage()
             );

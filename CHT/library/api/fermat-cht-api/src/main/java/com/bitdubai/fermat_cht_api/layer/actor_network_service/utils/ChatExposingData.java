@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.utils;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import java.util.Arrays;
 
 /**
@@ -14,6 +16,7 @@ public class ChatExposingData {
     private final String state    ;
     private final String city     ;
     private final String status;
+    private final Location location;
 
     public ChatExposingData(final String publicKey,
                                     final String alias    ,
@@ -21,7 +24,8 @@ public class ChatExposingData {
                                     final String country,
                                     final String state,
                                     final String city,
-                            final String status) {
+                            final String status,
+                            final Location location) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
@@ -30,6 +34,7 @@ public class ChatExposingData {
         this.state     = state;
         this.city      = city;
         this.status = status;
+        this.location = location;
     }
 
     /**
@@ -67,6 +72,10 @@ public class ChatExposingData {
 
     public String getStatus() {
         return status;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 
     @Override

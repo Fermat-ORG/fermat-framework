@@ -77,7 +77,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     cryptoBroker.getAlias(),
                     cryptoBroker.getAlias(),
                     null,
-                    null,
+                    cryptoBroker.getLocation(),
                     Actors.CBP_CRYPTO_BROKER,
                     cryptoBroker.getImage(),
                     0,0
@@ -103,7 +103,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     actor.getPublicKey(),
                     actor.getAlias(),
                     actor.getAlias(),
-                    null,
+                    actor.getLocation(),
                     null,
                     actor.getImage()
             );
