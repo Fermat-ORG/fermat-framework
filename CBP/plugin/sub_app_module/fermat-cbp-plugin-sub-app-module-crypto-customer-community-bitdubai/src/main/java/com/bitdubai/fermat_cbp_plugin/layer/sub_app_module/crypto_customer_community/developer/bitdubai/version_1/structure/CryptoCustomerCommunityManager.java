@@ -115,7 +115,7 @@ public class CryptoCustomerCommunityManager
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            actorConnections = search.getResult(max, offset);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

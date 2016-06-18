@@ -54,7 +54,7 @@ public abstract class ChatSearch {
 
     public abstract ChatExposingData getResult(final String publicKey) throws CantListChatException;
 
-    public abstract List<ChatExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantListChatException;
+    public abstract List<ChatExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListChatException;
 
     public abstract List<ChatExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListChatException;
 
