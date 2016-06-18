@@ -34,7 +34,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CryptoCustomerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
@@ -262,7 +261,8 @@ public class CryptoCustomerIdentityListFragment
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
 

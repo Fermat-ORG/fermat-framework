@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -84,12 +82,6 @@ public class GeolocationBrokerIdentityFragment
     }
 
 
-    /**
-     * Initializes the views of this Fragment
-     *
-     * @param layout layout of this Fragment containing the views
-     */
-
     private void initViews(View layout) {
         // Spinner Drop down elements
         List<Frecuency> dataSpinner = new ArrayList<>();
@@ -129,11 +121,6 @@ public class GeolocationBrokerIdentityFragment
             e.printStackTrace();
         }
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

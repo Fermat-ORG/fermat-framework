@@ -79,6 +79,9 @@ public class CryptoCustomerIdentityFermatAppConnection extends AppConnections<Re
             case FragmentsCommons.CREATE_IDENTITY_MENU_ID:
                 return R.drawable.save_changes_button;
 
+            case FragmentsCommons.GEOLOCATION_SETTINGS_OPTION_MENU_ID:
+                return R.drawable.cbp_id_geolocation_icon;
+
             default:
                 return 0;
         }
