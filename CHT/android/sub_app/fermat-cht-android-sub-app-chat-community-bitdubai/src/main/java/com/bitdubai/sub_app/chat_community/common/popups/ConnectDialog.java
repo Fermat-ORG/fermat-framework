@@ -126,8 +126,6 @@ public class ConnectDialog
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
                             .requestConnectionToChatActor(identity, chatUserInformation);
-//                            .askIntraUserForAcceptance(chatUserInformation.getName(),
-
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);

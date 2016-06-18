@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
@@ -82,7 +83,9 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    public void createNewCryptoBrokerIdentity (final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
+    public void createNewCryptoBrokerIdentity (final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser,
+                                               long accuracy,
+                                               Frecuency frecuency) throws CantCreateNewDeveloperException {
         try {
             if (aliasExists (cryptoBroker.getAlias())) {
                 throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
@@ -93,7 +96,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME            , cryptoBroker.getPublicKey()    );
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , cryptoBroker.getAlias()        );
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser  .getPublicKey()    );
-            record.setFermatEnum (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME        , cryptoBroker.getExposureLevel());
+            record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME, cryptoBroker.getExposureLevel());
+            record.setLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, cryptoBroker.getAccuracy());
+            record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, cryptoBroker.getFrecuency());
+
             table.insertRecord(record);
             persistNewCryptoBrokerIdentityProfileImage(cryptoBroker.getPublicKey(), cryptoBroker.getProfileImage());
         } catch (CantInsertRecordException e){
@@ -105,13 +111,18 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateBrokerIdentityException {
+    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile,
+                                           long accuracy,
+                                           Frecuency frecuency) throws CantUpdateBrokerIdentityException {
         try {
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias);
+            record.setLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, accuracy);
+            record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, frecuency);
             table.updateRecord(record);
+
             updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
         } catch (CantUpdateRecordException e) {
             throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
@@ -275,7 +286,9 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         byte[] profileImage = getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
         ExposureLevel published = ExposureLevel.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME));
         KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
-        return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published);
+        long accuracy = record.getLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
+        Frecuency frecuency = Frecuency.getByCode(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME);
+        return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published, accuracy, frecuency);
     }
 
     private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
