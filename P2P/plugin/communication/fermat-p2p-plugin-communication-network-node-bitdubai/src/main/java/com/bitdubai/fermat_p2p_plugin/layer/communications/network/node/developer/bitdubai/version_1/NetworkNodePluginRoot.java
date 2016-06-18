@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -45,6 +46,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
@@ -818,7 +821,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Insert NodesCatalog into data base
              */
             pair = daoFactory.getNodesCatalogDao().createUpdateTransactionStatementPair(nodeCatalog);
-            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+            databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
 
             // create the node catalog transaction
             NodesCatalogTransaction transaction = new NodesCatalogTransaction();
@@ -942,5 +945,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public PropagateNodeCatalogAgent getPropagateNodeCatalogAgent() {
         return propagateNodeCatalogAgent;
+    }
+
+    public LocationManager getLocationManager() {
+        return locationManager;
     }
 }
