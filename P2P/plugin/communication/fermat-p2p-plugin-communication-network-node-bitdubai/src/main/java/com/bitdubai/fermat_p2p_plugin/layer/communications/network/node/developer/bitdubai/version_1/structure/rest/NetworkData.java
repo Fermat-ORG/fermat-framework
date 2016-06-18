@@ -106,16 +106,12 @@ public class NetworkData {
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
         } catch (Exception e) {
-            //e.printStackTrace();
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("code",e.hashCode());
-            jsonObject.addProperty("message",e.getMessage());
-            jsonObject.addProperty("details",gson.toJson(e.getCause()));
-
 
             JsonObject jsonObjectError = new JsonObject();
             jsonObjectError.addProperty("error",gson.toJson(jsonObject));
+            jsonObjectError.addProperty("code",e.hashCode());
+            jsonObjectError.addProperty("message",e.getMessage());
+            jsonObjectError.addProperty("details",gson.toJson(e.getCause()));
 
             return Response.status(200).entity(gson.toJson(jsonObjectError)).build();
 
@@ -158,14 +154,11 @@ public class NetworkData {
 
         }catch (Exception e){
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("code",e.hashCode());
-            jsonObject.addProperty("message",e.getMessage());
-            jsonObject.addProperty("details",gson.toJson(e.getCause()));
-
-
             JsonObject jsonObjectError = new JsonObject();
             jsonObjectError.addProperty("error",gson.toJson(jsonObject));
+            jsonObjectError.addProperty("code",e.hashCode());
+            jsonObjectError.addProperty("message",e.getMessage());
+            jsonObjectError.addProperty("details",gson.toJson(e.getCause()));
 
             return Response.status(200).entity(gson.toJson(jsonObjectError)).build();
 
@@ -217,14 +210,11 @@ public class NetworkData {
 
         }catch (Exception e){
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("code",e.hashCode());
-            jsonObject.addProperty("message",e.getMessage());
-            jsonObject.addProperty("details",gson.toJson(e.getCause()));
-
-
             JsonObject jsonObjectError = new JsonObject();
             jsonObjectError.addProperty("error",gson.toJson(jsonObject));
+            jsonObjectError.addProperty("code",e.hashCode());
+            jsonObjectError.addProperty("message",e.getMessage());
+            jsonObjectError.addProperty("details",gson.toJson(e.getCause()));
 
             return Response.status(200).entity(gson.toJson(jsonObjectError)).build();
         }
@@ -278,14 +268,11 @@ public class NetworkData {
 
         }catch (Exception e){
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("code",e.hashCode());
-            jsonObject.addProperty("message",e.getMessage());
-            jsonObject.addProperty("details",gson.toJson(e.getCause()));
-
-
             JsonObject jsonObjectError = new JsonObject();
             jsonObjectError.addProperty("error",gson.toJson(jsonObject));
+            jsonObjectError.addProperty("code",e.hashCode());
+            jsonObjectError.addProperty("message",e.getMessage());
+            jsonObjectError.addProperty("details",gson.toJson(e.getCause()));
 
             return Response.status(200).entity(gson.toJson(jsonObjectError)).build();
         }
@@ -339,7 +326,7 @@ public class NetworkData {
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return new ArrayList<>();
@@ -371,7 +358,7 @@ public class NetworkData {
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return new ArrayList<>();
