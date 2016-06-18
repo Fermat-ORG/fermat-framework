@@ -55,7 +55,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/checkbox_connection"
             android:gravity="center_horizontal"
-            android:buttonTint="@drawable/bitcoinwcheckb_full"
             android:button="@drawable/bitcoinwcheckb_empty"
             />
 
