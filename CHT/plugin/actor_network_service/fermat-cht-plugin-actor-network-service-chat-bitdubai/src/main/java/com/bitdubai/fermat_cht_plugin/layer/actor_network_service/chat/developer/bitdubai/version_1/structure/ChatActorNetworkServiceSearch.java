@@ -79,7 +79,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation()));
             }
 
             System.out.println("Chat Actor Network Service Search Test RETURNING LIST OF ACTORS.");
@@ -145,7 +145,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
             String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 
-            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status);
+            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation());
 
         } catch (final CantRequestProfileListException e) {
 
@@ -209,7 +209,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation()));
             }
 
             return chatExposingDataArrayList;
@@ -266,7 +266,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation()));
             }
 
             return chatExposingDataArrayList;
@@ -323,7 +323,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation()));
             }
 
             return chatExposingDataArrayList;
@@ -380,7 +380,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status, actorProfile.getLocation()));
             }
 
             return chatExposingDataArrayList;
