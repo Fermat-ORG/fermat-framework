@@ -101,7 +101,7 @@ public class CryptoCustomerCommunityManager
         List<CryptoCustomerActorConnection> actorConnections;
 
         try{
-            worldCustomerList = getCryptoCustomerSearch().getResult();
+            worldCustomerList = getCryptoCustomerSearch().getResult(max, offset);
         } catch (CantGetCryptoCustomerSearchResult e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
