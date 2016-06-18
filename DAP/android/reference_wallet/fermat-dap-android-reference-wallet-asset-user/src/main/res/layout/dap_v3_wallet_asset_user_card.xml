@@ -28,7 +28,7 @@
                 android:id="@+id/cardHeader"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:background="@drawable/bg_card">
+                android:background="@drawable/bg_card_wallet_user">
 
                 <RelativeLayout
                     android:id="@+id/cardActorImageLayout"
@@ -100,7 +100,7 @@
                 <ImageView
                     android:id="@+id/cardAssetImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     android:adjustViewBounds="true"
                     android:background="@color/fab_material_white"
                     android:src="@drawable/img_asset_without_image"
@@ -160,9 +160,9 @@
 
                 <ImageView
                     android:id="@+id/cardConfirmedImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_toLeftOf="@id/cardConfirmedText"
                     android:src="@drawable/detail_check" />
 
@@ -201,7 +201,7 @@
                         android:layout_width="55dp"
                         android:layout_height="30dp"
                         android:background="@null"
-                        android:src="@drawable/ic_appropriate" />
+                        android:src="@drawable/ic_appropriate_user_wallet" />
 
                     <ImageButton
                         android:id="@+id/cardSellButton"

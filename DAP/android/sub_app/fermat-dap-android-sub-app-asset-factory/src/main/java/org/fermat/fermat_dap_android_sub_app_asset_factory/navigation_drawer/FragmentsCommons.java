@@ -1,7 +1,6 @@
 package org.fermat.fermat_dap_android_sub_app_asset_factory.navigation_drawer;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
-import com.squareup.picasso.Picasso;
+
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.FactoryUtils;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;

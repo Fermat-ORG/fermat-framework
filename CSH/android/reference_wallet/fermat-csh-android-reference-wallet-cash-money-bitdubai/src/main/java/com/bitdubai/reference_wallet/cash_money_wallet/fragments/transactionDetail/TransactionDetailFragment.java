@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
@@ -25,7 +27,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
-import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSessionReferenceApp;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
@@ -33,10 +34,9 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
  */
-public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
+public class TransactionDetailFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CashMoneyWalletModuleManager>, ResourceProviderManager> implements View.OnClickListener, DialogInterface.OnDismissListener {
 
     // Fermat Managers
-    private CashMoneyWalletSessionReferenceApp walletSession;
     private CashMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
@@ -65,8 +65,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         super.onCreate(savedInstanceState);
 
         try {
-            walletSession = ((CashMoneyWalletSessionReferenceApp) appSession);
-            moduleManager = walletSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {
@@ -81,7 +80,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         if((boolean)appSession.getData("checkIfTransactionHasBeenCommitted"))
         {
             try {
-                transaction = moduleManager.getTransaction(walletSession.getAppPublicKey(), transaction.getTransactionId());
+                transaction = moduleManager.getTransaction(appSession.getAppPublicKey(), transaction.getTransactionId());
 
                 //Transaction is committed, disallow edition and deletion
                 transactionIsEditable = false;
@@ -144,7 +143,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         }if (i == R.id.csh_transaction_detail_delete_btn) {
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }else if(i == R.id.csh_transaction_detail_update_btn) {
-            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSessionReferenceApp) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
+            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
             transactionFragmentDialog.setOnDismissListener(this);
             transactionFragmentDialog.show();
         }

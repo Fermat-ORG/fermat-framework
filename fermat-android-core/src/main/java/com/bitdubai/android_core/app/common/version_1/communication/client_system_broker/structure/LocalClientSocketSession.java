@@ -23,6 +23,7 @@ public class LocalClientSocketSession extends LocalSocketSession {
     }
 
 
+
     @Override
     public void onReceiveMessage(FermatModuleObjectWrapper object) {
         try {

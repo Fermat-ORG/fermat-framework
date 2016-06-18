@@ -6,12 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.ContractDetailViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
 
 import java.util.List;
 
@@ -27,11 +27,11 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
 
     private Context context;
     private List<ContractDetail> dataSet;
-    private CryptoCustomerWalletSessionReferenceApp walletSession;
+    private ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> walletSession;
     private CryptoCustomerWalletModuleManager walletManager;
     private ContractDetailActivityFragment fragment;
 
-    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, CryptoCustomerWalletSessionReferenceApp walletSession,
+    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, ReferenceAppFermatSession<CryptoCustomerWalletModuleManager> walletSession,
                                  CryptoCustomerWalletModuleManager walletManager, ContractDetailActivityFragment fragment) {
         this.context = context;
         this.dataSet = dataSet;

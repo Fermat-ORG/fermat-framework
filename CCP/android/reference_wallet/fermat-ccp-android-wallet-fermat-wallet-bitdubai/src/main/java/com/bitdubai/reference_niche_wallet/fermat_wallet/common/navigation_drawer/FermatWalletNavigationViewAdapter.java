@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_draw
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 
@@ -30,7 +31,7 @@ public class FermatWalletNavigationViewAdapter extends FermatAdapter<MenuItem, c
 
     public FermatWalletNavigationViewAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica.ttf");
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica-neue.ttf");
     }
     /**
      * Create a new holder instance
@@ -69,27 +70,28 @@ public class FermatWalletNavigationViewAdapter extends FermatAdapter<MenuItem, c
             holder.getLabel().setText(data.getLabel());
 
             //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
+            holder.getNavigation_row_divider().setBackgroundResource(R.drawable.devider_gradient_drawer);
             if(data.isSelected())
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                holder.getRow_container().setBackgroundResource(R.color.btn_drawer_overlay);
 
             switch (position) {
                 case 0:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_home_fluor : R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.fw_home_icon : R.drawable.fw_home_icon).into(holder.getIcon());
                     break;
                 case 1:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_profile_fluor : R.drawable.btn_drawer_profile_normal).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.fw_profile_icon : R.drawable.fw_profile_icon).into(holder.getIcon());
                     break;
                 case 2:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_request_fluor : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.fw_payment__request_icon : R.drawable.fw_payment__request_icon).into(holder.getIcon());
                     if(data.getNotifications()!=0){
                         holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
                     }
                     break;
                 case 3:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.icon_settings : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.fw_settings_icon : R.drawable.fw_settings_icon).into(holder.getIcon());
                     break;
                 case 4:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_logout_fluor : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.fw_logout_icon : R.drawable.fw_logout_icon).into(holder.getIcon());
                     break;
                 default:
                     break;

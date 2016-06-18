@@ -167,7 +167,8 @@ public class WizardActivity extends FermatActivity
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), referenceAppFermatSession, null);
+                    //todo: ver porqué null el ultimo parametro
+                    Fragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), referenceAppFermatSession, null,null);
                     fragments.add(abstractFermatFragment);
                 }
             } catch (FragmentNotFoundException e) {

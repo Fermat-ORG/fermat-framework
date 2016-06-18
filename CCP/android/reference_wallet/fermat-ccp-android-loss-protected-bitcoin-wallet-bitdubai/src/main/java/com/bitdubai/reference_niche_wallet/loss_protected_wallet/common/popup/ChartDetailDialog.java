@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -60,6 +61,8 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
     private ImageView earnOrLostImage;
 
+    private Typeface tf;
+
     /**
      *  UI components
      */
@@ -82,6 +85,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
         this.lossProtectedWalletmanager = lossProtectedWalletmanager;
         this.errorManager = errorManager;
         this.lossProtectedWalletSession = lossProtectedWalletSession;
+        this.tf = Typeface.createFromAsset(activity.getAssets(), "fonts/Roboto-Regular.ttf");
     }
 
 
@@ -103,10 +107,11 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
         getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a ", Locale.US);
 
 
         txt_date.setText(sdf.format(spending.getTimestamp()));
+        txt_date.setTypeface(tf);
 
         final double amount = getEarnOrLostOfSpending(
                 spending.getAmount(),
@@ -123,6 +128,10 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
             earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
 
+        }else if (amount== 0){
+
+            txt_amount.setText("USD 0.00 earned");
+
         }else if (amount< 0){
 
             txt_amount.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
@@ -132,6 +141,7 @@ public class ChartDetailDialog extends Dialog implements View.OnClickListener
 
             earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
         }
+        txt_amount.setTypeface(tf);
 
     }
 

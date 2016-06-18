@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by rodrigo on 9/4/15.
  */
-public interface Contract extends Serializable{
+public interface Contract extends Serializable {
     List<ContractProperty> getContractProperties();
 
     ContractProperty getContractProperty(String propertyName);

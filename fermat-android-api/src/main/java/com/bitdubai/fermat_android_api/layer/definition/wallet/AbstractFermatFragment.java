@@ -11,14 +11,17 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FrameworkHelpers;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
@@ -28,18 +31,25 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+
+import java.util.List;
 
 /**
  * Created by Matias Furszyfer on 2015.11.21..
  */
 public abstract class AbstractFermatFragment<S extends FermatSession,R extends ResourceProviderManager> extends Fragment implements AbstractFermatFragmentInterface<S,R>{
 
+    private static final String TAG = "AbstractFermatFragment";
     /**
      * FLAGS
      */
@@ -48,6 +58,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     /**
      * Platform
      */
+    protected FermatFragment fermatFragmentType;
     protected S appSession;
     protected R appResourcesProviderManager;
 
@@ -66,7 +77,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //if(fermatFragmentType.getOptionsMenu()!=null)
+            setHasOptionsMenu(true);
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -104,15 +116,116 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         isAttached = false;
     }
 
+
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onPrepareOptionsMenu(Menu menu) {
+        try {
+            Log.i(TAG,"Preparing fragment optionMenu");
+            if(fermatFragmentType!=null) {
+                if (fermatFragmentType.getOptionsMenu() != null) {
+                    List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                    for (int i = 0; i < optionsMenuItems.size(); i++) {
+                        OptionMenuItem menuItem = optionsMenuItems.get(i);
+                        int id = menuItem.getId();
+                        int groupId = menuItem.getGroupId();
+                        int order = menuItem.getOrder();
+                        int showAsAction = menuItem.getShowAsAction();
+                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                        FermatDrawable icon = menuItem.getFermatDrawable();
+                        if (icon != null) {
+                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        super.onCreateOptionsMenu(menu,inflater);
+                        }
+                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
+                        int actionViewClass = menuItem.getActionViewClass();
+                        if (actionViewClass != -1) {
+                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                        }
+                    }
+                }
+            }else{
+                if(appSession!=null)
+                    Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
+            }
 
+
+        } catch (Exception e) {
+            if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
+            e.printStackTrace();
+        }
+        super.onPrepareOptionsMenu(menu);
     }
 
-    public void setAppSession(S appSession) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        Log.i(TAG,"onCreateOptionsMenu");
+//        try {
+//            if(fermatFragmentType!=null) {
+//                if (fermatFragmentType.getOptionsMenu() != null) {
+//                    List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+//                    for (int i = 0; i < optionsMenuItems.size(); i++) {
+//                        OptionMenuItem menuItem = optionsMenuItems.get(i);
+//                        int id = menuItem.getId();
+//                        int groupId = menuItem.getGroupId();
+//                        int order = menuItem.getOrder();
+//                        int showAsAction = menuItem.getShowAsAction();
+//                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+//                        FermatDrawable icon = menuItem.getFermatDrawable();
+//                        if (icon != null) {
+//                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+//                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//                        }
+//                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
+//                        int actionViewClass = menuItem.getActionViewClass();
+//                        if (actionViewClass != -1) {
+//                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+//                        }
+//                    }
+//                }
+//            }else{
+//                if(appSession!=null)
+//                Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
+//            }
+//
+//
+//        } catch (Exception e) {
+//            if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
+//            e.printStackTrace();
+//        }
+//        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    /**
+     * Method to obtain res from other apps
+     */
+    private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
+        return getFrameworkHelpers().obtainRes(id,sourceLocation,appOwnerPublicKey);
+    }
+
+    /**
+     * Method to obtain view class from framework
+     * @return
+     */
+    private final View obtainFrameworkView(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
+        return getFrameworkHelpers().obtainClassView(id, sourceLocation, appOwnerPublicKey);
+    }
+    private final View obtainFrameworkViewOptionMenuAvailable(int id,SourceLocation sourceLocation){
+        return getFrameworkHelpers().obtainFrameworkOptionMenuClassViewAvailable(id, sourceLocation);
+    }
+
+
+    private final FrameworkHelpers getFrameworkHelpers(){
+        return (FrameworkHelpers)getActivity();
+    }
+
+    public final void setAppSession(S appSession) {
         this.appSession = appSession;
+    }
+
+    public final void setFragmentType(FermatFragment fermatFragmentType){
+        this.fermatFragmentType = fermatFragmentType;
     }
 
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
@@ -336,6 +449,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
+    /**
+     * This method is called when the fragment is on user's focus
+     */
+    @Override
+    public void onFragmentFocus() {
+
+    }
 
     /**
      *  This method will be called when the user open the drawer if exist

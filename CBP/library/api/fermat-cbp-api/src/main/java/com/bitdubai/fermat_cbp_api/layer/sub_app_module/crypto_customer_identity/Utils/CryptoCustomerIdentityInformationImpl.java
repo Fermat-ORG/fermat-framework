@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
@@ -17,15 +18,21 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     private final String        publicKey   ;
     private final byte[]        profileImage;
     private final ExposureLevel exposureLevel;
+    private long   accuracy;
+    private Frecuency frecuency;
 
     public CryptoCustomerIdentityInformationImpl(final String alias,
                                                  final String publicKey,
                                                  final byte[] profileImage,
-                                                 final ExposureLevel exposureLevel){
+                                                 final ExposureLevel exposureLevel,
+                                                 final long accuracy,
+                                                 final Frecuency frecuency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
+        this.accuracy      = accuracy     ;
+        this.frecuency     = frecuency    ;
     }
 
     @Override
@@ -46,6 +53,16 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     @Override
     public boolean isPublished() {
         return exposureLevel.equals(ExposureLevel.PUBLISH);
+    }
+
+    @Override
+    public long getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public Frecuency getFrecuency() {
+        return frecuency;
     }
 
     public boolean equals(Object o){

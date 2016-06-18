@@ -4,6 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by eze on 11/06/15.
  */
@@ -58,8 +62,6 @@ public class CryptoTransaction{
      * Default constructor.
      */
     public CryptoTransaction(){}
-
-
 
     /**
      * Getters

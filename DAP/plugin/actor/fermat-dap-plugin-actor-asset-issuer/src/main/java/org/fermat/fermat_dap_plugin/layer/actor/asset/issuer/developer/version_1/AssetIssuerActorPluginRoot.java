@@ -51,7 +51,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.events.NewRequestActorNoti
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
@@ -371,7 +371,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         requester,
                         actorAssetRedeemPoint);
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessage);
-            } catch (CantSendMessageException e) {
+            } catch (CantSendDAPMessageException e) {
                 reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantConnectToActorAssetRedeemPointException("CAN'T SEND MESSAGE TO ACTOR ASSET REDEEM POINT", e, "", "");
             } catch (CantSetObjectException e) {

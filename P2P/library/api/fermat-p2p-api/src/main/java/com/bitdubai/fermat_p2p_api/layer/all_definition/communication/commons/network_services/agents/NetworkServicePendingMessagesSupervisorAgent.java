@@ -11,7 +11,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +104,7 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
             List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
 
-            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+//            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
 
             if(messages != null) {
 

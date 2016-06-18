@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.MarketExchangeRatesPageAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import com.viewpagerindicator.LinePageIndicator;
 
 import java.lang.ref.WeakReference;
@@ -38,13 +39,13 @@ import java.util.List;
 public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     private final String TAG = "BrokerWalletHeader";
 
-    private final CryptoBrokerWalletSessionReferenceApp session;
+    private final ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> session;
     private final WeakReference<Context> activity;
     private ErrorManager errorManager;
     private CryptoBrokerWalletModuleManager moduleManager;
 
 
-    public CryptoBrokerWalletHeaderPainter(Context activity, CryptoBrokerWalletSessionReferenceApp fullyLoadedSession) {
+    public CryptoBrokerWalletHeaderPainter(Context activity, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> fullyLoadedSession) {
         this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
@@ -87,7 +88,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
-                    session.setActualExchangeRates(summaries);
+                    session.setData(FragmentsCommons.EXCHANGE_RATES, summaries);
 
                     progressBar.setVisibility(View.GONE);
 

@@ -36,7 +36,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 
@@ -47,7 +46,6 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstan
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.common.adapters.DeliverUserAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.v3.common.filters.DeliverUserAdapterFilter;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 

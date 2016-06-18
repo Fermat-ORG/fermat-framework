@@ -152,13 +152,15 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
             configureToolbar();
             noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
-            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            showOrHideNoAssetsView(digitalAssets.isEmpty());
+            onRefresh();
+//            digitalAssets = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+//            appSession.setData("asset_data", digitalAssets);
+//            showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        onRefresh();
+//        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -349,10 +351,14 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
 
     @Override
     public List<DigitalAsset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<DigitalAsset> digitalAssets = new ArrayList<>();
+//        List<DigitalAsset> digitalAssets = new ArrayList<>();
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssetsDateSorted(moduleManager);
+
+                appSession.setData("asset_data", digitalAssets);
+
+                showOrHideNoAssetsView(digitalAssets.isEmpty());
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

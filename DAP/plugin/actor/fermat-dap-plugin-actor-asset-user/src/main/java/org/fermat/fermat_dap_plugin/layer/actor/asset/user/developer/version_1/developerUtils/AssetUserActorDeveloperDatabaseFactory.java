@@ -118,12 +118,9 @@ public class AssetUserActorDeveloperDatabaseFactory {//implements DealsWithPlugi
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME);
-        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_ACTOR_TYPE_COLUMN_NAME);
-        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME);
         /*
          * Asset User Actor database addition.
          */
@@ -143,19 +140,15 @@ public class AssetUserActorDeveloperDatabaseFactory {//implements DealsWithPlugi
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME);
-        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
-        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME);
-        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME);
 
         /**
          * Asset User Actor Registered database addition.
          */
         DeveloperDatabaseTable assetUserRegisteredTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME, assetUserRegisteredColumns);
         tables.add(assetUserRegisteredTable);
-
 
         /**
          * Asset User Group Table database columns.
@@ -186,30 +179,6 @@ public class AssetUserActorDeveloperDatabaseFactory {//implements DealsWithPlugi
          */
         DeveloperDatabaseTable assetUserGroupMemberTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME, assetUserGroupMemberColumns);
         tables.add(assetUserGroupMemberTable);
-        /**
-         * Asset User Relation Asset Issuer database columns.
-         */
-//        List<String> assetUserRelationAssetIssuerColumns = new ArrayList<String>();
-//
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_IDENTITY_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_NAME_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_DESCRIPTION_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_ID_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_HASH_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_STATUS_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_RESOURCES_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_AMOUNT_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_CURRENCY_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ISSUER_ASSET_EXPIRATION_DATE_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_REDEEMPTION_TIMESTAMP_COLUMN_NAME);
-//        assetUserRelationAssetIssuerColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_REDEEMPTION_DATE_COLUMN_NAME);
-        /**
-         * Asset User Relation Asset Issuer database addition.
-         */
-//        DeveloperDatabaseTable assetUserRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME, assetUserRelationAssetIssuerColumns);
-//        tables.add(assetUserRelationAssetIssuerTable);
 
         /**
          * Crypto Address database columns.
@@ -275,14 +244,4 @@ public class AssetUserActorDeveloperDatabaseFactory {//implements DealsWithPlugi
         database.closeDatabase();
         return returnedRecords;
     }
-
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
 }

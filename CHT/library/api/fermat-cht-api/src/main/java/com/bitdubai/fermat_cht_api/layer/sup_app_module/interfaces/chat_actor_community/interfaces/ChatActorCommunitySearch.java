@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 
 import java.io.Serializable;
@@ -13,6 +16,12 @@ public interface ChatActorCommunitySearch extends Serializable {
     void addActorAlias(String alias);
 
     List<ChatActorCommunityInformation> getResult() throws CantGetChtActorSearchResult;
+
+    List<ChatActorCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetChtActorSearchResult;
+
+    List<ChatActorCommunityInformation> getResultDistance(double distance) throws CantGetChtActorSearchResult;
+
+    List<ChatActorCommunityInformation> getResultAlias(String alias) throws CantGetChtActorSearchResult;
 
     String getAlias();
 

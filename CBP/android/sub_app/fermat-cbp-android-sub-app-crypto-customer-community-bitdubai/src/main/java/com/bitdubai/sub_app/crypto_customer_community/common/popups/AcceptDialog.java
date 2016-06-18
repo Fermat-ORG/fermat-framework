@@ -6,21 +6,23 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
+
 
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
  */
-public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -30,23 +32,18 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
     LinkedCryptoCustomerIdentity cryptoCustomerCommunityInformation;
 
     CryptoCustomerCommunitySelectableIdentity identity;
-    private FermatTextView title;
-    private FermatTextView description;
-    private FermatTextView userName;
-    private FermatButton positiveBtn;
-    private FermatButton negativeBtn;
 
 
-    public AcceptDialog(Activity a,
-                        CryptoCustomerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
+    public AcceptDialog(Activity activity,
+                        ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager> session,
                         SubAppResourcesProviderManager subAppResources,
                         LinkedCryptoCustomerIdentity cryptoCustomerInformation,
                         CryptoCustomerCommunitySelectableIdentity identity) {
 
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(activity, session, subAppResources);
 
         this.cryptoCustomerCommunityInformation = cryptoCustomerInformation;
-        this.identity             = identity               ;
+        this.identity = identity;
     }
 
 
@@ -54,11 +51,11 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title = (FermatTextView) findViewById(R.id.title);
-        description = (FermatTextView) findViewById(R.id.description);
-        userName = (FermatTextView) findViewById(R.id.user_name);
-        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
+        FermatTextView title = (FermatTextView) findViewById(R.id.title);
+        FermatTextView description = (FermatTextView) findViewById(R.id.description);
+        FermatTextView userName = (FermatTextView) findViewById(R.id.user_name);
+        FermatButton positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        FermatButton negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -84,9 +81,9 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-           try {
+            try {
                 if (cryptoCustomerCommunityInformation != null && identity != null) {
-                    System.out.println("************* im goint to accept: "+cryptoCustomerCommunityInformation.getConnectionId());
+                    System.out.println("************* im goint to accept: " + cryptoCustomerCommunityInformation.getConnectionId());
                     getSession().getModuleManager().acceptCryptoCustomer(cryptoCustomerCommunityInformation.getConnectionId());
                     Toast.makeText(getContext(), " Accepted connection request from " + cryptoCustomerCommunityInformation.getAlias(), Toast.LENGTH_SHORT).show();
                 } else {

@@ -12,6 +12,8 @@
         android:layout_height="4.5dp"
         android:background="#DC5A0F"
         android:fitsSystemWindows="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         />
 
     <LinearLayout
@@ -48,14 +50,18 @@
                     android:textColor="#073487"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     android:gravity="left"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
                     android:src="@drawable/lpw_icon"
-                    android:paddingBottom="2dp"/>
+                    android:paddingBottom="2dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
             </LinearLayout>
 
             <View
@@ -64,7 +70,9 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="#073487"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
            <LinearLayout
                android:layout_width="match_parent"
@@ -77,7 +85,8 @@
                    android:layout_height="wrap_content"
                    android:text="Date:DD/MM/YY"
                    android:textSize="14sp"
-
+                   android:focusable="false"
+                   android:focusableInTouchMode="false"
                    android:textColor="@color/black"
                    />
                 <LinearLayout
@@ -88,17 +97,20 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/earning_icon"
                         android:id="@+id/earnOrLostImage"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         />
 
                    <TextView
                        android:id="@+id/amount"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-                       android:text="U$D:0.0"
+                       android:text="U$D 0.00"
                        android:textSize="14sp"
                        android:textColor="@color/black"
+                       android:focusable="false"
+                       android:focusableInTouchMode="false"
                        />
 
                 </LinearLayout>
@@ -109,14 +121,18 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="#073487" />
+                android:background="#073487"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="#073487"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+
                 />
 
         </LinearLayout>
@@ -124,17 +140,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
 
 
             <Button
                 android:id="@+id/accept_btn"
-                android:layout_width="0dp"
+                android:layout_width="150dp"
                 android:background="#DC5A0F"
                 android:text="Close"
                 android:textColor="#FFFFFF"
-                android:layout_weight="1"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
 
         </LinearLayout>
 

@@ -30,7 +30,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
         activityWeakReference.get().setAppStatus(appsStatus);
-        List<AbstractFermatFragmentInterface> list = activityWeakReference.get().getScreenAdapter().getLstCurrentFragments();
+        List<AbstractFermatFragmentInterface> list = activityWeakReference.get().getAdapter().getLstCurrentFragments();
         for (AbstractFermatFragmentInterface fragment : list) {
             try {
                 fragment.onUpdateViewOnUIThread(appsStatus.getCode());

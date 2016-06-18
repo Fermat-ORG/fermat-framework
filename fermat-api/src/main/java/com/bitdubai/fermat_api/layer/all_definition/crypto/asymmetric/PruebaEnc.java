@@ -6,13 +6,6 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.util.OperatingSystemCheck;
-
-
-import org.apache.commons.lang.time.StopWatch;
-import org.bouncycastle.util.encoders.Base64;
-
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -22,11 +15,6 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Enumeration;
-import java.util.Properties;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.PruebaEnc</code>
@@ -46,7 +34,7 @@ public class PruebaEnc {
 
             //System.getProperties().list(System.out);
 
-            //StopWatchtch stopwatch = Stopwatch.createStarted();
+            //Stopwatch stopwatch = Stopwatch.createStarted();
 
             // Generate a 126-bit Digital Signature Algorithm (ECDH) key pair
            // generateKeys("ECDH", 126);

@@ -155,6 +155,41 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         System.out.println("******************* REGISTERING ACTOR: "+name+ " - type: "+type + "  GO OUT METHOD");
     }
 
+    public void registerActor(final ActorProfile actorToRegister,
+                              final long         refreshInterval,
+                              final long         accuracy       ) throws ActorAlreadyRegisteredException, CantRegisterActorException {
+
+        System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  ENTER METHOD");
+
+        //validateImageSize(image.length); TODO COMMENTED UNTIL BETTER MANAGEMENT BE IMPLEMENTED
+
+        if (registeredActors.get(actorToRegister) != null)
+            throw new ActorAlreadyRegisteredException("publicKey: " + actorToRegister.getIdentityPublicKey() + " - name: " + actorToRegister.getName(), "An actor is already registered with the given public key.");
+
+        registeredActors.put(
+                actorToRegister,
+                new RefreshParameters(
+                        System.currentTimeMillis(),
+                        refreshInterval,
+                        accuracy
+                )
+        );
+
+        if (this.getConnection() != null && this.getConnection().isRegistered()) {
+
+            try {
+
+                this.getConnection().registerProfile(actorToRegister);
+
+            } catch (CantRegisterProfileException exception) {
+
+                throw new CantRegisterActorException(exception, "publicKey: "+actorToRegister.getIdentityPublicKey()+" - name: "+actorToRegister.getName(), "There was an error trying to register the actor through the network service.");
+            }
+        }
+
+        System.out.println("******************* REGISTERING ACTOR: "+actorToRegister.getName()+ " - type: "+actorToRegister.getActorType() + "  GO OUT METHOD");
+    }
+
     private ActorProfile getRegisteredActorByPublicKey(final String publicKey) {
 
         for (Map.Entry<ActorProfile, RefreshParameters> entry : registeredActors.entrySet())

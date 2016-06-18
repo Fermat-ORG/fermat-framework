@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by franklin on 05/10/15.
  */
-public class AssetUserWalletBalance implements AssetUserWalletList, Serializable{
+public class AssetUserWalletBalance implements AssetUserWalletList, Serializable {
 
     DigitalAsset digitalAsset;
     Set<CryptoAddress> cryptoAddresses;

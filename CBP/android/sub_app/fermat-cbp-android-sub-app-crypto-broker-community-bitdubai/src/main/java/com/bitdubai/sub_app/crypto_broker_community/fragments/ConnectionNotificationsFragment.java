@@ -16,25 +16,26 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -42,17 +43,13 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, AcceptDialog.OnDismissListener {
-
-    public static final String ACTOR_SELECTED = "actor_selected";
 
     private static final int MAX = 20;
 
     protected final String TAG = "ConnectionNotificationsFragment";
 
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
@@ -60,8 +57,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
     private LinearLayout emptyView;
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private int offset = 0;
-    private CryptoBrokerCommunityInformation cryptoBrokerInformation;
     private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
 
     /**
@@ -78,7 +73,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoBrokerInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         cryptoBrokerInformationList = new ArrayList<>();
@@ -94,9 +88,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_notifications, container, false);
-            setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new AppNotificationAdapter(getActivity(), cryptoBrokerInformationList);
@@ -127,17 +120,15 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
 
         try {
 
+            int offset = 0;
             dataSet.addAll(moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
 
-        } catch (CantListCryptoBrokersException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
         return dataSet;
-    }
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
     }
 
     @Override
@@ -206,7 +197,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
-        } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
         }

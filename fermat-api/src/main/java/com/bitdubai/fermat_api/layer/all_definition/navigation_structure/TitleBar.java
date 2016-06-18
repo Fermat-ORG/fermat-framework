@@ -25,6 +25,8 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private boolean isTitleTextStatic;
     private String font;
 
+    private FermatDrawable backgroundDrawable;
+
     // This icon will be used for open the navigationDrawer, go back
     private MenuItem leftIconFermatDrawable;
 
@@ -150,5 +152,13 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setLeftIconFermatDrawable(MenuItem leftIconFermatDrawable) {
         this.leftIconFermatDrawable = leftIconFermatDrawable;
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }

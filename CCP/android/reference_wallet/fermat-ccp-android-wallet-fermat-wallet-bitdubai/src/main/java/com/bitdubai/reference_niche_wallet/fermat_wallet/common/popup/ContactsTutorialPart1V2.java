@@ -19,8 +19,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalle
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 /**
@@ -67,7 +65,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceAppFermatSess
 
     @Override
     protected int setLayoutId() {
-        return R.layout.contacts_tutorial_part1_v2;
+        return R.layout.fermat_wallet_contacts_tutorial_part1_v2;
     }
 
     @Override

@@ -54,7 +54,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 05/10/15.
  */
-public class AssetUserWalletImpl implements AssetUserWallet, Serializable{
+public class AssetUserWalletImpl implements AssetUserWallet, Serializable {
     private static final String ASSET_USER_WALLET_FILE_NAME = "walletsIds";
 
     /**
@@ -168,7 +168,7 @@ public class AssetUserWalletImpl implements AssetUserWallet, Serializable{
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
             AssetUserWalletDatabaseFactory databaseFactory = new AssetUserWalletDatabaseFactory(pluginDatabaseSystem);
-            databaseFactory.createDatabase(this.pluginId, internalWalletId);
+            database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException e) {
             assetUserWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateWalletException("Database could not be created", e, "internalWalletId: " + internalWalletId.toString(), "");

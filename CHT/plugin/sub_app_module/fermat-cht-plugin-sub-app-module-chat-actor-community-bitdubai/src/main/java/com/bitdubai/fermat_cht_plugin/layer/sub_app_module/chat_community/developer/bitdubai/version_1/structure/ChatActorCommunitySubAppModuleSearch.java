@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
@@ -43,6 +45,69 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
             ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
             final List<ChatExposingData> chatActorConnections = chatActorSearch.getResult();
+
+            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
+
+            for(ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+
+            return chatActorLocalCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<ChatActorCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetChtActorSearchResult {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultLocation(deviceLocation);
+
+            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
+
+            for(ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+
+            return chatActorLocalCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<ChatActorCommunityInformation> getResultDistance(double distance) throws CantGetChtActorSearchResult {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultDistance(distance);
+
+            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
+
+            for(ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+
+            return chatActorLocalCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetChtActorSearchResult(CantGetChtActorSearchResult.CONTEXT_CONTENT_SEPARATOR, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<ChatActorCommunityInformation> getResultAlias(String alias) throws CantGetChtActorSearchResult {
+        try {
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResultAlias(alias);
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 

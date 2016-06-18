@@ -1,7 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -38,7 +37,6 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfac
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.AssetIssuerIdentity;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryRecord;
 
 import java.sql.Timestamp;

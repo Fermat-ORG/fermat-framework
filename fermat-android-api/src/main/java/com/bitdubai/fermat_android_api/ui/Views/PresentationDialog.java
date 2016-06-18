@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -234,8 +235,13 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 //                        M module = getSession().getModuleManager();
 //                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
                 FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
-                ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                if (bitcoinWalletSettings != null) {
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                    ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                }else{
+                    Log.e(TAG,"Error: Save Settings null, verify if the module is running");
+                }
+
 //                        }else{
 //                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
 //                        }
@@ -253,7 +259,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
     private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
 

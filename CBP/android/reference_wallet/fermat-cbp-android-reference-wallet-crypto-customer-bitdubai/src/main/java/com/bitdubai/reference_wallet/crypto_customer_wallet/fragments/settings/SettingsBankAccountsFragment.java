@@ -14,23 +14,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.util.List;
 
 /**
  * Created by guillermo on 16/02/16.
  */
-public class SettingsBankAccountsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
+public class SettingsBankAccountsFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager>
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
     private static final String TAG = "WizardPageSetBank";
@@ -59,18 +63,18 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Try to load appSession data
-            Object data = appSession.getData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST);
+            Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             if(data == null) {
 
                 //Get saved locations from settings
                 bankAccountList = moduleManager.getListOfBankAccounts();
 
                 //Save locations to appSession data
-                appSession.setData(CryptoCustomerWalletSessionReferenceApp.BANK_ACCOUNT_LIST, bankAccountList);
+                appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
                 bankAccountList = (List<BankAccountNumber>) data;
             }
@@ -167,7 +171,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
     }
 
     private void saveSettingAndGoNextStep() {
-        appSession.setData(CryptoCustomerWalletSessionReferenceApp.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
+        appSession.setData(FragmentsCommons.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 

@@ -2,13 +2,13 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
@@ -18,6 +18,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -96,7 +98,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), clientProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -123,7 +125,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 Package packageRespond = Package.createInstance(
                         respondProfileCheckInMsj.toJson(),
                         packageReceived.getNetworkServiceTypeSource(),
-                        PackageType.CHECK_IN_CLIENT_RESPOND,
+                        PackageType.CHECK_IN_CLIENT_RESPONSE,
                         channelIdentityPrivateKey,
                         destinationIdentityPublicKey
                 );
@@ -146,7 +148,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
      *
      * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    private void checkInClient(final ClientProfile profile) throws CantCreateTransactionStatementPairException, DatabaseTransactionFailedException {
+    private void checkInClient(final ClientProfile profile) throws Exception {
 
         // create transaction for
         DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInClientDao().getNewTransaction();
@@ -172,7 +174,15 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
          * Save into the data base
          */
         pair = getDaoFactory().getCheckedInClientDao().createInsertTransactionStatementPair(checkedInClient);
-        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+        if(!getDaoFactory().getCheckedInClientDao().exists(checkedInClient.getIdentityPublicKey())) {
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+        }else {
+
+            if(validateProfileChange(profile))
+                databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+
+        }
 
         /*
          * ClientsRegistrationHistory into data base
@@ -221,4 +231,41 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
          */
         return getDaoFactory().getClientsRegistrationHistoryDao().createInsertTransactionStatementPair(clientsRegistrationHistory);
     }
+
+    /**
+     * Validate if the profile register have changes
+     *
+     * @param profile
+     * @return boolean
+     * @throws Exception
+     */
+    private boolean validateProfileChange(ClientProfile profile) throws  Exception {
+
+        /*
+         * Create the CheckedInClient
+         */
+        CheckedInClient checkedInClient = new CheckedInClient();
+        checkedInClient.setIdentityPublicKey(profile.getIdentityPublicKey());
+        checkedInClient.setDeviceType(profile.getDeviceType());
+
+        //Validate if location are available
+        if (profile.getLocation() != null) {
+            checkedInClient.setLatitude(profile.getLocation().getLatitude());
+            checkedInClient.setLongitude(profile.getLocation().getLongitude());
+        }else{
+            checkedInClient.setLatitude(0.0);
+            checkedInClient.setLongitude(0.0);
+        }
+
+
+        CheckedInClient checkedInClientRegistered = getDaoFactory().getCheckedInClientDao().findById(profile.getIdentityPublicKey());
+
+        if (!checkedInClientRegistered.equals(checkedInClient)){
+            return Boolean.TRUE;
+        }else {
+            return Boolean.FALSE;
+        }
+
+    }
+
 }

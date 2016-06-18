@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.common.views.views.UserCommunityUtils;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 

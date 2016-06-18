@@ -16,6 +16,7 @@ import java.util.List;
 public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInterface> extends FragmentStatePagerAdapter implements FermatUIAdapter<F>{
 
     protected F[] fragments;
+    protected String[] titles;
 
     public FermatScreenAdapter(FragmentManager fm,F[] fragments) {
         super(fm);
@@ -38,13 +39,13 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
     }
 
     public void destroyItem(android.view.ViewGroup container, int position, Object object) {
-        FragmentManager manager = ((Fragment) object).getFragmentManager();
-        if(manager != null) {
-            FragmentTransaction trans = manager.beginTransaction();
-            trans.detach((Fragment) object);
-            trans.remove((Fragment) object);
-            trans.commit();
-        }
+//        FragmentManager manager = ((Fragment) object).getFragmentManager();
+//        if(manager != null) {
+//            FragmentTransaction trans = manager.beginTransaction();
+//            trans.detach((Fragment) object);
+//            trans.remove((Fragment) object);
+//            trans.commit();
+//        }
     }
 
     public void destroyCurrentFragments(){
@@ -59,4 +60,13 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
             }
         }
     }
+
+    public void onFragmentFocus(int position){
+        fragments[position].onFragmentFocus();
+    }
+
+    public void setTitles(String[] titles) {
+        this.titles = titles;
+    }
+
 }

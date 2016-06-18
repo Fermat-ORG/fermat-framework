@@ -51,10 +51,8 @@ import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 
-import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -206,8 +204,8 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -215,10 +213,19 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+            switch (id) {
+                //case IC_ACTION_HELP_FACTORY:
+                case 2:
                 setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+//            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+//                setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -340,9 +347,9 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
 
     private void go(String code) {
 //        if (validate()) {
-            saveMultimedia();
-            appSession.setData("asset_factory", asset);
-            changeActivity(code, appSession.getAppPublicKey());
+        saveMultimedia();
+        appSession.setData("asset_factory", asset);
+        changeActivity(code, appSession.getAppPublicKey());
 //        }
     }
 
@@ -392,11 +399,17 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             }
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(ImagesUtils.toByteArray(imageBitmap));
+            resource.setResourceBinayData(ImagesUtils.toByteArray(ConvertToBitMap(wizardMultimediaAssetImage)));
             resources.add(resource);
             asset.setResources(resources);
         } else
             asset.setResources(null);
+    }
+
+    private Bitmap ConvertToBitMap(ImageView imageView) {
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        return imageView.getDrawingCache();
     }
 
     private void setupUIData() {

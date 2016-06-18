@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -12,7 +13,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ final public class NegotiationWrapper {
      * @param negotiationInfo the {@link CustomerBrokerNegotiationInformation} object to wrap
      * @param appSession      the session with the Module Manager and Error Manager in case of need to add missing clauses
      */
-    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSessionReferenceApp appSession) {
+    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager> appSession) {
         this.negotiationInfo = negotiationInfo;
         confirmedClauses = new HashSet<>();
 

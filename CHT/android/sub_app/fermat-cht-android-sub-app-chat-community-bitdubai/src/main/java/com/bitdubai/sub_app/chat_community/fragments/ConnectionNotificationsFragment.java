@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -10,8 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,18 +35,15 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -57,10 +51,6 @@ import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
-
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
 /**
  * ConnectionNotificationsFragment
@@ -81,6 +71,7 @@ public class ConnectionNotificationsFragment
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
+    private ChatActorCommunitySelectableIdentity identity;
     protected final String TAG = "ConnectionNotificationsFragment";
 
     private RecyclerView recyclerView;
@@ -144,7 +135,9 @@ public class ConnectionNotificationsFragment
 
             //Check if a default identity is configured
             try{
-                moduleManager.getSelectedActorIdentity();
+                identity = moduleManager.getSelectedActorIdentity();
+                if(identity == null)
+                    launchListIdentitiesDialog  = true;
             }catch (CantGetSelectedActorIdentityException e){
                 //There are no identities in device
                 launchActorCreationDialog = true;
@@ -198,12 +191,23 @@ public class ConnectionNotificationsFragment
         return rootView;
     }
 
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
 
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            dataSet.addAll(moduleManager.listChatActorPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
+            List<ChatActorCommunityInformation> result;
+            if(identity != null) {
+                result = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+                    identity.getActorType(), MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -276,10 +280,10 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, identity);
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
-        } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "Connection Accepted but.. ERROR! ->", Toast.LENGTH_LONG).show();
         }
@@ -328,9 +332,9 @@ public class ConnectionNotificationsFragment
         onRefresh();
     }
 
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -354,9 +358,9 @@ public class ConnectionNotificationsFragment
 
     private void showDialogHelp() {
         try {
-            moduleManager = appSession.getModuleManager();
-            if (moduleManager.getSelectedActorIdentity() != null) {
-                if (!moduleManager.getSelectedActorIdentity().getPublicKey().isEmpty()) {
+            //moduleManager = appSession.getModuleManager();
+            if (identity != null) {
+                if (!identity.getPublicKey().isEmpty()) {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
                                     appSession,
@@ -416,23 +420,24 @@ public class ConnectionNotificationsFragment
                     }
                 });
             }
-        } catch (CantGetSelectedActorIdentityException e) {
-            PresentationChatCommunityDialog presentationChatCommunityDialog =
-                    new PresentationChatCommunityDialog(getActivity(),
-                            appSession,
-                            null,
-                            moduleManager,
-                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
-                            applicationsHelper.get(), showIdentity*/);
-            presentationChatCommunityDialog.show();
-            presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //showCriptoUsersCache();
-                }
-            });
-            e.printStackTrace();
-        } catch (ActorIdentityNotSelectedException e) {
+//        } catch (CantGetSelectedActorIdentityException e) {
+        } catch (Exception e) {
+//            PresentationChatCommunityDialog presentationChatCommunityDialog =
+//                    new PresentationChatCommunityDialog(getActivity(),
+//                            appSession,
+//                            null,
+//                            moduleManager,
+//                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES/*,
+//                            applicationsHelper.get(), showIdentity*/);
+//            presentationChatCommunityDialog.show();
+//            presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    //showCriptoUsersCache();
+//                }
+//            });
+//            e.printStackTrace();
+//        } catch (ActorIdentityNotSelectedException e) {
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
                             appSession,

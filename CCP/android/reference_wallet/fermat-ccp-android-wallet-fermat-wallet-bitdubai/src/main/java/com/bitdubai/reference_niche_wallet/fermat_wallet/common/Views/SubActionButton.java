@@ -29,6 +29,7 @@ public class SubActionButton
     public static final int THEME_DARKER = 3;
 
 
+
     public SubActionButton(Context context) {
         super(context);
     }
@@ -137,6 +138,7 @@ public class SubActionButton
         private int paddingRight = 0;
         private int paddingTop = 0;
         private int paddingBottom = 0;
+        private Drawable textBackgroundDrawable = null;
 
 
         public Builder(Context context) {
@@ -165,6 +167,11 @@ public class SubActionButton
 
         public Builder setTextBackgroundColor(int color) {
             this.textBackgroundColor = color;
+            return this;
+        }
+
+        public Builder setTextBackgroundDrawable(Drawable drawable) {
+            this.textBackgroundDrawable = drawable;
             return this;
         }
 

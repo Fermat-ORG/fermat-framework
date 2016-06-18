@@ -46,7 +46,7 @@ public class NetworkClientSentMessageDeliveredEventHandler implements FermatEven
             this.networkService.getProfile().getNetworkServiceType().equals(fermatEvent.getNetworkServiceTypeSource())) {
 
             if(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().exists(fermatEvent.getId()))
-                networkService.onSentMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
+                networkService.onNetworkServiceSentMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
 
         }
 

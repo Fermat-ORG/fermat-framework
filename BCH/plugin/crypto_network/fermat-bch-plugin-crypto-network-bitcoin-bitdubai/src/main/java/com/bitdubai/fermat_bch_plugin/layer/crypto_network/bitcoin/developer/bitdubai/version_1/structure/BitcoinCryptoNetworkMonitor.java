@@ -81,6 +81,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final BitcoinCryptoNetworkDatabaseDao dao;
+    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
     private ContextPropagatingThreadFactory contextPropagatingThreadFactory;
 
 
@@ -540,7 +541,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, CryptoCurrency.BITCOIN, wallet, tx)){
+            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE,BITCOIN,  wallet, tx)){
                 try {
                     dao.saveCryptoTransaction(cryptoTransaction, transactionId);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -595,7 +596,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * store the transaction as Pending submit in the transactions table
                  */
-                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, CryptoCurrency.BITCOIN);
+                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, BITCOIN );
                 cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                 dao.saveCryptoTransaction(cryptoTransaction, transactionId);
 

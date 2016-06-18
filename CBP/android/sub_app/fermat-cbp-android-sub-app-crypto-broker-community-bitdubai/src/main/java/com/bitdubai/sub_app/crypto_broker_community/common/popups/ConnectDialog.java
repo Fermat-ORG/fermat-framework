@@ -7,19 +7,21 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -27,7 +29,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -44,17 +46,17 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
     CharSequence username;
     CharSequence title;
 
-    private final CryptoBrokerCommunityInformation        information;
-    private final CryptoBrokerCommunitySelectableIdentity identity   ;
+    private final CryptoBrokerCommunityInformation information;
+    private final CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(final Activity                                activity                          ,
-                         final CryptoBrokerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
-                         final SubAppResourcesProviderManager          subAppResources                   ,
-                         final CryptoBrokerCommunityInformation        information                       ,
-                         final CryptoBrokerCommunitySelectableIdentity identity                          ) {
+    public ConnectDialog(final Activity activity,
+                         final ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
+                         final SubAppResourcesProviderManager subAppResources,
+                         final CryptoBrokerCommunityInformation information,
+                         final CryptoBrokerCommunitySelectableIdentity identity) {
 
-        super(activity, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(activity, session, subAppResources);
 
         this.information = information;
         this.identity = identity;

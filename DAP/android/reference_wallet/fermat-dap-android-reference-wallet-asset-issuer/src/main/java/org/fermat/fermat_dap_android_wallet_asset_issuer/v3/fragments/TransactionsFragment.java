@@ -74,9 +74,10 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction, 
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
+        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+
         transactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
-        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
 
         configureToolbar();
     }

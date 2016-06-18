@@ -128,6 +128,19 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
     }
 
     @Override
+    public List<RedeemPointStatistic> getAllStatisticsByWallet(String walletPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException, CantLoadWalletException {
+        try {
+            return assetRedeemPointWalletManager.loadAssetRedeemPointWallet(walletPublicKey, selectedNetwork).getAllStatistics();
+        } catch (CantGetRedeemPointStatisticsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetRedeemPointStatisticsException(e);
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantLoadWalletException(e);
+        }
+    }
+
+    @Override
     public void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException {
         assetRedeemPointWalletManager.createWalletAssetRedeemPoint(walletPublicKey, selectedNetwork);
     }
@@ -179,8 +192,7 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
         } catch (CantLoadWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantLoadWalletException("Error load Wallet ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
-        }
-        catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantGetTransactionsException("Error getting transactions ", exception, "Method: getTransactionsForDisplay", "Class: AssetIssuerWalletModuleManager");
         }

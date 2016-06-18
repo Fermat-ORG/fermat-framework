@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.closed_negotiation_details.ClosedNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseContractDetailsFragment;
@@ -25,14 +27,13 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetMerchandisesFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages.WizardPageSetProvidersFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 /**
  * Return new instances of the fragments for this wallet
  * <p/>
  * Created by Nelson Ramirez on 2015-09-30
  */
-public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<CryptoBrokerWalletSessionReferenceApp,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
+public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,WalletResourcesProviderManager, CryptoBrokerWalletFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
@@ -71,8 +72,6 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return WizardPageSetProvidersFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS:
                 return WizardPageOtherSettingsFragment.newInstance();
-            //case CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT:
-              //  return WizardPageSetBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD:
                 return CreateNewLocationFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS:

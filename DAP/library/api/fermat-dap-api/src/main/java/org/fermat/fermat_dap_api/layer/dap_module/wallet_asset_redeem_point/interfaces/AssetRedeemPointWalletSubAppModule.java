@@ -36,6 +36,8 @@ public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<Redeem
 
     List<RedeemPointStatistic> getStatisticsByAssetPublicKey(String walletPublicKey, String assetPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException, CantLoadWalletException;
 
+    List<RedeemPointStatistic> getAllStatisticsByWallet(String walletPublicKey) throws CantGetRedeemPointStatisticsException, RecordsNotFoundException, CantLoadWalletException;
+
     void createWalletAssetRedeemPoint(String walletPublicKey) throws CantCreateWalletException;
 
     RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
