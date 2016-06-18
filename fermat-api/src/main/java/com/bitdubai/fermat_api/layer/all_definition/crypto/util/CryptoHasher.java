@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.util;
 
-import org.bouncycastle.crypto.digests.RIPEMD160Digest;
+//import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -71,12 +71,13 @@ public class CryptoHasher {
 	private static String performRipemd160(final byte[] data) {
 		String hashed = "";
 		try {
-			RIPEMD160Digest digest = new RIPEMD160Digest();
-			digest.update(data, 0, data.length);
-			byte[] hash = new byte[digest.getDigestSize()];
-			digest.doFinal(hash, 0);
-			BigInteger hashValue = new BigInteger(1,hash);
-			hashed = String.format("%040X", hashValue);
+			//Todo: pasar a otro lado esto
+//			RIPEMD160Digest digest = new RIPEMD160Digest();
+//			digest.update(data, 0, data.length);
+//			byte[] hash = new byte[digest.getDigestSize()];
+//			digest.doFinal(hash, 0);
+//			BigInteger hashValue = new BigInteger(1,hash);
+//			hashed = String.format("%040X", hashValue);
 		} catch(Exception ex) {
                         System.err.println(ex.getMessage());
                 }

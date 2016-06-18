@@ -77,7 +77,7 @@ import java.util.concurrent.Future;
  */
 //TODO: le tengo que poner un timeout para desconectar los clientes y no abusen de Fermat, seguramente se pueda controlar esto por un token que me envia
 //TODO:   haciendo que paguen una cierta cantidad de satoshis por utilizar Fermat como servicio en background
-public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
+public class PlatformService extends Service implements FermatWorkerCallBack, BroadcastInterface {
 
     public static final String SERVER_NAME = "server_fermat";
 
@@ -267,35 +267,42 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
     }
 
-    private final IServerBrokerService.Stub mBinder = new IServerBrokerService.Stub() {
+    private final IPlatformService.Stub mBinder = new IPlatformService.Stub() {
 
 
         public String register() {
-            final String clientKey = UUID.randomUUID().toString();
-            if (serverThread == null) {
-                serverThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            LocalSocket localSocket = localServerSocket.accept();
-                            localSocket.setSendBufferSize(500000);
-//                            localSocket.setSoTimeout(0);
-                            LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(clientKey, localSocket);
+            String clientKey = null;
+            try {
+                clientKey = UUID.randomUUID().toString();
+
+                if (serverThread == null) {
+                    final String finalClientKey = clientKey;
+                    serverThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
                             try {
-                                localServerSocketSession.startSender();
-                            }catch (Exception e){
+                                LocalSocket localSocket = localServerSocket.accept();
+                                localSocket.setSendBufferSize(500000);
+//                            localSocket.setSoTimeout(0);
+                                LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(finalClientKey, localSocket);
+                                try {
+                                    localServerSocketSession.startSender();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                socketsClients.put(finalClientKey, localServerSocketSession);
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            socketsClients.put(clientKey, localServerSocketSession);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+
                         }
+                    });
+                }
+                serverThread.start();
 
-                    }
-                });
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            serverThread.start();
-
             return clientKey;
         }
 
@@ -366,16 +373,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
-//            Log.i(TAG,"invoqueModuleMethod");
-//            Log.i(TAG,platformCode);
-//            Log.i(TAG,layerCode);
-//            Log.i(TAG,pluginsCode);
-//            Log.i(TAG,version);
-//            Log.i(TAG,method);
-//            Log.i(TAG,"Parameters");
-//            for (ModuleObjectParameterWrapper parameter : parameters) {
-//                Log.i(TAG, parameter.toString());
-//            }
             Object returnModuleObject = null;
             PluginVersionReference pluginVersionReference =  null;
             try {
@@ -395,43 +392,44 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            chunkAndSendData(dataId, clientKey, aidlObject);
 //            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
 
-
-
+            FermatModuleObjectWrapper fermatModuleObjectWrapper = null;
             try {
-
                 if (returnModuleObject instanceof Exception) {
-                    return new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
                 } else {
                     if (!(returnModuleObject instanceof Serializable)) {
                         if (returnModuleObject != null) {
                             NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
                             // return the exception
-                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                            sendLargeData(dataId, clientKey, fermatModuleObjectWrapper);
+                        }else{
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         }
                     }else {
                         Serializable aidlObject = (Serializable) returnModuleObject;
                         try {
                             sendLargeData(dataId, clientKey, aidlObject);
-                            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(null, true, dataId);
                         } catch (Exception e) {
-                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
+                            sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
+                            e.printStackTrace();
                         }
                     }
-
                 }
             } catch (Exception e) {
 //                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
                 try {
-                    sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e);
+                    sendLargeData(dataId, clientKey,fermatModuleObjectWrapper);
                 } catch (Exception e1) {
                     Log.e(TAG,"Error, please contact furszy and show him the stacktrace below");
                     e1.printStackTrace();
+                    fermatModuleObjectWrapper = new FermatModuleObjectWrapper(dataId, null, true, e1);
                 }
-//                new FermatModuleObjectWrapper(dataId, null, true, e);
             }
-
-            return new FermatModuleObjectWrapper(null, true, dataId);
-
+            return fermatModuleObjectWrapper;
         }
 
         @Override
@@ -527,6 +525,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "OnCreate");
+//        android.os.Debug.waitForDebugger();
         fermatSystem = FermatSystem.getInstance();
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
@@ -841,6 +840,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         }
 
         // Indicate that app was loaded.
+        Log.i(TAG,"PlatformService running");
         isFermatSystemRunning = true;
         Intent intent = new Intent();
         intent.setAction("org.fermat.SYSTEM_RUNNING");

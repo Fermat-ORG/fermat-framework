@@ -35,6 +35,8 @@ public class GetTask extends FermatServiceWorker {
             if(!fermatSystem.isStarted) {
                 try {
                     Log.i("GetTask", "fermat system previous to start");
+                    /* now let's wait until the debugger attaches */
+//                    android.os.Debug.waitForDebugger();
                     fermatSystem.startAllRegisteredPlatforms();
                     Log.i("GetTask", "fermat system started");
 

@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -235,7 +234,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
-        intraActorManager.updateActor(intraActorManager.contructIdentity(publicKey,alias,phrase,Actors.INTRA_USER,img));
+        intraActorManager.updateActor(intraActorManager.buildIdentity(publicKey, alias, phrase, Actors.INTRA_USER, img));
     }
 
     @Override
@@ -297,9 +296,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             List<IntraWalletUserIdentity> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             List<Actor> lstActors = new ArrayList<Actor>();
             for(IntraWalletUserIdentity user : lstIntraWalletUSer){
-                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(),Actors.INTRA_USER,user.getImage()));
+                lstActors.add(intraActorManager.buildIdentity(user.getPublicKey(), user.getAlias(), user.getPhrase(), Actors.INTRA_USER, user.getImage()));
             }
-            intraActorManager.registrateActors(lstActors);
+            intraActorManager.registerActors(lstActors);
         } catch (CantListIntraWalletUserIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -308,7 +307,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     public void registerIdentity(IntraWalletUserIdentity intraWalletUserIdentity){
-        intraActorManager.registrateActor(intraActorManager.contructIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
+        intraActorManager.registerActor(intraActorManager.buildIdentity(intraWalletUserIdentity.getPublicKey(), intraWalletUserIdentity.getAlias(), intraWalletUserIdentity.getPhrase(), Actors.INTRA_USER, intraWalletUserIdentity.getImage()));
 
     }
 

@@ -21,14 +21,15 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatPlatformServiceNotConnectedException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeDataRequestException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IServerBrokerService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.PlatformService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IPlatformService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -204,10 +205,13 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             pluginVersionReference.getVersion().toString(),
                             method.getName(),
                             parameters);
-                } catch (RemoteException e) {
+                }catch (TransactionTooLargeException t1){
+                    Log.e(TAG, "Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
+                    objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy,method,t1));
+                }  catch (RemoteException e) {
                     e.printStackTrace();
                 } catch (RuntimeException e) {
-                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in class " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                     e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -223,8 +227,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference){
+        FermatModuleObjectWrapper fermatModuleObjectWrapper = null;
         try {
-            return iServerBrokerService.invoqueModuleMethod(
+            fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
                     serverIdentificationKey,
                     dataId,
                     pluginVersionReference.getPlatform().getCode(),
@@ -236,7 +241,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     parameters);
         } catch (TransactionTooLargeException t) {
             try {
-                return iServerBrokerService.invoqueModuleLargeDataMethod(
+                fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleLargeDataMethod(
                         serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
@@ -246,12 +251,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
+            } catch (TransactionTooLargeException t1){
+                Log.e(TAG,"Method request too much data on the main thread, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                fermatModuleObjectWrapper = new FermatModuleObjectWrapper(new LargeWorkOnMainThreadException(proxy,method,t1));
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (RuntimeException e) {
                 Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
                 e.printStackTrace();
-            } catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
             }
         } catch (RemoteException e) {
@@ -260,7 +268,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             e.printStackTrace();
         }
 
-        return null;
+        return fermatModuleObjectWrapper;
     }
 
     @Override
@@ -291,11 +299,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
             bufferChannelAIDL = new BufferChannelAIDL();
 
-            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            Intent serviceIntent = new Intent(this, PlatformService.class);
             serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
             doBindService(serviceIntent);
 
-//        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
+//        Intent serviceIntent2 = new Intent(this, PlatformService.class);
 //        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
 //        doBindMessengerService(serviceIntent2);
         }catch (Exception e){
@@ -324,7 +332,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         super.onDestroy();
     }
 
-    private IServerBrokerService iServerBrokerService = null;
+    private IPlatformService iServerBrokerService = null;
     /** Flag indicating whether we have called bind on the service. */
     boolean mPlatformServiceIsBound;
 
@@ -334,12 +342,22 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private ServiceConnection mPlatformServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-            iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
+            iServerBrokerService = IPlatformService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mPlatformServiceIsBound = true;
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
+//                try {
+//                    iServerBrokerService.asBinder().unlinkToDeath(new IBinder.DeathRecipient() {
+//                        @Override
+//                        public void binderDied() {
+//                            Log.e(TAG,"Binder unlinked");
+//                        }
+//                    }, 0);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
                 //running socket receiver
                 Log.i(TAG, "Starting socket receiver");
                 LocalSocket localSocket = new LocalSocket();
@@ -561,7 +579,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private void tryReconnect() {
         if(!mPlatformServiceIsBound){
-            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            Intent serviceIntent = new Intent(this, PlatformService.class);
             serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
             doBindService(serviceIntent);
         }else{

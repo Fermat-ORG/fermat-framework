@@ -29,12 +29,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -72,7 +70,7 @@ public class ConnectionsWorldFragment
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 6;
     protected final String TAG = "Recycler Base";
 
     //Managers
@@ -319,17 +317,31 @@ public class ConnectionsWorldFragment
         System.out.println("****************** GETMORE DATA SYNCRHINIEZED ENTERING");
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-
-            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity, MAX, offset);
-
-            dataSet.addAll(result);
-
-            offset = dataSet.size();
+            List<ChatActorCommunityInformation> result;
+            if(identity != null) {
+                result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
+//              for(ChatActorCommunityInformation chat: result){
+//                if(chat.getConnectionState()!= null){
+//                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
+//                        moduleManager.requestConnectionToChatActor(identity,chat);
+//                        dataSet.add(chat);
+//                    }else dataSet.add(chat);
+//                }
+//                else dataSet.add(chat);
+//            }
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("****************** GETMORE DATA SYNCRHINIEZED SALGO BIEN: ");
         return dataSet;
+    }
+
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
     }
 
     @Override
@@ -442,102 +454,6 @@ public class ConnectionsWorldFragment
 
             e.printStackTrace();
 
-        }
-    }
-
-    private void actionsDialog(int action, ChatActorCommunityInformation data) {
-        ConnectDialog connectDialog;
-        final ChatActorCommunityInformation dat = data;
-        switch (action) {
-            case 1://connect
-                CommonLogger.info(TAG, "User connection state " +
-                        data.getConnectionState());
-                try {
-                    connectDialog =
-                            new ConnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
-                    connectDialog.setUsername(data.getAlias());
-//                    connectDialog.setSecondDescription("a connection request?");
-                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    connectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2://Disconnect
-                CommonLogger.info(TAG, "User connection state " +
-                        data.getConnectionState());
-                final DisconnectDialog disconnectDialog;
-                try {
-                    disconnectDialog =
-                            new DisconnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    disconnectDialog.setTitle("Disconnect");
-                    disconnectDialog.setDescription("Do you want to disconnect from");
-                    disconnectDialog.setUsername(data.getAlias() + "?");
-                    disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    disconnectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3://Accept Connection
-                try {
-                    AcceptDialog notificationAcceptDialog =
-                            new AcceptDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    notificationAcceptDialog.show();
-
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 4://Resend Connection
-                CommonLogger.info(TAG, "User connection state "
-                        + data.getConnectionState());
-                Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
-                try {
-                    connectDialog =
-                            new ConnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    connectDialog.setTitle("Resend Connection Request");
-                    connectDialog.setDescription("Do you want to resend ");
-                    connectDialog.setUsername(data.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
-                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    connectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 5://Reject Connection
-                CommonLogger.info(TAG, "User connection state "
-                        + data.getConnectionState());
-                Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
-                break;
         }
     }
 }
