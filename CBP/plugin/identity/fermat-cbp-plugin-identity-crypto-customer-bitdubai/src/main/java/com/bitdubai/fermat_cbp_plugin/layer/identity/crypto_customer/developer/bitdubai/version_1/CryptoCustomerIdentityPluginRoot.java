@@ -172,8 +172,9 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
         try {
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
+            Location location = locationManager.getLocation();
             if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile));
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location));
             }
         } catch (CantGetIdentityException e) {
 
@@ -190,6 +191,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException("CAN'T EXPOSE CRYPTO CUSTOMER IDENTITY", FermatException.wrapException(e), "", "");
 
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
         }
     }
 
@@ -263,7 +266,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
                             new CryptoCustomerExposingData(
                                     identity.getPublicKey()   ,
                                     identity.getAlias()       ,
-                                    identity.getProfileImage()
+                                    identity.getProfileImage(),
+                                    location
                             )
                     );
                 }
@@ -287,13 +291,15 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     private void exposeIdentity(final CryptoCustomerIdentity identity) throws CantExposeActorIdentityException {
 
         try {
-
-            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage()));
+            Location location = locationManager.getLocation();
+            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location));
 
         } catch (final CantExposeIdentityException e) {
 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
+        } catch (CantGetDeviceLocationException e) {
+            throw new CantExposeActorIdentityException(e, "", "Problem exposing identities in Location.");
         }
     }
 
