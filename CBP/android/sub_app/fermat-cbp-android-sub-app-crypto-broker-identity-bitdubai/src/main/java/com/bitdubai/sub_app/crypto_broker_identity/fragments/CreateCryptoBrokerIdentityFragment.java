@@ -220,12 +220,6 @@ public class CreateCryptoBrokerIdentityFragment
 
         progressBar.setVisibility(View.GONE);
 
-        if (appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
-            appSession.removeData(FragmentsCommons.ACCURACY_DATA);
-
-        if (appSession.getData(FragmentsCommons.FREQUENCY_DATA) != null)
-            appSession.removeData(FragmentsCommons.FREQUENCY_DATA);
-
         Toast.makeText(getActivity(), "Crypto Broker Identity Created.", Toast.LENGTH_LONG).show();
 
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY, appSession.getAppPublicKey());

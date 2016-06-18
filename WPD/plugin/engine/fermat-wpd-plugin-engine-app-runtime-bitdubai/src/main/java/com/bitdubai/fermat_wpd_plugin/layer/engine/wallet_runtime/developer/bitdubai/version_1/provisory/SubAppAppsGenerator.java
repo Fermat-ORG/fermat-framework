@@ -3053,8 +3053,6 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeActivity.setOptionsMenu(optionsMenu);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Geolocation");
         runtimeTitleBar.setLabelSize(16);

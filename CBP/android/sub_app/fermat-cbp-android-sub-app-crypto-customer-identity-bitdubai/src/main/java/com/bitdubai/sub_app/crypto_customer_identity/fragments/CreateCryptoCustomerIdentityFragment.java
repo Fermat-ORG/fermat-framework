@@ -151,6 +151,7 @@ implements FermatWorkerCallBack{
         configureToolbar();
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -252,12 +253,6 @@ implements FermatWorkerCallBack{
         }
 
         progressBar.setVisibility(View.GONE);
-
-        if (appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
-            appSession.removeData(FragmentsCommons.ACCURACY_DATA);
-
-        if (appSession.getData(FragmentsCommons.FREQUENCY_DATA) != null)
-            appSession.removeData(FragmentsCommons.FREQUENCY_DATA);
 
         Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
 

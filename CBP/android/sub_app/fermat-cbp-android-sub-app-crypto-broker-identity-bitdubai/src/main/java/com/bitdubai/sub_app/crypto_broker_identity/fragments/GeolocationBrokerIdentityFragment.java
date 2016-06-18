@@ -15,25 +15,17 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.util.EditIdentityWorker;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -43,12 +35,8 @@ import java.util.concurrent.ExecutorService;
  */
 
 public class GeolocationBrokerIdentityFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, SubAppResourcesProviderManager>
-        implements FermatWorkerCallBack {
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, SubAppResourcesProviderManager> {
 
-    private ExecutorService executor;
-
-    ErrorManager errorManager;
     EditText accuracy;
     Spinner frequency;
     Toolbar toolbar;
@@ -61,6 +49,7 @@ public class GeolocationBrokerIdentityFragment
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -134,20 +123,12 @@ public class GeolocationBrokerIdentityFragment
         } else {
             accuracyData = Integer.parseInt(accuracy.getText().toString());
 
-            final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
-
             appSession.setData(FragmentsCommons.FREQUENCY_DATA, frequencyData);
             appSession.setData(FragmentsCommons.ACCURACY_DATA, accuracyData);
-
-            if (identityInfo != null) {
-                CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(identityInfo, accuracyData, frequencyData);
-                FermatWorker fermatWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-                executor = fermatWorker.execute();
-            }
         }
     }
 
-    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {
@@ -162,24 +143,5 @@ public class GeolocationBrokerIdentityFragment
             accuracy.setText("0");
             frequency.setSelection(0);
         }
-    }
-
-    @Override
-    public void onPostExecute(Object... result) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-    }
-
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-
-        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
 }

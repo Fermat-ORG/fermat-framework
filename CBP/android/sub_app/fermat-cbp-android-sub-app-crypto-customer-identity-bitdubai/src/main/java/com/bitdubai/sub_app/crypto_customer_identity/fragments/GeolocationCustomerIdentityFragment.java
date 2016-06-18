@@ -18,20 +18,14 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.util.EditCustomerIdentityWorker;
 import com.bitdubai.sub_app.crypto_customer_identity.util.FragmentsCommons;
 
 import java.util.ArrayList;
@@ -46,8 +40,7 @@ import java.util.concurrent.ExecutorService;
  */
 
 public class GeolocationCustomerIdentityFragment
-        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, SubAppResourcesProviderManager>
-        implements FermatWorkerCallBack {
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerIdentityModuleManager>, SubAppResourcesProviderManager> {
 
     private ExecutorService executor;
 
@@ -153,16 +146,8 @@ public class GeolocationCustomerIdentityFragment
         } else {
             accuracyData = Integer.parseInt(accuracy.getText().toString());
 
-            final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
-
             appSession.setData(FragmentsCommons.FREQUENCY_DATA, frequencyData);
             appSession.setData(FragmentsCommons.ACCURACY_DATA, accuracyData);
-
-            if (identityInfo != null) {
-                CryptoCustomerIdentityInformation identity = new CryptoCustomerIdentityInformationImpl(identityInfo, accuracyData, frequencyData);
-                FermatWorker fermatWorker = new EditCustomerIdentityWorker(getActivity(), appSession, identity, this);
-                executor = fermatWorker.execute();
-            }
         }
     }
 
@@ -181,24 +166,5 @@ public class GeolocationCustomerIdentityFragment
             accuracy.setText("0");
             frequency.setSelection(0);
         }
-    }
-
-    @Override
-    public void onPostExecute(Object... result) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-    }
-
-    @Override
-    public void onErrorOccurred(Exception ex) {
-        if (executor != null) {
-            executor.shutdown();
-            executor = null;
-        }
-
-        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
-                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
 }

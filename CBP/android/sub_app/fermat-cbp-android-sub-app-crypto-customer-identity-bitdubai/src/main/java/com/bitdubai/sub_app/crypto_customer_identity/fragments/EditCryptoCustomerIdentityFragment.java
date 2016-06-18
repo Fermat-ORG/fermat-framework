@@ -111,6 +111,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
      *
      * @param layout el layout de este Fragment que contiene las vistas
      */
+    @SuppressWarnings("deprecation")
     private void initViews(View layout) {
         actualizable = true;
 
@@ -176,6 +177,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         configureToolbar();
     }
 
+    @SuppressWarnings("deprecation")
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -248,12 +250,6 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
         }
 
         progressBar.setVisibility(View.GONE);
-
-        if(appSession.getData(FragmentsCommons.ACCURACY_DATA) != null)
-            appSession.removeData(FragmentsCommons.ACCURACY_DATA);
-
-        if(appSession.getData(FragmentsCommons.FREQUENCY_DATA) != null)
-            appSession.removeData(FragmentsCommons.FREQUENCY_DATA);
 
         Toast.makeText(getActivity(), "Crypto Customer Identity Updated.", Toast.LENGTH_LONG).show();
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY, appSession.getAppPublicKey());
