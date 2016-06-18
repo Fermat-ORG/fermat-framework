@@ -55,7 +55,6 @@ import java.util.UUID;
  */
 public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatActorCommunitySettings> {
 
-
     @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
     List<ChatActorCommunityInformation> listWorldChatActor(String PublicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException;
 

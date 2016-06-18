@@ -249,7 +249,8 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_dap_factory_draft_search).getActionView();
+        MenuItem searchItem = menu.findItem(R.id.action_dap_factory_draft_search);
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -266,8 +267,8 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
             }
         });
 
-        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -275,14 +276,23 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+            switch (id) {
+                //case IC_ACTION_HELP_FACTORY:
+                case 2:
                 setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+//            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+//                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), "Asset Factory system error",
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
