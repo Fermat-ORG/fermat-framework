@@ -525,7 +525,7 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "OnCreate");
-        android.os.Debug.waitForDebugger();
+//        android.os.Debug.waitForDebugger();
         fermatSystem = FermatSystem.getInstance();
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
