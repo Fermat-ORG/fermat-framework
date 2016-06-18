@@ -116,10 +116,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         isAttached = false;
     }
 
+
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        Log.i(TAG,"onCreateOptionsMenu");
+    public void onPrepareOptionsMenu(Menu menu) {
         try {
+            Log.i(TAG,"Preparing fragment optionMenu");
             if(fermatFragmentType!=null) {
                 if (fermatFragmentType.getOptionsMenu() != null) {
                     List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
@@ -145,7 +146,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                 }
             }else{
                 if(appSession!=null)
-                Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
+                    Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
             }
 
 
@@ -153,7 +154,47 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
             if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
             e.printStackTrace();
         }
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        Log.i(TAG,"onCreateOptionsMenu");
+//        try {
+//            if(fermatFragmentType!=null) {
+//                if (fermatFragmentType.getOptionsMenu() != null) {
+//                    List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+//                    for (int i = 0; i < optionsMenuItems.size(); i++) {
+//                        OptionMenuItem menuItem = optionsMenuItems.get(i);
+//                        int id = menuItem.getId();
+//                        int groupId = menuItem.getGroupId();
+//                        int order = menuItem.getOrder();
+//                        int showAsAction = menuItem.getShowAsAction();
+//                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+//                        FermatDrawable icon = menuItem.getFermatDrawable();
+//                        if (icon != null) {
+//                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+//                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//                        }
+//                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
+//                        int actionViewClass = menuItem.getActionViewClass();
+//                        if (actionViewClass != -1) {
+//                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+//                        }
+//                    }
+//                }
+//            }else{
+//                if(appSession!=null)
+//                Log.e(TAG,"FermatFragmentType null in fragment for app:"+appSession.getAppPublicKey()+", contact furszy");
+//            }
+//
+//
+//        } catch (Exception e) {
+//            if(appSession!=null) Log.e(TAG,"Error loading optionsMenu, please check fragments for session:"+appSession.getAppPublicKey()+", if problem persist contact to Furszy");
+//            e.printStackTrace();
+//        }
+//        super.onCreateOptionsMenu(menu,inflater);
     }
 
     /**

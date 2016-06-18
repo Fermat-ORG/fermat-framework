@@ -4,7 +4,7 @@ import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.PlatformService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 
 import java.io.IOException;
@@ -150,7 +150,7 @@ public abstract class LocalSocketSession {
         if(!localSocket.isConnected())
             //todo: sacar ese nombre del path del server
             try {
-                localSocket.connect(new LocalSocketAddress(CommunicationServerService.SERVER_NAME));
+                localSocket.connect(new LocalSocketAddress(PlatformService.SERVER_NAME));
                 localSocket.setReceiveBufferSize(500000);
                 localSocket.setSoTimeout(0);
             } catch (IOException e) {

@@ -24,7 +24,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -244,7 +244,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
         } catch (CantExecuteQueryException e) {
             userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
-        } catch (UnexpectedResultReturnedFromDatabaseException | CantSetObjectException | CantStartDeliveringException | CantSendMessageException e) {
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantSetObjectException | CantStartDeliveringException | CantSendDAPMessageException e) {
             userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
         }
