@@ -1,13 +1,18 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils;
 
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
+
+import java.util.List;
 
 /**
  * Created by Franklin Marcano on 17/06/2016.
  */
 public class CitiesImpl implements Cities {
-    //Variables
+    City city;
+    Cities cities;
+
 
 
     //Constructor

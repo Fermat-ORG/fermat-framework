@@ -71,6 +71,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -498,11 +500,28 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<Cities> getCities(String filter) {
-        //Recorrer mapa
-        //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
-        //que es lo que retorno ya lleno
-        return null;
+    public List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException{
+
+        List<Cities> cities = null;
+        HashMap<String, Country> CitiesMap = geolocationManager.getCountryList();
+        Country country;
+
+        try {
+
+            for(Map.Entry<String, Country> entry: CitiesMap.entrySet()){
+                country = entry.getValue();
+                for (int i = 0; i < geolocationManager.getCitiesByCountryCode(country.getCountryShortName()).size(); i++){
+                    geolocationManager.getCitiesByCountryCode(country.getCountryShortName()).get(i);
+                }
+            }
+            //Recorrer mapa
+            //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
+            //que es lo que retorno ya lleno
+            return cities;
+        } catch (Exception e){
+            System.out.println("No sé que poner aquí");
+        }
+        return cities;
     }
 
     @Override
