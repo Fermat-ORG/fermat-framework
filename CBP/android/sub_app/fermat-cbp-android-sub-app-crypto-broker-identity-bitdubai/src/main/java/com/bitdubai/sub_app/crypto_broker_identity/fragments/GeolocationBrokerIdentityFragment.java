@@ -3,7 +3,6 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,38 +15,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityModuleManagerImpl;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
+import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.crypto_broker_identity.util.EditIdentityWorker;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
-import com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.GeolocationIdentityExecutor.SUCCESS;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
+import java.util.concurrent.ExecutorService;
+
 
 /**
  * FERMAT-ORG
@@ -55,17 +44,19 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/06/16.
  */
 
-public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, SubAppResourcesProviderManager> {
+public class GeolocationBrokerIdentityFragment
+        extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerIdentityModuleManager>, SubAppResourcesProviderManager>
+        implements FermatWorkerCallBack {
 
-    CryptoBrokerIdentityModuleManager moduleManager;
+    private ExecutorService executor;
+
     ErrorManager errorManager;
     EditText accuracy;
     Spinner frequency;
     Toolbar toolbar;
-    long acurracydata;
-    Frecuency frecuencydata;
-    CryptoBrokerIdentity identity;
-      private IdentityBrokerPreferenceSettings chatIdentitySettings;
+    int accuracyData;
+    Frecuency frequencyData;
+
 
     public static GeolocationBrokerIdentityFragment newInstance() {
         return new GeolocationBrokerIdentityFragment();
@@ -74,28 +65,7 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            chatIdentitySettings = null;
-            try {
-                chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch(Exception e){
-                chatIdentitySettings = null;
-            }
-            if (chatIdentitySettings == null) {
-                try {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
 
-            checkIdentity();
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        }
         toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.arrow_left));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -113,20 +83,6 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
         return rootLayout;
     }
 
-    private void checkIdentity(){
-        //Check if a default identity is configured
-        if(identity==null){
-            try{
-                final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
-
-                if(identityInfo != null){
-                    return;
-                }
-            }catch (Exception e){
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            }
-        }
-    }
 
     /**
      * Initializes the views of this Fragment
@@ -136,33 +92,28 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frecuency> dataspinner = new ArrayList<Frecuency>();
-        dataspinner.add(Frecuency.LOW);
-        dataspinner.add(Frecuency.NORMAL);
-        dataspinner.add(Frecuency.HIGH);
+        List<Frecuency> dataSpinner = new ArrayList<>();
+        dataSpinner.add(Frecuency.LOW);
+        dataSpinner.add(Frecuency.NORMAL);
+        dataSpinner.add(Frecuency.HIGH);
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
-        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
-
         try {
-            ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
-                    R.layout.cbp_iden_spinner_item, dataspinner);
-            //android.R.layout.simple_spinner_item, dataspinner);
+            ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
             dataAdapter.setDropDownViewResource(R.layout.cbp_iden_spinner_item);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             frequency.setAdapter(dataAdapter);
 
             setValues(frequency, accuracy, dataAdapter);
-            // frequency.setBackgroundColor(new Color.parseColor("#d1d1d1"));
+
             frequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
+                        frequencyData = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -185,76 +136,63 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void saveAndGoBack(){
-        try {
-            if(ExistIdentity()){
-                saveIdentityGeolocation("onBack");
+    @Override
+    public void onBackPressed() {
+        saveIdentityGeolocation();
+    }
+
+    private void saveIdentityGeolocation() {
+        if (accuracy.getText().length() == 0) {
+            Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
+        } else {
+            accuracyData = Integer.parseInt(accuracy.getText().toString());
+
+            final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
+
+            appSession.setData(FragmentsCommons.FREQUENCY_DATA, frequencyData);
+            appSession.setData(FragmentsCommons.ACCURACY_DATA, accuracyData);
+
+            if (identityInfo != null) {
+                CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(identityInfo, accuracyData, frequencyData);
+                FermatWorker fermatWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+                executor = fermatWorker.execute();
             }
-        } catch (CHTException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
+        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
+
+        if (identityInfo != null) {
+            final String accuracyString = Long.toString(identityInfo.getAccuracy());
+            accuracy.setText(accuracyString);
+
+            if (!(identityInfo.getFrecuency() == null)) {
+                int spinnerPosition = dataAdapter.getPosition(identityInfo.getFrecuency());
+                frequency.setSelection(spinnerPosition);
+            }
+        } else {
+            accuracy.setText("0");
+            frequency.setSelection(0);
         }
     }
 
     @Override
-    public void onBackPressed(){
-        saveAndGoBack();
-        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
-        //super.onBackPressed();
-    }
-
-    private void saveIdentityGeolocation(String donde) throws CantGetChatIdentityException {
-        GeolocationIdentityExecutor executor = null;
-        try {
-            if (accuracy.getText().length() == 0) {
-                Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
-            } else {
-                ExposureLevel ex = null;
-                acurracydata = Long.parseLong(accuracy.getText().toString());
-                final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
-
-                CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(identityInfo.getAlias(),identityInfo.getPublicKey(),identityInfo.getProfileImage(),ex, identityInfo.getAccuracy(),identityInfo.getFrecuency());
-                executor = new GeolocationIdentityExecutor(appSession,identity);
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
-                        } else if (donde.equalsIgnoreCase("onBack")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                }
-            }
-        }catch(Exception e){
-            if(errorManager != null)
-                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+    public void onPostExecute(Object... result) {
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
         }
     }
 
-    public boolean ExistIdentity() throws CHTException {
-        try {
-            if (!identity.getAlias().isEmpty()) {
-                Log.i("CHT EXIST IDENTITY", "TRUE");
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        if (executor != null) {
+            executor.shutdown();
+            executor = null;
         }
-        Log.i("CHT EXIST IDENTITY", "FALSE");
-        return false;
-    }
 
-    public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
-        checkIdentity();
-        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
-
-        if(identityInfo!=null){
-            accuracy.setText(""+identityInfo.getAccuracy());
-            if (!identityInfo.getFrecuency().equals(null)) {
-                int spinnerPosition = dataAdapter.getPosition(identityInfo.getFrecuency());
-                frequency.setSelection(spinnerPosition);
-            }
-        }
+        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
     }
 }

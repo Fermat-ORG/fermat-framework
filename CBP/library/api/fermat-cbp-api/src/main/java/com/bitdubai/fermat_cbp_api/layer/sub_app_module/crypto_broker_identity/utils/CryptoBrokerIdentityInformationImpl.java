@@ -20,6 +20,15 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     private long   accuracy;
     private Frecuency frecuency;
 
+    public CryptoBrokerIdentityInformationImpl(CryptoBrokerIdentityInformation identityInfo, long accuracy, Frecuency frequency){
+        this.alias = identityInfo.getAlias();
+        this.publicKey = identityInfo.getPublicKey();
+        this.profileImage = identityInfo.getProfileImage();
+        this.exposureLevel = identityInfo.isPublished()? ExposureLevel.PUBLISH : ExposureLevel.HIDE;
+        this.accuracy      = accuracy     ;
+        this.frecuency     = frequency    ;
+    }
+
     public CryptoBrokerIdentityInformationImpl(final String alias,
                                                final String publicKey,
                                                final byte[] profileImage,
