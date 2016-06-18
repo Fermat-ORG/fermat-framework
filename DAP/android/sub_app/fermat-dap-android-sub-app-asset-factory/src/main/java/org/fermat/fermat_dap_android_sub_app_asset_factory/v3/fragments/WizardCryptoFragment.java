@@ -148,8 +148,8 @@ public class WizardCryptoFragment extends AbstractFermatFragment<ReferenceAppFer
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -157,10 +157,19 @@ public class WizardCryptoFragment extends AbstractFermatFragment<ReferenceAppFer
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+            switch (id) {
+                //case IC_ACTION_HELP_FACTORY:
+                case 2:
                 setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+//            if (id == SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY) {
+//                setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

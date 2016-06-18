@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -88,9 +89,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private final UUID                                     pluginId                              ;
     private final PluginVersionReference                   pluginVersionReference                ;
     private final GeolocationManager                       geolocationManager                    ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager,
                                      ChatActorConnectionManager chatActorConnectionManager,
@@ -111,12 +109,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
 
         try{
-            worldActorList = getChatActorSearch().getResult();
+            worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
         } catch (CantGetChtActorSearchResult exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
