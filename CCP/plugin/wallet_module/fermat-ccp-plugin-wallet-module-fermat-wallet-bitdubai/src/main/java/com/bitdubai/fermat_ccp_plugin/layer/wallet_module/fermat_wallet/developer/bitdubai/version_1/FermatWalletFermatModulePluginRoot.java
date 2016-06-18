@@ -45,6 +45,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.structure.FermatWalletWalletModuleManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 
@@ -122,6 +123,9 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
     private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
 
 
@@ -205,7 +209,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
            // logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation started...", null, null);
 
-          /*  if(walletModuleCryptoWallet == null) {
+            if(walletModuleCryptoWallet == null) {
                 walletModuleCryptoWallet = new FermatWalletWalletModuleManager(
                         cryptoWalletManager,
                         cryptoAddressBookManager,
@@ -218,6 +222,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         intraWalletUserIdentityManager,
                         outgoingExtraUserManager,
                         outgoingIntraActorManager,
+                        exchangeProviderFilterManagerproviderFilter,
                         walletContactsManager,
                         pluginId,
                         pluginFileSystem,
@@ -227,7 +232,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
                 walletModuleCryptoWallet.initialize();
 
-            }*/
+            }
 
             logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation finished successfully.", null, null);
 
