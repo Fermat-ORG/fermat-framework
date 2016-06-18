@@ -51,13 +51,13 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
-    public List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias) throws CantGetCryptoCustomerSearchResult {
+    public List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoCustomerSearchResult {
 
         try {
 
             CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(publicKey, deviceLocation, distance, alias);
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 

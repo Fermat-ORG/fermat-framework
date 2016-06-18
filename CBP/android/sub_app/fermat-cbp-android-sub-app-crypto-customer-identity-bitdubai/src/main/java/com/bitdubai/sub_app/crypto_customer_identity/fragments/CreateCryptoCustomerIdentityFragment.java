@@ -165,8 +165,12 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         if (item.getItemId() == FragmentsCommons.CREATE_IDENTITY_MENU_ID) {
             createNewIdentityInBackDevice();
         }
+        if (item.getItemId() == 1) {
+            changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+        }
         return true;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -282,4 +286,5 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
+
 }
