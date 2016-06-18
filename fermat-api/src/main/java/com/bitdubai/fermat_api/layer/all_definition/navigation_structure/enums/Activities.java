@@ -707,7 +707,7 @@ public enum Activities implements FermatEnum {
             case "CBPSACBIGI":
                 return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY;
             case "CBPSACCIGI":
-                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY;
+                return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY;
             case "CBPSACCI":
                 return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCIIC":

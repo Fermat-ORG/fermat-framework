@@ -65,8 +65,7 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
     long acurracydata;
     Frecuency frecuencydata;
     CryptoBrokerIdentity identity;
-    final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
-    private IdentityBrokerPreferenceSettings chatIdentitySettings;
+      private IdentityBrokerPreferenceSettings chatIdentitySettings;
 
     public static GeolocationBrokerIdentityFragment newInstance() {
         return new GeolocationBrokerIdentityFragment();
@@ -118,6 +117,8 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
         //Check if a default identity is configured
         if(identity==null){
             try{
+                final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
                 if(identityInfo != null){
                     return;
                 }
@@ -209,6 +210,8 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
             } else {
                 ExposureLevel ex = null;
                 acurracydata = Long.parseLong(accuracy.getText().toString());
+                final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
                 CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(identityInfo.getAlias(),identityInfo.getPublicKey(),identityInfo.getProfileImage(),ex, identityInfo.getAccuracy(),identityInfo.getFrecuency());
                 executor = new GeolocationIdentityExecutor(appSession,identity);
                 int resultKey = executor.execute();
@@ -244,6 +247,8 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
 
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
         checkIdentity();
+        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);;
+
         if(identityInfo!=null){
             accuracy.setText(""+identityInfo.getAccuracy());
             if (!identityInfo.getFrecuency().equals(null)) {

@@ -2688,6 +2688,7 @@ public class SubAppAppsGenerator {
         final int ADD_IDENTITY_OPTION_MENU_ID = 1;
         final int HELP_OPTION_MENU_ID = 2;
         final int CREATE_IDENTITY_MENU_ID = 3;
+        final int GEOLOCATION_IDENTITY = 4;
         final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
         final Owner OWNER = new Owner(PUBLIC_KEY);
 
@@ -2791,6 +2792,16 @@ public class SubAppAppsGenerator {
         // Option Menu - Create New Identity Activity
         optionsMenu = new OptionsMenu();
         runtimeActivity.setOptionsMenu(optionsMenu);
+        // OptionsMenu optionsMenu = new OptionsMenu();
+
+        // Option Menu Item - GEOLOCATION
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_IDENTITY);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_IDENTITY, "ic_location", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
 
         // Option Menu Item - Create Identity
         optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
@@ -2815,15 +2826,6 @@ public class SubAppAppsGenerator {
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
-
-       // OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem menuItem = new OptionMenuItem(1);
-        Owner owner2 = new Owner();
-        owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode());
-
-        menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner2,SourceLocation.DEVELOPER_RESOURCES));
-        menuItem.setShowAsAction(2);
-        optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 
@@ -2871,6 +2873,8 @@ public class SubAppAppsGenerator {
     private void createCryptoBrokerIdentitySubAppNavigationStructure() throws InvalidParameterException {
         final int ADD_IDENTITY_OPTION_MENU_ID = 1;
         final int HELP_OPTION_MENU_ID = 2;
+        final int GEOLOCATION_IDENTITY = 3;
+
         final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
         final Owner OWNER = new Owner(PUBLIC_KEY);
 
@@ -2956,6 +2960,18 @@ public class SubAppAppsGenerator {
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
+
+        optionsMenu = new OptionsMenu();
+
+        // Option Menu Item - GEOLOCATION
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_IDENTITY);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_IDENTITY, "ic_location", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("New Identity");
