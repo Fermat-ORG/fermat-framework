@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -266,38 +267,39 @@ public abstract class FermatActivity extends AppCompatActivity implements
             menu.clear();
             if (optionsMenu != null) {
                 List<OptionMenuItem> optionsMenuItems = optionsMenu.getMenuItems();
-                for (int i=0;i< optionsMenuItems.size();i++) {
-                    OptionMenuItem menuItem = optionsMenuItems.get(i);
-                    int id = menuItem.getId();
-                    int groupId = menuItem.getGroupId();
-                    int order = menuItem.getOrder();
-                    int showAsAction = menuItem.getShowAsAction();
-                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                    FermatDrawable icon = menuItem.getFermatDrawable();
-                    if(icon!=null) {
-                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
-                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-                    }
-                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
-                    int actionViewClass = menuItem.getActionViewClass();
-                    if(actionViewClass!=-1){
-                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
-                    }
-                    if(menuItem.getOptionMenuPressEvent()!=null){
-                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
-                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
-                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
-                                    //return true because i want to cancell the rest of the callback if this is an activity change
-                                    return true;
-                                }
-                            });
-                        }
-                    }
-                }
+                loadMenu(menu,optionsMenuItems);
+//                for (int i=0;i< optionsMenuItems.size();i++) {
+//                    OptionMenuItem menuItem = optionsMenuItems.get(i);
+//                    int id = menuItem.getId();
+//                    int groupId = menuItem.getGroupId();
+//                    int order = menuItem.getOrder();
+//                    int showAsAction = menuItem.getShowAsAction();
+//                    MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+//                    FermatDrawable icon = menuItem.getFermatDrawable();
+//                    if(icon!=null) {
+//                        int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+//                        item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//
+//                    }
+//                    if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+//                    int actionViewClass = menuItem.getActionViewClass();
+//                    if(actionViewClass!=-1){
+//                        item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+//                    }
+//                    if(menuItem.getOptionMenuPressEvent()!=null){
+//                        final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+//                        if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+//                            item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                                @Override
+//                                public boolean onMenuItemClick(MenuItem item) {
+//                                    changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+//                                    //return true because i want to cancell the rest of the callback if this is an activity change
+//                                    return true;
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
             }
             return true;
 
@@ -309,6 +311,47 @@ public abstract class FermatActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void loadMenu(Menu menu,List<OptionMenuItem> menuItemList){
+        for (int i=0;i< menuItemList.size();i++) {
+            OptionMenuItem menuItem = menuItemList.get(i);
+            int id = menuItem.getId();
+            int groupId = menuItem.getGroupId();
+            int order = menuItem.getOrder();
+            int showAsAction = menuItem.getShowAsAction();
+            MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+            FermatDrawable icon = menuItem.getFermatDrawable();
+            if(icon!=null) {
+                int iconRes = ResourceLocationSearcherHelper.obtainRes(this,icon.getId(),icon.getSourceLocation(),icon.getOwner().getOwnerAppPublicKey());
+                item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            }
+            if(showAsAction!=-1)item.setShowAsAction(menuItem.getShowAsAction());
+            int actionViewClass = menuItem.getActionViewClass();
+            if(actionViewClass!=-1){
+                item.setActionView(OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,actionViewClass));
+            }
+            if(menuItem.hasSubMenu()){
+                SubMenu subMenu = item.getSubMenu();
+                List<OptionMenuItem> subMenuItemList = menuItem.getSubMenuOptionList();
+                loadMenu(subMenu, subMenuItemList);
+            }
+            item.setVisible(menuItem.isVisible());
+            if(menuItem.getOptionMenuPressEvent()!=null){
+                final OptionMenuPressEvent optionMenuPressEvent = menuItem.getOptionMenuPressEvent();
+                if(optionMenuPressEvent instanceof OptionMenuChangeActivityOnPressEvent) {
+                    item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            changeActivity(((OptionMenuChangeActivityOnPressEvent) optionMenuPressEvent).getActivityCode(),null);
+                            //return true because i want to cancell the rest of the callback if this is an activity change
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
     }
 
     /**

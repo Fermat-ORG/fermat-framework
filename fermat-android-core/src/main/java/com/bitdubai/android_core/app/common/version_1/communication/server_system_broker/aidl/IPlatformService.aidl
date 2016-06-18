@@ -5,7 +5,7 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 
-interface IServerBrokerService {
+interface IPlatformService {
 
 
     FermatModuleObjectWrapper invoqueModuleMethod(

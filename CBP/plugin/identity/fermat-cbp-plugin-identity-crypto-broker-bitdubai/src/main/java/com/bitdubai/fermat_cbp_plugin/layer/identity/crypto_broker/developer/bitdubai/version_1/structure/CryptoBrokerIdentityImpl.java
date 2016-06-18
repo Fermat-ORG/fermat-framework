@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -23,16 +24,22 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
     private final KeyPair keyPair;
     private byte[] profileImage;
     private ExposureLevel exposureLevel;
+    private long   accuracy;
+    private Frecuency frecuency;
 
     public CryptoBrokerIdentityImpl(final String        alias        ,
                                     final KeyPair       keyPair      ,
                                     final byte[]        profileImage ,
-                                    final ExposureLevel exposureLevel){
+                                    final ExposureLevel exposureLevel,
+                                    final long accuracy,
+                                    final Frecuency frecuency){
 
         this.alias         = alias        ;
         this.keyPair       = keyPair      ;
         this.profileImage  = profileImage ;
         this.exposureLevel = exposureLevel;
+        this.accuracy      = accuracy     ;
+        this.frecuency     = frecuency    ;
     }
 
     @Override
@@ -70,6 +77,16 @@ public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializa
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
         }
+    }
+
+    @Override
+    public long getAccuracy() {
+        return this.accuracy;
+    }
+
+    @Override
+    public Frecuency getFrecuency() {
+        return this.frecuency;
     }
 
     public boolean equals(Object o){
