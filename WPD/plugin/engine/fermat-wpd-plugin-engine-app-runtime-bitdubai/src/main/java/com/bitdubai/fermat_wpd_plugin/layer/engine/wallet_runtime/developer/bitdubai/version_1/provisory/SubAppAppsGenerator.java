@@ -2584,8 +2584,13 @@ public class SubAppAppsGenerator {
         Fragment runtimeFragment;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
-
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
         String communityRedeemPointPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityRedeemPointPublicKey);
 
         dapAssetRedeemPointCommunity = new AppNavigationStructure();
 
@@ -2643,6 +2648,59 @@ public class SubAppAppsGenerator {
 //        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        optionsMenu = new OptionsMenu();
+
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Connect");
+        menuItem.setOrder(0);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Disconnect");
+        menuItem.setOrder(1);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(3);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Cancel Connecting");
+        menuItem.setOrder(2);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(4);
+//        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Select All");
+        menuItem.setOrder(3);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(5);
+//        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Unselect All");
+        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(6);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(7);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
