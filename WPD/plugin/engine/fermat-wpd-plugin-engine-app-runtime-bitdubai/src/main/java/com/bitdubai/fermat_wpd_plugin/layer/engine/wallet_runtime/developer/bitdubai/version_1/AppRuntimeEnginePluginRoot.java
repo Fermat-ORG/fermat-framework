@@ -5885,9 +5885,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         // home fragment
-//        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
 
         //Tabs
         runtimeTabStrip = new TabStrip();
@@ -5957,7 +5954,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setFermatDrawable(new FermatDrawable(3, "ic_world", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("World");
         optionMenuItem.setShowAsAction(2);
-        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_PROFILE.getCode()));
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_WORLD.getCode()));
         optionsMenu.addMenuItem(optionMenuItem);
 
         // World optionMenu
@@ -5972,6 +5969,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Profile");
         optionMenuItem.setOrder(0);
         optionMenuItem.setShowAsAction(4);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CHT_COMBO_PROFILE.getCode()));
 //        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
@@ -5991,6 +5989,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CHT_COMBO_PROFILE.getCode());
         runtimeActivity.setType(Activities.CHT_COMBO_PROFILE);
         runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setBackPublicKey(ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode());
         runtimeActivity.setColor("#12aca1");
 
         // title bar
@@ -6001,6 +6000,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
+        MenuItem backItem = new MenuItem(1);
+        backItem.setAppLinkPublicKey("back");
+        Owner drawableBackOwner = new Owner();
+        drawableBackOwner.setOwnerAppPublicKey("fermatFramework");
+        //todo: pasar estos numeros a constantes en la api
+        backItem.setFermatDrawable(new FermatDrawable(1000,"back_arrow_white",drawableBackOwner,SourceLocation.FERMAT_FRAMEWORK));
+        runtimeTitleBar.setNavItem(backItem);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         //status bar
@@ -6035,6 +6041,70 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // Add to navigation structure
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+
+        // World activity
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CHT_COMBO_WORLD.getCode());
+        runtimeActivity.setType(Activities.CHT_COMBO_WORLD);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+        runtimeActivity.setBackPublicKey(ComboAppsPublicKeys.CHT_IDENTITY_COMMUNITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("World");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        backItem = new MenuItem(1);
+        backItem.setAppLinkPublicKey("back");
+        drawableBackOwner = new Owner();
+        drawableBackOwner.setOwnerAppPublicKey("fermatFramework");
+        //todo: pasar estos numeros a constantes en la api
+        backItem.setFermatDrawable(new FermatDrawable(1000,"back_arrow_white",drawableBackOwner,SourceLocation.FERMAT_FRAMEWORK));
+        runtimeTitleBar.setNavItem(backItem);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        // home fragment
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeFragment.setOwner(owner);
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setBackActivity(Activities.CHT_COMBO_HOME);
+
+        //Side Menu
+//        runtimeActivity.setSideMenu(loadSideMenuChatCombo(publicKey));
+
+        //OptionMenu
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+        runtimeFragment.setOwner(owner);
+        menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+
 
         return runtimeWalletNavigationStructure;
     }

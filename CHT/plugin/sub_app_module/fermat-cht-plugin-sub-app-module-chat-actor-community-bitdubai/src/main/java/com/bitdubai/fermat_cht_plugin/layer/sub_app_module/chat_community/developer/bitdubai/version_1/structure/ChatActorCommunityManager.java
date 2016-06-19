@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -49,6 +50,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
@@ -87,9 +89,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private final UUID                                     pluginId                              ;
     private final PluginVersionReference                   pluginVersionReference                ;
     private final GeolocationManager                       geolocationManager                    ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
-    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager,
                                      ChatActorConnectionManager chatActorConnectionManager,
@@ -110,12 +109,12 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+    public List<ChatActorCommunityInformation> listWorldChatActor(String publicKey, Actors actorType, DeviceLocation deviceLocation, double distance, String alias, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
         List<ChatActorCommunityInformation> worldActorList = null;
         List<ChatActorConnection> actorConnections = null;
 
         try{
-            worldActorList = getChatActorSearch().getResult();
+            worldActorList = getChatActorSearch().getResult(publicKey, deviceLocation, distance, alias, offset, max);
         } catch (CantGetChtActorSearchResult exception) {
             chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
@@ -499,6 +498,14 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
+    public List<Cities> getCities(String filter) {
+        //Recorrer mapa
+        //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
+        //que es lo que retorno ya lleno
+        return null;
+    }
+
+    @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
@@ -552,7 +559,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         //TODO: Revisar este metodo que hace aca
-        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null, null);
 
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;

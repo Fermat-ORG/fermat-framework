@@ -680,8 +680,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     private void paintToolbarIcon(TitleBar titleBar) {
-        if(titleBar.getLeftIconFermatDrawable()!=null){
-            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getLeftIconFermatDrawable();
+        if(titleBar.getNavItem()!=null){
+            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getNavItem();
             FermatDrawable leftIconFermatDrawable = menuItem.getFermatDrawable();
             int resId = ResourceLocationSearcherHelper.obtainRes(
                     this,
