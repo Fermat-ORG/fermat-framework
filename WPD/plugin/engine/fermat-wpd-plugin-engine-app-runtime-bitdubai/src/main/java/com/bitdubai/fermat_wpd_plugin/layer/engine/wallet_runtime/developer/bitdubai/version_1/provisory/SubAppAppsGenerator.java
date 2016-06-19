@@ -1525,7 +1525,7 @@ public class SubAppAppsGenerator {
 //
 //        leftIconMenuItem.setFermatDrawable(new FermatDrawable(10, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
 //        leftIconMenuItem.setAppLinkPublicKey("back");
-//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
+//        runtimeTitleBar.setNavItem(leftIconMenuItem);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1564,7 +1564,7 @@ public class SubAppAppsGenerator {
 //
 //        leftIconMenuItem2.setFermatDrawable(new FermatDrawable(11, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
 //        leftIconMenuItem2.setAppLinkPublicKey("back");
-//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem2);
+//        runtimeTitleBar.setNavItem(leftIconMenuItem2);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1603,7 +1603,7 @@ public class SubAppAppsGenerator {
 //
 //        leftIconMenuItem3.setFermatDrawable(new FermatDrawable(12, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
 //        leftIconMenuItem3.setAppLinkPublicKey("back");
-//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem3);
+//        runtimeTitleBar.setNavItem(leftIconMenuItem3);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1642,7 +1642,7 @@ public class SubAppAppsGenerator {
 //
 //        leftIconMenuItem4.setFermatDrawable(new FermatDrawable(13, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
 //        leftIconMenuItem4.setAppLinkPublicKey("back");
-//        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem4);
+//        runtimeTitleBar.setNavItem(leftIconMenuItem4);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4224,31 +4224,33 @@ public class SubAppAppsGenerator {
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuBrowser = new OptionsMenu();
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3,"ic_search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
         optionMenuItemBrowser.setShowAsAction(2);
         optionMenuItemBrowser.setActionViewClass(100);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2,"location",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Location");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Help");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
+
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
 
         //Tabs Connections
         runtimeTab = new Tab();
@@ -4256,7 +4258,7 @@ public class SubAppAppsGenerator {
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
+
         runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
@@ -4274,6 +4276,7 @@ public class SubAppAppsGenerator {
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         runtimeFragment.setOptionsMenu(optionsMenuConn);
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
 
 
         //Tabs Notifications
@@ -4418,7 +4421,7 @@ public class SubAppAppsGenerator {
 
         leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
         leftIconMenuItem.setAppLinkPublicKey("back");
-        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
+        runtimeTitleBar.setNavItem(leftIconMenuItem);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 

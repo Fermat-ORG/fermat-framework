@@ -63,6 +63,7 @@ dependencies {
     compile('org.bitcoinj:bitcoinj-core:0.13.3') {
         exclude module: 'scrypt'
     }
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 //    compile 'com.madgag.spongycastle:core:1.54.0.0'
 //    compile 'com.madgag.spongycastle:prov:1.54.0.0'
 //    compile 'com.madgag.spongycastle:pkix:1.54.0.0'
@@ -130,3 +131,6 @@ tasks.withType(FindBugs) {
 //        }
 //    }
 //}
+dependencies {
+    compile 'org.apache.commons:commons-collections4:4.0'
+}
