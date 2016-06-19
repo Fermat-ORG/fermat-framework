@@ -258,36 +258,36 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
                         pair = insertCheckedNetworkServicesHistory(checkedInNetworkService);
                         databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
+                    }
+                }
+
+               /*
+                * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                */
+                List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
+                        findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                clientPublicKey);
+
+                if(listCheckedInActor != null){
+
+                    for(CheckedInActor actor : listCheckedInActor){
+
                         /*
-                         * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                         * DELETE from table CheckedInActor
                          */
-                        List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
-                                findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                                        checkedInNetworkService.getIdentityPublicKey());
+                        pair = getDaoFactory().getCheckedInActorDao().createDeleteTransactionStatementPair(actor.getId());
+                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
 
-                        if(listCheckedInActor != null){
+                        LOG.info("DELETE Actor " + actor.toString());
 
-                            for(CheckedInActor actor : listCheckedInActor){
-
-                                /*
-                                 * DELETE from table CheckedInActor
-                                 */
-                                pair = getDaoFactory().getCheckedInActorDao().createDeleteTransactionStatementPair(actor.getId());
-                                databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-
-                                LOG.info("DELETE Actor " + actor.toString());
-
-                                /*
-                                 * Create a new row into the table CheckedActorsHistory
-                                 */
-                                pair = insertCheckedActorsHistory(actor);
-                                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-
-                            }
-
-                        }
+                        /*
+                         * Create a new row into the table CheckedActorsHistory
+                         */
+                        pair = insertCheckedActorsHistory(actor);
+                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
                     }
+
                 }
 
                 databaseTransaction.execute();
