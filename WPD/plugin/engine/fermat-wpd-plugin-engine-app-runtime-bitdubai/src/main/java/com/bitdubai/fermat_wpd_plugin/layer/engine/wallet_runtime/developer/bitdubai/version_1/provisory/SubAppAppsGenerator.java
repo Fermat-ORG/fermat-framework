@@ -3748,6 +3748,7 @@ public class SubAppAppsGenerator {
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
@@ -3757,12 +3758,12 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
-        optionMenuItem.setShowAsAction(-1);
+        optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
-        runtimeFragment.setOptionsMenu(optionsMenu);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         //Tabs Contacts
         runtimeTab = new Tab();
@@ -4248,7 +4249,7 @@ public class SubAppAppsGenerator {
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
-        runtimeFragment.setOptionsMenu(optionsMenuBrowser);
+        runtimeActivity.setOptionsMenu(optionsMenuBrowser);
 
         //Tabs Connections
         runtimeTab = new Tab();
@@ -4267,8 +4268,8 @@ public class SubAppAppsGenerator {
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        optionMenuItemConn = new OptionMenuItem(22);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn = new OptionMenuItem(2);
+        //optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(4);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
@@ -4292,11 +4293,10 @@ public class SubAppAppsGenerator {
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
-        optionMenuItemNot.setShowAsAction(1);
+        optionMenuItemNot.setShowAsAction(2);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
-
 
         chtComm.addActivity(runtimeActivity);
         chtComm.changeActualStartActivity(runtimeActivity.getType().getCode());

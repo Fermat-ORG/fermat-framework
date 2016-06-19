@@ -178,7 +178,7 @@ public class ConnectionsWorldFragment
 
                         if (!isRefreshing) {
                             if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                isRefreshing = false;
+                                isRefreshing = true;
                                 Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
                                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                                 progressDialog.setMessage("Please wait");
@@ -195,7 +195,7 @@ public class ConnectionsWorldFragment
                                     @SuppressWarnings("unchecked")
                                     @Override
                                     public void onPostExecute(Object... result) {
-                                        isRefreshing = false;
+                                        isRefreshing = true;
                                         if (swipeRefresh != null)
                                             swipeRefresh.setRefreshing(false);
                                         if (result != null &&
@@ -217,7 +217,7 @@ public class ConnectionsWorldFragment
                                     @Override
                                     public void onErrorOccurred(Exception ex) {
                                         progressDialog.dismiss();
-                                        isRefreshing = false;
+                                        isRefreshing = true;
                                         if (swipeRefresh != null)
                                             swipeRefresh.setRefreshing(false);
                                         if (getActivity() != null)
