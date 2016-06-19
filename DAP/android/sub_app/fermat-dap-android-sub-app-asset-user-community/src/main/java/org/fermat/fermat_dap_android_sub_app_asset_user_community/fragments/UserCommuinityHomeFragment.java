@@ -91,15 +91,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
     private List<Actor> actorsConnecting;
     private List<ActorAssetUser> actorsToConnect;
     private Actor actor;
-    private int MAX = 1;
-    private int offset = 0;
     private Menu menu;
 
-    private MenuItem menuItemConnect;
-    private MenuItem menuItemDisconnect;
-    private MenuItem menuItemSelect;
-    private MenuItem menuItemUnselect;
-    private MenuItem menuItemCancel;
+//    private MenuItem menuItemConnect;
+//    private MenuItem menuItemDisconnect;
+//    private MenuItem menuItemSelect;
+//    private MenuItem menuItemUnselect;
+//    private MenuItem menuItemCancel;
     private SearchView searchView;
     private ExecutorService _executor;
 
@@ -107,6 +105,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
      * Flags
      */
     private boolean isRefreshing = false;
+    private static final int MAX = 10;
+    private int offset = 0;
 
     public static UserCommuinityHomeFragment newInstance() {
         return new UserCommuinityHomeFragment();
@@ -197,25 +197,25 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
                 }
 
                 if (actorsConnecting.size() > 0) {
-                    menuItemCancel.setVisible(true);
+//                    menuItemCancel.setVisible(true);
                 } else {
-                    menuItemCancel.setVisible(false);
+//                    menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
-                        menuItemConnect.setVisible(false);
+//                        menuItemConnect.setVisible(false);
                     } else if (actorsConnecting.size() == 0) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
                     if (selectedActors > actorsConnecting.size()) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
-                    menuItemUnselect.setVisible(true);
+//                    menuItemUnselect.setVisible(true);
                     if (selectedActors == cheackeableActors) {
-                        menuItemSelect.setVisible(false);
+//                        menuItemSelect.setVisible(false);
                     } else {
-                        menuItemSelect.setVisible(true);
+//                        menuItemSelect.setVisible(true);
                     }
 
 //                  if(ableToDisconnect(actorsSelected)){
@@ -466,11 +466,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 //        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_user_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.getItem(1);
-        menuItemDisconnect = menu.getItem(2);
-        menuItemCancel = menu.getItem(3);
-        menuItemSelect = menu.getItem(4);
-        menuItemUnselect = menu.getItem(5);
+//        menuItemConnect = menu.getItem(1);
+//        menuItemDisconnect = menu.getItem(2);
+//        menuItemCancel = menu.getItem(3);
+//        menuItemSelect = menu.getItem(4);
+//        menuItemUnselect = menu.getItem(5);
 
         restartButtons();
     }
@@ -730,9 +730,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
                     }
                     adapter.changeDataSet(actors);
                     adapter.getAdapterChangeListener().onDataSetChanged(actors);
-                    menuItemConnect.setVisible(true);
-                    menuItemSelect.setVisible(false);
-                    menuItemUnselect.setVisible(true);
+//                    menuItemConnect.setVisible(true);
+//                    menuItemSelect.setVisible(false);
+//                    menuItemUnselect.setVisible(true);
                     break;
                 case 5://IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL
                     for (Actor actorIssuer : actors) {
@@ -1172,7 +1172,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
         try {
-            result = moduleManager.getAllActorAssetUserRegistered();
+            result = moduleManager.getAllActorAssetUserRegistered(MAX, offset);
             if (result != null && result.size() > 0) {
                 for (AssetUserActorRecord record : result) {
                     dataSet.add((new Actor(record)));
@@ -1214,10 +1214,10 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
     }
 
     private void restartButtons() {
-        menuItemCancel.setVisible(false);
-        menuItemSelect.setVisible(true);
-        menuItemUnselect.setVisible(false);
-        menuItemConnect.setVisible(false);
-        menuItemDisconnect.setVisible(false);
+//        menuItemCancel.setVisible(false);
+//        menuItemSelect.setVisible(true);
+//        menuItemUnselect.setVisible(false);
+//        menuItemConnect.setVisible(false);
+//        menuItemDisconnect.setVisible(false);
     }
 }

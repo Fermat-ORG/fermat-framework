@@ -91,14 +91,13 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     private RedeemPointCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-    private int offset = 0;
     private Menu menu;
 
-    private MenuItem menuItemSelect;
-    private MenuItem menuItemUnselect;
-    private MenuItem menuItemConnect;
-    private MenuItem menuItemDisconnect;
-    private MenuItem menuItemCancel;
+//    private MenuItem menuItemSelect;
+//    private MenuItem menuItemUnselect;
+//    private MenuItem menuItemConnect;
+//    private MenuItem menuItemDisconnect;
+//    private MenuItem menuItemCancel;
     private SearchView searchView;
 
     private ExecutorService _executor;
@@ -107,6 +106,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
      * Flags
      */
     private boolean isRefreshing = false;
+    private static final int MAX = 10;
+    private int offset = 0;
 
     public static RedeemPointCommunityHomeFragment newInstance() {
         return new RedeemPointCommunityHomeFragment();
@@ -196,26 +197,26 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
                 }
 
                 if (actorsConnecting.size() > 0) {
-                    menuItemCancel.setVisible(true);
+//                    menuItemCancel.setVisible(true);
 
                 } else {
-                    menuItemCancel.setVisible(false);
+//                    menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
-                        menuItemConnect.setVisible(false);
+//                        menuItemConnect.setVisible(false);
                     } else if (actorsConnecting.size() == 0) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
                     if (selectedActors > actorsConnecting.size()) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
-                    menuItemUnselect.setVisible(true);
+//                    menuItemUnselect.setVisible(true);
                     if (selectedActors == cheackeableActors) {
-                        menuItemSelect.setVisible(false);
+//                        menuItemSelect.setVisible(false);
                     } else {
-                        menuItemSelect.setVisible(true);
+//                        menuItemSelect.setVisible(true);
                     }
 //                    if(ableToDisconnect(actorsSelected)){
 //                        menuItemConnect.setVisible(false);
@@ -471,11 +472,11 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
 //        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.getItem(1);
-        menuItemDisconnect = menu.getItem(2);
-        menuItemCancel = menu.getItem(3);
-        menuItemSelect = menu.getItem(4);
-        menuItemUnselect = menu.getItem(5);
+//        menuItemConnect = menu.getItem(1);
+//        menuItemDisconnect = menu.getItem(2);
+//        menuItemCancel = menu.getItem(3);
+//        menuItemSelect = menu.getItem(4);
+//        menuItemUnselect = menu.getItem(5);
 
         restartButtons();
     }
@@ -737,9 +738,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
                     }
                     adapter.changeDataSet(actors);
                     adapter.getAdapterChangeListener().onDataSetChanged(actors);
-                    menuItemConnect.setVisible(true);
-                    menuItemSelect.setVisible(false);
-                    menuItemUnselect.setVisible(true);
+//                    menuItemConnect.setVisible(true);
+//                    menuItemSelect.setVisible(false);
+//                    menuItemUnselect.setVisible(true);
                     break;
                 case 5://IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL
                     for (Actor actorIssuer : actors) {
@@ -747,8 +748,8 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
                     }
                     adapter.changeDataSet(actors);
                     adapter.getAdapterChangeListener().onDataSetChanged(actors);
-                    menuItemSelect.setVisible(true);
-                    menuItemUnselect.setVisible(false);
+//                    menuItemSelect.setVisible(true);
+//                    menuItemUnselect.setVisible(false);
                     restartButtons();
                     break;
                 case 6://case IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION:
@@ -1143,7 +1144,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
             throw new NullPointerException("AssetRedeemPointCommunitySubAppModuleManager is null");
 
         try {
-            result = moduleManager.getAllActorAssetRedeemPointRegistered();
+            result = moduleManager.getAllActorAssetRedeemPointRegistered(MAX, offset);
             if (result != null && result.size() > 0) {
                 for (RedeemPointActorRecord record : result) {
                     dataSet.add((new Actor(record)));
@@ -1185,10 +1186,10 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     }
 
     private void restartButtons() {
-        menuItemCancel.setVisible(false);
-        menuItemSelect.setVisible(true);
-        menuItemUnselect.setVisible(false);
-        menuItemConnect.setVisible(false);
-        menuItemDisconnect.setVisible(false);
+//        menuItemCancel.setVisible(false);
+//        menuItemSelect.setVisible(true);
+//        menuItemUnselect.setVisible(false);
+//        menuItemConnect.setVisible(false);
+//        menuItemDisconnect.setVisible(false);
     }
 }
