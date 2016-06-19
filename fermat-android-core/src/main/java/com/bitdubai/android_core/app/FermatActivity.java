@@ -110,6 +110,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
@@ -788,7 +789,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 fermatFragments[i] = fragment;
                 //optionMenu
                 if(fragment.getOptionsMenu()!=null)addOptionMenuItems(fragment.getOptionsMenu());
-                String appPublicKey = fragment.getOwner().getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
+                Owner owner = fragment.getOwner();
+                if(owner==null) throw new NullPointerException("Owner null on fragment: "+fragment.getType()+" in app: "+session.getAppPublicKey()+", Please check your App structure");
+                String appPublicKey = owner.getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
                 AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
                 if (session instanceof ComboAppType2FermatSession) {
                     session = ((ComboAppType2FermatSession) session).getFermatSession(appPublicKey, FermatSession.class);
@@ -844,6 +847,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (InvalidParameterException e) {
             Log.e(TAG, "Invalid parameter, please check your runtime");
             e.printStackTrace();
+            handleExceptionAndRestart();
+        } catch (Exception e){
+            Log.e(TAG,e.getMessage());
             handleExceptionAndRestart();
         }
     }

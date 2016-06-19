@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.BottomNavigation;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.util.LibraryException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -211,7 +212,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
             //runtimeSubApp.addActivity(runtimeActivity);
 
-            Fragment runtimeFragment; //= new Fragment();
+            FermatRuntimeFragment runtimeFragment; //= new FermatRuntimeFragment();
             //runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN.getKey());
             //runtimeActivity.addFragment(Fragments.CWP_SHELL_LOGIN.getKey(), runtimeFragment);
 
@@ -230,7 +231,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
             createDesktop();
             Activity activity;
-            Fragment fragment;
+            FermatRuntimeFragment fragment;
 
 
 //            runtimeDesktopObject = new RuntimeDesktopObject();
@@ -239,7 +240,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //             */
 //
 //            // dmp_WALLET_MANAGER_FRAGMENT
-//            fragment.setType("CCPWMF");
+//            fragment.setFragmentCode("CCPWMF");
 //            activity.addFragment("CCPWMF",fragment);
 //            runtimeDesktopObject.setStartActivity(activity.getType());
 //
@@ -247,9 +248,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //             * Add home subApps fragment
 //             */
 //
-//            fragment = new Fragment();
+//            fragment = new FermatRuntimeFragment();
 //            // dmp_SUB_APP_MANAGER_FRAGMENT
-//            fragment.setType("CCPSAMF");
+//            fragment.setFragmentCode("CCPSAMF");
 //            activity.addFragment("CCPSAMF", fragment);
 
 
@@ -280,14 +281,14 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("DAPDHA");
-            fragment = new Fragment();
+            fragment = new FermatRuntimeFragment();
 
             /**
              * Add WalletManager fragment
              */
 
             // dmp_WALLET_MANAGER_FRAGMENT
-            fragment.setType("DAPWMF");
+            fragment.setFragmentCode("DAPWMF");
             activity.addFragment("DAPWMF", fragment);
             runtimeDesktopObject.addActivity(activity);
 
@@ -295,9 +296,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * Add home subApps fragment
              */
 
-            fragment = new Fragment();
+            fragment = new FermatRuntimeFragment();
             // dmp_SUB_APP_MANAGER_FRAGMENT
-            fragment.setType("DAPSAMF");
+            fragment.setFragmentCode("DAPSAMF");
             activity.addFragment("DAPSAMF", fragment);
             runtimeDesktopObject.addActivity(activity);
 
@@ -321,7 +322,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("CBPDHA");
-            fragment = new Fragment();
+            fragment = new FermatRuntimeFragment();
             runtimeDesktopObject.addActivity(activity);
 
             /**
@@ -329,7 +330,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              */
 
             // dmp_WALLET_MANAGER_FRAGMENT
-            fragment.setType("CBPWMF");
+            fragment.setFragmentCode("CBPWMF");
             activity.addFragment("CBPWMF", fragment);
             runtimeDesktopObject.addActivity(activity);
 
@@ -337,9 +338,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * Add home subApps fragment
              */
 
-            fragment = new Fragment();
+            fragment = new FermatRuntimeFragment();
             // dmp_SUB_APP_MANAGER_FRAGMENT
-            fragment.setType("CBPSAMF");
+            fragment.setFragmentCode("CBPSAMF");
             activity.addFragment("CBPSAMF", fragment);
             runtimeDesktopObject.addActivity(activity);
 
@@ -362,7 +363,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     private void createDesktop() {
         RuntimeDesktopObject runtimeDesktopObject;
         TitleBar runtimeTitleBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         String publicKey = "main_desktop";
 
         runtimeDesktopObject = new RuntimeDesktopObject();
@@ -404,8 +405,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
         //activity.setType(Activities.dmp_DESKTOP_HOME);
         //   activity.setActivityType("CCPDHA");
-        Fragment fragment = new Fragment();
-        fragment.setType(Fragments.DESKTOP_APPS_MAIN.getKey());
+        FermatRuntimeFragment fragment = new FermatRuntimeFragment();
+        fragment.setFragmentCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
         activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
         runtimeDesktopObject.addActivity(activity);
@@ -413,12 +414,12 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
 
         // activity
-        fragment = new Fragment();
-        fragment.setType(Fragments.DESKTOP_P2P_MAIN.getKey());
+        fragment = new FermatRuntimeFragment();
+        fragment.setFragmentCode(Fragments.DESKTOP_P2P_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
 
-        fragment = new Fragment();
-        fragment.setType(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
+        fragment = new FermatRuntimeFragment();
+        fragment.setFragmentCode(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
 
 
@@ -435,8 +436,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
         runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
 
-        fragment = new Fragment();
-        fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+        fragment = new FermatRuntimeFragment();
+        fragment.setFragmentCode(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
         activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(), fragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -459,9 +460,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
-        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTINGS.getKey());
+        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -483,9 +484,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
-        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -507,9 +508,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
-        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey());
+        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTING_EXPORT_KEY.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -531,9 +532,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DESKTOP_MORE_SETTINGS.getKey());
-        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DESKTOP_MORE_SETTINGS.getKey());
+        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_MORE_SETTINGS.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -549,9 +550,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         activity.setColor("#ffffff");
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.COMMUNITIES_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.COMMUNITIES_FRAGMENT.getKey());
+        runtimeFragment.setBackCode(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.COMMUNITIES_FRAGMENT.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
@@ -562,7 +563,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     private void createToolsDesktop() {
         RuntimeDesktopObject runtimeDesktopObject;
         Activity activity;
-        Fragment fragment; /**
+        FermatRuntimeFragment fragment; /**
          * Desktop WPD
          */
 
@@ -583,9 +584,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
          * Add home subApps fragment
          */
 
-        fragment = new Fragment();
+        fragment = new FermatRuntimeFragment();
         // dmp_SUB_APP_MANAGER_FRAGMENT
-        fragment.setType("CCPSAMF");
+        fragment.setFragmentCode("CCPSAMF");
         activity.addFragment("CCPSAMF", fragment);
         runtimeDesktopObject.addActivity(activity);
     }
@@ -675,6 +676,11 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
                     e.printStackTrace();
                 } catch (CantLoadFileException e) {
                     e.printStackTrace();
+                } catch (LibraryException e){
+                    e.printStackTrace();
+                    createDesktop();
+                    createToolsDesktop();
+                    fermatStructure = lstDesktops.get(appPublicKey);
                 }
             }
         }

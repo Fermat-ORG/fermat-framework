@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
 
@@ -35,7 +36,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      *  the String is the fragments enum value corresponding to each plugin
      */
 
-    Map<String, Fragment> fragments = new HashMap<String, Fragment>();
+    Map<String, FermatFragment> fragments = new HashMap<String, FermatFragment>();
 
     String lastFragment;
 
@@ -85,7 +86,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment(String fragmentsType, Fragment fragment) {
+    public void addFragment(String fragmentsType, FermatFragment fragment) {
         fragments.put(fragmentsType, fragment);
     }
 
@@ -205,12 +206,12 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     // TODO VER COMO HACER ESTO
     @Override
-    public Map<String, Fragment> getFragments() {
+    public Map<String, FermatFragment> getFragments() {
         return fragments;
     }
 
     @Override
-    public Fragment getLastFragment() {
+    public FermatFragment getLastFragment() {
         if(lastFragment==null){
             lastFragment = startFragment;
         }
@@ -218,11 +219,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public Fragment getFragment(String fragment) {
-        Iterator<Map.Entry<String, Fragment>> eSubApp = fragments.entrySet().iterator();
+    public FermatFragment getFragment(String fragment) {
+        Iterator<Map.Entry<String, FermatFragment>> eSubApp = fragments.entrySet().iterator();
         while (eSubApp.hasNext()) {
-            Map.Entry<String, Fragment> fragmentEntryEntry = eSubApp.next();
-            Fragment subApp = fragmentEntryEntry.getValue();
+            Map.Entry<String, FermatFragment> fragmentEntryEntry = eSubApp.next();
+            FermatFragment subApp = fragmentEntryEntry.getValue();
             if (subApp.getType().equals(fragment)) {
                 lastFragment = fragment;
                 return subApp;

@@ -23,6 +23,9 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment,Se
         this.fragmentCode = fragmentCode;
     }
 
+    public FermatRuntimeFragment() {
+    }
+
     public OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
