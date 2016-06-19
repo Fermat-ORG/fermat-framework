@@ -775,10 +775,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Tabs
      */
     protected void setPagerTabs(TabStrip tabStrip,FermatSession session){
+        int tabsSize = tabStrip.getTabs().size();
         List<Tab> tabs = tabStrip.getTabs();
-        Fragment[] fragments = new Fragment[tabStrip.getTabs().size()];
-        String[] tabTitles = new String[tabStrip.getTabs().size()];
-        FermatFragment[] fermatFragments = new FermatFragment[tabStrip.getTabs().size()];
+        Fragment[] fragments = new Fragment[tabsSize];
+        String[] tabTitles = new String[tabsSize];
+        FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
+        FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
         try {
             for (int i=0;i<tabs.size();i++) {
                 Tab tab = tabs.get(i);
@@ -797,6 +799,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                    throw new InvalidParameterException(e,"Fragment not found: "+fragment.getType()+" with owner: "+fragment.getOwner(),"Framework building tabs");
                 }
                 tabTitles[i] = tab.getLabel();
+                tabsDrawables[i] = tab.getDrawable();
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -807,6 +810,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 for (int i = 0; i < tabLayout.getTabCount(); i++) {
                     byte[] image = tabStrip.getTabs().get(i).getIcon();
                     tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
+                }
+                for (int i=0;i<tabsSize;i++) {
+                    FermatDrawable tabDrawables = tabsDrawables[i];
+                    if(tabDrawables!=null){
+                        tabLayout.getTabAt(i).setIcon(ResourceLocationSearcherHelper.obtainRes(this,tabDrawables.getId(),tabDrawables.getSourceLocation(),tabDrawables.getOwner().getOwnerAppPublicKey()));
+                    }
                 }
             }
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
