@@ -102,6 +102,8 @@ public class ChatListFragment
     PresentationDialog presentationDialog;
     ImageView noData;
     TextView noDatalabel;
+    TextView nochatssubtitle;
+    TextView nochatssubtitle1;
     private static final int MAX = 20;
     private int offset = 0;
 
@@ -211,6 +213,8 @@ public class ChatListFragment
                     //layout.setBackgroundResource(R.drawable.cht_background_color);
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
+                    nochatssubtitle.setVisibility(View.VISIBLE);
+                    nochatssubtitle1.setVisibility(View.VISIBLE);
                     getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
                     contactName.clear();
                     message.clear();
@@ -298,12 +302,16 @@ public class ChatListFragment
                 layout.setBackgroundResource(R.drawable.cht_background_white);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
+                nochatssubtitle.setVisibility(View.GONE);
+                nochatssubtitle1.setVisibility(View.GONE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
                 chatlistview();
             }else{
                 //layout.setBackgroundResource(R.drawable.cht_background_color);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
+                nochatssubtitle.setVisibility(View.VISIBLE);
+                nochatssubtitle1.setVisibility(View.VISIBLE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
                 contactName.clear();
                 message.clear();
@@ -348,6 +356,8 @@ public class ChatListFragment
         //text = (TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
+        nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);
+        nochatssubtitle1 = (TextView) layout.findViewById(R.id.nochatssubtitle1);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
@@ -434,7 +444,7 @@ public class ChatListFragment
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-        if(code.equals("13") && searchView.getQuery().toString().equals("")){
+        if(code.equals("13") /*&& searchView.getQuery().toString().equals("")*/){
             updatevalues();
             chatlistview();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
