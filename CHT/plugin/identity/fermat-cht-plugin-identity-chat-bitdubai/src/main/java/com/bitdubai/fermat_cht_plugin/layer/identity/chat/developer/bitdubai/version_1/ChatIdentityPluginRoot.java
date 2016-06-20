@@ -153,7 +153,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         List<ChatExposingData> chatExposingDataList = new ArrayList<>();
         Location location = null;
         try {
-             locationManager.getLocation();
+             location = locationManager.getLocation();
         } catch (CantGetDeviceLocationException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException("Cant Expose Chat Identity, in Get Location.", FermatException.wrapException(e), null, null);

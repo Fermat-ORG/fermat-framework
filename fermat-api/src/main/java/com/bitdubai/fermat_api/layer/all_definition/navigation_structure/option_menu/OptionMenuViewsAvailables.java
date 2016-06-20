@@ -5,6 +5,9 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option
  */
 public class OptionMenuViewsAvailables {
 
+    /**
+     * SearchView
+     */
     public static final int SEARCH_VIEW = 100;
 
 

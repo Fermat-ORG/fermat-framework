@@ -161,7 +161,7 @@
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL"/>
-        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.PlatformService"
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.PlatformService"
             android:process=":commerverSerice"
             android:exported="true">
             <intent-filter>

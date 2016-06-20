@@ -422,6 +422,7 @@ public enum Activities implements FermatEnum {
     //Combo Chat
     CHT_COMBO_HOME("CHTCH"),
     CHT_COMBO_PROFILE("CHTCP"),
+    CHT_COMBO_WORLD("CHTW"),
     ;
 
     private String code;
@@ -1088,6 +1089,8 @@ public enum Activities implements FermatEnum {
                 return CHT_COMBO_HOME;
             case "CHTCP":
                 return CHT_COMBO_PROFILE;
+            case "CHTW":
+                return CHT_COMBO_WORLD;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
