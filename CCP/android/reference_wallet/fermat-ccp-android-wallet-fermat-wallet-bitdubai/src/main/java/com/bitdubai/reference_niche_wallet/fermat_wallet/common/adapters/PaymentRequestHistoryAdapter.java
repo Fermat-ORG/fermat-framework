@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
@@ -77,7 +76,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.history_request_row;
+        return R.layout.fermat_history_request_row;
     }
 
     /**
