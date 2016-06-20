@@ -129,17 +129,21 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                         int groupId = menuItem.getGroupId();
                         int order = menuItem.getOrder();
                         int showAsAction = menuItem.getShowAsAction();
-                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                        FermatDrawable icon = menuItem.getFermatDrawable();
-                        if (icon != null) {
-                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                        MenuItem oldMenu = menu.findItem(id);
+                        if(oldMenu==null) {
+                            MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                            FermatDrawable icon = menuItem.getFermatDrawable();
+                            if (icon != null) {
+                                int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-                        }
-                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
-                        int actionViewClass = menuItem.getActionViewClass();
-                        if (actionViewClass != -1) {
-                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                            }
+                            if (showAsAction != -1)
+                                item.setShowAsAction(menuItem.getShowAsAction());
+                            int actionViewClass = menuItem.getActionViewClass();
+                            if (actionViewClass != -1) {
+                                item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                            }
                         }
                     }
                 }
