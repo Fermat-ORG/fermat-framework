@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 
 /**
  * Created by Matias Furszyfer on 2015.07.30..
@@ -42,9 +43,13 @@ public class XMLParser {
 
     public static Object parseXML(String xml,Object root){
         Object object=null;
-        if (xml != null) {
+        try {
+            if (xml != null) {
                 XStream xStream = getXstreamObject();
-                object=xStream.fromXML(xml,root);
+                object = xStream.fromXML(xml, root);
+            }
+        }catch (ConversionException e){
+            throw new LibraryException("Error in xml library",e);
         }
         return object;
     }

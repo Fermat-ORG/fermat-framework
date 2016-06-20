@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure;
+package com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure;
 
 import android.os.Parcel;
 import android.os.Parcelable;
