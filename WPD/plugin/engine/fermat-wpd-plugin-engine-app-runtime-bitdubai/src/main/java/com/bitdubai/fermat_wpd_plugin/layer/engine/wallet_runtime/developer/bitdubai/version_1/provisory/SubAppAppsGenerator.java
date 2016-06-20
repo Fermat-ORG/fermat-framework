@@ -4179,6 +4179,9 @@ public class SubAppAppsGenerator {
         chtComm.setPlatform(Platforms.CHAT_PLATFORM);
         //listSubApp.put(chtComm.getPublicKey(), chtComm);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#075E54");
+
         //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
@@ -4195,8 +4198,6 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#075E54");
         runtimeActivity.setStatusBar(statusBar);
 
         //Owner
@@ -4223,8 +4224,7 @@ public class SubAppAppsGenerator {
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-
+        runtimeFragment.setOwner(owner);
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -4249,7 +4249,6 @@ public class SubAppAppsGenerator {
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
-        runtimeFragment.setOwner(owner);
 
         runtimeTab.setFragment(runtimeFragment);
 //        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
