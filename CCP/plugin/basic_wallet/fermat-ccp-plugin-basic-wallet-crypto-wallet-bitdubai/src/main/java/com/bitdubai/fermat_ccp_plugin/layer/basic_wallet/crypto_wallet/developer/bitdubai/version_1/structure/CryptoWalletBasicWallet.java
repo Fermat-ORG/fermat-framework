@@ -86,7 +86,7 @@ public class CryptoWalletBasicWallet implements CryptoWalletWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            System.out.println("******BASIC WALLET - OPEN DATA BASE ********");
+           // System.out.println("******BASIC WALLET - OPEN DATA BASE ********");
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeCryptoWalletBasicException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {

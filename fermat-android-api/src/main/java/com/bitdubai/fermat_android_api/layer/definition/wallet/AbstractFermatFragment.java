@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -129,17 +130,21 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
                         int groupId = menuItem.getGroupId();
                         int order = menuItem.getOrder();
                         int showAsAction = menuItem.getShowAsAction();
-                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                        FermatDrawable icon = menuItem.getFermatDrawable();
-                        if (icon != null) {
-                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                        MenuItem oldMenu = menu.findItem(id);
+                        if(oldMenu==null) {
+                            MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                            FermatDrawable icon = menuItem.getFermatDrawable();
+                            if (icon != null) {
+                                int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-                        }
-                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
-                        int actionViewClass = menuItem.getActionViewClass();
-                        if (actionViewClass != -1) {
-                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                            }
+                            if (showAsAction != -1)
+                                item.setShowAsAction(menuItem.getShowAsAction());
+                            int actionViewClass = menuItem.getActionViewClass();
+                            if (actionViewClass != -1) {
+                                item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                            }
                         }
                     }
                 }
@@ -200,7 +205,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain res from other apps
      */
     private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id,sourceLocation,appOwnerPublicKey);
+        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
@@ -312,6 +317,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
         return (FermatScreenSwapper) getActivity();
+
     }
 
     /**
@@ -368,7 +374,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final void setChangeBackActivity(Activities backActivity){
-        getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        try {
+            getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     protected final FermatRuntime getRuntimeManager(){
@@ -505,12 +515,33 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+
     /**
      * Runtime Fragment methods
-     * //TODO: Quizás esto pueda ser una transacción y cuando le da commit se hace y se cambia todo lo que se quiera cambiar en runtime del fragmento
+     * //TODO: esto pueda ser una transacción y cuando le da commit se hace y se cambia todo lo que se quiera cambiar en runtime del fragmento
      */
-    public void changeOptionMenuVisibility(int id,boolean visibility){
-        fermatFragmentType.getOptionsMenu().getItem(id).setVisibility(visibility);
+
+    /**
+     *  Change the optionMenuItem visibility for a fragment menuItem
+     *
+     * @param id
+     * @param visibility
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
+        changeOptionMenuVisibility(id,visibility,false);
+    }
+
+    /**
+     * Change the optionMenuItem visibility for a activity menuItem
+     * @param id
+     * @param visibility
+     * @param fromParent
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility,boolean fromParent) throws InvalidParameterException {
+        if(!fromParent) fermatFragmentType.getOptionsMenu().getItem(id).setVisibility(visibility);
+        else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 }

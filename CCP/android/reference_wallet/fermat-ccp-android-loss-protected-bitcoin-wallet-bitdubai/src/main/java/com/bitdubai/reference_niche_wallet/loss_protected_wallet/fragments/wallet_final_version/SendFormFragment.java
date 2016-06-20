@@ -3,6 +3,10 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -219,7 +223,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             setUpContactAddapter();
 
-
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
 
             return rootView;
         } catch (Exception e) {
@@ -491,8 +498,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
         if (lossProtectedWalletContact != null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
-                bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+
+                if (lossProtectedWalletContact.getProfilePicture() != null) {
+
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
+                    bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+                } else
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
+
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
@@ -698,7 +711,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void sendCrypto() {
         try {
             //first check if have exchange rate info
-            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)!= 0){
+            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
+                    != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                     CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
                     if (validAddress != null) {
@@ -890,13 +904,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-        final InputMethodManager imm;
+
        /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
 
 
-        //Lineas para ocultar el teclado virtual (Hide keyboard)
-         imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editTextAmount.getWindowToken(), 0);
+
     }
 }

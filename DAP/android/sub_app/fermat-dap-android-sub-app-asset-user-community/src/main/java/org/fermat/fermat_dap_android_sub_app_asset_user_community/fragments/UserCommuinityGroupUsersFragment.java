@@ -78,7 +78,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
-    private MenuItem menuItemDelete;
+//    private MenuItem menuItemDelete;
     private Menu menu;
     private CreateGroupFragmentDialog dialog;
 
@@ -135,9 +135,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                 }
 
                 if (someSelected) {
-                    menuItemDelete.setVisible(true);
+//                    menuItemDelete.setVisible(true);
                 } else {
-                    menuItemDelete.setVisible(false);
+//                    menuItemDelete.setVisible(false);
                 }
 
             }
@@ -195,25 +195,6 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME, 0, "Rename Group").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE, 0, "Delete Group").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS, 0, "Delete Selected Users").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menuItemDelete = menu.getItem(3);
-        menuItemDelete.setVisible(false);
-
-    }
-
     private void setUpPresentation(boolean checkButton) {
 
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -232,19 +213,35 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+//        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME, 0, "Rename Group").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE, 0, "Delete Group").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS, 0, "Delete Selected Users").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+//        menuItemDelete = menu.getItem(4);
+//        menuItemDelete.setVisible(false);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            } else {
-                if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME) {
+            ConfirmDeleteDialog dialog;
+            switch (id) {
+                case 1://IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME
                     lauchCreateGroupDialog();
-                } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE) {
+                    break;
+                case 2://IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE
                     appSession.setData("group_ID", group.getGroupId());
-                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
+                    dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
                     dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {
@@ -277,9 +274,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                         }
                     });
                     dialog.show();
-
-                } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS) {
-                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
+                    break;
+                case 3://IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS
+                    dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
                     dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {
@@ -294,7 +291,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                                 }
                                 Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
                                 onRefresh();
-                                menuItemDelete.setVisible(false);
+//                                menuItemDelete.setVisible(false);
                             } catch (CantDeleteAssetUserGroupException e) {
                                 e.printStackTrace();
                                 Toast.makeText(getActivity(), "This users couldn't be deleted.", Toast.LENGTH_SHORT).show();
@@ -304,9 +301,83 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                         }
                     });
                     dialog.show();
-
-                }
+                    break;
+                case 4://IC_ACTION_USER_COMMUNITY_HELP_GROUP
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            } else {
+//                if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_RENAME) {
+//                    lauchCreateGroupDialog();
+//                } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE) {
+//                    appSession.setData("group_ID", group.getGroupId());
+//                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
+//                    dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
+//                        @Override
+//                        public void onClick() {
+//                            String groupSelectedID;
+//                            try {
+//                                groupSelectedID = (String) appSession.getData("group_ID");
+//                                List<ActorAssetUser> userList = moduleManager.getListActorAssetUserByGroups(groupSelectedID);
+//                                for (ActorAssetUser user : userList) {
+//
+//                                    AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+//                                    actorGroup.setGroupId(groupSelectedID);
+//                                    actorGroup.setActorPublicKey(user.getActorPublicKey());
+//                                    moduleManager.removeActorAssetUserFromGroup(actorGroup);
+//
+//                                }
+//
+//                                moduleManager.deleteGroup(groupSelectedID);
+//                                Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
+//                                changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN, appSession.getAppPublicKey());
+//                            } catch (CantDeleteAssetUserGroupException e) {
+//                                e.printStackTrace();
+//                                Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
+//                            } catch (RecordsNotFoundException e) {
+//                                e.printStackTrace();
+//                                Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
+//                            } catch (CantGetAssetUserActorsException e) {
+//                                e.printStackTrace();
+//                                Toast.makeText(getActivity(), "Can't get users from group.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                    dialog.show();
+//
+//                } else if (item.getItemId() == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_DELETE_MEMBERS) {
+//                    ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), appSession, appResourcesProviderManager);
+//                    dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
+//                        @Override
+//                        public void onClick() {
+//                            try {
+//                                for (Actor actor : actors) {
+//                                    if (actor.selected) {
+//                                        AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+//                                        actorGroup.setGroupId(group.getGroupId());
+//                                        actorGroup.setActorPublicKey(actor.getActorPublicKey());
+//                                        moduleManager.removeActorAssetUserFromGroup(actorGroup);
+//                                    }
+//                                }
+//                                Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
+//                                onRefresh();
+//                                menuItemDelete.setVisible(false);
+//                            } catch (CantDeleteAssetUserGroupException e) {
+//                                e.printStackTrace();
+//                                Toast.makeText(getActivity(), "This users couldn't be deleted.", Toast.LENGTH_SHORT).show();
+//                            } catch (RecordsNotFoundException e) {
+//                                Toast.makeText(getActivity(), "Records not found.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+//                    dialog.show();
+//
+//                }
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Asset User system error",

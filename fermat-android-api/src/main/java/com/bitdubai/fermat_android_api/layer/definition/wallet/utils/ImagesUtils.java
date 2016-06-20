@@ -105,7 +105,7 @@ public class ImagesUtils {
      */
     public static byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         return stream.toByteArray();
     }
 
@@ -164,5 +164,4 @@ public class ImagesUtils {
         }
         return dstBmp;
     }
-
 }

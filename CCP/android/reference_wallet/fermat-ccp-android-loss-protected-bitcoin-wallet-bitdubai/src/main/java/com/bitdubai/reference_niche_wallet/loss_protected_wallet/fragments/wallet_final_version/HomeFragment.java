@@ -732,12 +732,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, LossProtectedWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.loos_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
     }
 
 
@@ -747,10 +742,10 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
             int id = item.getItemId();
 
-            if(id == LossProtectedWalletConstants.IC_ACTION_SEND){
+            if(id ==2){
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
-            }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
+            }else {
                 setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
                 return true;
             }

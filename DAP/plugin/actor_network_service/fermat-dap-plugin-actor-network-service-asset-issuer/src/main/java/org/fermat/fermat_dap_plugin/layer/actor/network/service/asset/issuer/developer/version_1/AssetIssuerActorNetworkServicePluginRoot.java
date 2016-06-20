@@ -603,7 +603,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractActorNetwo
     }
 
     @Override
-    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
+    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered(int max, int offset) throws CantRequestListActorAssetIssuerRegisteredException {
 
         try {
             if (actorAssetIssuerRegisteredList != null && !actorAssetIssuerRegisteredList.isEmpty())
@@ -615,10 +615,10 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractActorNetwo
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.ASSET_ISSUER_ACTOR
             );
 
