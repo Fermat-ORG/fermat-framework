@@ -120,7 +120,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
-            Log.i(TAG,"Preparing fragment optionMenu");
             if(fermatFragmentType!=null) {
                 if (fermatFragmentType.getOptionsMenu() != null) {
                     List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
@@ -159,8 +158,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(TAG,"onCreateOptionsMenu");
-        menu.add("onCreateOption");
+
 //        try {
 //            if(fermatFragmentType!=null) {
 //                if (fermatFragmentType.getOptionsMenu() != null) {
