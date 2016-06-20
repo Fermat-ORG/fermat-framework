@@ -204,7 +204,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain res from other apps
      */
     private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id,sourceLocation,appOwnerPublicKey);
+        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
@@ -316,6 +316,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
         return (FermatScreenSwapper) getActivity();
+
     }
 
     /**
@@ -372,7 +373,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final void setChangeBackActivity(Activities backActivity){
-        getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        try {
+            getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     protected final FermatRuntime getRuntimeManager(){
