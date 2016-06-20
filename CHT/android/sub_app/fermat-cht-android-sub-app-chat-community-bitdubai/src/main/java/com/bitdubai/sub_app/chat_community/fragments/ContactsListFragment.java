@@ -69,7 +69,7 @@ public class ContactsListFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 2;
+    private static final int MAX = 6;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
@@ -165,6 +165,11 @@ public class ContactsListFragment
         return rootView;
     }
 
+    @Override
+    public void onFragmentFocus () {
+        onRefresh();
+    }
+
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {
 //        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), appSession.getModuleManager().getSelectedActorIdentity()));
         //AppNavigationAdapter appNavigationAdapter = new AppNavigationAdapter(getActivity(), null);
@@ -249,12 +254,12 @@ public class ContactsListFragment
 //                contactid.clear();
 //                contacticon.clear();
 //                contactStatus.clear();
-
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
+                if(identity!=null) {
+                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), null, 0, "", MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
-                            for (ChatActorCommunityInformation conta:con) {
+                            for (ChatActorCommunityInformation conta : con) {
                                 if (conta.getConnectionState() != null) {
                                     if (conta.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())) {
                                         try {
@@ -268,6 +273,7 @@ public class ContactsListFragment
                             }
                         }
                     }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -277,11 +283,16 @@ public class ContactsListFragment
     }
 
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
-        BackgroundAsyncTaskList backWorldList = new BackgroundAsyncTaskList();
-        backWorldList.execute();
+//        BackgroundAsyncTaskList backWorldList = new BackgroundAsyncTaskList();
+//        backWorldList.execute();
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.listAllConnectedChatActor(identity, MAX, offset));
+            List<ChatActorCommunityInformation> result;
+            if(identity != null){
+                result = moduleManager.listAllConnectedChatActor(identity, MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
         } catch (CantListChatActorException e) {
             e.printStackTrace();
         }

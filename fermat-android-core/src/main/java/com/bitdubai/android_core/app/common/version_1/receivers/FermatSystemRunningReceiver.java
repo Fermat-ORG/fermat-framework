@@ -8,7 +8,7 @@ import android.util.Log;
 import com.bitdubai.android_core.app.ApplicationSession;
 
 /**
- * Created by mati on 2016.04.22..
+ * Created by Matias Furszyfer on 2016.04.22..
  */
 public class FermatSystemRunningReceiver extends BroadcastReceiver{
 

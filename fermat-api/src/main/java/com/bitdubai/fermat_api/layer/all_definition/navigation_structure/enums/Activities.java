@@ -303,12 +303,16 @@ public enum Activities implements FermatEnum {
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER("CBPSACBIIC"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY("CBPSACBIEI"),
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY("CBPSACBIGCI"),
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY("CBPSACBIGEI"),
 
     // Crypto Customer Identity
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER("CBPSACCIIC"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CBPSACCICI"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY("CBPSACCIEI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY("CBPSACCIGCI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY("CBPSACCIGEI"),
 
     // Crypto Broker Community
     CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS("CBPSACBCCF"),
@@ -418,6 +422,7 @@ public enum Activities implements FermatEnum {
     //Combo Chat
     CHT_COMBO_HOME("CHTCH"),
     CHT_COMBO_PROFILE("CHTCP"),
+    CHT_COMBO_WORLD("CHTW"),
     ;
 
     private String code;
@@ -673,14 +678,14 @@ public enum Activities implements FermatEnum {
             case "CBPCCWSML":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS;
             case "CBPCCWCNLIS":
-                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;            
+                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
             case "CBPCCWCD":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS;
             case "CBPCCWSBAS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
             case "CBPCCWP":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
-                case "CBPCCWCNBAIS":
+            case "CBPCCWCNBAIS":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS;
 
             case "DAPAUCAM":
@@ -703,7 +708,14 @@ public enum Activities implements FermatEnum {
                 return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACBIEI":
                 return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY;
-
+            case "CBPSACBIGCI":
+                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY;
+            case "CBPSACBIGEI":
+                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY;
+            case "CBPSACCIGCI":
+                return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY;
+            case "CBPSACCIGEI":
+                return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY;
             case "CBPSACCI":
                 return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCIIC":
@@ -711,7 +723,7 @@ public enum Activities implements FermatEnum {
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACCIEI":
-                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;           
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
 
             case "CBPSACBCCF":
                 return CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS;
@@ -970,7 +982,7 @@ public enum Activities implements FermatEnum {
             case "CWRWLPWBV1S":
                 return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SETTINGS;
             case "CWRWLPWBV1SW":
-                  return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
+                return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET;
             case "CWRWLPWBV1CV":
                 return CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES;
             case "CCPBLPWCVD":
@@ -1077,6 +1089,8 @@ public enum Activities implements FermatEnum {
                 return CHT_COMBO_HOME;
             case "CHTCP":
                 return CHT_COMBO_PROFILE;
+            case "CHTW":
+                return CHT_COMBO_WORLD;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

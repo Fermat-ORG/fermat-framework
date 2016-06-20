@@ -38,6 +38,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -176,7 +177,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 fermatStructure = fermatAppsManager.getLastAppStructure();
             }
             Activity activity = (fermatStructure != null) ? fermatStructure.getLastActivity() : null;
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
+            FermatFragment fragment = (activity != null) ? activity.getLastFragment() : null;
             if (fragment != null) frgBackType = fragment.getBack();
             if (frgBackType != null) {
                 changeFragment(fermatStructure.getPublicKey(), fragment);
@@ -266,7 +267,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
-                    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
+                    FermatFragment runtimeFragment = appStructure.getLastActivity().getLastFragment();
                     FermatSession fermatSubSession = null;
                     if (runtimeFragment.getOwner()!=null){
                         fermatSubSession = ((ComboAppType2FermatSession)session).getFermatSession(runtimeFragment.getOwner().getOwnerAppPublicKey(),FermatSession.class);
@@ -391,7 +392,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }
     }
 
-    public void changeFragment(String appPublicKey, com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fermatFragment) {
+    public void changeFragment(String appPublicKey, FermatFragment fermatFragment) {
         try {
             ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getFragment(fermatFragment.getType());
             FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatFragment.getOwner().getOwnerAppPublicKey(),this,ApplicationSession.getInstance().getAppManager().getAppsSession(appPublicKey));

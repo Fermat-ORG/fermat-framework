@@ -25,13 +25,13 @@ import com.bitdubai.android_core.app.common.version_1.communication.client_syste
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.MethodTimeOutException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IServerBrokerService;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.IntentServerServiceAction;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.PlatformService;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.IPlatformService;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -206,7 +206,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                             method.getName(),
                             parameters);
                 }catch (TransactionTooLargeException t1){
-                    Log.e(TAG,"Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method="+method.getName()+" at pluginVersionReference="+pluginVersionReference.toString3());
+                    Log.e(TAG, "Method send too much data, remove large data from method's parameters, minimize data returned by the module or check the android framework documentation for make a large data background request, method=" + method.getName() + " at pluginVersionReference=" + pluginVersionReference.toString3());
                     objectArrived = new FermatModuleObjectWrapper(new LargeDataRequestException(proxy,method,t1));
                 }  catch (RemoteException e) {
                     e.printStackTrace();
@@ -299,11 +299,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             poolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS_NUM);
             bufferChannelAIDL = new BufferChannelAIDL();
 
-            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            Intent serviceIntent = new Intent(this, PlatformService.class);
             serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
             doBindService(serviceIntent);
 
-//        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
+//        Intent serviceIntent2 = new Intent(this, PlatformService.class);
 //        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
 //        doBindMessengerService(serviceIntent2);
         }catch (Exception e){
@@ -332,7 +332,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         super.onDestroy();
     }
 
-    private IServerBrokerService iServerBrokerService = null;
+    private IPlatformService iServerBrokerService = null;
     /** Flag indicating whether we have called bind on the service. */
     boolean mPlatformServiceIsBound;
 
@@ -342,22 +342,22 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private ServiceConnection mPlatformServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-            iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
+            iServerBrokerService = IPlatformService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mPlatformServiceIsBound = true;
             Log.i(TAG,"Registering client");
             try {
                 serverIdentificationKey = iServerBrokerService.register();
-                try {
-                    iServerBrokerService.asBinder().unlinkToDeath(new IBinder.DeathRecipient() {
-                        @Override
-                        public void binderDied() {
-                            Log.e(TAG,"Binder unlinked");
-                        }
-                    }, 0);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+//                try {
+//                    iServerBrokerService.asBinder().unlinkToDeath(new IBinder.DeathRecipient() {
+//                        @Override
+//                        public void binderDied() {
+//                            Log.e(TAG,"Binder unlinked");
+//                        }
+//                    }, 0);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
                 //running socket receiver
                 Log.i(TAG, "Starting socket receiver");
                 LocalSocket localSocket = new LocalSocket();
@@ -579,7 +579,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     private void tryReconnect() {
         if(!mPlatformServiceIsBound){
-            Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+            Intent serviceIntent = new Intent(this, PlatformService.class);
             serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
             doBindService(serviceIntent);
         }else{

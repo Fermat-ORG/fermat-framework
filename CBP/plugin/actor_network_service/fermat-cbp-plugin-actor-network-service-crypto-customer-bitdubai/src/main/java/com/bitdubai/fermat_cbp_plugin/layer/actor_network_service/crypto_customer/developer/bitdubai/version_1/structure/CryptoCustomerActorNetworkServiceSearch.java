@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_custom
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerSearch;
@@ -30,7 +31,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResult(Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -41,10 +42,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 
@@ -57,7 +58,187 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                 System.out.println("************** I'm a crypto customer searched: "+actorProfile);
                 System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
 
-                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+            }
+
+            return cryptoCustomerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    alias,
+                    distance,
+                    null,
+                    publicKey,
+                    deviceLocation,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offSet,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+            }
+
+            return cryptoCustomerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantListCryptoCustomersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    deviceLocation,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offSet,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+            }
+
+            return cryptoCustomerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerExposingData> getResultDistance(double distance, Integer max, Integer offSet) throws CantListCryptoCustomersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    null,
+                    distance,
+                    null,
+                    null,
+                    null,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offSet,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
+            }
+
+            return cryptoCustomerExposingDataList;
+
+        } catch (final CantRequestProfileListException e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Problem trying to request list of registered components in communication layer.");
+
+        } catch (final Exception e) {
+
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Unhandled error.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerExposingData> getResultAlias(String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    Actors.CBP_CRYPTO_CUSTOMER.getCode(),
+                    alias,
+                    null,
+                    null,
+                    null,
+                    null,
+                    max,
+                    null,
+                    NetworkServiceType.UNDEFINED,
+                    offSet,
+                    NetworkServiceType.CRYPTO_CUSTOMER
+            );
+
+            final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = new ArrayList<>();
+
+            for (final ActorProfile actorProfile : list) {
+
+                System.out.println("************** I'm a crypto customer searched: "+actorProfile);
+                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
+
+                cryptoCustomerExposingDataList.add(new CryptoCustomerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoCustomerExposingDataList;

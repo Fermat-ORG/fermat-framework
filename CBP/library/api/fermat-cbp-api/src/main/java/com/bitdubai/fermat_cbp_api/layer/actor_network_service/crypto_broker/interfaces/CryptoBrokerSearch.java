@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 
@@ -38,7 +39,15 @@ public abstract class CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    public abstract List<CryptoBrokerExposingData> getResult() throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResult(Integer max, Integer offset) throws CantListCryptoBrokersException;
+
+    public abstract List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException;
+
+    public abstract List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantListCryptoBrokersException;
+
+    public abstract List<CryptoBrokerExposingData> getResultDistance(double distance, Integer max, Integer offset) throws CantListCryptoBrokersException;
+
+    public abstract List<CryptoBrokerExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
