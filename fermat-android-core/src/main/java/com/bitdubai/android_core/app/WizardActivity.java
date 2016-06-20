@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuIte
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 
@@ -337,12 +338,12 @@ public class WizardActivity extends FermatActivity
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity = walletNavigationStructure.getLastActivity();
 
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
+            FermatFragment fragment = activity.getLastFragment();
 
             if (fragment != null) frgBackType = fragment.getBack();
 
             if (frgBackType != null) {
-                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletNavigationStructure.getLastActivity().getFragment(fragment.getBack());
+                FermatFragment fragmentBack = walletNavigationStructure.getLastActivity().getFragment(fragment.getBack());
                 //changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
             } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
                 //changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());

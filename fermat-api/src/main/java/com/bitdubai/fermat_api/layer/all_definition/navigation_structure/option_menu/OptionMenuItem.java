@@ -64,10 +64,6 @@ public class OptionMenuItem extends MenuItem {
      * OptionMenu press event launched when user click on the item
      */
     private OptionMenuPressEvent<?> optionMenuPressEvent;
-    /**
-     * Visibility
-     */
-    private boolean visibility = true;
 
     public OptionMenuItem(int id) {
         super(id);
@@ -126,11 +122,5 @@ public class OptionMenuItem extends MenuItem {
         return subMenuOptionList;
     }
 
-    public boolean isVisible() {
-        return visibility;
-    }
 
-    public void setVisibility(boolean visibility) {
-        this.visibility = visibility;
-    }
 }

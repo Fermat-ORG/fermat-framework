@@ -1,11 +1,11 @@
-package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.sockets;
+package com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.sockets;
 
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.PlatformService;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl.PlatformService;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
