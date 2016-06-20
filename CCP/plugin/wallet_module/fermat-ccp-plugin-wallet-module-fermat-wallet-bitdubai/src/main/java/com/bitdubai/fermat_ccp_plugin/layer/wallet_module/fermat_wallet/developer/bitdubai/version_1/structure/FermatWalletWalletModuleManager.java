@@ -216,7 +216,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
-                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
+                                           final WalletContactsManager walletContactsManager, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilterManagerproviderFilter, PluginFileSystem pluginFileSystem,
                                            final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster,
                                            final WalletManagerManager walletManagerManager,
                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
