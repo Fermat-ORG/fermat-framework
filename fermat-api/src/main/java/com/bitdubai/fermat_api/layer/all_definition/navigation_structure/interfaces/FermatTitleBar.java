@@ -29,7 +29,7 @@ public interface FermatTitleBar  extends Serializable {
 
     boolean isTitleTextStatic();
 
-    MenuItem getLeftIconFermatDrawable();
+    MenuItem getNavItem();
 
     FermatDrawable getBackgroundDrawable();
 

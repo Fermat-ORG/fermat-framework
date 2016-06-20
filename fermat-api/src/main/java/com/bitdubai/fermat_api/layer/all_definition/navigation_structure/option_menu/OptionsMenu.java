@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatMainMenu;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +14,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.07.17..
  */
 
-public class OptionsMenu implements FermatMainMenu {
+public class OptionsMenu implements FermatMainMenu<OptionMenuItem> {
 
     /**
      * OptionsMenu class member variables
@@ -37,6 +41,17 @@ public class OptionsMenu implements FermatMainMenu {
 
     public List<OptionMenuItem> getMenuItems () {
         return menuItems;
+    }
+
+    @Override
+    public MenuItem getItem(final int id) {
+        return CollectionUtils.find(menuItems, new Predicate<MenuItem>() {
+            @Override
+            public boolean evaluate(MenuItem object) {
+                return object.getId() == id;
+            }
+
+        });
     }
 
     /**

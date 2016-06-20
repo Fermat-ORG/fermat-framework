@@ -2,17 +2,20 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
+
+import java.io.Serializable;
 
 /**
  * Created by Matias Furszyfer on 2016.06.08..
  */
-public class FermatRuntimeFragment extends Artifact implements FermatFragment {
+public class FermatRuntimeFragment extends Artifact implements FermatFragment,Serializable {
 
     private String fragmentCode;
     private String backCode;
 
     // OptionMenu to add or change to the activity OptionsMenu
-    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
+    private OptionsMenu optionsMenu;
 
 
     public FermatRuntimeFragment(int id, Owner owner, SourceLocation sourceLocation, String fragmentCode) {
@@ -20,11 +23,14 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment {
         this.fragmentCode = fragmentCode;
     }
 
-    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
+    public FermatRuntimeFragment() {
+    }
+
+    public OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
 
-    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
+    public void setOptionsMenu(OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 
@@ -45,4 +51,6 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment {
     public String getBack() {
         return backCode;
     }
+
+
 }

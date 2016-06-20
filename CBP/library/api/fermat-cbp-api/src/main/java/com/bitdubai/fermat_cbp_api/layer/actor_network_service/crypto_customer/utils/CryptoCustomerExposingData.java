@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import java.util.Arrays;
 
 /**
@@ -13,14 +15,17 @@ public final class CryptoCustomerExposingData {
     private final String publicKey;
     private final String alias    ;
     private final byte[] image    ;
+    private final Location location;
 
     public CryptoCustomerExposingData(final String publicKey,
                                       final String alias,
-                                      final byte[] image) {
+                                      final byte[] image,
+                                      final Location location) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
         this.image     = image    ;
+        this.location  = location;
     }
 
     /**
@@ -42,6 +47,13 @@ public final class CryptoCustomerExposingData {
      */
     public final byte[] getImage() {
         return image;
+    }
+
+    /**
+     * @return an locarion  with the image exposed by the Crypto Broker.
+     */
+    public final Location getLocation() {
+        return location;
     }
 
     @Override

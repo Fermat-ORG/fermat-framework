@@ -72,7 +72,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                     chatExposingData.getAlias(),
                     chatExposingData.getAlias(),
                     extraDataToJson(chatExposingData),
-                    null,
+                    chatExposingData.getLocation(),
                     Actors.CHAT,
                     chatExposingData.getImage(),
                     0, 0
