@@ -163,22 +163,18 @@ public class Profiles implements RestFulServices {
         List<ActorProfile> profileList = new ArrayList<>();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
-        List<ActorsCatalog> actorsList = getDaoFactory().getActorsCatalogDao().findAll(filters);
+        List<ActorsCatalog> actorsList;
 
-        /*
-         * Apply pagination
-         */
-        if (discoveryQueryParameters.getMax() > 0 &&
-                discoveryQueryParameters.getOffset() >= 0 &&
-                actorsList.size() > discoveryQueryParameters.getMax() &&
-                actorsList.size() > discoveryQueryParameters.getOffset() &&
-                discoveryQueryParameters.getOffset() < discoveryQueryParameters.getMax()){
+        if( (discoveryQueryParameters.getMax() > 0 &&  discoveryQueryParameters.getOffset() >= 0) &&
+                (discoveryQueryParameters.getOffset() < discoveryQueryParameters.getMax()) )
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, discoveryQueryParameters.getMax(), discoveryQueryParameters.getOffset());
+        else
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters);
 
-            actorsList =  actorsList.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
 
-        }else if (actorsList.size() > 100) {
+        if (actorsList.size() > 100)
             actorsList =  actorsList.subList(0, 100);
-        }
+
 
         List<ActorsCatalog> actors = filterActorsOnline(actorsList);
 
