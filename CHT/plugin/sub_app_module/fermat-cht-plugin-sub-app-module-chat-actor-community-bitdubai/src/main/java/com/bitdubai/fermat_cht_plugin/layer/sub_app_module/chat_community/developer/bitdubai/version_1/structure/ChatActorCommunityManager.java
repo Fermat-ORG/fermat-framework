@@ -52,6 +52,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -69,8 +70,11 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -502,22 +506,27 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException{
 
-        List<Cities> cities = null;
-        HashMap<String, Country> CitiesMap = geolocationManager.getCountryList();
+        List<Cities> cities = new ArrayList<>();
+        CitiesImpl objectCities = null;
         Country country;
 
         try {
-
+            HashMap<String, Country> CitiesMap = geolocationManager.getCountryList();
             for(Map.Entry<String, Country> entry: CitiesMap.entrySet()){
+
                 country = entry.getValue();
-                for (int i = 0; i < geolocationManager.getCitiesByCountryCode(country.getCountryShortName()).size(); i++){
-                    geolocationManager.getCitiesByCountryCode(country.getCountryShortName()).get(i);
+                List<City> cityList = geolocationManager.getCitiesByCountryCode(country.getCountryShortName());
+
+                for(City city: cityList){
+                    if(city.getName().equals(filter) || country.getCountryName().equals(filter))
+                        cities.add(new CitiesImpl(city.getName(), city.getCountryCode(), city.getLatitude(), city.getLongitude(), country.getCountryName(), country.getCountryShortName(), country.getGeoRectangle()));
                 }
             }
-            return cities;
+
         } catch (Exception e){
             System.out.println("No sé que poner aquí");
         }
+
         return cities;
     }
 
