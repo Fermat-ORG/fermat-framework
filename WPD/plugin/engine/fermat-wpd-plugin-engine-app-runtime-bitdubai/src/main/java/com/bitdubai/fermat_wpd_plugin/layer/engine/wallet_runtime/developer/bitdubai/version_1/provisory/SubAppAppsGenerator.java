@@ -1330,6 +1330,7 @@ public class SubAppAppsGenerator {
         Owner owner;
         String titleBarColor = "#3f5b77";// "#4B5E75";
         String statusBarColor = "#3f5b77";
+        String textTitleColor = "#ffffff";
         String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
 
         dapFactory = new AppNavigationStructure();
@@ -1351,6 +1352,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Factory");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1412,6 +1414,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Draft Asset");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1436,14 +1439,14 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
 
         runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
@@ -1462,15 +1465,16 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1487,6 +1491,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1508,6 +1513,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Multimedia");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem = new MenuItem();
@@ -1547,6 +1553,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Properties");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem2 = new MenuItem();
@@ -1586,6 +1593,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem3 = new MenuItem();
@@ -1625,6 +1633,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Verify");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem4 = new MenuItem();
@@ -2084,50 +2093,50 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuMain = new OptionsMenu();
 
-        OptionMenuItem menuItemMain = new OptionMenuItem(1);
-        menuItemMain.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        OptionMenuItem menuItemMain = new OptionMenuItem(0);
+        menuItemMain.setFermatDrawable(new FermatDrawable(0, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Connect");
         menuItemMain.setOrder(0);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(2);
-        menuItemMain.setFermatDrawable(new FermatDrawable(2, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(1);
+        menuItemMain.setFermatDrawable(new FermatDrawable(1, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Disconnect");
         menuItemMain.setOrder(1);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(3);
-        menuItemMain.setFermatDrawable(new FermatDrawable(3, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(2);
+        menuItemMain.setFermatDrawable(new FermatDrawable(2, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Cancel Connecting");
         menuItemMain.setOrder(2);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(4);
-        menuItemMain.setFermatDrawable(new FermatDrawable(4, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(3);
+        menuItemMain.setFermatDrawable(new FermatDrawable(3, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Select All");
         menuItemMain.setOrder(3);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(5);
-        menuItemMain.setFermatDrawable(new FermatDrawable(5, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(4);
+        menuItemMain.setFermatDrawable(new FermatDrawable(4, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Unselect All");
         menuItemMain.setOrder(4);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(6);
-        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(5);
+        menuItemMain.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Help");
         menuItemMain.setOrder(5);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(7);
-        menuItemMain.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(6);
+        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Search");
         menuItemMain.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         menuItemMain.setActionViewClass(100);

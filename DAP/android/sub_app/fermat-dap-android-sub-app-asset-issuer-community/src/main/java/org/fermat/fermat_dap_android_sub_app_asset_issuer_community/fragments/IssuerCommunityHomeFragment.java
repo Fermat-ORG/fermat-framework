@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -87,10 +88,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     private View rootView;
     private LinearLayout emptyView;
 
-//    private MenuItem menuItemSelect;
-//    private MenuItem menuItemUnselect;
-//    private MenuItem menuItemCancel;
-//    private MenuItem menuItemConnect;
+    private MenuItem menuItemSelect;
+    private MenuItem menuItemUnselect;
+    private MenuItem menuItemCancel;
+    private MenuItem menuItemConnect;
     private SearchView searchView;
 
     private List<ActorIssuer> actors;
@@ -192,31 +193,42 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
                     }
                 }
-                if (actorsConnecting.size() > 0) {
+                try {
+                    if (actorsConnecting.size() > 0) {
+                        changeOptionMenuVisibility(menuItemCancel.getItemId(), true, true);
 //                    menuItemCancel.setVisible(true);
-                } else {
-//                    menuItemCancel.setVisible(false);
-                }
-
-                if (someSelected) {
-                    if (actorsConnecting.size() == selectedActors) {
-//                        menuItemConnect.setVisible(false);
-                    } else if (actorsConnecting.size() == 0) {
-//                        menuItemConnect.setVisible(true);
-                    }
-                    if (selectedActors > actorsConnecting.size()) {
-//                        menuItemConnect.setVisible(true);
-                    }
-//                    menuItemUnselect.setVisible(true);
-                    if (selectedActors == cheackeableActors) {
-//                        menuItemSelect.setVisible(false);
                     } else {
-//                        menuItemSelect.setVisible(true);
+                        changeOptionMenuVisibility(menuItemCancel.getItemId(), false, true);
+//                    menuItemCancel.setVisible(false);
                     }
-                } else {
-                    restartButtons();
-                }
 
+                    if (someSelected) {
+                        if (actorsConnecting.size() == selectedActors) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), false, true);
+//                        menuItemConnect.setVisible(false);
+                        } else if (actorsConnecting.size() == 0) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+//                        menuItemConnect.setVisible(true);
+                        }
+                        if (selectedActors > actorsConnecting.size()) {
+                            changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+//                        menuItemConnect.setVisible(true);
+                        }
+                        changeOptionMenuVisibility(menuItemUnselect.getItemId(), true, true);
+//                    menuItemUnselect.setVisible(true);
+                        if (selectedActors == cheackeableActors) {
+                            changeOptionMenuVisibility(menuItemSelect.getItemId(), false, true);
+//                        menuItemSelect.setVisible(false);
+                        } else {
+                            changeOptionMenuVisibility(menuItemSelect.getItemId(), true, true);
+//                        menuItemSelect.setVisible(true);
+                        }
+                    } else {
+                        restartButtons();
+                    }
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -407,8 +419,8 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_community_issuer_search).getActionView();
+//        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
+        searchView = (SearchView) menu.findItem(6).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -443,10 +455,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-//        menuItemConnect = menu.getItem(1);
-//        menuItemCancel = menu.getItem(2);
-//        menuItemSelect = menu.getItem(3);
-//        menuItemUnselect = menu.getItem(4);
+        menuItemConnect = menu.findItem(1);
+        menuItemCancel = menu.findItem(2);
+        menuItemSelect = menu.findItem(3);
+        menuItemUnselect = menu.findItem(4);
 
         restartButtons();
     }
@@ -617,6 +629,10 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                     }
                     adapter.changeDataSet(actors);
                     adapter.getAdapterChangeListener().onDataSetChanged(actors);
+                    changeOptionMenuVisibility(menuItemConnect.getItemId(), true, true);
+                    changeOptionMenuVisibility(menuItemSelect.getItemId(), false, true);
+                    changeOptionMenuVisibility(menuItemUnselect.getItemId(), true, true);
+
 //                    menuItemConnect.setVisible(true);
 //                    menuItemSelect.setVisible(false);
 //                    menuItemUnselect.setVisible(true);
@@ -633,189 +649,6 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                     setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
             }
-
-//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL) {
-//
-//            for (ActorIssuer actorIssuer : actors) {
-//                if (actorIssuer.getRecord().getExtendedPublicKey() == null)
-//                    actorIssuer.selected = true;
-//            }
-//            adapter.changeDataSet(actors);
-//            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-//            menuItemConnect.setVisible(true);
-//            menuItemSelect.setVisible(false);
-//            menuItemUnselect.setVisible(true);
-//
-//        }
-//
-//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL) {
-//
-//            for (ActorIssuer actorIssuer : actors) {
-//                actorIssuer.selected = false;
-//            }
-//            adapter.changeDataSet(actors);
-//            adapter.getAdapterChangeListener().onDataSetChanged(actors);
-//            restartButtons();
-//        }
-//
-//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
-//            List<ActorAssetIssuer> toConnect = new ArrayList<>();
-//            for (ActorIssuer actorIssuer : actors) {
-//                if (actorIssuer.selected)
-//                    toConnect.add(actorIssuer.getRecord());
-//            }
-//
-//            if (toConnect.size() > 0) {
-//                ConnectDialog connectDialog;
-//                connectDialog = new ConnectDialog(getActivity(), appSession, null) {
-//                    @Override
-//                    public void onClick(View v) {
-//                        int i = v.getId();
-//                        if (i == R.id.positive_button) {
-//                            final ProgressDialog dialog = new ProgressDialog(getActivity());
-//                            dialog.setMessage(getString(R.string.connecting));
-//                            dialog.setCancelable(false);
-//                            dialog.show();
-//                            FermatWorker worker = new FermatWorker() {
-//                                @Override
-//                                protected Object doInBackground() throws Exception {
-//                                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
-//                                    for (ActorIssuer actorIssuer : actors) {
-//                                        if (actorIssuer.selected && !(actorIssuer.getRecord().getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
-//                                            toConnect.add(actorIssuer.getRecord());
-//                                        }
-//                                    }
-//                                    //// TODO: 20/11/15 get Actor asset issuer
-//                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
-//
-//                                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
-//
-////                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
-//                                    return true;
-//                                }
-//                            };
-//                            worker.setContext(getActivity());
-//                            worker.setCallBack(new FermatWorkerCallBack() {
-//                                @Override
-//                                public void onPostExecute(Object... result) {
-//                                    dialog.dismiss();
-//                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
-//                                    restartButtons();
-//                                    if (swipeRefreshLayout != null)
-//                                        swipeRefreshLayout.post(new Runnable() {
-//                                            @Override
-//                                            public void run() {
-//                                                onRefresh();
-//                                            }
-//                                        });
-//                                }
-//
-//                                @Override
-//                                public void onErrorOccurred(Exception ex) {
-//                                    dialog.dismiss();
-//                                    Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
-//
-//                                }
-//                            });
-//                            worker.execute();
-//                            dismiss();
-//                        } else if (i == R.id.negative_button) {
-//                            dismiss();
-//                        }
-//
-//                    }
-//                };
-//                connectDialog.setTitle(R.string.connection_request_title);
-//                connectDialog.setDescription(getString(R.string.connection_request_desc));
-//                connectDialog.setUsername((actorsToConnect.size() > 1) ? "" + actorsToConnect.size() +
-//                        " Issuers" : actorsToConnect.get(0).getName());
-//                connectDialog.setSecondDescription(getString(R.string.connection_request_desc_two));
-//                connectDialog.show();
-//                return true;
-//            } else {
-//                Toast.makeText(getActivity(), R.string.no_issuers_selected, Toast.LENGTH_LONG).show();
-//                return false;
-//            }
-//        }
-//
-//        if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING) {
-//            CancelDialog cancelDialog;
-//
-//            cancelDialog = new CancelDialog(getActivity(), (AssetIssuerCommunitySubAppSessionReferenceApp) appSession, null) {
-//                @Override
-//                public void onClick(View v) {
-//                    int i = v.getId();
-//                    if (i == R.id.positive_button) {
-//
-//                        final ProgressDialog dialog = new ProgressDialog(getActivity());
-//                        dialog.setMessage("Canceling, please wait...");
-//                        dialog.setCancelable(false);
-//                        dialog.show();
-//                        FermatWorker worker = new FermatWorker() {
-//                            @Override
-//                            protected Object doInBackground() throws Exception {
-//
-//
-//                                for (ActorIssuer actor : actorsConnecting) {
-//                                    //TODO revisar si esto es asi
-//                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
-//                                }
-//
-//                                    /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);*/
-//                                return true;
-//                            }
-//                        };
-//                        worker.setContext(getActivity());
-//                        worker.setCallBack(new FermatWorkerCallBack() {
-//                            @Override
-//                            public void onPostExecute(Object... result) {
-//                                dialog.dismiss();
-//                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
-//                                restartButtons();
-//                                if (swipeRefreshLayout != null)
-//                                    swipeRefreshLayout.post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            onRefresh();
-//                                        }
-//                                    });
-//                            }
-//
-//                            @Override
-//                            public void onErrorOccurred(Exception ex) {
-//                                dialog.dismiss();
-//                                    /*TODO aun no se que error deberia ir aqui*/
-////                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-//                                Toast.makeText(getActivity(), "Can't cancel connection to selected issuers", Toast.LENGTH_LONG).show();
-////                                ex.printStackTrace();
-//                            }
-//                        });
-//                        worker.execute();
-//
-//
-//                        dismiss();
-//                    } else if (i == R.id.negative_button) {
-//                        dismiss();
-//                    }
-//                }
-//            };
-//            cancelDialog.setTitle("Cancel request");
-//            cancelDialog.setDescription("Do you want to cancel connection with ");
-//            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
-//                    " Issuers" : actorsConnecting.get(0).getRecord().getName());
-//            //connectDialog.setSecondDescription("a connection request");
-//            cancelDialog.show();
-//            return true;
-//        }
-
-//            if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-//                return true;
-//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), R.string.dap_issuer_community_system_error,
@@ -974,5 +807,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 //        menuItemSelect.setVisible(true);
 //        menuItemUnselect.setVisible(false);
 //        menuItemConnect.setVisible(false);
+        try {
+            changeOptionMenuVisibility(menuItemCancel.getItemId(), false, true);
+            changeOptionMenuVisibility(menuItemSelect.getItemId(), true, true);
+            changeOptionMenuVisibility(menuItemUnselect.getItemId(), false, true);
+            changeOptionMenuVisibility(menuItemConnect.getItemId(), false, true);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
     }
 }

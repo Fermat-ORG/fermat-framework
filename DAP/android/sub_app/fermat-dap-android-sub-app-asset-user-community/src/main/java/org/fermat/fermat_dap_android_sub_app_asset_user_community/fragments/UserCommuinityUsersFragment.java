@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -37,7 +38,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserVi
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
@@ -70,7 +70,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
     private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
-//    private MenuItem menuItemAdd;
+    private MenuItem menuItemAdd;
     private Menu menu;
 
     /**
@@ -129,10 +129,16 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
                     }
                 }
 
-                if (someSelected) {
+                try {
+                    if (someSelected) {
+                        changeOptionMenuVisibility(menuItemAdd.getItemId(), true, true);
 //                    menuItemAdd.setVisible(true);
-                } else {
+                    } else {
 //                    menuItemAdd.setVisible(false);
+                        changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
+                    }
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -300,6 +306,13 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 //        menuItemAdd = menu.getItem(0);
 //        menuItemAdd.setVisible(false);
+        try {
+            menuItemAdd = menu.findItem(1);
+            changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
+//            menuItemDelete.setVisible(false);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

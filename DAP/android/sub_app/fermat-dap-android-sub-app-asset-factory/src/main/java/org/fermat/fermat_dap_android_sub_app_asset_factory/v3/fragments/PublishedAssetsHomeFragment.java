@@ -112,7 +112,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
 //        create.setEnabled(false);
 
         initSettings();
-        configureToolbar();
+//        configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_factory_draft_assets_home_fragment_no_assets);
 
         try {
@@ -279,7 +279,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
             switch (id) {
                 //case IC_ACTION_HELP_FACTORY:
                 case 2:
-                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
 //                case 1:
 //                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
