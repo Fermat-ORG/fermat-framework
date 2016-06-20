@@ -72,6 +72,9 @@ import java.util.regex.Pattern;
 public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
@@ -225,6 +228,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         exchangeProviderFilterManagerproviderFilter,
                         walletContactsManager,
                         pluginId,
+                        exchangeProviderFilterManagerproviderFilter,
                         pluginFileSystem,
                         eventManager,
                         bitcoinNetworkManager, broadcaster,
