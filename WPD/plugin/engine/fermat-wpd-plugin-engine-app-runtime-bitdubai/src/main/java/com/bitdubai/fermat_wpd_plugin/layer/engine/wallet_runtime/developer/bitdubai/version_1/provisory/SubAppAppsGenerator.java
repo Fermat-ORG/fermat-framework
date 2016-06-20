@@ -33,11 +33,12 @@ import java.util.HashMap;
 public class SubAppAppsGenerator {
 
 
-    public  HashMap<String,AppNavigationStructure> listSubApp ;
+    public HashMap<String, AppNavigationStructure> listSubApp;
 
     public SubAppAppsGenerator() {
         listSubApp = new HashMap<>();
     }
+
     /*
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
@@ -45,7 +46,6 @@ public class SubAppAppsGenerator {
     public void factoryReset() throws Exception {
 
         try {
-
 
 
             AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
@@ -695,7 +695,6 @@ public class SubAppAppsGenerator {
             //createArtArtistIdentitySubAppNavigationStructure();
 
 
-
             runtimeSubApp = new AppNavigationStructure();
 
             String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
@@ -724,8 +723,6 @@ public class SubAppAppsGenerator {
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
 
 
             /**
@@ -769,7 +766,6 @@ public class SubAppAppsGenerator {
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
-
             //createTkyArtistIdentityNavigationStructure();
             /**
              * Start ART
@@ -785,8 +781,6 @@ public class SubAppAppsGenerator {
              */
 
             createArtistCommunitySubAppNavigationStructure();
-
-
 
 
             /**
@@ -1297,6 +1291,31 @@ public class SubAppAppsGenerator {
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
+    private SideMenu loadSideMenuAssetFactory(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#1d1d25");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createAssetFactorySubAppNavigationStructure() throws InvalidParameterException {
 
         AppNavigationStructure dapFactory;
@@ -1306,15 +1325,12 @@ public class SubAppAppsGenerator {
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
         FermatRuntimeFragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         OptionsMenu optionsMenu;
         OptionMenuItem menuItem;
         Owner owner;
-        String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
-
-        String toolbarColor = "#4B5E75";
+        String titleBarColor = "#3f5b77";// "#4B5E75";
         String statusBarColor = "#3f5b77";
+        String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
 
         dapFactory = new AppNavigationStructure();
 
@@ -1330,11 +1346,12 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Factory");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new TabStrip();
@@ -1362,23 +1379,7 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#1d1d25");
-        runtimeSideMenu.setHasFooter(true);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
@@ -1407,10 +1408,11 @@ public class SubAppAppsGenerator {
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Draft Asset");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
@@ -1426,14 +1428,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor("#1d1d25");
+        runtimeActivity.setColor("#3f5b77");
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
@@ -1442,22 +1445,7 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#1d1d25");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1466,14 +1454,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor("#1d1d25");
+        runtimeActivity.setColor("#3f5b77");
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1494,10 +1483,11 @@ public class SubAppAppsGenerator {
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1514,11 +1504,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Multimedia");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem = new MenuItem();
 //
@@ -1553,11 +1543,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Properties");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem2 = new MenuItem();
 //
@@ -1592,11 +1582,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem3 = new MenuItem();
 //
@@ -1631,11 +1621,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Verify");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem4 = new MenuItem();
 //
@@ -1668,17 +1658,54 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapFactory.getPublicKey(), dapFactory);
     }
 
+    private SideMenu loadSideMenuAssetIssuerCommunity(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createAssetIssuerCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetIssuerCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
         FermatRuntimeFragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         OptionsMenu optionsMenu;
         OptionMenuItem menuItem;
         Owner owner;
+        String statusBarColor = "#0072bb";
+        String titleBarColor = "#0072bb";
         String communityIssuerPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
 
         owner = new Owner();
@@ -1696,7 +1723,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1704,7 +1731,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1712,34 +1739,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
         optionsMenu = new OptionsMenu();
 
@@ -1797,7 +1797,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1805,7 +1805,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1813,34 +1813,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1851,8 +1834,8 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(communityIssuerPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
-        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1860,7 +1843,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1872,6 +1855,10 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1883,7 +1870,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1891,7 +1878,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1899,6 +1886,10 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1910,7 +1901,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1918,7 +1909,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -1926,34 +1917,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -2020,16 +1994,63 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
     }
 
+    private SideMenu loadSideMenuAssetUserCommunity(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Manage Groups");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createAssetUserCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetUserCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
+        String statusBarColor = "#0072bb";
+        String titleBarColor = "#0072bb";
+        Owner owner;
         FermatRuntimeFragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
 
         String communityUserPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityUserPublicKey);
 
         dapAssetUserCommunity = new AppNavigationStructure();
 
@@ -2043,7 +2064,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2051,48 +2072,68 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        OptionsMenu optionsMenuMain = new OptionsMenu();
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        OptionMenuItem menuItemMain = new OptionMenuItem(1);
+        menuItemMain.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Connect");
+        menuItemMain.setOrder(0);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(2);
+        menuItemMain.setFermatDrawable(new FermatDrawable(2, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Disconnect");
+        menuItemMain.setOrder(1);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(3);
+        menuItemMain.setFermatDrawable(new FermatDrawable(3, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Cancel Connecting");
+        menuItemMain.setOrder(2);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(4);
+        menuItemMain.setFermatDrawable(new FermatDrawable(4, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Select All");
+        menuItemMain.setOrder(3);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemMain = new OptionMenuItem(5);
+        menuItemMain.setFermatDrawable(new FermatDrawable(5, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Unselect All");
+        menuItemMain.setOrder(4);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        menuItemMain = new OptionMenuItem(6);
+        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Help");
+        menuItemMain.setOrder(5);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        menuItemMain = new OptionMenuItem(7);
+        menuItemMain.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Search");
+        menuItemMain.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setActionViewClass(100);
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        runtimeActivity.setOptionsMenu(optionsMenuMain);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2105,7 +2146,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2113,7 +2154,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2121,6 +2162,9 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuProfile = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenuProfile);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2132,7 +2176,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2140,7 +2184,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2148,6 +2192,9 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuProfile2 = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenuProfile2);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2160,14 +2207,14 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2176,40 +2223,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuConnection = new OptionsMenu();
+        OptionMenuItem menuItemConnection = new OptionMenuItem(1);
+        menuItemConnection.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemConnection.setLabel("Help");
+//        menuItemConnection.setOrder(4);
+        menuItemConnection.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuConnection.addMenuItem(menuItemConnection);
+        runtimeActivity.setOptionsMenu(optionsMenuConnection);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2222,7 +2246,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2230,7 +2254,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2238,40 +2262,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuMgroup = new OptionsMenu();
+        OptionMenuItem menuItemMgroup = new OptionMenuItem(1);
+        menuItemMgroup.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMgroup.setLabel("Help");
+//        menuItemMgroup.setOrder(4);
+        menuItemMgroup.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMgroup.addMenuItem(menuItemMgroup);
+        runtimeActivity.setOptionsMenu(optionsMenuMgroup);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2283,7 +2284,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2291,7 +2292,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2299,40 +2300,38 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuGroupUser = new OptionsMenu();
+        OptionMenuItem menuItemGroupUser = new OptionMenuItem(1);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(1, "rename_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Rename Group");
+        menuItemGroupUser.setOrder(0);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemGroupUser = new OptionMenuItem(2);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(2, "delete_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Delete Group");
+        menuItemGroupUser.setOrder(1);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemGroupUser = new OptionMenuItem(3);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(3, "delete_selected_users", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Delete Selected Users");
+        menuItemGroupUser.setOrder(2);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemGroupUser = new OptionMenuItem(4);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Help");
+        menuItemGroupUser.setOrder(3);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
+        runtimeActivity.setOptionsMenu(optionsMenuGroupUser);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2344,7 +2343,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2352,7 +2351,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2360,40 +2359,24 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuAdminUser = new OptionsMenu();
+        OptionMenuItem menuItemAdminUser = new OptionMenuItem(1);
+        menuItemAdminUser.setFermatDrawable(new FermatDrawable(1, "add_to_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemAdminUser.setLabel("Add to Group");
+        menuItemAdminUser.setOrder(0);
+        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemAdminUser = new OptionMenuItem(2);
+        menuItemAdminUser.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemAdminUser.setLabel("Help");
+        menuItemAdminUser.setOrder(1);
+        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
+        runtimeActivity.setOptionsMenu(optionsMenuAdminUser);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2405,7 +2388,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2413,7 +2396,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2421,40 +2404,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuNotification = new OptionsMenu();
+        OptionMenuItem menuItemNotification = new OptionMenuItem(1);
+        menuItemNotification.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemNotification.setLabel("Help");
+//        menuItemNotification.setOrder(4);
+        menuItemNotification.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuNotification.addMenuItem(menuItemNotification);
+        runtimeActivity.setOptionsMenu(optionsMenuNotification);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2523,16 +2483,59 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
+    private SideMenu loadSideMenuRedeemPointCommunity(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createRedeemPointCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetRedeemPointCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String statusBarColor = "#0072bb";
+        String titleBar = "#0072bb";
         FermatRuntimeFragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
 
         String communityRedeemPointPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityRedeemPointPublicKey);
 
         dapAssetRedeemPointCommunity = new AppNavigationStructure();
 
@@ -2546,7 +2549,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2554,7 +2557,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
@@ -2562,34 +2565,60 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        optionsMenu = new OptionsMenu();
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Connect");
+        menuItem.setOrder(0);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Disconnect");
+        menuItem.setOrder(1);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(3);
+        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Cancel Connecting");
+        menuItem.setOrder(2);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItem = new OptionMenuItem(4);
+        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Select All");
+        menuItem.setOrder(3);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(5);
+        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Unselect All");
+        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(6);
+        menuItem.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(7);
+        menuItem.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2603,7 +2632,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2611,7 +2640,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2623,6 +2652,9 @@ public class SubAppAppsGenerator {
         runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2635,14 +2667,14 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2651,34 +2683,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2754,12 +2769,12 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2777,7 +2792,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2785,7 +2800,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -2793,34 +2808,17 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2831,8 +2829,6 @@ public class SubAppAppsGenerator {
         AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
         Activity runtimeActivity;
         StatusBar statusBar;
-
-
 
 
         String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
@@ -3781,7 +3777,7 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -4264,11 +4260,12 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Search");
         optionMenuItemConn.setActionViewClass(100);
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
+
 
         optionMenuItemConn = new OptionMenuItem(22);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
@@ -4294,7 +4291,7 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
-        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
         optionMenuItemNot.setShowAsAction(1);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
@@ -4387,7 +4384,7 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtComm.getPublicKey(), chtComm);
     }
 
-    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException{
+    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException {
 
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
@@ -4420,7 +4417,7 @@ public class SubAppAppsGenerator {
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(chatIdentityPublicKey);
 
-        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
         leftIconMenuItem.setAppLinkPublicKey("back");
         runtimeTitleBar.setNavItem(leftIconMenuItem);
 
@@ -4434,12 +4431,12 @@ public class SubAppAppsGenerator {
         OptionMenuItem menuItem = new OptionMenuItem(1);
         Owner owner2 = new Owner();
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
