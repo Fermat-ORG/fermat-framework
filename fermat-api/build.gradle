@@ -64,11 +64,9 @@ dependencies {
     compile('org.bitcoinj:bitcoinj-core:0.13.3') {
         exclude module: 'scrypt'
     }
-<<<<<<< HEAD
 
-=======
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
->>>>>>> d61eab82c80997bc610ee18795b558cd580dd528
+
 //    compile 'com.madgag.spongycastle:core:1.54.0.0'
 //    compile 'com.madgag.spongycastle:prov:1.54.0.0'
 //    compile 'com.madgag.spongycastle:pkix:1.54.0.0'
