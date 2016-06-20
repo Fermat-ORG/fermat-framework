@@ -30,6 +30,11 @@ public class FermatRuntimeFragment extends Artifact implements FermatFragment,Se
         return optionsMenu;
     }
 
+    @Override
+    public boolean hasOptionMenu() {
+        return optionsMenu!=null;
+    }
+
     public void setOptionsMenu(OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }

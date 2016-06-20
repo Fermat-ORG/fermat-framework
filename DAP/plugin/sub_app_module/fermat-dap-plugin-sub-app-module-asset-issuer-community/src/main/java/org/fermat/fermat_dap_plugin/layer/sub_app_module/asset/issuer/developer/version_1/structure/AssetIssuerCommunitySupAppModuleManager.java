@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -56,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
@@ -114,12 +116,13 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     }
 
     @Override
-    public List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException {
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    public List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered(int max, int offset) throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list = null;
         List<AssetIssuerActorRecord> assetIssuerActorRecords = null;
 
         try {
-            list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+            list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered(max, offset);
             if (list != null && list.size() > 0)
                 actorAssetIssuerManager.createActorAssetIssuerRegisterInNetworkService(list);
         } catch (CantRequestListActorAssetIssuerRegisteredException e) {

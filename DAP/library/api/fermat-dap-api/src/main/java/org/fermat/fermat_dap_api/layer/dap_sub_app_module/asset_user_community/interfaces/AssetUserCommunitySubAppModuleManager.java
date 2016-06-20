@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -33,6 +34,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.Records
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nerio on 13/10/15.
@@ -43,13 +45,14 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
 
-    List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    List<AssetUserActorRecord> getAllActorAssetUserRegistered(int max, int offset) throws CantGetAssetUserActorsException;
 
     ActorAssetUser getActorUser(String actorAssetUserPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
     List<ActorAssetUser> getAllActorAssetUserConnected() throws CantGetAssetUserActorsException;
 
-    List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException;
+    List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId, int max, int offset) throws CantGetAssetUserActorsException;
 
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetException;
 

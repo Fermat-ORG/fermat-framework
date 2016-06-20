@@ -447,7 +447,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.profile_actor) : brokerImageByteArray,
+                                    moduleManager.createNewRedeemPoint(brokerNameText,
+                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray,
                                             brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
                                             brokerAddressStreetName, brokerAddressHouseNumber);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
@@ -636,12 +637,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     }
 
-    private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
 //    private void dispatchTakePictureIntent() {
@@ -687,7 +684,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             switch (id) {
                 //case IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION:
                 case 2:
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
 //                case 1:
 //                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
@@ -883,21 +880,21 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         }
         if (Build.VERSION.SDK_INT < 19) {
             Intent intent = new Intent();
-//            intent.setType("image/jpeg");
+            intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Choose picture"), REQUEST_LOAD_IMAGE);
         } else {
 //            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //            intent.addCategory(Intent.CATEGORY_OPENABLE);
 //            intent.setType("image/jpeg");
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
         }
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        inImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
