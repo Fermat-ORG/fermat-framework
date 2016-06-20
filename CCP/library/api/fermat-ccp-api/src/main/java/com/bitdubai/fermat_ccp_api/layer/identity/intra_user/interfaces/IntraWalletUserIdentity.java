@@ -22,13 +22,13 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
      * The method <code>getAccuracy</code> returns the phrase created by the intra user
      * @return string phrase object
      */
-    Long getAccuracy();
+    long getAccuracy();
 
     /**
      * The method <code>getFrecuency</code> returns the phrase created by the intra user
      * @return string phrase object
      */
-    Enum getFrecuency();
+    Frecuency getFrecuency();
     
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image
@@ -46,15 +46,5 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
      */
     String createMessageSignature(String message);
 
-    /**
-     * This method return long with Acurancy
-     * @return the Long
-     */
-    long getAccuracy();
 
-    /**
-     * This method return enum with Frecuency
-     * @return the Enum Frecuency
-     */
-    Frecuency getFrecuency();
 }

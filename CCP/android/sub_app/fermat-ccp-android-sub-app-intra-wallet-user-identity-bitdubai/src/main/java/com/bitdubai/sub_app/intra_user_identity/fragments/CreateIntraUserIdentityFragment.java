@@ -87,6 +87,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     IntraUserIdentitySettings intraUserIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private IntraUserIdentityModuleManager moduleManager;
 
     ExecutorService executorService;
 
@@ -102,6 +103,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         try {
 
             errorManager = appSession.getErrorManager();
+
+            moduleManager = appSession.getModuleManager();
             setHasOptionsMenu(true);
             executorService.submit(new Runnable() {
                 @Override
@@ -109,10 +112,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                     try {
                         if (appSession.getAppPublicKey()!= null){
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings("123456789");
                         }
 
                     } catch (Exception e) {
@@ -412,7 +415,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
-            if (appSession.getModuleManager() != null) {
+            if (moduleManager != null) {
                 try {
                     if (!isUpdate) {
                         final String finalBrokerPhraseText = brokerPhraseText;
@@ -420,7 +423,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             @Override
                             public void run() {
                                 try {
-                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
