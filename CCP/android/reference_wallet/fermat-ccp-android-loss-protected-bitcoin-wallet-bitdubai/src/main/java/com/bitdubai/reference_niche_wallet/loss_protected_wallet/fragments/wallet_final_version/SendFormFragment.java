@@ -3,6 +3,11 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+<<<<<<< HEAD
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import android.graphics.drawable.Drawable;
+=======
+>>>>>>> d4835fd4a7e2b3345a249d9bf204b85326fc061f
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -494,8 +499,19 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
         if (lossProtectedWalletContact != null) {
             try {
+<<<<<<< HEAD
+
+                if (lossProtectedWalletContact.getProfilePicture() != null) {
+
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
+                    bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+                } else
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
+
+=======
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
                 bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+>>>>>>> d4835fd4a7e2b3345a249d9bf204b85326fc061f
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }

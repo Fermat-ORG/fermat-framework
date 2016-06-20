@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 
 
 /**

@@ -219,6 +219,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private void setUp() {
         if (mFragmentView != null) {
             image_view_profile = (ImageView) mFragmentView.findViewById(R.id.image_view_profile);
+            image_view_profile.setScaleType(ImageView.ScaleType.CENTER_CROP);
             edit_text_name = (EditText) mFragmentView.findViewById(R.id.edit_text_name);
             text_view_address = (TextView) mFragmentView.findViewById(R.id.text_view_address);
             receive_button = (FermatButton) mFragmentView.findViewById(R.id.receive_button);

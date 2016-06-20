@@ -152,7 +152,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
      * @throws CantCreateNewIntraWalletUserException
      */
     @Override
-    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public IntraWalletUserIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, Frecuency frecuency) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -160,9 +160,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
            String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,phrase, publicKey, privateKey, loggedUser, profileImage);
+            intraWalletUserIdentityDao.createNewUser(alias, phrase, publicKey, privateKey, loggedUser, profileImage, accuracy, frecuency);
 
-            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage,0,Frecuency.NONE);
+            IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,phrase, publicKey, privateKey, profileImage, accuracy, frecuency);
+
 
             //registerIdentities();
             //registerIdentity(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).get(0));
@@ -178,7 +179,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage) throws CantCreateNewIntraWalletUserException {
+    public com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity createNewIntraWalletUser(String alias,  byte[] profileImage, Long accuracy, Frecuency frecuency ) throws CantCreateNewIntraWalletUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -186,9 +187,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage);
-
-            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage,0,Frecuency.NONE);
+            intraWalletUserIdentityDao.createNewUser(alias,"", publicKey, privateKey, loggedUser, profileImage, accuracy, frecuency );
+            com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity intraWalletUserIdentity = new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(alias,"", publicKey, privateKey, profileImage, accuracy, frecuency);
 
             registerIdentities();
 
