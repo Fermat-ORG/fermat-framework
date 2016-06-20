@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
+import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
@@ -178,7 +180,7 @@ public class ConnectionsWorldFragment
 
                         if (!isRefreshing) {
                             if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                isRefreshing = false;
+                                isRefreshing = true;
                                 Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
                                 final ProgressDialog progressDialog = new ProgressDialog(getActivity());
                                 progressDialog.setMessage("Please wait");
@@ -195,7 +197,7 @@ public class ConnectionsWorldFragment
                                     @SuppressWarnings("unchecked")
                                     @Override
                                     public void onPostExecute(Object... result) {
-                                        isRefreshing = false;
+                                        isRefreshing = true;
                                         if (swipeRefresh != null)
                                             swipeRefresh.setRefreshing(false);
                                         if (result != null &&
@@ -217,7 +219,7 @@ public class ConnectionsWorldFragment
                                     @Override
                                     public void onErrorOccurred(Exception ex) {
                                         progressDialog.dismiss();
-                                        isRefreshing = false;
+                                        isRefreshing = true;
                                         if (swipeRefresh != null)
                                             swipeRefresh.setRefreshing(false);
                                         if (getActivity() != null)
@@ -432,6 +434,23 @@ public class ConnectionsWorldFragment
                 case 1:
                     break;
                 case 2:
+                    //todo: al llamar dialog de location t da este error, eso es
+                    // todo: porq hace falta poner lo del hilo y el addapter.changedataset
+                    // todo:No adapter attached; skipping layout
+                    try {
+                        GeolocationDialog geolocationDialog =
+                                new GeolocationDialog(getActivity(),appSession, null);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
+                        geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                //Todo: callback to connectionworldagment to update view of browser filtering by the city or country selected
+                            }
+                        });
+                        geolocationDialog.show();
+
+                    } catch ( Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         } catch (Exception e) {

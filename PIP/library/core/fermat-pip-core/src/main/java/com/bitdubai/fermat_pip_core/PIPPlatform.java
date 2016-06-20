@@ -46,4 +46,8 @@ public final class PIPPlatform extends AbstractPlatform {
             );
         }
     }
+
+    public static void main(String[] args){
+
+    }
 }

@@ -20,6 +20,8 @@ public class Tab implements FermatTab {
 
     FermatFragment fragment;
 
+    FermatDrawable drawable;
+
     /**
      * Tab class constructors
      */
@@ -64,4 +66,14 @@ public class Tab implements FermatTab {
     public void setIcon(byte[] icon) {
         this.icon = icon;
     }
+
+    public FermatDrawable getDrawable() {
+        return drawable;
+    }
+
+    @Override
+    public void setFermatDrawable(FermatDrawable fermatDrawable) {
+        this.drawable = fermatDrawable;
+    }
+
 }

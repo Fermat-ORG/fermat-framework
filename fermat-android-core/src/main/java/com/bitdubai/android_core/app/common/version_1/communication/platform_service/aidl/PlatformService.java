@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl;
+package com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl;
 
 import android.app.Service;
 import android.content.Intent;
@@ -17,11 +17,11 @@ import android.util.Log;
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastInterface;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationDataKeys;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.IntentServerServiceAction;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
