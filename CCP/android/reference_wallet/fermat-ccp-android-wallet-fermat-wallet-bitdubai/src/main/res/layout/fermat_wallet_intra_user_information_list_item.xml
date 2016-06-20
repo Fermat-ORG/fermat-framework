@@ -44,22 +44,19 @@
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingStart="8dp"
         android:singleLine="true"
         android:textColor="#54ACEC"
         tools:text="@string/matias_furszyfer_text"
         android:fontFamily="hel"
         />
 
-    <CheckBox
-            android:id="@+id/checkbox_connection"
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:buttonTint="@drawable/bitcoinwcheckb_full"
-            android:background="@drawable/bitcoinwcheckb_empty"
-            android:width="30dp"
-            android:height="16dp"/>
+            android:id="@+id/checkbox_connection"
+            android:gravity="center_horizontal"
+            android:button="@drawable/bitcoinwcheckb_empty"
+            />
 
     </LinearLayout>
 

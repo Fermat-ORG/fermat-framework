@@ -89,9 +89,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                 /*
                  * Load from Database
                  */
-                CheckedInClient checkedInClient = getDaoFactory().getCheckedInClientDao().findEntityByFilter(
-                        CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                        profileIdentity);
+                CheckedInClient checkedInClient = getDaoFactory().getCheckedInClientDao().findById(profileIdentity);
 
                 /*
                  * Validate if exist

@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.fermat_wallet.fragments.wallet_final_version;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -60,7 +63,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
     private int offset = 0;
     private FermatWallet moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<FermatWalletIntraUserActor> intraUserInformationList;
+    private ArrayList<FermatWalletIntraUserActor> intraUserInformationList = new ArrayList<>();
 
     private ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
@@ -90,8 +93,6 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             errorManager = fermatWalletSessionReferenceApp.getErrorManager();
 
 
-
-            intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
@@ -109,6 +110,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
 
             blockchainNetworkType = moduleManager.loadAndGetSettings(fermatWalletSessionReferenceApp.getAppPublicKey()).getBlockchainNetworkType();
 
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -131,6 +135,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
                 isContactAddPopUp = true;
             }
 
+            hideSoftKeyboard(getActivity());
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -413,6 +418,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
         cryptoWalletIntraUserActor.setSelected(selected);
         intraUserInformationList.add(cryptoWalletIntraUserActor);
 
+    }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if(activity.getCurrentFocus() != null)
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

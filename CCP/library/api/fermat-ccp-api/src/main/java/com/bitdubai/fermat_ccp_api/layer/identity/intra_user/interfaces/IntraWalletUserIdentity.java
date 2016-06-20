@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 import java.io.Serializable;
@@ -33,4 +34,16 @@ public interface IntraWalletUserIdentity extends ActiveActorIdentityInformation,
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSignIntraWalletUserMessageException
      */
     String createMessageSignature(String message);
+
+    /**
+     * This method return long with Acurancy
+     * @return the Long
+     */
+    long getAccuracy();
+
+    /**
+     * This method return enum with Frecuency
+     * @return the Enum Frecuency
+     */
+    Frecuency getFrecuency();
 }

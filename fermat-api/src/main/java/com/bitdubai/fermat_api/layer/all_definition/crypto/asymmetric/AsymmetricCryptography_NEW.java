@@ -18,14 +18,14 @@ public class AsymmetricCryptography_NEW {
     static {
 
         if (OperatingSystemCheck.getOperatingSystemType() == OperatingSystemCheck.OperatingSystemType.Android){
-
-            Security.addProvider(new org.spongycastle.jce.provider.BouncyCastleProvider());
-            Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+//todo: mover hacia otra api, Mati
+//            Security.addProvider(new org.spongycastle.jce.provider.BouncyCastleProvider());
+//            Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
 
         }else {
 
-            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-            Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
+//            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+//            Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
         }
 
     }

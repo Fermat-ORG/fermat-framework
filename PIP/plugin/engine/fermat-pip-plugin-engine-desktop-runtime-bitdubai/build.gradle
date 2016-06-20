@@ -18,6 +18,18 @@ dependencies {
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
 
+task engineDesktopFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.DeveloperBitDubai'
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 def jacocoHtmlReport = ""
 
 jacocoTestReport{

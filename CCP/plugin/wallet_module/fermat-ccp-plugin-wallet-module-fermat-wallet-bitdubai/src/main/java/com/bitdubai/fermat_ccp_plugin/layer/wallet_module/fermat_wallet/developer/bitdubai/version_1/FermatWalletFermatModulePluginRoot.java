@@ -127,6 +127,9 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
     private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+
 
 
     private String appPublicKey;
@@ -222,6 +225,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         intraWalletUserIdentityManager,
                         outgoingExtraUserManager,
                         outgoingIntraActorManager,
+                        exchangeProviderFilterManagerproviderFilter,
                         walletContactsManager,
                         pluginId,
                         exchangeProviderFilterManagerproviderFilter,
