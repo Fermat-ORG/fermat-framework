@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 
 /**
  * Created by Matias Furszyfer on 2015.09.01
@@ -28,5 +30,7 @@ public interface PaintActivityFeatures {
 
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
+
+    void changeOptionMenuVisibility(int id,boolean isVisible,String appPublicKey) throws InvalidParameterException;
 
 }

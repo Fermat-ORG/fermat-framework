@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -514,12 +515,33 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+
     /**
      * Runtime Fragment methods
-     * //TODO: Quizás esto pueda ser una transacción y cuando le da commit se hace y se cambia todo lo que se quiera cambiar en runtime del fragmento
+     * //TODO: esto pueda ser una transacción y cuando le da commit se hace y se cambia todo lo que se quiera cambiar en runtime del fragmento
      */
-    public void changeOptionMenuVisibility(int id,boolean visibility){
-        fermatFragmentType.getOptionsMenu().getItem(id).setVisibility(visibility);
+
+    /**
+     *  Change the optionMenuItem visibility for a fragment menuItem
+     *
+     * @param id
+     * @param visibility
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
+        changeOptionMenuVisibility(id,visibility,false);
+    }
+
+    /**
+     * Change the optionMenuItem visibility for a activity menuItem
+     * @param id
+     * @param visibility
+     * @param fromParent
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility,boolean fromParent) throws InvalidParameterException {
+        if(!fromParent) fermatFragmentType.getOptionsMenu().getItem(id).setVisibility(visibility);
+        else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
         getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 }
