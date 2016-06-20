@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+
 import java.io.Serializable;
 
 /**
@@ -16,4 +18,8 @@ public interface FermatTab  extends Serializable {
     FermatFragment getFragment();
 
     byte[] getIcon();
+
+    FermatDrawable getDrawable();
+
+    void setFermatDrawable(FermatDrawable fermatDrawable);
 }

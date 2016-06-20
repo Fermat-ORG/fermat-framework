@@ -132,31 +132,31 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 //                throw new CantCreateActorRedeemPointException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET REDEEM POINT IN ACTOR NETWORK SERVICE", e, "", "");
 //            }
         }
-
-        private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {
-            try {
-                if (assetRedeemPointActorNetworkServiceManager != null && redeemPointActorDao.getActorAssetRedeemPoint() != null) {
-                    List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
-                    if (list.isEmpty()) {
-                        System.out.println("Actor Asset Redeem Point - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        System.out.println("Actor Asset Redeem Point - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
-                        redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
-                    } else {
-                        System.out.println("Actor Asset Redeem Point - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        int recordInsert = redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
-                        System.out.println("Actor Asset Redeem Point - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
-                    }
-                }
-            } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
-                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorRedeemPointException("CAN'T REQUEST LIST ACTOR ASSET REDEEM POINT NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetRedeemPointActorNetworkServiceManager);
-            } catch (CantAddPendingRedeemPointException e) {
-                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorRedeemPointException("CAN'T ADD LIST ACTOR ASSET REDEEM POINT IN BD ACTORS ", e, "", "");
-            } catch (CantGetAssetRedeemPointActorsException e) {
-                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateActorRedeemPointException("CAN'T GET ASSET ACTOR ASSET REDEEM POINT", e, "", "");
-            }
-        }
+        //EN DESHUSO
+//        private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {
+//            try {
+//                if (assetRedeemPointActorNetworkServiceManager != null && redeemPointActorDao.getActorAssetRedeemPoint() != null) {
+//                    List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
+//                    if (list.isEmpty()) {
+//                        System.out.println("Actor Asset Redeem Point - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+//                        System.out.println("Actor Asset Redeem Point - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
+//                        redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
+//                    } else {
+//                        System.out.println("Actor Asset Redeem Point - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
+//                        int recordInsert = redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
+//                        System.out.println("Actor Asset Redeem Point - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
+//                    }
+//                }
+//            } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
+//                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorRedeemPointException("CAN'T REQUEST LIST ACTOR ASSET REDEEM POINT NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetRedeemPointActorNetworkServiceManager);
+//            } catch (CantAddPendingRedeemPointException e) {
+//                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorRedeemPointException("CAN'T ADD LIST ACTOR ASSET REDEEM POINT IN BD ACTORS ", e, "", "");
+//            } catch (CantGetAssetRedeemPointActorsException e) {
+//                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorRedeemPointException("CAN'T GET ASSET ACTOR ASSET REDEEM POINT", e, "", "");
+//            }
+//        }
     }
 }

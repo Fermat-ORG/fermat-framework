@@ -1,9 +1,9 @@
 // IServerBrokerService.aidl
-package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl;
+package com.bitdubai.android_core.app.common.version_1.communication.platform_service.aidl;
 
 // Declare any non-default types here with import statements
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.platform_service.structure.ModuleObjectParameterWrapper;
 
 interface IPlatformService {
 

@@ -556,7 +556,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException {
+    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered(int max, int offset) throws CantRequestListActorAssetRedeemPointRegisteredException {
 
         try {
 
@@ -570,10 +570,10 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractActor
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.ASSET_REDEEM_POINT_ACTOR
             );
 

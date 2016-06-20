@@ -46,7 +46,7 @@ public interface AssetUserActorNetworkServiceManager extends DAPNetworkService, 
      *
      * @return List<ActorAssetUser>
      */
-    List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
+    List<ActorAssetUser> getListActorAssetUserRegistered(int max, int offset) throws CantRequestListActorAssetUserRegisteredException;
 
     /**
      * Get the the ActorAssetUser registered by Public key
