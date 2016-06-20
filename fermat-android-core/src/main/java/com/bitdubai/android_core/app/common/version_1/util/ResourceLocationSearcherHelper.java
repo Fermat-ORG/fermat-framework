@@ -18,6 +18,7 @@ public class ResourceLocationSearcherHelper {
         int resId = 0;
         switch (sourceLocation){
             case FERMAT_FRAMEWORK:
+                resId = ResDrawableFrameworkHelper.obtainFrameworkAvailableResDrawable(activity,resourceId);
                 break;
             case DEVELOPER_RESOURCES:
                 resId = FermatAppConnectionManager.getFermatAppConnection(publickKeyOwnerOfSource,activity).getResource(resourceId);

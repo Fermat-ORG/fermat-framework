@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
@@ -46,7 +47,7 @@ public interface ChatIdentityModuleManager extends ModuleManager, ModuleSettings
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     void createNewIdentityChat(String alias,
-                                       byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantCreateNewChatIdentityException;
+                                       byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency, Location location) throws CantCreateNewChatIdentityException;
 
     /**
      * The method <code>updateIdentityChat</code> change a identity information data
@@ -56,6 +57,6 @@ public interface ChatIdentityModuleManager extends ModuleManager, ModuleSettings
      * @param profileImage
      * @throws CantUpdateChatIdentityException
      */
-    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency) throws CantUpdateChatIdentityException;
+    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState, long accurancy, Frecuency frecuency, Location location) throws CantUpdateChatIdentityException;
 
 }

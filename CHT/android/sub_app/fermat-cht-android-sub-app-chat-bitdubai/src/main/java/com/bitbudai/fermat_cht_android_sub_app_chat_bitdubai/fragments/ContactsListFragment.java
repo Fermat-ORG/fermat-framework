@@ -92,6 +92,9 @@ public class ContactsListFragment
     ImageView noData;
     View layout;
     TextView noDatalabel;
+    TextView nochatssubtitle;
+    TextView nochatssubtitle1;
+    TextView nochatssubtitle2;
     List<ChatActorCommunityInformation> con;
     private static final int MAX = 20;
     private int offset = 0;
@@ -250,22 +253,34 @@ public class ContactsListFragment
                         }
                         noData.setVisibility(View.GONE);
                         noDatalabel.setVisibility(View.GONE);
+                        nochatssubtitle.setVisibility(View.GONE);
+                        nochatssubtitle1.setVisibility(View.GONE);
+                        nochatssubtitle2.setVisibility(View.GONE);
                         layout.setBackgroundResource(0);
                         ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
                         layout.setBackground(bgcolor);
                     } else {
                         noData.setVisibility(View.VISIBLE);
                         noDatalabel.setVisibility(View.VISIBLE);
+                        nochatssubtitle.setVisibility(View.VISIBLE);
+                        nochatssubtitle1.setVisibility(View.VISIBLE);
+                        nochatssubtitle2.setVisibility(View.VISIBLE);
                         //layout.setBackgroundResource(R.drawable.cht_background_1);
                     }
                 }  else {
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
+                    nochatssubtitle.setVisibility(View.VISIBLE);
+                    nochatssubtitle1.setVisibility(View.VISIBLE);
+                    nochatssubtitle2.setVisibility(View.VISIBLE);
                     //layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
+                nochatssubtitle.setVisibility(View.VISIBLE);
+                nochatssubtitle1.setVisibility(View.VISIBLE);
+                nochatssubtitle2.setVisibility(View.VISIBLE);
                 //layout.setBackgroundResource(R.drawable.cht_background_1);
             }
         }catch (Exception e){
@@ -293,8 +308,14 @@ public class ContactsListFragment
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
         noData=(ImageView) layout.findViewById(R.id.nodata);
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
+        nochatssubtitle = (TextView) layout.findViewById(R.id.nochatssubtitle);
+        nochatssubtitle1 = (TextView) layout.findViewById(R.id.nochatssubtitle1);
+        nochatssubtitle2 = (TextView) layout.findViewById(R.id.nochatssubtitle2);
         noData.setVisibility(View.VISIBLE);
         noDatalabel.setVisibility(View.VISIBLE);
+        nochatssubtitle.setVisibility(View.VISIBLE);
+        nochatssubtitle1.setVisibility(View.VISIBLE);
+        nochatssubtitle2.setVisibility(View.VISIBLE);
         //layout.setBackgroundResource(R.drawable.cht_background_1);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();

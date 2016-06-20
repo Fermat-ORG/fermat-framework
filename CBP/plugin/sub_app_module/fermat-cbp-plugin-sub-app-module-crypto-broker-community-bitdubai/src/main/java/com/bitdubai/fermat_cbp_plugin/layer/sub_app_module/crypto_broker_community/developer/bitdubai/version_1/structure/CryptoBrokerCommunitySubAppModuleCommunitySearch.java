@@ -54,6 +54,27 @@ public class CryptoBrokerCommunitySubAppModuleCommunitySearch implements CryptoB
     }
 
     @Override
+    public List<CryptoBrokerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoBrokerSearchResult {
+        try {
+
+            CryptoBrokerSearch cryptoBrokerSearch = cryptoBrokerActorNetworkServiceManager.getSearch();
+
+            final List<CryptoBrokerExposingData> cryptoBrokerExposingDataList = cryptoBrokerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
+
+            final List<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+
+            for(CryptoBrokerExposingData cbed : cryptoBrokerExposingDataList)
+                cryptoBrokerCommunityInformationList.add(new CryptoBrokerCommunitySubAppModuleInformation(cbed));
+
+            return cryptoBrokerCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetCryptoBrokerSearchResult(exception, "", "Unhandled Error.");
+        }
+    }
+
+    @Override
     public List<CryptoBrokerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoBrokerSearchResult {
 
         try {

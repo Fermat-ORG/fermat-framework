@@ -51,6 +51,28 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
+    public List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoCustomerSearchResult {
+
+        try {
+
+            CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
+
+            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+
+            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
+                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
+
+            return cryptoCustomerCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetCryptoCustomerSearchResult("", exception, "", "Unhandled Error.");
+        }
+    }
+
+    @Override
     public List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoCustomerSearchResult {
 
         try {
