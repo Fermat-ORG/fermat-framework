@@ -514,9 +514,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                     geolocationManager.getCitiesByCountryCode(country.getCountryShortName()).get(i);
                 }
             }
-            //Recorrer mapa
-            //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
-            //que es lo que retorno ya lleno
             return cities;
         } catch (Exception e){
             System.out.println("No sé que poner aquí");
