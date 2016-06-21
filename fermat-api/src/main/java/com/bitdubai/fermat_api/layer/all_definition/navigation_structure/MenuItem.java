@@ -33,6 +33,11 @@ public class MenuItem implements FermatMenuItem {
     private String selectedTextColor;
 
     /**
+     * Visibility
+     */
+    private boolean visibility = true;
+
+    /**
      * SideMenu class constructors
      */
     public MenuItem(int id) {
@@ -140,5 +145,13 @@ public class MenuItem implements FermatMenuItem {
 
     public void setSelectedTextColor(String selectedTextColor) {
         this.selectedTextColor = selectedTextColor;
+    }
+
+    public boolean isVisible() {
+        return visibility;
+    }
+
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
     }
 }

@@ -255,7 +255,7 @@ public class ContactsListFragment
 //                contacticon.clear();
 //                contactStatus.clear();
                 if(identity!=null) {
-                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
+                    List<ChatActorCommunityInformation> con = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), null, 0, "", MAX, offset);
                     if (con != null) {
                         int size = con.size();
                         if (size > 0) {
@@ -283,8 +283,8 @@ public class ContactsListFragment
     }
 
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
-        BackgroundAsyncTaskList backWorldList = new BackgroundAsyncTaskList();
-        backWorldList.execute();
+//        BackgroundAsyncTaskList backWorldList = new BackgroundAsyncTaskList();
+//        backWorldList.execute();
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
             List<ChatActorCommunityInformation> result;

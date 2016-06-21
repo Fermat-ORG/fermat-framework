@@ -58,8 +58,8 @@ public class EditIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            //TODO: Lozada revisa
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE);
+            //TODO: Jose Cardozo revisa que tienes que pasarle el Location
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE, null);
 
         } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();

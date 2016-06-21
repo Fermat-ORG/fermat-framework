@@ -18,6 +18,8 @@ public interface CryptoCustomerCommunitySearch extends Serializable {
 
     List<CryptoCustomerCommunityInformation> getResult() throws CantGetCryptoCustomerSearchResult;
 
+    List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoCustomerSearchResult;
+
     List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoCustomerSearchResult;
 
     List<CryptoCustomerCommunityInformation> getResultDistance(double distance) throws CantGetCryptoCustomerSearchResult;
