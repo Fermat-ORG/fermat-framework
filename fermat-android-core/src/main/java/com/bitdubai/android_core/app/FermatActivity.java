@@ -110,6 +110,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuPressEvent;
@@ -680,8 +681,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
     private void paintToolbarIcon(TitleBar titleBar) {
-        if(titleBar.getLeftIconFermatDrawable()!=null){
-            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getLeftIconFermatDrawable();
+        if(titleBar.getNavItem()!=null){
+            final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = titleBar.getNavItem();
             FermatDrawable leftIconFermatDrawable = menuItem.getFermatDrawable();
             int resId = ResourceLocationSearcherHelper.obtainRes(
                     this,
@@ -775,10 +776,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Tabs
      */
     protected void setPagerTabs(TabStrip tabStrip,FermatSession session){
+        int tabsSize = tabStrip.getTabs().size();
         List<Tab> tabs = tabStrip.getTabs();
-        Fragment[] fragments = new Fragment[tabStrip.getTabs().size()];
-        String[] tabTitles = new String[tabStrip.getTabs().size()];
-        FermatFragment[] fermatFragments = new FermatFragment[tabStrip.getTabs().size()];
+        Fragment[] fragments = new Fragment[tabsSize];
+        String[] tabTitles = new String[tabsSize];
+        FermatFragment[] fermatFragments = new FermatFragment[tabsSize];
+        FermatDrawable[] tabsDrawables = new FermatDrawable[tabsSize];
         try {
             for (int i=0;i<tabs.size();i++) {
                 Tab tab = tabs.get(i);
@@ -786,7 +789,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 fermatFragments[i] = fragment;
                 //optionMenu
                 if(fragment.getOptionsMenu()!=null)addOptionMenuItems(fragment.getOptionsMenu());
-                String appPublicKey = fragment.getOwner().getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
+                Owner owner = fragment.getOwner();
+                if(owner==null) throw new NullPointerException("Owner null on fragment: "+fragment.getType()+" in app: "+session.getAppPublicKey()+", Please check your App structure");
+                String appPublicKey = owner.getOwnerAppPublicKey().equals(session.getAppPublicKey()) ? session.getAppPublicKey() : fragment.getOwner().getOwnerAppPublicKey();
                 AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(appPublicKey, this);
                 if (session instanceof ComboAppType2FermatSession) {
                     session = ((ComboAppType2FermatSession) session).getFermatSession(appPublicKey, FermatSession.class);
@@ -797,6 +802,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                    throw new InvalidParameterException(e,"Fragment not found: "+fragment.getType()+" with owner: "+fragment.getOwner(),"Framework building tabs");
                 }
                 tabTitles[i] = tab.getLabel();
+                tabsDrawables[i] = tab.getDrawable();
             }
             tabLayout.setVisibility(View.VISIBLE);
             pagertabs = (ViewPager) findViewById(R.id.pager);
@@ -808,10 +814,17 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     byte[] image = tabStrip.getTabs().get(i).getIcon();
                     tabLayout.getTabAt(i).setIcon(new BitmapDrawable(getResources(),BitmapFactory.decodeByteArray(image,0, image.length)));
                 }
+                for (int i=0;i<tabsSize;i++) {
+                    FermatDrawable tabDrawables = tabsDrawables[i];
+                    if(tabDrawables!=null){
+                        tabLayout.getTabAt(i).setIcon(ResourceLocationSearcherHelper.obtainRes(this,tabDrawables.getId(),tabDrawables.getSourceLocation(),tabDrawables.getOwner().getOwnerAppPublicKey()));
+                    }
+                }
             }
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
             pagertabs.setPageMargin(pageMargin);
+            adapter.setStartFragmentPosition(tabStrip.getStartItem());
             pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
             tabLayout.setupWithViewPager(pagertabs);
 
@@ -835,6 +848,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (InvalidParameterException e) {
             Log.e(TAG, "Invalid parameter, please check your runtime");
             e.printStackTrace();
+            handleExceptionAndRestart();
+        } catch (Exception e){
+            Log.e(TAG,e.getMessage());
             handleExceptionAndRestart();
         }
     }
@@ -2133,17 +2149,36 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     @Override
     public int obtainRes(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainRes(this,id,sourceLocation,appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainRes(this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
     public View obtainClassView(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainView(this,id,sourceLocation,appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainView(this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
     //todo: ampliar esto a mayor cantidad de clases
     public View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation) {
-        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,id);
+        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, id);
+    }
+
+    /**
+     *  Method to change the visibility of an optionMenu
+     *  todo: poner esto en otra clase
+     * @param id
+     * @param isVisible
+     * @param appPublicKey
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean isVisible,String appPublicKey) throws InvalidParameterException {
+        Activity activity = ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey).getLastActivity();
+        OptionsMenu optionMenu = activity.getOptionsMenu();
+        if(optionMenu!=null){
+            optionMenu.getItem(id).setVisibility(isVisible);
+            getToolbar().getMenu().findItem(id).setVisible(isVisible);
+        }else{
+            throw new InvalidParameterException("OptionMenu in activity: "+activity.getType().getCode()+" in app: "+appPublicKey);
+        }
     }
 }

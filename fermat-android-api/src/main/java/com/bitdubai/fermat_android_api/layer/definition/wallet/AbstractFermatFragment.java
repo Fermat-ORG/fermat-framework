@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -54,6 +55,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * FLAGS
      */
     protected boolean isAttached;
+    /**
+     * If the fragment is visible for the user
+     */
+    private boolean isVisible;
 
     /**
      * Platform
@@ -79,6 +84,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         super.onCreate(savedInstanceState);
         //if(fermatFragmentType.getOptionsMenu()!=null)
             setHasOptionsMenu(true);
+
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -120,27 +126,32 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         try {
-            Log.i(TAG,"Preparing fragment optionMenu");
             if(fermatFragmentType!=null) {
-                if (fermatFragmentType.getOptionsMenu() != null) {
-                    List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
-                    for (int i = 0; i < optionsMenuItems.size(); i++) {
-                        OptionMenuItem menuItem = optionsMenuItems.get(i);
-                        int id = menuItem.getId();
-                        int groupId = menuItem.getGroupId();
-                        int order = menuItem.getOrder();
-                        int showAsAction = menuItem.getShowAsAction();
-                        MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                        FermatDrawable icon = menuItem.getFermatDrawable();
-                        if (icon != null) {
-                            int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                            item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                if(isVisible) {
+                    if (fermatFragmentType.getOptionsMenu() != null) {
+                        List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                        for (int i = 0; i < optionsMenuItems.size(); i++) {
+                            OptionMenuItem menuItem = optionsMenuItems.get(i);
+                            int id = menuItem.getId();
+                            int groupId = menuItem.getGroupId();
+                            int order = menuItem.getOrder();
+                            int showAsAction = menuItem.getShowAsAction();
+                            MenuItem oldMenu = menu.findItem(id);
+                            if (oldMenu == null) {
+                                MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                                FermatDrawable icon = menuItem.getFermatDrawable();
+                                if (icon != null) {
+                                    int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-                        }
-                        if (showAsAction != -1) item.setShowAsAction(menuItem.getShowAsAction());
-                        int actionViewClass = menuItem.getActionViewClass();
-                        if (actionViewClass != -1) {
-                            item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                }
+                                if (showAsAction != -1)
+                                    item.setShowAsAction(menuItem.getShowAsAction());
+                                int actionViewClass = menuItem.getActionViewClass();
+                                if (actionViewClass != -1) {
+                                    item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                }
+                            }
                         }
                     }
                 }
@@ -159,7 +170,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        Log.i(TAG,"onCreateOptionsMenu");
+
 //        try {
 //            if(fermatFragmentType!=null) {
 //                if (fermatFragmentType.getOptionsMenu() != null) {
@@ -201,7 +212,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * Method to obtain res from other apps
      */
     private final int obtainRes(int id,SourceLocation sourceLocation,String appOwnerPublicKey){
-        return getFrameworkHelpers().obtainRes(id,sourceLocation,appOwnerPublicKey);
+        return getFrameworkHelpers().obtainRes(id, sourceLocation, appOwnerPublicKey);
     }
 
     /**
@@ -313,6 +324,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
         return (FermatScreenSwapper) getActivity();
+
     }
 
     /**
@@ -369,7 +381,11 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected final void setChangeBackActivity(Activities backActivity){
-        getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        try {
+            getFermatScreenSwapper().setChangeBackActivity(backActivity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     protected final FermatRuntime getRuntimeManager(){
@@ -449,10 +465,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
+
+    public final void setFragmentFocus(boolean isVisible){
+        this.isVisible = isVisible;
+        if(isAttached) {
+            onFragmentFocus();
+        }
+    }
+
     /**
      * This method is called when the fragment is on user's focus
      */
-    @Override
     public void onFragmentFocus() {
 
     }
@@ -504,5 +527,35 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         ConnectivityManager cm = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+
+    /**
+     * Runtime Fragment methods
+     * //TODO: esto pueda ser una transacción y cuando le da commit se hace y se cambia todo lo que se quiera cambiar en runtime del fragmento
+     */
+
+    /**
+     *  Change the optionMenuItem visibility for a fragment menuItem
+     *
+     * @param id
+     * @param visibility
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility) throws InvalidParameterException {
+        changeOptionMenuVisibility(id,visibility,false);
+    }
+
+    /**
+     * Change the optionMenuItem visibility for a activity menuItem
+     * @param id
+     * @param visibility
+     * @param fromParent
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean visibility,boolean fromParent) throws InvalidParameterException {
+        if(!fromParent) fermatFragmentType.getOptionsMenu().getItem(id).setVisibility(visibility);
+        else getPaintActivtyFeactures().changeOptionMenuVisibility(id,visibility,appSession.getAppPublicKey());
+        getToolbar().getMenu().findItem(id).setVisible(visibility);
     }
 }
