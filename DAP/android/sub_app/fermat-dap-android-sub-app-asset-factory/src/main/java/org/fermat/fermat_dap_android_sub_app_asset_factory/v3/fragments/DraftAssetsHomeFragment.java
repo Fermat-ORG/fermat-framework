@@ -91,6 +91,8 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
     private SearchView searchView;
     private AssetFactoryDraftAdapter adapterView;
 
+    private int menuItemSize;
+
     public static AssetFactory getAssetForEdit() {
         return selectedAsset;
     }
@@ -277,23 +279,27 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        menu.clear();
         inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_dap_factory_draft_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+            MenuItem searchItem = menu.findItem(1);
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }

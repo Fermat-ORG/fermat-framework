@@ -1385,14 +1385,14 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
         menuItem.setShowAsAction(2);
         menuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
         menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
