@@ -10,6 +10,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -67,10 +71,17 @@ public class EditCryptoBrokerIdentityFragment
     private ImageView sw;
     private EditText mBrokerName;
     private View progressBar;
+    private int maxLenghtTextCount = 30;
+    FermatTextView textCount;
 
     private ExecutorService executor;
     private byte[] profileImage;
 
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
@@ -109,6 +120,8 @@ public class EditCryptoBrokerIdentityFragment
 
         progressBar = layout.findViewById(R.id.cbi_progress_bar);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        textCount = (FermatTextView) layout.findViewById(R.id.crypto_broker_name_text_count);
+
         sw = (ImageView) layout.findViewById(R.id.sw);
         final ImageView mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         final Button botonU = (Button) layout.findViewById(R.id.update_crypto_broker_button);
@@ -189,6 +202,9 @@ public class EditCryptoBrokerIdentityFragment
 
         mBrokerName.requestFocus();
         mBrokerName.performClick();
+        mBrokerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+        mBrokerName.addTextChangedListener(textWatcher);
+        textCount.setText(String.valueOf(maxLenghtTextCount));
 
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
