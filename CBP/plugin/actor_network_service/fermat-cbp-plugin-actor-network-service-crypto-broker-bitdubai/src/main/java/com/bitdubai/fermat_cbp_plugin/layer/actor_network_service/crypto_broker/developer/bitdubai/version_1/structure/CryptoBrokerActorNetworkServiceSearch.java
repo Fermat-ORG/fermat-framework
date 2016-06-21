@@ -55,7 +55,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -96,7 +96,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -138,7 +138,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -180,7 +180,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoBrokerExposingDataList;
@@ -222,7 +222,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final ActorProfile actorProfile : list) {
 
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), actorProfile.getLocation()));
             }
 
             return cryptoBrokerExposingDataList;
