@@ -169,12 +169,7 @@ public class Profiles implements RestFulServices {
                 (discoveryQueryParameters.getOffset() < discoveryQueryParameters.getMax()) )
             actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, discoveryQueryParameters.getMax(), discoveryQueryParameters.getOffset());
         else
-            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters);
-
-
-        if (actorsList.size() > 100)
-            actorsList =  actorsList.subList(0, 100);
-
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, 10, 0);
 
         List<ActorsCatalog> actors = filterActorsOnline(actorsList);
 
