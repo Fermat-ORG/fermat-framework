@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdu
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -314,18 +315,20 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
     private com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity buildIdentity(DatabaseTableRecord record) throws CantGetIntraWalletUserIdentityPrivateKeyException, CantGetIntraWalletUserIdentityProfileImageException {
-        return new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
-                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
-                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
-                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN_COLUMN_NAME),
-                record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN_COLUMN_NAME),
-
-
-        );
-
+        try {
+            return new com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity(
+                    record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
+                    record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME),
+                    record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
+                    getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                    getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                    record.getLongValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN),
+                    record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_FRECUENCY_COLUMN)
+                    );
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

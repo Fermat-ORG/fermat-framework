@@ -62,9 +62,9 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage, Long accuracy, String frecuency) throws CantCreateNewIntraUserIdentityException {
         try {
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage);
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage,  accuracy, frecuency);
 
             return new IntraUserIdentity( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -77,9 +77,9 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
+    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage, Long accuracy, String frecuency) throws CantCreateNewIntraUserIdentityException {
         try {
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage);
+            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage, accuracy, frecuency);
 
             return new IntraUserIdentity( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
 
@@ -106,7 +106,7 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
+    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage, Long accuracy, String frecuency) throws CantUpdateIntraUserIdentityException {
 
         try
         {
@@ -174,8 +174,8 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
     }
 
     @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        createNewIntraWalletUser(name,phrase,profile_img);
+    public void createIdentity(String name, String phrase, byte[] profile_img, Long accuracy, String frecuency) throws Exception {
+        createNewIntraWalletUser(name,phrase,profile_img, accuracy, frecuency);
     }
 
     @Override

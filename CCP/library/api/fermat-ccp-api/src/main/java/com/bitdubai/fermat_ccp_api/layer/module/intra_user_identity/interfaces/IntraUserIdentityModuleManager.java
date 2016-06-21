@@ -42,8 +42,8 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      *
      * @throws CantCreateNewIntraUserIdentityException if something goes wrong.
      */
-    IntraUserModuleIdentity createNewIntraWalletUser(String alias ,String phrase      ,
-                                                     byte[] profileImage) throws CantCreateNewIntraUserIdentityException;
+    IntraUserModuleIdentity createNewIntraWalletUser(String alias ,String phrase,
+                                                     byte[] profileImage, Long accuracy, String frecuency) throws CantCreateNewIntraUserIdentityException;
 
 
     /**
@@ -54,7 +54,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      * @throws CantCreateNewIntraUserIdentityException
      */
     IntraUserModuleIdentity createNewIntraWalletUser(String alias ,
-                                                     byte[] profileImage) throws CantCreateNewIntraUserIdentityException;
+                                                     byte[] profileImage, Long accuracy, String frecuency) throws CantCreateNewIntraUserIdentityException;
 
 
     /**
@@ -74,7 +74,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserI
      * @param profileImage
      * @throws CantUpdateIntraUserIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage) throws CantUpdateIntraUserIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase,byte[] profileImage, Long accuracy, String frecuency) throws CantUpdateIntraUserIdentityException;
 
     /**
      *The method <code>deleteIntraUserIdentity</code> change identity status to inactive

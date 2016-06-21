@@ -420,7 +420,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             @Override
                             public void run() {
                                 try {
-                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, "normal");
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
@@ -435,9 +435,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
+                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0,"normal");
                                     else
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
+                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0,"normal");
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
