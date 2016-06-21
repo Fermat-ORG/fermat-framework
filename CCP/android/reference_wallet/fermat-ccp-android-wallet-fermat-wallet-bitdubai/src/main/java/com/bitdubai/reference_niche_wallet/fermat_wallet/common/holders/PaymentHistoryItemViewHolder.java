@@ -21,6 +21,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private TextView txt_amount;
     private TextView txt_notes;
     private TextView txt_time;
+    private TextView  textView6;
 
     private LinearLayout linear_layour_container_state;
     private TextView txt_state;
@@ -39,6 +40,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
         txt_time = (TextView) itemView.findViewById(R.id.txt_time);
         txt_state = (TextView) itemView.findViewById(R.id.txt_state);
+        textView6 = (TextView) itemView.findViewById(R.id.textView6);
         btn_refuse_request = (Button) itemView.findViewById(R.id.btn_refuse_request);
         btn_accept_request = (Button) itemView.findViewById(R.id.btn_accept_request);
         linear_layour_container_state = (LinearLayout) itemView.findViewById(R.id.linear_layour_container_state);
@@ -66,6 +68,8 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     public TextView getTxt_state() {
         return txt_state;
     }
+
+    public TextView getTxt_fromOrTo(){return textView6;}
 
     public Button getBtn_refuse_request() {
         return btn_refuse_request;

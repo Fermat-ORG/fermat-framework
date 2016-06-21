@@ -270,12 +270,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                                 intraUserInformationModuleList.add(intraUserCache);
                         }
 
-                        //save cache records
-                        try {
-                            saveCacheIntraUsersSuggestions(intraUserInformationModuleList);
-                        } catch (CantGetIntraUsersListException e) {
-                            e.printStackTrace();
-                        }
+
 
                         return intraUserInformationModuleList;
                     }

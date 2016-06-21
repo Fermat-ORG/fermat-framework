@@ -38,7 +38,7 @@ public interface ModuleManager<Z extends FermatSettings, Y extends ActiveActorId
      *
      * @param
      */
-    void createIdentity(String name, String phrase, byte[] profile_img, Long accuracy, String frecuency) throws Exception;
+    void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
 
     void setAppPublicKey(String publicKey);
 

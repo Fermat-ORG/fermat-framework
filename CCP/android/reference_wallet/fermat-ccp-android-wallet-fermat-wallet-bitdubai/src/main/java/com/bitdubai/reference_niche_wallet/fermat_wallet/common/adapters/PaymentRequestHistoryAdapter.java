@@ -76,7 +76,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.fermat_history_request_row;
+
+        return R.layout.fermat_wallet_history_request_row;
+
     }
 
     /**
@@ -155,11 +157,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         {
             holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
             holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_fromOrTo().setText("To ");
             holder.getTxt_state().setText(state);
             holder.getTxt_state().setTypeface(tf);
         }
         else
         {
+            holder.getTxt_fromOrTo().setText("From ");
             if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
