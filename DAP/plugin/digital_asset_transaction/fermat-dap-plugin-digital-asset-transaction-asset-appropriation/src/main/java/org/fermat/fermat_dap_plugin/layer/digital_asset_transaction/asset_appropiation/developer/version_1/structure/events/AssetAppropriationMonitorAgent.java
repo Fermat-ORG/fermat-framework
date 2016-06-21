@@ -24,6 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -40,7 +41,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -321,7 +322,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
 
-        public void sendMessageAssetAppropriated(final DigitalAssetMetadata metadata) throws CantGetAssetUserActorsException, CantSetObjectException, CantSendMessageException, CantGetCryptoTransactionException {
+        public void sendMessageAssetAppropriated(final DigitalAssetMetadata metadata) throws CantGetAssetUserActorsException, CantSetObjectException, CantSendDAPMessageException, CantGetCryptoTransactionException {
             ActorAssetIssuer actorAssetIssuer = new AssetIssuerActorRecord(metadata.getDigitalAsset().getIdentityAssetIssuer().getAlias(),
                     metadata.getDigitalAsset().getIdentityAssetIssuer().getPublicKey());
 
@@ -331,7 +332,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             assetTransmissionNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         }
 
-        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
+        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendDAPMessageException {
             AssetMovementContentMessage content = new AssetMovementContentMessage(actorAssetUserManager.getActorAssetUser(), actorAssetUserManager.getActorAssetUser(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), networkType, AssetMovementType.ASSET_APPROPIATED);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetIssuer actorReceiver = new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(), digitalAssetMetadata.getDigitalAsset().getPublicKey());
@@ -347,7 +348,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 if (identity.getAlias().equals(alias)) assetIdentity = identity;
             }
             if (assetIdentity == null)
-                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null);
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null,Long.parseLong("0"), Frecuency.NONE);
             return assetIdentity;
         }
 

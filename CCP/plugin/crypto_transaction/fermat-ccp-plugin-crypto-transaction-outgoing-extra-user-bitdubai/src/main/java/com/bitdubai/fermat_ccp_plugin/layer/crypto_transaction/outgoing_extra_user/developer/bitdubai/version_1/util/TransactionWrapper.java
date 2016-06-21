@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
  * Created by eze on 2015.06.25..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
  */
-public class TransactionWrapper implements CryptoWalletTransactionRecord {
+public class TransactionWrapper implements CryptoWalletTransactionRecord,BitcoinLossProtectedWalletTransactionRecord {
 
     private final UUID             transactionId     ;
     private final String           actorFromPublicKey;
@@ -99,6 +100,11 @@ public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    @Override
+    public long getExchangRate() {
+        return 0;
+    }
 
     @Override
     public CryptoCurrency getCryptoCurrency() {

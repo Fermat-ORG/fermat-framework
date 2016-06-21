@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -43,9 +44,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
-import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
-import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
@@ -70,8 +68,9 @@ public class ConnectionsWorldFragment
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 2;
+    private static final int MAX = 6;
     protected final String TAG = "Recycler Base";
+
 
     //Managers
     private ChatActorCommunitySubAppModuleManager moduleManager;
@@ -82,14 +81,17 @@ public class ConnectionsWorldFragment
     private ChatActorCommunitySelectableIdentity identity;
     private int offset = 0;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private DeviceLocation location = null;
+    private double distance = 0;
+    private String alias;
 
     //Flags
-    private boolean isRefreshing = false;
-    private boolean launchActorCreationDialog = false;
-    private boolean launchListIdentitiesDialog = false;
+    private boolean isRefreshing = false, launchActorCreationDialog = false, launchListIdentitiesDialog = false;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     //UI
     private View rootView;
+
     //View layout;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
@@ -131,15 +133,12 @@ public class ConnectionsWorldFragment
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                 } catch (Exception e) {
-
                     if (errorManager != null)
                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
                 }
             }
 
             //Check if a default identity is configured
-
             try{
                 identity = moduleManager.getSelectedActorIdentity();
                 if(identity == null)
@@ -169,6 +168,70 @@ public class ConnectionsWorldFragment
                     appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if(dy > 0){
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if (!isRefreshing) {
+                            if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                                isRefreshing = false;
+                                Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
+                                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                                progressDialog.setMessage("Please wait");
+                                progressDialog.setCancelable(false);
+                                progressDialog.show();
+                                FermatWorker worker = new FermatWorker() {
+                                    @Override
+                                    protected Object doInBackground() throws Exception {
+                                        return getMoreData(location, distance, alias, MAX, pastVisiblesItems);
+                                    }
+                                };
+                                worker.setContext(getActivity());
+                                worker.setCallBack(new FermatWorkerCallBack() {
+                                    @SuppressWarnings("unchecked")
+                                    @Override
+                                    public void onPostExecute(Object... result) {
+                                        isRefreshing = false;
+                                        if (swipeRefresh != null)
+                                            swipeRefresh.setRefreshing(false);
+                                        if (result != null &&
+                                                result.length > 0) {
+                                            progressDialog.dismiss();
+                                            if (getActivity() != null && adapter != null) {
+                                                lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+                                                adapter.changeDataSet(lstChatUserInformations);
+                                                if (lstChatUserInformations.isEmpty()) {
+                                                    showEmpty(true, emptyView);
+                                                } else {
+                                                    showEmpty(false, emptyView);
+                                                }
+                                            }
+                                        } else
+                                            showEmpty(true, emptyView);
+                                    }
+
+                                    @Override
+                                    public void onErrorOccurred(Exception ex) {
+                                        progressDialog.dismiss();
+                                        isRefreshing = false;
+                                        if (swipeRefresh != null)
+                                            swipeRefresh.setRefreshing(false);
+                                        if (getActivity() != null)
+                                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+                                    }
+                                });
+                                worker.execute();
+                                //Log.v("...", "Last Item Wow !");
+                                //Do pagination.. i.e. fetch new data
+                            }
+                        }
+                    }
+                }
+            });
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
@@ -242,7 +305,7 @@ public class ConnectionsWorldFragment
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData();
+                    return getMoreData(location, distance, alias, MAX, offset);
                 }
             };
             worker.setContext(getActivity());
@@ -313,13 +376,15 @@ public class ConnectionsWorldFragment
         }
     }
 
-    private synchronized List<ChatActorCommunityInformation> getMoreData() {
+    private synchronized List<ChatActorCommunityInformation> getMoreData(DeviceLocation location, double distance, String alias,int max, int offset) {
         System.out.println("****************** GETMORE DATA SYNCRHINIEZED ENTERING");
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
-
-            List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(), MAX, offset);
-//            for(ChatActorCommunityInformation chat: result){
+            List<ChatActorCommunityInformation> result;
+            if(identity != null) {
+                result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
+                        location, distance, alias, max, offset);
+//              for(ChatActorCommunityInformation chat: result){
 //                if(chat.getConnectionState()!= null){
 //                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
 //                        moduleManager.requestConnectionToChatActor(identity,chat);
@@ -328,9 +393,9 @@ public class ConnectionsWorldFragment
 //                }
 //                else dataSet.add(chat);
 //            }
-            dataSet.addAll(result);
-
-            offset = dataSet.size();
+                dataSet.addAll(result);
+                //offset = dataSet.size();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -339,8 +404,12 @@ public class ConnectionsWorldFragment
     }
 
     @Override
-    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
+    public void onFragmentFocus () {
+        onRefresh();
+    }
 
+    @Override
+    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
     }
 
     @Override
@@ -388,7 +457,6 @@ public class ConnectionsWorldFragment
                                     PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
                             );
                     presentationChatCommunityDialog.show();
-
                 } else {
                     PresentationChatCommunityDialog presentationChatCommunityDialog =
                             new PresentationChatCommunityDialog(getActivity(),
@@ -434,9 +502,7 @@ public class ConnectionsWorldFragment
                     }
                 });
             }
-
         }catch (Exception e){
-
             PresentationChatCommunityDialog presentationChatCommunityDialog =
                     new PresentationChatCommunityDialog(getActivity(),
                             appSession,
@@ -445,105 +511,7 @@ public class ConnectionsWorldFragment
                             PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
                     );
             presentationChatCommunityDialog.show();
-
             e.printStackTrace();
-
-        }
-    }
-
-    private void actionsDialog(int action, ChatActorCommunityInformation data) {
-        ConnectDialog connectDialog;
-        final ChatActorCommunityInformation dat = data;
-        switch (action) {
-            case 1://connect
-                CommonLogger.info(TAG, "User connection state " +
-                        data.getConnectionState());
-                try {
-                    connectDialog =
-                            new ConnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
-                    connectDialog.setUsername(data.getAlias());
-//                    connectDialog.setSecondDescription("a connection request?");
-                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    connectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2://Disconnect
-                CommonLogger.info(TAG, "User connection state " +
-                        data.getConnectionState());
-                final DisconnectDialog disconnectDialog;
-                try {
-                    disconnectDialog =
-                            new DisconnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    disconnectDialog.setTitle("Disconnect");
-                    disconnectDialog.setDescription("Do you want to disconnect from");
-                    disconnectDialog.setUsername(data.getAlias() + "?");
-                    disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    disconnectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3://Accept Connection
-                try {
-                    AcceptDialog notificationAcceptDialog =
-                            new AcceptDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    notificationAcceptDialog.show();
-
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 4://Resend Connection
-                CommonLogger.info(TAG, "User connection state "
-                        + data.getConnectionState());
-                Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
-                try {
-                    connectDialog =
-                            new ConnectDialog(getActivity(), appSession, null,
-                                    data, identity);
-                    connectDialog.setTitle("Resend Connection Request");
-                    connectDialog.setDescription("Do you want to resend ");
-                    connectDialog.setUsername(data.getAlias());
-                    connectDialog.setSecondDescription("a connection request?");
-                    connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            //updateButton(dat);
-                        }
-                    });
-                    connectDialog.show();
-                } catch (Exception e) {//} catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 5://Reject Connection
-                CommonLogger.info(TAG, "User connection state "
-                        + data.getConnectionState());
-                Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
-                break;
         }
     }
 }

@@ -6,6 +6,10 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
@@ -44,19 +48,22 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
     private Broadcaster                         broadcaster;
     private CryptoCustomerManager               cryptoCustomerANSManager;
     private CryptoCustomerIdentityPluginRoot    pluginRoot;
+    private LocationManager                     locationManager;
     
     public CryptoCustomerIdentityManagerImpl(
             CryptoCustomerIdentityDatabaseDao   cryptoCustomerIdentityDatabaseDao,
             DeviceUserManager                   deviceUserManager,
             Broadcaster                         broadcaster,
             CryptoCustomerManager               cryptoCustomerANSManager,
-            CryptoCustomerIdentityPluginRoot    pluginRoot
+            CryptoCustomerIdentityPluginRoot    pluginRoot,
+            LocationManager                     locationManager
     ){
         this.cryptoCustomerIdentityDatabaseDao  = cryptoCustomerIdentityDatabaseDao;
         this.deviceUserManager                  = deviceUserManager;
         this.broadcaster                        = broadcaster;
         this.cryptoCustomerANSManager           = cryptoCustomerANSManager;
         this.pluginRoot                         = pluginRoot;
+        this.locationManager                    = locationManager;
     }
 
     /*CryptoCustomerIdentityManager Interface implementation.*/
@@ -94,13 +101,15 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
         }
     }
 
-    public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoCustomerIdentityException {
+    public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage,
+                                                               long accuracy,
+                                                               Frecuency frecuency) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
             // TODO BY DEFAULT THE CUSTOMER IS PUBLISHED
-            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true);
-            cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser);
+            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true, 0, Frecuency.NONE);
+            cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser, 0, Frecuency.NONE);
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_customer_creado");
 
@@ -120,13 +129,16 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
     }
 
     @Override
-    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException {
-        cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile);
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
+                                             long accuracy,
+                                             Frecuency frecuency) throws CantUpdateCustomerIdentityException {
+        cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile, 0, Frecuency.NONE);
 
         try {
+            Location location = locationManager.getLocation();
             CryptoCustomerIdentity customer = cryptoCustomerIdentityDatabaseDao.getIdentity(publicKey);
             if( customer.isPublished() ){
-                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile));
+                cryptoCustomerANSManager.updateIdentity(new CryptoCustomerExposingData(publicKey, alias, imageProfile, location));
             }
         } catch (CantGetIdentityException e) {
 
@@ -143,6 +155,8 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerIdentityException("CAN'T EXPOSE CRYPTO CUSTOMER IDENTITY", FermatException.wrapException(e), "", "");
 
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
         }
     }
 
@@ -205,13 +219,15 @@ public class CryptoCustomerIdentityManagerImpl implements CryptoCustomerIdentity
     private void exposeIdentity(final CryptoCustomerIdentity identity) throws CantExposeActorIdentityException {
 
         try {
-
-            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage()));
+            Location location = locationManager.getLocation();
+            cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage(), location));
 
         } catch (final CantExposeIdentityException e) {
 
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
 import com.edmodo.cropper.CropImageView;
 
 /**
@@ -24,10 +25,6 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
 
 
     //Constants
-    static final String ORIGINAL_IMAGE = "ORIGINAL_IMAGE";
-    static final String CROPPED_IMAGE = "CROPPED_IMAGE";
-    static final String BACK_ACTIVITY = "BACK_ACTIVITY";
-
     private static final int IMAGE_WIDTH = 400;
     private static final int IMAGE_HEIGHT = 400;
     private static final int IMAGE_COMPRESSION_PERCENTAGE = 30;
@@ -50,11 +47,11 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
         super.onCreate(savedInstanceState);
 
         //Capture data from session, then clean it.
-        originalImage = (Bitmap) appSession.getData(ORIGINAL_IMAGE);
-        backActivity = (Enum<Activities>) appSession.getData(BACK_ACTIVITY);
+        originalImage = (Bitmap) appSession.getData(FragmentsCommons.ORIGINAL_IMAGE);
+        backActivity = (Enum<Activities>) appSession.getData(FragmentsCommons.BACK_ACTIVITY);
 
-        appSession.removeData(ORIGINAL_IMAGE);
-        appSession.removeData(BACK_ACTIVITY);
+        appSession.removeData(FragmentsCommons.ORIGINAL_IMAGE);
+        appSession.removeData(FragmentsCommons.BACK_ACTIVITY);
 
     }
 
@@ -100,7 +97,7 @@ public class CryptoBrokerImageCropperFragment extends AbstractFermatFragment<Ref
                 byte[] croppedImageByteArray = ImagesUtils.toCompressedByteArray(croppedImage, IMAGE_COMPRESSION_PERCENTAGE);
 
                 //Save it to session
-                appSession.setData(CROPPED_IMAGE, croppedImageByteArray);
+                appSession.setData(FragmentsCommons.CROPPED_IMAGE, croppedImageByteArray);
 
                 goBackToCallerActivity();
 

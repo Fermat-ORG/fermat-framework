@@ -43,4 +43,9 @@ public class BCHPlatform extends AbstractPlatform {
             );
         }
     }
+
+
+    public static void main(String[] args){
+
+    }
 }

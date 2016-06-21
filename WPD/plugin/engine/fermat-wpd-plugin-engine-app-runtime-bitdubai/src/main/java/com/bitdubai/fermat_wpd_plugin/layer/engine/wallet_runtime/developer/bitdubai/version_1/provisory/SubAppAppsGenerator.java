@@ -7,9 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Owner;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -24,9 +21,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
+
 
 /**
  * Created by mati on 2016.05.09..
@@ -34,11 +35,12 @@ import java.util.HashMap;
 public class SubAppAppsGenerator {
 
 
-    public  HashMap<String,AppNavigationStructure> listSubApp ;
+    public HashMap<String, AppNavigationStructure> listSubApp;
 
     public SubAppAppsGenerator() {
         listSubApp = new HashMap<>();
     }
+
     /*
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
@@ -46,7 +48,6 @@ public class SubAppAppsGenerator {
     public void factoryReset() throws Exception {
 
         try {
-
 
 
             AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
@@ -58,8 +59,8 @@ public class SubAppAppsGenerator {
             runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
             runtimeSubApp.addActivity(runtimeActivity);
 
-            Fragment runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN.getKey());
+            FermatRuntimeFragment runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_SHELL_LOGIN.getKey());
             runtimeActivity.addFragment(Fragments.CWP_SHELL_LOGIN.getKey(), runtimeFragment);
 
             TitleBar runtimeTitleBar;
@@ -124,12 +125,12 @@ public class SubAppAppsGenerator {
             runtimeActivity.setTabStrip(runtimeTabStrip);
             runtimeSubApp.addActivity(runtimeActivity);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS.getKey(), runtimeFragment);
 
             /* Adding WizardTypes */
@@ -181,12 +182,12 @@ public class SubAppAppsGenerator {
             //runtimeTabStrip.setBackgroundColor("#72af9c");
             runtimeActivity.setTabStrip(runtimeTabStrip);
             runtimeActivity.setBackPublicKey(factory_public_key);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
 
 
@@ -263,8 +264,8 @@ public class SubAppAppsGenerator {
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
 
@@ -284,14 +285,14 @@ public class SubAppAppsGenerator {
             runtimeActivity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
             runtimeSubApp.addActivity(runtimeActivity);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_MANAGER_MAIN.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_MANAGER_MAIN.getKey(), runtimeFragment);
 
 
             //Desktop page Developer sub App
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_SUB_APP_DEVELOPER.getKey());
             runtimeActivity.addFragment(Fragments.CWP_SUB_APP_DEVELOPER.getKey(), runtimeFragment);
 
 
@@ -311,8 +312,8 @@ public class SubAppAppsGenerator {
             runtimeSubApp.addActivity(runtimeActivity);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_PUBLISHER_MAIN_FRAGMENT.getKey(), runtimeFragment);
 
 
@@ -366,30 +367,30 @@ public class SubAppAppsGenerator {
             runtimeTabStrip.setTextColor(0xFFFFFFFF);
             runtimeActivity.setTabStrip(runtimeTabStrip);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP.getKey(), runtimeFragment);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS.getKey(), runtimeFragment);
 
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY.getKey(), runtimeFragment);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP.getKey(), runtimeFragment);
             /**
              * End of SHOPS tabs.
@@ -439,8 +440,8 @@ public class SubAppAppsGenerator {
 
             runtimeActivity.setOptionsMenu(runtimeOptionsMenu);*/
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
 
@@ -495,8 +496,8 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT.getKey());
 
@@ -548,8 +549,8 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
 
@@ -603,8 +604,8 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#0072bb");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
 
@@ -618,6 +619,18 @@ public class SubAppAppsGenerator {
              */
 
             /**
+             * DAP ASSET ISSUER IDENTITY
+             */
+            createAssetIssuerIdentitySubAppNavigationStructure();
+            /**
+             * DAP ASSET USER IDENTITY
+             */
+            createAssetUserIdentitySubAppNavigationStructure();
+            /**
+             * DAP ASSET REDEEM POINT IDENTITY
+             */
+            createAssetRedeemPointIdentitySubAppNavigationStructure();
+            /**
              * DAP ASSET FACTORY
              */
             createAssetFactorySubAppNavigationStructure();
@@ -625,12 +638,10 @@ public class SubAppAppsGenerator {
              * DAP ASSET ISSUER COMMUNITY
              */
             createAssetIssuerCommunitySubAppNavigationStructure();
-
             /**
              * DAP ASSET USER COMMUNITY
              */
             createAssetUserCommunitySubAppNavigationStructure();
-
             /**
              * DAP REDEEM POINT COMMUNITY
              */
@@ -686,7 +697,6 @@ public class SubAppAppsGenerator {
             //createArtArtistIdentitySubAppNavigationStructure();
 
 
-
             runtimeSubApp = new AppNavigationStructure();
 
             String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
@@ -710,13 +720,11 @@ public class SubAppAppsGenerator {
             statusBar = new StatusBar();
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
 
 
             /**
@@ -753,12 +761,11 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
 
 
             //createTkyArtistIdentityNavigationStructure();
@@ -776,8 +783,6 @@ public class SubAppAppsGenerator {
              */
 
             createArtistCommunitySubAppNavigationStructure();
-
-
 
 
             /**
@@ -806,8 +811,8 @@ public class SubAppAppsGenerator {
             statusBar = new StatusBar();
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
@@ -847,8 +852,8 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
@@ -883,8 +888,8 @@ public class SubAppAppsGenerator {
 //            statusBar.setColor("#1189a4");
 //            runtimeActivity.setStatusBar(statusBar);
 //
-//            runtimeFragment = new Fragment();
-//            runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeFragment = new FermatRuntimeFragment();
+//            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
 //            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
 //            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
 
@@ -909,202 +914,12 @@ public class SubAppAppsGenerator {
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
 
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeFragment = new FermatRuntimeFragment();
+            runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            /**
-             * DAP IDENTITIES
-             */
-
-            /**
-             * DAP ISSUER IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Issuer Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Issuer Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-
-            /**
-             * DAP USER IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_USER.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("User Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New User Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
-            /**
-             * REDEEM POINT IDENTITY
-             */
-            runtimeSubApp = new AppNavigationStructure();
-
-            runtimeSubApp.setPublicKey(SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode());
-            runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-            // Activity: List of identities
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(null);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-//            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Redeem Point Identity");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
-
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
-//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Create New Redeem Point Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
         } catch (Exception e) {
             String message = FermatException.DEFAULT_MESSAGE;
@@ -1122,7 +937,7 @@ public class SubAppAppsGenerator {
         Activity runtimeActivity;
         StatusBar statusBar;
         TitleBar runtimeTitleBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         String publicKey = SubAppsPublicKeys.CWP_STORE.getCode();
 
@@ -1150,8 +965,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#B46A54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
 
@@ -1174,8 +989,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#B46A54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
 
@@ -1199,27 +1014,330 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#FFFFFF");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
     }
 
+    private void createAssetIssuerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("Issuer Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new FermatRuntimeFragment();
+//            runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset Issuer Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
+    private void createAssetUserIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_USER.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY);
+//
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("User Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new FermatRuntimeFragment();
+//            runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset User Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
+    private void createAssetRedeemPointIdentitySubAppNavigationStructure() throws InvalidParameterException {
+
+        AppNavigationStructure runtimeSubApp;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String identityPublicKey = SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode();
+
+        runtimeSubApp = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(identityPublicKey);
+
+        runtimeSubApp.setPublicKey(identityPublicKey);
+        runtimeSubApp.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
+        // Activity: List of identities
+//            runtimeActivity = new Activity();
+//            runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
+//            runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(null);
+//            runtimeActivity.setColor("#03A9F4");
+//            runtimeSubApp.addActivity(runtimeActivity);
+////            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY);
+//
+//            runtimeTitleBar = new TitleBar();
+//            runtimeTitleBar.setLabel("Redeem Point Identity");
+//            runtimeTitleBar.setIsTitleTextStatic(true);
+//            runtimeTitleBar.setColor("#1189a4");
+//            runtimeTitleBar.setTitleColor("#ffffff");
+//            runtimeTitleBar.setLabelSize(18);
+//            runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//            statusBar = new StatusBar();
+//            statusBar.setColor("#1189a4");
+//            runtimeActivity.setStatusBar(statusBar);
+//
+//            runtimeFragment = new FermatRuntimeFragment();
+//            runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
+//            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+//            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+//            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Redeem Point Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+//            menuItem = new OptionMenuItem(1);
+//            Owner owner = new Owner();
+//            owner.setOwnerAppPublicKey(SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode());
+//            menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner,SourceLocation.DEVELOPER_RESOURCES));
+//            menuItem.setShowAsAction(2);
+//            optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+    }
+
+    private SideMenu loadSideMenuAssetFactory(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#1d1d25");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createAssetFactorySubAppNavigationStructure() throws InvalidParameterException {
+
         AppNavigationStructure dapFactory;
         Activity runtimeActivity;
         Tab runtimeTab;
         TabStrip runtimeTabStrip;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
-        String toolbarColor = "#4B5E75";
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String titleBarColor = "#3f5b77";// "#4B5E75";
         String statusBarColor = "#3f5b77";
-
         String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
+
         dapFactory = new AppNavigationStructure();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(dapFactoryPublicKey);
 
         dapFactory.setPublicKey(dapFactoryPublicKey);
         dapFactory.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
@@ -1230,11 +1348,12 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#1d1d25");
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Factory");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new TabStrip();
@@ -1244,8 +1363,6 @@ public class SubAppAppsGenerator {
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Draft");
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(dapFactoryPublicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -1256,31 +1373,31 @@ public class SubAppAppsGenerator {
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey(), runtimeFragment);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#1d1d25");
-        runtimeSideMenu.setHasFooter(true);
+        runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapFactory.addActivity(runtimeActivity);
         dapFactory.changeActualStartActivity(Activities.DAP_MAIN.getCode());
@@ -1293,16 +1410,17 @@ public class SubAppAppsGenerator {
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Draft Asset");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey(), runtimeFragment);
 
         dapFactory.addActivity(runtimeActivity);
@@ -1312,38 +1430,24 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor("#1d1d25");
+        runtimeActivity.setColor("#3f5b77");
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#1d1d25");
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1352,21 +1456,22 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor("#1d1d25");
+        runtimeActivity.setColor("#3f5b77");
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey(), runtimeFragment);
 
         dapFactory.addActivity(runtimeActivity);
@@ -1380,17 +1485,18 @@ public class SubAppAppsGenerator {
 
         statusBar = new StatusBar();
         statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
 
         dapFactory.addActivity(runtimeActivity);
@@ -1400,22 +1506,37 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
         runtimeActivity.setBackActivity(Activities.DAP_MAIN);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
-
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Multimedia");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem = new MenuItem();
+//
+//        leftIconMenuItem.setFermatDrawable(new FermatDrawable(10, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setNavItem(leftIconMenuItem);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1424,22 +1545,37 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_MULTIMEDIA);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
-
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Properties");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem2 = new MenuItem();
+//
+//        leftIconMenuItem2.setFermatDrawable(new FermatDrawable(11, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem2.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setNavItem(leftIconMenuItem2);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1448,22 +1584,37 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_PROPERTIES);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
-
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto");
-        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem3 = new MenuItem();
+//
+//        leftIconMenuItem3.setFermatDrawable(new FermatDrawable(12, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem3.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setNavItem(leftIconMenuItem3);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1472,26 +1623,78 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY);
         runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_WIZARD_CRYPTO);
         runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-        runtimeActivity.setColor(toolbarColor);
-
-        statusBar = new StatusBar();
-        statusBar.setColor(statusBarColor);
+        runtimeActivity.setColor(titleBarColor);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Verify");
-        runtimeTitleBar.setColor(toolbarColor);
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
+//        MenuItem leftIconMenuItem4 = new MenuItem();
+//
+//        leftIconMenuItem4.setFermatDrawable(new FermatDrawable(13, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+//        leftIconMenuItem4.setAppLinkPublicKey("back");
+//        runtimeTitleBar.setNavItem(leftIconMenuItem4);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_WIZARD_VERIFY.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
         listSubApp.put(dapFactory.getPublicKey(), dapFactory);
+    }
+
+    private SideMenu loadSideMenuAssetIssuerCommunity(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
     }
 
     private void createAssetIssuerCommunitySubAppNavigationStructure() throws InvalidParameterException {
@@ -1499,11 +1702,16 @@ public class SubAppAppsGenerator {
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
-
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String statusBarColor = "#0072bb";
+        String titleBarColor = "#0072bb";
         String communityIssuerPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityIssuerPublicKey);
 
         dapAssetIssuerCommunity = new AppNavigationStructure();
 
@@ -1517,7 +1725,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1525,42 +1733,61 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        optionsMenu = new OptionsMenu();
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Connect");
+        menuItem.setOrder(0);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Cancel Connecting");
+        menuItem.setOrder(1);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(3);
+//        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Select All");
+        menuItem.setOrder(2);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItem = new OptionMenuItem(4);
+//        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Unselect All");
+        menuItem.setOrder(3);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(5);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(6);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1572,7 +1799,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1580,42 +1807,25 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_CONNECTIONS_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1626,8 +1836,8 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackPublicKey(communityIssuerPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
-        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar = new StatusBar();
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1635,7 +1845,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1643,10 +1853,14 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1658,7 +1872,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1666,14 +1880,18 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1685,7 +1903,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1693,42 +1911,25 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetIssuerCommunity(communityIssuerPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityIssuerPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetIssuerCommunity.addActivity(runtimeActivity);
 
@@ -1756,8 +1957,8 @@ public class SubAppAppsGenerator {
 //        statusBar.setColor("#0072bb");
 //        runtimeActivity.setStatusBar(statusBar);
 //
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey());
 //        runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_SETTINGS.getKey());
 //
@@ -1795,16 +1996,63 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
     }
 
+    private SideMenu loadSideMenuAssetUserCommunity(String publicKey) {
+
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
+
+        MenuItem runtimeMenuItem;
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Manage Groups");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        return runtimeSideMenu;
+    }
+
     private void createAssetUserCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetUserCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
+        String statusBarColor = "#0072bb";
+        String titleBarColor = "#0072bb";
+        Owner owner;
+        FermatRuntimeFragment runtimeFragment;
 
         String communityUserPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityUserPublicKey);
 
         dapAssetUserCommunity = new AppNavigationStructure();
 
@@ -1818,7 +2066,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1826,48 +2074,68 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        OptionsMenu optionsMenuMain = new OptionsMenu();
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        OptionMenuItem menuItemMain = new OptionMenuItem(1);
+        menuItemMain.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Connect");
+        menuItemMain.setOrder(0);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(2);
+        menuItemMain.setFermatDrawable(new FermatDrawable(2, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Disconnect");
+        menuItemMain.setOrder(1);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(3);
+        menuItemMain.setFermatDrawable(new FermatDrawable(3, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Cancel Connecting");
+        menuItemMain.setOrder(2);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemMain = new OptionMenuItem(4);
+        menuItemMain.setFermatDrawable(new FermatDrawable(4, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Select All");
+        menuItemMain.setOrder(3);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemMain = new OptionMenuItem(5);
+        menuItemMain.setFermatDrawable(new FermatDrawable(5, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Unselect All");
+        menuItemMain.setOrder(4);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        menuItemMain = new OptionMenuItem(6);
+        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Help");
+        menuItemMain.setOrder(5);
+        menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        menuItemMain = new OptionMenuItem(7);
+        menuItemMain.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain.setLabel("Search");
+        menuItemMain.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItemMain.setActionViewClass(100);
+        optionsMenuMain.addMenuItem(menuItemMain);
+
+        runtimeActivity.setOptionsMenu(optionsMenuMain);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -1880,7 +2148,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1888,14 +2156,17 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuProfile = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenuProfile);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -1907,7 +2178,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -1915,14 +2186,17 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuProfile2 = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenuProfile2);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -1935,56 +2209,33 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuConnection = new OptionsMenu();
+        OptionMenuItem menuItemConnection = new OptionMenuItem(1);
+        menuItemConnection.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemConnection.setLabel("Help");
+//        menuItemConnection.setOrder(4);
+        menuItemConnection.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuConnection.addMenuItem(menuItemConnection);
+        runtimeActivity.setOptionsMenu(optionsMenuConnection);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -1997,7 +2248,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2005,48 +2256,25 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuMgroup = new OptionsMenu();
+        OptionMenuItem menuItemMgroup = new OptionMenuItem(1);
+        menuItemMgroup.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMgroup.setLabel("Help");
+//        menuItemMgroup.setOrder(4);
+        menuItemMgroup.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuMgroup.addMenuItem(menuItemMgroup);
+        runtimeActivity.setOptionsMenu(optionsMenuMgroup);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2058,7 +2286,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2066,48 +2294,46 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuGroupUser = new OptionsMenu();
+        OptionMenuItem menuItemGroupUser = new OptionMenuItem(1);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(1, "rename_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Rename Group");
+        menuItemGroupUser.setOrder(0);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemGroupUser = new OptionMenuItem(2);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(2, "delete_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Delete Group");
+        menuItemGroupUser.setOrder(1);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItemGroupUser = new OptionMenuItem(3);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(3, "delete_selected_users", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Delete Selected Users");
+        menuItemGroupUser.setOrder(2);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemGroupUser = new OptionMenuItem(4);
+        menuItemGroupUser.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemGroupUser.setLabel("Help");
+        menuItemGroupUser.setOrder(3);
+        menuItemGroupUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuGroupUser.addMenuItem(menuItemGroupUser);
+        runtimeActivity.setOptionsMenu(optionsMenuGroupUser);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2119,7 +2345,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2127,48 +2353,32 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuAdminUser = new OptionsMenu();
+        OptionMenuItem menuItemAdminUser = new OptionMenuItem(1);
+        menuItemAdminUser.setFermatDrawable(new FermatDrawable(1, "add_to_group", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemAdminUser.setLabel("Add to Group");
+        menuItemAdminUser.setOrder(0);
+        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItemAdminUser = new OptionMenuItem(2);
+        menuItemAdminUser.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemAdminUser.setLabel("Help");
+        menuItemAdminUser.setOrder(1);
+        menuItemAdminUser.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuAdminUser.addMenuItem(menuItemAdminUser);
+        runtimeActivity.setOptionsMenu(optionsMenuAdminUser);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2180,7 +2390,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2188,48 +2398,25 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuAssetUserCommunity(communityUserPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Manage Groups");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
-        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        OptionsMenu optionsMenuNotification = new OptionsMenu();
+        OptionMenuItem menuItemNotification = new OptionMenuItem(1);
+        menuItemNotification.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemNotification.setLabel("Help");
+//        menuItemNotification.setOrder(4);
+        menuItemNotification.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenuNotification.addMenuItem(menuItemNotification);
+        runtimeActivity.setOptionsMenu(optionsMenuNotification);
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -2253,8 +2440,8 @@ public class SubAppAppsGenerator {
 //        runtimeTitleBar.setLabelSize(20);
 //        runtimeActivity.setTitleBar(runtimeTitleBar);
 //
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_SETTINGS_FRAGMENT.getKey());
 //
@@ -2298,104 +2485,59 @@ public class SubAppAppsGenerator {
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
-    private void createTkyArtistIdentityNavigationStructure() throws InvalidParameterException {
-        AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
-        Activity runtimeActivity;
-        StatusBar statusBar;
+    private SideMenu loadSideMenuRedeemPointCommunity(String publicKey) {
 
+        SideMenu runtimeSideMenu = new SideMenu();
+        //DAP V3
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+//        runtimeSideMenu.setNavigationIconColor("#ffffff");
+//        runtimeSideMenu.setHasFooter(true);
 
-
-
-        String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
-        runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
-        // Activity: Create New Identity
-        runtimeActivity = new Activity();
-
-        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
-        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
-        //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-        runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY.getCode());
-
-        TitleBar runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Tokenly Identity");
-        runtimeTitleBar.setColor("#1189a4");
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setLabelSize(18);
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#1189a4");
-        runtimeActivity.setStatusBar(statusBar);
-
-        Fragment runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-
-        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
-    }
-
-    private void createArtArtistIdentitySubAgracppNavigationStructure() throws InvalidParameterException {
-        AppNavigationStructure artArtistIdentity;
-        Activity runtimeActivity;
-        TitleBar runtimeTitleBar;
-        StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String IdentityArtistPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        artArtistIdentity = new AppNavigationStructure();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
-        artArtistIdentity.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeActivity = new Activity();
-        statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
-        runtimeActivity.setStatusBar(statusBar);
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
+//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Artist Identity");
-        runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
-
-/*
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        */
-
-        artArtistIdentity.addActivity(runtimeActivity);
-
-        listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
-    } //ArtArtistIdentity
+        return runtimeSideMenu;
+    }
 
     private void createRedeemPointCommunitySubAppNavigationStructure() throws InvalidParameterException {
         AppNavigationStructure dapAssetRedeemPointCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        String statusBarColor = "#0072bb";
+        String titleBar = "#0072bb";
+        FermatRuntimeFragment runtimeFragment;
 
         String communityRedeemPointPublicKey = SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(communityRedeemPointPublicKey);
 
         dapAssetRedeemPointCommunity = new AppNavigationStructure();
 
@@ -2409,7 +2551,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2417,42 +2559,68 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        optionsMenu = new OptionsMenu();
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Connect");
+        menuItem.setOrder(0);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Disconnect");
+        menuItem.setOrder(1);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        menuItem = new OptionMenuItem(3);
+        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Cancel Connecting");
+        menuItem.setOrder(2);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        menuItem = new OptionMenuItem(4);
+        menuItem.setFermatDrawable(new FermatDrawable(4, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Select All");
+        menuItem.setOrder(3);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(5);
+        menuItem.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Unselect All");
+        menuItem.setOrder(4);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(6);
+        menuItem.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(7);
+        menuItem.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2466,7 +2634,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2474,7 +2642,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2482,10 +2650,13 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2498,50 +2669,33 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_LIST_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
@@ -2569,8 +2723,8 @@ public class SubAppAppsGenerator {
 //        statusBar.setColor("#0072bb");
 //        runtimeActivity.setStatusBar(statusBar);
 //
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT.getKey());
 //
@@ -2617,16 +2771,16 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE_FRAGMENT.getKey());
 
@@ -2640,7 +2794,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2648,60 +2802,137 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor(titleBar);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT.getKey());
 
-        runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(loadSideMenuRedeemPointCommunity(communityRedeemPointPublicKey));
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_CONNECTIONS_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT);
-        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS);
-//        runtimeMenuItem.setAppLinkPublicKey(communityRedeemPointPublicKey);
-//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        //reinicializacion optionMenu for not reply menu en diferente activity
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+//        menuItem.setOrder(5);
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
 
         listSubApp.put(dapAssetRedeemPointCommunity.getPublicKey(), dapAssetRedeemPointCommunity);
     }
 
+    private void createTkyArtistIdentityNavigationStructure() throws InvalidParameterException {
+        AppNavigationStructure runtimeSubApp = new AppNavigationStructure();
+        Activity runtimeActivity;
+        StatusBar statusBar;
+
+
+        String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+        runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
+        // Activity: Create New Identity
+        runtimeActivity = new Activity();
+
+        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
+        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
+        //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY.getCode());
+
+        TitleBar runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Tokenly Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        FermatRuntimeFragment runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+    }
+
+    private void createArtArtistIdentitySubAgracppNavigationStructure() throws InvalidParameterException {
+        AppNavigationStructure artArtistIdentity;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        FermatRuntimeFragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+
+        String IdentityArtistPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+
+        artArtistIdentity = new AppNavigationStructure();
+
+        artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
+        artArtistIdentity.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+
+        runtimeActivity = new Activity();
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Artist Identity");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
+
+/*
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        */
+
+        artArtistIdentity.addActivity(runtimeActivity);
+
+        listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
+    } //ArtArtistIdentity
+
     private void createCryptoCustomerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final int CREATE_IDENTITY_MENU_ID = 3;
+        final int GEOLOCATION_SETTINGS_OPTION_MENU_ID = 4;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
-        String publicKey = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
 
         runtimeSubApp = new AppNavigationStructure();
 
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         runtimeSubApp.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -2725,8 +2956,27 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
 
@@ -2735,15 +2985,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#0e738b");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
@@ -2752,7 +3002,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2768,17 +3018,62 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(CREATE_IDENTITY_MENU_ID, "action_create", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
 
         // Activity: Edit Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2794,23 +3089,77 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.         CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Option Menu - Edit Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(CREATE_IDENTITY_MENU_ID, "action_create", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Edit Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation in Edit Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
     }
 
     private void createCryptoBrokerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final int GEOLOCATION_SETTINGS_OPTION_MENU_ID = 3;
+
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
         TitleBar runtimeTitleBar;
-        Fragment runtimeFragment;
-
-        String publicKey = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
+        FermatRuntimeFragment runtimeFragment;
 
         runtimeSubApp = new AppNavigationStructure();
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
         // Activity: List of identities
@@ -2833,8 +3182,27 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+        // Option Menu - List of identities Activity
+        OptionsMenu optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        OptionMenuItem optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
 
@@ -2843,15 +3211,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
@@ -2860,12 +3228,23 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
+
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("New Identity");
@@ -2876,17 +3255,43 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation in Create Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
 
         // Activity: Edit Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2902,10 +3307,48 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        // Option Menu - Edit Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation in Edit Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
     }
 
     private void createCryptoBrokerCommunitySubAppNavigationStructure() throws InvalidParameterException {
@@ -2914,7 +3357,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppBrokerCommunity = new AppNavigationStructure();
 
@@ -2964,8 +3407,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
 
@@ -2997,8 +3440,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
 
@@ -3030,8 +3473,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
 
@@ -3064,8 +3507,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
 
@@ -3081,7 +3524,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppCustomerCommunity = new AppNavigationStructure();
 
@@ -3131,8 +3574,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
 
@@ -3164,8 +3607,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
 
@@ -3197,8 +3640,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
 
@@ -3231,8 +3674,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
 
@@ -3249,7 +3692,7 @@ public class SubAppAppsGenerator {
         TitleBar runtimeTitleBar;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         final int titleBarLabelSize = 20;
         Owner owner;
         String publickeyDeveloperTools = SubAppsPublicKeys.PIP_DEVELOPER.getCode();
@@ -3298,21 +3741,21 @@ public class SubAppAppsGenerator {
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 
@@ -3335,8 +3778,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
 //        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), runtimeFragment);
@@ -3363,8 +3806,8 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
 
@@ -3390,14 +3833,14 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
 
         runtimeSubApp.addActivity(runtimeActivity);
 
-//        /*New Fragment - Log Level 1*/
+//        /*New FermatRuntimeFragment - Log Level 1*/
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS);
         runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_1_TOOLS.getCode());
@@ -3417,15 +3860,15 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
 
         runtimeSubApp.addActivity(runtimeActivity);
 
-        /*New Fragment - Log Level 2*/
+        /*New FermatRuntimeFragment - Log Level 2*/
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS);
         runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_2_TOOLS.getCode());
@@ -3445,20 +3888,20 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
 //        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
 
         runtimeSubApp.addActivity(runtimeActivity);
 
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
 
-        /*New Fragment - Log Level 3*/
+        /*New FermatRuntimeFragment - Log Level 3*/
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS);
         runtimeActivity.setActivityType(Activities.CWP_SUB_APP_DEVELOPER_LOG_LEVEL_3_TOOLS.getCode());
@@ -3478,8 +3921,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
 //        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
@@ -3495,7 +3938,7 @@ public class SubAppAppsGenerator {
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
@@ -3529,8 +3972,8 @@ public class SubAppAppsGenerator {
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(chatPublicKey);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
@@ -3545,29 +3988,29 @@ public class SubAppAppsGenerator {
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
         runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"delete_all_chats",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(-1);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
@@ -3576,20 +4019,21 @@ public class SubAppAppsGenerator {
         runtimeTab = new Tab();
         runtimeTab.setLabel("CONTACTS");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey()));
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(2,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
@@ -3605,7 +4049,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3620,8 +4064,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
 
@@ -3631,11 +4075,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#47BF73");
+        statusBar.setColor("#F9F9F9");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -3646,8 +4090,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
 
@@ -3657,7 +4101,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         //chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3672,8 +4116,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#47BF73");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
 
@@ -3683,7 +4127,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3698,8 +4142,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#47BF73");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey());
 
@@ -3716,8 +4160,8 @@ public class SubAppAppsGenerator {
 //        runtimeTab = new Tab();
 //        runtimeTab.setLabel("CHATS");
 //        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeTabStrip.addTab(runtimeTab);
 //
@@ -3725,8 +4169,8 @@ public class SubAppAppsGenerator {
 //        runtimeTab = new Tab();
 //        runtimeTab.setLabel("CONTACTS");
 //        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
 //        runtimeTabStrip.addTab(runtimeTab);
@@ -3740,7 +4184,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3755,8 +4199,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
 
@@ -3766,7 +4210,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3781,8 +4225,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#47BF73");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
 
@@ -3792,7 +4236,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3807,8 +4251,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
 
@@ -3818,7 +4262,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3833,8 +4277,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
 
@@ -3844,7 +4288,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3859,8 +4303,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
 
@@ -3870,7 +4314,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3885,8 +4329,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
 
@@ -3896,7 +4340,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILELIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILELIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3911,8 +4355,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT.getKey());
 
@@ -3922,7 +4366,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_PROFILE_DETAIL);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3937,8 +4381,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_PROFILE_DETAIL_FRAGMENT.getKey());
 
@@ -3948,7 +4392,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT);
         runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3963,8 +4407,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_SEND_ERROR_REPORT_FRAGMENT.getKey());
 
@@ -3977,27 +4421,23 @@ public class SubAppAppsGenerator {
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
         chtComm = new AppNavigationStructure();
-        String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
+        final String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
         chtComm.setPublicKey(communityPublicKey);
         chtComm.setPlatform(Platforms.CHAT_PLATFORM);
-        listSubApp.put(chtComm.getPublicKey(), chtComm);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#075E54");
+        //listSubApp.put(chtComm.getPublicKey(), chtComm);
 
         //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setBackgroundColor("#f9f9f9");
-        chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-
-        runtimeActivity.setStatusBar(statusBar);
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setColor("#F9F9F9");
+        //chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("P2P Chat Community");
@@ -4007,14 +4447,18 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#075E54");
+        runtimeActivity.setStatusBar(statusBar);
+
         //Owner
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(communityPublicKey);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
 
         //runtimeActivity.setSideMenu(runtimeSideMenu);
         //chtComm.addActivity(runtimeActivity);
@@ -4024,85 +4468,97 @@ public class SubAppAppsGenerator {
         runtimeTabStrip.setTabsColor("#075E54");
         runtimeTabStrip.setTabsTextColor("#F9F9F9");
         runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Browser
         runtimeTab = new Tab();
-        runtimeTab.setLabel("BROWSER");
-        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey()));
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeTab.setLabel("   BROWSER   ");
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuBrowser = new OptionsMenu();
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Search");
         optionMenuItemBrowser.setShowAsAction(2);
+        optionMenuItemBrowser.setActionViewClass(100);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2,"location",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Location");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         optionMenuItemBrowser = new OptionMenuItem(3);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemBrowser.setLabel("Help");
         optionMenuItemBrowser.setShowAsAction(2);
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
+        runtimeFragment.setOwner(owner);
 
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab.setFragment(runtimeFragment);
+//        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
 
         //Tabs Connections
         runtimeTab = new Tab();
-        runtimeTab.setLabel("CONNECTIONS");
+        runtimeTab.setLabel(" CONNECTIONS ");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
+
+        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3,"search",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Search");
+        optionMenuItemConn.setActionViewClass(100);
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-        optionMenuItemConn = new OptionMenuItem(2);
+
+        optionMenuItemConn = new OptionMenuItem(22);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
-        optionMenuItemConn.setShowAsAction(1);
+        optionMenuItemConn.setShowAsAction(4);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         runtimeFragment.setOptionsMenu(optionsMenuConn);
-
         runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
+
 
         //Tabs Notifications
         runtimeTab = new Tab();
         runtimeTab.setLabel("NOTIFICATIONS");
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
-        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
         optionMenuItemNot.setShowAsAction(1);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
 
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
 
         chtComm.addActivity(runtimeActivity);
+        chtComm.changeActualStartActivity(runtimeActivity.getType().getCode());
+
         listSubApp.put(chtComm.getPublicKey(), chtComm);
 //
 //        // Activity: Connection
@@ -4123,8 +4579,8 @@ public class SubAppAppsGenerator {
 //        runtimeTitleBar.setLabelSize(18);
 //        runtimeActivity.setTitleBar(runtimeTitleBar);
 //
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
 //
@@ -4149,8 +4605,8 @@ public class SubAppAppsGenerator {
 //        runtimeTitleBar.setLabelSize(20);
 //        runtimeActivity.setTitleBar(runtimeTitleBar);
 //
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
 //
@@ -4164,7 +4620,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         //runtimeActivity.setColor("#FF0B46F0");
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
 
@@ -4173,11 +4629,11 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
-        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setLabelSize(18);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
 
@@ -4185,13 +4641,13 @@ public class SubAppAppsGenerator {
         listSubApp.put(chtComm.getPublicKey(), chtComm);
     }
 
-    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException{
+    private void createChatIdentitySubAppNavigationStructure() throws InvalidParameterException {
 
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         runtimeSubApp = new AppNavigationStructure();
         String chatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
@@ -4218,9 +4674,9 @@ public class SubAppAppsGenerator {
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(chatIdentityPublicKey);
 
-        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7,"open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
         leftIconMenuItem.setAppLinkPublicKey("back");
-        runtimeTitleBar.setLeftIconFermatDrawable(leftIconMenuItem);
+        runtimeTitleBar.setNavItem(leftIconMenuItem);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -4232,22 +4688,49 @@ public class SubAppAppsGenerator {
         OptionMenuItem menuItem = new OptionMenuItem(1);
         Owner owner2 = new Owner();
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
-        menuItem.setFermatDrawable(new FermatDrawable(2,"ic_location",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner2,SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
 
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_GEOLOCATION_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(chatIdentityPublicKey);
+        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#075E54");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_GEOLOCATION_IDENTITY_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
@@ -4257,7 +4740,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppFanCommunity = new AppNavigationStructure();
 
@@ -4312,8 +4795,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#E6E7E8");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getKey());
 
@@ -4345,8 +4828,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
 
@@ -4377,8 +4860,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
 
@@ -4410,8 +4893,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#6D6F71");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
 
@@ -4444,8 +4927,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
 
@@ -4461,7 +4944,7 @@ public class SubAppAppsGenerator {
         MenuItem runtimeMenuItem;
         StatusBar statusBar;
         Activity runtimeActivity;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
 
         AppNavigationStructure subAppArtistCommunity = new AppNavigationStructure();
         String communityPublicKey = SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode();
@@ -4516,8 +4999,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
 
@@ -4549,8 +5032,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
 
@@ -4582,8 +5065,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
 
@@ -4615,8 +5098,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
 
@@ -4649,8 +5132,8 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
 
@@ -4667,7 +5150,7 @@ public class SubAppAppsGenerator {
         TitleBar runtimeTitleBar;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         final int titleBarLabelSize = 20;
 
         runtimeSubApp = new AppNavigationStructure();
@@ -4693,8 +5176,8 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
 

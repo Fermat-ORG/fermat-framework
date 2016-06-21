@@ -410,7 +410,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_user_identity) : brokerImageByteArray);
+                                    moduleManager.createNewIdentityAssetUser(brokerNameText,
+                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIdentityAssetUserException e) {
                                     e.printStackTrace();
@@ -595,12 +596,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
     }
 
-    private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(getActivity().getResources(), resImage);
     }
 
 //    private void dispatchTakePictureIntent() {
@@ -634,18 +631,28 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_user_identity_menu_main, menu);
-        menu.add(0, SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION, 0, R.string.help).setIcon(R.drawable.dap_identity_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
+            int id = item.getItemId();
 
-            if (item.getItemId() == SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                //case IC_ACTION_USER_IDENTITY_HELP_PRESENTATION:
+                case 2:
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+//            if (item.getItemId() == SessionConstants.IC_ACTION_USER_IDENTITY_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -832,14 +839,14 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
         }
         if (Build.VERSION.SDK_INT < 19) {
             Intent intent = new Intent();
-//            intent.setType("image/jpeg");
+            intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Choose picture"), REQUEST_LOAD_IMAGE);
         } else {
 //            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 //            intent.addCategory(Intent.CATEGORY_OPENABLE);
 //            intent.setType("image/jpeg");
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, GALLERY_KITKAT_INTENT_CALLED);
         }
     }
