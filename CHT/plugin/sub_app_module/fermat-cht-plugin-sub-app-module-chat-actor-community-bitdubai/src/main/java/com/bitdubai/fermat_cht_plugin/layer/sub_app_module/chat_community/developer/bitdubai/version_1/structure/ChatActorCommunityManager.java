@@ -507,7 +507,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     public List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException{
 
         List<Cities> cities = new ArrayList<>();
-        CitiesImpl objectCities = null;
         Country country;
 
         try {
@@ -524,7 +523,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             }
 
         } catch (Exception e){
-            System.out.println("No sé que poner aquí");
+            System.out.println("Can't return List<Cities>");
         }
 
         return cities;
