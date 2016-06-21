@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
@@ -233,11 +234,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().unregisterProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate);
 
-                this.getConnection().registerProfile(actorToUpdate);
-
-            } catch (CantUnregisterProfileException |CantRegisterProfileException exception) {
+            } catch (CantUpdateRegisteredProfileException exception) {
 
                 throw new CantUpdateRegisteredActorException(exception, "publicKey: "+publicKey+" - name: "+name, "There was an error trying to update a registered actor through the network service.");
             }
@@ -250,11 +249,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().unregisterProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate);
 
-                this.getConnection().registerProfile(actorToUpdate);
-
-            } catch (CantUnregisterProfileException |CantRegisterProfileException exception) {
+            } catch (CantUpdateRegisteredProfileException exception) {
 
                 throw new CantUpdateRegisteredActorException(exception, "publicKey: "+actorToUpdate.getIdentityPublicKey()+" - name: "+actorToUpdate.getName(), "There was an error trying to update a registered actor through the network service.");
             }

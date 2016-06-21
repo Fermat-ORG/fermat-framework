@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -32,6 +33,16 @@ public interface NetworkClientConnection {
      * @throws CantRegisterProfileException      if something goes wrong.
      */
     void registerProfile(Profile profile) throws CantRegisterProfileException;
+
+    /**
+     * Through the method <code>updateRegisteredProfile</code> we can update registered profile
+     * in the server.
+     *
+     * @param profile  of the component that we're trying to update.
+     *
+     * @throws CantUpdateRegisteredProfileException      if something goes wrong.
+     */
+    void updateRegisteredProfile(Profile profile) throws CantUpdateRegisteredProfileException;
 
     /**
      * Through the method <code>unregisterProfile</code> we can unregister a profile in the server.

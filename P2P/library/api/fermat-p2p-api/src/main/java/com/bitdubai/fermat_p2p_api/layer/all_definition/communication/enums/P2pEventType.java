@@ -153,6 +153,9 @@ public enum P2pEventType implements FermatEventEnum {
     NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED("NCAPR"){
         public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
     },
+    NETWORK_CLIENT_ACTOR_PROFILE_UPDATED("NCAPU"){
+        public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
+    },
     NETWORK_CLIENT_CONNECTION_SUCCESS("NCCSU"){
         public NetworkClientConnectionSuccessEvent getNewEvent() { return new NetworkClientConnectionSuccessEvent(this); }
     },
