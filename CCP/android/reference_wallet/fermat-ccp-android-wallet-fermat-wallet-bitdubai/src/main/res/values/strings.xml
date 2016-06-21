@@ -61,7 +61,7 @@
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>
-    <!-- history_request_row.xml -->
+    <!-- fermat_wallet_history_request_rowry_request_row.xml -->
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
