@@ -41,13 +41,26 @@
                 android:selectAllOnFocus="true"
                 android:background="#cc808080"
                 android:padding="12dp"
-                android:hint="Enter name or alias"
+                android:hint="Enter name or aliass"
                 android:textSize="18dp"
                 android:gravity="center_vertical"
                 android:layout_alignBottom="@+id/crypto_broker_image"
                 android:textColorHint="#ffffff">
                 <requestFocus />
             </EditText>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/crypto_broker_name_text_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="50"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
             <ImageView
                 android:id="@+id/camara"

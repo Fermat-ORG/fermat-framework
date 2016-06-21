@@ -10,6 +10,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -48,7 +52,14 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
     private EditText mBrokerName;
     private ImageView mBrokerImage;
     private View progressBar;
+    private int maxLenghtTextCount = 30;
+    FermatTextView textCount;
 
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public static CreateCryptoBrokerIdentityFragment newInstance() {
         return new CreateCryptoBrokerIdentityFragment();
@@ -87,6 +98,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        textCount = (FermatTextView) layout.findViewById(R.id.crypto_broker_name_text_count);
 
         if(cryptoBrokerBitmap != null)
             mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
@@ -127,6 +139,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment<R
 
         mBrokerName.requestFocus();
         mBrokerName.performClick();
+        mBrokerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+        mBrokerName.addTextChangedListener(textWatcher);
+        textCount.setText(String.valueOf(maxLenghtTextCount));
 
         final InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
