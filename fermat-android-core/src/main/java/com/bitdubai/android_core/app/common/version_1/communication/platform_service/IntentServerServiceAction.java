@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker;
+package com.bitdubai.android_core.app.common.version_1.communication.platform_service;
 
 /**
  * Created by mati on 2016.04.27..
