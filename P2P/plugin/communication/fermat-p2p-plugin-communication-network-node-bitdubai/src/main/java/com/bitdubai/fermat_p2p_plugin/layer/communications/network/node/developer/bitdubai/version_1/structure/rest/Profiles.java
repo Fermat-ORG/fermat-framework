@@ -165,9 +165,10 @@ public class Profiles implements RestFulServices {
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
 
-        if( (discoveryQueryParameters.getMax() > 0 &&  discoveryQueryParameters.getOffset() >= 0) &&
-                (discoveryQueryParameters.getOffset() < discoveryQueryParameters.getMax()) )
-            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, discoveryQueryParameters.getMax(), discoveryQueryParameters.getOffset());
+        int max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+
+        if( (discoveryQueryParameters.getMax() > 0 &&  discoveryQueryParameters.getOffset() >= 0))
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, max, discoveryQueryParameters.getOffset());
         else
             actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, 10, 0);
 
