@@ -107,11 +107,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         return true;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.ccw_menu_home, menu);
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

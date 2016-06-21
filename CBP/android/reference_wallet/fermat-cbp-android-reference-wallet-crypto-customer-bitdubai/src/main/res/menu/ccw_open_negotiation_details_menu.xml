@@ -1,8 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/ccw_action_cancel_negotiation"
-        android:title="@string/ccw_open_negotiation_details_cancel_negotiation_menu_text"
-        app:showAsAction="never"/>
-</menu>
