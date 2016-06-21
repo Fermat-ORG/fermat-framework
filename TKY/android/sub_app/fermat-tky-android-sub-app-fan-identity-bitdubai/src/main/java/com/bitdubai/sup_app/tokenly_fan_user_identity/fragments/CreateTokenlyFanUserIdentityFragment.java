@@ -59,6 +59,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -512,8 +513,22 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
                     Bundle extras = data.getExtras();
                     imageBitmap = (Bitmap) extras.get("data");
+                    //-----------------------------------------------
+                    ContentResolver contentResolver2 = getActivity().getContentResolver();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver2, selectedImage2);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    fanImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(fanImage);
+
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:

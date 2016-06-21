@@ -128,9 +128,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
                             artistCommunityInformationArrayList = (ArrayList<ArtCommunityInformation>) result[0];
                             adapter.changeDataSet(artistCommunityInformationArrayList);
                             if (artistCommunityInformationArrayList.isEmpty()) {
-                                showEmpty(true, emptyView);
+                               // showEmpty(true, emptyView);
+                                emptyView.setVisibility(View.VISIBLE);
                             } else {
-                                showEmpty(false, emptyView);
+                                //showEmpty(false, emptyView);
+                                emptyView.setVisibility(View.VISIBLE);
                             }
                         }
                     } else

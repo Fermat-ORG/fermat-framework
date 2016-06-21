@@ -61,6 +61,7 @@ import com.bitdubai.sub_app.artist_identity.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -233,7 +234,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             artistImageByteArray = toByteArray(bitmap);
             artistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -811,8 +812,22 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             contextMenuInUse = true;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
                     Bundle extras = data.getExtras();
                     imageBitmap = (Bitmap) extras.get("data");
+                    //-----------------------------------------------
+                    ContentResolver contentResolver2 = getActivity().getContentResolver();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver2, selectedImage2);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    artistImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
+
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
