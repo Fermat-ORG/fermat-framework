@@ -620,7 +620,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                         try {
-                            String notes = null;
+                            String notes = "";
                             if (txt_notes.getText().toString().length() != 0) {
                                 notes = txt_notes.getText().toString();
                             }

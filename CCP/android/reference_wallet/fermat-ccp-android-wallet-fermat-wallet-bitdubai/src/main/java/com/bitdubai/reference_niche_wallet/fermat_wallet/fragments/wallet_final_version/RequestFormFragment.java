@@ -624,7 +624,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }
@@ -669,7 +669,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    CryptoCurrency.BITCOIN
 
                            );
