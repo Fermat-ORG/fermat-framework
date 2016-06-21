@@ -43,7 +43,7 @@
                             android:id="@id/txt_amount"
                             android:textStyle="bold"
                             android:textColor="#F78803"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:layout_marginBottom="5dp"
                             />
 
@@ -60,6 +60,7 @@
                                 android:text="Date:"
                                 android:textStyle="bold"
                                 android:id="@+id/textView4"
+                                android:textSize="14sp"
                                 android:layout_below="@+id/txt_amount"
                                 android:layout_alignLeft="@+id/txt_amount"
                                 android:layout_alignStart="@+id/txt_amount"
@@ -72,6 +73,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:text="July 10,2016"
+                                android:textSize="14sp"
                                 android:id="@id/txt_time"
                                 android:layout_below="@+id/txt_amount"
                                 android:layout_toRightOf="@+id/textView4"
@@ -92,6 +94,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:text="To:"
+                                android:textSize="14sp"
                                 android:id="@+id/textView6"
                                 android:layout_below="@+id/textView4"
                                 android:layout_alignLeft="@+id/textView4"
@@ -105,6 +108,7 @@
                                 android:textAppearance="?android:attr/textAppearanceSmall"
                                 android:text="Username"
                                 android:id="@id/txt_contactName"
+                                android:textSize="14sp"
                                 android:layout_below="@+id/txt_time"
                                 android:layout_toRightOf="@+id/textView4"
                                 android:layout_toEndOf="@+id/textView4"
@@ -118,6 +122,7 @@
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Transaction concept"
                             android:id="@id/txt_notes"
+                            android:textSize="14sp"
                             android:layout_below="@+id/textView6"
                             android:layout_alignLeft="@+id/textView6"
                             android:layout_alignStart="@+id/textView6"
@@ -129,7 +134,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="0dp"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:id="@+id/linear_layour_container_state"
@@ -145,7 +150,7 @@
                             android:layout_marginEnd="34dp"
                             android:textColor="#54ACEC"
                             android:textStyle="bold"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             />
                     </LinearLayout>
 
@@ -158,6 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="16dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/linear_layour_container_buttons"
                 android:layout_gravity="right"
                 >
