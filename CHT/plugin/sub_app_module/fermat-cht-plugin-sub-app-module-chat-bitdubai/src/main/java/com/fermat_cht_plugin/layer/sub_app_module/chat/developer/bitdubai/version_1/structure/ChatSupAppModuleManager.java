@@ -338,7 +338,7 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available",0, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available",0, null);
     }
 
     @Override
