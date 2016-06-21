@@ -824,6 +824,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
             pagertabs.setPageMargin(pageMargin);
+            adapter.setStartFragmentPosition(tabStrip.getStartItem());
             pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
             tabLayout.setupWithViewPager(pagertabs);
 
