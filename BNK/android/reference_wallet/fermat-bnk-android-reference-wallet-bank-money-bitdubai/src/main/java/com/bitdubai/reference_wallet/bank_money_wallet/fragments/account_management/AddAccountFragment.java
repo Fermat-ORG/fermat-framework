@@ -240,7 +240,6 @@ public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFerma
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==ReferenceWalletConstants.SAVE_ACTION){
-            System.out.println("item selected");
             if(createAccount())
                 changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
             return true;
@@ -249,11 +248,5 @@ public class AddAccountFragment extends AbstractFermatFragment<ReferenceAppFerma
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.SAVE_ACTION, 0, "Save")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
 
 }
