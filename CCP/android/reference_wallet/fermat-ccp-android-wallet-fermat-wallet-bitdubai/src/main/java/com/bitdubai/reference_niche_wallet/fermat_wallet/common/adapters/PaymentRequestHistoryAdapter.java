@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
@@ -89,13 +90,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     @Override
     protected void bindHolder(final PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
 
-        try {
+       /* try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
         }catch (Exception e){
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
-        }
+        }*/
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), (int)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), ((ShowMoneyType)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)).getCode()));
         holder.getTxt_amount().setTypeface(tf) ;
 
         if(data.getContact() != null)
@@ -213,7 +214,5 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             }
         });
     }
-
-
 
 }

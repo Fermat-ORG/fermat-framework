@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-    android:id="@+id/expiration_date_card_view"
+    android:id="@+id/contract_detail_card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -52,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/description_text_status_confirm"
                 android:textSize="18sp"
@@ -81,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:textColor="@color/description_text_status_confirm"
                     tools:text="Done on 15/02/16"/>
@@ -102,8 +104,10 @@
                     android:layout_gravity="end"
                     android:layout_marginBottom="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="WAITING FOR CUSTOMER"
+                    android:text="@string/waiting_for_the_customer"
+                    android:textAllCaps="true"
                     android:textColor="#FF0000"
                     android:textSize="14sp"
                     android:visibility="gone"/>

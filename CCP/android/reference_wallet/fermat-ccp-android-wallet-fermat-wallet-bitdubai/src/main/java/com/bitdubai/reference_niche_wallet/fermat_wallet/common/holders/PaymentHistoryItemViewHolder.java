@@ -5,10 +5,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-
 import org.w3c.dom.Text;
 
 
@@ -18,7 +16,7 @@ import org.w3c.dom.Text;
 
 
 public class PaymentHistoryItemViewHolder extends FermatViewHolder {
-    private ImageView contactIcon;
+
     private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
@@ -36,7 +34,6 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     public PaymentHistoryItemViewHolder(View itemView) {
         super(itemView);
 
-        contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
         txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
@@ -49,9 +46,6 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
 
     }
 
-    public ImageView getContactIcon() {
-        return contactIcon;
-    }
 
     public TextView getTxt_contactName() {
         return txt_contactName;
@@ -64,7 +58,6 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     public TextView getTxt_notes() {
         return txt_notes;
     }
-
 
     public TextView getTxt_time() {
         return txt_time;

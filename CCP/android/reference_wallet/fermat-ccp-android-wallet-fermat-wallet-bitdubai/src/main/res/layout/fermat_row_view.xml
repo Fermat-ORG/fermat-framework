@@ -9,7 +9,8 @@
     android:paddingBottom="2dp"
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
-    android:paddingTop="2dp">
+    android:paddingTop="2dp"
+    android:background="@drawable/background_white_gradient">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -26,7 +27,7 @@
             android:layout_width="110dp"
             android:layout_height="40dp"
             android:layout_weight="0.6"
-            android:background="@drawable/circle_border"
+            android:background="@drawable/fw_fermat_user_buttom"
             tools:src="@drawable/ic_profile_male" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -39,10 +40,18 @@
             android:gravity="center_vertical"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#fff"
-            android:textSize="14sp"
+            android:textColor="#54ACEC"
+            android:textSize="20sp"
             app:typeface="ROBOTO_REGULAR"
-            tools:text="Nelson Alfonso Ramirez Noguera" />
+            tools:text="Nelson Alfonso Ramirez" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fw_add_over_icon"
+            android:layout_marginTop="12dp"
+
+            />
     </LinearLayout>
 
     <View
@@ -51,7 +60,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/gradient_line"/>
+        android:background="@drawable/gradient"/>
 
 </LinearLayout>
 
