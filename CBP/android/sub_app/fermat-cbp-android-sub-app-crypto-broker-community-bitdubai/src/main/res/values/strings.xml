@@ -19,4 +19,6 @@
     <string name="cbp_cbc_launch_action_creation_name_left">Customer</string>
     <string name="cbp_cbc_launch_action_creation_name_right">Broker</string>
     <string name="notifications">Notifications</string>
+    <string name="connection_request">Connection Request</string>
+    <string name="add_contact">Add Contact</string>
 </resources>
