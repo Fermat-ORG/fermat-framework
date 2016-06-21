@@ -55,6 +55,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
      * FLAGS
      */
     protected boolean isAttached;
+    /**
+     * If the fragment is visible for the user
+     */
+    private boolean isVisible;
 
     /**
      * Platform
@@ -80,6 +84,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         super.onCreate(savedInstanceState);
         //if(fermatFragmentType.getOptionsMenu()!=null)
             setHasOptionsMenu(true);
+
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -122,28 +127,30 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     public void onPrepareOptionsMenu(Menu menu) {
         try {
             if(fermatFragmentType!=null) {
-                if (fermatFragmentType.getOptionsMenu() != null) {
-                    List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
-                    for (int i = 0; i < optionsMenuItems.size(); i++) {
-                        OptionMenuItem menuItem = optionsMenuItems.get(i);
-                        int id = menuItem.getId();
-                        int groupId = menuItem.getGroupId();
-                        int order = menuItem.getOrder();
-                        int showAsAction = menuItem.getShowAsAction();
-                        MenuItem oldMenu = menu.findItem(id);
-                        if(oldMenu==null) {
-                            MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
-                            FermatDrawable icon = menuItem.getFermatDrawable();
-                            if (icon != null) {
-                                int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
-                                item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                if(isVisible) {
+                    if (fermatFragmentType.getOptionsMenu() != null) {
+                        List<OptionMenuItem> optionsMenuItems = fermatFragmentType.getOptionsMenu().getMenuItems();
+                        for (int i = 0; i < optionsMenuItems.size(); i++) {
+                            OptionMenuItem menuItem = optionsMenuItems.get(i);
+                            int id = menuItem.getId();
+                            int groupId = menuItem.getGroupId();
+                            int order = menuItem.getOrder();
+                            int showAsAction = menuItem.getShowAsAction();
+                            MenuItem oldMenu = menu.findItem(id);
+                            if (oldMenu == null) {
+                                MenuItem item = menu.add(groupId, id, order, menuItem.getLabel());
+                                FermatDrawable icon = menuItem.getFermatDrawable();
+                                if (icon != null) {
+                                    int iconRes = obtainRes(icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey());
+                                    item.setIcon(iconRes);//.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-                            }
-                            if (showAsAction != -1)
-                                item.setShowAsAction(menuItem.getShowAsAction());
-                            int actionViewClass = menuItem.getActionViewClass();
-                            if (actionViewClass != -1) {
-                                item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                }
+                                if (showAsAction != -1)
+                                    item.setShowAsAction(menuItem.getShowAsAction());
+                                int actionViewClass = menuItem.getActionViewClass();
+                                if (actionViewClass != -1) {
+                                    item.setActionView(obtainFrameworkViewOptionMenuAvailable(actionViewClass, SourceLocation.FERMAT_FRAMEWORK));
+                                }
                             }
                         }
                     }
@@ -458,10 +465,17 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     }
 
+
+    public final void setFragmentFocus(boolean isVisible){
+        this.isVisible = isVisible;
+        if(isAttached) {
+            onFragmentFocus();
+        }
+    }
+
     /**
      * This method is called when the fragment is on user's focus
      */
-    @Override
     public void onFragmentFocus() {
 
     }
