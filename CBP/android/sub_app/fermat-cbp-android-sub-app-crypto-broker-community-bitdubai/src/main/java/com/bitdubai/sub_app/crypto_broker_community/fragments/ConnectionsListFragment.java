@@ -60,6 +60,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationArrayList;
     TextView noDatalabel;
     ImageView noData;
+
     public static ConnectionsListFragment newInstance() {
         return new ConnectionsListFragment();
     }
@@ -77,7 +78,6 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -85,7 +85,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-            noData=(ImageView) rootView.findViewById(R.id.nodata);
+            noData = (ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -176,19 +176,16 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show /*&&
-                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
+        if (show) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            // emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
+        } else {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);

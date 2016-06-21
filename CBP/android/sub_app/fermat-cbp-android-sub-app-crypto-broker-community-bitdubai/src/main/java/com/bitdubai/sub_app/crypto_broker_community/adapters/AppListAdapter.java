@@ -38,7 +38,7 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbc_row_connections_world;
+        return R.layout.cbc_comm_world_item;
     }
 
     @Override

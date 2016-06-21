@@ -63,6 +63,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
     ImageView noData;
     TextView noDatalabel;
+
     /**
      * Create a new instance of this fragment
      *
@@ -220,19 +221,16 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show/* &&
-                (emptyView.getShowAsAction() == View.GONE || emptyView.getShowAsAction() == View.INVISIBLE)*/) {
+        if (show) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            //emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            //rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show /*&& emptyView.getShowAsAction() == View.VISIBLE*/) {
+        } else {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);

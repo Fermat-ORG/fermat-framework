@@ -15,7 +15,7 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/cht_comm_world_item"/>
+            tools:listitem="@layout/cbc_comm_world_item"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
     <!--Empty view-->
