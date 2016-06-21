@@ -42,6 +42,8 @@ public enum PackageType {
 
     ACTOR_CALL_REQUEST,
 
+    UPDATE_ACTOR_PROFILE_REQUEST,
+
     /*
      * Respond packet types
      */
@@ -59,6 +61,8 @@ public enum PackageType {
 
     CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE,
     ACTOR_TRACE_DISCOVERY_QUERY_RESPONSE,
+
+    UPDATE_ACTOR_PROFILE_RESPONSE,
 
     MESSAGE_TRANSMIT_RESPONSE,
 

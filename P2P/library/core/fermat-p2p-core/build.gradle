@@ -17,10 +17,10 @@ dependencies {
     compile project(':fermat-core-api')
     compile project(':fermat-p2p-api')
 
-    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+ //   compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
 //    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
-//    compile project(':fermat-p2p-plugin-communication-network-node-bitdubai')
+    compile project(':fermat-p2p-plugin-communication-network-node-bitdubai')
     compile project(':fermat-p2p-plugin-communication-network-client-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
