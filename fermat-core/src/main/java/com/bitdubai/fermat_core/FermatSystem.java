@@ -453,6 +453,9 @@ public final class FermatSystem {
     public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
         final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
         final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
+        System.out.println("---------------------------------------------\n");
+        System.out.println("Starting addons");
+        System.out.println("---------------------------------------------\n");
         for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
             try {
                 fermatAddonManager.startAddonAndReferences(addon.getValue());
@@ -465,10 +468,10 @@ public final class FermatSystem {
 
             List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
             for (AbstractPlugin abstractPlugin : list) {
-                fermatPluginManager.startPluginAndReferences(abstractPlugin);
                 System.out.println("---------------------------------------------\n");
                 System.out.println("Cloud client starting");
                 System.out.println("---------------------------------------------\n");
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
             }
         } catch (PlatformNotFoundException e) {
             e.printStackTrace();
