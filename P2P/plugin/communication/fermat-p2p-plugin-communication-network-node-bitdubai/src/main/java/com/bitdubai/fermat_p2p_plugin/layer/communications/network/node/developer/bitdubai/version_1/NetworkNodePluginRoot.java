@@ -930,15 +930,20 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void cleanCheckInTables() throws CantReadRecordDataBaseException, CantDeleteRecordDataBaseException {
 
+        LOG.info("Executing the clean check in tables");
+
         if(daoFactory.getCheckedInClientDao().getAllCount() > 0){
+            LOG.info("Deleting CHECK_IN_CLIENT records");
             daoFactory.getCheckedInClientDao().deleteAll();
         }
 
         if(daoFactory.getCheckedInNetworkServiceDao().getAllCount() > 0){
+            LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
             daoFactory.getCheckedInNetworkServiceDao().deleteAll();
         }
 
         if(daoFactory.getCheckedInActorDao().getAllCount() > 0){
+            LOG.info("Deleting CHECK_IN_ACTORS records");
             daoFactory.getCheckedInActorDao().deleteAll();
         }
 
