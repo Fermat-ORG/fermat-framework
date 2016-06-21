@@ -201,7 +201,7 @@ public class GeolocationCustomerIdentityFragment extends AbstractFermatFragment<
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
     }
 

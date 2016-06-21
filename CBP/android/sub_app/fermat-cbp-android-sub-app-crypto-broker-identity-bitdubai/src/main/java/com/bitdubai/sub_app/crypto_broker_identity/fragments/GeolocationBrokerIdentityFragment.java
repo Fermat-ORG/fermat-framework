@@ -198,7 +198,7 @@ public class GeolocationBrokerIdentityFragment extends AbstractFermatFragment<Re
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
     }
 
