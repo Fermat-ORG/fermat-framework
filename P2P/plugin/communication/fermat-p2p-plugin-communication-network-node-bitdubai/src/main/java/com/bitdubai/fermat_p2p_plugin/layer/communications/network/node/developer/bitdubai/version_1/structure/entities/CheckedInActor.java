@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -144,7 +145,7 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 				Objects.equals(getName(), that.getName()) &&
 				Objects.equals(getActorType(), that.getActorType()) &&
 				Objects.equals(getExtraData(), that.getExtraData()) &&
-				Objects.equals(getPhoto(), that.getPhoto()) &&
+				Arrays.equals(getPhoto(), that.getPhoto()) &&
 				Objects.equals(getLatitude(), that.getLatitude()) &&
 				Objects.equals(getLongitude(), that.getLongitude()) ;
     }
