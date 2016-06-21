@@ -4042,17 +4042,21 @@ public class SubAppAppsGenerator {
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        optionsMenu = new OptionsMenu();
-        OptionMenuItem menuItem = new OptionMenuItem(1);
-        menuItem.setLabel("Search");
-        menuItem.setActionViewClass(100);
-        menuItem.setShowAsAction(4);
-        optionsMenu.addMenuItem(menuItem);
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
 
-        menuItem = new OptionMenuItem(2);
-        menuItem.setLabel("Clean Chat");
-        menuItem.setShowAsAction(4);
-        optionsMenu.addMenuItem(menuItem);
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setLabel("Clean Chat");
+        optionMenuItem.setShowAsAction(4);
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
 

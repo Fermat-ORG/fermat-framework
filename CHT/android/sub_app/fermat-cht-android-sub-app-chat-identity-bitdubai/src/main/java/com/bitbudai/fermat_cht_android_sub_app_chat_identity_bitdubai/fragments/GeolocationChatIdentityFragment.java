@@ -205,7 +205,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
                             Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
+                            //getActivity().onBackPressed();
                         } else if (donde.equalsIgnoreCase("onBack")) {
                             Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
                         }

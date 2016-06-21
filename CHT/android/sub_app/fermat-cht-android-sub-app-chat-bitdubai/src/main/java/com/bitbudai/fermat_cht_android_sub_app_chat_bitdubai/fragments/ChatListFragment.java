@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,6 +108,7 @@ public class ChatListFragment
     TextView nochatssubtitle1;
     private static final int MAX = 20;
     private int offset = 0;
+    Toolbar toolbar;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();
@@ -468,9 +470,9 @@ public class ChatListFragment
         // Locate the search item = (MenuItem) fermatFragmentType.getOptionsMenu().getItem(1);
         //OptionsMenu menuu = fermatFragmentType.getOptionsMenu();
 //        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
-        MenuItem searchItem = menu.findItem(1);
+        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
         if (searchItem!=null) {
-            //searchView = (SearchView) searchItem.getActionView();
+            searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                @Override
