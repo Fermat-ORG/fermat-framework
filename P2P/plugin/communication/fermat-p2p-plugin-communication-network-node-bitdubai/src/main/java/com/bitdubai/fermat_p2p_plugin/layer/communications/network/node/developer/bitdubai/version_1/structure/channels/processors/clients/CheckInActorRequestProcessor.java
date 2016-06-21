@@ -162,7 +162,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws  CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws CantCreateTransactionStatementPairException, CantReadRecordDataBaseException {
 
 
 
@@ -188,10 +188,11 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 checkedInActor.setLongitude(0.0);
             }
 
-            /*
-             * Save into the data base
-             */
-            return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+
+          if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey()))
+             return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+          else
+              return getDaoFactory().getCheckedInActorDao().createUpdateTransactionStatementPair(checkedInActor);
 
     }
 
