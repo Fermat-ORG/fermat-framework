@@ -36,7 +36,7 @@
                         android:text="0.00 FMTS"
                         android:textColor="#333333"
                         android:textStyle="bold"
-                        android:textSize="16sp"/>
+                        android:textSize="14sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#2481BA"
                         android:text="From"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:layout_marginRight="5dp"/>
 
                     <TextView
@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#414042"
                         android:text="My Account"
-                        android:textSize="16sp"/>
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#414042"
                         android:text="Date: "
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:layout_marginRight="5dp"/>
 
                     <TextView
@@ -92,8 +92,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#2481BA"
-                        android:text="Month 0, 0000"
-                        android:textSize="16sp"/>
+                        android:text="Month 0, 0000 00:00 AM"
+                        android:textSize="12sp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:text="Transaction concept"
                         android:textColor="#F78803"
-                        android:textSize="14sp"/>
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
 

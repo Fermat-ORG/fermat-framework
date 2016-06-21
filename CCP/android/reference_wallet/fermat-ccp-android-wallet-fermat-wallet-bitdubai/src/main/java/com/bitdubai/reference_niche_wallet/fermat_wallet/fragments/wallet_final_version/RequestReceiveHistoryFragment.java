@@ -107,7 +107,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
-            getExecutor().execute(new Runnable() {
+          /*  getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -125,7 +125,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                     }
                 }
             });
-
+*/
 
 
 
