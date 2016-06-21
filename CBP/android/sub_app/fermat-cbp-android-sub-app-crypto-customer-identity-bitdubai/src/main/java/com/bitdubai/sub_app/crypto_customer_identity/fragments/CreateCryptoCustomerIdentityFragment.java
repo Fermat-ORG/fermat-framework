@@ -14,6 +14,9 @@ import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -60,7 +64,14 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     private EditText mCustomerName;
     private ImageView mCustomerImage;
     private View progressBar;
+    private int maxLenghtTextCount = 30;
+    FermatTextView textCount;
 
+    private final TextWatcher textWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {textCount.setText(String.valueOf(maxLenghtTextCount - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
         return new CreateCryptoCustomerIdentityFragment();
@@ -96,6 +107,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         progressBar = layout.findViewById(R.id.cci_progress_bar);
         mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
         mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
+        textCount = (FermatTextView) layout.findViewById(R.id.crypto_customer_name_text_count);
 
 
         if(cryptoCustomerBitmap != null)
@@ -111,7 +123,9 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
         mCustomerName.requestFocus();
         mCustomerName.performClick();
-
+        mCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLenghtTextCount)});
+        mCustomerName.addTextChangedListener(textWatcher);
+        textCount.setText(String.valueOf(maxLenghtTextCount));
 
         mCustomerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
