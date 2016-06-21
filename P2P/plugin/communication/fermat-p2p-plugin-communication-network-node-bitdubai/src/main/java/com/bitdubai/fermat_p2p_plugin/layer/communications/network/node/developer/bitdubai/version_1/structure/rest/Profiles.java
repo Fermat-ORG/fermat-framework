@@ -4,19 +4,27 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,11 +64,14 @@ public class Profiles implements RestFulServices {
      */
     private Gson gson;
 
+    private NetworkNodePluginRoot pluginRoot;
+
     /**
      * Constructor
      */
     public Profiles(){
-
+        daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
+        pluginRoot = (NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT);
     }
 
     @POST
@@ -116,6 +127,30 @@ public class Profiles implements RestFulServices {
 
     }
 
+    private  List<ActorsCatalog> filterActorsOnline(List<ActorsCatalog>  actorsCatalogs){
+
+        List<ActorsCatalog> actors = new ArrayList<>();
+
+        for(ActorsCatalog actorsCatalog : actorsCatalogs){
+
+            try {
+
+                if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()) &&
+                        daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
+                    actors.add(actorsCatalog);
+                else if(isActorOnline(actorsCatalog))
+                    actors.add(actorsCatalog);
+
+            } catch (CantReadRecordDataBaseException e) {
+
+            }
+
+        }
+
+
+        return actors;
+    }
+
     /**
      * Filter all network service from data base that mach
      * with the parameters
@@ -128,7 +163,16 @@ public class Profiles implements RestFulServices {
         List<ActorProfile> profileList = new ArrayList<>();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
-        List<ActorsCatalog> actors = getDaoFactory().getActorsCatalogDao().findAll(filters);
+        List<ActorsCatalog> actorsList;
+
+        int max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+
+        if( (discoveryQueryParameters.getMax() > 0 &&  discoveryQueryParameters.getOffset() >= 0))
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, max, discoveryQueryParameters.getOffset());
+        else
+            actorsList =getDaoFactory().getActorsCatalogDao().findAll(filters, 10, 0);
+
+        List<ActorsCatalog> actors = filterActorsOnline(actorsList);
 
         for (ActorsCatalog actorsCatalog : actors) {
 
@@ -144,21 +188,6 @@ public class Profiles implements RestFulServices {
 
                 profileList.add(actorProfile);
             }
-        }
-
-          /*
-         * Apply pagination
-         */
-        if (discoveryQueryParameters.getMax() > 0 &&
-                discoveryQueryParameters.getOffset() >= 0 &&
-                profileList.size() > discoveryQueryParameters.getMax() &&
-                profileList.size() > discoveryQueryParameters.getOffset() &&
-                discoveryQueryParameters.getOffset() < discoveryQueryParameters.getMax()){
-
-                profileList =  profileList.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
-
-        }else if (profileList.size() > 100) {
-            profileList =  profileList.subList(0, 100);
         }
 
         return profileList;
@@ -196,6 +225,51 @@ public class Profiles implements RestFulServices {
         }
 
         return filters;
+    }
+
+    private Boolean isActorOnline(ActorsCatalog actorsCatalog){
+
+        try {
+
+            String nodeUrl = getNodeUrl(actorsCatalog.getNodeIdentityPublicKey());
+
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorsCatalog.getIdentityPublicKey());
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                return respondJsonObject.get("isOnline").getAsBoolean();
+
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    private String getNodeUrl(final String publicKey) {
+
+        try {
+
+            NodesCatalog nodesCatalog = daoFactory.getNodesCatalogDao().findById(publicKey);
+            return nodesCatalog.getIp()+":"+nodesCatalog.getDefaultPort();
+
+        } catch (RecordNotFoundException exception) {
+            throw new RuntimeException("Node not found in catalog: "+exception.getMessage());
+        } catch (Exception exception) {
+            throw new RuntimeException("Problem trying to find the node in the catalog: "+exception.getMessage());
+        }
     }
 
     private DaoFactory getDaoFactory() {
