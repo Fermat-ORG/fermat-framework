@@ -1,14 +1,17 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -300,46 +303,6 @@ public class ConnectionsWorldFragment
         return rootView;
     }
 
-    public void turnGPSOn() {
-        try{
-            Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
-            intent.putExtra("enabled", true);
-            if (Build.VERSION.SDK_INT < 23) {
-                //getActivity().sendBroadcast(intent);
-                String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                if(!provider.contains("gps")){ //if gps is disabled
-                    Intent gpsOptionsIntent = new Intent(
-                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(gpsOptionsIntent);
-    //                final Intent poke = new Intent();
-    //                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-    //                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-    //                poke.setData(Uri.parse("3"));
-    //                getActivity().sendBroadcast(poke);
-                }
-            }else {
-                //getContext().sendBroadcast(intent);
-                String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-                if(!provider.contains("gps")){ //if gps is disabled
-                    Intent gpsOptionsIntent = new Intent(
-                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(gpsOptionsIntent);
-    //                final Intent poke = new Intent();
-    //                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-    //                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-    //                poke.setData(Uri.parse("3"));
-    //                getContext().sendBroadcast(poke);
-                }
-            }
-        }catch(Exception e){
-            if (Build.VERSION.SDK_INT < 23) {
-                Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
-            }else{
-                Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
-            }
-        }
-    }
-
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
@@ -576,5 +539,76 @@ public class ConnectionsWorldFragment
             presentationChatCommunityDialog.show();
             e.printStackTrace();
         }
+    }
+
+    public void turnGPSOn() {
+        try{
+            if(!checkGPSFineLocation() || !checkGPSCoarseLocation()){ //if gps is disabled
+                if (Build.VERSION.SDK_INT < 23) {
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this.getActivity(),
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }
+                    if (ActivityCompat.checkSelfPermission(this.getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this.getActivity(),
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    }
+                }
+                else{
+                    if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }
+                    if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        getActivity().requestPermissions(
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    }
+                }
+            }
+        }catch (Exception e){
+            try{
+                Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+                intent.putExtra("enabled", true);
+                if (Build.VERSION.SDK_INT < 23) {
+                    String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if(!provider.contains("gps")){ //if gps is disabled
+                        Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Intent gpsOptionsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                }else {
+                    String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                    if(!provider.contains("gps")){ //if gps is disabled
+                        Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                        Intent gpsOptionsIntent = new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(gpsOptionsIntent);
+                    }
+                }
+            }catch(Exception ex){
+                if (Build.VERSION.SDK_INT < 23) {
+                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                }else{
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                }
+            }
+        }
+    }
+
+    private boolean checkGPSCoarseLocation() {
+        String permission = "android.permission.ACCESS_COARSE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean checkGPSFineLocation() {
+        String permission = "android.permission.ACCESS_FINE_LOCATION";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

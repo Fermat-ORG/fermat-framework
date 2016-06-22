@@ -217,7 +217,6 @@ public class ChatFragment
             int id = item.getItemId();
             switch (id) {
                 case 1:
-
                     break;
                 case 2:
                     try {
