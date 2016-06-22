@@ -36,7 +36,7 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM      , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .NOMINATIM)
+    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
     private GeolocationManager geolocationManager;
 
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR_CONNECTION)
