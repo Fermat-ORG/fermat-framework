@@ -20,36 +20,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.GeolocationIdentityExecutor;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.sub_app.intra_user_identity.R;
-//import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
-//import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
-//import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-//home/andres/project/fermat/CCP/library/api/fermat-ccp-api/src/main/java/com/bitdubai/fermat_ccp_api/layer/identity/intra_user/interfaces/IntraWalletUserIdentity.java
-//home/andres/project/fermat/CHT/library/api/fermat-cht-api/src/main/java/com/bitdubai/fermat_cht_api/layer/identity/interfaces/ChatIdentity.java
-//import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import java.util.ArrayList;
 import java.util.List;
-
-   //import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
-
 
 
 public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>, SubAppResourcesProviderManager>{
@@ -84,7 +70,8 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
-        //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ccp_ic_back_buttom));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,9 +118,9 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
       /*  try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
-                    R.layout.cht_iden_spinner_item, dataspinner);
+                    R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
-            dataAdapter.setDropDownViewResource(R.layout.cht_iden_spinner_item);
+            dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
 //        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             frequency.setAdapter(dataAdapter);
 
