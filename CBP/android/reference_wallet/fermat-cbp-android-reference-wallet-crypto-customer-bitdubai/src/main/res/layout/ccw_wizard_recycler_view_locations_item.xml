@@ -45,6 +45,17 @@
 
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/ccw_sub_title"
+            android:layout_alignStart="@+id/ccw_sub_title"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#CCCCCC"/>
+
         <TextView
             android:id="@+id/ccw_sub_title"
             android:layout_width="wrap_content"
@@ -65,16 +76,7 @@
             android:textStyle="bold"
             tools:text="Av. Padilla, Torre Barcelona, Piso 4, Apto 2, Maracaibo, 4001, Venezuela"/>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignLeft="@+id/ccw_sub_title"
-            android:layout_alignStart="@+id/ccw_sub_title"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:background="#CCCCCC"/>
+
 
     </RelativeLayout>
 
