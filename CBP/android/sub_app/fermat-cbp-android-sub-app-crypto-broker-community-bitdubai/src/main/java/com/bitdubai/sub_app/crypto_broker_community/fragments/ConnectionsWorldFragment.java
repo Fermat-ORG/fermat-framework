@@ -24,7 +24,6 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
-import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -210,6 +209,18 @@ public class ConnectionsWorldFragment
     }
 
     @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+//        if (scrollListener == null) {
+//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+//            endlessScrollListener.setOnLoadMoreDataListener(this);
+//            scrollListener = endlessScrollListener;
+//        }
+//
+//        return scrollListener;
+        return null;
+    }
+
+    @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
@@ -281,17 +292,6 @@ public class ConnectionsWorldFragment
         }
 
         Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public RecyclerView.OnScrollListener getScrollListener() {
-        if (scrollListener == null) {
-            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
-            endlessScrollListener.setOnLoadMoreDataListener(this);
-            scrollListener = endlessScrollListener;
-        }
-
-        return scrollListener;
     }
 
     private void launchPresentationDialog() {
