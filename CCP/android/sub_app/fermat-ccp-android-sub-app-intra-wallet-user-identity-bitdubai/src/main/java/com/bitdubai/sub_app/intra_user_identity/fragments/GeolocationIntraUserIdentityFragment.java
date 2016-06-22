@@ -130,9 +130,9 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
 
         try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
-                    R.layout.cht_iden_spinner_item, dataspinner);
+                    R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
-            dataAdapter.setDropDownViewResource(R.layout.cht_iden_spinner_item);
+            dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
 //        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             frequency.setAdapter(dataAdapter);
 
@@ -183,17 +183,21 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {
-        GeolocationIdentityExecutor executor = null;
+      //  GeolocationIdentityExecutor executor = null;
         try {
             if (accuracy.getText().length() == 0) {
                 Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
-                executor = new GeolocationIdentityExecutor(appSession, identity.getPublicKey(), identity.getAlias(),
-                        identity.getImage(), identity.getConnectionState(),
-                        identity.getCountry(), identity.getState(),
-                        identity.getCity(), frecuencydata, acurracydata);
-                int resultKey = executor.execute();
+
+                moduleManager.updateIntraUserIdentity(
+                        identity.getPublicKey(),
+                        identity.getAlias(),
+                        identity.getPhrase(),
+                        identity.getImage(),
+                        identity.getAccuracy(),
+                        identity.getFrecuency()
+                );
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
