@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.fragments;
 
-
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;

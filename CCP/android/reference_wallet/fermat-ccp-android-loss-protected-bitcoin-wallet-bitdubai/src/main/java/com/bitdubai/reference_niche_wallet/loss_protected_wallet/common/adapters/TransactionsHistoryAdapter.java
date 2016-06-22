@@ -76,7 +76,7 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
                         ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         //formatter for date transaction
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.US);
         holder.getTransaction_date().setText("Date: " + sdf.format(data.getTimestamp()) + ".");
 
         //Validate Involved Actor for contact name

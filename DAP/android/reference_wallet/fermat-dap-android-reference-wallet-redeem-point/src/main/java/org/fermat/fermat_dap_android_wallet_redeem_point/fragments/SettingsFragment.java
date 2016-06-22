@@ -3,7 +3,6 @@ package org.fermat.fermat_dap_android_wallet_redeem_point.fragments;
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -31,7 +31,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.SessionConstantsRedeemPoint;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
 import static android.widget.Toast.makeText;
@@ -176,15 +175,13 @@ public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.redeem_card_titlebar));
             toolbar.setTitleTextColor(Color.WHITE);
-            Drawable drawable = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_redeem_point_action_bar_gradient_colors, null);
-                toolbar.setElevation(0);
-            } else {
-                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_redeem_point_action_bar_gradient_colors);
+            toolbar.setBottom(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(getResources().getColor(R.color.redeem_card_titlebar));
             }
-            toolbar.setBackground(drawable);
         }
     }
 

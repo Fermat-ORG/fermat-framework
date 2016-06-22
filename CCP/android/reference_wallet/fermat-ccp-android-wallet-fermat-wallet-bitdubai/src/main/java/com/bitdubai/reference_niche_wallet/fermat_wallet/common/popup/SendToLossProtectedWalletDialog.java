@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -74,7 +75,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
      *  Deals with crypto wallet interface
      */
     private FermatWallet fermatWallet;
-    private FermatWalletSessionReferenceApp appSession;
+    private ReferenceAppFermatSession<FermatWallet> appSession;
     /**
      * Deals with error manager interface
      */
@@ -104,7 +105,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     public SendToLossProtectedWalletDialog(Activity activity,
                                            FermatWallet fermatWallet,
-                                           FermatWalletSessionReferenceApp appSession,
+                                           ReferenceAppFermatSession<FermatWallet> appSession,
                                            BlockchainNetworkType blockchainNetworkType) {
 
         super(activity);

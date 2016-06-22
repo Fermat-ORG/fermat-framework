@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatTab;
 
 
@@ -18,7 +18,9 @@ public class Tab implements FermatTab {
 
     byte[] icon;
 
-    Fragments fragment;
+    FermatFragment fragment;
+
+    FermatDrawable drawable;
 
     /**
      * Tab class constructors
@@ -26,7 +28,7 @@ public class Tab implements FermatTab {
     public Tab() {
     }
 
-    public Tab(String label, Fragments fragment) {
+    public Tab(String label, FermatRuntimeFragment fragment) {
         this.label = label;
         this.fragment = fragment;
     }
@@ -39,9 +41,15 @@ public class Tab implements FermatTab {
         return this.label;
     }
 
+    @Override
+    public void setFragment(FermatFragment fragment) {
+        this.fragment = fragment;
 
-    public Fragments getFragment(){
-        return this.fragment;
+    }
+
+
+    public FermatFragment getFragment(){
+        return fragment;
     }
 
     public byte[] getIcon() {
@@ -55,11 +63,17 @@ public class Tab implements FermatTab {
         this.label = texto;
     }
 
-    public void setFragment(Fragments fragment){
-        this.fragment = fragment;
-    }
-
     public void setIcon(byte[] icon) {
         this.icon = icon;
     }
+
+    public FermatDrawable getDrawable() {
+        return drawable;
+    }
+
+    @Override
+    public void setFermatDrawable(FermatDrawable fermatDrawable) {
+        this.drawable = fermatDrawable;
+    }
+
 }

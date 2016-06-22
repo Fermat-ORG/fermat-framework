@@ -76,7 +76,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), R.drawable.bg_drawer_body,options);
+                    activity.get().getResources(), R.drawable.background_navigation_drawer,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
@@ -86,7 +86,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
 
     @Override
     public int addBodyBackgroundColor() {
-        return 0;
+        return R.drawable.background_navigation_drawer;
     }
 
     @Override

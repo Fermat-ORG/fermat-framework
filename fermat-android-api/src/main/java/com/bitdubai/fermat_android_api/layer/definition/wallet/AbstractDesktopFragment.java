@@ -37,6 +37,14 @@ public class AbstractDesktopFragment<S extends FermatSession,R extends ResourceP
         throw new Exception("big problem occur");
     }
 
+    /**
+     * This method is called when the fragment is on user's focus
+     */
+    @Override
+    public void onFragmentFocus() {
+
+    }
+
 
     @Override
     public void onUpdateViewOnUIThread(FermatBundle code) {

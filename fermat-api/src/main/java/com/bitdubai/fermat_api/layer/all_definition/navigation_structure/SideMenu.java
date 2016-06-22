@@ -18,6 +18,7 @@ public class SideMenu implements FermatSideMenu {
      */
     List<MenuItem> menuItems = new ArrayList<>();
     private String backgroundColor;
+    private FermatDrawable backgroundDrawable;
     private String navigationIconColor;
     private boolean hasFooter=false;
 
@@ -91,5 +92,13 @@ public class SideMenu implements FermatSideMenu {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public FermatDrawable getBackgroundDrawable() {
+        return backgroundDrawable;
+    }
+
+    public void setBackgroundDrawable(FermatDrawable backgroundDrawable) {
+        this.backgroundDrawable = backgroundDrawable;
     }
 }

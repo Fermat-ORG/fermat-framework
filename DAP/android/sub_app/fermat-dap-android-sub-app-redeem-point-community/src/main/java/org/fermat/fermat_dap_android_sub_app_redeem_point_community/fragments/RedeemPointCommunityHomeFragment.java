@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +73,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     protected final String TAG = "RedeemCommunityFragment";
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
+    private static final String SEARCH = "redeem_point_community_search";
     private static RedeemPointCommunitySubAppModuleManager moduleManager;
     RedeemPointSettings settings = null;
     private int redeemNotificationsCount = 0;
@@ -97,6 +99,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     private MenuItem menuItemConnect;
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemCancel;
+    private SearchView searchView;
 
     private ExecutorService _executor;
 
@@ -157,8 +160,15 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
+//                actors = dataSet;
+                for (int i=0; i<actors.size(); i++) {
+                    for (int j=0; j<dataSet.size(); j++) {
+                        if (dataSet.get(j).getActorPublicKey().equals(actors.get(i).getActorPublicKey())) {
+                            actors.set(i, dataSet.get(j));
+                        }
+                    }
+                }
 
-                actors = dataSet;
                 boolean someSelected = false;
                 int selectedActors = 0;
                 int cheackeableActors = 0;
@@ -298,7 +308,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_redeem_point)
+                .setBannerRes(R.drawable.banner_redeem_point_community)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)
@@ -421,27 +431,52 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_community_redeem_point_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.action_community_redeem_point_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.changeDataSet(actors);
+                    adapter.getFilter().filter(s);
+                    appSession.setData(SEARCH, s);
+                }
+                return false;
+            }
+        });
+        if (appSession.getData(SEARCH) != null) {
+            String s = appSession.getData(SEARCH).toString();
+            searchView.setQuery(s, true);
+            if (s.length() > 0) searchView.setIconified(false);
+        }
+
         this.menu = menu;
-        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 1, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_DISCONNECT, 1, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_DISCONNECT, 2, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING, 3, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 3, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 4, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 4, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(5, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 5, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 5, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.getItem(0);
-        menuItemDisconnect = menu.getItem(1);
-        menuItemCancel = menu.getItem(2);
-        menuItemSelect = menu.getItem(3);
-        menuItemUnselect = menu.getItem(4);
+        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+        menuItemConnect = menu.getItem(1);
+        menuItemDisconnect = menu.getItem(2);
+        menuItemCancel = menu.getItem(3);
+        menuItemSelect = menu.getItem(4);
+        menuItemUnselect = menu.getItem(5);
         restartButtons();
 
         //inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
@@ -808,6 +843,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
                         if (getActivity() != null && adapter != null) {
                             actors = (ArrayList<Actor>) result[0];
                             adapter.changeDataSet(actors);
+                            adapter.getFilter().filter(searchView.getQuery().toString());
                             if (actors.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {

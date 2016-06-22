@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatDrawable;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 
@@ -28,6 +29,8 @@ public interface FermatTitleBar  extends Serializable {
 
     boolean isTitleTextStatic();
 
-    MenuItem getLeftIconFermatDrawable();
+    MenuItem getNavItem();
+
+    FermatDrawable getBackgroundDrawable();
 
 }

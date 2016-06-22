@@ -51,7 +51,7 @@
 
     <!-- v3 -->
     <color name="card_toolbar">#1371A7</color>
-    <color name="card_toolbar_trans">#aa1371a7</color>
+    <color name="card_toolbar_trans_user_wallet">#aa1371a7</color>
     <color name="bg_circular_redeem_color">#CC1371A7</color>
     <color name="card_top">#0C6089</color>
     <color name="card_text_top_primary">#ffffff</color>

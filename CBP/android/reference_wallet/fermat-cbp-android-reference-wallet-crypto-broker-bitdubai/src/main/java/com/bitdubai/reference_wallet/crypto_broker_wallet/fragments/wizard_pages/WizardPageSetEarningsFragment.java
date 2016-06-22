@@ -33,7 +33,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Earnin
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleCheckableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfa
 /**
  * Created by nelson on 22/12/15.
  */
-public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession,ResourceProviderManager>
+public class WizardPageSetEarningsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>,ResourceProviderManager>
         implements SingleCheckableItemAdapter.OnCheckboxClickedListener<EarningsWizardData> {
 
     // Constants
@@ -76,7 +75,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSessionReferenceApp) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             List<String> temp = new ArrayList<>();
@@ -154,6 +153,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment<Refere
                     .setSubTitle(R.string.cbw_wizard_earnings_dialog_sub_title)
                     .setBody(R.string.cbw_wizard_earnings_dialog_body)
                     .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .setIsCheckEnabled(true)
                     .build();
             presentationDialog.show();
         }

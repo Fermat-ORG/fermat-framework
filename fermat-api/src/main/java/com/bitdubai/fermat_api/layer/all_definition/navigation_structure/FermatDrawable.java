@@ -5,36 +5,23 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.S
 /**
  * Created by Matias furszyfer on 2016.06.07..
  */
-public class FermatDrawable {
+public class FermatDrawable extends Artifact {
 
-    private String id;
-    private String ownerAppPublicKey;
-    private SourceLocation sourceLocation;
+    private String resName;
 
-    public FermatDrawable(String id) {
-        this.id = id;
-        this.sourceLocation = SourceLocation.FERMAT_FRAMEWORK;
+    public FermatDrawable() {
     }
 
-    public FermatDrawable(String id, String ownerAppPublicKey, SourceLocation sourceLocation) {
-        this.id = id;
-        this.ownerAppPublicKey = ownerAppPublicKey;
-        this.sourceLocation = sourceLocation;
+    public FermatDrawable(int id,String resName, Owner owner, SourceLocation sourceLocation) {
+        super(id, owner, sourceLocation);
+        this.resName = resName;
     }
 
-    public String getId() {
-        return id;
+    public String getResName() {
+        return resName;
     }
 
-    public SourceLocation getSourceLocation() {
-        return sourceLocation;
-    }
-
-    public void setSourceLocation(SourceLocation sourceLocation) {
-        this.sourceLocation = sourceLocation;
-    }
-
-    public String getOwnerAppPublicKey() {
-        return ownerAppPublicKey;
+    public void setResName(String resName) {
+        this.resName = resName;
     }
 }

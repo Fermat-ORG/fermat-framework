@@ -107,7 +107,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage().toString()));
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
-            holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
+            holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_green);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
@@ -136,7 +136,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
                     holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
             }
         } else {
-            holder.contentWithBG.setBackgroundResource(R.drawable.burble_white_shadow);
+            holder.contentWithBG.setBackgroundResource(R.drawable.cht_burble_white);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();

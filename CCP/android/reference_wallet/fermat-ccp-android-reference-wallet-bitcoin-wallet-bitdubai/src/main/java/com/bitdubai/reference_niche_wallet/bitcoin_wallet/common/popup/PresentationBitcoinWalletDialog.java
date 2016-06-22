@@ -20,10 +20,10 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +32,7 @@ import java.io.ByteArrayOutputStream;
  * Created by mati on 2015.11.27..
  */
 
-public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession<CryptoWallet>,SubAppResourcesProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFermatSession<CryptoWallet>,ResourceProviderManager> implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
     public static final int TYPE_PRESENTATION =1;
@@ -68,7 +68,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
      * @param resources     parent class of WalletResources and SubAppResources
      */
 
-    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
+    public PresentationBitcoinWalletDialog(Activity activity, ReferenceAppFermatSession fermatSession, ResourceProviderManager resources,int type,boolean checkButton) {
 
         super(activity, fermatSession, resources);
         this.activity = activity;
@@ -155,7 +155,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
                             public void run() {
                                 try {
                                     //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
-                                    cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                                    getSession().getModuleManager().createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                                    getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
                                 } catch (CantCreateNewIntraWalletUserException e) {
                                     e.printStackTrace();
                                 }
@@ -178,13 +179,13 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
     }
 
     private void saveSettings() {
-        if(type!=TYPE_PRESENTATION)
-        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
-        if(checkbox_not_show.isChecked()){
+//        if(type!=TYPE_PRESENTATION)
+//        if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
+//        if(checkbox_not_show.isChecked()){
             //noinspection TryWithIdenticalCatches
             try {
                     BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
-                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
                     getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
@@ -195,7 +196,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceAppFe
             } catch (Exception e){
                 e.printStackTrace();
             }
-        }
+//        }
     }
 
     private byte[] convertImage(int resImage) {

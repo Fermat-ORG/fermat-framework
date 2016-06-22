@@ -29,6 +29,9 @@
         <attr name="typeface"/>
     </declare-styleable>
 
+    <declare-styleable name="FermatCheckedTextView">
+        <attr name="typeface"/>
+    </declare-styleable>
 
     <declare-styleable name="RoundProgressBar">
         <attr name="tlcp_strokeWidth" format="dimension"/>

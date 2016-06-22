@@ -38,7 +38,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     LossProtectedWallet manager;
     ReferenceAppFermatSession<LossProtectedWallet> lossProtectedWalletSession;
     Typeface tf;
-    private int typeAmountSelected = 1;
+    private ShowMoneyType typeAmountSelected = ShowMoneyType.BITCOIN;
     /**
      * DATA
      * **/
@@ -57,7 +57,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         if(lossProtectedWalletSession.getData(SessionConstant.TYPE_BALANCE_SELECTED) != null)
-            typeAmountSelected = (int)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
+            typeAmountSelected = (ShowMoneyType)lossProtectedWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED);
         else
             lossProtectedWalletSession.setData(SessionConstant.TYPE_AMOUNT_SELECTED, typeAmountSelected);
     }
@@ -131,7 +131,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
                         data.getAmount(),
                         MAX_DECIMAL_FOR_BALANCE_TRANSACTION,
                         MIN_DECIMAL_FOR_BALANCE_TRANSACTION,
-                        typeAmountSelected) + "  (" + percentage + "% Spend)");
+                        typeAmountSelected.getCode()) + "  (" + percentage + "% Spend)");
         holder.getTxt_amount().setTypeface(tf);
 
         if ((double)lossProtectedWalletSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) >= data.getExchangeRate())

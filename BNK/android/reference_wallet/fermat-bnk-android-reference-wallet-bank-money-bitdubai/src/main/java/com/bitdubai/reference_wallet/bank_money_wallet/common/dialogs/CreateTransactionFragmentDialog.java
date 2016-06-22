@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -29,7 +30,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankTransactionParametersImpl;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.NumberInputFilter;
 
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private BankMoneyWalletSessionReferenceApp bankMoneyWalletSession;
+    private ReferenceAppFermatSession<BankMoneyWalletModuleManager> bankMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
     BigDecimal optionalAmount;
@@ -101,7 +101,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     };
 
 
-    public CreateTransactionFragmentDialog(ErrorManager errorManager,Activity a, BankMoneyWalletSessionReferenceApp bankMoneyWalletSession, Resources resources,
+    public CreateTransactionFragmentDialog(ErrorManager errorManager,Activity a, ReferenceAppFermatSession<BankMoneyWalletModuleManager> bankMoneyWalletSession, Resources resources,
                                            TransactionType transactionType,String account,FiatCurrency fiatCurrency, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub

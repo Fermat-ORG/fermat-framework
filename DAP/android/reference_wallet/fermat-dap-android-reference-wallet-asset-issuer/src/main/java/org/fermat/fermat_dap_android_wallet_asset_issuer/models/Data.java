@@ -22,6 +22,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWall
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +62,49 @@ public class Data implements Serializable {
         return digitalAssets;
     }
 
+    public static List<DigitalAsset> getAllDigitalAssetsDateSorted(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        List<DigitalAsset> digitalAssets = new ArrayList<>();
+        try {
+
+            List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
+            DigitalAsset digitalAsset;
+            for (AssetIssuerWalletList balance : balances) {
+                digitalAsset = new DigitalAsset();
+                digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+                digitalAsset.setName(balance.getDigitalAsset().getName());
+                digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+                digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+                digitalAsset.setAvailableBalance(balance.getAvailableBalance());
+                Date expirationDate = (Date) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                digitalAsset.setExpDate(expirationDate);
+
+                List<Resource> resources = balance.getDigitalAsset().getResources();
+                if (resources != null && resources.size() > 0) {
+                    digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                }
+
+                List<Transaction> transactions = getTransactions(moduleManager, digitalAsset);
+                digitalAsset.setLastTransactionDate(transactions.get(0).getDate());
+
+                digitalAssets.add(digitalAsset);
+            }
+
+            Collections.sort(digitalAssets, new Comparator<DigitalAsset>() {
+                @Override
+                public int compare(DigitalAsset lhs, DigitalAsset rhs) {
+                    if (lhs.getLastTransactionDate().getTime() > rhs.getLastTransactionDate().getTime())
+                        return -1;
+                    else if (lhs.getLastTransactionDate().getTime() < rhs.getLastTransactionDate().getTime())
+                        return 1;
+                    return 0;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return digitalAssets;
+    }
+
     public static DigitalAsset getDigitalAsset(AssetIssuerWalletSupAppModuleManager moduleManager, String digitalAssetPublicKey) throws CantLoadWalletException {
         List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         DigitalAsset digitalAsset;
@@ -73,7 +118,7 @@ public class Data implements Serializable {
                 digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
                 digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
                 digitalAsset.setAvailableBalance(balance.getAvailableBalance());
-                Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                Date expirationDate = (Date) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
                 digitalAsset.setExpDate(expirationDate);
 
                 List<Resource> resources = balance.getDigitalAsset().getResources();
@@ -84,6 +129,19 @@ public class Data implements Serializable {
             }
         }
         return null;
+    }
+
+    public static List<UserDelivery> getStats(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
+        List<UserDelivery> users = new ArrayList<>();
+        UserDelivery userDelivery;
+        List<AssetStatistic> stats = moduleManager.getWalletStatisticsByAsset(walletPublicKey, digitalAsset.getName());
+        for (AssetStatistic stat : stats) {
+            if (!stat.getStatus().equals(AssetCurrentStatus.ASSET_CREATED)) {
+                userDelivery = new UserDelivery(stat.getOwner().getProfileImage(), stat.getOwner().getName(), new Timestamp(stat.getDistributionDate().getTime()), stat.getStatus().getCode(), stat.getStatus().getDescription());
+                users.add(userDelivery);
+            }
+        }
+        return users;
     }
 
     public static List<UserDelivery> getUserDeliveryList(String walletPublicKey, DigitalAsset digitalAsset, AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
@@ -120,7 +178,7 @@ public class Data implements Serializable {
         for (AssetStatistic stat :
                 stats) {
             if (stat.getStatus().equals(AssetCurrentStatus.ASSET_APPROPRIATED)) {
-                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), new Timestamp(stat.getAssetUsedDate().getTime()), stat.getStatus().getDescription());
+                UserAppropiate = new UserAppropiate(stat.getOwner().getName(), stat.getAssetUsedDate(), stat.getStatus().getDescription());
                 users.add(UserAppropiate);
             }
         }
@@ -128,19 +186,29 @@ public class Data implements Serializable {
     }
 
     public static List<User> getConnectedUsers(AssetIssuerWalletSupAppModuleManager moduleManager, List<User> usersSelected) throws CantGetAssetUserActorsException {
-//        List<User> users = new ArrayList<>();
-//        users.add(new User("Frank Contreras"));
-//        users.add(new User("Victor Mars"));
-//        users.add(new User("Nerio Indriago"));
-//        users.add(new User("Rodrigo Acosta"));
         List<User> users = new ArrayList<>();
         List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
         for (ActorAssetUser actorAssetUser : actorAssetUsers) {
             User newUser = new User(actorAssetUser.getName(), actorAssetUser);
-//            int index = usersSelected.indexOf(newUser);
-//            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
             users.add(newUser);
         }
+
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User lhs, User rhs) {
+                return rhs.getName().compareTo(lhs.getName());
+            }
+        });
+
+        String lastLetter = "";
+        for (User user : users) {
+            String letter = user.getName().substring(0, 1);
+            if (!letter.equals(lastLetter)) {
+                user.setFirst(true);
+                lastLetter = letter;
+            }
+        }
+
         return users;
     }
 
@@ -155,10 +223,25 @@ public class Data implements Serializable {
                 users.add(new User(actorAssetUser.getName(), actorAssetUser));
             }
             newGroup.setUsers(users);
-//            int index = usersSelected.indexOf(newUser);
-//            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
             groups.add(newGroup);
         }
+
+        Collections.sort(groups, new Comparator<Group>() {
+            @Override
+            public int compare(Group lhs, Group rhs) {
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+
+        String lastLetter = "";
+        for (Group group : groups) {
+            String letter = group.getName().substring(0, 1);
+            if (!letter.equals(lastLetter)) {
+                group.setFirst(true);
+                lastLetter = letter;
+            }
+        }
+
         return groups;
     }
 
@@ -174,10 +257,11 @@ public class Data implements Serializable {
 
     public static List<Transaction> getTransactions(AssetIssuerWalletSupAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
+
+        List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.getTransactionsForDisplay(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
-        for (AssetIssuerWalletTransaction assetUserWalletTransaction :
-                assetUserWalletTransactions) {
+
+        for (AssetIssuerWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
             if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                 dapActor = assetUserWalletTransaction.getActorFrom();
             } else {
@@ -187,5 +271,17 @@ public class Data implements Serializable {
             transactions.add(transaction);
         }
         return transactions;
+    }
+
+    public static List<String> getStatsOptions() {
+        List<String> arr = new ArrayList<>();
+        arr.add("All");
+        AssetCurrentStatus[] statuses = AssetCurrentStatus.values();
+        for (AssetCurrentStatus status : statuses) {
+            if (!status.equals(AssetCurrentStatus.ASSET_CREATED.ASSET_CREATED)) {
+                arr.add(status.getDescription());
+            }
+        }
+        return arr;
     }
 }

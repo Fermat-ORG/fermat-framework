@@ -45,33 +45,7 @@ import java.util.List;
 public class ContactFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatManager>, SubAppResourcesProviderManager>{
 
-//    // Defines a tag for identifying log entries
-//    private static final String TAG = "ContactsListFragment";
-//
-//    // Bundle key for saving previously selected search result item
-//    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
-//    //private ContactsAdapter mAdapter; // The main query adapter
-//    private ImageLoader mImageLoader; // Handles loading the contact image in a background thread
-//    private String mSearchTerm; // Stores the current search query term
-//
-//    //private OnContactsInteractionListener mOnContactSelectedListener;
-//
-//    // Stores the previously selected search item so that on a configuration change the same item
-//    // can be reselected again
-//    private int mPreviouslySelectedSearchItem = 0;
-// public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
-//    private ListView contactsContainer;
-//    //private ContactsAdapter adapter;
-//
-//    // Whether or not the search query has changed since the last time the loader was refreshed
-//    private boolean mSearchQueryChanged;
-
-    // Whether or not this fragment is showing in a two-pane layout
-    private boolean mIsTwoPaneLayout;
-
-    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
-    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
    // private ChatModuleManager moduleManager;
@@ -219,29 +193,4 @@ public class ContactFragment
 //        }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * Gets the preferred height for each item in the ListView, in pixels, after accounting for
-     * screen density. ImageLoader uses this value to resize thumbnail images to match the ListView
-     * item height.
-     *
-     * @return The preferred height in pixels, based on the current theme.
-     */
-//    private int getListPreferredItemHeight() {
-//        final TypedValue typedValue = new TypedValue();
-//
-//        // Resolve list item preferred height theme attribute into typedValue
-//        getActivity().getTheme().resolveAttribute(
-//                android.R.attr.listPreferredItemHeight, typedValue, true);
-//
-//        // Create a new DisplayMetrics object
-//        final DisplayMetrics metrics = new android.util.DisplayMetrics();
-//
-//        // Populate the DisplayMetrics
-//        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//
-//        // Return theme value based on DisplayMetrics
-//        return (int) typedValue.getDimension(metrics);
-//    }
-
 }

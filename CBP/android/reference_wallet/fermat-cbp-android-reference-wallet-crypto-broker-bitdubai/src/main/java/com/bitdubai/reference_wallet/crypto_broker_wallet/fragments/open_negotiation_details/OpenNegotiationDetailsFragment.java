@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -56,8 +57,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotia
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.MathUtils;
 import com.google.common.collect.Lists;
 
@@ -88,7 +89,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.EXCHAN
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener {
 
     private static final String TAG = "OpenNegotiationDetails";
@@ -117,7 +118,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            CustomerBrokerNegotiationInformation negotiationInfo = appSession.getNegotiationData();
+            Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
+            CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;
             negotiationWrapper = new NegotiationWrapper(negotiationInfo, appSession);
 
         } catch (Exception ex) {
@@ -161,9 +163,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
 
         adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
-        adapter.setMarketRateList(appSession.getActualExchangeRates());
+        adapter.setMarketRateList(getActualExchangeRates());
 
-        if(negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
+        if (negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.SENT_TO_CUSTOMER && negotiationWrapper.getNegotiationInfo().getStatus() != NegotiationStatus.WAITING_FOR_CUSTOMER) {
             adapter.setFooterListener(this);
             adapter.setClauseListener(this);
         }
@@ -187,6 +189,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         recyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    private List<IndexInfoSummary> getActualExchangeRates() {
+        Object data = appSession.getData(FragmentsCommons.EXCHANGE_RATES);
+        return (data != null) ? (List<IndexInfoSummary>) data : null;
     }
 
     @Override
@@ -336,6 +343,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         dialog.configure(R.string.notes, R.string.cbw_insert_note);
+        dialog.setTextCount(200);
         dialog.setTextFreeInputType(true);
         dialog.setEditTextValue(negotiationInfo.getMemo());
         dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
@@ -402,14 +410,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
-                    adapter.setMarketRateList(appSession.getActualExchangeRates());
+                    adapter.setMarketRateList(getActualExchangeRates());
                     adapter.setQuote((Quote) result[0]);
                 }
             }
 
             @Override
             public void onErrorOccurred(Exception ex) {
-                adapter.setMarketRateList(appSession.getActualExchangeRates());
+                adapter.setMarketRateList(getActualExchangeRates());
                 adapter.setQuote(null);
 
                 if (errorManager != null)
@@ -446,10 +454,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
 
 
-                if(exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
+                if (exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
                     Toast.makeText(getActivity(), "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).show();
 
-                if(exchangeRate.compareTo(marketRateReferenceValue) == -1)
+                if (exchangeRate.compareTo(marketRateReferenceValue) == -1)
                     Toast.makeText(getActivity(), "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).show();
 
             }
@@ -648,7 +656,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
 
-
     private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
@@ -673,8 +680,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
 
-        if (appSession.getActualExchangeRates() != null)
-            for (IndexInfoSummary item : appSession.getActualExchangeRates()) {
+        final List<IndexInfoSummary> actualExchangeRates = getActualExchangeRates();
+
+        if (actualExchangeRates != null)
+            for (IndexInfoSummary item : actualExchangeRates) {
                 final ExchangeRate exchangeRateData = item.getExchangeRateData();
                 final String toCurrency = exchangeRateData.getToCurrency().getCode();
                 final String fromCurrency = exchangeRateData.getFromCurrency().getCode();

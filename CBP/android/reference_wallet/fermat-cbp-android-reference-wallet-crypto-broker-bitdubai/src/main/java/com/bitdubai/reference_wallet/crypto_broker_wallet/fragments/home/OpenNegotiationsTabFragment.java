@@ -10,29 +10,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
 
 
 /**
@@ -42,7 +43,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager>
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     // Fermat Managers
@@ -73,7 +74,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        openNegotiationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        onRefresh();
     }
 
 
@@ -87,13 +88,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            emptyListViewsContainer.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
     }
 
     private void configureToolbar() {
@@ -193,15 +187,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
-        appSession.setData(CryptoBrokerWalletSessionReferenceApp.NEGOTIATION_DATA, data);
+        appSession.setData(FragmentsCommons.NEGOTIATION_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
-        /*
-        if(data.getStatus() == NegotiationStatus.SENT_TO_BROKER || data.getStatus() == NegotiationStatus.WAITING_FOR_BROKER){
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
-        }else{
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
-        }
-        */
     }
 
     @Override
@@ -219,13 +206,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                     adapter.changeDataSet(openNegotiationList);
             }
         }
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }else {
-            emptyListViewsContainer.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        showOrHideEmptyView();
     }
 
     @Override
@@ -248,6 +229,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 break;
         }
 
+    }
+
+    private void showOrHideEmptyView(){
+        if (openNegotiationList == null || openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            emptyListViewsContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
 

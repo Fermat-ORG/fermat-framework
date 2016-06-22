@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -24,9 +26,7 @@ public class NodeConnectionHistory extends AbstractBaseEntity implements Seriali
 
 	private String ip;
 
-	private double lastLatitude;
-
-	private double lastLongitude;
+    private NetworkNodeCommunicationDeviceLocation lastLocation;
 
 	private String status;
 
@@ -34,6 +34,7 @@ public class NodeConnectionHistory extends AbstractBaseEntity implements Seriali
         super();
         this.uuid = UUID.randomUUID();
         this.connectionTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
     public Timestamp getConnectionTimestamp() {
@@ -68,22 +69,6 @@ public class NodeConnectionHistory extends AbstractBaseEntity implements Seriali
         this.ip = ip;
     }
 
-    public double getLastLatitude() {
-        return lastLatitude;
-    }
-
-    public void setLastLatitude(double lastLatitude) {
-        this.lastLatitude = lastLatitude;
-    }
-
-    public double getLastLongitude() {
-        return lastLongitude;
-    }
-
-    public void setLastLongitude(double lastLongitude) {
-        this.lastLongitude = lastLongitude;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -105,23 +90,58 @@ public class NodeConnectionHistory extends AbstractBaseEntity implements Seriali
         return uuid.toString();
     }
 
+
+    public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+        return lastLocation;
+    }
+
+    public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+        this.lastLocation = lastLocation;
+    }
+
+    public void setLastLocation(double latitude, double longitude){
+        lastLocation = new NetworkNodeCommunicationDeviceLocation(
+                latitude,
+                longitude,
+                null     ,
+                0        ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NodeConnectionHistory)) return false;
+
         NodeConnectionHistory that = (NodeConnectionHistory) o;
-        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
-                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getConnectionTimestamp(), that.getConnectionTimestamp()) &&
-                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
-                Objects.equals(getIp(), that.getIp()) &&
-                Objects.equals(getStatus(), that.getStatus());
+
+        if (getUuid() != null ? !getUuid().equals(that.getUuid()) : that.getUuid() != null)
+            return false;
+        if (getIdentityPublicKey() != null ? !getIdentityPublicKey().equals(that.getIdentityPublicKey()) : that.getIdentityPublicKey() != null)
+            return false;
+        if (getConnectionTimestamp() != null ? !getConnectionTimestamp().equals(that.getConnectionTimestamp()) : that.getConnectionTimestamp() != null)
+            return false;
+        if (getDefaultPort() != null ? !getDefaultPort().equals(that.getDefaultPort()) : that.getDefaultPort() != null)
+            return false;
+        if (getIp() != null ? !getIp().equals(that.getIp()) : that.getIp() != null) return false;
+        if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
+            return false;
+        return !(getStatus() != null ? !getStatus().equals(that.getStatus()) : that.getStatus() != null);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getConnectionTimestamp(), getDefaultPort(), getIp(), getLastLatitude(), getLastLongitude(), getStatus());
+        int result = getUuid() != null ? getUuid().hashCode() : 0;
+        result = 31 * result + (getIdentityPublicKey() != null ? getIdentityPublicKey().hashCode() : 0);
+        result = 31 * result + (getConnectionTimestamp() != null ? getConnectionTimestamp().hashCode() : 0);
+        result = 31 * result + (getDefaultPort() != null ? getDefaultPort().hashCode() : 0);
+        result = 31 * result + (getIp() != null ? getIp().hashCode() : 0);
+        result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        return result;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 
 
 /**
- * Created by rodrigo on 2015.07.17.
+ * Created by Matias Furszyfer on 2015.07.17.
  */
 
 public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity,Serializable {
@@ -35,7 +36,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      *  the String is the fragments enum value corresponding to each plugin
      */
 
-    Map<String, Fragment> fragments = new HashMap<String, Fragment>();
+    Map<String, FermatFragment> fragments = new HashMap<String, FermatFragment>();
 
     String lastFragment;
 
@@ -47,7 +48,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     Footer footer;
 
-    OptionsMenu optionsMenu;
+    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu;
 
     TabStrip tabStrip;
 
@@ -85,7 +86,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.type = type;
     }
 
-    public void addFragment(String fragmentsType, Fragment fragment) {
+    public void addFragment(String fragmentsType, FermatFragment fragment) {
         fragments.put(fragmentsType, fragment);
     }
 
@@ -97,7 +98,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         this.sideMenu = sideMenu;
     }
 
-    public void setOptionsMenu(OptionsMenu optionsMenu) {
+    public void setOptionsMenu(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu optionsMenu) {
         this.optionsMenu = optionsMenu;
     }
 
@@ -153,7 +154,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public OptionsMenu getOptionsMenu() {
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu getOptionsMenu() {
         return optionsMenu;
     }
 
@@ -205,12 +206,12 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     // TODO VER COMO HACER ESTO
     @Override
-    public Map<String, Fragment> getFragments() {
+    public Map<String, FermatFragment> getFragments() {
         return fragments;
     }
 
     @Override
-    public Fragment getLastFragment() {
+    public FermatFragment getLastFragment() {
         if(lastFragment==null){
             lastFragment = startFragment;
         }
@@ -218,11 +219,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
-    public Fragment getFragment(String fragment) {
-        Iterator<Map.Entry<String, Fragment>> eSubApp = fragments.entrySet().iterator();
+    public FermatFragment getFragment(String fragment) {
+        Iterator<Map.Entry<String, FermatFragment>> eSubApp = fragments.entrySet().iterator();
         while (eSubApp.hasNext()) {
-            Map.Entry<String, Fragment> fragmentEntryEntry = eSubApp.next();
-            Fragment subApp = fragmentEntryEntry.getValue();
+            Map.Entry<String, FermatFragment> fragmentEntryEntry = eSubApp.next();
+            FermatFragment subApp = fragmentEntryEntry.getValue();
             if (subApp.getType().equals(fragment)) {
                 lastFragment = fragment;
                 return subApp;
@@ -283,6 +284,18 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setBottomNavigationMenu(FermatBottomNavigation bottomNavigationMenu) {
         this.bottomNavigationMenu = bottomNavigationMenu;
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "activityType='" + activityType + '\'' +
+                ", fragments=" + fragments +
+                ", lastFragment='" + lastFragment + '\'' +
+                ", startFragment='" + startFragment + '\'' +
+                ", backPublicKey='" + backPublicKey + '\'' +
+                ", backActivity=" + backActivity +
+                '}';
     }
 }
 

@@ -16,21 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -39,27 +37,19 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager>
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity>, AcceptDialog.OnDismissListener {
-
-    public static final String ACTOR_SELECTED = "actor_selected";
 
     private static final int MAX = 20;
 
     protected final String TAG = "ConnectionNotificationsFragment";
 
-    private RecyclerView recyclerView;
-    private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private CryptoCustomerCommunitySubAppSessionReferenceApp cryptoCustomerCommunitySubAppSession;
     private LinearLayout emptyView;
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
-    private ErrorManager errorManager;
-    private int offset = 0;
-    private CryptoCustomerCommunityInformation cryptoCustomerInformation;
     private List<LinkedCryptoCustomerIdentity> cryptoCustomerInformationList;
 
     /**
@@ -76,10 +66,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoCustomerCommunitySubAppSession = appSession;
-        cryptoCustomerInformation = (CryptoCustomerCommunityInformation) appSession.getData(ACTOR_SELECTED);
-        moduleManager = cryptoCustomerCommunitySubAppSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
+        moduleManager = appSession.getModuleManager();
         cryptoCustomerInformationList = new ArrayList<>();
     }
 
@@ -94,8 +81,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_notifications, container, false);
             setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             adapter = new AppNotificationAdapter(getActivity(), cryptoCustomerInformationList);
@@ -126,6 +113,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
 
         try {
 
+            int offset = 0;
             dataSet.addAll(moduleManager.listCryptoCustomersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
 
         } catch (Exception e) {
@@ -208,7 +196,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
             //Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoCustomer(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             //TODO: Note, subAppResourcesProviderManager is badly casted as a WalletResourcesNetworkServicePluginRoot.. sending null, for now. so it doesnt throw a classCastException
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoCustomerCommunitySubAppSession, null, data, moduleManager.getSelectedActorIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {

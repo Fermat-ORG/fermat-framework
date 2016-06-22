@@ -36,7 +36,6 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSessionReferenceApp;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 /**
@@ -69,7 +68,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
-    //private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
     private String strConnectionState = "UNKNOWN";
     private android.support.v7.widget.Toolbar toolbar;
@@ -196,9 +194,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                         new ConnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request?");
+                connectDialog.setDescription("Are you sure you want to send a connection request to this contact?");
+                //connectDialog.setUsername(chatUserInformation.getAlias());
+                //connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -219,9 +217,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                 disconnectDialog =
                         new DisconnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
-                disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Do you want to disconnect from");
-                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
+                disconnectDialog.setTitle("Confirm Delete Connection");
+                disconnectDialog.setDescription("Are you sure you want to delete this connection?" );
+//                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -262,9 +260,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
                         new ConnectDialog(getActivity(), appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Resend Connection Request");
-                connectDialog.setDescription("Do you want to resend ");
+                connectDialog.setDescription("Do you want to resend a connection request to this contact?");
                 connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request?");
+                //connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

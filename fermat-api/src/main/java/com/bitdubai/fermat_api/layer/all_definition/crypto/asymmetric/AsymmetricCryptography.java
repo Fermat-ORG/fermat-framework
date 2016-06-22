@@ -62,9 +62,9 @@ public class AsymmetricCryptography {
 	
 	public static String derivePublicKey(final String hexPrivateKey) throws IllegalArgumentException{
 		checkStringArgument(hexPrivateKey);
-		//AsymmetricPrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey, 16));
-		//AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
-		//return keyCreator.createPublicKey(privateKey).toString();
+//		AsymmetricPrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey, 16));
+//		AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
+//		return keyCreator.createPublicKey(privateKey).toString();
 		ECKey key = ECKey.fromPrivate(new BigInteger(hexPrivateKey, 16), false);
 		return key.getPublicKeyAsHex().toUpperCase();
 	}

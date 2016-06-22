@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -36,6 +37,8 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
     private String state;
     private String city;
     private String connectionState;
+    private long   accuracy;
+    private Frecuency frecuency;
 
 //    /**
 //     * DealsWithPluginFileSystem Interface member variables.
@@ -67,7 +70,7 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
     /**
      * Constructor
      */
-    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, String country, String state, String city, String connectionState) {
+    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -78,9 +81,11 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
         this.state = state;
         this.city = city;
         this.connectionState = connectionState;
+        this.accuracy = accuracy;
+        this.frecuency = frecuency;
     }
 
-    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState) {
+    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState, long accuracy, Frecuency frecuency) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -88,6 +93,8 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
         this.state = state;
         this.city = city;
         this.connectionState = connectionState;
+        this.accuracy = accuracy;
+        this.frecuency = frecuency;
     }
 
     public ChatIdentityImpl() {
@@ -205,5 +212,23 @@ public class ChatIdentityImpl implements ChatIdentity, Serializable {
     @Override
     public String getConnectionState() {
         return this.connectionState;
+    }
+
+    /**
+     * This method return long with Accurancy
+     * @return the Long
+     */
+    @Override
+    public long getAccuracy() {
+        return this.accuracy;
+    }
+
+    /**
+     * This method return enum with Frecuency
+     * @return the Enum Frecuency
+     */
+    @Override
+    public Frecuency getFrecuency() {
+        return this.frecuency;
     }
 }

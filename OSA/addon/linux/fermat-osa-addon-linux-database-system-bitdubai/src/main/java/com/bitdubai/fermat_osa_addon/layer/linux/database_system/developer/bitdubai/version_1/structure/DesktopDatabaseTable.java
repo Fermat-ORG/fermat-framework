@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
@@ -32,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure.DesktopDatabaseTable</code>
@@ -206,6 +206,24 @@ public class DesktopDatabaseTable implements DatabaseTable {
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantInsertRecordException(exception);
+            }
+        }
+    }
+
+    @Override
+    public void truncate() throws CantTruncateTableException {
+
+        String SQL_QUERY = "DELETE FROM " + tableName;
+
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
+
+                stmt.execute(SQL_QUERY);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CantTruncateTableException(e, "", "Unhandled error.");
             }
         }
     }
@@ -464,6 +482,19 @@ public class DesktopDatabaseTable implements DatabaseTable {
                 null            ,
                 null
         );
+
+    }
+
+    @Override
+    public void deleteAllRecord() throws CantDeleteRecordException {
+
+        try {
+            String query = "DELETE FROM " + tableName;
+            database.execSQL(query);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new CantDeleteRecordException(e);
+        }
 
     }
 

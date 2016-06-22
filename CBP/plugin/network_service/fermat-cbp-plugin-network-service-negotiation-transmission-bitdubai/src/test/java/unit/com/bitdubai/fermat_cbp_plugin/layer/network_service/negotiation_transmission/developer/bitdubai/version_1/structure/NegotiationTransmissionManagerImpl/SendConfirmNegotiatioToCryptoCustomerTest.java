@@ -28,7 +28,7 @@ public class SendConfirmNegotiatioToCryptoCustomerTest {
     public void sendConfirmNegotiatioToCryptoCustomer()  throws Exception{
 
         NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl = mock(NegotiationTransmissionManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, transactionType);
+        doCallRealMethod().when(negotiationTransmissionManagerImpl).sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, transactionType);
 
     }
 }

@@ -30,6 +30,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
 
 
 import java.util.ArrayList;
@@ -42,12 +43,12 @@ import static com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.Wal
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
+public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest,ReferenceAppFermatSession<FermatWallet>,ResourceProviderManager> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
      */
-    FermatWalletSessionReferenceApp fermatWalletSessionReferenceApp;
+    ReferenceAppFermatSession<FermatWallet> fermatWalletSessionReferenceApp;
 
     String walletPublicKey = "reference_wallet";
     /**
@@ -84,7 +85,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        fermatWalletSessionReferenceApp = (FermatWalletSessionReferenceApp)appSession;
+        fermatWalletSessionReferenceApp = appSession;
 
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
@@ -279,7 +280,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     @Override
     public void onClick(View v) {
         try {
-            PaymentRequest paymentRequest = fermatWalletSessionReferenceApp.getLastRequestSelected();
+            PaymentRequest paymentRequest = (PaymentRequest) fermatWalletSessionReferenceApp.getData(SessionConstant.LAST_REQUEST_CONTACT);
             int id = v.getId();
             if(id == R.id.btn_refuse_request){
 
@@ -287,7 +288,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
             }
             else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(), fermatWalletSessionReferenceApp.getIntraUserModuleManager().getPublicKey());
+                cryptoWallet.approveRequest(paymentRequest.getRequestId(), cryptoWallet.getSelectedActorIdentity().getPublicKey());
                 Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
             }
 

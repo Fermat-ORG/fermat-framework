@@ -1,18 +1,14 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
@@ -85,7 +81,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             /*
              * Get the destination
              */
-            String destinationIdentityPublicKey = packageReceived.getClientDestination();
+            String destinationIdentityPublicKey = packageReceived.getDestinationPublicKey();
 
             /*
              * Get the connection to the destination
@@ -106,16 +102,15 @@ public class MessageTransmitProcessor extends PackageProcessor {
             if (clientDestination != null){
 
                 /*
-                 * Repackage the content and send
+                 * Redirect the content and send
                  */
-                Package packageToRedirect = Package.createInstance(messageContent.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT, channelIdentityPrivateKey, destinationIdentityPublicKey);
-                clientDestination.getBasicRemote().sendObject(packageToRedirect);
+                clientDestination.getBasicRemote().sendObject(packageReceived);
 
                 /*
                  * Notify to de sender the message was transmitted
                  */
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.SUCCESS, MsgRespond.STATUS.SUCCESS.toString(), messageContent.getId());
-                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPOND, channelIdentityPrivateKey, senderIdentityPublicKey);
+                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
                 session.getBasicRemote().sendObject(packageRespond);
 
             }else {
@@ -124,7 +119,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
                  * Notify to de sender the message can not transmit
                  */
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.FAIL, "The destination is not more available", messageContent.getId());
-                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPOND, channelIdentityPrivateKey, senderIdentityPublicKey);
+                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
                 session.getBasicRemote().sendObject(packageRespond);
             }
 
@@ -137,7 +132,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
                 //LOG.error(exception.getMessage());
 
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.FAIL, exception.getMessage(), messageContent.getId());
-                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPOND, channelIdentityPrivateKey, senderIdentityPublicKey);
+                Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPONSE, channelIdentityPrivateKey, senderIdentityPublicKey);
 
                 /*
                  * Send the respond

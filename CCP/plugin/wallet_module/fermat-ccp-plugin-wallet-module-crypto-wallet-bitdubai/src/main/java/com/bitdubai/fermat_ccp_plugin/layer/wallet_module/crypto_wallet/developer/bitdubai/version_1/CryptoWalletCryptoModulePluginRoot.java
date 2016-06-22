@@ -37,6 +37,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.int
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -189,7 +190,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
 
 
     //TODO: ordenar esto please
-    CryptoWalletWalletModuleManager walletModuleCryptoWallet = null;
+    CryptoWallet walletModuleCryptoWallet = null;
 
     @Override
     @moduleManagerInterfacea(moduleManager = CryptoWalletWalletModuleManager.class)
@@ -218,7 +219,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                         bitcoinNetworkManager, broadcaster,
                         walletManagerManager,transferIntraWalletUsersManager);
 
-                walletModuleCryptoWallet.initialize();
+//                walletModuleCryptoWallet.initialize();
             }
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);

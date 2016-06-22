@@ -128,6 +128,8 @@ private void setUpScreenComponents(){
             }
             Toast.makeText(context, "Sending...", Toast.LENGTH_SHORT).show();
             dismiss();
+
+
         }
     }
 

@@ -23,7 +23,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-wpd-api')
 
-    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
+//    compile 'org.bouncycastle:bcprov-jdk15on:1.52'
     compile 'commons-collections:commons-collections:3.2'
 
     testCompile 'junit:junit:4.11'

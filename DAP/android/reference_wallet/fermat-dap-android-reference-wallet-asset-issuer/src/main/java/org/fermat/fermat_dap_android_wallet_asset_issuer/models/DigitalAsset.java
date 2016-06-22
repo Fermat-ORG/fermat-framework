@@ -32,6 +32,7 @@ public class DigitalAsset implements Serializable {
     private int redeemed;
     private int appropriated;
     private int unused;
+    private Date lastTransactionDate;
 
     public DigitalAsset() {
     }
@@ -169,5 +170,13 @@ public class DigitalAsset implements Serializable {
 
     public void setUnused(int unused) {
         this.unused = unused;
+    }
+
+    public Date getLastTransactionDate() {
+        return lastTransactionDate;
+    }
+
+    public void setLastTransactionDate(Date lastTransactionDate) {
+        this.lastTransactionDate = lastTransactionDate;
     }
 }

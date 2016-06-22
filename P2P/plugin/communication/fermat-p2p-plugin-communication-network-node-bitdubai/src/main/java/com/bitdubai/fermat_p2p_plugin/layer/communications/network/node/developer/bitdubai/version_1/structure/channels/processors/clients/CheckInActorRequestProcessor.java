@@ -1,18 +1,24 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -80,21 +86,39 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  */
                 actorProfile = (ActorProfile) messageContent.getProfileToRegister();
 
+                // create transaction for
+                DatabaseTransaction databaseTransaction = getDaoFactory().getCheckedInActorDao().getNewTransaction();
+                DatabaseTransactionStatementPair pair;
+
                 /*
                  * CheckedInActor into data base
                  */
-                insertCheckedInActor(actorProfile);
+                pair = insertCheckedInActor(actorProfile);
+
+                if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
+                    databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+                }else {
+
+                    boolean hasChanges = validateProfileChange(actorProfile);
+
+                    if(hasChanges)
+                        databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());
+
+                }
 
                 /*
                  * CheckedActorsHistory into data base
                  */
-                insertCheckedActorsHistory(actorProfile);
+                pair = insertCheckedActorsHistory(actorProfile);
+                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+                databaseTransaction.execute();
 
                 /*
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -113,7 +137,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -138,9 +162,9 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInActor(final ActorProfile actorProfile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws  CantCreateTransactionStatementPairException {
 
-        if (!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
+
 
             /*
              * Create the CheckedInActor
@@ -167,8 +191,8 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
             /*
              * Save into the data base
              */
-            getDaoFactory().getCheckedInActorDao().create(checkedInActor);
-        }
+            return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+
     }
 
     /**
@@ -177,7 +201,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedActorsHistory(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+    private DatabaseTransactionStatementPair insertCheckedActorsHistory(ActorProfile actorProfile) throws CantCreateTransactionStatementPairException {
 
         /*
          * Create the CheckedActorsHistory
@@ -204,7 +228,46 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+        return getDaoFactory().getCheckedActorsHistoryDao().createInsertTransactionStatementPair(checkedActorsHistory);
+
+    }
+
+    /**
+     * Validate if the profile register have changes
+     *
+     * @param actorProfile
+     * @return boolean
+     * @throws CantReadRecordDataBaseException
+     * @throws RecordNotFoundException
+     */
+    private boolean validateProfileChange(ActorProfile actorProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
+
+        CheckedInActor checkedInActor = new CheckedInActor();
+        checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+        checkedInActor.setActorType(actorProfile.getActorType());
+        checkedInActor.setAlias(actorProfile.getAlias());
+        checkedInActor.setName(actorProfile.getName());
+        checkedInActor.setPhoto(actorProfile.getPhoto());
+        checkedInActor.setExtraData(actorProfile.getExtraData());
+        checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+        checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
+
+        //Validate if location are available
+        if (actorProfile.getLocation() != null){
+            checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
+            checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+        }else{
+            checkedInActor.setLatitude(0.0);
+            checkedInActor.setLongitude(0.0);
+        }
+
+        CheckedInActor actorsRegistered = getDaoFactory().getCheckedInActorDao().findById(actorProfile.getIdentityPublicKey());
+
+        if (!actorsRegistered.equals(checkedInActor)){
+            return Boolean.TRUE;
+        }else {
+            return Boolean.FALSE;
+        }
 
     }
 

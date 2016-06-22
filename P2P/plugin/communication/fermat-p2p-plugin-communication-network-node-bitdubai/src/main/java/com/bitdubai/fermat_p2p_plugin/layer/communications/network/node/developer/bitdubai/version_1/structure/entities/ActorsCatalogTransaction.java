@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -32,9 +35,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String identityPublicKey;
 
-	private Double lastLatitude;
-
-	private Double lastLongitude;
+	private NetworkNodeCommunicationDeviceLocation lastLocation;
 
 	private String name;
 
@@ -50,6 +51,7 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		super();
 		this.hashId = UUID.randomUUID().toString();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
+        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public String getTransactionType() {
@@ -108,22 +110,6 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		this.identityPublicKey = identityPublicKey;
 	}
 
-	public Double getLastLatitude() {
-		return lastLatitude;
-	}
-
-	public void setLastLatitude(Double lastLatitude) {
-		this.lastLatitude = lastLatitude;
-	}
-
-	public Double getLastLongitude() {
-		return lastLongitude;
-	}
-
-	public void setLastLongitude(Double lastLongitude) {
-		this.lastLongitude = lastLongitude;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -161,27 +147,72 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 		return hashId;
 	}
 
+	public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+		return lastLocation;
+	}
+
+	public void setLastLocation(NetworkNodeCommunicationDeviceLocation lastLocation) {
+		this.lastLocation = lastLocation;
+	}
+
+	public void setLastLocation(double latitude, double longitude){
+		lastLocation = new NetworkNodeCommunicationDeviceLocation(
+				latitude,
+				longitude,
+				null     ,
+				0        ,
+				null     ,
+				System.currentTimeMillis(),
+				LocationSource.UNKNOWN);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof ActorsCatalogTransaction)) return false;
+
 		ActorsCatalogTransaction that = (ActorsCatalogTransaction) o;
-		return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
-				Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
-				Objects.equals(getHashId(), that.getHashId()) &&
-				Objects.equals(getActorType(), that.getActorType()) &&
-				Objects.equals(getAlias(), that.getAlias()) &&
-				Objects.equals(getExtraData(), that.getExtraData()) &&
-				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-				Objects.equals(getName(), that.getName()) &&
-				Objects.equals(getNodeIdentityPublicKey(), that.getNodeIdentityPublicKey()) &&
-				Objects.equals(getPhoto(), that.getPhoto()) &&
-				Objects.equals(getTransactionType(), that.getTransactionType());
+
+		if (getHashId() != null ? !getHashId().equals(that.getHashId()) : that.getHashId() != null)
+			return false;
+		if (getActorType() != null ? !getActorType().equals(that.getActorType()) : that.getActorType() != null)
+			return false;
+		if (getAlias() != null ? !getAlias().equals(that.getAlias()) : that.getAlias() != null)
+			return false;
+		if (getExtraData() != null ? !getExtraData().equals(that.getExtraData()) : that.getExtraData() != null)
+			return false;
+		if (getHostedTimestamp() != null ? !getHostedTimestamp().equals(that.getHostedTimestamp()) : that.getHostedTimestamp() != null)
+			return false;
+		if (getIdentityPublicKey() != null ? !getIdentityPublicKey().equals(that.getIdentityPublicKey()) : that.getIdentityPublicKey() != null)
+			return false;
+		if (getLastLocation() != null ? !getLastLocation().equals(that.getLastLocation()) : that.getLastLocation() != null)
+			return false;
+		if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
+			return false;
+		if (getNodeIdentityPublicKey() != null ? !getNodeIdentityPublicKey().equals(that.getNodeIdentityPublicKey()) : that.getNodeIdentityPublicKey() != null)
+			return false;
+		if (getClientIdentityPublicKey() != null ? !getClientIdentityPublicKey().equals(that.getClientIdentityPublicKey()) : that.getClientIdentityPublicKey() != null)
+			return false;
+		if (!Arrays.equals(getPhoto(), that.getPhoto())) return false;
+		return !(getTransactionType() != null ? !getTransactionType().equals(that.getTransactionType()) : that.getTransactionType() != null);
+
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getHashId(), getActorType(), getAlias(), getExtraData(), getIdentityPublicKey(), getLastLatitude(), getLastLongitude(), getName(), getNodeIdentityPublicKey(), getPhoto(), getTransactionType());
+		int result = getHashId() != null ? getHashId().hashCode() : 0;
+		result = 31 * result + (getActorType() != null ? getActorType().hashCode() : 0);
+		result = 31 * result + (getAlias() != null ? getAlias().hashCode() : 0);
+		result = 31 * result + (getExtraData() != null ? getExtraData().hashCode() : 0);
+		result = 31 * result + (getHostedTimestamp() != null ? getHostedTimestamp().hashCode() : 0);
+		result = 31 * result + (getIdentityPublicKey() != null ? getIdentityPublicKey().hashCode() : 0);
+		result = 31 * result + (getLastLocation() != null ? getLastLocation().hashCode() : 0);
+		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+		result = 31 * result + (getNodeIdentityPublicKey() != null ? getNodeIdentityPublicKey().hashCode() : 0);
+		result = 31 * result + (getClientIdentityPublicKey() != null ? getClientIdentityPublicKey().hashCode() : 0);
+		result = 31 * result + (getPhoto() != null ? Arrays.hashCode(getPhoto()) : 0);
+		result = 31 * result + (getTransactionType() != null ? getTransactionType().hashCode() : 0);
+		return result;
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
@@ -20,6 +19,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -143,7 +143,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                  * If all ok, respond whit success message
                  */
                 CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.SUCCESS, CheckInProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList, discoveryQueryParameters);
-                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -162,7 +162,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                  * Respond whit fail message
                  */
                 CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList, discoveryQueryParameters);
-                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

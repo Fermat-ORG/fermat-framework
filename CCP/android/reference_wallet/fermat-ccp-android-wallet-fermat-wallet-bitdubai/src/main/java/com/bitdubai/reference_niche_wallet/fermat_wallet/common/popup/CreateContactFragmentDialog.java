@@ -37,8 +37,6 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.CreateContactDia
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.contacts_list_adapter.WalletContact;
 
-import com.bitdubai.reference_niche_wallet.fermat_wallet.session.FermatWalletSessionReferenceApp;
-
 
 import java.io.ByteArrayOutputStream;
 
@@ -158,7 +156,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_contact_dialog);
+            setContentView(R.layout.fermat_wallet_create_contact_dialog);
 
 
             save_contact_btn = (Button) findViewById(R.id.save_contact_btn);

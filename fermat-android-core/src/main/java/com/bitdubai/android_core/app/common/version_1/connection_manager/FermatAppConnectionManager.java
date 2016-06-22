@@ -47,6 +47,9 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAs
 import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
 import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
 
 //import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
@@ -56,13 +59,30 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRe
  */
 public class FermatAppConnectionManager {
 
-
     private static final String TAG = "FermatAppConnection";
 
-    private static AppConnections switchStatement(Context activity,String publicKey){
-        AppConnections fermatAppConnection = null;
+    private static Map<String, AppConnections> openConnections = new HashMap<>();
 
-        switch (publicKey){
+    private static AppConnections switchStatement(Context activity, String publicKey) {
+        AppConnections fermatAppConnection = null;
+        if (activity == null) Log.e(TAG, "Activity null");
+        if (openConnections.containsKey(publicKey)) {
+            fermatAppConnection = openConnections.get(publicKey);
+            if(fermatAppConnection!=null) {
+                if (fermatAppConnection.getContext() != null) {
+                    if (!fermatAppConnection.getContext().equals(activity)) {
+                        fermatAppConnection.clear();
+                        fermatAppConnection.setContext(activity);
+                    }
+                } else {
+                    fermatAppConnection.setContext(activity);
+                }
+            }else{
+                Log.e(TAG,"AppConnection null, please check this in the FermatAppConnectionManager class");
+            }
+            return fermatAppConnection;
+        }
+        switch (publicKey) {
             //CCP WALLET
             case "reference_wallet":
                 fermatAppConnection = new BitcoinWalletFermatAppConnection(activity);
@@ -80,12 +100,10 @@ public class FermatAppConnectionManager {
             case "public_key_intra_user_commmunity":
                 fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
-
             //DESKTOP
             case "main_desktop":
                 fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
-
             //DAP WALLETS
             case "asset_issuer" :
                 fermatAppConnection = new WalletAssetIssuerFermatAppConnection(activity);
@@ -123,7 +141,6 @@ public class FermatAppConnectionManager {
             case "public_key_pip_developer_sub_app":
                 fermatAppConnection = new DeveloperFermatAppConnection(activity);
                 break;
-
             //CBP WALLETS
             case "crypto_broker_wallet":
                 fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity);
@@ -144,17 +161,14 @@ public class FermatAppConnectionManager {
             case "sub_app_crypto_customer_identity":
                 fermatAppConnection = new CryptoCustomerIdentityFermatAppConnection(activity);
                 break;
-
             //CASH WALLET
             case "cash_wallet":
                 fermatAppConnection = new CashMoneyWalletFermatAppConnection(activity, null);
                 break;
-
             //BANKING WALLET
-           case "banking_wallet":
-               fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
-               break;
-
+            case "banking_wallet":
+                fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
+                break;
             // WPD Sub Apps
             case "public_key_store":
                 fermatAppConnection = new WalletStoreFermatAppConnection(activity);
@@ -162,7 +176,7 @@ public class FermatAppConnectionManager {
 
 
 
-            // CHT Sub Apps
+//            // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
@@ -204,34 +218,34 @@ public class FermatAppConnectionManager {
             default:
                 fermatAppConnection = new EmptyFermatAppConnection(activity);
                 break;
+        }
 
-
+        if (!openConnections.containsKey(publicKey)) {
+            openConnections.put(publicKey, fermatAppConnection);
         }
 
         return fermatAppConnection;
     }
 
-
     public static AppConnections getFermatAppConnection(String publicKey, Context context, FermatSession session) {
-        AppConnections fermatAppConnection = switchStatement(context,publicKey);
-        if(!publicKey.equals(session.getAppPublicKey()) && session instanceof ComboAppType2FermatSession){
+        AppConnections fermatAppConnection = switchStatement(context, publicKey);
+        if (!publicKey.equals(session.getAppPublicKey()) && session instanceof ComboAppType2FermatSession) {
             try {
-                session = ((ComboAppType2FermatSession) session).getFermatSession(publicKey,FermatSession.class);
+                session = ((ComboAppType2FermatSession) session).getFermatSession(publicKey, FermatSession.class);
             } catch (InvalidParameterException e) {
-                Log.e(TAG,"Probando una cosa, no se asusten");
+                Log.e(TAG, "Probando una cosa, no se asusten");
                 e.printStackTrace();
             }
         }
-        fermatAppConnection.setFullyLoadedSession(session);
+        if(fermatAppConnection!=null) fermatAppConnection.setFullyLoadedSession(session);
         return fermatAppConnection;
     }
 
-
     public static AppConnections getFermatAppConnection(String appPublicKey, Activity activity) {
-        return switchStatement(activity,appPublicKey);
+        return switchStatement(activity, appPublicKey);
     }
 
     public static AppConnections getFermatAppConnection(String appPublicKey, Context context) {
-        return switchStatement(context,appPublicKey);
+        return switchStatement(context, appPublicKey);
     }
 }
