@@ -94,17 +94,31 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
      */
     protected abstract int getLayoutResource();
 
+    /**
+     * Get the {@link SwipeRefreshLayout} ID in the layout resource
+     *
+     * @return int view ID Ex: R.id.swipe_view
+     */
     protected abstract int getSwipeRefreshLayoutId();
 
+    /**
+     * Get the {@link RecyclerView} ID in the layout resource
+     *
+     * @return int view ID Ex: R.id.recycler_view
+     */
     protected abstract int getRecyclerLayoutId();
 
+    /**
+     * RecyclerView can perform several optimizations if it can know in advance that changes in adapter content
+     * cannot change the size of the RecyclerView itself. If your use of RecyclerView falls into this category, return true in this method
+     *
+     * @return <code>true</code> if adapter changes cannot affect the size of the RecyclerView
+     */
     protected abstract boolean recyclerHasFixedSize();
 
     /**
-     * <p>Setup views with layout root view
-     * Override this function and write the code after call super.initViews(layout) method if you
-     * want to initializer your others views reference on your own class derived of this
-     * base class<p/>
+     * Setup views with layout root view. Override this function and write the code after call super.initViews(layout)
+     * method if you want to initializer your others views reference on your own class derived of this base class
      *
      * @param layout View root
      */
@@ -156,6 +170,10 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
         return null;
     }
 
+    /**
+     * This method will call the method {@link FermatListFragment#getMoreDataAsync} in a new thread and is triggered when
+     * the {@link SwipeRefreshLayout} view is Swipe Down
+     */
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
@@ -171,10 +189,11 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
     }
 
     /**
-     * return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
-     * Override this method if yo want to implement infinite scrolling or pagination
+     * Override this method if yo want to implement infinite scrolling or pagination.
+     * Return a {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
      *
      * @return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     * This return <code>null</code> by default
      */
     public RecyclerView.OnScrollListener getScrollListener() {
         return null;

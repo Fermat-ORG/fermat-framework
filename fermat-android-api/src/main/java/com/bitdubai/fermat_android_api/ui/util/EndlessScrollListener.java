@@ -1,9 +1,11 @@
-package com.bitdubai.sub_app.crypto_broker_community.common.utils;
+package com.bitdubai.fermat_android_api.ui.util;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 
 
 /**

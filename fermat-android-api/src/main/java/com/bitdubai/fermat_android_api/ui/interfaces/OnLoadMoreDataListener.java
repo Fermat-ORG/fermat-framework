@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.common.utils;
+package com.bitdubai.fermat_android_api.ui.interfaces;
 
 /**
  * Interface that can be used to fetch more data to setted in a list view.
