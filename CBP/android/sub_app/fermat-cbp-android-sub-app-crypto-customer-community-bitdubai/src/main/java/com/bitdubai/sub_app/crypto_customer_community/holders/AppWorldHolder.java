@@ -25,8 +25,8 @@ public class AppWorldHolder extends FermatViewHolder {
      *
      * @param itemView cast elements in layout
      */
-    public AppWorldHolder(View itemView) {
-        super(itemView);
+    public AppWorldHolder(View itemView, int type) {
+        super(itemView, type);
         connectionState = (ImageView) itemView.findViewById(R.id.ccc_connection_state);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);

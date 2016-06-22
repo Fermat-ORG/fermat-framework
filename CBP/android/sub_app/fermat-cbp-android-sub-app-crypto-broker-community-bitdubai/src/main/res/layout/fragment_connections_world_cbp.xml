@@ -160,7 +160,6 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@drawable/cbc_list_divider"
             tools:listitem="@layout/cht_comm_world_item"
             android:visibility="visible"/>
 

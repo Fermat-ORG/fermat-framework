@@ -1,10 +1,10 @@
-package com.bitdubai.sub_app.crypto_broker_community.holders;
+package com.bitdubai.sub_app.crypto_customer_community.holders;
 
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.R;
 
 
 /**
