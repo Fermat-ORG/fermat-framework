@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_api.layer.modules;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.UUID;
@@ -22,6 +24,7 @@ public class ModuleManagerImpl<Z extends FermatSettings> {
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
+
 
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified

@@ -1,7 +1,6 @@
 package unit.HoldCryptoMoneyTransactionImpl;
 
 
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.HoldCryptoMoneyTransactionImpl;
 
 import org.junit.Test;

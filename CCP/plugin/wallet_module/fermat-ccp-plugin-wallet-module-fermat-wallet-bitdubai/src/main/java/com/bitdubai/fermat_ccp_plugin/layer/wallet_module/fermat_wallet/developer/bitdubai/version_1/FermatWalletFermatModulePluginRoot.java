@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1;
 
+
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.FermatWalletSettings;
 
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.structure.FermatWalletWalletModuleManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 
@@ -70,6 +72,8 @@ import java.util.regex.Pattern;
 public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
+
+
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
@@ -78,7 +82,6 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
     private LogManager logManager;
-
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -121,6 +124,9 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION    , plugin = Plugins.TRANSFER_INTRA_WALLET)
     private TransferIntraWalletUsersManager transferIntraWalletUsersManager;
+
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
 
 
@@ -220,11 +226,13 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         walletContactsManager,
                         pluginId,
                         pluginFileSystem,
+                        exchangeProviderFilterManagerproviderFilter,
                         eventManager,
                         bitcoinNetworkManager, broadcaster,
                         walletManagerManager,transferIntraWalletUsersManager);
 
                 walletModuleCryptoWallet.initialize();
+
             }
 
             logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation finished successfully.", null, null);

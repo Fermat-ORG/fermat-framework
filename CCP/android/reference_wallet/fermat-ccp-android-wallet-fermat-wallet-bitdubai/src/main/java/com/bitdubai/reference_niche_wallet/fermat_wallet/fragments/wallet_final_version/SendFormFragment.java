@@ -197,7 +197,12 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 setUpUIData();
 
             }
-            //setUpContactAddapter();
+            setUpContactAddapter();
+
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
 
             return rootView;
         } catch (Exception e) {
@@ -247,6 +252,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         txt_type = (TextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
@@ -264,7 +270,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 if(bitcoinConverter != null) {
                     switch (position) {
                         case 0:
-                            text = "[btc]";
+                            text = "[ftms]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -275,6 +281,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                             break;
                         case 1:
+                            text = "[btc]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 2:
                             text = "[bits]";
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -285,7 +302,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             }
 
                             break;
-                        case 2:
+                        case 3:
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
@@ -480,7 +497,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                 blockchainNetworkType
                         );
                     } else {
@@ -497,7 +514,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         VaultType.CRYPTO_CURRENCY_VAULT,
                                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType
                                 );
                             } else {
@@ -518,11 +535,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     }
                 } catch (CantCreateWalletContactException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
 
                 } catch (ContactNameAlreadyExistsException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
 
 
@@ -603,7 +620,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                     if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                         try {
-                            String notes = null;
+                            String notes = "";
                             if (txt_notes.getText().toString().length() != 0) {
                                 notes = txt_notes.getText().toString();
                             }
@@ -617,10 +634,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                 msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
                             } else if (txtType.equals("[satoshis]")) {
                                 newAmount = amount;
-                                msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
+                                msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND) + " SATOSHIS.";
                             } else if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                                 msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
+                            }
+                            else if (txtType.equals("[ftms]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" FTMS.";
                             }
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
@@ -636,7 +657,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                         Actors.INTRA_USER,
                                         cryptoWalletWalletContact.getActorPublicKey(),
                                         cryptoWalletWalletContact.getActorType(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                         blockchainNetworkType,
                                         CryptoCurrency.BITCOIN
 
@@ -654,7 +675,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         } catch (CantSendFermatException e) {
-                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -696,7 +717,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
 
         } catch (Exception e) {

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -515,7 +516,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
     }
 
     @Override
-    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException {
+    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset, DeviceLocation location) throws ErrorSearchingSuggestionsException {
 
         final List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
@@ -530,7 +531,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                     null,
                     null,
                     null,
-                    null,
+                    location,
                     max,
                     null,
                     NetworkServiceType.UNDEFINED,
@@ -557,23 +558,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractActorNetworkServ
                 lstIntraUser.add(new IntraUserNetworkService(actorProfile.getIdentityPublicKey(), actorProfile.getPhoto(), actorProfile.getAlias(), actorPhrase));
             }
 
-            //Create a thread to save intra user cache list
 
-            if(lstIntraUser.size() > 0) {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                        } catch (CantAddIntraWalletCacheUserException e) {
-                            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-
-                        }
-                    }
-                }, "Thread Cache");
-
-                thread.start();
-            }
 
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
