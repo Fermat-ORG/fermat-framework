@@ -79,7 +79,7 @@
     <string name="ccw_no_selected_wallets">No Selected Wallets</string>
     <string name="ccw_open_negotiation_details_cancel_negotiation_menu_text">Cancel Negotiation</string>
     <string name="ccw_price">Price</string>
-    <string name="ccw_providers">Providers</string>
+    <string name="ccw_providers">Add Provider</string>
     <string name="ccw_save">Save</string>
     <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
     <string name="ccw_selling_details">Selling %1$s %2$s</string>
@@ -104,7 +104,7 @@
     <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
     <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
     <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
-    <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> for your Wallet.</string>
+    <string name="ccw_wizard_exchange_rate_providers_description">Please, select a <b>Bitcoin Wallet</b></string>
     <string name="ccw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
     <string name="ccw_wizard_bitcoin_wallet_and_providers">Set a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b>.</string>
     <string name="ccw_select_your_bank_account">Your Bank Accounts</string>
@@ -213,4 +213,6 @@
 
     <string name="ccw_insert_note">Insert Note</string>
     <string name="sending_to_the_broker">Sending to the Broker</string>
+    <string name="location">Location</string>
+    <string name="ccw_exchange_rate">EXCHANGE RATE</string>
 </resources>

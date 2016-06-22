@@ -8,13 +8,12 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 
+
 /**
  * Created by angel on 20/1/16.
  */
-
 public class EditIdentityWorker extends FermatWorker {
     public static final int SUCCESS = 1;
-    public static final int INVALID_ENTRY_DATA = 4;
 
     private CryptoBrokerIdentityModuleManager moduleManager;
     private CryptoBrokerIdentityInformation identityInfo;
@@ -37,25 +36,21 @@ public class EditIdentityWorker extends FermatWorker {
 
         boolean valueChanged = (identity.isPublished() != identityInfo.isPublished());
 
-        if ( identity == null ) {
-            return INVALID_ENTRY_DATA;
-        } else {
-            //TODO:NELSON Hay que pasarle los valores correcto al accuracy y la frecuencia al objeto identity
-            moduleManager.updateCryptoBrokerIdentity(identity);
-            if (valueChanged) {
-                if (identity.isPublished()) {
+        moduleManager.updateCryptoBrokerIdentity(identity);
 
-                    System.out.println("VLZ: Publicando");
+        if (valueChanged) {
+            if (identity.isPublished()) {
 
-                    moduleManager.publishIdentity(identity.getPublicKey());
-                }else {
+                System.out.println("VLZ: Publicando");
 
-                    System.out.println("VLZ: Ocultando");
+                moduleManager.publishIdentity(identity.getPublicKey());
+            }else {
 
-                    moduleManager.hideIdentity(identity.getPublicKey());
-                }
+                System.out.println("VLZ: Ocultando");
+
+                moduleManager.hideIdentity(identity.getPublicKey());
             }
-            return SUCCESS;
         }
+        return SUCCESS;
     }
 }

@@ -107,10 +107,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());

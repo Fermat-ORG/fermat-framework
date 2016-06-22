@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0">
+
+        <LinearLayout
+            android:id="@+id/search_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:id="@+id/ubication_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/cht_geolacation_light_icon"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_alignLeft="@id/ubication_icon"
+                >
+                <TextView
+                    android:id="@+id/country_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Country"
+                    android:textColor="@color/color_black"
+                    android:textSize="18sp"
+                    android:layout_marginTop="5dp"
+                    />
+                <TextView
+                    android:id="@+id/state_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="State"
+                    android:textColor="@color/color_black"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/separator"
+            android:background="#414042"
+            android:layout_width = "match_parent"
+            android:layout_height="1dip"
+            android:layout_marginTop="8dp"
+            />
+</LinearLayout>

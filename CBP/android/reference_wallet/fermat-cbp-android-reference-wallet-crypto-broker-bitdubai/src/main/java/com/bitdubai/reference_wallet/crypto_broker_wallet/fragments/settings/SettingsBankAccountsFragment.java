@@ -154,8 +154,8 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment<Referen
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                accounts.remove(i);
-                accountsStrings.remove(i);
+                accounts.remove(position);
+                accountsStrings.remove(position);
                 adapter.changeDataSet(accounts);
                 saveSetting();
                 showOrHideRecyclerView();
