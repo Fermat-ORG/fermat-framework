@@ -386,6 +386,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
+        runtimeAppNavigationStructure = buildWalletIdentityApp();
+        recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
+
+
+
         /**
          * SubApp generator
          */
@@ -6162,6 +6167,109 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         return runtimeWalletNavigationStructure;
     }
+
+
+    private AppNavigationStructure buildWalletIdentityApp() {
+
+        AppNavigationStructure runtimeWalletNavigationStructure = new AppNavigationStructure();
+        Activity runtimeActivity;
+        FermatRuntimeFragment runtimeFragment;
+        TitleBar runtimeTitleBar;
+
+
+        StatusBar runtimeStatusBar;
+
+        Tab runtimeTab;
+
+
+        final String publicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
+
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
+        //Home Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackgroundColor("#ffffff");
+        runtimeActivity.setColor("#ffffff");
+
+        // title bar
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Wallet Users");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#009CD4");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        //status bar
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#009CD4");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        //Menu
+
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        Owner owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_IDENTITY.getCode());
+
+        //Help optionMenu
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(99);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+        //Search optionMenu
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation");
+        optionMenuItem.setShowAsAction(2);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // home fragment
+
+        runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
+
+
+        // Profile Activity
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getCode());
+        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY);
+        runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+        runtimeActivity.setColor("#ffffff");
+
+//Fragments
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY.getKey(), runtimeFragment);
+
+
+        // Add to navigation structure
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+
+
+        return runtimeWalletNavigationStructure;
+    }
+
 
 
     private SideMenu loadSideMenuChatCombo(String publicKey) {

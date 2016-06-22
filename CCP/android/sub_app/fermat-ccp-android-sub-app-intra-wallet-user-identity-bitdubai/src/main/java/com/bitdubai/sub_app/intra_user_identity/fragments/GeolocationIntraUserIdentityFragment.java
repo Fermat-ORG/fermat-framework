@@ -20,35 +20,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.GeolocationIdentityExecutor;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.sub_app.intra_user_identity.R;
-//import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
-//import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
-//import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-//home/andres/project/fermat/CCP/library/api/fermat-ccp-api/src/main/java/com/bitdubai/fermat_ccp_api/layer/identity/intra_user/interfaces/IntraWalletUserIdentity.java
-//home/andres/project/fermat/CHT/library/api/fermat-cht-api/src/main/java/com/bitdubai/fermat_cht_api/layer/identity/interfaces/ChatIdentity.java
-//import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import java.util.ArrayList;
 import java.util.List;
-
-   //import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
-
 
 
 public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>, SubAppResourcesProviderManager>{
@@ -83,7 +70,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ccp_ic_back_buttom));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +90,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         //Check if a default identity is configured
         if(identity==null){
             try{
-                identity = moduleManager.getIdentityChatUser();
+                identity = (IntraWalletUserIdentity)moduleManager.getSelectedActorIdentity();
             }catch (Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
@@ -178,38 +165,26 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {
-      //  GeolocationIdentityExecutor executor = null;
+
         try {
             if (accuracy.getText().length() == 0) {
                 Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
+                moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
+                        identity.getImage(),acurracydata,frecuencydata );
 
-                moduleManager.updateIntraUserIdentity(
-                        identity.getPublicKey(),
-                        identity.getAlias(),
-                        identity.getPhrase(),
-                        identity.getImage(),
-                        identity.getAccuracy(),
-                        identity.getFrecuency()
-                );
-                switch (resultKey) {
-                    case SUCCESS:
-                        if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
-                        } else if (donde.equalsIgnoreCase("onBack")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                }
+                Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
+
             }
         }catch(Exception e){
+            Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated Error.", Toast.LENGTH_LONG).show();
+
             if(errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
@@ -218,13 +193,13 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public boolean ExistIdentity() throws FermatException {
         try {
             if (!identity.getAlias().isEmpty()) {
-                Log.i("CHT EXIST IDENTITY", "TRUE");
+                Log.i("CCP EXIST IDENTITY", "TRUE");
                 return true;
             }
         } catch (Exception e) {
             return false;
         }
-        Log.i("CHT EXIST IDENTITY", "FALSE");
+        Log.i("CPP EXIST IDENTITY", "FALSE");
         return false;
     }
 
