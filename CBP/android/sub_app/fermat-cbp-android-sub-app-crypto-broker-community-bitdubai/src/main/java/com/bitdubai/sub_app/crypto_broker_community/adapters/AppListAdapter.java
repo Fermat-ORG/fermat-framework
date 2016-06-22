@@ -97,12 +97,12 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     @Override
     public int getItemViewType(int position) {
-        return position == dataSet.size() ? LOADING_ITEM : DATA_ITEM;
+        return position == super.getItemCount() ? LOADING_ITEM : DATA_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.size() + 1;
+        return super.getItemCount() + 1;
     }
 
     public boolean isLoadingData() {

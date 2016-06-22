@@ -357,8 +357,7 @@ public class ConnectionsWorldFragment
             noDataLabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDataLabel.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
+            recyclerView.setVisibility(View.INVISIBLE);
 
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
@@ -370,6 +369,7 @@ public class ConnectionsWorldFragment
             noDataLabel.setVisibility(View.GONE);
             ColorDrawable bgColor = new ColorDrawable(Color.parseColor("#F9F9F9"));
             emptyView.setBackground(bgColor);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 }

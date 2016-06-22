@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,22 +7,6 @@
     android:background="#F9F9F9"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/cbc_list_divider"
-            tools:listitem="@layout/cht_comm_world_item"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-    <!--Empty view-->
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
@@ -49,7 +33,6 @@
             android:textStyle="normal"/>
 
     </LinearLayout>
-    <!--Empty view-->
 
     <LinearLayout
         android:id="@+id/search_empty_view"
@@ -83,7 +66,6 @@
             tools:ignore="HardcodedText"/>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/no_connection_view"
@@ -169,4 +151,19 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/cbc_list_divider"
+            tools:listitem="@layout/cht_comm_world_item"
+            android:visibility="visible"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>
