@@ -41,12 +41,12 @@ import io.jsonwebtoken.impl.TextCodec;
  * @since Java JDK 1.7
  */
 @Path("/user")
-public class User {
+public class UserAuth {
 
     /**
      * Represent the logger instance
      */
-    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(User.class));
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(UserAuth.class));
 
     /**
      * Represent the gson
@@ -56,7 +56,7 @@ public class User {
     /**
      * Constructor
      */
-    public User() {
+    public UserAuth() {
         super();
         this.gson = GsonProvider.getGson();
     }
