@@ -128,9 +128,7 @@ dependencies {
     compile project(':fermat-dap-android-sub-app-redeem-point-community')
     compile project(':fermat-dap-android-sub-app-asset-issuer-identity')
     compile project(':fermat-dap-android-sub-app-asset-user-identity')
-    compile (project(':fermat-dap-android-sub-app-redeem-point-identity')){
-        exclude group: 'com.githang', module:'com.edmodo.cropper'
-    }
+    compile project(':fermat-dap-android-sub-app-redeem-point-identity')
     //BNK wallets
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
