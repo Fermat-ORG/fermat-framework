@@ -31,13 +31,13 @@
             tools:ignore="ContentDescription"
             android:layout_marginTop="73dp"/>
 
-        <View
+ <!--       <View
             android:id="@+id/circle_space"
             android:layout_width="190dp"
             android:layout_height="190dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="73dp"
-            android:background="@drawable/picture_circle" />
+            android:background="@drawable/picture_circle" />-->
 
 
     </FrameLayout>
