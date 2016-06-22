@@ -32,5 +32,5 @@ public interface AbstractFermatFragmentInterface<S extends FermatSession,R exten
     /**
      * This method is called when the fragment is on user's focus
      */
-    void onFragmentFocus();
+    void setFragmentFocus(boolean isVisible);
 }
