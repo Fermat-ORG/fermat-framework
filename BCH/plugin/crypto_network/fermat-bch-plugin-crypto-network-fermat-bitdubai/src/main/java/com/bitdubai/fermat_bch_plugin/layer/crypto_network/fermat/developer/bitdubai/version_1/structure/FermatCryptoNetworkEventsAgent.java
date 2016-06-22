@@ -193,7 +193,7 @@ public class FermatCryptoNetworkEventsAgent implements Agent {
             /**
              * I raise the event
              */
-            event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+            event.setSource(EventSource.CRYPTO_NETWORK_FERMAT_PLUGIN);
             eventManager.raiseEvent(event);
         }
 
@@ -237,7 +237,7 @@ public class FermatCryptoNetworkEventsAgent implements Agent {
             /**
              * I raise the event
              */
-            event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+            event.setSource(EventSource.CRYPTO_NETWORK_FERMAT_PLUGIN);
             eventManager.raiseEvent(event);
         }
 

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 
 import org.bitcoinj.core.NetworkParameters;
 
@@ -14,7 +14,7 @@ public interface FermatNetworkConfiguration {
     /**
      * The network parameters of the default networt type selected for the platform.
      */
-    NetworkParameters DEFAULT_NETWORK_PARAMETERS = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    NetworkParameters DEFAULT_NETWORK_PARAMETERS = BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
     /**
      * The crypto currency of this network

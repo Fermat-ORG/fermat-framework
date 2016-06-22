@@ -2,12 +2,11 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bit
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.BlockchainException;
 
 
 import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.CheckpointManager;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.DownloadProgressTracker;
 import org.bitcoinj.core.NetworkParameters;
@@ -18,14 +17,7 @@ import org.bitcoinj.store.MemoryBlockStore;
 import org.bitcoinj.store.SPVBlockStore;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Created by rodrigo on 6/22/16.
@@ -56,9 +48,9 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
         this.context = context;
         this.networkParameters= this.context.getParams();
 
-        this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
+        this.BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
-        this.BLOCKCHAIN_FILENAME = "bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
+        this.BLOCKCHAIN_FILENAME = "fermat_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();
 
 
@@ -119,25 +111,6 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
             System.out.println("*** Crypto Network: " + e.toString());
         }
 
-        /**
-         * I will load the checkpoints for this network, if this is the initialization of the blockchain and
-         * the checkpoint exists.
-         */
-        try {
-            if (firstTime){
-                switch (BLOCKCHAIN_NETWORK_TYPE){
-                    case TEST_NET:
-                        loadCheckpoint("2016-05-29 15:22:16");
-                        break;
-                    case PRODUCTION:
-                        loadCheckpoint("2016-05-29 15:29:57");
-                        break;
-                }
-            }
-        } catch (IOException e) {
-            // if there are no checkpoints, then I will continue
-            System.out.println("***CryptoNetwork*** no checkpoint founds for network type " + BLOCKCHAIN_NETWORK_TYPE.getCode());
-        }
 
         /**
          * I initialize the blockchain object
@@ -148,31 +121,5 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
     private void initializeInMemory() throws BlockStoreException {
         blockStore = new MemoryBlockStore(context.getParams());
         blockChain = new BlockChain(context, wallet, blockStore);
-    }
-
-    /**
-     * If there are checkpoints for this network type, then I will load them to the blockchain
-     */
-    private void loadCheckpoint(String dateTime) throws BlockStoreException, IOException {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(CHECKPOINT_FILENAME);
-
-        if (inputStream != null) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Date date = null;
-            try {
-                date = format.parse(dateTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            long millis = date.getTime();
-
-
-            CheckpointManager.checkpoint(networkParameters, inputStream, blockStore, millis);
-            System.out.println("*** Crypto Network *** Checkpoint loaded for network " + BLOCKCHAIN_NETWORK_TYPE.getCode());
-        }
-
     }
 }

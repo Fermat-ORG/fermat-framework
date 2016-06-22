@@ -2,7 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -203,7 +203,7 @@ public abstract class CryptoVault {
     private HashMap<TransactionInput, TransactionOutput> getOwnOutputsForSigning(Wallet wallet, Transaction transaction){
         HashMap<TransactionInput, TransactionOutput> inputOutputMap = new HashMap<>();
 
-        final BlockchainNetworkType blockchainNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(transaction.getParams());
+        final BlockchainNetworkType blockchainNetworkType = BlockchainNetworkSelector.getBlockchainNetworkType(transaction.getParams());
 
         for (TransactionInput transactionInput : transaction.getInputs()){
             TransactionOutPoint outPoint = transactionInput.getOutpoint();

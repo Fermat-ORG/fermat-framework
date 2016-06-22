@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.ConnectedBitcoinNode;
@@ -122,7 +122,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
          * Define the constants
          */
         NETWORK_PARAMETERS = context.getParams();
-        BLOCKCHAIN_NETWORKTYPE = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
+        BLOCKCHAIN_NETWORKTYPE = BlockchainNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
 
         contextPropagatingThreadFactory = new ContextPropagatingThreadFactory("NetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode());
 

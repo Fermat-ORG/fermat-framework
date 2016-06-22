@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData</code>
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.fermat.developer.bitdubai.version_1.util.TransactionProtocolData</code>
  * holds the data used to transfer transaction information on the transmission protocol
  * <p/>
  *

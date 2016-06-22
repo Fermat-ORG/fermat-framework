@@ -96,7 +96,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
-            System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
+            System.out.println("***FermatCryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
 
 
         /**
@@ -116,7 +116,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
         if (blocksLeft == 0){
             BlockchainDownloadUpToDateEvent blockchainDownloadUpToDateEvent = new BlockchainDownloadUpToDateEvent(blockchainDownloadProgress, NETWORK_TYPE);
             eventManager.raiseEvent(blockchainDownloadUpToDateEvent);
-            System.out.println("***CryptoNetwork*** BlockchainDownloadUpToDateEvent raised. " + blockchainDownloadProgress.toString());
+            System.out.println("***FermatCryptoNetwork*** BlockchainDownloadUpToDateEvent raised. " + blockchainDownloadProgress.toString());
         }
 
     }
@@ -125,13 +125,13 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
 
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-        System.out.println("***CryptoNetwork*** Blockchain Download started for " + NETWORK_TYPE.getCode() + " network. Blocks left: " + blocksLeft);
+        System.out.println("***FermatCryptoNetwork*** Blockchain Download started for " + NETWORK_TYPE.getCode() + " network. Blocks left: " + blocksLeft);
         blockchainDownloadProgress.setTotalBlocks(blocksLeft);
     }
 
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        StringBuilder logAggresive = new StringBuilder("***CryptoNetwork*** New Peer connection on " + NETWORK_TYPE.getCode() + "  to " + peer.toString());
+        StringBuilder logAggresive = new StringBuilder("***FermatCryptoNetwork*** New Peer connection on " + NETWORK_TYPE.getCode() + "  to " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
         logAggresive.append("Total connected peers for Network " + NETWORK_TYPE.getCode() + ": " + peerCount);
         System.out.println(logAggresive.toString());

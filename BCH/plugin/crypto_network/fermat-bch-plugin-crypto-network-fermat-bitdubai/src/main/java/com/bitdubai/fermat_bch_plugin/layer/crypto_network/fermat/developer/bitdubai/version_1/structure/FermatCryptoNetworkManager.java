@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.AbstractBlockchainProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -36,7 +36,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainProviderName;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
@@ -80,7 +79,6 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
     /**
      * class variables
      */
-    FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor;
     final String WALLET_PATH;
     private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
     private final FermatCryptoNetworkDatabaseDao dao;
@@ -159,7 +157,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
             } catch (UnreadableWalletException e) {
                 CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 e.printStackTrace();
                 throw exception;
             }
@@ -226,19 +224,19 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                 if (isWalletReset) {
                     System.out.println("***CryptoNetwork*** new keys added from " + cryptoVault.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
 
-                    FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
-                    FermatCryptoNetworkMonitor.stop();
+                    FermatCryptoNetworkMonitor fermatCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
+                    fermatCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
-                    FermatCryptoNetworkMonitor = null;
+                    fermatCryptoNetworkMonitor = null;
 
                     /**
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    FermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
-                    runningAgents.put(blockchainNetworkType, FermatCryptoNetworkMonitor);
+                    fermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
+                    runningAgents.put(blockchainNetworkType, fermatCryptoNetworkMonitor);
 
-                    FermatCryptoNetworkMonitor.start();
+                    fermatCryptoNetworkMonitor.start();
                 }
             } else {
                 /**
@@ -272,7 +270,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         List<Address> watchedAddresses = wallet.getWatchedAddresses();
         List<Address> newAddresses = new ArrayList<>();
 
-        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
         for (ECKey ecKey : keyList) {
             newAddresses.add(ecKey.toAddress(networkParameters));
         }
@@ -313,7 +311,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        final NetworkParameters NETWORK_PARAMETER = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters NETWORK_PARAMETER = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){

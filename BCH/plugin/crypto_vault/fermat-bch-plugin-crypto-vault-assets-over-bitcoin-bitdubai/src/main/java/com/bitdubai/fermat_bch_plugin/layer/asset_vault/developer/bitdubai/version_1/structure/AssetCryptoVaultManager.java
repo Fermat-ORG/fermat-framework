@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -159,7 +159,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw new CantSendAssetBitcoinsToUserException (CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork
@@ -366,17 +366,17 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -681,7 +681,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
         try {
             networkParameters = Address.getParametersFromAddress(cryptoAddress.getAddress());
         } catch (AddressFormatException e) {
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            networkParameters = BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -766,7 +766,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw new CantCreateBitcoinTransactionException (CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Network is not active!", "invalid network type");
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork
@@ -935,7 +935,7 @@ public class AssetCryptoVaultManager  extends CryptoVault{
             throw exception;
         }
 
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I will get the input transaction  I will use to form the input from the CryptoNetwork

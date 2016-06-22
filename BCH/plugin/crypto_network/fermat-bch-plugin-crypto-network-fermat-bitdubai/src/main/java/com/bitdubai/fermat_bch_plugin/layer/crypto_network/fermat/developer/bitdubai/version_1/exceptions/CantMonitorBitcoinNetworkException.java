@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by rodrigo on 10/9/15.
  */
 public class CantMonitorBitcoinNetworkException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "There was an error monitoring the Bitcoin Network";
+    public static final String DEFAULT_MESSAGE = "There was an error monitoring the Fermat Network";
 
     public CantMonitorBitcoinNetworkException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

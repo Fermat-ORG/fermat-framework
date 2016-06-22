@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeFermatCryptoNetworkDatabaseException  extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE BITCOIN CRYPTONETWORK DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE FERMAT CRYPTONETWORK DATABASE EXCEPTION";
 
     public CantInitializeFermatCryptoNetworkDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

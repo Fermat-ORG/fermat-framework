@@ -88,7 +88,8 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
     /**
      * Class variables
      */
-    FermatCryptoNetworkDatabaseDao dao;
+    private FermatCryptoNetworkDatabaseDao dao;
+    private FermatCryptoNetworkManager fermatCryptoNetworkManager;
 
     /**
      * Default Constructor
@@ -98,10 +99,9 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
-     * BitcoinNetworkManager variable
+     * instantiates the dao object to access the database
+     * @return
      */
-    private FermatCryptoNetworkManager fermatCryptoNetworkManager;
-
     private FermatCryptoNetworkDatabaseDao getDao(){
         if (dao == null)
             dao = new FermatCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
@@ -381,7 +381,4 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin implements
     public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
         return fermatCryptoNetworkManager.getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
     }
-
-
-
 }
