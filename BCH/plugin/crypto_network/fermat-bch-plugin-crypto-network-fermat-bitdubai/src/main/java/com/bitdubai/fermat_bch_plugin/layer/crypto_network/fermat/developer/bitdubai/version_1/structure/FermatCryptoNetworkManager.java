@@ -39,6 +39,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainProviderName;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -81,7 +82,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      */
     FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor;
     final String WALLET_PATH;
-    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
+    private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
     private final FermatCryptoNetworkDatabaseDao dao;
 
     /**
@@ -567,7 +568,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
              */
             for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction = TransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, BITCOIN);
+                    cryptoTransaction = TransactionConverter.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transaction, CURRENCY);
             }
         }
 
@@ -834,7 +835,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
 
                     // If I find it on a running agent, then I will form the CryptoTransaction and return it.
                     if (transaction != null){
-                        cryptoTransaction = TransactionConverter.getCryptoTransaction(entry.getKey(), transaction, BITCOIN);
+                        cryptoTransaction = TransactionConverter.getCryptoTransaction(entry.getKey(), transaction, CURRENCY);
                         cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                         return cryptoTransaction;
                     }
@@ -875,7 +876,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             if (blockchainNetworkType == null)
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), BITCOIN);
+            CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), CURRENCY);
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1016,7 +1017,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
             for (Map.Entry<Transaction, BlockchainNetworkType> entry : getChildBitcoinTransactionsFromParent(parentTransactionHash).entrySet()){
-                cryptoTransactions.add(TransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), BITCOIN));
+                cryptoTransactions.add(TransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), CURRENCY));
             }
         } catch (CantGetTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1103,7 +1104,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
 
     @Override
     public BlockchainProviderName getName() {
-        return BlockchainProviderName.BITCOIN;
+        return BlockchainProviderName.FERMAT;
     }
 
     @Override

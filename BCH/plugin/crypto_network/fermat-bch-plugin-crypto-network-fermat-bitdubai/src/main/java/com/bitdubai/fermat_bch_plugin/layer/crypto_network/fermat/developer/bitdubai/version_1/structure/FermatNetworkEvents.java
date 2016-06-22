@@ -7,6 +7,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -57,7 +58,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
     final NetworkParameters NETWORK_PARAMETERS;
     BlockchainDownloadProgress blockchainDownloadProgress;
     Wallet cryptoNetworkWallet;
-    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
+    private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
 
 
     /**
@@ -171,7 +172,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }
@@ -211,7 +212,7 @@ public class FermatNetworkEvents implements WalletEventListener, PeerEventListen
         /**
          * I'm converting the Bitcoin transaction into all the CryptoTransactions that might contain
          */
-        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, BITCOIN, cryptoNetworkWallet, tx)){
+        for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(NETWORK_TYPE, CURRENCY, cryptoNetworkWallet, tx)){
             saveCryptoTransaction(cryptoTransaction);
         }
     }

@@ -30,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
@@ -76,7 +77,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
     private final FermatCryptoNetworkDatabaseDao dao;
-    private final CryptoCurrency BITCOIN = BitcoinNetworkConfiguration.CRYPTO_CURRENCY;
+    private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
     private ContextPropagatingThreadFactory contextPropagatingThreadFactory;
 
 
@@ -536,7 +537,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
          * @param transactionId
          */
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
-            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, BITCOIN, wallet, tx)){
+            for (CryptoTransaction cryptoTransaction : TransactionConverter.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, CURRENCY, wallet, tx)){
                 try {
                     dao.saveCryptoTransaction(cryptoTransaction, transactionId);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -591,7 +592,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 /**
                  * store the transaction as Pending submit in the transactions table
                  */
-                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, BITCOIN );
+                CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx, CURRENCY );
                 cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
                 dao.saveCryptoTransaction(cryptoTransaction, transactionId);
 
