@@ -38,7 +38,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
@@ -114,22 +116,37 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             errorManager = appSession.getErrorManager();
             clausesTemp = new HashMap<>();
 
+
+            //Try to load appSession BANK_ACCOUNT_LIST data
             Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
-            if (data == null) {
-                bankAccountList = new ArrayList<>();
+            if(data == null) {
+
+                //Get saved locations from settings
+                bankAccountList = moduleManager.getListOfBankAccounts();
+
+                //Save locations to appSession BANK_ACCOUNT_LIST data
                 appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
-//                bankAccountList = (List<String>) data;
                 bankAccountList = (List<BankAccountNumber>) data;
             }
 
+
+            //Try to load appSession LOCATION_LIST data
             data = appSession.getData(FragmentsCommons.LOCATION_LIST);
             if (data == null) {
-                locationList = new ArrayList<>();
+
+                //Get saved locations from settings
+                Collection<NegotiationLocations> listAux = moduleManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux) {
+                    locationList.add(locationAux.getLocation());
+                }
+
+                //Save locations to appSession LOCATION_LIST data
                 appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
+
 
         } catch (Exception e) {
             if (errorManager != null)
