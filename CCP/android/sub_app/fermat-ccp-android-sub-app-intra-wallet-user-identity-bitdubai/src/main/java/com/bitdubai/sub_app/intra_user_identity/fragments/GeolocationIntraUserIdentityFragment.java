@@ -84,7 +84,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+        //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +114,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     /**
      * Initializes the views of this Fragment
      *
-     * @param layout layout of this Fragment containing the views
+     * @param layout layout of this Fragment contta aining the views
      */
 
     private void initViews(View layout) {
@@ -129,7 +129,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
-        try {
+      /*  try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
                     R.layout.cht_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
@@ -157,7 +157,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             });
         } catch (CantGetIntraUserIdentityException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -179,7 +179,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
     }
 
