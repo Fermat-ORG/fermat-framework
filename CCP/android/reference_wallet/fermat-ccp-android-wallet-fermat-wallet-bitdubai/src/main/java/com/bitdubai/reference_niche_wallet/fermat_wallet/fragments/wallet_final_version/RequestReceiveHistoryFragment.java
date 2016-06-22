@@ -107,7 +107,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
-            getExecutor().execute(new Runnable() {
+          /*  getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -125,7 +125,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
                     }
                 }
             });
-
+*/
 
 
 
@@ -309,18 +309,16 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
-            offset+=MAX_TRANSACTIONS;
+            offset+=1;
         } catch (Exception e) {
             fermatWalletSessionReferenceApp.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
 
-        if(lstPaymentRequest!=null){
+
             return lstPaymentRequest;
-        }else{
-            return  new ArrayList<>();
-        }
+
     }
 
     @Override

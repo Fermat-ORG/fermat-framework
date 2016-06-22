@@ -63,13 +63,17 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         try {
             long funds = 0;
-
+            CryptoWalletWallet cryptoWalletWallet;
             switch (referenceWallet) {
+
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
                     funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
-                //TODO: el disponible es en base al exchange rate del momento
+                case BASIC_WALLET_FERMAT_WALLET:
+                   cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
                     funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);

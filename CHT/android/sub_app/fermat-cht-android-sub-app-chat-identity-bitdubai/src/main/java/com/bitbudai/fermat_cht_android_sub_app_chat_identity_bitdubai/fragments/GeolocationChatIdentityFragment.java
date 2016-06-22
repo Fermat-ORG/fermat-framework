@@ -183,6 +183,7 @@ public class GeolocationChatIdentityFragment  extends AbstractFermatFragment<Ref
 
     private void saveIdentityGeolocation(String donde) throws CantGetChatIdentityException {
         GeolocationIdentityExecutor executor = null;
+
             try {
                 if (accuracy.getText().length() == 0) {
                     Toast.makeText(getActivity(), "Acuraccy is empty, please add a value", Toast.LENGTH_SHORT).show();

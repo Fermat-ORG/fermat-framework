@@ -272,11 +272,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     @Override
-    public boolean isFermatBackgroundServiceRunning() {
+    public boolean isFermatBackgroundServiceRunning() throws FermatPlatformServiceNotConnectedException{
         try {
             return iServerBrokerService.isFermatSystemRunning();
         } catch (RemoteException e) {
             e.printStackTrace();
+            throw new FermatPlatformServiceNotConnectedException("PlatformService not connected yet",e);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -80,8 +81,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private String appPublicKey;
     private PluginTextFile intraUserLoginXml;
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private DeviceLocation location;
 
-    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey) {
+    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,DeviceLocation location) {
         super(pluginFileSystem, pluginId);
         this.intraUserLoginXml = intraUserLoginXml;
         this.intraWalletUser = intraWalletUser;
@@ -90,6 +92,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.intraUserNertwokServiceManager = intraUserNertwokServiceManager;
         this.errorManager = errorManager;
         this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
+        this.location = location;
     }
 
     /**
@@ -234,7 +237,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
                 List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset);
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset,location);
 
 
 

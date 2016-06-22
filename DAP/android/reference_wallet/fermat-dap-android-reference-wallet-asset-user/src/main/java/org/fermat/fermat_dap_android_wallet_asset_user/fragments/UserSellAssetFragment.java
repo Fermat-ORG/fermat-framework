@@ -384,35 +384,53 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User, Refere
         super.onCreateOptionsMenu(menu, inflater);
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
-                if (isValidSell()) {
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
-                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
-                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
-                                }
-                            }).build().show();
-                }
-
+            switch (id) {
+//                case 1://IC_ACTION_USER_HELP_REDEEM
+//                    setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                    break;
+                case 2://IC_ACTION_USER_ASSET_REDEEM
+                    if (isValidSell()) {
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
+                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+                                        long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+                                        doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
+                                    }
+                                }).build().show();
+                    }
+                    break;
             }
-            return true;
+
+//            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+//                if (isValidSell()) {
+//                    new ConfirmDialog.Builder(getActivity(), appSession)
+//                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+//                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_sell))
+//                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+//                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+//                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+//                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
+//                                }
+//                            }).build().show();
+//                }
+//            }
+//            return true;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

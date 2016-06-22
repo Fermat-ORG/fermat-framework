@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -45,11 +49,17 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
+import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
 /**
  * ContactsListFragment
@@ -239,16 +249,12 @@ public class ContactsListFragment
 
         @Override
         protected void onPostExecute(Void result) {
-            //this.cancel(true);
-
-
             return;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
 //               con = chatManager.listWorldChatActor(identity, MAX, offset);
 //                contactname.clear();
 //                contactid.clear();
@@ -299,7 +305,6 @@ public class ContactsListFragment
 
         return dataSet;
     }
-
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
@@ -356,6 +361,101 @@ public class ContactsListFragment
 
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
+    }
 
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+            switch (id) {
+                case 2:
+                    showDialogHelp();
+                    break;
+                case 1:
+                    break;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDialogHelp() {
+        try {
+            moduleManager = appSession.getModuleManager();
+            if (identity != null) {
+                if (!identity.getPublicKey().isEmpty()) {
+                    PresentationChatCommunityDialog presentationChatCommunityDialog =
+                            new PresentationChatCommunityDialog(getActivity(),
+                                    appSession,
+                                    null,
+                                    moduleManager,
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
+                            );
+                    presentationChatCommunityDialog.show();
+                } else {
+                    PresentationChatCommunityDialog presentationChatCommunityDialog =
+                            new PresentationChatCommunityDialog(getActivity(),
+                                    appSession,
+                                    null,
+                                    moduleManager,
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION
+                            );
+                    presentationChatCommunityDialog.show();
+                    presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Boolean isBackPressed =
+                                    (Boolean) appSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().finish();
+                                }
+                            } else {
+                                invalidate();
+                            }
+                        }
+                    });
+                }
+            } else {
+                PresentationChatCommunityDialog presentationChatCommunityDialog =
+                        new PresentationChatCommunityDialog(getActivity(),
+                                appSession,
+                                null,
+                                moduleManager,
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
+                        );
+                presentationChatCommunityDialog.show();
+                presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Boolean isBackPressed = (Boolean) appSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        if (isBackPressed != null) {
+                            if (isBackPressed) {
+                                getActivity().onBackPressed();
+                            }
+                        }
+                    }
+                });
+            }
+        }catch (Exception e){
+            PresentationChatCommunityDialog presentationChatCommunityDialog =
+                    new PresentationChatCommunityDialog(getActivity(),
+                            appSession,
+                            null,
+                            moduleManager,
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
+                    );
+            presentationChatCommunityDialog.show();
+            e.printStackTrace();
+        }
     }
 }

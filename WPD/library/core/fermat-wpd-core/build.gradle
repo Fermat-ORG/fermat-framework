@@ -34,7 +34,7 @@ dependencies {
 
     compile project(':fermat-wpd-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-wpd-plugin-network-service-wallet-resources-bitdubai')
-    compile project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
+//    compile project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
     compile project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai')
 
 //    compile project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
@@ -53,6 +53,17 @@ tasks.withType (FindBugs) {
         xml.enabled = false
         html.enabled = true
     }
+}
+
+task wpdFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 def jacocoHtmlReport = ""

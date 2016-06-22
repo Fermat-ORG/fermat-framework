@@ -316,6 +316,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
     private com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure.IntraWalletUserIdentity buildIdentity(DatabaseTableRecord record) throws CantGetIntraWalletUserIdentityPrivateKeyException, CantGetIntraWalletUserIdentityProfileImageException {
+
         Frecuency frecuency = Frecuency.NORMAL;
 
         try{
@@ -333,6 +334,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
                 getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                 record.getLongValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ACCURACY_COLUMN),frecuency
                 );
+
 
     }
 
