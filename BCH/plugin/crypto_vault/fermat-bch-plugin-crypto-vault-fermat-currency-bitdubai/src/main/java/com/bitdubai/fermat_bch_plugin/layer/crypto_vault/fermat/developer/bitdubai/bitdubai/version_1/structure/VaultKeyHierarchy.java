@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -11,10 +11,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteData
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.exceptions.database.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao;
-
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
-
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantInitializeFermatCurrencyCryptoVaultDatabaseException;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -28,17 +26,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
- * Defines the internal Hierarchy object used on the Crypto Vault. The hierarchy is created from a root key each time the platform
- * is initiated. The Hierarchy is in charge of generating new bitcoin addresses when request from the public Keys derived for each account.
- * <p/>
- *
- * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by rodrigo on 6/22/16.
  */
-class VaultKeyHierarchy extends KeyHierarchy {
+public class VaultKeyHierarchy extends KeyHierarchy {
 
     /**
      * Holds the list of Accounts and master keys of the hierarchy
@@ -48,7 +38,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
     /**
      * Holds the DAO object to access the database
      */
-    BitcoinCurrencyCryptoVaultDao dao;
+    FermatCurrencyCryptoVaultDao dao;
 
     /**
      * Platform variables
@@ -232,11 +222,11 @@ class VaultKeyHierarchy extends KeyHierarchy {
      * gets the dao instance to access database operations
      * @return
      */
-    private BitcoinCurrencyCryptoVaultDao getDao(){
+    private FermatCurrencyCryptoVaultDao getDao(){
         if (dao == null){
             try {
-                dao = new BitcoinCurrencyCryptoVaultDao(pluginDatabaseSystem, pluginId);
-            } catch (CantInitializeBitcoinCurrencyCryptoVaultDatabaseException e) {
+                dao = new FermatCurrencyCryptoVaultDao(pluginDatabaseSystem, pluginId);
+            } catch (CantInitializeFermatCurrencyCryptoVaultDatabaseException e) {
                 e.printStackTrace();
             }
         }
@@ -250,7 +240,7 @@ class VaultKeyHierarchy extends KeyHierarchy {
      * @return
      */
     public List<ECKey> getDerivedKeys(HierarchyAccount account){
-       return getDerivedPrivateKeys(account);
+        return getDerivedPrivateKeys(account);
     }
 
     @Override
