@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="6dp"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
@@ -45,7 +46,7 @@
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="14sp"
             tools:text="1 BTC @ 254 USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -67,7 +68,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/ccw_broker_name"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="03 Feb 2015"/>
 
     </RelativeLayout>

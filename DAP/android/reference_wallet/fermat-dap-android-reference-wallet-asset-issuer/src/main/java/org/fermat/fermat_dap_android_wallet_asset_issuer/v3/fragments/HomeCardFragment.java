@@ -67,9 +67,12 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     // Data
     private List<DigitalAsset> digitalAssets;
 
+    private android.support.v7.widget.Toolbar toolbar;
+
     //UI
     private View noAssetsView;
     private SearchView searchView;
+    private int menuItemSize;
 
     public static HomeCardFragment newInstance() {
         return new HomeCardFragment();
@@ -210,25 +213,32 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(s);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+            searchView = (SearchView) menu.findItem(2).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_hint));
+//            toolbar = getToolbar();
+//            toolbar.addView(searchView);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((HomeCardAdapterFilter) ((HomeCardAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
+//        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);
 //        searchView = (SearchView) menu.getItem(1).getActionView();
@@ -239,10 +249,16 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION) {
-                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_ISSUER_HELP_PRESENTATION
+                    setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION) {
+//                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

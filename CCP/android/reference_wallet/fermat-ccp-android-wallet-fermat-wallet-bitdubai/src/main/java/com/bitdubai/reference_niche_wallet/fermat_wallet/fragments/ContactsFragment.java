@@ -186,7 +186,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contac_main_act, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_contac_main_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -255,8 +255,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
                 .setText("External User")
-                .setTextColor(Color.WHITE)
-                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
+                .setTextColor(Color.BLACK)
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -266,8 +266,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 .setPadding(0,0,padding,0)
                 .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
                 .setText("Fermat User")
-                .setTextColor(Color.WHITE)
-                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_contacts))
+                .setTextColor(Color.BLACK)
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
@@ -348,7 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             int id = item.getItemId();
 
-            if (id == FermatWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == 3) {
                 setUpTutorial(true);
                 return true;
             }
@@ -502,13 +502,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-        View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
-        mListView.setPinnedHeaderView(pinnedHeaderView);
+      //  View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
+      //  mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view, mListView, false);
-        indexBarView.setData(mListView, mListItems, mListSectionPos);
-        mListView.setIndexBarView(indexBarView);
+       // IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
+       // indexBarView.setData(mListView, mListItems, mListSectionPos);
+       // mListView.setIndexBarView(indexBarView);
 /*
         // set preview text view
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
@@ -836,7 +836,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                               // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));

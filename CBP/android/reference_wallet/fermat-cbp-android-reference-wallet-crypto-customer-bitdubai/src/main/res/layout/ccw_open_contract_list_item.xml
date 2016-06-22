@@ -16,37 +16,65 @@
         android:id="@+id/ccw_customer_image"
         android:layout_width="@dimen/ccw_image_width_and_height"
         android:layout_height="@dimen/ccw_image_width_and_height"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
         android:contentDescription="@string/identity_img"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         tools:src="@drawable/person"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_receiving_or_sending"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/margin_text"
         android:layout_marginRight="@dimen/margin_text"
         android:layout_toEndOf="@+id/ccw_customer_image"
-        android:layout_toLeftOf="@+id/ccw_contract_status"
         android:layout_toRightOf="@+id/ccw_customer_image"
+        android:layout_toLeftOf="@+id/ccw_contract_status"
         android:layout_toStartOf="@+id/ccw_contract_status"
-        android:paddingTop="4dp"
         android:singleLine="true"
         android:textColor="@color/ccw_first_line_item"
         android:textSize="@dimen/ccw_title_text_size"
         tools:text="Receiving 1.360.000 USD"/>
 
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_type_of_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ccw_receiving_or_sending"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
+        android:layout_toEndOf="@+id/ccw_customer_image"
+        android:layout_toRightOf="@+id/ccw_customer_image"
+        android:layout_toLeftOf="@+id/ccw_contract_status"
+        android:layout_toStartOf="@+id/ccw_contract_status"
+        android:singleLine="true"
+        android:textColor="@color/ccw_second_line_item"
+        android:textSize="@dimen/ccw_title_text_size"
+        tools:text="Transfer to Bank"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ccw_type_of_payment"
+        android:layout_toEndOf="@+id/ccw_customer_image"
+        android:layout_toRightOf="@+id/ccw_customer_image"
+        android:singleLine="true"
+        android:textColor="@color/ccw_third_line_item"
+        android:textSize="@dimen/ccw_subtitle_text"
+        tools:text="Nelson Ramirez"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_contract_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/ccw_receiving_or_sending"
+        android:layout_marginTop="4dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:gravity="end"
-        android:paddingTop="4dp"
         android:textColor="@color/waiting_for_text"
         android:textSize="@dimen/ccw_regular_text_size"
         tools:text="Waiting for Customer"/>
@@ -62,32 +90,4 @@
         android:textSize="@dimen/ccw_regular_text_size"
         tools:text="03 Feb 2015"/>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_type_of_payment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ccw_receiving_or_sending"
-        android:layout_marginEnd="@dimen/margin_text"
-        android:layout_marginRight="@dimen/margin_text"
-        android:layout_toEndOf="@+id/ccw_customer_image"
-        android:layout_toLeftOf="@+id/ccw_contract_status"
-        android:layout_toRightOf="@+id/ccw_customer_image"
-        android:layout_toStartOf="@+id/ccw_contract_status"
-        android:singleLine="true"
-        android:textColor="@color/ccw_second_line_item"
-        android:textSize="@dimen/ccw_title_text_size"
-        tools:text="Transfer to Bank"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_customer_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ccw_type_of_payment"
-        android:layout_gravity="center_vertical"
-        android:layout_toEndOf="@+id/ccw_customer_image"
-        android:layout_toRightOf="@+id/ccw_customer_image"
-        android:singleLine="true"
-        android:textColor="@color/ccw_third_line_item"
-        android:textSize="@dimen/ccw_subtitle_text"
-        tools:text="Nelson Ramirez"/>
 </RelativeLayout>

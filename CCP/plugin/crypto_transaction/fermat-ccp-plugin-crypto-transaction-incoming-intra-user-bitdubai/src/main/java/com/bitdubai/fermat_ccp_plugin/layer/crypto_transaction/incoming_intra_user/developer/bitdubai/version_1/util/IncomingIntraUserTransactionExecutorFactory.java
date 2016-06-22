@@ -37,6 +37,8 @@ public class IncomingIntraUserTransactionExecutorFactory {
             switch (walletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     return createBitcoinBasicWalletExecutor(walletPublicKey);
+                case BASIC_WALLET_FERMAT_WALLET:
+                    return createBitcoinBasicWalletExecutor(walletPublicKey);
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     return createBitcoinBasicLossProtectedWalletExecutor(walletPublicKey);
                 default:

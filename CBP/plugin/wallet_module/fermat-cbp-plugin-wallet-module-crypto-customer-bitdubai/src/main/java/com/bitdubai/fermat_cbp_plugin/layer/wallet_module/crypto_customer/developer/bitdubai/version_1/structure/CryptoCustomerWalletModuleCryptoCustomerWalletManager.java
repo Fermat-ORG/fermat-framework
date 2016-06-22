@@ -1221,7 +1221,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, Frecuency.NONE);
+        final ActorIdentity cryptoCustomerIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, Frecuency.NONE);
+        cryptoCustomerIdentityManager.publishIdentity(cryptoCustomerIdentity.getPublicKey());
     }
 
     @Override

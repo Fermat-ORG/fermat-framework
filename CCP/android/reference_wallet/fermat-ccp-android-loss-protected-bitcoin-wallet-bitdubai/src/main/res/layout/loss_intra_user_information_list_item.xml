@@ -42,7 +42,6 @@
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingStart="8dp"
         android:singleLine="true"
         android:textColor="#333333"
         tools:text="@string/matias_furszyfer_text" />
@@ -52,9 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColorHint="@color/color_black"
-            android:buttonTint="@color/color_black"
-            android:background="@drawable/checkboxblank_icon"
+            android:button="@drawable/checkboxblank_icon"
             android:width="30dp"
             android:height="16dp"/>
 
@@ -65,5 +62,11 @@
         android:layout_height="0.8dp"
         android:layout_marginTop="8dp"
         android:background="#ccc"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"></LinearLayout>
 
 </LinearLayout>

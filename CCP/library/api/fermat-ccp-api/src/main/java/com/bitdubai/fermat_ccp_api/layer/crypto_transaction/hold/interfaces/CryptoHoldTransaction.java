@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces;
 
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 
 /**
  * Created by Franklin Marcano on 21/11/2015.
