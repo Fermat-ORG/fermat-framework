@@ -150,7 +150,7 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
                  * Send the respond
                  */
                 Package packageRespond = Package.createInstance(updateProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_ACTOR_PROFILE_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -163,12 +163,10 @@ public class UpdateActorProfileIntoCatalogProcessor extends PackageProcessor {
                 LOG.error(exception.getCause());
                 updateProfileMsjRespond = new UpdateProfileMsjRespond(MsgRespond.STATUS.FAIL, exception.getCause().getMessage(), actorProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(updateProfileMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_ACTOR_PROFILE_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            }catch (IOException iOException) {
-               LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-               LOG.error(encodeException.getMessage());
+            }catch (Exception e) {
+               LOG.error(e.getMessage());
             }
         }
 
