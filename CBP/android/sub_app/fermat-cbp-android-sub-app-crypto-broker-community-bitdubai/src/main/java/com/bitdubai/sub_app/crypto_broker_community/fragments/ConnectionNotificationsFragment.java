@@ -29,9 +29,8 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNotificationAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +105,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             onRefresh();
 
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }

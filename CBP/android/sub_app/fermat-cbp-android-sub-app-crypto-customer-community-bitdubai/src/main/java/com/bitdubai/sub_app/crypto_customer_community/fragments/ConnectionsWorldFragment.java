@@ -37,9 +37,8 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,7 +123,6 @@ public class ConnectionsWorldFragment
             }
 
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
@@ -210,7 +208,7 @@ public class ConnectionsWorldFragment
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
