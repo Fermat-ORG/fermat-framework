@@ -824,6 +824,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
             pagertabs.setPageMargin(pageMargin);
+            adapter.setStartFragmentPosition(tabStrip.getStartItem());
             pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
             tabLayout.setupWithViewPager(pagertabs);
 
@@ -2148,17 +2149,36 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     @Override
     public int obtainRes(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainRes(this,id,sourceLocation,appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainRes(this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
     public View obtainClassView(int id, SourceLocation sourceLocation, String appOwnerPublicKey) {
-        return ResourceLocationSearcherHelper.obtainView(this,id,sourceLocation,appOwnerPublicKey);
+        return ResourceLocationSearcherHelper.obtainView(this, id, sourceLocation, appOwnerPublicKey);
     }
 
     @Override
     //todo: ampliar esto a mayor cantidad de clases
     public View obtainFrameworkOptionMenuClassViewAvailable(int id, SourceLocation sourceLocation) {
-        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this,id);
+        return OptionMenuFrameworkHelper.obtainFrameworkAvailableOptionMenuItems(this, id);
+    }
+
+    /**
+     *  Method to change the visibility of an optionMenu
+     *  todo: poner esto en otra clase
+     * @param id
+     * @param isVisible
+     * @param appPublicKey
+     * @throws InvalidParameterException
+     */
+    public void changeOptionMenuVisibility(int id,boolean isVisible,String appPublicKey) throws InvalidParameterException {
+        Activity activity = ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey).getLastActivity();
+        OptionsMenu optionMenu = activity.getOptionsMenu();
+        if(optionMenu!=null){
+            optionMenu.getItem(id).setVisibility(isVisible);
+            getToolbar().getMenu().findItem(id).setVisible(isVisible);
+        }else{
+            throw new InvalidParameterException("OptionMenu in activity: "+activity.getType().getCode()+" in app: "+appPublicKey);
+        }
     }
 }

@@ -17,6 +17,7 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
 
     protected F[] fragments;
     protected String[] titles;
+    private int lastPosition;
 
     public FermatScreenAdapter(FragmentManager fm,F[] fragments) {
         super(fm);
@@ -62,11 +63,20 @@ public class FermatScreenAdapter<F extends Fragment & AbstractFermatFragmentInte
     }
 
     public void onFragmentFocus(int position){
-        fragments[position].onFragmentFocus();
+        if(fragments!=null) {
+            fragments[lastPosition].setFragmentFocus(false);
+            lastPosition = position;
+            fragments[position].setFragmentFocus(true);
+        }
     }
 
     public void setTitles(String[] titles) {
         this.titles = titles;
     }
 
+    public void setStartFragmentPosition(int startFragmentPosition) {
+        this.lastPosition = startFragmentPosition;
+        if(fragments!=null)
+        fragments[lastPosition].setFragmentFocus(true);
+    }
 }

@@ -167,7 +167,13 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 worldActor = worldActorList.get(i);
                 for (ChatActorConnection connectedActor : actorConnections) {
                     if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                        worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId(), worldActor.getStatus()));
+                        worldActorList.set(i,
+                                new ChatActorCommunitySubAppModuleInformationImpl(
+                                        worldActor.getPublicKey(), worldActor.getAlias(),
+                                        worldActor.getImage(), connectedActor.getConnectionState(),
+                                        connectedActor.getConnectionId(), worldActor.getStatus(),
+                                        connectedActor.getCountry(),connectedActor.getState(),
+                                        connectedActor.getCity(), null));
                 }
             }
         }
@@ -430,7 +436,11 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                         record.getImage(),
                         record.getConnectionState(),
                         record.getConnectionId(),
-                        record.getStatus())));
+                        record.getStatus(),
+                        record.getCountry(),
+                        record.getState(),
+                        record.getCity(),
+                        record.getLocation())));
 
 
         } catch (CantGetChatActorWaitingException e) {
@@ -583,7 +593,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         //TODO: Revisar este metodo que hace aca
-        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null);
 
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
