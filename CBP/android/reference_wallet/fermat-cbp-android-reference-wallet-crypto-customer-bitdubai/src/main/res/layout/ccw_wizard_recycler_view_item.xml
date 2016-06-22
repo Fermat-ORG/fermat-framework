@@ -35,7 +35,7 @@
                 android:id="@+id/ccw_close_img_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ccw_action_content_clear"
+                android:src="@drawable/ccw_action_content_clear_white"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"/>
 
