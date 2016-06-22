@@ -392,7 +392,7 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {

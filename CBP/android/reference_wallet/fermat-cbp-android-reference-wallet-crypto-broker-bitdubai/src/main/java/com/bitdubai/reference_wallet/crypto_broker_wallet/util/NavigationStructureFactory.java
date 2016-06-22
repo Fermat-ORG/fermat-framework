@@ -1,8 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.FermatRuntimeFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Footer;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -28,7 +28,7 @@ public class NavigationStructureFactory {
         TitleBar runtimeTitleBar;
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
-        Fragment runtimeFragment;
+        FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
@@ -82,8 +82,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
 
@@ -99,8 +99,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
 
@@ -116,8 +116,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getKey());
 
@@ -133,8 +133,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getKey());
 
@@ -150,8 +150,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getKey());
 
@@ -167,8 +167,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getKey());
 
@@ -193,8 +193,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getKey());
 
@@ -221,8 +221,8 @@ public class NavigationStructureFactory {
         runtimeHeader.setLabel("Market rate");
         runtimeActivity.setHeader(runtimeHeader);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
 
         runtimeTabStrip = new TabStrip();
@@ -236,8 +236,8 @@ public class NavigationStructureFactory {
         runtimeTab.setLabel("Negotiations");
 //        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
 
@@ -245,15 +245,15 @@ public class NavigationStructureFactory {
         runtimeTab.setLabel("Contracts");
 //        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
         runtimeTabStrip.addTab(runtimeTab);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
 
         // TODO falta agregar un footer a navigation structure
         Footer runtimeFooter = new Footer();
         runtimeFooter.setBackgroundColor("#AAAAAA");
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
         runtimeFooter.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         runtimeActivity.setFooter(runtimeFooter);
@@ -279,8 +279,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
 
@@ -305,8 +305,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
 
@@ -331,8 +331,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
 
@@ -358,8 +358,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
 
@@ -385,8 +385,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
 
@@ -411,8 +411,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
 
@@ -437,8 +437,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
 
@@ -463,8 +463,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
 
@@ -488,8 +488,8 @@ public class NavigationStructureFactory {
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
 
