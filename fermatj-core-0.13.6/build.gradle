@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('fermatj-core-0.13.6.jar'))

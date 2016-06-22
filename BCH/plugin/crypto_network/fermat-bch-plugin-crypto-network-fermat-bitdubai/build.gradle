@@ -7,5 +7,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':fermat-api')
     compile project(':fermat-bch-api')
-    compile project(':fermatj-core-0.13.6')
 }
