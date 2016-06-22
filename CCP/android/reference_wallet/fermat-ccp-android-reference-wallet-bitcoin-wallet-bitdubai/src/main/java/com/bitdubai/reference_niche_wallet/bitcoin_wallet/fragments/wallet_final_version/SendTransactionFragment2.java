@@ -455,11 +455,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 @Override
                                 public void run() {
                                     try {
-                                        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                                        circularProgressBar.setProgressValue2(getBalanceAverage());
-                                        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
-                                        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
-                                        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+                                      setCircularProgressBar();
                                     }catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -530,8 +526,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             if (after - before < 2000) {
                                 changeBalanceType(txt_type_balance, txt_balance_amount);
                                 //System.out.println(System.currentTimeMillis());
-                                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                                circularProgressBar.setProgressValue2(getBalanceAverage());
+                                setCircularProgressBar();
                                 return true;
                             } else {
                                 //String receivedAddress = GET("http://52.27.68.19:15400/mati/address/");
@@ -712,24 +707,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_menu_help_icon)
-               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
+            if (id == 2) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, appSession.getAppPublicKey());
                 return true;
-            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION){
+            } else
+            {
                 setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+
             }
         } catch (Exception e) {
             // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -903,7 +894,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             case BITCOIN:
                 moneyTpe = "btc";
                 if(txt_balance_amount.getText().length() >= 7)
-                    txt_balance_amount.setTextSize(25);
+                    txt_balance_amount.setTextSize(24);
                 else
                     txt_balance_amount.setTextSize(28);
                 break;
@@ -1106,10 +1097,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
 
-                    final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(balanceAvailable,ShowMoneyType.BITCOIN.getCode());
+                    runningBalance = WalletUtils.formatBalanceStringNotDecimal(balanceAvailable,ShowMoneyType.BITCOIN.getCode());
 
-                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                    circularProgressBar.setProgressValue2(getBalanceAverage());
+                    setCircularProgressBar();
                 }
 
             }
@@ -1117,6 +1107,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void setCircularProgressBar()
+    {
+        int balance = 0;
+        if(Integer.valueOf(runningBalance) > 100)
+            balance = 100;
+         else
+            balance = Integer.valueOf(runningBalance);
+
+
+        circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+        circularProgressBar.setProgressValue2(getBalanceAverage());
+        circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
+        circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
+        circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
     }
 }
 

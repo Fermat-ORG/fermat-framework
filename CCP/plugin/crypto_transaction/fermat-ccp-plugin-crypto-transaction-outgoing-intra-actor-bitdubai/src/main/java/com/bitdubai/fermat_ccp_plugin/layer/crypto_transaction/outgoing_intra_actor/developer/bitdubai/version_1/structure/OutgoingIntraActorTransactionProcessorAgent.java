@@ -372,11 +372,34 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
                         if(dif >= 180000)
                         {
-                            dao.cancelTransaction(transaction);
-                            roolback(transaction, true);
-                            System.out.print("ROLLBACK 4");
+                            try {
+                                dao.cancelTransaction(transaction);
+                                roolback(transaction, true);
+                                System.out.print("ROLLBACK 4");
+                            } catch (OutgoingIntraActorCantCancelTransactionException e1) {
+                                e1.printStackTrace();
+                            }
+
                         }
 
+
+                     } catch (Exception e) {
+                        reportUnexpectedException(FermatException.wrapException(e));
+                        //if I spend more than five minutes I canceled
+                        long sentDate = transaction.getTimestamp();
+                        long currentTime = System.currentTimeMillis();
+                        long dif = currentTime - sentDate;
+
+                        if (dif >= 180000) {
+                            try {
+                                dao.cancelTransaction(transaction);
+                                roolback(transaction, true);
+                                System.out.print("ROLLBACK 4");
+                            } catch (OutgoingIntraActorCantCancelTransactionException e1) {
+                                e1.printStackTrace();
+                            }
+
+                        }
                     }
                 }
 
@@ -413,6 +436,8 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 reportUnexpectedException(e);
             } catch (Exception e) {
                 reportUnexpectedException(FermatException.wrapException(e));
+
+
             }
         }
 
@@ -433,6 +458,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     return this.cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                case BASIC_WALLET_FERMAT_WALLET:
+                    return this.cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     return this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
@@ -444,6 +472,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
         private void debitFromAvailableBalance(OutgoingIntraActorTransactionWrapper transaction) throws CantLoadWalletsException, CantRegisterDebitException, OutgoingIntraActorWalletNotSupportedException, CantLoadWalletException {
             switch (transaction.getReferenceWallet()) {
                 case BASIC_WALLET_BITCOIN_WALLET:
+                    this.cryptoWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).debit(transaction);
+                    break;
+                case BASIC_WALLET_FERMAT_WALLET:
                     this.cryptoWalletManager.loadWallet(transaction.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).debit(transaction);
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:

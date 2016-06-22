@@ -78,7 +78,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             }
         }
 
-        tf = Typeface.createFromAsset(context.getAssets(), "fonts/helvetica-neue.ttf");
+
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+
         contactPositionItem = new HashMap<>();
 
 
@@ -147,10 +149,10 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
-                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                        convertView = mLayoutInflater.inflate(R.layout.fermat_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
                         walletContact = (FermatWalletWalletContact) mListItems.get(position);
-                        //guardo el contacto
+                        //save contact
                         contactPositionItem.put(position, walletContact);
                         try {
                             if (walletContact.getProfilePicture() != null && walletContact.getProfilePicture().length > 0) {
@@ -168,13 +170,13 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 //                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
                         break;
                     case TYPE_SECTION:
-                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                        text = (String) mListItems.get(position);
+                      /*  convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                        text = (String) mListItems.get(position);*/
                         break;
                 }
 
                 holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-                holder.textView.setTypeface(tf);
+               // holder.textView.setTypeface(tf);
 
                 convertView.setTag(holder);
 //            } else {

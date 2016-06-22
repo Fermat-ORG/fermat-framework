@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
@@ -79,8 +81,9 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     private String appPublicKey;
     private PluginTextFile intraUserLoginXml;
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private DeviceLocation location;
 
-    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey) {
+    public IntraUserModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId, PluginTextFile intraUserLoginXml, IntraWalletUserIdentity intraWalletUser, IntraWalletUserIdentityManager intraWalletUserIdentityManager, IntraWalletUserActorManager intraWalletUserManager, IntraUserManager intraUserNertwokServiceManager, ErrorManager errorManager, String intraUserLoggedPublicKey,DeviceLocation location) {
         super(pluginFileSystem, pluginId);
         this.intraUserLoginXml = intraUserLoginXml;
         this.intraWalletUser = intraWalletUser;
@@ -89,6 +92,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         this.intraUserNertwokServiceManager = intraUserNertwokServiceManager;
         this.errorManager = errorManager;
         this.intraUserLoggedPublicKey = intraUserLoggedPublicKey;
+        this.location = location;
     }
 
     /**
@@ -103,7 +107,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     public IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws CouldNotCreateIntraUserException {
 
         try {
-            this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage);
+            this.intraWalletUser = this.intraWalletUserIdentityManager.createNewIntraWalletUser(intraUserName, phrase, profileImage,Long.parseLong("0"), Frecuency.NONE);
 
 
             return new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getImage());
@@ -233,7 +237,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
                 List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset);
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset,location);
 
 
 
@@ -559,6 +563,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
      * @throws CantGetIntraUsersListException
      */
     @Override
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
     public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey, int max, int offset) throws CantGetIntraUsersListException {
         List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
         try {

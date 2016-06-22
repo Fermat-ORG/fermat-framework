@@ -3,69 +3,74 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="160dp"
+    android:layout_height="130dp"
+    android:padding="10dp"
     android:layout_alignParentBottom="true"
     tools:background="@drawable/ccw_navigation_drawer_background">
+
 
 
     <ImageView
         android:id="@+id/ccw_wallet_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginTop="-10dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ccw_logo_customer_wallet_navigation_drawer"
         tools:ignore="contentDescription"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_navigation_view_bitcoin_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_above="@+id/ccw_navigation_view_fermat_name"
+        android:text="@string/ccw_navigation_view_bitcoin_balance"
+        android:textColor="@color/white"
+        android:textSize="14sp"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:text="@string/ccw_navigation_view_bitcoin_balance"
-            android:textColor="@color/white"
-            android:textSize="16sp"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_navigation_view_bitcoin_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:gravity="end|center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            tools:text="0.32565 BTC"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ccw_navigation_view_bitcoin_balance"
-            android:text="Fermat Balance"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:visibility="gone"/>
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_navigation_view_bitcoin_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/ccw_navigation_view_fermat_balance"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        tools:text="0.32565 BTC"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_navigation_view_fermat_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/ccw_navigation_view_bitcoin_balance"
-            android:gravity="end|center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:visibility="gone"
-            tools:text="385.467 FER"/>
-    </RelativeLayout>
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_navigation_view_fermat_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:text="Fermat Balance"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_navigation_view_fermat_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        tools:text="385.467 FER"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
@@ -20,14 +21,22 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
-    private String status="";
+    private final String country  ;
+    private final String state    ;
+    private final String city     ;
+    private final String status;
+    private final Location location;
 
     public ChatActorCommunitySubAppModuleInformationImpl(final String publicKey,
                                                          final String alias,
                                                          final byte[] image,
                                                          final ConnectionState connectionState,
                                                          final UUID connectionId,
-                                                         final String status) {
+                                                         final String status,
+                                                         final String country,
+                                                         final String state,
+                                                         final String city,
+                                                         final Location location) {
 
         this.publicKey          = publicKey      ;
         this.alias              = alias          ;
@@ -35,6 +44,10 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.connectionState    = connectionState;
         this.connectionId       = connectionId   ;
         this.status             = status         ;
+        this.country             = country         ;
+        this.state             = state         ;
+        this.city             = city         ;
+        this.location             = location         ;
     }
 
 
@@ -45,6 +58,11 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image     = exposingData.getImage()    ;
         this.connectionState = exposingData.getConnectionState();
         this.connectionId = exposingData.getConnectionId();
+        this.status = exposingData.getStatus();
+        this.country = exposingData.getCountry();
+        this.state = exposingData.getState();
+        this.city = exposingData.getCity();
+        this.location = null;
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatExposingData ced) {
@@ -54,6 +72,10 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.connectionState= null;
         this.connectionId=null;
         this.status=ced.getStatus();
+        this.country = ced.getCountry();
+        this.state = ced.getState();
+        this.city = ced.getCity();
+        this.location = ced.getLocation();
     }
 
     public ChatActorCommunitySubAppModuleInformationImpl(ChatActorCommunityInformation record) {
@@ -62,6 +84,11 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.image = record.getImage();
         this.connectionState = record.getConnectionState();
         this.connectionId = null;
+        this.status=record.getStatus();
+        this.country = record.getCountry();
+        this.state = record.getState();
+        this.city = record.getCity();
+        this.location = record.getLocation();
 
 
     }
@@ -98,6 +125,18 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
     public String getStatus() {
         return status;
     }
+    public String getCity() {
+        return city;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public String getState() {
+        return state;
+    }
+    public Location getLocation() {
+        return location;
+    }
 
     @Override
     public String toString() {
@@ -106,7 +145,12 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
                 ", alias='" + alias + '\'' +
                 ", connectionState='" + connectionState + '\'' +
                 ", connectionId='" + connectionId + '\'' +
-                ", image=" + (image != null) +
+                ", image=" + (image != null) + '\'' +
+                ", status=" + (status) + '\'' +
+                ", country=" + (country) + '\'' +
+                ", state=" + (state) + '\'' +
+                ", city=" + (city) + '\'' +
+                ", location=" + (location!=null) +
                 '}';
     }
 }

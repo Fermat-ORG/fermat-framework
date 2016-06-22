@@ -16,6 +16,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
@@ -45,14 +47,13 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public View addNavigationViewHeader() {
-
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
         final CryptoBrokerCommunitySubAppModuleManager moduleManager = subAppSession.getModuleManager();
 
-        final LayoutInflater layoutInflaterService = (LayoutInflater) activity.get().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View headerView = layoutInflaterService.inflate(R.layout.row_navigation_drawer_community_header, null, false);
+        final Context context = activity.get();
+        final LayoutInflater layoutInflaterService = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View headerView = layoutInflaterService.inflate(R.layout.cbc_row_navigation_drawer_community_header, null, false);
 
-        FermatWorker fermatWorker = new FermatWorker() {
+        FermatWorker fermatWorker = new FermatWorker(context) {
             @Override
             protected Object doInBackground() throws Exception {
                 if (selectedActorIdentity == null)
@@ -67,12 +68,13 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
                 selectedActorIdentity = (ActiveActorIdentityInformation) result[0];
 
                 try {
-                    FragmentsCommons.setUpHeaderScreen(headerView, activity.get(), selectedActorIdentity);
+                    FragmentsCommons.setUpHeaderScreen(headerView, context, selectedActorIdentity);
+                    headerView.findViewById(R.id.cbc_progress_bar).setVisibility(View.GONE);
                     headerView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
-                                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
+                                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(context, subAppSession, null);
                                 listIdentitiesDialog.setTitle("Connection Request");
                                 listIdentitiesDialog.show();
                             } catch (Exception ignore) {
@@ -80,7 +82,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
                         }
                     });
                 } catch (FermatException e) {
-                    e.printStackTrace();
+                    subAppSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 }
             }
 

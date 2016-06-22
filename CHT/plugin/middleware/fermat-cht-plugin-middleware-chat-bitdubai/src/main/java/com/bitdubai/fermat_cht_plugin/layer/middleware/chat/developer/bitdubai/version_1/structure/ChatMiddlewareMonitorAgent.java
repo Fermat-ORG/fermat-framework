@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -392,7 +393,7 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-//            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {

@@ -86,7 +86,7 @@ public class FermatWalletNavigationViewPainter implements com.bitdubai.fermat_an
 
     @Override
     public int addBodyBackgroundColor() {
-        return R.drawable.background_navigation_drawer;
+        return 0;
     }
 
     @Override

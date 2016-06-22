@@ -14,7 +14,7 @@
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
     <string name="search_text">Search</string>
-    <!-- contact_detail_base.xml -->
+    <!-- fermat_contact_detail_baseil_base.xml -->
     <string name="matias_furszyfer_text">Matias Furszyfer</string>
     <string name="name_text">Name</string>
     <string name="address_text">Address</string>
@@ -44,7 +44,7 @@
     <!-- donut_header.xml -->
     <string name="txt_balance_amount_29_text">0.00</string>
     <string name="balance_amount_type_text">btc</string>
-    <!-- fragment_add_connections_list.xml -->
+    <!-- fermat_wallet_fragment_add_connections_list.xmltions_list.xml -->
     <string name="click_me_to_search_text">Touch me\nto look for contacts</string>
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
     <string name="receive_text">Receive</string>
@@ -55,11 +55,14 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
-    <!-- fragment_transaction_main.xml -->
+
+    <!-- fermat_wallet_fragment_transaction_mainansaction_main.xml -->
+
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>
-    <!-- history_request_row.xml -->
+
+    <!-- fermat_wallet_history_request_rowry_request_row.xml -->
     <string name="accepted_text">Accepted</string>
     <string name="deny_text">Deny</string>
     <string name="accept_text">Accept</string>
