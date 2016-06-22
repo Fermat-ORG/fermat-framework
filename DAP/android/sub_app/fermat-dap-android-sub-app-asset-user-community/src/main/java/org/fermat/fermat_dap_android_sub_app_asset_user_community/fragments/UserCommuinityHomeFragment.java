@@ -93,6 +93,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
     private List<ActorAssetUser> actorsToConnect;
     private Actor actor;
     private Menu menu;
+    private android.support.v7.widget.Toolbar toolbar;
 
     private MenuItem menuItemConnect;
     private MenuItem menuItemDisconnect;
@@ -446,11 +447,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
 //        searchView = (SearchView) menu.findItem(R.id.action_community_user_search).getActionView();
         searchView = (SearchView) menu.findItem(6).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.action_community_user_search_hint));
+//        toolbar = getToolbar();
+//        toolbar.addView(searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

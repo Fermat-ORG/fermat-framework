@@ -67,6 +67,8 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
     // Data
     private List<DigitalAsset> digitalAssets;
 
+    private android.support.v7.widget.Toolbar toolbar;
+
     //UI
     private View noAssetsView;
     private SearchView searchView;
@@ -211,12 +213,15 @@ public class HomeCardFragment extends FermatWalletListFragment<DigitalAsset, Ref
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
             searchView = (SearchView) menu.findItem(2).getActionView();
             searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_hint));
+//            toolbar = getToolbar();
+//            toolbar.addView(searchView);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
