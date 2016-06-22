@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +25,14 @@ public interface ChatActorCommunityInformation extends Serializable {
     UUID getConnectionId();
 
     String getStatus();
+
+    String getCountry();
+
+    String getState();
+
+    String getCity();
+
+    Location getLocation();
 
 
 }

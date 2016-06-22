@@ -419,37 +419,38 @@ public class ContactsListFragment
         //inflater.inflate(R.menu.contact_list_menu, menu);
 
         // Locate the search item
-//        MenuItem searchItem = menu.findItem(R.id.menu_search);
-//        searchView = (SearchView) searchItem.getActionView();
-//        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String s) {
-//                if (s.equals(searchView.getQuery().toString())) {
-//                    updateValues();
-//                    adapter.refreshEvents(contactname, contacticon, contactid);
-//                    adapter.getFilter().filter(s);
-//                }
-//                return false;
-//            }
-//        });
-//        if (appSession.getData("filterString") != null) {
-//            String filterString = (String) appSession.getData("filterString");
-//            if (filterString.length() > 0) {
-//                searchView.setQuery(filterString, true);
-//                searchView.setIconified(false);
-//            }else{
-//                updateValues();
-//                adapter.refreshEvents(contactname, contacticon, contactid);
-//            }
-//        }
-//        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //MenuItem searchItem = menu.findItem(R.id.menu_search);
+        MenuItem searchItem = menu.findItem(1);
+        if (searchItem!=null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        updateValues();
+                        adapter.refreshEvents(contactname, contacticon, contactid);
+                        adapter.getFilter().filter(s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData("filterString") != null) {
+                String filterString = (String) appSession.getData("filterString");
+                if (filterString.length() > 0) {
+                    searchView.setQuery(filterString, true);
+                    searchView.setIconified(false);
+                }else{
+                    updateValues();
+                    adapter.refreshEvents(contactname, contacticon, contactid);
+                }
+            }
+        }
     }
 
     @Override
