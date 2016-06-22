@@ -66,6 +66,8 @@ public enum PackageType {
 
     MESSAGE_TRANSMIT_RESPONSE,
 
+    ACTOR_CALL_RESPONSE,
+
     // Definition types NODE channel
 
     /*
@@ -91,7 +93,6 @@ public enum PackageType {
     RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPONSE,
     SERVER_HANDSHAKE_RESPONSE,
 
-    ACTOR_CALL_RESPONSE,
 
     ;
 
