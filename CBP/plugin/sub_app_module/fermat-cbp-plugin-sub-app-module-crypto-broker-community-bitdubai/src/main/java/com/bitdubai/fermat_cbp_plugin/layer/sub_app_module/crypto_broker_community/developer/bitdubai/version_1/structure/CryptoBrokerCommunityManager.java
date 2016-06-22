@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetCryptoBrokerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
@@ -117,55 +118,35 @@ public class CryptoBrokerCommunityManager
         List<CryptoBrokerCommunityInformation> worldBrokerList;
         List<CryptoBrokerActorConnection> actorConnections;
 
-        worldBrokerList = new ArrayList<>();
-        testCryptoBrokerCommunityInfoList = getTestCryptoBrokerCommunityInformation();
-        final int size = testCryptoBrokerCommunityInfoList.size();
-        for(int i = offset, count = 0; i < size && count < max; i++, count++){
-            worldBrokerList.add(testCryptoBrokerCommunityInfoList.get(i));
+        try {
+            worldBrokerList = getCryptoBrokerSearch().getResult(max, offset);
+        } catch (CantGetCryptoBrokerSearchResult e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Error in listWorldCryptoBrokers trying to list world brokers");
         }
 
 
-//        try {
-//            worldBrokerList = getCryptoBrokerSearch().getResult(max, offset);
-//        } catch (CantGetCryptoBrokerSearchResult e) {
-//            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw new CantListCryptoBrokersException(e, "", "Error in listWorldCryptoBrokers trying to list world brokers");
-//        }
-//
-//
-//        try {
-//
-//            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
-//            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
-//
-//            actorConnections = search.getResult(max, offset);
-//
-//        } catch (final CantListActorConnectionsException e) {
-//            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//            throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
-//        }
-//
-//        CryptoBrokerCommunityInformation worldBroker;
-//        for (int i = 0; i < worldBrokerList.size(); i++) {
-//            worldBroker = worldBrokerList.get(i);
-//            for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
-//                if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-//                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
-//            }
-//        }
-        return worldBrokerList;
-    }
+        try {
 
-    private List<CryptoBrokerCommunityInformation> testCryptoBrokerCommunityInfoList;
-    private List<CryptoBrokerCommunityInformation> getTestCryptoBrokerCommunityInformation() {
-        if(testCryptoBrokerCommunityInfoList == null){
-            testCryptoBrokerCommunityInfoList = new ArrayList<>();
-            for (int i = 0; i < 50; i++) {
-                testCryptoBrokerCommunityInfoList.add(new CryptoBrokerCommunitySubAppModuleInformation("pk_test" + i, "test" + i, new byte[0]));
+            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
+
+            actorConnections = search.getResult(max, offset);
+
+        } catch (final CantListActorConnectionsException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
+        }
+
+        CryptoBrokerCommunityInformation worldBroker;
+        for (int i = 0; i < worldBrokerList.size(); i++) {
+            worldBroker = worldBrokerList.get(i);
+            for (CryptoBrokerActorConnection connectedBroker : actorConnections) {
+                if (worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
+                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
             }
         }
-
-        return testCryptoBrokerCommunityInfoList;
+        return worldBrokerList;
     }
 
     /**

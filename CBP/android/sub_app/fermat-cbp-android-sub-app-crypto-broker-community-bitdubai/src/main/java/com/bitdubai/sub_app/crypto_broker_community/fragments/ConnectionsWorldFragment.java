@@ -37,8 +37,8 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_broker_community.common.utils.EndlessScrollListener;
-import com.bitdubai.sub_app.crypto_broker_community.common.utils.OnLoadMoreDataListener;
+import com.bitdubai.fermat_android_api.ui.util.EndlessScrollListener;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -56,9 +56,10 @@ public class ConnectionsWorldFragment
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
 
     //Constants
+    private static final int MAX = 15;
+    private static final int SPAN_COUNT = 3;
+    protected static final String TAG = "ConnectionsWorldFrag";
     public static final String ACTOR_SELECTED = "actor_selected";
-    private static final int MAX = 12;
-    protected final String TAG = "ConnectionsWorldFrag";
 
     //Managers
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
@@ -132,7 +133,6 @@ public class ConnectionsWorldFragment
         }
     }
 
-
     @Override
     protected void initViews(View rootView) {
         super.initViews(rootView);
@@ -185,11 +185,28 @@ public class ConnectionsWorldFragment
         return adapter;
     }
 
-
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        if (layoutManager == null)
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        if (layoutManager == null) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT, LinearLayoutManager.VERTICAL, false);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    switch (itemViewType) {
+                        case AppListAdapter.DATA_ITEM:
+                            return 1;
+                        case AppListAdapter.LOADING_ITEM:
+                            return SPAN_COUNT;
+                        default:
+                            return GridLayoutManager.DEFAULT_SPAN_COUNT;
+                    }
+                }
+            });
+
+            layoutManager = gridLayoutManager;
+        }
+
 
         return layoutManager;
     }
@@ -206,6 +223,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
         FermatWorker fermatWorker = new FermatWorker(getActivity(), this) {
             @Override
             protected Object doInBackground() throws Exception {
@@ -236,6 +254,7 @@ public class ConnectionsWorldFragment
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
+            adapter.setLoadingData(false);
             if (result != null && result.length > 0) {
 
                 if (adapter != null) {
