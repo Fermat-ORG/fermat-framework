@@ -7,15 +7,21 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -27,8 +33,13 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocati
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunityManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 import com.bitdubai.sub_app.chat_community.R;
@@ -46,8 +57,10 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     //ATTRIBUTES
     private TextView CountryPlace; //Estos van dentro del adapter
     private TextView StatePlace;   //Estos van dentro del adapter
-    private SearchView SeachInput;
-    private ChatActorCommunityManager mChatActorCommunityManager;
+    private EditText SeachInput;
+    private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
+    private ListView mRecyclerView;
+    private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
@@ -72,8 +85,8 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
 
 
 
-    public GeolocationDialog (Context activity, FermatSession referenceAppFermatSession, ResourceProviderManager resources){
-        super(activity, referenceAppFermatSession, resources);
+    public GeolocationDialog (Context activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession, ResourceProviderManager resources){
+        super(activity, appSession, resources); this.appSession = appSession;
     }
 
     public void setCountryPlace(String country){
@@ -91,15 +104,36 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        //TODO Instaciar el geolocation_recycler_view
-        CountryPlace = (TextView) this.findViewById(R.id.country_search);
-        StatePlace = (TextView) this.findViewById(R.id.state_search);
+        try {
+
+            mChatActorCommunityManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
+
+            mRecyclerView = (ListView) this.findViewById(R.id.geolocation_recycler_view);
+            CountryPlace = (TextView) this.findViewById(R.id.country_search);
+            StatePlace = (TextView) this.findViewById(R.id.state_search);
+
+            adapter = new GeolocationAdapter(getContext(), mChatActorCommunityManager.getCities(""));
+
+            mRecyclerView.setAdapter(adapter);
+            mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
+            SeachInput = (EditText) findViewById(R.id.geolocation_input);
+            onRefresh();
+        }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException | CantCreateCountriesListException | CantGetCitiesListException e){
+            System.out.println("Exception at Geolocation Dialog");
+        }
 
 
     }
 
     public void onClick(View v) {
-        int i = v.getId();
+        int i = v.getId(); //Todo poner la selección del adapter
 
     }
 
@@ -121,7 +155,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData(SeachInput.getText());
+                    return getMoreData(SeachInput.getText().toString());
                 }
             };
             worker.setContext(getActivity());
@@ -194,5 +228,6 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             emptyView.setBackground(bgcolor);
         }
     }
+
 
 }

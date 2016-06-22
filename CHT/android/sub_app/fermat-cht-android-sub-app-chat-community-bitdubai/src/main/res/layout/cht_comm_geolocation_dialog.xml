@@ -8,30 +8,26 @@
 
     >
 
-    <SearchView
+    <EditText
         android:id="@+id/geolocation_input"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="35dp"
+        android:textColor="@color/color_black"
         android:background="#F9F9F9"
+        android:hint="Search"
         />
     <Space
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="20dp"
         android:visibility="invisible"
         />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/geolocation_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <android.support.v7.widget.RecyclerView
+        <ListView
             android:id="@+id/geolocation_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/cht_comm_geolocation_results_item"
             android:divider="@drawable/cht_list_divider" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
