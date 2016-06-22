@@ -38,13 +38,11 @@
             android:background="@drawable/circular_friend_list"
             android:src="@drawable/afc_profile_image"/>
 
-        <View
-            android:id="@+id/warning_cirlcle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
+        <!--<View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/white_circle"
-            />
+            />-->
 
         <ImageView
             android:id="@+id/afc_connection_state"
@@ -67,7 +65,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/afc_community_name"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="25dp"
                 android:layout_marginTop="13dp"
                 android:ellipsize="end"
                 android:gravity="start"
