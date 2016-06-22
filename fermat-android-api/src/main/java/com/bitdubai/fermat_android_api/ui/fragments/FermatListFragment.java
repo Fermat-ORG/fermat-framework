@@ -45,6 +45,7 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
     protected FermatAdapter adapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerView.OnScrollListener scrollListener;
     /**
      * Executor
      */
@@ -71,6 +72,11 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
         if (_executor != null) {
             _executor.shutdown();
             _executor = null;
+        }
+
+        if (scrollListener != null && recyclerView != null) {
+            recyclerView.removeOnScrollListener(scrollListener);
+            scrollListener = null;
         }
     }
 
@@ -116,6 +122,10 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
             if (adapter != null) {
                 recyclerView.setAdapter(adapter);
             }
+            scrollListener = getScrollListener();
+            if (scrollListener != null) {
+                recyclerView.addOnScrollListener(scrollListener);
+            }
             swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(getSwipeRefreshLayoutId());
             if (swipeRefreshLayout != null) {
                 isRefreshing = false;
@@ -158,5 +168,15 @@ public abstract class FermatListFragment<M, S extends FermatSession> extends Abs
             };
             worker.execute(getExecutor());
         }
+    }
+
+    /**
+     * return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     * Override this method if yo want to implement infinite scrolling or pagination
+     *
+     * @return the {@link RecyclerView.OnScrollListener} for the {@link RecyclerView} of this fragment.
+     */
+    public RecyclerView.OnScrollListener getScrollListener() {
+        return null;
     }
 }
