@@ -14,7 +14,9 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
@@ -42,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.Can
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.adapters.GeolocationAdapter;
@@ -57,26 +61,21 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     //ATTRIBUTES
     private TextView CountryPlace; //Estos van dentro del adapter
     private TextView StatePlace;   //Estos van dentro del adapter
-    private EditText SeachInput;
+    private EditText searchInput;
     private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
-    private ListView mRecyclerView;
+    private ListView mListView;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
+    private CitiesImpl cityFromList;
+    private ImageButton lupaButton;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
-//    private SwipeRefreshLayout swipeRefresh;
-//    private DeviceLocation location = null;
-//    private double distance = 0;
-//    private String al;
-//    private static final int MAX = 6;
-//    private int offset = 0;
     private ArrayList<Cities> lstChatUserInformations;
     private GeolocationAdapter adapter;
     private ErrorManager errorManager;
     private LinearLayout emptyView;
-//    ImageView noData;
     TextView noDatalabel;
-//    private View rootView;
+
 
     //SETTERS ATTRIBUTES
     String Country;
@@ -110,20 +109,22 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             errorManager = appSession.getErrorManager();
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            mRecyclerView = (ListView) this.findViewById(R.id.geolocation_recycler_view);
+            mListView = (ListView) this.findViewById(R.id.geolocation_recycler_view);
             CountryPlace = (TextView) this.findViewById(R.id.country_search);
             StatePlace = (TextView) this.findViewById(R.id.state_search);
 
-            adapter = new GeolocationAdapter(getContext(), mChatActorCommunityManager.getCities(""));
+//            lupaButton = (ImageButton) this.findViewById(R.id.lupita_button); TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
 
-            mRecyclerView.setAdapter(adapter);
-            mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            adapter = new GeolocationAdapter(getContext(), mChatActorCommunityManager.getCities(searchInput.getText().toString()));
+
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    cityFromList = (CitiesImpl) parent.getItemAtPosition(position);
                 }
             });
-            SeachInput = (EditText) findViewById(R.id.geolocation_input);
+            searchInput = (EditText) findViewById(R.id.geolocation_input);
             onRefresh();
         }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException | CantCreateCountriesListException | CantGetCitiesListException e){
             System.out.println("Exception at Geolocation Dialog");
@@ -155,7 +156,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData(SeachInput.getText().toString());
+                    return getMoreData(searchInput.getText().toString());
                 }
             };
             worker.setContext(getActivity());
@@ -164,8 +165,6 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-//                    if ()
-//                        swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
                         progressDialog.dismiss();

@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by roy on 13/06/16.
  */
-public class GeolocationAdapter extends ArrayAdapter<String> {
+public class GeolocationAdapter extends ArrayAdapter<Cities> {
 
     private List<Cities> cities = new ArrayList<>();
     protected List<Cities> dataSet;
@@ -58,6 +58,8 @@ public class GeolocationAdapter extends ArrayAdapter<String> {
             Country.setText("Country");
             TextView State = (TextView) item.findViewById(R.id.state_search);
             State.setText("State");
+
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
