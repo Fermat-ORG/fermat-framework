@@ -44,7 +44,7 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
     public void start() throws CantStartPluginException {
 
         System.out.println("***FermatNetwork*** started");
-        System.out.println("***FermatNetwork*** Thread Started");
+
 
         final NetworkParameters networkParameters = RegTestParams.get();
         Wallet wallet = new Wallet(networkParameters);
@@ -63,15 +63,10 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
         PeerAddress peer1 = new PeerAddress(new InetSocketAddress("52.27.68.19", 4877));
         PeerAddress peer2 = new PeerAddress(new InetSocketAddress("52.34.251.168", 4877));
         PeerAddress peer3 = new PeerAddress(new InetSocketAddress("52.32.106.35", 4877));
-        PeerAddress peer4 = new PeerAddress(new InetSocketAddress("127.0.0.1", 4877));
-        PeerAddress peer5 = new PeerAddress(new InetSocketAddress("52.27.68.19", 19000));
 
         peerGroup.addAddress(peer1);
         peerGroup.addAddress(peer2);
         peerGroup.addAddress(peer3);
-        peerGroup.addAddress(peer4);
-        peerGroup.addAddress(peer5);
-
 
         peerGroup.setUserAgent("fermatj", "0.0.1");
         peerGroup.addEventListener(new PeerEventListener() {
@@ -117,7 +112,6 @@ public class FermatCryptoNetworkPluginRoot extends AbstractPlugin {
             }
         });
         peerGroup.start();
-        peerGroup.connectTo(peer1.getSocketAddress());
         peerGroup.downloadBlockChain();
         System.out.println(wallet.freshReceiveAddress().toString());
 
