@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.sub_app.intra_user_identity.R;
 //import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
@@ -103,7 +104,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         //Check if a default identity is configured
         if(identity==null){
             try{
-                identity = moduleManager.getIdentityChatUser();
+                identity = (IntraWalletUserIdentity)moduleManager.getSelectedActorIdentity();
             }catch (Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
@@ -183,29 +184,21 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     }
 
     private void saveIdentityGeolocation(String donde) throws CantGetIntraUserIdentityException {
-        GeolocationIdentityExecutor executor = null;
+
         try {
             if (accuracy.getText().length() == 0) {
                 Toast.makeText(getActivity(), "Accuracy is empty, please add a value", Toast.LENGTH_SHORT).show();
             } else {
                 acurracydata = Long.parseLong(accuracy.getText().toString());
-                executor = new GeolocationIdentityExecutor(appSession, identity.getPublicKey(), identity.getAlias(),
-                        identity.getImage(), identity.getConnectionState(),
-                        identity.getCountry(), identity.getState(),
-                        identity.getCity(), frecuencydata, acurracydata);
-                int resultKey = executor.execute();
-                switch (resultKey) {
-                    case SUCCESS:
-                        if (donde.equalsIgnoreCase("onClick")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                            getActivity().onBackPressed();
-                        } else if (donde.equalsIgnoreCase("onBack")) {
-                            Toast.makeText(getActivity(), "Chat Identity Geolocation Update.", Toast.LENGTH_LONG).show();
-                        }
-                        break;
-                }
+                moduleManager.updateIntraUserIdentity(identity.getPublicKey(), identity.getAlias(),identity.getPhrase(),
+                        identity.getImage(),acurracydata,frecuencydata );
+
+                Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated OK.", Toast.LENGTH_LONG).show();
+
             }
         }catch(Exception e){
+            Toast.makeText(getActivity(), "Wallet User Identity Geolocation Updated Error.", Toast.LENGTH_LONG).show();
+
             if(errorManager != null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
@@ -214,13 +207,13 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public boolean ExistIdentity() throws FermatException {
         try {
             if (!identity.getAlias().isEmpty()) {
-                Log.i("CHT EXIST IDENTITY", "TRUE");
+                Log.i("CCP EXIST IDENTITY", "TRUE");
                 return true;
             }
         } catch (Exception e) {
             return false;
         }
-        Log.i("CHT EXIST IDENTITY", "FALSE");
+        Log.i("CPP EXIST IDENTITY", "FALSE");
         return false;
     }
 
