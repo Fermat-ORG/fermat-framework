@@ -49,8 +49,8 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                 var message = "";
                 if(response.status === -1){message = "Server no available";}
                 if(response.status === 401){message = "You must authenticate again";}
-                alert(response.status+" - Service error: "+response.statusText+" "+message);
-                $window.location.href = '../index.html';
+                alert(response.status+" - Monitoring Service error 1: "+response.statusText+" "+message);
+                 $window.location.href = '../index.html';
            });
 
       };
@@ -82,7 +82,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
                   var message = "";
                   if(response.status === -1){message = "Server no available";}
                   if(response.status === 401){message = "You must authenticate again";}
-                  alert(response.status+" - Service error: "+response.statusText+" "+message);
+                  alert(response.status+" - Monitoring Service error 2: "+response.statusText+" "+message);
                   $window.location.href = '../index.html';
              });
 
