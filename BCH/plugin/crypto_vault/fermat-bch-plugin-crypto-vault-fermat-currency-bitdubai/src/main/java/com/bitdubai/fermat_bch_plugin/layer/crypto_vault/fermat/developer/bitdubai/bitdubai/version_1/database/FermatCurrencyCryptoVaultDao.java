@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -22,11 +22,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.H
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
-
-
 import com.bitdubai.fermat_bch_api.layer.exceptions.database.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
-
+import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.exceptions.CantInitializeFermatCurrencyCryptoVaultDatabaseException;
 
 import org.bitcoinj.core.ECKey;
 
@@ -37,16 +34,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bch_plugin.layer.CryptoVault.BitcoinCurrency.developer.bitdubai.version_1.database.BitcoinCurrencyCryptoVaultDao</code>
- * Class used to initialize the database and access and modify the saved data.<p/>
- * <p/>
- *
- * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by rodrigo on 6/22/16.
  */
-public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
+public class FermatCurrencyCryptoVaultDao  implements CryptoVaultDao {
     /**
      * Database instance of the plugin.
      */
@@ -63,7 +53,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @param pluginDatabaseSystem the database object
      * @param pluginId the pluginId used to access the database
      */
-    public BitcoinCurrencyCryptoVaultDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantInitializeBitcoinCurrencyCryptoVaultDatabaseException {
+    public FermatCurrencyCryptoVaultDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantInitializeFermatCurrencyCryptoVaultDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
 
@@ -75,9 +65,9 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
     /**
      * Initializes the database on the plugin. If it doesn't exists it will create it. If it exists, it will load it.
-     * @throws CantInitializeBitcoinCurrencyCryptoVaultDatabaseException
+     * @throws CantInitializeFermatCurrencyCryptoVaultDatabaseException
      */
-    private void initializeDatabase() throws CantInitializeBitcoinCurrencyCryptoVaultDatabaseException {
+    private void initializeDatabase() throws CantInitializeFermatCurrencyCryptoVaultDatabaseException {
         try {
              /*
               * Open new database connection
@@ -88,14 +78,14 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeBitcoinCurrencyCryptoVaultDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeFermatCurrencyCryptoVaultDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            BitcoinCurrencyCryptoVaultDatabaseFactory bitcoinCurrencyCryptoVaultDatabaseFactory = new BitcoinCurrencyCryptoVaultDatabaseFactory(pluginDatabaseSystem);
+            FermatCurrencyCryptoVaultDatabaseFactory bitcoinCurrencyCryptoVaultDatabaseFactory = new FermatCurrencyCryptoVaultDatabaseFactory(pluginDatabaseSystem);
             try {
                   /*
                    * We create the new database
@@ -105,7 +95,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeBitcoinCurrencyCryptoVaultDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeFermatCurrencyCryptoVaultDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -122,12 +112,12 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantInsertRecordException
      */
     public void addNewHierarchyAccount(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, hierarchyAccount.getId());
-        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription());
-        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode());
+        record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, hierarchyAccount.getId());
+        record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription());
+        record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode());
 
         try {
             databaseTable.insertRecord(record);
@@ -153,7 +143,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
     @Override
     public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -161,7 +151,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
                     CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
                     e,
                     "There was an error loading into memory table " +
-                            BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME,
+                            FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME,
                     "A database error.");
         }
 
@@ -172,11 +162,11 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
             HierarchyAccount hierarchyAccount = null;
             try {
                 hierarchyAccount = new HierarchyAccount(
-                        record.getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
-                        record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME),
-                        HierarchyAccountType.getByCode(record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME)));
+                        record.getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
+                        record.getStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME),
+                        HierarchyAccountType.getByCode(record.getStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME)));
             } catch (InvalidParameterException e) {
-                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid Account Type: " + record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME), null );
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid Account Type: " + record.getStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME), null );
             }
 
             /**
@@ -199,18 +189,18 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void updateMaintainerStatistics(int hierarchyAccountId,
-                                            String date,
-                                            int currentGeneratedKeys,
-                                            int currentUsedKeys,
-                                            int currentThreshold)
+                                           String date,
+                                           int currentGeneratedKeys,
+                                           int currentUsedKeys,
+                                           int currentThreshold)
             throws CantExecuteDatabaseOperationException{
 
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
 
         /**
          * I will filter the table using the account id
          */
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -218,7 +208,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
                     CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
                     e,
                     "there was an error loading the " +
-                            BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME
+                            FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME
                             + " table into memory.",
                     "Database issue");
         }
@@ -251,15 +241,15 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
                                                int currentUsedKeys,
                                                int currentThreshold)
             throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
 
         DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
-        databaseTableRecord.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, 1);
-        databaseTableRecord.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, hierarchyAccountId);
-        databaseTableRecord.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
-        databaseTableRecord.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
-        databaseTableRecord.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
-        databaseTableRecord.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
+        databaseTableRecord.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, 1);
+        databaseTableRecord.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, hierarchyAccountId);
+        databaseTableRecord.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
+        databaseTableRecord.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
+        databaseTableRecord.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
+        databaseTableRecord.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
 
         try {
             databaseTable.insertRecord(databaseTableRecord);
@@ -268,7 +258,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
              * I will create the output meessage
              */
             StringBuilder outputMessage = new StringBuilder("there was an error inserting a new record into " );
-            outputMessage.append(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+            outputMessage.append(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
             outputMessage.append(System.lineSeparator());
             outputMessage.append("The record to insert is: ");
             outputMessage.append(XMLParser.parseObject(databaseTableRecord));
@@ -295,21 +285,21 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
                                                     int currentUsedKeys,
                                                     int currentThreshold)
             throws CantExecuteDatabaseOperationException{
-        int previousExecNumber = recordToUpdate.getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME);
-        recordToUpdate.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, previousExecNumber + 1);
-        recordToUpdate.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
-        recordToUpdate.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
-        recordToUpdate.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
-        recordToUpdate.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
+        int previousExecNumber = recordToUpdate.getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME);
+        recordToUpdate.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, previousExecNumber + 1);
+        recordToUpdate.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
+        recordToUpdate.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
+        recordToUpdate.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
+        recordToUpdate.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
 
         try {
-            getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME).updateRecord(recordToUpdate);
+            getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME).updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException e) {
             /**
              * I will create the output meessage
              */
             StringBuilder outputMessage = new StringBuilder("there was an error updating an existing record from " );
-            outputMessage.append(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+            outputMessage.append(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
             outputMessage.append(System.lineSeparator());
             outputMessage.append("The record to insert is: ");
             outputMessage.append(XMLParser.parseObject(recordToUpdate));
@@ -329,12 +319,12 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setGeneratedKeysValue(int accountId, int value) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
 
         /**
          * first I see if we already have records for this account by setting a filter and getting the values
          */
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -353,14 +343,14 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
             if (databaseTable.getRecords().size() == 0){
                 //insert
                 record = databaseTable.getEmptyRecord();
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, 0);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, 0);
                 databaseTable.insertRecord(record);
             } else {
                 //update
                 record = databaseTable.getRecords().get(0);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
                 databaseTable.updateRecord(record);
             }
         } catch (CantInsertRecordException | CantUpdateRecordException e) {
@@ -381,8 +371,8 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public int getCurrentGeneratedKeys(int accountId) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -392,7 +382,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         if (databaseTable.getRecords().size() == 0)
             return 1;
         else
-            return databaseTable.getRecords().get(0).getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME);
+            return databaseTable.getRecords().get(0).getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME);
     }
 
     /**
@@ -402,8 +392,8 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public int getCurrentUsedKeys(int accountId) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -413,7 +403,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         if (databaseTable.getRecords().size() == 0)
             return 1;
         else
-            return databaseTable.getRecords().get(0).getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME);
+            return databaseTable.getRecords().get(0).getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME);
     }
 
     /**
@@ -423,12 +413,12 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setNewCurrentUsedKeyValue(int accountId, int newValue) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
 
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -444,15 +434,15 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
             if (databaseTable.getRecords().size() == 0){
                 // I will insert the new value
                 record = databaseTable.getEmptyRecord();
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, 0);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, 0);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
 
                 databaseTable.insertRecord(record);
             } else {
                 // I will update the existing value
                 record = databaseTable.getRecords().get(0);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
                 databaseTable.updateRecord(record);
             }
         } catch (CantInsertRecordException | CantUpdateRecordException e) {
@@ -473,12 +463,12 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setActiveNetworkType(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
 
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -495,13 +485,13 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
             if (databaseTable.getRecords().size() == 0){
                 // I will insert the new value
                 record = databaseTable.getEmptyRecord();
-                record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode());
-                record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
+                record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+                record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
                 databaseTable.insertRecord(record);
             } else {
                 // I will update the existing value
                 record = databaseTable.getRecords().get(0);
-                record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
+                record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
                 databaseTable.updateRecord(record);
             }
         } catch (CantInsertRecordException | CantUpdateRecordException e) {
@@ -522,7 +512,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      */
     public List<BlockchainNetworkType> getActiveNetworkTypes() throws CantExecuteDatabaseOperationException{
         List<BlockchainNetworkType> networkTypes = new ArrayList<>();
-        DatabaseTable databaseTable = getDatabaseTable(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
+        DatabaseTable databaseTable = getDatabaseTable(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
 
         /**
          * I will check to see if I already have a value for this account so i can updated it.
@@ -542,7 +532,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
          * I will add all the saved values into the list to return
          */
         for (DatabaseTableRecord record : databaseTable.getRecords()){
-            networkTypes.add(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME)));
+            networkTypes.add(BlockchainNetworkType.getByCode(record.getStringValue(FermatCurrencyCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME)));
         }
 
         /**
@@ -570,7 +560,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
             return;
 
-        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        DatabaseTable databaseTable = database.getTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
         DatabaseTransaction transaction = database.newTransaction();
 
 
@@ -583,9 +573,9 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         for (ECKey key : keys){
             if (i >= currentGeneratedKeys){
                 DatabaseTableRecord record = databaseTable.getEmptyRecord();
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
-                record.setIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
-                record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
+                record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
                 transaction.addRecordToInsert(databaseTable, record);
             }
             i++;
@@ -615,9 +605,9 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
             return;
 
-        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = database.getTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -636,8 +626,8 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         }
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
-        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+        record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        record.setStringValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {
@@ -650,7 +640,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
      * @return
      */
     public int getNextAvailableHierarchyAccountId() throws CantExecuteDatabaseOperationException{
-        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        DatabaseTable databaseTable = database.getTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
@@ -667,8 +657,8 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
         {
             int hierarchyAccountId = 0;
             for (DatabaseTableRecord record : databaseTableRecords){
-                if (record.getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME) > hierarchyAccountId)
-                    hierarchyAccountId = record.getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+                if (record.getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME) > hierarchyAccountId)
+                    hierarchyAccountId = record.getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
             }
 
             return hierarchyAccountId + 1;
@@ -677,8 +667,8 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
     @Override
     public int getPublicKeyPosition(String address) throws com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException {
-        DatabaseTable databaseTable = database.getTable(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
-        databaseTable.addStringFilter(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = database.getTable(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -688,7 +678,7 @@ public class BitcoinCurrencyCryptoVaultDao implements CryptoVaultDao {
 
         List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
         if (databaseTableRecords.size() != 0){
-            return databaseTableRecords.get(0).getIntegerValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+            return databaseTableRecords.get(0).getIntegerValue(FermatCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
         } else
             return 0;
     }
