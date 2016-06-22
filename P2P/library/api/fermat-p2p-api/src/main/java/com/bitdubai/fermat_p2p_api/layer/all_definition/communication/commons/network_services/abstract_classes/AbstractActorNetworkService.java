@@ -13,8 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.location_system.utils.LocationUtils;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceActorLocationUpdaterAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileRegisteredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorProfileUpdatedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.ActorNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantRegisterActorException;
@@ -81,6 +83,14 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
         actorRegistered.setEventHandler(new NetworkClientActorProfileRegisteredEventHandler(this));
         eventManager.addListener(actorRegistered);
         listenersAdded.add(actorRegistered);
+
+        /*
+         * 2. Listen and handle Network Client Actor Profile Updated Event
+         */
+        FermatEventListener actorUpdated = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_UPDATED);
+        actorUpdated.setEventHandler(new NetworkClientActorProfileUpdatedEventHandler(this));
+        eventManager.addListener(actorUpdated);
+        listenersAdded.add(actorUpdated);
 
     }
 
@@ -187,7 +197,7 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
             }
         }
 
-        System.out.println("******************* REGISTERING ACTOR: "+actorToRegister.getName()+ " - type: "+actorToRegister.getActorType() + "  GO OUT METHOD");
+        System.out.println("******************* REGISTERING ACTOR: " + actorToRegister.getName() + " - type: " + actorToRegister.getActorType() + "  GO OUT METHOD");
     }
 
     private ActorProfile getRegisteredActorByPublicKey(final String publicKey) {
@@ -233,11 +243,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().unregisterProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate);
 
-                this.getConnection().registerProfile(actorToUpdate);
-
-            } catch (CantUnregisterProfileException |CantRegisterProfileException exception) {
+            } catch (CantUpdateRegisteredProfileException exception) {
 
                 throw new CantUpdateRegisteredActorException(exception, "publicKey: "+publicKey+" - name: "+name, "There was an error trying to update a registered actor through the network service.");
             }
@@ -250,11 +258,9 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
             try {
 
-                this.getConnection().unregisterProfile(actorToUpdate);
+                this.getConnection().updateRegisteredProfile(actorToUpdate);
 
-                this.getConnection().registerProfile(actorToUpdate);
-
-            } catch (CantUnregisterProfileException |CantRegisterProfileException exception) {
+            } catch (CantUpdateRegisteredProfileException exception) {
 
                 throw new CantUpdateRegisteredActorException(exception, "publicKey: "+actorToUpdate.getIdentityPublicKey()+" - name: "+actorToUpdate.getName(), "There was an error trying to update a registered actor through the network service.");
             }
@@ -332,6 +338,19 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
 
         if (registeredActor != null)
             onActorRegistered(registeredActor);
+    }
+
+    public final void onActorUpdated(String publicKey) {
+
+        ActorProfile registeredActor = (registeredActors != null ? getRegisteredActorByPublicKey(publicKey) : null);
+
+        if (registeredActor != null)
+            onActorUpdated(registeredActor);
+    }
+
+    protected void onActorUpdated(ActorProfile actorProfile) {
+
+        System.out.println("im updated : "+ actorProfile);
     }
 
     protected void onActorRegistered(ActorProfile actorProfile) {

@@ -87,23 +87,23 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     private View rootView;
     private LinearLayout emptyView;
 
-
-    private MenuItem menuItemSelect;
-    private MenuItem menuItemUnselect;
-    private MenuItem menuItemCancel;
-    private MenuItem menuItemConnect;
+//    private MenuItem menuItemSelect;
+//    private MenuItem menuItemUnselect;
+//    private MenuItem menuItemCancel;
+//    private MenuItem menuItemConnect;
     private SearchView searchView;
 
     private List<ActorIssuer> actors;
     private List<ActorIssuer> actorsConnecting;
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
-
     private ExecutorService _executor;
     /**
      * Flags
      */
     private boolean isRefreshing = false;
+    private static final int MAX = 10;
+    private int offset = 0;
 
     public static IssuerCommunityHomeFragment newInstance() {
         return new IssuerCommunityHomeFragment();
@@ -193,25 +193,25 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                     }
                 }
                 if (actorsConnecting.size() > 0) {
-                    menuItemCancel.setVisible(true);
+//                    menuItemCancel.setVisible(true);
                 } else {
-                    menuItemCancel.setVisible(false);
+//                    menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
-                        menuItemConnect.setVisible(false);
+//                        menuItemConnect.setVisible(false);
                     } else if (actorsConnecting.size() == 0) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
                     if (selectedActors > actorsConnecting.size()) {
-                        menuItemConnect.setVisible(true);
+//                        menuItemConnect.setVisible(true);
                     }
-                    menuItemUnselect.setVisible(true);
+//                    menuItemUnselect.setVisible(true);
                     if (selectedActors == cheackeableActors) {
-                        menuItemSelect.setVisible(false);
+//                        menuItemSelect.setVisible(false);
                     } else {
-                        menuItemSelect.setVisible(true);
+//                        menuItemSelect.setVisible(true);
                     }
                 } else {
                     restartButtons();
@@ -434,24 +434,20 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SELECT_ALL, 3, R.string.select_all)//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_UNSELECT_ALL, 4, R.string.unselect_all)//.setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-//
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
+//        menuItemConnect = menu.getItem(1);
+//        menuItemCancel = menu.getItem(2);
+//        menuItemSelect = menu.getItem(3);
+//        menuItemUnselect = menu.getItem(4);
 
-        menuItemConnect = menu.getItem(1);
-        menuItemCancel = menu.getItem(2);
-        menuItemSelect = menu.getItem(3);
-        menuItemUnselect = menu.getItem(4);
         restartButtons();
     }
 
@@ -621,9 +617,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
                     }
                     adapter.changeDataSet(actors);
                     adapter.getAdapterChangeListener().onDataSetChanged(actors);
-                    menuItemConnect.setVisible(true);
-                    menuItemSelect.setVisible(false);
-                    menuItemUnselect.setVisible(true);
+//                    menuItemConnect.setVisible(true);
+//                    menuItemSelect.setVisible(false);
+//                    menuItemUnselect.setVisible(true);
                     break;
                 case 4://Unselect All
                     for (ActorIssuer actorIssuer : actors) {
@@ -932,7 +928,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 
         try {
-            result = moduleManager.getAllActorAssetIssuerRegistered();
+            result = moduleManager.getAllActorAssetIssuerRegistered(MAX, offset);
             if (result != null && result.size() > 0) {
                 for (AssetIssuerActorRecord record : result) {
                     dataSet.add((new ActorIssuer(record)));
@@ -974,9 +970,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     }
 
     private void restartButtons() {
-        menuItemCancel.setVisible(false);
-        menuItemSelect.setVisible(true);
-        menuItemUnselect.setVisible(false);
-        menuItemConnect.setVisible(false);
+//        menuItemCancel.setVisible(false);
+//        menuItemSelect.setVisible(true);
+//        menuItemUnselect.setVisible(false);
+//        menuItemConnect.setVisible(false);
     }
 }
