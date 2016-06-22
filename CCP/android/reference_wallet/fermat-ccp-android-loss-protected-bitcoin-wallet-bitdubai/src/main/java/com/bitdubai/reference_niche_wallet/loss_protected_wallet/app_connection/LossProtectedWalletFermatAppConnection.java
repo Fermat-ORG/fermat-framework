@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 
 import android.content.Context;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -110,6 +111,27 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<Refer
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+        switch (id){
+            case 1:
+
+                break;
+            case 2:
+                resId = R.drawable.loos_help_icon;
+                break;
+            case 4:
+                resId = R.drawable.ic_actionbar_send;
+                break;
+            case 3:
+
+                break;
+
+        }
+        return resId;
     }
 
 

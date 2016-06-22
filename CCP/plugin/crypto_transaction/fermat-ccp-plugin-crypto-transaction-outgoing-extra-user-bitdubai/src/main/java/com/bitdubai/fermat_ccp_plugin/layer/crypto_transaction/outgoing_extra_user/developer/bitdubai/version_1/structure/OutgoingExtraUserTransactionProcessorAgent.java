@@ -1,12 +1,23 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.exceptions.CantRevertTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.InconsistentFundsException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -17,9 +28,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.OutgoingExtraActorWalletNotSupportedException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
@@ -36,6 +52,9 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
     private final BitcoinNetworkManager bitcoinNetworkManager  ;
     private final ErrorManager         errorManager        ;
     private final OutgoingExtraUserDao dao                 ;
+    private EventManager eventManager;
+    private Broadcaster broadcaster;
+    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
     /**
      * Constructor with final params...
@@ -44,13 +63,19 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                                                       final CryptoVaultManager cryptoVaultManager  ,
                                                       final BitcoinNetworkManager bitcoinNetworkManager,
                                                       final ErrorManager         errorManager        ,
-                                                      final OutgoingExtraUserDao dao                 ) {
+                                                      final OutgoingExtraUserDao dao                 ,
+                                                      final EventManager eventManager,
+                                                      final Broadcaster broadcaster,
+                                                      final BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager) {
 
         this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoVaultManager   = cryptoVaultManager  ;
         this.bitcoinNetworkManager   = bitcoinNetworkManager  ;
         this.errorManager         = errorManager        ;
         this.dao                  = dao                 ;
+        this.eventManager         = eventManager;
+        this.broadcaster          = broadcaster ;
+        this.bitcoinLossProtectedWalletManager = bitcoinLossProtectedWalletManager;
 
         this.status               = AgentStatus.CREATED ;
 
@@ -187,10 +212,13 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
                 try {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
+                    roolback(transaction, true);
                 } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
+
                     reportUnexpectedError(e2);
                     continue;
                 } catch (Exception exception) {
+
                     reportUnexpectedError(exception);
                     continue;
                 }
@@ -203,6 +231,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 try {
 
                     dao.cancelTransaction(transaction, "There was a problem and the money was not sent.");
+                    roolback(transaction, true);
 
                 } catch (Exception exception) {
                     reportUnexpectedError(exception);
@@ -212,6 +241,26 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
                 reportUnexpectedError(e);
 
             }  catch (Exception exception) {
+
+                //if I spend more than five minutes I canceled
+                long sentDate = transaction.getTimestamp();
+                long currentTime = System.currentTimeMillis();
+                long dif = currentTime - sentDate;
+
+                if (dif >= 180000) {
+                    try {
+                        dao.cancelTransaction(transaction, " ROLLBACK 4.");
+                        roolback(transaction, true);
+                        System.out.print("ROLLBACK 4");
+                    } catch (CantUpdateRecordException e1) {
+                        e1.printStackTrace();
+                    } catch (InconsistentTableStateException e1) {
+                        e1.printStackTrace();
+                    } catch (CantLoadTableToMemoryException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
 
                 reportUnexpectedError(exception);
             }
@@ -251,6 +300,80 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
     private void reportUnexpectedError(Exception e) {
         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
+
+
+    private void roolback(TransactionWrapper transaction, boolean credit) {
+        try {
+
+           if(transaction.getWalletPublicKey().equals(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode())
+                   || transaction.getWalletPublicKey().equals(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode())) {
+               //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
+               CryptoWalletWallet cryptoWalletWallet = null;
+               try {
+                   cryptoWalletWallet = cryptoWalletManager.loadWallet(transaction.getWalletPublicKey());
+
+                   //change transaction state to reversed and update balance to revert
+                   cryptoWalletWallet.revertTransaction(transaction, credit);
+
+                   //if the transaction is a payment request, rollback it state too
+                   notificateRollbackToGUI(transaction);
+                   if (transaction.getRequestId() != null)
+                       revertPaymentRequest(transaction.getRequestId());
+
+               } catch (CantLoadWalletsException e1) {
+                   e1.printStackTrace();
+               } catch (CantRevertTransactionException e1) {
+                   e1.printStackTrace();
+               }
+
+
+           }else
+           {
+               if(transaction.getWalletPublicKey().equals(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode())) {
+                   BitcoinLossProtectedWallet bitcoinLossProtectedWallet = bitcoinLossProtectedWalletManager.loadWallet(transaction.getWalletPublicKey());
+
+                   //change transaction state to reversed and update balance to revert
+                   bitcoinLossProtectedWallet.revertTransaction(transaction, credit);
+
+                   //if the transaction is a payment request, rollback it state too
+                   notificateRollbackToGUI(transaction);
+                   if (transaction.getRequestId() != null)
+                       revertPaymentRequest(transaction.getRequestId());
+
+               }
+               else
+               {
+                 throw new OutgoingExtraActorWalletNotSupportedException("Roolback", null, "ReferenceWallet public key value: " + transaction.getWalletPublicKey().toString(), " Roolback");
+
+               }
+           }
+
+         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void notificateRollbackToGUI(TransactionWrapper transactionWrapper){
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTIONREVERSE_" + transactionWrapper.getTransactionId().toString());
+
+    }
+
+    private void revertPaymentRequest(UUID requestId) throws CantProcessRequestAcceptedException {
+        try
+        {
+            //Hay que disparar un evento para que escuche el Crypto Payment y revierta el accepted
+            FermatEvent platformEvent  = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
+            OutgoingIntraUserTransactionRollbackNotificationEvent outgoingIntraUserTransactionRollbackNotificationEvent = (OutgoingIntraUserTransactionRollbackNotificationEvent) platformEvent;
+            outgoingIntraUserTransactionRollbackNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
+            outgoingIntraUserTransactionRollbackNotificationEvent.setRequestId(requestId);
+            eventManager.raiseEvent(platformEvent);
+        }
+        catch(Exception e)
+        {
+            throw new CantProcessRequestAcceptedException("I couldn't update the payment request that was accepted", FermatException.wrapException(e),"","unknown error");
+        }
     }
 
 }

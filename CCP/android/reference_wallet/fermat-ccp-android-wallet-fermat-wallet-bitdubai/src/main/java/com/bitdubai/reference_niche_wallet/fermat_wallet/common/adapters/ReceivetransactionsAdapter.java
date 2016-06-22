@@ -91,7 +91,9 @@ public class ReceivetransactionsAdapter
 
         holder.getTxt_user().setText(contactName);
 
-        holder.getTxt_memo().setText(data.getMemo());
+        if (data.getMemo()!=null)
+            holder.getTxt_memo().setText(data.getMemo());
+        else holder.getTxt_memo().setText("Not Notes");
 
 
     }

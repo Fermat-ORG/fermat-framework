@@ -11,12 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -93,6 +91,8 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
     private SearchView searchView;
     private AssetFactoryDraftAdapter adapterView;
 
+    private int menuItemSize;
+
     public static AssetFactory getAssetForEdit() {
         return selectedAsset;
     }
@@ -139,7 +139,7 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
         create.setEnabled(false);
 
         initSettings();
-        configureToolbar();
+//        configureToolbar();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
@@ -278,24 +278,30 @@ public class DraftAssetsHomeFragment extends FermatWalletListFragment<AssetFacto
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        menu.clear();
-        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_dap_factory_draft_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+        super.onCreateOptionsMenu(menu, inflater);
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+        inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
+
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+            MenuItem searchItem = menu.findItem(1);
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }

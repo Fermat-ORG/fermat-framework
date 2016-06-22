@@ -842,9 +842,9 @@ public class PlatformService extends Service implements FermatWorkerCallBack, Br
         // Indicate that app was loaded.
         Log.i(TAG,"PlatformService running");
         isFermatSystemRunning = true;
-        Intent intent = new Intent();
-        intent.setAction("org.fermat.SYSTEM_RUNNING");
-        sendBroadcast(intent);
+//        Intent intent = new Intent();
+//        intent.setAction("org.fermat.SYSTEM_RUNNING");
+//        sendBroadcast(intent);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -103,7 +104,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
             blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
-            hideSoftKeyboard(getActivity());
+
+
+            getActivity().getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            );
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -127,6 +132,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                 isContactAddPopUp = true;
             }
 
+            hideSoftKeyboard(getActivity());
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Init Views. " + e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
