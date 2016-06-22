@@ -14,7 +14,7 @@ angular.module("serverApp").controller('UserCtrl', ['$scope', '$http', '$window'
   $scope.login = function () {
 
     $scope.credentials.password = new String(CryptoJS.SHA256($scope.credentials.password));
-    $http.post('/fermat/api/user/login', angular.toJson($scope.credentials))
+    $http.post('/fermat/rest/api/v1/user/login', angular.toJson($scope.credentials))
         .then(function successCallback(response) {
             $scope.loginResponse = response.data;
 
@@ -26,7 +26,7 @@ angular.module("serverApp").controller('UserCtrl', ['$scope', '$http', '$window'
             var message = "";
             if(response.status === -1){message = "Server no available";}
             if(response.status === 401){message = "You must authenticate again";}
-            $scope.loginResponse.message = (response.status+" - Service error: "+response.statusText+" "+message);
+            $scope.loginResponse.message = (response.status+" - Auth Service error : "+response.statusText+" "+message);
          });
 
   };
