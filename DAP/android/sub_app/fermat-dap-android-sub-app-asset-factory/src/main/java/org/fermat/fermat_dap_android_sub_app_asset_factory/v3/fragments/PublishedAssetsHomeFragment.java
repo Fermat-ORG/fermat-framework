@@ -249,6 +249,8 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
         inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
 
         if (menuItemSize == 0 || menuItemSize == menu.size()) {

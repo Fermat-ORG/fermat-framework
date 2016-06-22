@@ -79,6 +79,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
     private boolean isRefreshing = false;
     private static final int MAX = 10;
     private int offset = 0;
+    private int menuItemSize;
 
     public static UserCommuinityUsersFragment newInstance() {
         return new UserCommuinityUsersFragment();
@@ -306,12 +307,16 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment<Referenc
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 //        menuItemAdd = menu.getItem(0);
 //        menuItemAdd.setVisible(false);
-        try {
-            menuItemAdd = menu.findItem(1);
-            changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+
+            try {
+                menuItemAdd = menu.findItem(1);
+                changeOptionMenuVisibility(menuItemAdd.getItemId(), false, true);
 //            menuItemDelete.setVisible(false);
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
         }
     }
 

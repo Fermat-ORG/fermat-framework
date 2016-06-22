@@ -86,6 +86,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
      * Flags
      */
     private boolean isRefreshing = false;
+    private int menuItemSize;
 
     public static UserCommuinityGroupUsersFragment newInstance() {
         return new UserCommuinityGroupUsersFragment();
@@ -229,13 +230,16 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 //        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-        try {
-            menuItemDelete = menu.findItem(2);
-            changeOptionMenuVisibility(menuItemDelete.getItemId(), false, true);
+            try {
+                menuItemDelete = menu.findItem(2);
+                changeOptionMenuVisibility(menuItemDelete.getItemId(), false, true);
 //            menuItemDelete.setVisible(false);
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
         }
     }
 

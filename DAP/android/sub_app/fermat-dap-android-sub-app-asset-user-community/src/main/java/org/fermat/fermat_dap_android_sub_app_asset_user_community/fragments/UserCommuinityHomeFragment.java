@@ -450,31 +450,34 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_community_user_home_menu, menu);
 //        searchView = (SearchView) menu.findItem(R.id.action_community_user_search).getActionView();
-        searchView = (SearchView) menu.findItem(6).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.action_community_user_search_hint));
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+
+            searchView = (SearchView) menu.findItem(6).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.action_community_user_search_hint));
 //        toolbar = getToolbar();
 //        toolbar.addView(searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.changeDataSet(actors);
-                    adapter.getFilter().filter(s);
-                    appSession.setData(SEARCH, s);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(actors);
+                        adapter.getFilter().filter(s);
+                        appSession.setData(SEARCH, s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData(SEARCH) != null) {
+                String s = appSession.getData(SEARCH).toString();
+                searchView.setQuery(s, true);
+                if (s.length() > 0) searchView.setIconified(false);
             }
-        });
-        if (appSession.getData(SEARCH) != null) {
-            String s = appSession.getData(SEARCH).toString();
-            searchView.setQuery(s, true);
-            if (s.length() > 0) searchView.setIconified(false);
-        }
 
 //        this.menu = menu;
 //        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
@@ -491,7 +494,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment<Reference
 //        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_user_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        if (menuItemSize == 0 || menuItemSize == menu.size()) {
             menuItemSize = menu.size();
             menuItemConnect = menu.findItem(0);
             menuItemDisconnect = menu.findItem(1);

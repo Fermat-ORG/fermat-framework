@@ -105,6 +105,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     private boolean isRefreshing = false;
     private static final int MAX = 10;
     private int offset = 0;
+    private int menuItemSize;
 
     public static IssuerCommunityHomeFragment newInstance() {
         return new IssuerCommunityHomeFragment();
@@ -420,29 +421,32 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_community_issuer_home_menu, menu);
-        searchView = (SearchView) menu.findItem(6).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.changeDataSet(actors);
-                    adapter.getFilter().filter(s);
-                    appSession.setData(SEARCH, s);
+            searchView = (SearchView) menu.findItem(6).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.action_community_issuer_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(actors);
+                        adapter.getFilter().filter(s);
+                        appSession.setData(SEARCH, s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData(SEARCH) != null) {
+                String s = appSession.getData(SEARCH).toString();
+                searchView.setQuery(s, true);
+                if (s.length() > 0) searchView.setIconified(false);
             }
-        });
-        if (appSession.getData(SEARCH) != null) {
-            String s = appSession.getData(SEARCH).toString();
-            searchView.setQuery(s, true);
-            if (s.length() > 0) searchView.setIconified(false);
-        }
 
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 1, R.string.connect).setIcon(R.drawable.ic_sub_menu_connect)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -455,12 +459,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment<Referenc
 //        menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 5, R.string.help).setIcon(R.drawable.dap_community_issuer_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.findItem(1);
-        menuItemCancel = menu.findItem(2);
-        menuItemSelect = menu.findItem(3);
-        menuItemUnselect = menu.findItem(4);
+            menuItemConnect = menu.findItem(1);
+            menuItemCancel = menu.findItem(2);
+            menuItemSelect = menu.findItem(3);
+            menuItemUnselect = menu.findItem(4);
 
-        restartButtons();
+            restartButtons();
+        }
     }
 
     @Override

@@ -109,6 +109,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
     private boolean isRefreshing = false;
     private static final int MAX = 10;
     private int offset = 0;
+    private int menuItemSize;
 
     public static RedeemPointCommunityHomeFragment newInstance() {
         return new RedeemPointCommunityHomeFragment();
@@ -441,31 +442,34 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
-        searchView = (SearchView) menu.findItem(7).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.action_community_redeem_point_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.dap_community_redeem_point_home_menu, menu);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.changeDataSet(actors);
-                    adapter.getFilter().filter(s);
-                    appSession.setData(SEARCH, s);
+            menuItemSize = menu.size();
+            searchView = (SearchView) menu.findItem(7).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.action_community_redeem_point_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        adapter.changeDataSet(actors);
+                        adapter.getFilter().filter(s);
+                        appSession.setData(SEARCH, s);
+                    }
+                    return false;
+                }
+            });
+            if (appSession.getData(SEARCH) != null) {
+                String s = appSession.getData(SEARCH).toString();
+                searchView.setQuery(s, true);
+                if (s.length() > 0) searchView.setIconified(false);
             }
-        });
-        if (appSession.getData(SEARCH) != null) {
-            String s = appSession.getData(SEARCH).toString();
-            searchView.setQuery(s, true);
-            if (s.length() > 0) searchView.setIconified(false);
-        }
 
 //        this.menu = menu;
 //        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 1, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
@@ -481,13 +485,14 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment<Ref
 //        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 6, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menuItemConnect = menu.findItem(1);
-        menuItemDisconnect = menu.findItem(2);
-        menuItemCancel = menu.findItem(3);
-        menuItemSelect = menu.findItem(4);
-        menuItemUnselect = menu.findItem(5);
+            menuItemConnect = menu.findItem(1);
+            menuItemDisconnect = menu.findItem(2);
+            menuItemCancel = menu.findItem(3);
+            menuItemSelect = menu.findItem(4);
+            menuItemUnselect = menu.findItem(5);
 
-        restartButtons();
+            restartButtons();
+        }
     }
 
     @Override
