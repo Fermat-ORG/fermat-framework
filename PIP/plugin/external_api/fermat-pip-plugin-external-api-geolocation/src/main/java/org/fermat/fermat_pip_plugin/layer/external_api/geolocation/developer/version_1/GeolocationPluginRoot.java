@@ -14,18 +14,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.structure.GeolocationPluginManager;
 
-import java.util.HashMap;
-import java.util.List;
-
-@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "darkpriestrelative@gmail.com", createdBy = "darkestpriest", layer = Layers.EXTERNAL_API, platform = Platforms.PLUG_INS_PLATFORM, plugin = Plugins.NOMINATIM)
+@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "darkpriestrelative@gmail.com", createdBy = "darkestpriest", layer = Layers.EXTERNAL_API, platform = Platforms.PLUG_INS_PLATFORM, plugin = Plugins.GEOLOCATION)
 public class GeolocationPluginRoot extends AbstractPlugin {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
@@ -82,15 +74,16 @@ public class GeolocationPluginRoot extends AbstractPlugin {
     }
 
     /**
-     * Test methods
+     * Test methods.
+     * I commented this method to help to improve the compilation time.
      */
-    private void testListCountries(){
+    /*private void testListCountries(){
         try {
             HashMap<String, Country> countriesHashMap = this.geolocationPluginManager.getCountryList();
-            System.out.println("NOMINATIM:" + countriesHashMap);
+            System.out.println("GEOLOCATION:" + countriesHashMap);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception " + e);
+            System.out.println("GEOLOCATION: Exception " + e);
         }
     }
 
@@ -99,10 +92,10 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             String countryCode = "VE";
             List<CountryDependency> countriesHashMap = this.geolocationPluginManager.
                     getCountryDependencies(countryCode);
-            System.out.println("NOMINATIM:"+countriesHashMap);
+            System.out.println("GEOLOCATION:"+countriesHashMap);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
     }
 
@@ -111,10 +104,10 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             String countryCode = "VE";
             List<City> cities = this.geolocationPluginManager.
                     getCitiesByCountryCode(countryCode);
-            System.out.println("NOMINATIM:"+cities);
+            System.out.println("GEOLOCATION:"+cities);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
     }
 
@@ -124,10 +117,10 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             String countryCode = "VE";
             List<City> cities = this.geolocationPluginManager.
                     getCitiesByCountryCodeAndDependencyName(countryCode, dependencyName);
-            System.out.println("NOMINATIM:"+cities);
+            System.out.println("GEOLOCATION:"+cities);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
     }
 
@@ -136,10 +129,10 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             String location = "Maracay";
             GeoRectangle geoRectangle = this.geolocationPluginManager.
                     getGeoRectangleByLocation(location);
-            System.out.println("NOMINATIM:"+geoRectangle);
+            System.out.println("GEOLOCATION:"+geoRectangle);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
     }
 
@@ -149,10 +142,10 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             float longitude = -68.30472f;
             Address address = this.geolocationPluginManager.
                     getAddressByCoordinate(latitude, longitude);
-            System.out.println("NOMINATIM:"+address);
+            System.out.println("GEOLOCATION:"+address);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
     }
 
@@ -160,11 +153,11 @@ public class GeolocationPluginRoot extends AbstractPlugin {
         try{
             GeoRectangle geoRectangle = this.geolocationPluginManager.
                     getRandomGeoLocation();
-            System.out.println("NOMINATIM:"+geoRectangle);
+            System.out.println("GEOLOCATION:"+geoRectangle);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("NOMINATIM: Exception "+e);
+            System.out.println("GEOLOCATION: Exception "+e);
         }
-    }
+    }*/
 
 }
