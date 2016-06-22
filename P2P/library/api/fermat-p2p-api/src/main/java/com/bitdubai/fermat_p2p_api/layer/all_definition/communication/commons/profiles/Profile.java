@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.p
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>Profile</code> is
  * the base of the component profile
@@ -11,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class Profile {
+public abstract class Profile implements Serializable {
 
     /**
      * Represent the Identity public key
