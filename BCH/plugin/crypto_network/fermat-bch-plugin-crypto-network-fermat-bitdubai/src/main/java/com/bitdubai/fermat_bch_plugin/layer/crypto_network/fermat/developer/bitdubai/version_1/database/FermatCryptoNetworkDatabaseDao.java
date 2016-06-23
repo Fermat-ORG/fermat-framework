@@ -667,7 +667,7 @@ public class FermatCryptoNetworkDatabaseDao {
         //BlockchainNetworkType
         cryptoTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE)));
         //Currency
-        cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        cryptoTransaction.setCryptoCurrency(CryptoCurrency.FERMAT);
         //CryptoStatus
         try {
             cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME)));
@@ -681,9 +681,9 @@ public class FermatCryptoNetworkDatabaseDao {
         //CryptoAmount
         cryptoTransaction.setCryptoAmount(record.getLongValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME));
         //AddressFrom
-        cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME), CryptoCurrency.BITCOIN));
+        cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME), CryptoCurrency.FERMAT));
         //AddressTo
-        cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME), CryptoCurrency.BITCOIN));
+        cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME), CryptoCurrency.FERMAT));
         //OP_Return
         cryptoTransaction.setOp_Return(record.getStringValue(FermatCryptoNetworkDatabaseConstants.TRANSACTIONS_OP_RETURN_COLUMN_NAME));
         //CryptoTransactionType
