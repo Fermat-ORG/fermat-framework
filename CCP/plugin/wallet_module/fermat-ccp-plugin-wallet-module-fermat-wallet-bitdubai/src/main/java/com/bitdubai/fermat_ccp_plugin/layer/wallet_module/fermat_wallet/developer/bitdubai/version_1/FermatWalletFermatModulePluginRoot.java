@@ -228,10 +228,12 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         walletContactsManager,
                         pluginId,
                         pluginFileSystem,
-                        exchangeProviderFilterManagerproviderFilter,
                         eventManager,
-                        fermatNetworkManager, broadcaster,
-                        walletManagerManager,transferIntraWalletUsersManager);
+                        fermatNetworkManager,
+                        broadcaster,
+                        exchangeProviderFilterManagerproviderFilter,
+                        walletManagerManager,
+                        transferIntraWalletUsersManager);
 
                 walletModuleCryptoWallet.initialize();
 

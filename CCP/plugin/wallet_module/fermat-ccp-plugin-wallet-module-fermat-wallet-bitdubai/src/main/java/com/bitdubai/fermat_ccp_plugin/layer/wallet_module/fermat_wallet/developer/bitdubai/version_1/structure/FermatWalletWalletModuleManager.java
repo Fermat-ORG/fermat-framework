@@ -218,14 +218,13 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
-                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
-                                           final EventManager eventManager, FermatNetworkManager fermatNetworkManager, Broadcaster broadcaster,
                                            final WalletContactsManager walletContactsManager,
-                                           UUID pluginId,
-                                           PluginFileSystem pluginFileSystem,
-                                           final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
+                                           final UUID pluginId,
+                                           final PluginFileSystem pluginFileSystem,
                                            final EventManager eventManager,
-                                           BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster,
+                                           final FermatNetworkManager fermatNetworkManager,
+                                           final Broadcaster broadcaster,
+                                           final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
                                            final WalletManagerManager walletManagerManager,
                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
         super(pluginFileSystem,pluginId);
@@ -248,7 +247,6 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
         this.fermatNetworkManager = fermatNetworkManager;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.broadcaster = broadcaster;
         this.walletManagerManager = walletManagerManager;
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
