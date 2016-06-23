@@ -47,7 +47,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/cbw_settings_current_merchandises"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginTop="8dp"
             tools:listitem="@layout/cbw_earnings_currency_pair_item"/>
