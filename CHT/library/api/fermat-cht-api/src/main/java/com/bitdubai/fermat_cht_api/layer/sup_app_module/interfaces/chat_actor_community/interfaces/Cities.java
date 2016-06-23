@@ -2,10 +2,12 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_c
 
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
+import java.io.Serializable;
+
 /**
  * Created by Franklin Marcano on 17/06/2016.
  */
-public interface Cities {
+public interface Cities extends Serializable {
     /**
      * This method returns the Country name.
      * @return

@@ -420,7 +420,7 @@ public class ContactsListFragment
 
         // Locate the search item
         //MenuItem searchItem = menu.findItem(R.id.menu_search);
-        MenuItem searchItem = menu.findItem(1);
+        MenuItem searchItem = menu.findItem(fermatFragmentType.getOptionsMenu().getItem(1).getId());
         if (searchItem!=null) {
             searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
