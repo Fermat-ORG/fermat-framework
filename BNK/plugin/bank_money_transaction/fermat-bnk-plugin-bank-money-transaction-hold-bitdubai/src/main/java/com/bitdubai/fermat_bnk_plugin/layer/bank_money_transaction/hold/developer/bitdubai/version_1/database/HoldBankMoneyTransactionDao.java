@@ -207,7 +207,7 @@ public class HoldBankMoneyTransactionDao {
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, BankTransactionStatus.ACKNOWLEDGE.getCode());
-        newRecord.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, (new Date().getTime() / 1000));
+        newRecord.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, new Date().getTime());
         newRecord.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, 0);
     }
 
