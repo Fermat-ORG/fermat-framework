@@ -13,13 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.AbstractBlockchainProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -283,7 +282,7 @@ public class BitcoinCryptoNetworkManager extends AbstractBlockchainProviderManag
         List<Address> watchedAddresses = wallet.getWatchedAddresses();
         List<Address> newAddresses = new ArrayList<>();
 
-        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
         for (ECKey ecKey : keyList) {
             newAddresses.add(ecKey.toAddress(networkParameters));
         }
@@ -324,7 +323,7 @@ public class BitcoinCryptoNetworkManager extends AbstractBlockchainProviderManag
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        final NetworkParameters NETWORK_PARAMETER = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters NETWORK_PARAMETER = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -623,17 +622,8 @@ public class BitcoinCryptoNetworkManager extends AbstractBlockchainProviderManag
      * @return
      */
     private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
-        CryptoTransaction newCryptoTransaction = new CryptoTransaction();
-
-        newCryptoTransaction.setTransactionHash(cryptoTransaction.getTransactionHash());
-        newCryptoTransaction.setBlockHash(cryptoTransaction.getBlockHash());
-        newCryptoTransaction.setOp_Return(cryptoTransaction.getOp_Return());
-        newCryptoTransaction.setAddressTo(cryptoTransaction.getAddressTo());
-        newCryptoTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
-        newCryptoTransaction.setCryptoAmount(cryptoTransaction.getCryptoAmount());
+        CryptoTransaction newCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
         newCryptoTransaction.setCryptoStatus(cryptoStatus);
-        newCryptoTransaction.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
-
         return newCryptoTransaction;
     }
 

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_core.layer.crypto_network.bitcoin_network;
+package com.bitdubai.fermat_bch_core.layer.crypto_network.fermat_network;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;

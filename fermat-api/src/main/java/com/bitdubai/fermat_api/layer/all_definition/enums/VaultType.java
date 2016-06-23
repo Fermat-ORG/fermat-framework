@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum VaultType implements FermatEnum {
 
     CRYPTO_ASSET_VAULT("ASVA"),
-    CRYPTO_CURRENCY_VAULT("CCVA"),
+    CRYPTO_CURRENCY_VAULT("CCV"),
     WATCH_ONLY_VAULT("WOV");
 
     private String code;

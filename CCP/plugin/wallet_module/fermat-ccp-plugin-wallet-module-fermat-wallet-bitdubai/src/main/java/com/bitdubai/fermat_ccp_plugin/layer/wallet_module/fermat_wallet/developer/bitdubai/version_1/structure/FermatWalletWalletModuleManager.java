@@ -28,8 +28,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.fermat_vault.FermatVaultManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
@@ -185,7 +187,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final CryptoVaultManager cryptoVaultManager            ;
+    private final FermatVaultManager fermatVaultManager            ;
 
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -196,7 +198,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager                   ;
+    private final FermatNetworkManager fermatNetworkManager                     ;
     private final Broadcaster                   broadcaster                     ;
     private final WalletManagerManager walletManagerManager;
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
@@ -209,13 +211,15 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final CryptoAddressBookManager cryptoAddressBookManager,
                                            final CryptoAddressesManager cryptoAddressesNSManager,
                                            final CryptoPaymentManager cryptoPaymentManager,
-                                           final CryptoVaultManager cryptoVaultManager,
+                                           final FermatVaultManager fermatVaultManager,
                                            final ErrorManager errorManager,
                                            final ExtraUserManager extraUserManager,
                                            final IntraWalletUserActorManager intraUserManager,
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
+                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
+                                           final EventManager eventManager, FermatNetworkManager fermatNetworkManager, Broadcaster broadcaster,
                                            final WalletContactsManager walletContactsManager,
                                            UUID pluginId,
                                            PluginFileSystem pluginFileSystem,
@@ -230,7 +234,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
         this.cryptoAddressesNSManager       = cryptoAddressesNSManager      ;
         this.cryptoPaymentManager           = cryptoPaymentManager          ;
-        this.cryptoVaultManager             = cryptoVaultManager            ;
+        this.fermatVaultManager             = fermatVaultManager            ;
         this.errorManager                   = errorManager                  ;
         this.extraUserManager               = extraUserManager              ;
         this.intraUserManager               = intraUserManager              ;
@@ -241,6 +245,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
         this.eventManager = eventManager;
+
+        this.fermatNetworkManager = fermatNetworkManager;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.broadcaster = broadcaster;
@@ -1303,7 +1309,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
         try {
-            return this.bitcoinNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
+            return this.fermatNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
 
         }
         catch (CantGetBlockchainDownloadProgress e) {
@@ -1440,7 +1446,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
         //todo Natalia corregir
-        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+        return fermatVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override
@@ -1518,9 +1524,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
-            case BASIC_WALLET_FERMAT_WALLET:
-                return cryptoVaultManager.getAddress(blockchainNetworkType);
-
+            case BASIC_WALLET_BITCOIN_WALLET:
+                return fermatVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }
@@ -1670,7 +1675,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
         try {
-            return cryptoVaultManager.getMnemonicCode();
+            return fermatVaultManager.getMnemonicCode();
         } catch (CantLoadExistingVaultSeed e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
@@ -1723,7 +1728,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
-        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+        fermatVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
     }
 
     @Override

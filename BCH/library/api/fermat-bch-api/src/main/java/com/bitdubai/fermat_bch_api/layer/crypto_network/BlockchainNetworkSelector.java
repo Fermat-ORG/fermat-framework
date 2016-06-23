@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
+package com.bitdubai.fermat_bch_api.layer.crypto_network;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -12,7 +12,7 @@ import org.bitcoinj.params.TestNet3Params;
  * Created by rodrigo on 9/21/15.
  * Calculates the correct network Parameters based on the requested network configuration
  */
-public class BitcoinNetworkSelector {
+public class BlockchainNetworkSelector {
     public static NetworkParameters getNetworkParameter(BlockchainNetworkType blockchainNetworkType){
         switch (blockchainNetworkType){
             case PRODUCTION:
