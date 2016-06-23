@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
@@ -608,7 +608,7 @@ public class CryptoBrokerCommunityManager
         if(name.equals("Customer"))
         {
             try{
-                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, Frecuency.NONE);
+                final CryptoCustomerIdentity createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img, 0, Frequency.NONE);
                 createdPublicKey = createdIdentity.getPublicKey();
                 new Thread() {
                     @Override
@@ -628,7 +628,7 @@ public class CryptoBrokerCommunityManager
         else if( name.equals("Broker"))
         {
             try{
-                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frecuency.NONE);
+                final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frequency.NONE);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

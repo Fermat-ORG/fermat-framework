@@ -4,7 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Refere
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -60,7 +60,7 @@ public class CreateBrokerIdentityExecutor {
 
         try {
             //TODO:NELSON Hay que pasarle los valores correcto al accuracy y la frecuencia
-            identity = moduleManager.createCryptoBrokerIdentity(identityName, imageInBytes,0, Frecuency.NONE);
+            identity = moduleManager.createCryptoBrokerIdentity(identityName, imageInBytes,0, Frequency.NONE);
 
         } catch (CantCreateCryptoBrokerException ex) {
             if (errorManager != null)
