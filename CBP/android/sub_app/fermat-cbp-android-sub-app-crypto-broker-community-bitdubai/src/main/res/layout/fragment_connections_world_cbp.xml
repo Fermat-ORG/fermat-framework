@@ -4,35 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
+    android:background="#F2F2F2"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/cbc_no_contacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/nodata"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:src="@drawable/cbc_comm_icon_no_user_full"/>
-
-        <TextView
-            android:id="@+id/nodatalabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No Users"
-            android:textColor="#BCBEC0"
-            android:textSize="12sp"
-            android:textStyle="normal"/>
-
-    </LinearLayout>
+        android:src="@drawable/no_contacts"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/search_empty_view"
@@ -160,8 +142,8 @@
             android:id="@+id/gridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/cht_comm_world_item"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            tools:listitem="@layout/cbc_comm_world_item"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

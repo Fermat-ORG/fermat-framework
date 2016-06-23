@@ -1,171 +1,73 @@
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="115dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="2dp"
-    android:layout_margin="4dp">
+    android:layout_marginEnd="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginStart="16dp"
+    android:paddingTop="22dp">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/cbc_broker_image"
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/cbc_comm_bg_circula_friend_list"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/cbc_status_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:layout_below="@+id/cbc_broker_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-15dp"
+        android:src="@drawable/agregar_contacto"/>
 
-        <ImageView
-            android:id="@+id/ring_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/cbc_comm_circular_shape"
-            android:scaleType="centerCrop"/>
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbc_broker_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cbc_status_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="#4d4d4d"
+        android:textSize="16sp"
+        tools:text="Broker Name"/>
 
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="82dp"
-            android:layout_height="82dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="9dp"
-            android:background="@drawable/cbc_comm_bg_circula_friend_list"
-            android:scaleType="centerCrop"
-            />
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbc_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cbc_broker_name"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="3"
+        android:textColor="#1291a3"
+        android:textSize="14sp"
+        tools:text="Country - Place"/>
 
-        <TextView
-            android:id="@+id/community_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="2dip"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingTop="10dp"
-            android:textColor="#757575"
-            android:textSize="20sp"
-            android:textStyle="normal"
-            tools:text="Person Namelsky"/>
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbc_connection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cbc_location_text"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#757575"
+        android:textSize="12sp"
+        android:visibility="visible"
+        tools:text="is now a connection"/>
 
-        <RelativeLayout
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/community_name"
-            android:layout_centerHorizontal="true"
-            android:padding="10dp">
+</RelativeLayout>
 
-            <ImageView
-                android:id="@+id/location_image"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/cbc_comm_geotag_contact_icon"
-                />
-
-            <TextView
-                android:id="@+id/location_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_toEndOf="@+id/location_image"
-                android:layout_toRightOf="@+id/location_image"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="3"
-                android:text="Location - Place"
-                android:textColor="#47BF73"
-                android:textSize="12sp"/>
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/connection_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/location"
-            android:layout_centerHorizontal="true"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:paddingBottom="10dp"
-            android:text="is now a connection"
-            android:textAlignment="center"
-            android:textColor="#757575"
-            android:textSize="12sp"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/connectedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/connection_text"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/cbc_comm_accept_conncetion_icon"
-            android:paddingBottom="10dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/blockedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/connection_text"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/cbc_comm_delete_connetion_icon"
-            android:paddingBottom="10dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/pendingButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/connection_text"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/cbc_comm_hold_conections_icon"
-            android:paddingBottom="10dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/acceptButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/connection_text"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/cbc_comm_hold_conections_icon"
-            android:paddingBottom="10dp"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/add_contact_button"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_below="@+id/location"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/cbc_comm_button_add_contact_bg"
-            android:paddingBottom="8dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:paddingTop="8dp"
-            android:shadowRadius="0"
-            android:text="@string/add_contact"
-            android:textAllCaps="false"
-            android:textColor="#47BF73"
-            android:textSize="12sp"
-            />
-
-        <TextView
-            android:id="@+id/divider"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_alignParentBottom="false"
-            android:layout_below="@+id/add_contact_button"/>
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
