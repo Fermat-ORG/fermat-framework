@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -25,11 +26,18 @@ public abstract class AbstractPluginSubsystem {
     private final Map<PluginDeveloperReference, AbstractPluginDeveloper> developers;
 
     private final PluginReference pluginReference;
+    private FermatContext fermatContext;
 
     public AbstractPluginSubsystem(final PluginReference pluginReference) {
 
         this.pluginReference = pluginReference;
 
+        this.developers = new ConcurrentHashMap<>();
+    }
+
+    public AbstractPluginSubsystem(PluginReference pluginReference,FermatContext fermatContext) {
+        this.fermatContext = fermatContext;
+        this.pluginReference = pluginReference;
         this.developers = new ConcurrentHashMap<>();
     }
 
@@ -92,4 +100,7 @@ public abstract class AbstractPluginSubsystem {
 
     public abstract void start() throws CantStartSubsystemException;
 
+    public FermatContext getFermatContext() {
+        return fermatContext;
+    }
 }

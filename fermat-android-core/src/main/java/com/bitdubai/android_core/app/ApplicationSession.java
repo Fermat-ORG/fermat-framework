@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.github.anrwatchdog.ANRWatchDog;
+import com.mati.fermat_osa_addon_android_loader.ClassLoaderManager;
 import com.mati.fermat_osa_addon_android_loader.Smith;
 
 import org.acra.ACRA;
@@ -87,6 +88,8 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
      * Base loader
      */
     private ClassLoader mBaseClassLoader;
+
+    private ClassLoaderManager classLoaderManager;
 
     /**
      *  Application session constructor
@@ -175,6 +178,8 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        classLoaderManager = new ClassLoaderManager<>(this);
 
 //        loadProcessInfo();
 
@@ -270,7 +275,11 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     public boolean isFermatRunning() {
         if(!fermatRunning){
-            fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+            try {
+                fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return fermatRunning;
     }
@@ -278,5 +287,10 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     @Override
     public ClassLoader getBaseClassLoader() {
         return mBaseClassLoader;
+    }
+
+    @Override
+    public Object loadPlugin(String pluginName) {
+        return null;
     }
 }

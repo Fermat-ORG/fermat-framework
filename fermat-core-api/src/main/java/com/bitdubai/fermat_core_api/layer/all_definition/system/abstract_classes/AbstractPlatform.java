@@ -48,7 +48,9 @@ public abstract class AbstractPlatform {
         this.platformReference = platformReference;
     }
 
-    public AbstractPlatform(FermatContext fermatContext) {
+    public AbstractPlatform(PlatformReference platformReference, FermatContext fermatContext) {
+        this.layers            = new ConcurrentHashMap<>();
+        this.platformReference = platformReference;
         this.fermatContext = fermatContext;
     }
 
@@ -236,5 +238,9 @@ public abstract class AbstractPlatform {
             }
         }
         return abstractPlugins;
+    }
+
+    public FermatContext getFermatContext() {
+        return fermatContext;
     }
 }

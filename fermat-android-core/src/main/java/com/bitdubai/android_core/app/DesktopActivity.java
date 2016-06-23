@@ -74,10 +74,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
-//        ClassLoaderManager classLoaderManager = new ClassLoaderManager(ApplicationSession.getInstance());
-//        Object o = classLoaderManager.load("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
+        try {
+
+//            ClassLoaderManager classLoaderManager = new ClassLoaderManager<>(ApplicationSession.getInstance());
+//            Object o = classLoaderManager.load("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
+//            for (Method method : o.getClass().getMethods()) {
+//                Log.i(TAG, method.getName());
+//            }
+//            Method m = o.getClass().getDeclaredMethod("start");
+//            m.invoke(o);
+//
+//            Method getAbstractPlugin = o.getClass().getMethod("getAbstractPlugin");
+//            Object ab = getAbstractPlugin.invoke(o);
+//            Method abstractPluginStart = ab.getClass().getMethod("start");
+//            abstractPluginStart.invoke(ab);
 //
 //        Log.i(TAG,o.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
     @Override

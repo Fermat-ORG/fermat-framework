@@ -211,6 +211,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOIN_ASSET_VAULT         ("BAV"),
     BITCOIN_FOR_ASSET("BFA"),
     BITCOIN_NETWORK             ("BN"),
+    FERMAT_NETWORK              ("FN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
     LOSS_PROTECTED_WALLET       ("LPW"),

@@ -6,4 +6,7 @@ package com.bitdubai.fermat_api;
 public interface FermatContext {
 
     ClassLoader getBaseClassLoader();
+
+    Object loadPlugin(String pluginName);
+
 }
