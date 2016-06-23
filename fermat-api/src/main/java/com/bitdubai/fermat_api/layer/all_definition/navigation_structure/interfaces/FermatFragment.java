@@ -16,4 +16,5 @@ public interface FermatFragment {
 
     OptionsMenu getOptionsMenu();
 
+    boolean hasOptionMenu();
 }

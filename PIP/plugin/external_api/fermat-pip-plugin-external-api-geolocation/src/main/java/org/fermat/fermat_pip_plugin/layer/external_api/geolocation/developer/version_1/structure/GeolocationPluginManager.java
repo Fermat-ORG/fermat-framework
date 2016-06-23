@@ -66,7 +66,7 @@ public class GeolocationPluginManager implements GeolocationManager {
     /**
      * Represents the file privacy of countries backup.
      */
-    FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
+    FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
 
     /**
      * Constructor with parameters
@@ -538,8 +538,8 @@ public class GeolocationPluginManager implements GeolocationManager {
         float south = geoRectangle.getSouth();
         float west = geoRectangle.getWest();
         float east = geoRectangle.getEast();
-        //System.out.println("NOMINATIM GEO-R:"+geoRectangle);
-        //System.out.println("NOMINATIM CITI:"+city);
+        //System.out.println("GEOLOCATION GEO-R:"+geoRectangle);
+        //System.out.println("GEOLOCATION CITI:"+city);
         //Check latitude
         boolean isLatitudeOk = north>=cityLatitude&&south<=cityLatitude;
         boolean isLongitudeOk = east>=cityLongitude&&west<=cityLongitude;

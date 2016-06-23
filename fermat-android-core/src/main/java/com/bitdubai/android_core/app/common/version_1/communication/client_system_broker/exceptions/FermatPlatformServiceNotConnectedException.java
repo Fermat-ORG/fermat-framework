@@ -10,4 +10,8 @@ public class FermatPlatformServiceNotConnectedException extends RuntimeException
     public FermatPlatformServiceNotConnectedException() {
         super(DEFAULT_MESSAGE);
     }
+
+    public FermatPlatformServiceNotConnectedException(String detailMessage, Throwable throwable) {
+        super(detailMessage, throwable);
+    }
 }

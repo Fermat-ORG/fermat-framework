@@ -129,7 +129,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
 
             _executor = Executors.newFixedThreadPool(2);
@@ -150,7 +150,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             }
 
             blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type" + blockchainNetworkType);
+           // System.out.println("Network Type" + blockchainNetworkType);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -199,6 +199,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
                 }
             });
+
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -242,11 +247,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
-        imageView_contact = (ImageView) rootView.findViewById(R.id.profile_Image);
-        send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+       send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
+        list.add("FTMS");
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
@@ -265,7 +270,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
                     switch (position) {
                         case 0:
-                            text = "[btc]";
+                            text = "[ftms]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -276,6 +281,17 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
                             break;
                         case 1:
+                            text = "[btc]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
+                        case 2:
                             text = "[bits]";
                             if (txtType.equals("[btc]")) {
                                 newAmount = bitcoinConverter.getBitsFromBTC(amount);
@@ -286,7 +302,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                             }
 
                             break;
-                        case 2:
+                        case 3:
                             text = "[satoshis]";
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
@@ -387,7 +403,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                     VaultType.CRYPTO_CURRENCY_VAULT,
                                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                     blockchainNetworkType
                             );
                         }
@@ -456,11 +472,11 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
         /**
          * Listeners
          */
-        imageView_contact.setOnClickListener(this);
-        send_button.setOnClickListener(this);
-        rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
-        /**
+        send_button.setOnClickListener(this);
+
+        send_button.setOnClickListener(this);
+      /**
          *  Amount observer
          */
         editTextAmount.addTextChangedListener(new TextWatcher() {
@@ -546,22 +562,18 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
             cryptoWalletWalletContact = (FermatWalletWalletContact) appSession.getData(SessionConstant.LAST_SELECTED_CONTACT);
         }
         if (cryptoWalletWalletContact != null) {
-            isFragmentFromDetail = true;
-            try {
-                if (cryptoWalletWalletContact.getProfilePicture() != null) {
-                    imageView_contact.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), cryptoWalletWalletContact.getProfilePicture()));
 
-                } else
-                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            } catch (Exception e) {
-                Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-            }
+            isFragmentFromDetail = true;
+
+
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-            Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
-        }
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+
+         }
+
+
     }
 
 
@@ -612,7 +624,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }
@@ -622,7 +634,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                         newAmount = amount;
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                    }else if (txtType.equals("[ftms]")) {
+                        newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     }
+
 
 
                     BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
@@ -641,7 +656,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    VaultType.CRYPTO_CURRENCY_VAULT,
                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                    appSession.getAppPublicKey(),
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    blockchainNetworkType
                            );
                            fermatWallet.sendCryptoPaymentRequest(
@@ -654,14 +669,14 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    CryptoCurrency.BITCOIN
 
                            );
                            Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
                            if (isFragmentFromDetail) onBack(null);
                            else
-                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                               onBack(Activities.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
                        Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }
@@ -696,7 +711,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
 
         } catch (CantGetSelectedActorIdentityException e) {

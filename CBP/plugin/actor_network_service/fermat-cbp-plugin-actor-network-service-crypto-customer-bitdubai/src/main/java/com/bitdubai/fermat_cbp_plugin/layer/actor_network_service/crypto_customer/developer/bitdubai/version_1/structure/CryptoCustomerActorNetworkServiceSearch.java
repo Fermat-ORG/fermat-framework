@@ -31,7 +31,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResult() throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResult(Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -42,10 +42,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 
@@ -76,7 +76,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -121,7 +121,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -132,10 +132,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     null,
                     deviceLocation,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 
@@ -166,7 +166,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResultDistance(double distance) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResultDistance(double distance, Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -177,10 +177,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 
@@ -211,7 +211,7 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
     }
 
     @Override
-    public List<CryptoCustomerExposingData> getResultAlias(String alias) throws CantListCryptoCustomersException {
+    public List<CryptoCustomerExposingData> getResultAlias(String alias, Integer max, Integer offSet) throws CantListCryptoCustomersException {
 
         try {
 
@@ -222,10 +222,10 @@ public final class CryptoCustomerActorNetworkServiceSearch extends CryptoCustome
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offSet,
                     NetworkServiceType.CRYPTO_CUSTOMER
             );
 

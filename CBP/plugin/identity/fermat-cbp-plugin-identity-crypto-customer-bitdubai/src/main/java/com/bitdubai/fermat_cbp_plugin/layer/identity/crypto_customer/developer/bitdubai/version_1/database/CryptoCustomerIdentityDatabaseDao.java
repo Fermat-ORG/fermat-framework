@@ -349,7 +349,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         long accuracy = record.getLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
         Frecuency frecuency = Frecuency.NONE;
         try {
-             frecuency = Frecuency.getByCode(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME);
+             frecuency = Frecuency.getByCode(record.getStringValue(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }

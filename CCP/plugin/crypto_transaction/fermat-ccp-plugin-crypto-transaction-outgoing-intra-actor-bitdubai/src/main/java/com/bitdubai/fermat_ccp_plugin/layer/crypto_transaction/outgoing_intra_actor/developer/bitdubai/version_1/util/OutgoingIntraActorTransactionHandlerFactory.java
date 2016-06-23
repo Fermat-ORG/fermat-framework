@@ -35,6 +35,9 @@ public class OutgoingIntraActorTransactionHandlerFactory {
             case BASIC_WALLET_BITCOIN_WALLET:
                 return new OutgoingIntraActorBitcoinWalletTransactionHandler(this.eventManager,this.cryptoWalletManager,this.outgoingIntraActorDao);
 
+            case BASIC_WALLET_FERMAT_WALLET:
+                return new OutgoingIntraActorBitcoinWalletTransactionHandler(this.eventManager,this.cryptoWalletManager,this.outgoingIntraActorDao);
+
             case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                 return new OutgoingIntraActorLossProtectedWalletTransactionHandler(this.eventManager,this.bitcoinLossProtectedWalletManager,this.outgoingIntraActorDao);
 

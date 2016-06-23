@@ -72,7 +72,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
             setUpUI();
             setUpActions();
             setUpUIData();
-            configureToolbar();
+//            configureToolbar();
 
             return rootView;
         } catch (Exception e) {
@@ -121,8 +121,8 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -130,10 +130,20 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS) {
-                setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                //case IC_ACTION_SETTINGS:
+                case 2:
+                    setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
+//                case 1:
+//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+//                    break;
             }
+
+//            if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS) {
+//                setUpFactorySettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -163,13 +173,14 @@ public class SettingsFactoryFragment extends AbstractFermatFragment<ReferenceApp
     }
 
     private void configureToolbar() {
-        Toolbar toolbar = getPaintActivtyFeactures().getToolbar();
+        Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.redeem_home_bar_color));
             toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#1d1d25"));
+                window.setStatusBarColor(getResources().getColor(R.color.redeem_home_bar_color));
             }
         }
     }

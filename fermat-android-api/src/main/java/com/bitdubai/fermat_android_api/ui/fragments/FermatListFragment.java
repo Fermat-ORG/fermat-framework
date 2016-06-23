@@ -23,10 +23,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatListFragment<M,S extends FermatSession> extends AbstractFermatFragment<S,ResourceProviderManager>
+public abstract class FermatListFragment<M, S extends FermatSession> extends AbstractFermatFragment<S, ResourceProviderManager>
         implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
@@ -139,6 +140,7 @@ public abstract class FermatListFragment<M,S extends FermatSession> extends Abst
      * <b>WARNING: DO NOT CALL UI REFERENCES INSIDE THIS METHOD THIS WILL CAUSE IllegalStateException</b>
      *
      * @param refreshType Fermat Refresh Enum Type
+     * @param pos         the position where to start to fetch more data, use this for pagination
      */
     public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         return null;

@@ -1,6 +1,5 @@
 package unit.UnholdCryptoMoneyTransactionPluginRoot;
 
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.UnHoldCryptoMoneyTransactionPluginRoot;
 
 import org.junit.Test;

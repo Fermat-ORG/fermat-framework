@@ -223,5 +223,6 @@
     <string name="cbw_transaction">Transaction</string>
     <string name="cbw_restock_title">Restock</string>
     <string name="cbw_destock_title">Destock</string>
+    <string name="amount_to_restock_or_destock">Amount to Restock or Destock</string>
 
 </resources>

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -106,10 +107,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
             chatIdentitySettings = null;
             try {
                 chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -134,6 +138,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
             }catch (Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
+            turnGPSOn();
         } catch (Exception e) {
             if(errorManager!=null)
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -269,6 +274,48 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
         }
     }
 
+    public void turnGPSOn() {
+        try{
+            Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+            intent.putExtra("enabled", true);
+            if (Build.VERSION.SDK_INT < 23) {
+                //getActivity().sendBroadcast(intent);
+                String provider = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                if(!provider.contains("gps")){ //if gps is disabled
+                    Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Intent gpsOptionsIntent = new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(gpsOptionsIntent);
+                    //                final Intent poke = new Intent();
+                    //                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+                    //                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+                    //                poke.setData(Uri.parse("3"));
+                    //                getActivity().sendBroadcast(poke);
+                }
+            }else {
+                //getContext().sendBroadcast(intent);
+                String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+                if(!provider.contains("gps")){ //if gps is disabled
+                    Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+                    Intent gpsOptionsIntent = new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(gpsOptionsIntent);
+                    //                final Intent poke = new Intent();
+                    //                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+                    //                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+                    //                poke.setData(Uri.parse("3"));
+                    //                getContext().sendBroadcast(poke);
+                }
+            }
+        }catch(Exception e){
+            if (Build.VERSION.SDK_INT < 23) {
+                Toast.makeText(getActivity(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+            }else{
+                Toast.makeText(getContext(), "Please, turn on your GPS", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -306,8 +353,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment<Reference
                 case 1:
                     if(identity!=null)
                         changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
-                    else
+                    else {
+                        if (Build.VERSION.SDK_INT < 23) {
+                            Toast.makeText(getActivity(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                        }else{
+                            Toast.makeText(getContext(), "You must create an identity to open this menu option", Toast.LENGTH_SHORT);
+                        }
                         setUpDialog();
+                    }
                     break;
             }
         } catch (Exception e) {

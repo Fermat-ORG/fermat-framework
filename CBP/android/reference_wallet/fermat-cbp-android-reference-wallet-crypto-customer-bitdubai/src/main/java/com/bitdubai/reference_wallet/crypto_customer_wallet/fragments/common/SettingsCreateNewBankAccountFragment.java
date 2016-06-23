@@ -3,6 +3,10 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -38,6 +43,9 @@ public class SettingsCreateNewBankAccountFragment
     // Data
     private FiatCurrency[] currencies;
     private FiatCurrency selectedCurrency;
+    private static int MAX_LENGHT_BANK_NAME = 15;
+    private static int MAX_LENGHT_BANK_ALIAS = 10;
+    private static int MAX_LENGHT_BANK_ACCOUNT = 25;
 
     private BankAccountType[] accountTypes;
     private BankAccountType selectedAccountType;
@@ -46,8 +54,24 @@ public class SettingsCreateNewBankAccountFragment
     private FermatEditText bankNameEditText;
     private FermatEditText accountNumberEditText;
     private FermatEditText accountAliasEditText;
+    FermatTextView bankNameCount, accountNumberCount, accountAliasCount;
 
     private CryptoCustomerWalletModuleManager moduleManager;
+    private final TextWatcher bankNameTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
+    private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
+    private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS - s.length()));}
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+    };
 
     public static SettingsCreateNewBankAccountFragment newInstance() {
         return new SettingsCreateNewBankAccountFragment();
@@ -76,10 +100,26 @@ public class SettingsCreateNewBankAccountFragment
         accountTypesSpinner.setAdapter(adapter);
 
         bankNameEditText = (FermatEditText) layout.findViewById(R.id.ccw_bank_name_edit_text);
-
         accountNumberEditText = (FermatEditText) layout.findViewById(R.id.ccw_account_number_edit_text);
         accountAliasEditText = (FermatEditText) layout.findViewById(R.id.ccw_account_alias_edit_text);
+        bankNameCount = (FermatTextView) layout.findViewById(R.id.ccw_bank_name_edit_text_count);
+        accountAliasCount = (FermatTextView) layout.findViewById(R.id.ccw_account_alias_edit_text_count);
+        accountNumberCount = (FermatTextView) layout.findViewById(R.id.ccw_account_number_edit_text_count);
 
+        bankNameEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_NAME)});
+        bankNameEditText.addTextChangedListener(bankNameTextWatcher);
+
+        accountNumberEditText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        accountNumberEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ACCOUNT)});
+        accountNumberEditText.addTextChangedListener(accountNumberTextWatcher);
+
+        accountAliasEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_BANK_ALIAS)});
+        accountAliasEditText.addTextChangedListener(accountAliasTextWatcher);
+
+        bankNameCount.setText(String.valueOf(MAX_LENGHT_BANK_NAME));
+        accountNumberCount.setText(String.valueOf(MAX_LENGHT_BANK_ACCOUNT));
+        accountAliasCount.setText(String.valueOf(MAX_LENGHT_BANK_ALIAS));
+        
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
         moduleManager = appSession.getModuleManager();

@@ -128,7 +128,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
 
             } catch (Exception ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_FERMAT_WALLET_ALL_BITDUBAI,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
@@ -170,13 +170,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, FermatWalletConstants.IC_ACTION_SEND, 0, "send")
-                .setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        menu.add(1, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.fw_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
 
@@ -184,7 +177,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == FermatWalletConstants.IC_ACTION_SEND){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, fermatWalletSessionReferenceApp.getAppPublicKey());
                 return true;
             }else if(id == FermatWalletConstants.IC_ACTION_HELP_CONTACT){
@@ -203,8 +196,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
-        recyclerView.addItemDecoration(itemDecoration);
+        //RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.gradient);
+       // recyclerView.addItemDecoration(itemDecoration);
 
         if(lstFermatWalletTransaction!=null) {
             if (lstFermatWalletTransaction.isEmpty()) {
@@ -293,7 +286,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletListFragment<Fermat
         } catch (Exception e){
             e.printStackTrace();
         }
-        return data;
+        return lstCryptoWalletTransactionsAvailable;
     }
 
     @Override

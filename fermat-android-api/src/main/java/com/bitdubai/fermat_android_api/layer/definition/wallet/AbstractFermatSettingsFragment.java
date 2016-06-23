@@ -42,6 +42,10 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
      * FLAGS
      */
     protected boolean isAttached;
+    /**
+     * If the fragment is visible for the user
+     */
+    private boolean isVisible;;
 
     /**
      * Platform
@@ -337,10 +341,15 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
 
     }
 
+    @Override
+    public void setFragmentFocus(boolean isVisible) {
+        this.isVisible =isVisible;
+        onFragmentFocus();
+    }
+
     /**
      * This method is called when the fragment is on user's focus
      */
-    @Override
     public void onFragmentFocus() {
 
     }

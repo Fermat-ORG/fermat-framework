@@ -35,6 +35,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_us
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionProcessorAgent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,9 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
     public OutgoingExtraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -97,7 +101,10 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
                 cryptoVaultManager  ,
                 bitcoinNetworkManager,
                 getErrorManager()        ,
-                dao
+                dao,
+                eventManager,
+                broadcaster,
+                lossProtectedWalletManager
         );
         this.transactionProcessorAgent.start();
 
