@@ -7,31 +7,52 @@
     android:layout_height="wrap_content"
 
     >
-
-    <SearchView
-        android:id="@+id/geolocation_input"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F9F9F9"
-        />
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="#f9f9f9"
+        >
+        <ImageView
+            android:id="@+id/close_geolocation_dialog"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/cht_comm_cancel_icon"
+            android:layout_gravity="center_vertical"
+            android:background="@color/color_black"
+
+            />
+
+        <EditText
+            android:id="@+id/geolocation_input"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/color_black"
+            android:background="#F9F9F9"
+            android:hint="Search"
+            android:textColorHint="#848484"
+            android:layout_weight="@android:integer/config_longAnimTime"
+            />
+        <ImageView
+            android:id="@+id/lupita_button"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_black"
+            android:src="@drawable/cht_comm_search_icon"
+            />
+    </LinearLayout>
     <Space
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="15dp"
         android:visibility="invisible"
         />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/geolocation_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/geolocation_recycler_view"
+        <ListView
+            android:id="@+id/geolocation_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/cht_comm_geolocation_results_item"
             android:divider="@drawable/cht_list_divider" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>
