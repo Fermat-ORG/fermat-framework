@@ -38,7 +38,6 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
-import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -114,7 +113,7 @@ public class WizardPropertiesFragment extends AbstractFermatFragment<ReferenceAp
         expirationTimeCalendar = Calendar.getInstance();
         expirationTimeCalendar.setTime(new Date());
 
-        configureToolbar();
+//        configureToolbar();
     }
 
     @Override
@@ -166,7 +165,7 @@ public class WizardPropertiesFragment extends AbstractFermatFragment<ReferenceAp
             switch (id) {
                 //case IC_ACTION_HELP_FACTORY:
                 case 2:
-                setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpHelpAssetStatistics(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
 //                case 1:
 //                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());

@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.adapters.AppSelectableIdentitiesListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppSelectableIdentitiesListAdapter;
 
 import java.util.List;
 

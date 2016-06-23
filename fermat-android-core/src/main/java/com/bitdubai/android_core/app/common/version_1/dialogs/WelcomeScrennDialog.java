@@ -120,7 +120,11 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceAppFermatSession,
 
     @Override
     public void onClick(View v) {
+
     }
+
+
+
 
     @Override
     public void onBackPressed() {

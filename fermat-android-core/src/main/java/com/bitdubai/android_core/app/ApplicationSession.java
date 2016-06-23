@@ -249,6 +249,9 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     }
 
     public boolean isFermatRunning() {
+        if(!fermatRunning){
+            fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+        }
         return fermatRunning;
     }
 }

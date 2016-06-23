@@ -269,6 +269,17 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
 
 
                     switch (position) {
+                        case 0:
+                            text = "[ftms]";
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+
+                            break;
                         case 1:
                             text = "[btc]";
                             if (txtType.equals("[bits]")) {
@@ -613,7 +624,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                     String txtType = txt_type.getText().toString();
                     String newAmount = "";
 
-                    String notes = null;
+                    String notes = "";
                     if (txt_notes.getText().toString().length() != 0){
                       notes = txt_notes.getText().toString();
                     }
@@ -623,7 +634,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                         newAmount = amount;
                     } else if (txtType.equals("[bits]")) {
                         newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                    }else if (txtType.equals("[ftms]")) {
+                        newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
                     }
+
 
 
                     BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
@@ -655,7 +669,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceAppFerm
                                    notes,
                                    operator.longValueExact(),
                                    blockchainNetworkType,
-                                   ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                   ReferenceWallet.BASIC_WALLET_FERMAT_WALLET,
                                    CryptoCurrency.BITCOIN
 
                            );

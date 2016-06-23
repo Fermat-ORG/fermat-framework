@@ -70,6 +70,8 @@ public class RedeemHomeHistoryFragment extends FermatWalletListFragment<DigitalA
     private View noAssetsView;
     private SearchView searchView;
 
+    private int menuItemSize;
+
     public static RedeemHomeHistoryFragment newInstance() {
         return new RedeemHomeHistoryFragment();
     }
@@ -280,36 +282,46 @@ public class RedeemHomeHistoryFragment extends FermatWalletListFragment<DigitalA
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.dap_wallet_asset_redeem_home_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_wallet_redeem_point_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_redeem_point_wallet_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((DigitalAssetHistoryAdapterFilter) ((DigitalAssetHistoryAdapter) getAdapter()).getFilter()).filter(s);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+//        searchView = (SearchView) menu.findItem(R.id.action_wallet_redeem_point_search).getActionView();
+            searchView = (SearchView) menu.findItem(2).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_redeem_point_wallet_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((DigitalAssetHistoryAdapterFilter) ((DigitalAssetHistoryAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
+//        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
-
             int id = item.getItemId();
 
-            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_REDEEM_HELP_PRESENTATION
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
