@@ -34,10 +34,7 @@ public class GeolocationAdapter extends ArrayAdapter<Cities> {
 
 //    private List<Cities> cities = new ArrayList<>();
     protected List<Cities> dataSet;
-
     private ErrorManager errorManager;
-
-
 
     public GeolocationAdapter(Context context, List<Cities> citiesList){
         super(context, 0, citiesList );
