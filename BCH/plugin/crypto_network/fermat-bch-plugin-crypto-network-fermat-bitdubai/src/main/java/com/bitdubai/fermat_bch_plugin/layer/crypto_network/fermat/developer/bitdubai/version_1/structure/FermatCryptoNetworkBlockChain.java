@@ -107,8 +107,8 @@ public class FermatCryptoNetworkBlockChain extends DownloadProgressTracker imple
              * If there is an error saving it to file, I will save it to memory
              */
             initializeInMemory();
-            System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
-            System.out.println("*** Crypto Network: " + e.toString());
+            System.out.println("*** Fermat Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
+            System.out.println("*** Fermat Crypto Network: " + e.toString());
         }
 
 
