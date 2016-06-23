@@ -50,6 +50,8 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.adapters.GeolocationAdapter;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
-    private ArrayList<Cities> lstChatUserInformations;
+    private List<Cities> lstChatUserInformations = new ArrayList<>();
     private GeolocationAdapter adapter;
     private ErrorManager errorManager;
     private LinearLayout emptyView;
@@ -109,14 +111,17 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             errorManager = appSession.getErrorManager();
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            mListView = (ListView) this.findViewById(R.id.geolocation_recycler_view);
+            mListView = (ListView) this.findViewById(R.id.geolocation_view);
             CountryPlace = (TextView) this.findViewById(R.id.country_search);
             StatePlace = (TextView) this.findViewById(R.id.state_search);
+            searchInput = (EditText) findViewById(R.id.geolocation_input);
 
 //            lupaButton = (ImageButton) this.findViewById(R.id.lupita_button); TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
 
-            adapter = new GeolocationAdapter(getContext(), mChatActorCommunityManager.getCities(searchInput.getText().toString()));
-
+            adapter = new GeolocationAdapter(getContext(), lstChatUserInformations);
+            for(Cities cityIterator: mChatActorCommunityManager.getCities("a")){
+                adapter.add(cityIterator);
+            }
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -124,7 +129,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
                     cityFromList = (CitiesImpl) parent.getItemAtPosition(position);
                 }
             });
-            searchInput = (EditText) findViewById(R.id.geolocation_input);
+
             onRefresh();
         }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException | CantCreateCountriesListException | CantGetCitiesListException e){
             System.out.println("Exception at Geolocation Dialog");
@@ -149,10 +154,10 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     public void onRefresh(){
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setMessage("Please wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
+//            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//            progressDialog.setMessage("Please wait");
+//            progressDialog.setCancelable(false);
+//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -167,7 +172,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
                     isRefreshing = false;
                     if (result != null &&
                             result.length > 0) {
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                         if (getContext()!= null && adapter != null) {
                             lstChatUserInformations = (ArrayList<Cities>) result[0];
                             adapter.changeDataSet(lstChatUserInformations);
@@ -183,7 +188,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (getActivity() != null)
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));

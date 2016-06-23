@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class GeolocationAdapter extends ArrayAdapter<Cities> {
 
-    private List<Cities> cities = new ArrayList<>();
+//    private List<Cities> cities = new ArrayList<>();
     protected List<Cities> dataSet;
 
     private ErrorManager errorManager;
@@ -40,8 +40,7 @@ public class GeolocationAdapter extends ArrayAdapter<Cities> {
 
 
     public GeolocationAdapter(Context context, List<Cities> citiesList){
-        super(context, R.layout.cht_comm_geolocation_results_item );
-        this.cities = citiesList;
+        super(context, 0, citiesList );
     }
 
     public void changeDataSet(List<Cities> dataSet) {
@@ -50,21 +49,26 @@ public class GeolocationAdapter extends ArrayAdapter<Cities> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.cht_comm_geolocation_results_item, null, true);
+
         try {
 
-            TextView Country = (TextView) item.findViewById(R.id.country_search);
-            Country.setText("Country");
-            TextView State = (TextView) item.findViewById(R.id.state_search);
-            State.setText("State");
+            if(convertView == null){
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cht_comm_geolocation_results_item, parent, false);
+            }
+
+            Cities cities = getItem(position);
 
 
+            TextView Country = (TextView) convertView.findViewById(R.id.country_search);
+            TextView State = (TextView) convertView.findViewById(R.id.state_search);
+
+            Country.setText(cities.getCountryName());
+            State.setText(cities.getName());
 
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        return item;
+        return convertView;
     }
 
 

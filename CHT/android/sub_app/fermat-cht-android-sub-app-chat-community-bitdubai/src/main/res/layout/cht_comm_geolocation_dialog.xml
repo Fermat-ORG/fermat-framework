@@ -48,7 +48,7 @@
         />
 
         <ListView
-            android:id="@+id/geolocation_recycler_view"
+            android:id="@+id/geolocation_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/cht_comm_geolocation_results_item"
