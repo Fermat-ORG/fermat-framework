@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
     private List<DataBaseTableOrder> tableOrder;
+    private List<AndroidDatabaseTableNearbyLocationOrder> tableNearbyLocationOrders;
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
@@ -459,6 +461,28 @@ public class AndroidDatabaseTable implements DatabaseTable {
         DataBaseTableOrder order = new AndroidDatabaseTableOrder(columnName, direction);
 
         this.tableOrder.add(order);
+    }
+
+    // TODO implement in android version
+    @Override
+    public void addNearbyLocationOrder(final String              latitudeField ,
+                                       final String              longitudeField,
+                                       final Location            point         ,
+                                       final DatabaseFilterOrder direction     ,
+                                       final String              distanceField ) {
+
+        if (tableNearbyLocationOrders == null)
+            tableNearbyLocationOrders = new ArrayList<>();
+
+        tableNearbyLocationOrders.add(
+                new AndroidDatabaseTableNearbyLocationOrder(
+                        latitudeField ,
+                        longitudeField,
+                        point         ,
+                        direction     ,
+                        distanceField
+                )
+        );
     }
 
     /**
