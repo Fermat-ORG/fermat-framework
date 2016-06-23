@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2016.04.13..
+ * Created by Matias Furszyfer on 2016.04.13..
  */
 public class WelcomeWizardFragment extends AbstractFermatFragment<ReferenceAppFermatSession<WalletManager>, ResourceProviderManager> implements View.OnClickListener {
 

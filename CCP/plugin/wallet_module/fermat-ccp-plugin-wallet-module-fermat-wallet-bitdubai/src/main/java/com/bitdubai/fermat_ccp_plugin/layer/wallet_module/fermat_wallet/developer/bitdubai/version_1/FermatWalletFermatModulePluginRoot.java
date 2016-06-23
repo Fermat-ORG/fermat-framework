@@ -73,6 +73,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
         LogManagerForDevelopers {
 
 
+
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
     private CryptoWalletManager cryptoWalletManager;
 
@@ -81,7 +82,6 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
     private LogManager logManager;
-
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -227,7 +227,6 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         pluginId,
                         pluginFileSystem,
                         exchangeProviderFilterManagerproviderFilter,
-
                         eventManager,
                         bitcoinNetworkManager, broadcaster,
                         walletManagerManager,transferIntraWalletUsersManager);

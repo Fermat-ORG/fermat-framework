@@ -713,6 +713,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             //showCriptoUsersCache();
+                            invalidate();
                         }
                     });
                 } else {

@@ -190,11 +190,15 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                if(ApplicationSession.getInstance().isFermatRunning()){
-                    fermatInit();
+                try {
+                    if (ApplicationSession.getInstance().isFermatRunning()) {
+                        fermatInit();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        },2,2, TimeUnit.SECONDS);
+        }, 0, 3, TimeUnit.SECONDS);
 
     }
 
@@ -227,8 +231,12 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
             myReceiverIsRegistered = true;
         }
-        if(ApplicationSession.getInstance().isFermatRunning()){
-            fermatInit();
+        try {
+            if (ApplicationSession.getInstance().isFermatRunning()) {
+                fermatInit();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

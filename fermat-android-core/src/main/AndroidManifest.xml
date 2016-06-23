@@ -56,15 +56,7 @@
         <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
 
 
-        <activity
-            android:name="com.bitdubai.android_core.app.EditableWalletActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.AppActivity"/>
-        </activity>
+
         <activity
             android:name="com.bitdubai.android_core.app.AppActivity"
             android:theme="@style/AppTheme.NoActionBar"

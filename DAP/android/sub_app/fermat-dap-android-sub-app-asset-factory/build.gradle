@@ -63,6 +63,7 @@ dependencies {
     //noinspection GradleDependency
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.github.shell-software:fab:1.0.5'
+    compile 'com.githang:com.edmodo.cropper:1.0.2'
 }
 
 

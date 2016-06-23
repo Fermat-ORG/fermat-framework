@@ -160,7 +160,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<FermatWallet
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(SubAppsPublicKeys.CCP_IDENTITY.getCode(), object);
+                    changeApp(SubAppsPublicKeys.CCP_COMMUNITY.getCode(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

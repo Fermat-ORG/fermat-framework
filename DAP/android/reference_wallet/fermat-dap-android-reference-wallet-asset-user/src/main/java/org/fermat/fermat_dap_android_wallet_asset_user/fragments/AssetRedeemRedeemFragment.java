@@ -146,8 +146,8 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help")
         //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -158,30 +158,51 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
-                setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
-                if (redeemPointSelect != null) {
+            switch (id) {
+//                case 1://IC_ACTION_USER_HELP_REDEEM
+//                    setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                    break;
+                case 2://IC_ACTION_USER_ASSET_REDEEM
+                    if (redeemPointSelect != null) {
 
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_redeem))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    doRedeem(assetToRedeem.getDigitalAsset(), redeemPoints, 1);
-                                }
-                            }).build().show();
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_redeem))
+                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        doRedeem(assetToRedeem.getDigitalAsset(), redeemPoints, 1);
+                                    }
+                                }).build().show();
 
-                } else {
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_rp), Toast.LENGTH_SHORT).show();
-                }
-
+                    } else {
+                        Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_rp), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
             }
 
-
+//            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
+//                setUpHelpAssetRedeem(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
+//                if (redeemPointSelect != null) {
+//
+//                    new ConfirmDialog.Builder(getActivity(), appSession)
+//                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+//                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_redeem))
+//                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+//                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    doRedeem(assetToRedeem.getDigitalAsset(), redeemPoints, 1);
+//                                }
+//                            }).build().show();
+//
+//                } else {
+//                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_rp), Toast.LENGTH_SHORT).show();
+//                }
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_system_error),

@@ -211,7 +211,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
             holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            holder.location_text.setText("Location of " + data.getAlias());//TODO: put here location
+            if(!data.getCountry().equals("") || !data.getState().equals("") || !data.getCity().equals(""))
+                holder.location_text.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
+            else
+                holder.location_text.setText("Searching...");//TODO: put here location
         }
 
         final ChatActorCommunityInformation dat=data;
