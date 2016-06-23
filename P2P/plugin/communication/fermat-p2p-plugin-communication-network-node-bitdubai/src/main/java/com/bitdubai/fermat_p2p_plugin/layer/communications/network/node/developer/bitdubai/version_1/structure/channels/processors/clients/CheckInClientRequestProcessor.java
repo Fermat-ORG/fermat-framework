@@ -103,7 +103,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -133,10 +133,10 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException | EncodeException iOException) {
-                LOG.error(iOException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
         }
     }

@@ -386,7 +386,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         }else {
 
             LOG.info("Configuration file doesn't exit");
-            ConfigurationManager.create(identity.getPublicKey());
+            ConfigurationManager.create(identity.getPublicKey(), isSeedServer(serverIp));
             ConfigurationManager.load();
         }
 
