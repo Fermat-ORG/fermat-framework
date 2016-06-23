@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1.structure.DeveloperSubAppModuleManager;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
+import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSessionReferenceApp;
 
 /**
@@ -63,5 +64,18 @@ public class DeveloperFermatAppConnection extends AppConnections<ReferenceAppFer
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+
+        switch (id){
+            case 1:
+                resId = R.drawable.ic_menu_search;
+                break;
+        }
+
+        return resId;
     }
 }

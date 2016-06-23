@@ -3754,13 +3754,13 @@ public class SubAppAppsGenerator {
         runtimeTab.setLabel("DataBase Tools");
         owner = new Owner();
         owner.setOwnerAppPublicKey(publickeyDeveloperTools);
-        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Log Tools");
         owner.setOwnerAppPublicKey(publickeyDeveloperTools);
-        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3770,18 +3770,27 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 
-
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
 //        runtimeFragment = new FermatRuntimeFragment();
 //        runtimeFragment.setFragmentCode(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
 //        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
 //        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
