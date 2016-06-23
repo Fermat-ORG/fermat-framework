@@ -17,9 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.common.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 
@@ -59,8 +58,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new BrokerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
+        return null;//new BrokerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

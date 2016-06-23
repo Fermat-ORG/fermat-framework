@@ -35,7 +35,7 @@ public class AppSelectableIdentitiesListAdapter
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbc_row_connection_list;
+        return R.layout.cbc_fragment_list_identities_item;
     }
 
     @Override

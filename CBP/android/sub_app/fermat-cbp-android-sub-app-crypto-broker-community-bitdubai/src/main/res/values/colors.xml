@@ -27,7 +27,9 @@
     <color name="color_white">#FFFFFF</color>
     <color name="color_gray_light1">#aadbfaC8</color>
     <color name="color_gray_light">#99C9C9C9</color>
-    <color name="color_black_light">#99000000</color>
+    <color name="color_black_light">#4d4d4d</color>
     <color name="secondary_text">#727272</color>
     <color name="primary_text">#212121</color>
+    <color name="cbc_toolbar_start_background">#1291A3</color>
+    <color name="cbc_toolbar_end_background">#1375a7</color>
 </resources>

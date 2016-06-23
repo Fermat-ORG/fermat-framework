@@ -3383,7 +3383,7 @@ public class SubAppAppsGenerator {
         listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bc");
+        statusBar.setColor("#1375a7");
 
         //Activity Home Browser
         runtimeActivity = new Activity();
@@ -3399,7 +3399,7 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setLabelSize(18);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bc");
+        runtimeTitleBar.setColor("#1291A3");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
@@ -3409,14 +3409,14 @@ public class SubAppAppsGenerator {
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#0072BC");
-        runtimeTabStrip.setTabsTextColor("#F9F9F9");
-        runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
+        runtimeTabStrip.setTabsColor("#1291A3");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Browser
         runtimeTab = new Tab();
-        runtimeTab.setLabel("   BROWSER   ");
+        runtimeTab.setLabel("BROWSER");
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getKey());
@@ -3449,7 +3449,7 @@ public class SubAppAppsGenerator {
 
         //Tabs Connections
         runtimeTab = new Tab();
-        runtimeTab.setLabel(" CONNECTIONS ");
+        runtimeTab.setLabel("CONNECTIONS");
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());

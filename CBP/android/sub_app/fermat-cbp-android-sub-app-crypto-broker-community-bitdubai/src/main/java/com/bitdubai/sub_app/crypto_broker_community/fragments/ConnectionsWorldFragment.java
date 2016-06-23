@@ -3,11 +3,13 @@ package com.bitdubai.sub_app.crypto_broker_community.fragments;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -134,6 +136,8 @@ public class ConnectionsWorldFragment
     protected void initViews(View rootView) {
         super.initViews(rootView);
 
+        configureToolbar();
+
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         noDataLabel = (TextView) rootView.findViewById(R.id.nodatalabel);
@@ -145,6 +149,19 @@ public class ConnectionsWorldFragment
         emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
 
         launchPresentationDialog();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbc_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbc_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -321,7 +338,7 @@ public class ConnectionsWorldFragment
                 presentationDialog.show();
 
             } else if (launchListIdentitiesDialog) {
-                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
