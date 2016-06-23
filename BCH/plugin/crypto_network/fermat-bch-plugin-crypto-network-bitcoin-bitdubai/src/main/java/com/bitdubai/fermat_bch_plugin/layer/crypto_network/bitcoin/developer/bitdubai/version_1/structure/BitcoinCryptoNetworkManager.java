@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.AbstractBlockchainProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.TransactionConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainProviderName;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
@@ -83,7 +85,7 @@ import javax.annotation.Nullable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
+public class BitcoinCryptoNetworkManager extends AbstractBlockchainProviderManager implements TransactionProtocolManager {
 
 
     /**
@@ -1109,5 +1111,19 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantGetActiveBlockchainNetworkTypeException(e, "error getting list of active networks.", "database issue");
         }
+    }
+
+    @Override
+    public BlockchainProviderName getName() {
+        return BlockchainProviderName.BITCOIN;
+    }
+
+    @Override
+    public List<BlockchainNetworkType> getSupportedNetworkTypes() {
+        List<BlockchainNetworkType> supportedNetworkTypes = new ArrayList<>();
+        supportedNetworkTypes.add(BlockchainNetworkType.PRODUCTION);
+        supportedNetworkTypes.add(BlockchainNetworkType.TEST_NET);
+        supportedNetworkTypes.add(BlockchainNetworkType.REG_TEST);
+        return supportedNetworkTypes;
     }
 }

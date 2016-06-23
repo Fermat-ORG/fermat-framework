@@ -238,6 +238,8 @@ public enum Plugins implements FermatPluginsEnum {
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
     EXTRA_WALLET_USER           ("EWU"),
+    FERMAT_NETWORK              ("FNW"),
+    FERMAT_VAULT                ("FERV"),
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
