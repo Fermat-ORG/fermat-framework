@@ -177,8 +177,8 @@ public class ChatFragment
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+//        super.onCreateOptionsMenu(menu, inflater);
         // Inflate the menu items
         //inflater.inflate(R.menu.chat_menu, menu);
         // Locate the search item

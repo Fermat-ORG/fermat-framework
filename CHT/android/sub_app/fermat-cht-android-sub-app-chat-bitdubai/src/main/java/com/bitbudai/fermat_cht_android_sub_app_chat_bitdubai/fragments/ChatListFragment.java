@@ -464,8 +464,8 @@ public class ChatListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
+        //menu.clear();
+        //super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.chat_list_menu, menu);
         // Locate the search item = (MenuItem) fermatFragmentType.getOptionsMenu().getItem(1);
         //OptionsMenu menuu = fermatFragmentType.getOptionsMenu();

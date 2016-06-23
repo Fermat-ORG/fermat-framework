@@ -65,7 +65,7 @@ public class CreateChatIdentityExecutor {
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
             //TODO: Jose Cardozo revisa que tienes que pasarle el Location
-            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE, null);
+            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE);
 
 
         } catch (CantCreateNewChatIdentityException e) {

@@ -344,7 +344,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //Init PIP
     PIP_FERMAT_MONITOR                  ("PFM"),
-    NOMINATIM                           ("PNM")
+    GEOLOCATION                         ("GLT")
     ;
     //End PIP
 

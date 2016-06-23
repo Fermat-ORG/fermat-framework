@@ -45,6 +45,10 @@ public class ContactsListAdapter
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+                if(!data.getCountry().equals("") || !data.getState().equals("") || !data.getCity().equals(""))
+                    holder.location.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
+                else
+                    holder.location.setText("Searching...");//TODO: put here location
             }
         }
     }
