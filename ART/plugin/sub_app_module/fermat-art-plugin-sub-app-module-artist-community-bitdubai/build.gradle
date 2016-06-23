@@ -1,6 +1,5 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(':fermat-api')
     compile project(':fermat-art-api')
 }
