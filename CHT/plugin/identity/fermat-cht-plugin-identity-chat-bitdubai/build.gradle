@@ -21,7 +21,7 @@ configurations {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-cht-api')
-    compile project(':fermat-api')
+    //compile project(':fermat-api')
 //    compile project(':fermat-p2p-api')
 //    compile project(':fermat-pip-api')
 //    compile project(':fermat-ccp-api')

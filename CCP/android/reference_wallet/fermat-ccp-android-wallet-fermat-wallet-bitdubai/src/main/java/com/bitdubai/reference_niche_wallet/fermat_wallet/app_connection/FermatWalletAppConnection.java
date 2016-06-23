@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.header.FermatWalletHeaderPainter;
+import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.navigation_drawer.FermatWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.fragment_factory.ReferenceWalletFragmentFactory;
@@ -66,7 +67,7 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermat
 
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
 
-        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager()); //getApplicationManager()
+        return new FermatWalletNavigationViewPainter(getContext(),this.getFullyLoadedSession(),getApplicationManager());
 
     }
 
@@ -107,5 +108,26 @@ public class FermatWalletAppConnection extends AppConnections<ReferenceAppFermat
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int getResource(int id) {
+        int resId = 0;
+        switch (id){
+            case 1:
+                resId = R.drawable.background_navigation_drawer;
+                break;
+            case 2:
+                resId = R.drawable.fw_help_icon;
+                break;
+            case 4:
+                resId = R.drawable.ic_actionbar_send;
+                break;
+            case 3:
+                resId = R.drawable.fw_withdrawall_icon;
+                break;
+
+        }
+        return resId;
     }
 }

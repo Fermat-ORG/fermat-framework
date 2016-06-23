@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.squareup.picasso.Picasso;
+
 
 /**
  * Created by nelson on 16/11/15.
@@ -21,6 +23,12 @@ public class FragmentsCommons {
     public static final String CONTRACT_DATA = "contract_data";
     public static final String CONFIGURED_DATA = "configured_data";
     public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
+    public static final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
+    public static final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
+    public static final int NO_FILTER_OPTION_MENU_ID = 3;
+    public static final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
+    public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+
 
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {

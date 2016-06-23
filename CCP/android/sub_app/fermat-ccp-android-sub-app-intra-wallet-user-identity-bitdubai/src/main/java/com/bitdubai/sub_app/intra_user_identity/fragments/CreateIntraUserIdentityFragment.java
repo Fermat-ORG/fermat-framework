@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
@@ -44,7 +45,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUserIdentityDialog;
-import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
@@ -87,6 +87,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     IntraUserIdentitySettings intraUserIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private IntraUserIdentityModuleManager moduleManager;
 
     ExecutorService executorService;
 
@@ -102,6 +103,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         try {
 
             errorManager = appSession.getErrorManager();
+
+            moduleManager = appSession.getModuleManager();
             setHasOptionsMenu(true);
             executorService.submit(new Runnable() {
                 @Override
@@ -109,10 +112,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                     try {
                         if (appSession.getAppPublicKey()!= null){
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = moduleManager.loadAndGetSettings("123456789");
                         }
 
                     } catch (Exception e) {
@@ -412,7 +415,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
-            if (appSession.getModuleManager() != null) {
+            if (moduleManager != null) {
                 try {
                     if (!isUpdate) {
                         final String finalBrokerPhraseText = brokerPhraseText;
@@ -420,7 +423,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             @Override
                             public void run() {
                                 try {
-                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+
+                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray, (long)0, Frecuency.NORMAL);
+
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
@@ -435,9 +440,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
+
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray, (long)0,Frecuency.NORMAL);
+
                                     else
-                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
+                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage(), (long)0,Frecuency.NORMAL);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -461,7 +468,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
@@ -503,7 +510,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
      */
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         return stream.toByteArray();
     }
 

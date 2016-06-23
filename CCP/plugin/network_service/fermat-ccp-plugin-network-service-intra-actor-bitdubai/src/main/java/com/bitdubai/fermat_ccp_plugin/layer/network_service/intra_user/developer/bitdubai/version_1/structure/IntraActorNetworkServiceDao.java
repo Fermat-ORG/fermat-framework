@@ -233,7 +233,6 @@ public class IntraActorNetworkServiceDao {
 
             throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,e, "Error creating file.", null);
         } catch (Exception e) {
-
             throw new CantPersistProfileImageException(CantPersistProfileImageException.DEFAULT_MESSAGE,FermatException.wrapException(e), "", "");
         }
     }

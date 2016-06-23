@@ -67,13 +67,9 @@ public class BrokerListViewHolder extends FermatViewHolder {
 
         final byte[] profileImage = data.getProfileImage();
 
-        if( profileImage != null && profileImage.length > 0 ){
-            ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            brokerImage.setImageBitmap(bmd.getBitmap());
-        }else{
-            brokerImage.setImageResource(R.drawable.ic_profile_male);
-        }
+        Drawable brokerImg = getImgDrawable(profileImage);
+
+        brokerImage.setImageDrawable(brokerImg);
 
         loadDataInAdapter(data);
     }
