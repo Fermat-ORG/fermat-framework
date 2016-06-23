@@ -1,6 +1,14 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -51,7 +59,7 @@ public class ActorProfile extends Profile {
      * Constructor
      */
     public ActorProfile(){
-        super();
+        super(ProfileTypes.ACTOR);
     }
 
     /**
@@ -178,6 +186,79 @@ public class ActorProfile extends Profile {
      */
     public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
         this.clientIdentityPublicKey = clientIdentityPublicKey;
+    }
+
+    public static Profile readJson(final JsonReader in) throws IOException {
+
+        ActorProfile actorProfile = new ActorProfile();
+
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+
+        while (in.hasNext()) {
+            switch (in.nextName()) {
+                case "ipk":
+                    actorProfile.setIdentityPublicKey(in.nextString());
+                    break;
+                case "lat":
+                    latitude = in.nextDouble();
+                    break;
+                case "lng":
+                    longitude = in.nextDouble();
+                    break;
+                case "act":
+                    actorProfile.setActorType(in.nextString());
+                    break;
+                case "ali":
+                    actorProfile.setAlias(in.nextString());
+                    break;
+                case "nam":
+                    actorProfile.setName(in.nextString());
+                    break;
+                case "exd":
+                    actorProfile.setExtraData(in.nextString());
+                    break;
+                case "nspk":
+                    actorProfile.setNsIdentityPublicKey(in.nextString());
+                    break;
+                case "clpk":
+                    actorProfile.setClientIdentityPublicKey(in.nextString());
+                    break;
+                case "photo":
+                    actorProfile.setPhoto(Base64.decode(in.nextString(), Base64.DEFAULT));
+                    break;
+            }
+        }
+
+        actorProfile.setLocation(
+                new NetworkNodeCommunicationDeviceLocation(
+                        latitude,
+                        longitude,
+                        null,
+                        0,
+                        null,
+                        0,
+                        LocationSource.UNKNOWN
+                )
+        );
+
+        return actorProfile;
+    }
+
+    @Override
+    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+
+        super.writeJson(out);
+
+        out.name("act").value(actorType);
+        out.name("ali").value(alias);
+        out.name("nam").value(name);
+        out.name("exd").value(extraData);
+        out.name("nspk").value(nsIdentityPublicKey);
+        out.name("clpk").value(clientIdentityPublicKey);
+        out.name("photo").value(Base64.encodeToString(photo, Base64.DEFAULT));
+
+        return out;
     }
 
     /**
