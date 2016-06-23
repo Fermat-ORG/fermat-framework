@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -61,8 +62,6 @@ import java.util.List;
 public class GeolocationDialog extends FermatDialog implements View.OnClickListener {
 
     //ATTRIBUTES
-    private TextView CountryPlace; //Estos van dentro del adapter
-    private TextView StatePlace;   //Estos van dentro del adapter
     private EditText searchInput;
     private ChatActorCommunitySubAppModuleManager mChatActorCommunityManager;
     private ListView mListView;
@@ -78,13 +77,10 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     private LinearLayout emptyView;
     TextView noDatalabel;
 
-
     //SETTERS ATTRIBUTES
     String Country;
     String State;
     String Input;
-
-
 
     public GeolocationDialog (Context activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession, ResourceProviderManager resources){
         super(activity, appSession, resources); this.appSession = appSession;
@@ -112,16 +108,22 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
             mListView = (ListView) this.findViewById(R.id.geolocation_view);
-            CountryPlace = (TextView) this.findViewById(R.id.country_search);
-            StatePlace = (TextView) this.findViewById(R.id.state_search);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
 
-//            lupaButton = (ImageButton) this.findViewById(R.id.lupita_button); TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
-
+            lupaButton = (ImageButton) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
+            lupaButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getContext(), "dfdf", Toast.LENGTH_SHORT).show();
+                            onRefresh();
+                        }
+                    }
+            );
             adapter = new GeolocationAdapter(getContext(), lstChatUserInformations);
-            for(Cities cityIterator: mChatActorCommunityManager.getCities("a")){
-                adapter.add(cityIterator);
-            }
+//            for(Cities cityIterator: mChatActorCommunityManager.getCities("a")){
+//                adapter.add(cityIterator);
+//            }
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -130,8 +132,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
                 }
             });
 
-            onRefresh();
-        }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException | CantCreateCountriesListException | CantGetCitiesListException e){
+        }catch (Exception e){
             System.out.println("Exception at Geolocation Dialog");
         }
 
@@ -203,7 +204,8 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
         List<Cities> dataSet = new ArrayList<>();
 
         try {
-           List<Cities> result = mChatActorCommunityManager.getCities(filter);
+            List<Cities> result = mChatActorCommunityManager.getCities(filter);
+            dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
