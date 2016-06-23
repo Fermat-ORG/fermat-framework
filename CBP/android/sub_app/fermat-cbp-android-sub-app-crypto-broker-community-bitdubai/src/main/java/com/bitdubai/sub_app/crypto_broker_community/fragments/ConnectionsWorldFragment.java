@@ -2,10 +2,8 @@ package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +13,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -31,7 +27,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
@@ -53,11 +48,11 @@ import java.util.List;
  */
 public class ConnectionsWorldFragment
         extends FermatListFragment<CryptoBrokerCommunityInformation, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>>
-        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
+        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
 
     //Constants
-    private static final int MAX = 15;
-    private static final int SPAN_COUNT = 3;
+    private static final int MAX = 10;
+    private static final int SPAN_COUNT = 2;
     protected static final String TAG = "ConnectionsWorldFrag";
     public static final String ACTOR_SELECTED = "actor_selected";
 
@@ -71,11 +66,8 @@ public class ConnectionsWorldFragment
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
 
-    //UI
-    private LinearLayout emptyView;
     private AppListAdapter adapter;
-    TextView noDataLabel;
-    ImageView noData;
+    ImageView noContacts;
     private int offset;
 
     public static ConnectionsWorldFragment newInstance() {
@@ -97,24 +89,7 @@ public class ConnectionsWorldFragment
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
-            //Obtain Settings or create new Settings if first time opening subApp
-            CryptoBrokerCommunitySettings appSettings;
-            try {
-                appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
-                appSettings = null;
-            }
-
-            if (appSettings == null) {
-                appSettings = new CryptoBrokerCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            loadingSettings();
 
             //Check if a default identity is configured
             try {
@@ -140,13 +115,7 @@ public class ConnectionsWorldFragment
 
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-        noDataLabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-        noData = (ImageView) rootView.findViewById(R.id.nodata);
-        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
-        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
-        rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-        emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
+        noContacts = (ImageView) rootView.findViewById(R.id.cbc_no_contacts);
 
         launchPresentationDialog();
     }
@@ -239,8 +208,8 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-        appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+//        appSession.setData(ACTOR_SELECTED, data);
+//        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
@@ -311,6 +280,28 @@ public class ConnectionsWorldFragment
         Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Obtain Settings or create new Settings if first time opening subApp
+     */
+    private void loadingSettings() {
+        CryptoBrokerCommunitySettings appSettings;
+        try {
+            appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            appSettings = null;
+        }
+
+        if (appSettings == null) {
+            appSettings = new CryptoBrokerCommunitySettings();
+            appSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void launchPresentationDialog() {
         try {
             if (launchActorCreationDialog) {
@@ -365,25 +356,14 @@ public class ConnectionsWorldFragment
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
 
         Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
-        if (show && (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            noData.setAnimation(anim);
-            noDataLabel.setAnimation(anim);
-            noData.setVisibility(View.VISIBLE);
-            noDataLabel.setVisibility(View.VISIBLE);
+        if (show && (noContacts.getVisibility() == View.GONE || noContacts.getVisibility() == View.INVISIBLE)) {
+            noContacts.setAnimation(anim);
+            noContacts.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
 
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-            noData.setAnimation(anim);
-            emptyView.setBackgroundResource(0);
-            noDataLabel.setAnimation(anim);
-            noData.setVisibility(View.GONE);
-            noDataLabel.setVisibility(View.GONE);
-            ColorDrawable bgColor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgColor);
+        } else if (!show && noContacts.getVisibility() == View.VISIBLE) {
+            noContacts.setAnimation(anim);
+            noContacts.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }

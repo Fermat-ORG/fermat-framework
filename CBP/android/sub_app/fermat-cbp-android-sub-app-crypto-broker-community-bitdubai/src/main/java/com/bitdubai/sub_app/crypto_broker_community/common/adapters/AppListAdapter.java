@@ -1,20 +1,16 @@
 package com.bitdubai.sub_app.crypto_broker_community.common.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.holders.AppWorldHolder;
 import com.bitdubai.sub_app.crypto_broker_community.common.holders.LoadingMoreViewHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -52,7 +48,7 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     protected int getCardViewResource(int type) {
         if (type == DATA_ITEM)
-            return R.layout.cbc_row_connections_world;
+            return R.layout.cbc_comm_world_item;
         if (type == LOADING_ITEM)
             return R.layout.loading_more_list_item;
         return 0;
@@ -77,22 +73,8 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     @Override
     protected void bindHolder(FermatViewHolder holder, CryptoBrokerCommunityInformation data, int position) {
-
         final AppWorldHolder appWorldHolder = (AppWorldHolder) holder;
-
-        appWorldHolder.name.setText(data.getAlias());
-
-        final ConnectionState connectionState = data.getConnectionState();
-        int visibility = connectionState != null && connectionState == ConnectionState.CONNECTED ? View.VISIBLE : View.GONE;
-
-        appWorldHolder.connectionState.setVisibility(visibility);
-
-        byte[] profileImage = data.getImage();
-        if (profileImage != null && profileImage.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            appWorldHolder.thumbnail.setImageBitmap(bitmap);
-        } else
-            Picasso.with(context).load(R.drawable.profile_image).into(appWorldHolder.thumbnail);
+        appWorldHolder.bind(data);
     }
 
     @Override
