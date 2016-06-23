@@ -118,7 +118,7 @@ public class VaultKeyHierarchy extends KeyHierarchy {
          * I will create the CryptoAddress with the key I just got
          */
         String address = ecKey.toAddress(BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
-        CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.FERMAT);
 
         /**
          * I need to make the network that I used to generate the address active, if it is different than the default network.

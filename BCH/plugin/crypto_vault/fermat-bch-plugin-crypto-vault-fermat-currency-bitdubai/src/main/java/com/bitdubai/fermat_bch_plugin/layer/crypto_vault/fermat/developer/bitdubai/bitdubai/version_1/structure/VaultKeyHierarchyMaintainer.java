@@ -201,7 +201,7 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
              * A network becomes active when it generated address for an specified network (MainNet, RegTest or TestNet)
              */
             try {
-                fermatNetworkManager.monitorNetworkFromKeyList(CryptoVaults.BITCOIN_CURRENCY, getActiveNetworks(), allAccountsKeyList);
+                fermatNetworkManager.monitorNetworkFromKeyList(CryptoVaults.FERMAT_CURRENCY, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
                 e.printStackTrace();
             }
@@ -380,10 +380,10 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
 
             /**
              * If there are no accounts in the database, these means is the first time the plugin runs, so I will create
-             * the account 0 that will be used by the bitcoin vault.
+             * the account 0 that will be used by the Fermat Vault.
              */
             if (hierarchyAccounts.size() == 0) {
-                com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+                com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
                 hierarchyAccounts.add(accountZero);
 
                 /**

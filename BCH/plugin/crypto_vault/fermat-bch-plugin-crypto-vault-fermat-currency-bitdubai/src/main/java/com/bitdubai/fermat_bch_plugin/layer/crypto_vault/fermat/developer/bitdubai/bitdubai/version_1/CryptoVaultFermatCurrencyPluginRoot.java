@@ -88,7 +88,7 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.FERMAT_NETWORK)
     private FermatNetworkManager fermatNetworkManager;
 
 
@@ -97,7 +97,7 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
     }
 
     /**
-     * CryptoVaultBitcoinCurrencyPluginRoot member variables
+     * CryptoVaultFermatCurrencyPluginRoot member variables
      */
     FermatCurrencyCryptoVaultManager fermatCurrencyCryptoVaultManager;
     Database database;
@@ -161,7 +161,7 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
         try {
             // the DeviceUserLogged
             String deviceUserLoggedPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            System.out.println("Starting new BitcoinCurrency Crypto Vault.");
+            System.out.println("Starting new Fermat Currency Crypto Vault.");
             fermatCurrencyCryptoVaultManager = new FermatCurrencyCryptoVaultManager(this.pluginId,
                     this.pluginFileSystem,
                     this.pluginDatabaseSystem,
@@ -171,7 +171,7 @@ public class CryptoVaultFermatCurrencyPluginRoot extends AbstractPlugin implemen
 
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException("Error starting plugin Bitcoin Vault");
+            throw new CantStartPluginException("Error starting plugin Fermat Vault");
         }
 
         /**

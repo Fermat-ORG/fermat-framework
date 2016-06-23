@@ -70,8 +70,8 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     /**
      * File name information where the seed will be stored
      */
-    private final String BITCOIN_VAULT_SEED_FILEPATH = "BitcoinVaultSeed";
-    private final String BITCOIN_VAULT_SEED_FILENAME;
+    private final String FERMAT_VAULT_SEED_FILEPATH = "FermatVaultSeed";
+    private final String FERMAT_VAULT_SEED_FILENAME;
     private final String DRAFT_TRANSACTION_PATH = "draftTransactions";
 
 
@@ -95,10 +95,10 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
                                              String seedFileName,
                                              FermatNetworkManager fermatNetworkManager,
                                              ErrorManager errorManager) throws InvalidSeedException {
-        super(pluginFileSystem, pluginId, fermatNetworkManager, "BitcoinVaultSeed", seedFileName);
+        super(pluginFileSystem, pluginId, fermatNetworkManager, "FermatVaultSeed", seedFileName);
 
         this.pluginId = pluginId;
-        BITCOIN_VAULT_SEED_FILENAME = seedFileName;
+        FERMAT_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.fermatNetworkManager = fermatNetworkManager;
@@ -112,7 +112,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     }
 
     /**
-     * Will get a new crypto address from the Bitcoin vault account.
+     * Will get a new crypto address from the Fermat Vault account.
      * @param blockchainNetworkType
      * @return
      * @throws GetNewCryptoAddressException
@@ -121,9 +121,9 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     public CryptoAddress getNewBitcoinVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
         /**
          * I create the account manually instead of getting it from the database because this method always returns addresses
-         * from the Bitcoin vault account with Id 0.
+         * from the Fermat Vault account with Id 0.
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
@@ -270,7 +270,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * validates we are not sending less than permited.
          */
         if (isDustySend(satoshis))
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more bitcoins!");
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, "Dusty send request: " + satoshis, "send more fermats!");
 
 
         /**
@@ -295,7 +295,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
             InvalidSendToAddressException exception = new InvalidSendToAddressException(e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
 
@@ -307,7 +307,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * Create the bitcoinj wallet from the keys of this account
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
         Context walletContext = new Context(networkParameters);
@@ -344,7 +344,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
 
             CouldNotSendMoneyException exception = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
 
@@ -377,26 +377,26 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
-            StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
+            StringBuilder output = new StringBuilder("Not enought money to send fermats.");
             output.append(System.lineSeparator());
             output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
             InsufficientCryptoFundsException exception = new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         } catch (Exception exception){
-            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            StringBuilder output = new StringBuilder("Error sending fermats.");
             output.append(System.lineSeparator());
-            output.append("Bitcoin Vault status: ");
+            output.append("Fermat Vault status: ");
             output.append(wallet.toString());
             output.append(System.lineSeparator());
             output.append("Transaction Status: ");
             output.append(sendRequest.tx.toString());
-            CouldNotSendMoneyException e = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+            CouldNotSendMoneyException e = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Fermat Vault");
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
 
@@ -437,7 +437,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
             return mnemonicPlusDate;
         } catch (InvalidSeedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
         }
     }
@@ -459,7 +459,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             masterHierarchyAccount = this.getDao().getHierarchyAccounts().get(0);
         } catch (CantExecuteDatabaseOperationException e) {
             //If there was an error, I will create a master account manually
-            masterHierarchyAccount = new HierarchyAccount(0, "Bitcoin Vault", HierarchyAccountType.MASTER_ACCOUNT);
+            masterHierarchyAccount = new HierarchyAccount(0, "Fermat Vault", HierarchyAccountType.MASTER_ACCOUNT);
         }
 
         /**
@@ -499,7 +499,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
         if (draftTransaction == null || addressTo == null || valueToSend == 0 || blockchainNetworkType == null){
             CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
 
@@ -507,7 +507,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * validates we are not sending less than permited.
          */
         if (isDustySend(valueToSend))
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more bitcoins!");
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Dusty send request: " + valueToSend, "send more fermats!");
 
         /**
          * I get the network for this address and validate that is active
@@ -515,7 +515,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         try {
             validateNetorkIsActive(blockchainNetworkType);
         } catch (CantValidateCryptoNetworkIsActiveException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
         }
 
@@ -531,7 +531,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE,e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
         }
 
@@ -543,7 +543,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * Create the bitcoinj wallet from the keys of this account
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Fermat Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
 
@@ -583,7 +583,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
 
 
             CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
 
         }
@@ -606,26 +606,26 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             // this will add the inputs to fill the transaction.
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
-            StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
+            StringBuilder output = new StringBuilder("Not enought money to send fermats.");
             output.append(System.lineSeparator());
             output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
             CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         } catch (Exception exception){
-            StringBuilder output = new StringBuilder("Error sending bitcoins.");
+            StringBuilder output = new StringBuilder("Error sending fermats.");
             output.append(System.lineSeparator());
-            output.append("Bitcoin Vault status: ");
+            output.append("Fermat Vault status: ");
             output.append(wallet.toString());
             output.append(System.lineSeparator());
             output.append("Transaction Status: ");
             output.append(sendRequest.tx.toString());
-            CantCreateDraftTransactionException e = new CantCreateDraftTransactionException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Bitcoin vault");
+            CantCreateDraftTransactionException e = new CantCreateDraftTransactionException(CouldNotSendMoneyException.DEFAULT_MESSAGE, exception, output.toString(), "Fermat Vault");
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         }
 
@@ -653,11 +653,11 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             storeDraftTransaction(draftTransaction);
         } catch (CantCreateFileException | CantPersistFileException e) {
             CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "Draft Transaction could not be stored on disk", "IO error");
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
 
-        System.out.println("***BitcoinVault*** Draft Transaction completed.");
+        System.out.println("***FermatVault*** Draft Transaction completed.");
         System.out.println(draftTransaction.toString());
 
         return draftTransaction;
@@ -694,7 +694,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
             return draftTransaction;
         } catch (Exception e) {
             CantGetDraftTransactionException exception = new CantGetDraftTransactionException(CantGetDraftTransactionException.DEFAULT_MESSAGE, e, "IO error while getting the draft transaction from disk. txHash: " + txHash, "PluginFileSystem");
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
     }
