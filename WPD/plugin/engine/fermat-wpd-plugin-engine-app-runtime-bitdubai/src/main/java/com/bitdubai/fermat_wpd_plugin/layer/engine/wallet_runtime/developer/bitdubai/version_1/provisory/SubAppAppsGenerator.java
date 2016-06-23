@@ -21,11 +21,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.SourceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuChangeActivityOnPressEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionMenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
+
 
 /**
  * Created by mati on 2016.05.09..
@@ -1330,6 +1332,7 @@ public class SubAppAppsGenerator {
         Owner owner;
         String titleBarColor = "#3f5b77";// "#4B5E75";
         String statusBarColor = "#3f5b77";
+        String textTitleColor = "#ffffff";
         String dapFactoryPublicKey = SubAppsPublicKeys.DAP_FACTORY.getCode();
 
         dapFactory = new AppNavigationStructure();
@@ -1351,6 +1354,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Factory");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -1383,14 +1387,14 @@ public class SubAppAppsGenerator {
 
         optionsMenu = new OptionsMenu();
         menuItem = new OptionMenuItem(1);
-        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Search");
         menuItem.setShowAsAction(2);
         menuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
-        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Help");
         menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenu.addMenuItem(menuItem);
@@ -1412,6 +1416,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Draft Asset");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1436,14 +1441,14 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
 
         runtimeActivity.setSideMenu(loadSideMenuAssetFactory(dapFactoryPublicKey));
 
@@ -1462,15 +1467,16 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
         runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
 
         dapFactory.addActivity(runtimeActivity);
 
@@ -1487,6 +1493,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1508,6 +1515,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Multimedia");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem = new MenuItem();
@@ -1547,6 +1555,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Properties");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem2 = new MenuItem();
@@ -1586,6 +1595,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem3 = new MenuItem();
@@ -1625,6 +1635,7 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Verify");
+        runtimeTitleBar.setTitleColor(textTitleColor);
         runtimeTitleBar.setColor(titleBarColor);
         runtimeTitleBar.setIconName("Back");
 //        MenuItem leftIconMenuItem4 = new MenuItem();
@@ -2084,50 +2095,50 @@ public class SubAppAppsGenerator {
 
         OptionsMenu optionsMenuMain = new OptionsMenu();
 
-        OptionMenuItem menuItemMain = new OptionMenuItem(1);
-        menuItemMain.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        OptionMenuItem menuItemMain = new OptionMenuItem(0);
+        menuItemMain.setFermatDrawable(new FermatDrawable(0, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Connect");
         menuItemMain.setOrder(0);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(2);
-        menuItemMain.setFermatDrawable(new FermatDrawable(2, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(1);
+        menuItemMain.setFermatDrawable(new FermatDrawable(1, "disconnect", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Disconnect");
         menuItemMain.setOrder(1);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(3);
-        menuItemMain.setFermatDrawable(new FermatDrawable(3, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(2);
+        menuItemMain.setFermatDrawable(new FermatDrawable(2, "cancel_connecting", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Cancel Connecting");
         menuItemMain.setOrder(2);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(4);
-        menuItemMain.setFermatDrawable(new FermatDrawable(4, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(3);
+        menuItemMain.setFermatDrawable(new FermatDrawable(3, "select_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Select All");
         menuItemMain.setOrder(3);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(5);
-        menuItemMain.setFermatDrawable(new FermatDrawable(5, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(4);
+        menuItemMain.setFermatDrawable(new FermatDrawable(4, "unselect_all", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Unselect All");
         menuItemMain.setOrder(4);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(6);
-        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(5);
+        menuItemMain.setFermatDrawable(new FermatDrawable(5, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Help");
         menuItemMain.setOrder(5);
         menuItemMain.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         optionsMenuMain.addMenuItem(menuItemMain);
 
-        menuItemMain = new OptionMenuItem(7);
-        menuItemMain.setFermatDrawable(new FermatDrawable(7, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItemMain = new OptionMenuItem(6);
+        menuItemMain.setFermatDrawable(new FermatDrawable(6, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItemMain.setLabel("Search");
         menuItemMain.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
         menuItemMain.setActionViewClass(100);
@@ -2912,17 +2923,25 @@ public class SubAppAppsGenerator {
     } //ArtArtistIdentity
 
     private void createCryptoCustomerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final int CREATE_IDENTITY_MENU_ID = 3;
+        final int GEOLOCATION_SETTINGS_OPTION_MENU_ID = 4;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
         FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
-        String publicKey = SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode();
 
         runtimeSubApp = new AppNavigationStructure();
 
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         runtimeSubApp.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
@@ -2946,17 +2965,53 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: ImageCropper
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
         // Activity: Create New Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2972,17 +3027,62 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(CREATE_IDENTITY_MENU_ID, "action_create", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_CREATE_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
 
         // Activity: Edit Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2999,22 +3099,76 @@ public class SubAppAppsGenerator {
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.         CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Option Menu - Edit Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Create Identity
+        optionMenuItem = new OptionMenuItem(CREATE_IDENTITY_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(CREATE_IDENTITY_MENU_ID, "action_create", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Edit Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation in Edit Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_EDIT_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
     }
 
     private void createCryptoBrokerIdentitySubAppNavigationStructure() throws InvalidParameterException {
+        final int ADD_IDENTITY_OPTION_MENU_ID = 1;
+        final int HELP_OPTION_MENU_ID = 2;
+        final int GEOLOCATION_SETTINGS_OPTION_MENU_ID = 3;
+
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
         AppNavigationStructure runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
         TitleBar runtimeTitleBar;
         FermatRuntimeFragment runtimeFragment;
 
-        String publicKey = SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode();
-
         runtimeSubApp = new AppNavigationStructure();
-        runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPublicKey(PUBLIC_KEY);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
         // Activity: List of identities
@@ -3037,22 +3191,69 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - List of identities Activity
+        OptionsMenu optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Create Identity
+        OptionMenuItem optionMenuItem = new OptionMenuItem(ADD_IDENTITY_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(ADD_IDENTITY_OPTION_MENU_ID, "action_add", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Create Identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Help
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "action_help", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+        // Activity: ImageCropper
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_IMAGE_CROPPER_FRAGMENT.getKey());
 
         // Activity: Create New Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
+
+        // Option Menu - Create New Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("New Identity");
@@ -3068,12 +3269,38 @@ public class SubAppAppsGenerator {
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
+        // Activity: Geolocation in Create Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_CREATE_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
         // Activity: Edit Identity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -3089,10 +3316,48 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        // Option Menu - Edit Identity Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Geolocation Settings
+        optionMenuItem = new OptionMenuItem(GEOLOCATION_SETTINGS_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(GEOLOCATION_SETTINGS_OPTION_MENU_ID, "cbp_id_geolocation_icon", OWNER, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Geolocation identity");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+
+        // Activity: Geolocation in Edit Identity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_EDIT_IDENTITY.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#9A12B09F");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#9A12B09F");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
     }
 
     private void createCryptoBrokerCommunitySubAppNavigationStructure() throws InvalidParameterException {
@@ -3687,10 +3952,10 @@ public class SubAppAppsGenerator {
         Tab runtimeTab;
 
         chtChat = new AppNavigationStructure();
-        String chatPublicKey = SubAppsPublicKeys.CHT_OPEN_CHAT.getCode();
+        final String chatPublicKey = SubAppsPublicKeys.CHT_OPEN_CHAT.getCode();
         chtChat.setPublicKey(chatPublicKey);
         chtChat.setPlatform(Platforms.CHAT_PLATFORM);
-        listSubApp.put(chtChat.getPublicKey(), chtChat);
+        //listSubApp.put(chtChat.getPublicKey(), chtChat);
 
         statusBar = new StatusBar();
         statusBar.setColor("#075E55");
@@ -3700,9 +3965,8 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         runtimeActivity.setBackgroundColor("#F9F9F9");
-        chtChat.changeActualStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
-
-        runtimeActivity.setStatusBar(statusBar);
+        runtimeActivity.setColor("#F9F9F9");
+        //chtChat.changeActualStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("P2P Chat");
@@ -3712,61 +3976,67 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E55");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
+        runtimeActivity.setStatusBar(statusBar);
+
         //Owner
         Owner owner = new Owner();
         owner.setOwnerAppPublicKey(chatPublicKey);
 
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+//        runtimeFragment = new FermatRuntimeFragment();
+//        runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#075E55");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#F9F9F9");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
+
         runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setOwner(owner);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenu = new OptionsMenu();
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Search");
         optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(3);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "delete_all_chats", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Delete All Chats");
-        optionMenuItem.setShowAsAction(-1);
+        optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
 
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+
         //Tabs Contacts
         runtimeTab = new Tab();
         runtimeTab.setLabel("CONTACTS");
+
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment.setOwner(owner);
 
         optionsMenu = new OptionsMenu();
         optionMenuItem = new OptionMenuItem(1);
@@ -3777,12 +4047,18 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(2);
-        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        //optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
-        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setShowAsAction(4);
         optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment.setOptionsMenu(optionsMenu);
+
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
@@ -4019,7 +4295,35 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#075E55");
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+
+        MenuItem leftIconMenuItem = new MenuItem();
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setAppLinkPublicKey("back");
+        //leftIconMenuItem.setLinkToActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        runtimeTitleBar.setNavItem(leftIconMenuItem);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+
+        optionsMenu = new OptionsMenu();
+        optionMenuItem = new OptionMenuItem(1);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(2, "ic_search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(2);
+        optionMenuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(2);
+        optionMenuItem.setLabel("Clean Chat");
+        optionMenuItem.setShowAsAction(4);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
@@ -4175,11 +4479,14 @@ public class SubAppAppsGenerator {
         chtComm.setPlatform(Platforms.CHAT_PLATFORM);
         //listSubApp.put(chtComm.getPublicKey(), chtComm);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#075E54");
+
         //Activity Home Browser
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setBackgroundColor("F9F9F9");
+        runtimeActivity.setBackgroundColor("#F9F9F9");
         runtimeActivity.setColor("#F9F9F9");
         //chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
 
@@ -4191,8 +4498,6 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#075E54");
         runtimeActivity.setStatusBar(statusBar);
 
         //Owner
@@ -4219,10 +4524,8 @@ public class SubAppAppsGenerator {
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-
+        runtimeFragment.setOwner(owner);
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
 
         OptionsMenu optionsMenuBrowser = new OptionsMenu();
         OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
@@ -4245,19 +4548,19 @@ public class SubAppAppsGenerator {
         optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
 
         runtimeFragment.setOptionsMenu(optionsMenuBrowser);
-        runtimeFragment.setOwner(owner);
 
         runtimeTab.setFragment(runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
 //        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT.getKey(), runtimeFragment);
 
         //Tabs Connections
         runtimeTab = new Tab();
         runtimeTab.setLabel(" CONNECTIONS ");
+
         runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey());
-
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment.setOwner(owner);
 
         OptionsMenu optionsMenuConn = new OptionsMenu();
         OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
@@ -4267,38 +4570,41 @@ public class SubAppAppsGenerator {
         optionMenuItemConn.setShowAsAction(2);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
-
-        optionMenuItemConn = new OptionMenuItem(22);
+        optionMenuItemConn = new OptionMenuItem(2);
         optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(4);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         runtimeFragment.setOptionsMenu(optionsMenuConn);
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
 
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT.getKey(), runtimeFragment);
 
         //Tabs Notifications
         runtimeTab = new Tab();
         runtimeTab.setLabel("NOTIFICATIONS");
+
         runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
+        runtimeFragment.setOwner(owner);
 
         OptionsMenu optionsMenuNot = new OptionsMenu();
         OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
         optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemNot.setLabel("Help");
-        optionMenuItemNot.setShowAsAction(1);
+        optionMenuItemNot.setShowAsAction(2);
         optionsMenuNot.addMenuItem(optionMenuItemNot);
 
         runtimeFragment.setOptionsMenu(optionsMenuNot);
 
+        runtimeTab.setFragment(runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         chtComm.addActivity(runtimeActivity);
         chtComm.changeActualStartActivity(runtimeActivity.getType().getCode());
@@ -4428,17 +4734,20 @@ public class SubAppAppsGenerator {
         statusBar.setColor("#075e53");
         runtimeActivity.setStatusBar(statusBar);
 
-        OptionsMenu optionsMenu = new OptionsMenu();
-        OptionMenuItem menuItem = new OptionMenuItem(1);
         Owner owner2 = new Owner();
         owner2.setOwnerAppPublicKey(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+
+        OptionsMenu optionsMenu = new OptionsMenu();
+        OptionMenuItem menuItem = new OptionMenuItem(1);
         menuItem.setFermatDrawable(new FermatDrawable(2, "ic_location", owner2, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Location");
         menuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
         menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner2, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setShowAsAction(2);
+        menuItem.setLabel("Help");
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);

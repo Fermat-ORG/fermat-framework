@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:visibility="invisible"
+    android:visibility="visible"
     >
 
     <LinearLayout
@@ -42,12 +42,11 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:text="@string/ccw_wizard_exchange_rate_providers_description"
             android:textColor="#606060"
             android:textSize="16sp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -66,7 +65,7 @@
             android:id="@+id/bitcoin_wallets_spinner"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:backgroundTint="@color/black"
             android:drawSelectorOnTop="true"
             tools:listitem="@layout/ccw_spinner_item"/>
@@ -81,7 +80,7 @@
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp"
+        android:paddingTop="10dp"
         android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -117,10 +116,21 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YOUR PROVIDERS"
+            android:layout_marginTop="8dp"
+            android:text="Add at least one Exchange Provider, selecting two currencies per Provider"
+            android:textColor="#606060"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOUR EXCHANGE PROVIDERS"
             android:textColor="#E5007E"/>
 
         <View
@@ -129,10 +139,13 @@
             android:layout_marginTop="8dp"
             android:background="@color/ccw_wizard_color"/>
 
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
             <Spinner
@@ -170,7 +183,7 @@
                 android:background="#1271A7"
                 android:text="@string/ccw_providers"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

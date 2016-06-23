@@ -1,6 +1,8 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.7
+sourceCompatibility = 1.7
+version = '1.0'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -13,4 +15,15 @@ dependencies {
      * used to specify where the Blockchain checkpoints are stored.
      */
     sourceSets.main.resources.srcDirs = ["src/main/resources/"]
+}
+
+task bhcCryptoNetworkFatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-all'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

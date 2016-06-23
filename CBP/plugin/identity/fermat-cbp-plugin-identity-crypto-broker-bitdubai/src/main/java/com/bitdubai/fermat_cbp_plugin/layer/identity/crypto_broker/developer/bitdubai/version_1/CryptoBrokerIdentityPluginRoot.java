@@ -114,14 +114,14 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         }
     }
 
-    public final CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] image,
-                                                                 long accuracy,
-                                                                 Frecuency frecuency) throws CantCreateCryptoBrokerIdentityException, CryptoBrokerIdentityAlreadyExistsException {
+    public final CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] image, long accuracy, Frecuency frecuency)
+            throws CantCreateCryptoBrokerIdentityException, CryptoBrokerIdentityAlreadyExistsException {
+
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = new ECCKeyPair();
             CryptoBrokerIdentity cryptoBroker = new CryptoBrokerIdentityImpl(alias, keyPair, image, ExposureLevel.HIDE, accuracy, frecuency);
-            cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser, accuracy, frecuency);
+            cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(cryptoBroker, keyPair.getPrivateKey(), loggedUser);
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "cambios_en_el_identity_broker_creado");
 

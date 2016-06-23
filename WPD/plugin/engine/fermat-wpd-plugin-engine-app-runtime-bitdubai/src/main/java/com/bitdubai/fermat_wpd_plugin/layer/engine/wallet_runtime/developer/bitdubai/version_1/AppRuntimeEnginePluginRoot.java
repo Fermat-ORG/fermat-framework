@@ -1242,16 +1242,22 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
         FermatRuntimeFragment runtimeFragment;
-
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
         final String publicKey = WalletsPublicKeys.DAP_ISSUER_WALLET.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
 
         final String statusBarColor = "#212121";
         final String titleBarLabelColor = "#ffffff";
         final int titleBarLabelSize = 20;
 
-
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(publicKey);
+        runtimeAppNavigationStructure.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
         navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
 
         // Activity: Home
@@ -1260,9 +1266,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Issuer");
@@ -1280,6 +1283,25 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 
         // Activity: Settings
         runtimeActivity = new Activity();
@@ -1462,7 +1484,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Detail");
@@ -1485,13 +1506,23 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("");
@@ -1510,6 +1541,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
 //        runtimeActivity = new Activity();
 //        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY);
@@ -1542,7 +1583,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#F5F5F5");//808A96
@@ -1559,7 +1599,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Users");
-        Owner owner = new Owner();
+        owner = new Owner();
         owner.setOwnerAppPublicKey(publicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TAB_SELECT_USERS.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
@@ -1579,7 +1619,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Select Users/Groups");
-//        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
 //        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setIconName("back");
@@ -1594,6 +1634,28 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TABS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY_TABS.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_send", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Send");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(3);
+//        menuItem.setFermatDrawable(new FermatDrawable(3, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         //Assets Details Appropriate
 //        runtimeActivity = new Activity();
@@ -1654,10 +1716,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
         FermatRuntimeFragment runtimeFragment;
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
+        final String publicKey = WalletsPublicKeys.DAP_USER_WALLET.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-
-        final String publicKey = WalletsPublicKeys.DAP_USER_WALLET.getCode();
 
         final String statusBarColor = "#1371A7";
         final String titleBarLabelColor = "#ffffff";
@@ -1666,6 +1733,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(publicKey);
+        runtimeAppNavigationStructure.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
         navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
 
         // Activity: Home
@@ -1674,9 +1743,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_V3_HOME.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset User");
@@ -1697,6 +1763,26 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_V3_HOME.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME.getCode());
+
 //TODO en Deshuso por ahora
 //        // Activity: History
 //        runtimeActivity = new Activity();
@@ -1746,8 +1832,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
 
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Detail");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
@@ -1769,6 +1853,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         // BEG Settings activity from DAP WALLET USER
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY);
@@ -1776,8 +1871,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
@@ -1796,6 +1889,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         // BEG Settings Network activity from DAP WALLET USER
         runtimeActivity = new Activity();
@@ -1823,6 +1927,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         // END Settings Network activity from DAP WALLET USER
 
         // BEG Settings Notifications activity from DAP WALLET USER
@@ -1831,8 +1946,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
-
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
@@ -1851,6 +1964,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         // END Settings Notifications activity from DAP WALLET USER
 
         runtimeActivity = new Activity();
@@ -1859,7 +1983,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Redeem Assets");
@@ -1877,6 +2000,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_ASSET_USER_ASSET_REDEEM.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_REDEEM.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_REDEEM.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_redeem", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Redeem");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
 //        runtimeActivity = new Activity();
 //        runtimeActivity.setType(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS);
@@ -1930,6 +2064,15 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_sell", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Sell");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
         //INI SELECT USERS FRAGMENT
 
 //        runtimeActivity = new Activity();
@@ -1965,7 +2108,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
         runtimeActivity.setBackPublicKey(publicKey);
 //        runtimeActivity.setColor("#1189a5");
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Transfer Assets");
@@ -1983,6 +2125,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_FRAGMENT.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(2);
+//        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_transfer", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Transfer");
+        menuItem.setShowAsAction(2);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         //INI TRANSFER SELECT USERS FRAGMENT
 
@@ -2047,8 +2200,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     private AppNavigationStructure createAssetRedeemPointWalletNavigationStructure() {
         AppNavigationStructure runtimeAppNavigationStructure;
-        SideMenu runtimeSideMenu;
-        MenuItem runtimeMenuItem;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
         StatusBar runtimeStatusBar;
@@ -2056,8 +2207,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-
+        OptionsMenu optionsMenu;
+        OptionMenuItem menuItem;
+        Owner owner;
         final String publicKey = WalletsPublicKeys.DAP_REDEEM_WALLET.getCode();
+
+        owner = new Owner();
+        owner.setOwnerAppPublicKey(publicKey);
 
 //        final String statusBarColor = "#005580";
         final String statusBarColor = "#009688";
@@ -2067,6 +2223,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPublicKey(publicKey);
+        runtimeAppNavigationStructure.setPlatform(Platforms.DIGITAL_ASSET_PLATFORM);
+
         navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
 
         // Activity: Home
@@ -2075,8 +2233,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Redeem Point");
@@ -2095,14 +2251,31 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
+
         //ACTIVITY HOME NEW
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
-        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Redeem Point");
@@ -2122,8 +2295,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("PENDING");
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(publicKey);
         runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.DAP_WALLET_REDEEM_POINT_MAIN_PENDING_TAB_FRAGMENT.getKey()));
         runtimeTabStrip.addTab(runtimeTab);
 
@@ -2142,7 +2313,24 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_HISTORY_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_HISTORY_TAB_FRAGMENT.getKey(), runtimeFragment);
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
+        menuItem = new OptionMenuItem(2);
+        menuItem.setFermatDrawable(new FermatDrawable(2, "ic_menu_search", owner, SourceLocation.DEVELOPER_RESOURCES));//number reference in class Android FermatAppConnection to method getResource(int id)
+        menuItem.setLabel("Search");
+        menuItem.setShowAsAction(2);
+        menuItem.setActionViewClass(100);
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
         //INI Redeem Detail activity
 
         runtimeActivity = new Activity();
@@ -2152,7 +2340,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         //runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
         runtimeActivity.setBackPublicKey(publicKey);
         //runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("");
@@ -2172,6 +2359,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_USER_DETAIL_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_USER_DETAIL_FRAGMENT.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         // INI Settings activity from DAP REDEEMPOINT
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY);
@@ -2180,7 +2378,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Settings");
@@ -2189,7 +2386,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -2200,14 +2396,23 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY.getKey());
 
-        // INI Settings Network activity from redeemPoint
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
 
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
+        // INI Settings Network activity from redeemPoint
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Network");
@@ -2227,6 +2432,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK.getKey());
 
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+
         // END Settings Network activity from redeempoint
 
         // INI Settings Notifications activity from redeempoint
@@ -2235,7 +2450,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY);
         runtimeActivity.setBackPublicKey(publicKey);
-        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
@@ -2253,6 +2467,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setFragmentCode(Fragments.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS.getKey());
+
+        optionsMenu = new OptionsMenu();
+        menuItem = new OptionMenuItem(1);
+//        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem.setLabel("Help");
+        menuItem.setShowAsAction(4);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
+        optionsMenu.addMenuItem(menuItem);
+
+        runtimeActivity.setOptionsMenu(optionsMenu);
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
 //TODO en Deshuso por ahora
 //        // Activity: History
@@ -2479,6 +2703,18 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
     private AppNavigationStructure createCryptoBrokerWalletNavigationStructure() {
+        final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
+        final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
+        final int NO_FILTER_OPTION_MENU_ID = 3;
+        final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
+        final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+        final String PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+        final String statusBarColor = "#1375a7";
+        final String titleBarColor = "#254478";
+        final String titleBarTitleColor = "#ffffff";
+        final int titleBarTextSize = 16;
+
         AppNavigationStructure runtimeAppNavigationStructure;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -2489,18 +2725,13 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-
-        final String publicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
-
-        final String statusBarColor = "#1375a7";
-        final String titleBarColor = "#254478";
-        final String titleBarTitleColor = "#ffffff";
-        final int titleBarTextSize = 16;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
         runtimeAppNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
-        runtimeAppNavigationStructure.setPublicKey(publicKey);
-        navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
+        runtimeAppNavigationStructure.setPublicKey(PUBLIC_KEY);
+        navigationStructureOpen.put(PUBLIC_KEY, runtimeAppNavigationStructure);
 
 
         // Side Menu
@@ -2510,25 +2741,25 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Earnings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // WIZARD
@@ -2537,7 +2768,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
         runtimeAppNavigationStructure.changeActualStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
 
@@ -2555,7 +2786,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -2572,7 +2803,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -2589,7 +2820,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -2606,7 +2837,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_BANK_ACCOUNT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -2623,7 +2854,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2680,7 +2911,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(publicKey);
+        owner.setOwnerAppPublicKey(PUBLIC_KEY);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Negotiations");
@@ -2713,7 +2944,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2728,6 +2959,16 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Open Negotiation details Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Cancel Negotiation
+        optionMenuItem = new OptionMenuItem(CANCEL_NEGOTIATION_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Cancel Negotiation");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
@@ -2739,7 +2980,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2764,7 +3005,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2790,7 +3031,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2816,7 +3057,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2842,7 +3083,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -2857,6 +3098,33 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Contract History Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        //TODO: falta agregar el boton filter que es el del icono cuando matias soporte lo de los submenus
+
+        // Option Menu Item - No Filter
+        optionMenuItem = new OptionMenuItem(NO_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("No Filter");
+        optionMenuItem.setOrder(0);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Succeeded
+        optionMenuItem = new OptionMenuItem(SUCCEEDED_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Succeeded");
+        optionMenuItem.setOrder(1);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Canceled
+        optionMenuItem = new OptionMenuItem(CANCELED_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Canceled");
+        optionMenuItem.setOrder(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey(), runtimeFragment);
@@ -2868,7 +3136,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -2894,7 +3162,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -2919,7 +3187,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2944,7 +3212,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2969,7 +3237,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -2994,7 +3262,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3019,6 +3287,20 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
     private AppNavigationStructure createCryptoCustomerWalletNavigationStructure() {
+        final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
+        final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
+        final int NO_FILTER_OPTION_MENU_ID = 3;
+        final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
+        final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+        final int START_NEGOTIATION_OPTION_MENU_ID = 6;
+        final String PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode();
+        final Owner OWNER = new Owner(PUBLIC_KEY);
+
+        final String statusBarColor = "#492781";
+        final String titleBarColor = "#492781";
+        final String titleBarLabelColor = "#ffffff";
+        final int titleBarLabelSize = 16;
+
         AppNavigationStructure runtimeAppNavigationStructure;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -3029,20 +3311,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
-
-        final String publicKey = WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode();
-
-        final String statusBarColor = "#492781";
-        final String titleBarColor = "#492781";
-        final String titleBarLabelColor = "#ffffff";
-        final int titleBarLabelSize = 16;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
 
         runtimeAppNavigationStructure = new AppNavigationStructure();
-        runtimeAppNavigationStructure.setPublicKey(publicKey);
+        runtimeAppNavigationStructure.setPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
-        navigationStructureOpen.put(publicKey, runtimeAppNavigationStructure);
-
+        navigationStructureOpen.put(PUBLIC_KEY, runtimeAppNavigationStructure);
 
 
         // Side Menu
@@ -3052,25 +3328,25 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contracts History");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Broker List");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
-        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeMenuItem.setAppLinkPublicKey(PUBLIC_KEY);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // WIZARD
@@ -3096,7 +3372,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -3113,7 +3389,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeStatusBar = new StatusBar();
@@ -3130,7 +3406,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3156,7 +3432,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3199,7 +3475,19 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Market rate");
         runtimeHeader.setExpandable(true);
+        runtimeHeader.setRemoveHeaderScroll(true);
         runtimeActivity.setHeader(runtimeHeader);
+
+        // Option Menu - Home Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        // Option Menu Item - Open Broker List activity
+        optionMenuItem = new OptionMenuItem(START_NEGOTIATION_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Start a Negotiation");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionMenuItem.setOptionMenuPressEvent(new OptionMenuChangeActivityOnPressEvent(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getCode()));
+        optionsMenu.addMenuItem(optionMenuItem);
 
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
@@ -3207,8 +3495,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         runtimeTabStrip = new TabStrip();
-//        runtimeTabStrip.setTabsColor("#502681");
-//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsColor("#492781");
         runtimeTabStrip.setTabsTextColor("#F9F9F9");
         runtimeTabStrip.setTabsIndicateColor("#dbdbdb");
@@ -3216,7 +3502,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(publicKey);
+        owner.setOwnerAppPublicKey(PUBLIC_KEY);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Negotiations");
@@ -3241,7 +3527,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3267,7 +3553,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3293,7 +3579,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3319,7 +3605,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3345,7 +3631,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3372,7 +3658,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3398,7 +3684,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3413,6 +3699,33 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        // Option Menu - Contract History Activity
+        optionsMenu = new OptionsMenu();
+        runtimeActivity.setOptionsMenu(optionsMenu);
+
+        //TODO: falta agregar el boton filter que es el del icono cuando matias soporte lo de los submenus
+
+        // Option Menu Item - No Filter
+        optionMenuItem = new OptionMenuItem(NO_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("No Filter");
+        optionMenuItem.setOrder(0);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Succeeded
+        optionMenuItem = new OptionMenuItem(SUCCEEDED_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Succeeded");
+        optionMenuItem.setOrder(1);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Option Menu Item - Canceled
+        optionMenuItem = new OptionMenuItem(CANCELED_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setLabel("Canceled");
+        optionMenuItem.setOrder(2);
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_NEVER);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getKey());
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY.getKey(), runtimeFragment);
@@ -3424,7 +3737,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3450,7 +3763,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3475,7 +3788,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setColor("#1189a5");
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3501,7 +3814,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3527,7 +3840,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setColor("#1189a5");
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -3553,7 +3866,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
@@ -3579,7 +3892,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS.getCode());
         runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
-        runtimeActivity.setBackPublicKey(publicKey);
+        runtimeActivity.setBackPublicKey(PUBLIC_KEY);
         runtimeActivity.setColor("#1189a5");
         runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
@@ -5991,12 +6304,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         //Help optionMenu
         OptionMenuItem optionMenuItem = new OptionMenuItem(1);
-//        optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItem.setLabel("Help");
         optionMenuItem.setOrder(2);
         optionMenuItem.setShowAsAction(4);
-//        optionMenuItem.setGroupId(1);
-//        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
 
@@ -6021,7 +6331,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         optionMenuItem.setLabel("Location");
         optionMenuItem.setOrder(1);
         optionMenuItem.setShowAsAction(4);
-//        optionMenuItem.setShowAsAction(2);
         optionsMenu.addMenuItem(optionMenuItem);
 
         optionMenuItem = new OptionMenuItem(5);

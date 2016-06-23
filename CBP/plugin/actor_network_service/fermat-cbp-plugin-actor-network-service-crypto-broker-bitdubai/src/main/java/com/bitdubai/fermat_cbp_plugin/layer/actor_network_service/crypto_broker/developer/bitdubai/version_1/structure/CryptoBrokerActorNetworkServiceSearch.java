@@ -31,7 +31,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResult() throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResult(Integer max, Integer offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -42,10 +42,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
@@ -73,7 +73,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
         try {
 
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
@@ -86,7 +86,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    offSet,
+                    offset,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
@@ -114,7 +114,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -125,10 +125,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     null,
                     null,
                     deviceLocation,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
@@ -156,7 +156,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResultDistance(double distance) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResultDistance(double distance, Integer max, Integer offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -167,10 +167,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
@@ -198,7 +198,7 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
     }
 
     @Override
-    public List<CryptoBrokerExposingData> getResultAlias(String alias) throws CantListCryptoBrokersException {
+    public List<CryptoBrokerExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -209,10 +209,10 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.CRYPTO_BROKER
             );
 
