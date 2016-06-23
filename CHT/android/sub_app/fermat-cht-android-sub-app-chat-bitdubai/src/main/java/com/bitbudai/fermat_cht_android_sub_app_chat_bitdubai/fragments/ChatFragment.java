@@ -177,8 +177,8 @@ public class ChatFragment
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+//        super.onCreateOptionsMenu(menu, inflater);
         // Inflate the menu items
         //inflater.inflate(R.menu.chat_menu, menu);
         // Locate the search item
@@ -217,6 +217,7 @@ public class ChatFragment
             int id = item.getItemId();
             switch (id) {
                 case 1:
+
                     break;
                 case 2:
                     try {

@@ -527,7 +527,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 List<City> cityList = geolocationManager.getCitiesByCountryCode(country.getCountryShortName());
 
                 for(City city: cityList){
-                    if(city.getName().equals(filter) || country.getCountryName().equals(filter))
+                    if(city.getName().toLowerCase().contains(filter.toLowerCase()) || country.getCountryName().toLowerCase().contains(filter.toLowerCase()))
                         cities.add(new CitiesImpl(city.getName(), city.getCountryCode(), city.getLatitude(), city.getLongitude(), country.getCountryName(), country.getCountryShortName(), country.getGeoRectangle()));
                 }
             }

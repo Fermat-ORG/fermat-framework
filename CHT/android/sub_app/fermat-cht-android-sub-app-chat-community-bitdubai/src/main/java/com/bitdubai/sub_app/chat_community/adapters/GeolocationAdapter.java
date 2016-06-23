@@ -30,46 +30,38 @@ import java.util.List;
 /**
  * Created by roy on 13/06/16.
  */
-public class GeolocationAdapter extends ArrayAdapter<Cities> {
+public class GeolocationAdapter extends ArrayAdapter {
 
-//    private List<Cities> cities = new ArrayList<>();
     protected List<Cities> dataSet;
     private ErrorManager errorManager;
 
-    public GeolocationAdapter(Context context, List<Cities> citiesList){
-        super(context, 0, citiesList );
+    public GeolocationAdapter(Context context, List<Cities> dataSet,ErrorManager errorManager){
+        super(context, R.layout.cht_comm_geolocation_results_item, dataSet );
+        this.dataSet = dataSet;
+        this.errorManager = errorManager;
     }
 
-    public void changeDataSet(List<Cities> dataSet) {
+    public void refreshEvents(List<Cities> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View item = inflater.inflate(R.layout.cht_comm_geolocation_results_item, null, true);
         try {
-
-            if(convertView == null){
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cht_comm_geolocation_results_item, parent, false);
-            }
-
-            Cities cities = getItem(position);
-
-
+//            if(convertView == null){
+//                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cht_comm_geolocation_results_item, parent, false);
+//            }
             TextView Country = (TextView) convertView.findViewById(R.id.country_search);
             TextView State = (TextView) convertView.findViewById(R.id.state_search);
-
-            Country.setText(cities.getCountryName());
-            State.setText(cities.getName());
-
+            Country.setText(dataSet.get(position).getCountryName());
+            State.setText(dataSet.get(position).getName());
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        return convertView;
+        return item;
     }
-
-
-
 //    @Override
 //    protected CitiesListHolder createHolder(View itemView, int type) {
 //        return new CitiesListHolder(itemView);

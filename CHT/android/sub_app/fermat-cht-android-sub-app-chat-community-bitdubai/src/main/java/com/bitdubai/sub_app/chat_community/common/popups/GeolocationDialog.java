@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.chat_community.common.popups;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -46,6 +47,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.Can
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
@@ -59,7 +61,7 @@ import java.util.List;
 /**
  * Created by roy on 11/06/16.
  */
-public class GeolocationDialog extends FermatDialog implements View.OnClickListener {
+public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     //ATTRIBUTES
     private EditText searchInput;
@@ -67,7 +69,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     private ListView mListView;
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private CitiesImpl cityFromList;
-    private ImageButton lupaButton;
+    private ImageView lupaButton;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
@@ -75,6 +77,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     private GeolocationAdapter adapter;
     private ErrorManager errorManager;
     private LinearLayout emptyView;
+    private final Activity activity;
     TextView noDatalabel;
 
     //SETTERS ATTRIBUTES
@@ -82,20 +85,14 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     String State;
     String Input;
 
-    public GeolocationDialog (Context activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession, ResourceProviderManager resources){
-        super(activity, appSession, resources); this.appSession = appSession;
+    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession, ResourceProviderManager resources){
+        super(activity, appSession, null);
+        this.appSession = appSession;
+        this.activity = activity;
     }
 
-    public void setCountryPlace(String country){
-        Country = country;
-    }
-
-    public void setStatePlace (String state){
-        State = state;
-    }
-
-    public void setSeachInput (String input){
-        Input = input;
+    public void onClick(View v) {
+        int id = v.getId();
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -108,40 +105,29 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
             mListView = (ListView) this.findViewById(R.id.geolocation_view);
+            noDatalabel = (TextView) this.findViewById(R.id.nodatalabel);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
 
-            lupaButton = (ImageButton) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
-            lupaButton.setOnClickListener(
-                    new View.OnClickListener() {
+            lupaButton = (ImageView) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
+            lupaButton.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getContext(), "dfdf", Toast.LENGTH_SHORT).show();
                             onRefresh();
                         }
                     }
             );
-            adapter = new GeolocationAdapter(getContext(), lstChatUserInformations);
-//            for(Cities cityIterator: mChatActorCommunityManager.getCities("a")){
-//                adapter.add(cityIterator);
-//            }
+            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    cityFromList = (CitiesImpl) parent.getItemAtPosition(position);
+                    //cityFromList = (CitiesImpl) parent.getItemAtPosition(position);
+                    cityFromList = (CitiesImpl) lstChatUserInformations.get(position);
                 }
             });
-
         }catch (Exception e){
             System.out.println("Exception at Geolocation Dialog");
         }
-
-
-    }
-
-    public void onClick(View v) {
-        int i = v.getId(); //Todo poner la selección del adapter
-
     }
 
     protected int setLayoutId() {
@@ -155,10 +141,6 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     public void onRefresh(){
         if (!isRefreshing) {
             isRefreshing = true;
-//            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-//            progressDialog.setMessage("Please wait");
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -173,10 +155,9 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
                     isRefreshing = false;
                     if (result != null &&
                             result.length > 0) {
-//                        progressDialog.dismiss();
-                        if (getContext()!= null && adapter != null) {
+                        if (getActivity()!= null && adapter != null) {
                             lstChatUserInformations = (ArrayList<Cities>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
+                            adapter.refreshEvents(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
@@ -189,7 +170,6 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-//                    progressDialog.dismiss();
                     isRefreshing = false;
                     if (getActivity() != null)
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -214,24 +194,13 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     }
 
     public void showEmpty(boolean show, View emptyView) {
-
-        Animation anim = AnimationUtils.loadAnimation(getContext(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            noDatalabel.setAnimation(anim);
+        if (show &&
+                (noDatalabel.getVisibility() == View.GONE || noDatalabel.getVisibility() == View.INVISIBLE)) {
             noDatalabel.setVisibility(View.VISIBLE);
             if (adapter != null)
-                adapter.changeDataSet(null);
-        } else {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-            emptyView.setBackgroundResource(0);
-            noDatalabel.setAnimation(anim);
+                adapter.refreshEvents(null);
+        } else if (!show && noDatalabel.getVisibility() == View.VISIBLE) {
             noDatalabel.setVisibility(View.GONE);
-            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgcolor);
         }
     }
 
