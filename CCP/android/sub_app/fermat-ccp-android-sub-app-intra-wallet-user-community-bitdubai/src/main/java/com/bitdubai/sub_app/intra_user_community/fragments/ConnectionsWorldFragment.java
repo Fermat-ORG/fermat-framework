@@ -655,9 +655,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
 
         } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
+             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+             getActivity().runOnUiThread(new Runnable() {
+                 public void run() {
+                     Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                 }
+             });
         }
         return dataSet;
     }
@@ -708,6 +713,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             //showCriptoUsersCache();
+                            invalidate();
                         }
                     });
                 } else {

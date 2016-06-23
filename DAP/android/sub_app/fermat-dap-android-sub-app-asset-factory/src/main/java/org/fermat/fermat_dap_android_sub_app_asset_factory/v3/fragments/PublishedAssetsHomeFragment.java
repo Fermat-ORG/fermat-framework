@@ -71,6 +71,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
     private Activity activity;
     private SearchView searchView;
 
+    private int menuItemSize;
 
     public static PublishedAssetsHomeFragment newInstance() {
         return new PublishedAssetsHomeFragment();
@@ -112,7 +113,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
 //        create.setEnabled(false);
 
         initSettings();
-        configureToolbar();
+//        configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_factory_draft_assets_home_fragment_no_assets);
 
         try {
@@ -248,25 +249,30 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
         inflater.inflate(R.menu.dap_wallet_asset_factory_draft_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_dap_factory_draft_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
+            MenuItem searchItem = menu.findItem(1);
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_factory_draft_search_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
 
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((AssetFactoryDraftAdapterFilter) ((AssetFactoryDraftAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
 //        menu.add(0, SessionConstantsAssetFactory.IC_ACTION_HELP_FACTORY, 0, "help").setIcon(R.drawable.dap_asset_factory_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
@@ -279,7 +285,7 @@ public class PublishedAssetsHomeFragment extends FermatWalletListFragment<AssetF
             switch (id) {
                 //case IC_ACTION_HELP_FACTORY:
                 case 2:
-                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
 //                case 1:
 //                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());

@@ -27,6 +27,12 @@ public class FragmentsCommons {
     public static final String QUOTES = "QUOTES";
     public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
     public static final String NEGOTIATION_ID = "NEGOTIATION_ID";
+    public static final int CANCEL_NEGOTIATION_OPTION_MENU_ID = 1;
+    public static final int CONTRACT_HISTORY_FILTER_OPTION_MENU_ID = 2;
+    public static final int NO_FILTER_OPTION_MENU_ID = 3;
+    public static final int SUCCEEDED_FILTER_OPTION_MENU_ID = 4;
+    public static final int CANCELED_FILTER_OPTION_MENU_ID = 5;
+    public static final int START_NEGOTIATION_OPTION_MENU_ID = 6;
 
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -40,7 +41,6 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.Ada
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Group;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.CreateGroupFragmentDialog;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
@@ -78,7 +78,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
     private View rootView;
     private LinearLayout emptyView;
     private int offset = 0;
-//    private MenuItem menuItemDelete;
+    private MenuItem menuItemDelete;
     private Menu menu;
     private CreateGroupFragmentDialog dialog;
 
@@ -86,6 +86,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
      * Flags
      */
     private boolean isRefreshing = false;
+    private int menuItemSize;
 
     public static UserCommuinityGroupUsersFragment newInstance() {
         return new UserCommuinityGroupUsersFragment();
@@ -134,12 +135,17 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                     }
                 }
 
-                if (someSelected) {
-//                    menuItemDelete.setVisible(true);
-                } else {
-//                    menuItemDelete.setVisible(false);
+                try {
+                    if (someSelected) {
+                        changeOptionMenuVisibility(menuItemDelete.getItemId(), true, true);
+//                        menuItemDelete.setVisible(true);
+                    } else {
+                        changeOptionMenuVisibility(menuItemDelete.getItemId(), false, true);
+//                        menuItemDelete.setVisible(false);
+                    }
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
                 }
-
             }
         });
         recyclerView.setAdapter(adapter);
@@ -224,9 +230,17 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 //        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
 //                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-//        menuItemDelete = menu.getItem(4);
-//        menuItemDelete.setVisible(false);
+            try {
+                menuItemDelete = menu.findItem(2);
+                changeOptionMenuVisibility(menuItemDelete.getItemId(), false, true);
+//            menuItemDelete.setVisible(false);
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -292,11 +306,14 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment<Ref
                                 Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
                                 onRefresh();
 //                                menuItemDelete.setVisible(false);
+                                changeOptionMenuVisibility(menuItemDelete.getItemId(), false, true);
                             } catch (CantDeleteAssetUserGroupException e) {
                                 e.printStackTrace();
                                 Toast.makeText(getActivity(), "This users couldn't be deleted.", Toast.LENGTH_SHORT).show();
                             } catch (RecordsNotFoundException e) {
                                 Toast.makeText(getActivity(), "Records not found.", Toast.LENGTH_SHORT).show();
+                            } catch (InvalidParameterException e) {
+                                e.printStackTrace();
                             }
                         }
                     });

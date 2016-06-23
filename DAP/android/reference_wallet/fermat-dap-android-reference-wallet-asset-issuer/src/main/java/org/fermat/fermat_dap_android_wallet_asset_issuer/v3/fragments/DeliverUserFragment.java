@@ -75,6 +75,8 @@ public class DeliverUserFragment extends FermatWalletListFragment<User, Referenc
     private RelativeLayout buttonPanelLayout;
     private FermatButton okButton;
 
+    private int menuItemSize;
+
     public static DeliverUserFragment newInstance() {
         return new DeliverUserFragment();
     }
@@ -167,28 +169,33 @@ public class DeliverUserFragment extends FermatWalletListFragment<User, Referenc
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.dap_asset_issuer_deliver_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_deliver_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_deliver_user_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+//        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_deliver_search).getActionView();
+        if (menuItemSize == 0 || menuItemSize == menu.size()) {
+            menuItemSize = menu.size();
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                buttonPanelLayout.setVisibility((s.length() > 0) ? View.VISIBLE : View.GONE);
-                if (s.equals(searchView.getQuery().toString())) {
-                    ((DeliverUserAdapterFilter) ((DeliverUserAdapter) getAdapter()).getFilter()).filter(s);
+            searchView = (SearchView) menu.findItem(1).getActionView();
+            searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_deliver_user_hint));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    return false;
                 }
-                return false;
-            }
-        });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER, 1, "")
-                .setIcon(R.drawable.ic_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    buttonPanelLayout.setVisibility((s.length() > 0) ? View.VISIBLE : View.GONE);
+                    if (s.equals(searchView.getQuery().toString())) {
+                        ((DeliverUserAdapterFilter) ((DeliverUserAdapter) getAdapter()).getFilter()).filter(s);
+                    }
+                    return false;
+                }
+            });
+        }
+//        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(1, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER, 1, "")
+//                .setIcon(R.drawable.ic_send)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -196,23 +203,43 @@ public class DeliverUserFragment extends FermatWalletListFragment<User, Referenc
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER) {
-                setUpHelpAssetDeliverUsers(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER) {
-                if (validateDistributeToUsers()) {
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_issuer_wallet_v3_distribute_confirm))
-                            .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_v3_dialog))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    doDistributeToUsers(digitalAsset.getAssetPublicKey(), getSelectedUsers(), getSelectedUsersCount());
-                                }
-                            }).build().show();
-                }
+            switch (id) {
+                case 2://IC_ACTION_ISSUER_HELP_USER
+                    if (validateDistributeToUsers()) {
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_issuer_wallet_v3_distribute_confirm))
+                                .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_v3_dialog))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        doDistributeToUsers(digitalAsset.getAssetPublicKey(), getSelectedUsers(), getSelectedUsersCount());
+                                    }
+                                }).build().show();
+                    }
+                    break;
+                case 3://IC_ACTION_ISSUER_HELP_USER
+                    setUpHelpAssetDeliverUsers(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_USER) {
+//                setUpHelpAssetDeliverUsers(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER) {
+//                if (validateDistributeToUsers()) {
+//                    new ConfirmDialog.Builder(getActivity(), appSession)
+//                            .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+//                            .setMessage(getResources().getString(R.string.dap_issuer_wallet_v3_distribute_confirm))
+//                            .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_v3_dialog))
+//                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+//                                @Override
+//                                public void onClick() {
+//                                    doDistributeToUsers(digitalAsset.getAssetPublicKey(), getSelectedUsers(), getSelectedUsersCount());
+//                                }
+//                            }).build().show();
+//                }
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

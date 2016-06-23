@@ -50,6 +50,7 @@ import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 09.10.15.
+ *
  */
 public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseSystem {
 
@@ -83,15 +84,15 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    public void createNewCryptoBrokerIdentity (final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser,
-                                               long accuracy,
-                                               Frequency frequency) throws CantCreateNewDeveloperException {
+    public void createNewCryptoBrokerIdentity(final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
         try {
             if (aliasExists (cryptoBroker.getAlias())) {
                 throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
             }
+
             persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+
             DatabaseTableRecord record = table.getEmptyRecord();
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME            , cryptoBroker.getPublicKey()    );
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME                 , cryptoBroker.getAlias()        );
@@ -101,7 +102,9 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, cryptoBroker.getFrequency());
 
             table.insertRecord(record);
+
             persistNewCryptoBrokerIdentityProfileImage(cryptoBroker.getPublicKey(), cryptoBroker.getProfileImage());
+
         } catch (CantInsertRecordException e){
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
@@ -114,19 +117,21 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile,
                                            long accuracy,
                                            Frequency frequency) throws CantUpdateBrokerIdentityException {
+
         try {
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+
             DatabaseTableRecord record = table.getEmptyRecord();
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias);
             record.setLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME, accuracy);
             record.setFermatEnum(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME, frequency);
+
             table.updateRecord(record);
 
             updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
-        } catch (CantUpdateRecordException e) {
-            throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
-        } catch (CantPersistProfileImageException e) {
+
+        } catch (Exception e) {
             throw new CantUpdateBrokerIdentityException(e.getMessage(), e, "", "");
         }
     }
@@ -289,6 +294,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         long accuracy = record.getLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
         Frequency frequency = Frequency.getByCode(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME);
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published, accuracy, frequency);
+
     }
 
     private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {

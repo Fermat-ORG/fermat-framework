@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transacion_form"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_white_gradient">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/send_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
         android:orientation="vertical"
         android:paddingLeft="7dip"
         android:paddingRight="7dip">
@@ -83,6 +83,15 @@
                         android:textSize="14sp"
                         app:typeface="ROBOTO_REGULAR" />
 
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/balance_amount_type_text"
+                        android:textColor="#F78803"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="16dp"
+                        android:id="@+id/txt_type"/>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -101,7 +110,7 @@
                         android:layout_weight="0.2"
                         android:background="@null"
                         android:gravity="left"
-                        android:text="Amount"
+                        android:hint="Amount"
                         android:inputType="numberDecimal"
                         android:paddingBottom="7dip"
                         android:paddingLeft="14dip"
@@ -111,7 +120,8 @@
                         android:textColor="#777583"
                         android:textColorHint="#777583"
                         android:textSize="16sp"
-                        android:textStyle="normal" />
+                        android:textStyle="normal"
+                        android:maxLength="11"/>
 
                     <Spinner
                         android:id="@+id/spinner"
@@ -126,7 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_home_arrow_down"
+                        android:src="@drawable/fw_arrow_down_icon"
 
                         />
                 </LinearLayout>
@@ -162,7 +172,7 @@
                         android:layout_gravity="end"
                         android:background="@null"
                         android:gravity="center_vertical"
-                        android:text="Notes about transactions,with large details,could be two lines long"
+                        android:hint="Notes"
                         android:paddingBottom="7dip"
                         android:paddingLeft="14dip"
                         android:paddingRight="14dip"

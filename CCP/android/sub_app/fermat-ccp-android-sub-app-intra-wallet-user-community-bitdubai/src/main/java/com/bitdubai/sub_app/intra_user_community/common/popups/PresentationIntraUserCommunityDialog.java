@@ -184,7 +184,7 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<Reference
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
        // bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 30, stream);
         return stream.toByteArray();
     }
 
