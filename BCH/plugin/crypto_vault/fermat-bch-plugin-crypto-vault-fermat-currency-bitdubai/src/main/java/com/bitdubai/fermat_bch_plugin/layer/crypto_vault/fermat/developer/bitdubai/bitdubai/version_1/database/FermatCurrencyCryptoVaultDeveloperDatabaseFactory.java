@@ -105,7 +105,7 @@ public class FermatCurrencyCryptoVaultDeveloperDatabaseFactory  {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("BitcoinCurrency", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("FermatCurrency", this.pluginId.toString()));
         return databases;
     }
 

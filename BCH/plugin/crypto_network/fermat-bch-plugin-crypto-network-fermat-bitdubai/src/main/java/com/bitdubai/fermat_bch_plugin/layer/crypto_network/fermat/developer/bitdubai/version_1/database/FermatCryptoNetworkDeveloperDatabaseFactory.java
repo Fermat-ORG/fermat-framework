@@ -95,7 +95,7 @@ public class FermatCryptoNetworkDeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Bitcoin", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Fermat", this.pluginId.toString()));
         return databases;
     }
 
