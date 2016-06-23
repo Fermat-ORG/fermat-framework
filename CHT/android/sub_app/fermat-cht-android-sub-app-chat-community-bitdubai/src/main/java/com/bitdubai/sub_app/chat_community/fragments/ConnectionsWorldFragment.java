@@ -77,7 +77,7 @@ public class ConnectionsWorldFragment
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 6;
+    private static final int MAX = 10;
     protected final String TAG = "Recycler Base";
 
 
