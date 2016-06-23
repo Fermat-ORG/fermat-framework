@@ -1,6 +1,14 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -31,7 +39,7 @@ public class NodeProfile extends Profile {
      * Constructor
      */
     public NodeProfile(){
-        super();
+        super(ProfileTypes.NODE);
     }
 
     /**
@@ -86,6 +94,63 @@ public class NodeProfile extends Profile {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static Profile readJson(final JsonReader in) throws IOException {
+
+        NodeProfile nodeProfile = new NodeProfile();
+
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+
+        while (in.hasNext()) {
+            switch (in.nextName()) {
+                case "ipk":
+                    nodeProfile.setIdentityPublicKey(in.nextString());
+                    break;
+                case "lat":
+                    latitude = in.nextDouble();
+                    break;
+                case "lng":
+                    longitude = in.nextDouble();
+                    break;
+                case "dep":
+                    nodeProfile.setDefaultPort(in.nextInt());
+                    break;
+                case "nam":
+                    nodeProfile.setName(in.nextString());
+                    break;
+                case "ip":
+                    nodeProfile.setIp(in.nextString());
+                    break;
+            }
+        }
+
+        nodeProfile.setLocation(
+                new NetworkNodeCommunicationDeviceLocation(
+                        latitude,
+                        longitude,
+                        null,
+                        0,
+                        null,
+                        0,
+                        LocationSource.UNKNOWN
+                )
+        );
+
+        return nodeProfile;
+    }
+
+    @Override
+    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+
+        super.writeJson(out);
+
+        out.name("dep").value(defaultPort);
+        out.name("nam").value(name);
+        out.name("ip").value(ip);
+
+        return out;
     }
 
     /**

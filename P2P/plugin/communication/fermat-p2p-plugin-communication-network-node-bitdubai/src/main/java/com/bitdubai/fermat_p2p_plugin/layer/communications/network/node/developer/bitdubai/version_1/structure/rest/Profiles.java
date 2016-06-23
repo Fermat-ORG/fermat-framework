@@ -90,8 +90,8 @@ public class Profiles implements RestFulServices {
              */
             DiscoveryQueryParameters discoveryQueryParameters = DiscoveryQueryParameters.parseContent(discoveryParam);
 
-            LOG.debug("clientIdentityPublicKey  = " + clientIdentityPublicKey);
-            LOG.debug("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
+            LOG.info("clientIdentityPublicKey  = " + clientIdentityPublicKey);
+            LOG.info("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
             /*
              * hold the result list
@@ -103,8 +103,10 @@ public class Profiles implements RestFulServices {
             /*
              * Convert the list to json representation
              */
-            String jsonListRepresentation = getGson().toJson(resultList, new TypeToken<List<ActorProfile>>() {
+            String jsonListRepresentation = GsonProvider.getGson().toJson(resultList, new TypeToken<List<ActorProfile>>() {
             }.getType());
+
+            System.out.println(jsonListRepresentation);
 
             /*
              * Create the respond
@@ -119,7 +121,7 @@ public class Profiles implements RestFulServices {
             e.printStackTrace();
         }
 
-        String jsonString = getGson().toJson(jsonObjectRespond);
+        String jsonString = GsonProvider.getGson().toJson(jsonObjectRespond);
 
         LOG.debug("jsonString.length() = " + jsonString.length());
 
@@ -135,18 +137,21 @@ public class Profiles implements RestFulServices {
 
             try {
 
-                if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()) &&
-                        daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
-                    actors.add(actorsCatalog);
-                else if(isActorOnline(actorsCatalog))
+                System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
+                if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey())) {
+                    System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
+
+                    if (daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
+                        actors.add(actorsCatalog);
+
+                } else if(isActorOnline(actorsCatalog))
                     actors.add(actorsCatalog);
 
             } catch (CantReadRecordDataBaseException e) {
-
+                e.printStackTrace();
             }
 
         }
-
 
         return actors;
     }
@@ -168,7 +173,10 @@ public class Profiles implements RestFulServices {
         int max    = 10;
         int offset =  0;
 
-        if( (discoveryQueryParameters.getMax() > 0 &&  discoveryQueryParameters.getOffset() >= 0)) {
+        if( discoveryQueryParameters.getMax() != null &&
+                discoveryQueryParameters.getOffset() != null &&
+                discoveryQueryParameters.getMax() > 0 &&
+                discoveryQueryParameters.getOffset() >= 0) {
             max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
             offset = discoveryQueryParameters.getOffset();
         }
@@ -182,7 +190,7 @@ public class Profiles implements RestFulServices {
 
         for (ActorsCatalog actorsCatalog : actors) {
 
-            if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
+        //    if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
                 ActorProfile actorProfile = new ActorProfile();
                 actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
                 actorProfile.setAlias(actorsCatalog.getAlias());
@@ -193,7 +201,7 @@ public class Profiles implements RestFulServices {
                 actorProfile.setLocation(actorsCatalog.getLastLocation());
 
                 profileList.add(actorProfile);
-            }
+     //       }
         }
 
         return profileList;
@@ -284,15 +292,6 @@ public class Profiles implements RestFulServices {
             daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
 
         return daoFactory;
-
-    }
-
-    private Gson getGson() {
-
-        if (gson == null)
-            gson = GsonProvider.getGson();
-
-        return gson;
 
     }
 

@@ -1,7 +1,15 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
+import java.io.IOException;
 
 /**
  * The Class <code>NetworkServiceProfile</code>
@@ -28,7 +36,7 @@ public class NetworkServiceProfile extends Profile {
      * Constructor
      */
     public NetworkServiceProfile(){
-        super();
+        super(ProfileTypes.NETWORK_SERVICE);
     }
 
     /**
@@ -65,6 +73,63 @@ public class NetworkServiceProfile extends Profile {
      */
     public void setNetworkServiceType(NetworkServiceType networkServiceType) {
         this.networkServiceType = networkServiceType;
+    }
+
+    public static Profile readJson(final JsonReader in) throws IOException {
+
+        NetworkServiceProfile nsProfile = new NetworkServiceProfile();
+
+        Double latitude = 0.0;
+        Double longitude = 0.0;
+
+        while (in.hasNext()) {
+            switch (in.nextName()) {
+                case "ipk":
+                    nsProfile.setIdentityPublicKey(in.nextString());
+                    break;
+                case "lat":
+                    latitude = in.nextDouble();
+                    break;
+                case "lng":
+                    longitude = in.nextDouble();
+                    break;
+                case "nst":
+                    try {
+                        nsProfile.setNetworkServiceType(NetworkServiceType.getByCode(in.nextString()));
+                    } catch (InvalidParameterException invalidParameterException) {
+                        throw new IOException("Malformed network service type");
+                    }
+                    break;
+                case "clpk":
+                    nsProfile.setClientIdentityPublicKey(in.nextString());
+                    break;
+            }
+        }
+
+        nsProfile.setLocation(
+                new NetworkNodeCommunicationDeviceLocation(
+                        latitude,
+                        longitude,
+                        null,
+                        0,
+                        null,
+                        0,
+                        LocationSource.UNKNOWN
+                )
+        );
+
+        return nsProfile;
+    }
+
+    @Override
+    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+
+        super.writeJson(out);
+
+        out.name("nst").value(networkServiceType.getCode());
+        out.name("clpk").value(clientIdentityPublicKey);
+
+        return out;
     }
 
     /**

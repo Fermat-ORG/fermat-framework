@@ -1,17 +1,24 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
+import java.io.IOException;
 import java.io.Serializable;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * The Class <code>Profile</code> is
  * the base of the component profile
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/12/15.
+ * Updated by Leon Acosta - (laion.cj91@gmail.com) on 23/06/2016.
  *
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public abstract class Profile implements Serializable {
 
@@ -26,10 +33,16 @@ public abstract class Profile implements Serializable {
     private Location location;
 
     /**
+     * Represent the type of the profile
+     */
+    private ProfileTypes type;
+
+    /**
      * Constructor
      */
-    public Profile(){
-        super();
+    public Profile(final ProfileTypes type){
+
+        this.type = type;
     }
 
     /**
@@ -68,12 +81,31 @@ public abstract class Profile implements Serializable {
         this.location = location;
     }
 
+    public ProfileTypes getType() {
+        return type;
+    }
+
     /**
      * Return this object in json string
      *
      * @return json string
      */
     public abstract String toJson();
+
+    public static Profile readJson(final JsonReader in) throws IOException {
+
+        throw new NotImplementedException();
+    }
+
+    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+
+        out.name("type").value(type.getCode());
+        out.name("ipk").value(identityPublicKey);
+        out.name("lat").value(location.getLatitude());
+        out.name("lng").value(location.getLongitude());
+
+        return out;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -89,5 +121,14 @@ public abstract class Profile implements Serializable {
     @Override
     public int hashCode() {
         return identityPublicKey != null ? identityPublicKey.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Profile{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", location=" + location +
+                ", type=" + type +
+                '}';
     }
 }

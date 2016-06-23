@@ -28,21 +28,11 @@ public final class LocationProvider {
 
     private static final String GEOIP_NEKUDO_URL = "http://geoip.nekudo.com/api/";
 
-    private static String ipAddress;
-
-    private static String getIpAddress() throws CantGetCurrentIPAddressException {
-
-        if (ipAddress == null)
-            ipAddress = IPAddressHelper.getCurrentIPAddress();
-
-        return ipAddress;
-    }
-
     public static DeviceLocation acquireLocationThroughIP() throws CantAcquireLocationException {
 
         try {
 
-            String ipAddress = getIpAddress();
+            String ipAddress = IPAddressHelper.getCurrentIPAddress();
 
             return acquireLocationThroughIP(ipAddress);
 
