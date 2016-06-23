@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;

@@ -27,10 +27,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.fermat_vault.FermatVaultManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
@@ -56,10 +55,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.C
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransactionSummary;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
@@ -187,7 +182,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final FermatVaultManager fermatVaultManager            ;
+    private final CryptoVaultManager cryptoVaultManager                        ;
 
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -211,7 +206,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final CryptoAddressBookManager cryptoAddressBookManager,
                                            final CryptoAddressesManager cryptoAddressesNSManager,
                                            final CryptoPaymentManager cryptoPaymentManager,
-                                           final FermatVaultManager fermatVaultManager,
+                                           final CryptoVaultManager cryptoVaultManager ,
                                            final ErrorManager errorManager,
                                            final ExtraUserManager extraUserManager,
                                            final IntraWalletUserActorManager intraUserManager,
@@ -233,7 +228,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
         this.cryptoAddressesNSManager       = cryptoAddressesNSManager      ;
         this.cryptoPaymentManager           = cryptoPaymentManager          ;
-        this.fermatVaultManager             = fermatVaultManager            ;
+        this.cryptoVaultManager             = cryptoVaultManager            ;
         this.errorManager                   = errorManager                  ;
         this.extraUserManager               = extraUserManager              ;
         this.intraUserManager               = intraUserManager              ;
@@ -1444,7 +1439,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
         //todo Natalia corregir
-        return fermatVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+        return cryptoVaultManager.isValidAddress(cryptoAddress, BlockchainNetworkType.getDefaultBlockchainNetworkType());
     }
 
     @Override
@@ -1522,8 +1517,8 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
-            case BASIC_WALLET_BITCOIN_WALLET:
-                return fermatVaultManager.getAddress(blockchainNetworkType);
+            case BASIC_WALLET_FERMAT_WALLET:
+                return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }
@@ -1673,7 +1668,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public List<String> getMnemonicText() throws CantGetMnemonicTextException {
         try {
-            return fermatVaultManager.getMnemonicCode();
+            return cryptoVaultManager.getMnemonicCode();
         } catch (CantLoadExistingVaultSeed e) {
             throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
         }
@@ -1726,7 +1721,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
 
     @Override
     public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
-        fermatVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.fermat_vault.FermatVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -80,7 +81,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
     private CryptoWalletManager cryptoWalletManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT    , plugin = Plugins.FERMAT_VAULT)
-    private FermatVaultManager fermatVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
     private LogManager logManager;
@@ -218,7 +219,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<FermatWal
                         cryptoAddressBookManager,
                         cryptoAddressesNSManager,
                         cryptoPaymentManager,
-                        fermatVaultManager,
+                        cryptoVaultManager,
                         getErrorManager(),
                         extraUserManager,
                         intraWalletUserActorManager,
