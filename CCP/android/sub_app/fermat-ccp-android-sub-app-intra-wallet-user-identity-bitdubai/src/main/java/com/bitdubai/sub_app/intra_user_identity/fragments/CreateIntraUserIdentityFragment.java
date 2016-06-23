@@ -106,7 +106,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             errorManager = appSession.getErrorManager();
 
             moduleManager = appSession.getModuleManager();
-            setHasOptionsMenu(true);
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -574,4 +574,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
