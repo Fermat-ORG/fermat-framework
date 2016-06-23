@@ -27,6 +27,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.fermat_vault.FermatVaultManager;
@@ -177,7 +178,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
-    private final BitcoinNetworkManager bitcoinNetworkManager                   ;
+    private final FermatNetworkManager fermatNetworkManager                     ;
     private final Broadcaster                   broadcaster                     ;
     private final WalletManagerManager walletManagerManager;
     private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
@@ -197,7 +198,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
                                            final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
-                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster,
+                                           final EventManager eventManager, FermatNetworkManager fermatNetworkManager, Broadcaster broadcaster,
                                            final WalletManagerManager walletManagerManager,
                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
         super(pluginFileSystem,pluginId);
@@ -218,7 +219,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         this.pluginFileSystem = pluginFileSystem;
         this.eventManager = eventManager;
 
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.broadcaster = broadcaster;
         this.walletManagerManager = walletManagerManager;
         this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
@@ -1170,7 +1171,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
         try {
-            return this.bitcoinNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
+            return this.fermatNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
 
         }
         catch (CantGetBlockchainDownloadProgress e) {
