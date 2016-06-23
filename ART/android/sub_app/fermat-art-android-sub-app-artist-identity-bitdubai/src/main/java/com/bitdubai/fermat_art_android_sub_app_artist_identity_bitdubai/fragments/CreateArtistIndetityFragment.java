@@ -10,11 +10,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +64,8 @@ import com.bitdubai.sub_app.artist_identity.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -233,7 +238,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            //bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             artistImageByteArray = toByteArray(bitmap);
             artistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -493,7 +498,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
                     case ERROR_IMAGE_VIEW:
-                        WarningCircle.setVisibility(View.VISIBLE);
+                        //WarningCircle.setVisibility(View.VISIBLE);
                         Toast.makeText(getActivity(), "ERROR_IMAGE_VIEW", Toast.LENGTH_LONG).show();
                         break;
                     case ERROR_USER_DATA:
@@ -811,16 +816,48 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             contextMenuInUse = true;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
+
+                    File myFile = new File(selectedImage2.getPath());
+                    myFile.getAbsolutePath();
+                    Bundle extras2 = data.getExtras();
+
+                    Bitmap fixedBitmap = FixRotation(myFile, (Bitmap) extras2.get("data"));
+
+
                     Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    imageBitmap = fixedBitmap;
+
+                    /*
+                    //-----------------------------------------------
+                    ContentResolver contentResolver2 = getActivity().getContentResolver();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver2, selectedImage2);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    */
+
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    artistImageByteArray = toByteArray(imageBitmap);
+
+                    updateProfileImage = true;
+
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
+
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
+                    File myFile2 = new File(selectedImage.getPath());
+                    myFile2.getAbsolutePath();
+                    Bundle extras3 = data.getExtras();
+
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            //imageBitmap = FixRotation(myFile2, imageBitmap);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             artistImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
@@ -838,6 +875,33 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 getResources(), imageBitmap));
             contextMenuInUse = false;
         }
+    }
+
+    private Bitmap FixRotation(File myFile,Bitmap bitmap) {
+
+        Bitmap rotatedBitmap = null;
+
+        try {
+            ExifInterface exif = new ExifInterface(myFile.getPath());
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int rotationInDegrees = exifToDegrees(rotation);
+            Matrix matrix = new Matrix();
+            if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
+            rotatedBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+        }catch(IOException ex){
+            Log.e(TAG, "Failed to get Exif data", ex);
+        }
+
+        return rotatedBitmap;
+    }
+
+    private int exifToDegrees(int exifOrientation) {
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
+        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        return 0;
     }
 
     @Override

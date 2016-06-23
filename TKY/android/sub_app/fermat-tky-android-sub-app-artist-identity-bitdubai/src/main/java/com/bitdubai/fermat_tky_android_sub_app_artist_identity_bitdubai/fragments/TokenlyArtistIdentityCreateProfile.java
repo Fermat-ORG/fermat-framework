@@ -67,6 +67,7 @@ import com.squareup.picasso.Picasso;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -362,6 +363,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
+
     private void setUpIdentity() {
         try {
 
@@ -399,8 +402,22 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    Uri selectedImage2 = data.getData();
                     Bundle extras = data.getExtras();
                     imageBitmap = (Bitmap) extras.get("data");
+                    //-----------------------------------------------
+                    ContentResolver contentResolver2 = getActivity().getContentResolver();
+                    try {
+                        imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver2, selectedImage2);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                    ArtistImageByteArray = toByteArray(imageBitmap);
+                    updateProfileImage = true;
+
+                    Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(ArtistImage);
+
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
@@ -450,7 +467,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
-//                bitmap = Bitmap.createScaledBitmap(bitmap, fanImage.getWidth(), fanImage.getHeight(), true);
+              //bitmap = Bitmap.createScaledBitmap(bitmap, fanImage.getWidth(), fanImage.getHeight(), true);
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile_male);
 
