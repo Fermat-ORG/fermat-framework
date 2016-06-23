@@ -463,6 +463,8 @@ public class ConnectionsWorldFragment
                         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                         window.setAttributes(wlp);
 
+                        geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                         geolocationDialog.show();
 
                     } catch ( Exception e) {
