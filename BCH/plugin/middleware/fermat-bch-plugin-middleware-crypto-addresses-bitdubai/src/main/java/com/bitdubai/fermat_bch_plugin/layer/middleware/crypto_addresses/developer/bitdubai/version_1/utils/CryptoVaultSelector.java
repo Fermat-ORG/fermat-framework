@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WatchOnlyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVaultEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.fermat_vault.FermatVaultManager;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantIdentifyVaultException;
@@ -26,13 +26,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.currency_vault.CryptoVault
 public final class CryptoVaultSelector {
 
     private CryptoVaultManager cryptoVaultManager;
-    private FermatVaultManager fermatVaultManager;
+    private CryptoVaultManager fermatVaultManager;
     private AssetVaultManager assetVaultManager;
     private WatchOnlyVaultManager watchOnlyVaultManager;
 
 
     public CryptoVaultSelector(final CryptoVaultManager cryptoVaultManager,
-                               final FermatVaultManager fermatVaultManager,
+                               final CryptoVaultManager fermatVaultManager,
                                final AssetVaultManager  assetVaultManager,
                                final WatchOnlyVaultManager watchOnlyVaultManager) {
         this.cryptoVaultManager = cryptoVaultManager;
