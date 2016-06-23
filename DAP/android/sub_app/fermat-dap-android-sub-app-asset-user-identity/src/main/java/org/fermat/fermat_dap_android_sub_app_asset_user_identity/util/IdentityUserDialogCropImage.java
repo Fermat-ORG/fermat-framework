@@ -48,11 +48,11 @@ public class IdentityUserDialogCropImage extends FermatDialog implements View.On
         cropImageView.setImageBitmap(image);
         cropImageView.setGuidelines(2);
         Button btnCrop = (Button) findViewById(R.id.btnCrop);
-//        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
+        Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
         btnCrop.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
-//        btnRotate.setOnClickListener(this);
+        btnRotate.setOnClickListener(this);
     }
 
     @Override
@@ -83,8 +83,8 @@ public class IdentityUserDialogCropImage extends FermatDialog implements View.On
         if (i == R.id.btnCancel) {
             dismiss();
         }
-//        if (i == R.id.btnRotateCropper) {
-//            cropImageView.rotateImage(90);
-//        }
+        if (i == R.id.btnRotateCropper) {
+            cropImageView.rotateImage(90);
+        }
     }
 }

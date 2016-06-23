@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -47,7 +48,6 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
-import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
@@ -57,7 +57,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.interfaces.AssetIssuerIdentityModuleManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -315,7 +314,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -485,10 +484,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (identityIssuerDialogCropImage.getCroppedImage() != null) {
-                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
-                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
-                                                    Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                                    deleteImageUri(imageUri);
+                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                    mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
                                                 } else {
@@ -525,10 +522,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (identityIssuerDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
-                                            Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                            deleteImageUri(imageUri);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
                                         } else {
@@ -575,10 +570,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (identityIssuerDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
-                                            Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                            deleteImageUri(imageUri);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityIssuerDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
                                         } else {
@@ -695,6 +688,13 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
                 matrix, false);
         return resizedBitmap;
+    }
+
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
@@ -859,12 +859,12 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
+//    public Uri getImageUri(Context inContext, Bitmap inImage) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        inImage.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+//        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+//        return Uri.parse(path);
+//    }
 
     private boolean checkWriteExternalPermission() {
         String permission = "android.permission.WRITE_EXTERNAL_STORAGE";

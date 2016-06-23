@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -581,10 +582,9 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (factoryDialogCropImage.getCroppedImage() != null) {
-                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
+                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+//                                                    wizardMultimediaAssetImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
-                                                    Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                                    deleteImageUri(imageUri);
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     if (mIdentityBitmap != null){
                                                         hasResource = true;
@@ -626,11 +626,10 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (factoryDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(wizardMultimediaAssetImage);
-                                            Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                            //deleteImageUri(imageUri);
-                                            //brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+//                                            wizardMultimediaAssetImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
+                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
+                                            brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             if (mIdentityBitmap != null){
                                                 hasResource = true;
                                             }
@@ -680,10 +679,11 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (factoryDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 280, 280);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(factoryDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+//                                            wizardMultimediaAssetImage.setImageDrawable(ImagesUtils.toByteArray(mIdentityBitmap));
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
-                                            Uri imageUri = getImageUri(getActivity(), mIdentityBitmap);
-                                            //deleteImageUri(imageUri);
+                                            brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
+
                                             if (mIdentityBitmap != null){
                                                 hasResource = true;
                                             }
@@ -800,6 +800,13 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
         return resizedBitmap;
     }
 
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_HIGH));
+        return px;
+    }
+
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -848,8 +855,8 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
+
     private void deleteImageUri(Uri uri) {
         getActivity().getContentResolver().delete(uri, null, null);
     }
-
 }

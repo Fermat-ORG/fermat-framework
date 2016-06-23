@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -316,7 +317,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
                 //Picasso.with(getActivity()).load(R.drawable.ic_profile_male).into(mBrokerImage);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -486,8 +487,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (identityUserDialogCropImage.getCroppedImage() != null) {
-                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
+                                                    mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                    mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                                     updateProfileImage = true;
                                                 } else {
@@ -524,8 +525,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (identityUserDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
                                         } else {
@@ -572,8 +573,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (identityUserDialogCropImagee.getCroppedImage() != null) {
-                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), 230, 230);
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).transform(new CircleTransform()).into(mIdentityImage);
+                                            mIdentityBitmap = getResizedBitmap(rotateBitmap(identityUserDialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
                                             updateProfileImage = true;
                                         } else {
@@ -687,6 +688,13 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
         Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
                 matrix, false);
         return resizedBitmap;
+    }
+
+    public int dpToPx() {
+        int dp = 150;
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
@@ -851,12 +859,12 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
+//    public Uri getImageUri(Context inContext, Bitmap inImage) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+//        return Uri.parse(path);
+//    }
 
     private boolean checkWriteExternalPermission() {
         String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
