@@ -2,9 +2,8 @@ package com.bitdubai.sub_app.crypto_broker_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
@@ -16,8 +15,8 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  */
 public class AppWorldHolder extends FermatViewHolder {
 
-    public SquareImageView thumbnail;
-    public FermatTextView name;
+    public ImageView thumbnail;
+    public TextView name;
     public ImageView connectionState;
 
 
@@ -27,9 +26,9 @@ public class AppWorldHolder extends FermatViewHolder {
      * @param itemView cast elements in layout
      */
     public AppWorldHolder(View itemView) {
-        super(itemView);
-        connectionState = (ImageView) itemView.findViewById(R.id.cbc_connection_state);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
-        name = (FermatTextView) itemView.findViewById(R.id.community_name);
+        super(itemView, 0);
+        //connectionState = (ImageView) itemView.findViewById(R.id.cbc_connection_state);
+        thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
+        name = (TextView) itemView.findViewById(R.id.community_name);
     }
 }

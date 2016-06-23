@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_broker_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -58,6 +61,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
+    ImageView noData;
+    TextView noDatalabel;
 
     /**
      * Create a new instance of this fragment
@@ -95,14 +100,16 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             adapter = new AppNotificationAdapter(getActivity(), cryptoBrokerInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
+            noData = (ImageView) rootView.findViewById(R.id.nodata);
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
 
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
+            emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             onRefresh();
 
         } catch (Exception ex) {
@@ -214,15 +221,27 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+        if (show) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.VISIBLE);
+            noDatalabel.setVisibility(View.VISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+        } else {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
+            noData.setAnimation(anim);
+            emptyView.setBackgroundResource(0);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.GONE);
+            noDatalabel.setVisibility(View.GONE);
+            rootView.setBackgroundResource(0);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            emptyView.setBackground(bgcolor);
+            rootView.setBackground(bgcolor);
         }
     }
 

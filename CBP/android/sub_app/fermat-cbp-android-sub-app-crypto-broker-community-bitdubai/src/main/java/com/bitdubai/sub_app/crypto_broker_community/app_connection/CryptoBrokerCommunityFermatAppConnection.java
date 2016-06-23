@@ -16,9 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
+import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -39,7 +42,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
 
     @Override
     public PluginVersionReference[] getPluginVersionReference() {
-        return  new PluginVersionReference[]{ new PluginVersionReference(
+        return new PluginVersionReference[]{new PluginVersionReference(
                 Platforms.CRYPTO_BROKER_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.CRYPTO_BROKER_COMMUNITY,
@@ -79,4 +82,21 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
         );
     }
 
+    @Override
+    public int getResource(int id) {
+        switch (id) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                return R.drawable.cbc_help_icon;
+
+            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
+                return R.drawable.cbc_comm_ubication_icon;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                return R.drawable.cbc_comm_search_icon;
+
+            default:
+                return 0;
+        }
+
+    }
 }
