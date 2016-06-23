@@ -20,7 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
@@ -49,7 +49,7 @@ public class GeolocationCustomerIdentityFragment
     Spinner frequency;
     Toolbar toolbar;
     int accuracyData;
-    Frecuency frequencyData;
+    Frequency frequencyData;
 
 
     public static GeolocationCustomerIdentityFragment newInstance() {
@@ -96,10 +96,10 @@ public class GeolocationCustomerIdentityFragment
 
     private void initViews(View layout) {
         // Spinner Drop down elements
-        List<Frecuency> dataSpinner = new ArrayList<>();
-        dataSpinner.add(Frecuency.LOW);
-        dataSpinner.add(Frecuency.NORMAL);
-        dataSpinner.add(Frecuency.HIGH);
+        List<Frequency> dataSpinner = new ArrayList<>();
+        dataSpinner.add(Frequency.LOW);
+        dataSpinner.add(Frequency.NORMAL);
+        dataSpinner.add(Frequency.HIGH);
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
@@ -107,7 +107,7 @@ public class GeolocationCustomerIdentityFragment
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
         try {
-            ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
+            ArrayAdapter<Frequency> dataAdapter = new ArrayAdapter<>(getActivity(), R.layout.cbp_iden_spinner_item, dataSpinner);
             dataAdapter.setDropDownViewResource(R.layout.cbp_iden_spinner_item);
             frequency.setAdapter(dataAdapter);
 
@@ -117,7 +117,7 @@ public class GeolocationCustomerIdentityFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frequencyData = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
+                        frequencyData = Frequency.getByCode(parent.getItemAtPosition(position).toString());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -151,15 +151,15 @@ public class GeolocationCustomerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetChatIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetChatIdentityException {
         final CryptoCustomerIdentityInformation identityInfo = (CryptoCustomerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {
             final String accuracyString = Long.toString(identityInfo.getAccuracy());
             accuracy.setText(accuracyString);
 
-            if (!(identityInfo.getFrecuency() == null)) {
-                int spinnerPosition = dataAdapter.getPosition(identityInfo.getFrecuency());
+            if (!(identityInfo.getFrequency() == null)) {
+                int spinnerPosition = dataAdapter.getPosition(identityInfo.getFrequency());
                 frequency.setSelection(spinnerPosition);
             }
         } else {
