@@ -2,7 +2,8 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdu
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.fermat.developer.bitdubai.bitdubai.version_1.database.FermatCurrencyCryptoVaultDao;
@@ -57,7 +58,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
      * Platform services
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private BitcoinNetworkManager bitcoinNetworkManager;
+    private FermatNetworkManager fermatNetworkManager;
     UUID pluginId;
 
     /**
@@ -65,10 +66,10 @@ public class VaultKeyHierarchyGenerator implements Runnable {
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, FermatNetworkManager fermatNetworkManager, UUID pluginId) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.pluginId = pluginId;
 
     }
@@ -110,7 +111,7 @@ public class VaultKeyHierarchyGenerator implements Runnable {
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
          */
-        vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.fermatNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
         } catch (CantStartAgentException e) {

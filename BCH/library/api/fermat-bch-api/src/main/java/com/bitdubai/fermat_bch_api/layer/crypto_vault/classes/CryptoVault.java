@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
@@ -71,7 +72,7 @@ public abstract class CryptoVault {
      */
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    BlockchainCryptoManager blockchainCryptoManager;
 
     /**
      * Constants variables
@@ -83,18 +84,18 @@ public abstract class CryptoVault {
      * Constructor
      * @param pluginFileSystem
      * @param pluginId
-     * @param bitcoinNetworkManager
+     * @param blockchainCryptoManager
      * @param CRYPTO_VAULT_SEED_FILEPATH
      * @param CRYPTO_VAULT_SEED_FILENAME
      */
     public CryptoVault(PluginFileSystem pluginFileSystem,
                        UUID pluginId,
-                       BitcoinNetworkManager bitcoinNetworkManager,
+                       BlockchainCryptoManager blockchainCryptoManager,
                        String CRYPTO_VAULT_SEED_FILEPATH,
                        String CRYPTO_VAULT_SEED_FILENAME) {
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.blockchainCryptoManager = blockchainCryptoManager;
         this.CRYPTO_VAULT_SEED_FILEPATH = CRYPTO_VAULT_SEED_FILEPATH;
         this.CRYPTO_VAULT_SEED_FILENAME = CRYPTO_VAULT_SEED_FILENAME;
     }
@@ -213,7 +214,7 @@ public abstract class CryptoVault {
             /**
              * I will get the transaction that is referenced in the input
              */
-            Transaction outputTransaction = bitcoinNetworkManager.getBitcoinTransaction(blockchainNetworkType, outputtHash.toString());
+            Transaction outputTransaction = blockchainCryptoManager.getBitcoinTransaction(blockchainNetworkType, outputtHash.toString());
             if (outputTransaction != null){
                 /**
                  * I will get the referenced output of the transaction and check if it is mine

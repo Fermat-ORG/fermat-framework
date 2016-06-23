@@ -16,7 +16,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelecto
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
@@ -77,7 +78,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
     /**
      * platform interfaces definition
      */
-    BitcoinNetworkManager bitcoinNetworkManager;
+    FermatNetworkManager fermatNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     ErrorManager errorManager;
@@ -92,21 +93,21 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
                                              PluginFileSystem pluginFileSystem,
                                              PluginDatabaseSystem pluginDatabaseSystem,
                                              String seedFileName,
-                                             BitcoinNetworkManager bitcoinNetworkManager,
+                                             FermatNetworkManager fermatNetworkManager,
                                              ErrorManager errorManager) throws InvalidSeedException {
-        super(pluginFileSystem, pluginId, bitcoinNetworkManager, "BitcoinVaultSeed", seedFileName);
+        super(pluginFileSystem, pluginId, fermatNetworkManager, "BitcoinVaultSeed", seedFileName);
 
         this.pluginId = pluginId;
         BITCOIN_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.errorManager = errorManager;
 
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(this.getVaultSeed(), pluginDatabaseSystem, this.fermatNetworkManager, this.pluginId);
         new Thread(vaultKeyHierarchyGenerator).start();
     }
 
@@ -301,7 +302,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = fermatNetworkManager.getBitcoinTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -403,7 +404,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
+            fermatNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, FermatTrId, true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }
@@ -413,7 +414,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          */
         if (broadcast){
             try {
-                bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
+                fermatNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
             } catch (CantBroadcastTransactionException e) {
                 throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
             }
@@ -537,7 +538,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+        List<Transaction> transactions = fermatNetworkManager.getBitcoinTransactions(blockchainNetworkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -632,7 +633,7 @@ public class FermatCurrencyCryptoVaultManager extends CryptoVault {
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
+            fermatNetworkManager.storeBitcoinTransaction(blockchainNetworkType, sendRequest.tx, UUID.randomUUID(), true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }

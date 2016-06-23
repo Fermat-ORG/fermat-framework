@@ -622,17 +622,8 @@ public class BitcoinCryptoNetworkManager extends AbstractBlockchainProviderManag
      * @return
      */
     private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
-        CryptoTransaction newCryptoTransaction = new CryptoTransaction();
-
-        newCryptoTransaction.setTransactionHash(cryptoTransaction.getTransactionHash());
-        newCryptoTransaction.setBlockHash(cryptoTransaction.getBlockHash());
-        newCryptoTransaction.setOp_Return(cryptoTransaction.getOp_Return());
-        newCryptoTransaction.setAddressTo(cryptoTransaction.getAddressTo());
-        newCryptoTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
-        newCryptoTransaction.setCryptoAmount(cryptoTransaction.getCryptoAmount());
+        CryptoTransaction newCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
         newCryptoTransaction.setCryptoStatus(cryptoStatus);
-        newCryptoTransaction.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
-
         return newCryptoTransaction;
     }
 

@@ -28,7 +28,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
@@ -124,7 +124,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
         NETWORK_PARAMETERS = context.getParams();
         BLOCKCHAIN_NETWORKTYPE = BlockchainNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
 
-        contextPropagatingThreadFactory = new ContextPropagatingThreadFactory("NetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode());
+        contextPropagatingThreadFactory = new ContextPropagatingThreadFactory("FermatNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode());
 
     }
 
@@ -137,19 +137,19 @@ public class FermatCryptoNetworkMonitor  implements Agent {
         monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao, this.context);
 
         // I define the thread name and start it.
-        threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
+        threadName = "FermatCryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
         monitorAgentThread = contextPropagatingThreadFactory.newThread(monitorAgent);
 
         /**
          * and start it
          */
         monitorAgentThread.start();
-        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
+        System.out.println("***FermatCryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
     }
 
     @Override
     public void stop() {
-        System.out.println("***CryptoNetwork*** Stopping monitor agent for " + BLOCKCHAIN_NETWORKTYPE.getCode());
+        System.out.println("***FermatCryptoNetwork*** Stopping monitor agent for " + BLOCKCHAIN_NETWORKTYPE.getCode());
         if (monitorAgentThread != null){
             PeerGroup peerGroup = monitorAgent.getPeerGroup();
             if (peerGroup != null){
@@ -157,13 +157,13 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
                 while (peerGroup.isRunning()){
                     //peergroup is still running.
-                    System.out.println("***CryptoNetwork*** stopping peer group service...");
+                    System.out.println("***FermatCryptoNetwork*** stopping peer group service...");
                 }
             }
-            System.out.println("***CryptoNetwork*** Thread and peer group successfully stopped.");
+            System.out.println("***FermatCryptoNetwork*** Thread and peer group successfully stopped.");
             try{
                 monitorAgentThread.interrupt();
-                System.out.println("***CryptoNetwork*** Monitor Agent Thread state is: " + monitorAgentThread.getState().name());
+                System.out.println("***FermatCryptoNetwork*** Monitor Agent Thread state is: " + monitorAgentThread.getState().name());
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -189,7 +189,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
         // private class constanst
         final NetworkParameters NETWORK_PARAMETERS;
         final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
-        final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
+        final String TRANSACTION_DIRECTORY = "FermatCryptoNetworkTransactions";
         final Context context;
 
 
@@ -238,7 +238,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 // start it all
                 doTheMainTask();
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -248,7 +248,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
          * Agent main method
          */
         private void doTheMainTask() throws Exception {
-            System.out.println("***CryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
+            System.out.println("***FermatCryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
 
             try{
                 /**
@@ -290,8 +290,8 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 /**
                  * Define internal agent information.
                  */
-                peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
-                peerGroup.setMinBroadcastConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+                peerGroup.setUserAgent(FermatNetworkConfiguration.USER_AGENT_NAME, FermatNetworkConfiguration.USER_AGENT_VERSION);
+                peerGroup.setMinBroadcastConnections(FermatNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
 
                 /**
@@ -306,8 +306,8 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 peerGroup.start();
                 peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
 
-                System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
-                System.out.println("***CryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");
+                System.out.println("***FermatCryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
+                System.out.println("***FermatCryptoNetwork*** PeerGroup running?: " + peerGroup.isRunning() + " with " + peerGroup.getConnectedPeers().size() + " connected peers.");
 
                 /**
                  * I will broadcast any transaction that might be in broadcasting status.
@@ -317,7 +317,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
             } catch (Exception e){
                 e.printStackTrace();
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
             }
         }
@@ -416,13 +416,13 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 e.printStackTrace();
             }
 
-            System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
+            System.out.println("***FermatCryptoNetwork***  Broadcasting transaction " + txHash + "...");
 
             final Transaction finalTransaction = transaction;
 
 
 
-            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS).future();
+            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, FermatNetworkConfiguration.MIN_BROADCAST_CONNECTIONS).future();
             wallet.receivePending(finalTransaction, null);
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.
@@ -450,7 +450,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                          */
                         deleteStoredBroadcastTransaction(txHash);
 
-                        System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
+                        System.out.println("***FermatCryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -460,13 +460,13 @@ public class FermatCryptoNetworkMonitor  implements Agent {
 
                 @Override
                 public void onFailure(Throwable t) {
-                    System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
+                    System.out.println("***FermatCryptoNetwork*** Error bradcasting transaction " + txHash + "...");
 
                     try {
                         dao.setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }
             });
@@ -619,7 +619,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                     Transaction storedTransaction = wallet.getTransaction(tx.getHash());
                     if (storedTransaction == null){
                         CantStoreBitcoinTransactionException e = new  CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         throw e;
 
                     }
@@ -629,9 +629,9 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 }
 
 
-                System.out.println("***CryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
+                System.out.println("***FermatCryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
             } catch (CantExecuteDatabaseOperationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
             } catch (Exception e) {
                 /**
@@ -648,7 +648,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 }
 
                 CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -769,10 +769,10 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                  */
                 this.dao.setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
 
-                System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
+                System.out.println("***FermatCryptoNetwork*** Transaction " + txHash + " cancelled.");
             } catch (Exception e) {
                 CantCancellBroadcastTransactionException exception = new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
         }
@@ -805,7 +805,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 return blockchainConnectionStatus;
             } catch (Exception e){
                 CantGetBlockchainConnectionStatusException exception = new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 
@@ -839,7 +839,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
              */
             if (transactionBlockHash == null ){
                 CantGetTransactionException e = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw e;
 
             }
@@ -867,7 +867,7 @@ public class FermatCryptoNetworkMonitor  implements Agent {
                 }
             } catch (Exception e) {
                 CantGetTransactionException exception = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw exception;
             }
 

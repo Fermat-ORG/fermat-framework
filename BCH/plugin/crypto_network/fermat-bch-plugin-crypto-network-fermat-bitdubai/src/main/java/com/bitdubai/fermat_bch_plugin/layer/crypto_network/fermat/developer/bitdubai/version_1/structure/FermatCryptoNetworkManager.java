@@ -79,7 +79,8 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
     /**
      * class variables
      */
-    final String WALLET_PATH;
+    private final String WALLET_PATH;
+    private String walletFileName;
     private final CryptoCurrency CURRENCY = FermatNetworkConfiguration.CRYPTO_CURRENCY;
     private final FermatCryptoNetworkDatabaseDao dao;
 
@@ -115,7 +116,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
-        this.WALLET_PATH = pluginFileSystem.getAppPath();
+        this.WALLET_PATH = pluginFileSystem.getAppPath();        
         this.dao = FermatCryptoNetworkDatabaseDao;
 
         runningAgents = new HashMap<>();
@@ -147,7 +148,8 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
             System.out.println("***CryptoNetwork*** Monitor Request from " + cryptoVault.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
 
             // I create the walletFile for this network
-            File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
+            walletFileName = CURRENCY + "_" + blockchainNetworkType.getCode();
+            File walletFile = new File(WALLET_PATH, walletFileName);
             /**
              * load (or create) the wallet.
              */
@@ -232,7 +234,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                     /**
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
-                    File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
+                    File walletFilename = new File(WALLET_PATH, walletFileName);
                     fermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
                     runningAgents.put(blockchainNetworkType, fermatCryptoNetworkMonitor);
 
@@ -242,7 +244,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
+                File walletFilename = new File(WALLET_PATH, walletFileName);
                 FermatCryptoNetworkMonitor FermatCryptoNetworkMonitor = new FermatCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
                 runningAgents.put(blockchainNetworkType, FermatCryptoNetworkMonitor);
 
@@ -309,7 +311,8 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      */
     private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) throws UnreadableWalletException {
         Wallet wallet = null;
-        File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
+        walletFileName = CURRENCY + "_" + blockchainNetworkType.getCode();
+        File walletFile = new File(WALLET_PATH, walletFileName);
 
         final NetworkParameters NETWORK_PARAMETER = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
@@ -402,7 +405,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             dao.confirmReception(transactionID);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, "Crypto Network issue confirming transaction.", "database issue");
         }
     }
@@ -446,7 +449,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                 dao.setTransactionProtocolStatus(transaction.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
             }
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, "database error getting the pending transactions.", "database issue");
         }
 
@@ -473,7 +476,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             return dao.getCryptoTransactions(txHash,null,null);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
         }
     }
@@ -541,7 +544,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             return runningAgents.get(blockchainNetworkType).getTransactionFromBlockChain(parentTransactionHash, transactionBlockHash);
         } catch (CantGetTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Error getting the parent transaction from the blockchain.", "Blockchain error");
         }
     }
@@ -610,17 +613,8 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
      * @return
      */
     private CryptoTransaction duplicateCryptoTransaction(CryptoTransaction cryptoTransaction, CryptoStatus cryptoStatus) {
-        CryptoTransaction newCryptoTransaction = new CryptoTransaction();
-
-        newCryptoTransaction.setTransactionHash(cryptoTransaction.getTransactionHash());
-        newCryptoTransaction.setBlockHash(cryptoTransaction.getBlockHash());
-        newCryptoTransaction.setOp_Return(cryptoTransaction.getOp_Return());
-        newCryptoTransaction.setAddressTo(cryptoTransaction.getAddressTo());
-        newCryptoTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
-        newCryptoTransaction.setCryptoAmount(cryptoTransaction.getCryptoAmount());
+        CryptoTransaction newCryptoTransaction = TransactionConverter.copyCryptoTransaction(cryptoTransaction);
         newCryptoTransaction.setCryptoStatus(cryptoStatus);
-        newCryptoTransaction.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
-
         return newCryptoTransaction;
     }
 
@@ -647,7 +641,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             return dao.getTransactionCryptoStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + txHash, "database issue");
         }
     }
@@ -738,7 +732,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             return dao.getBroadcastStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetBroadcastStatusException(CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
         }
     }
@@ -772,7 +766,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             dao.setBroadcastStatus(Status.CANCELLED, 0, null, txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Database error while cancelling transaction.", "database issue");
         }
 
@@ -805,7 +799,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
         try {
             cryptoTransaction = dao.getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
 
@@ -814,7 +808,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
             try {
                 cryptoTransaction = dao.getCryptoTransaction(txHash, null, toAddress);
             } catch (CantExecuteDatabaseOperationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
             }
         }
@@ -839,7 +833,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                     }
                 } catch (CantLoadTransactionFromFileException | CantCreateFileException e) {
                     CantGetCryptoTransactionException exception = new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the CryptoTransaction from disk", "IO Error");
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     throw exception;
                 } catch (FileNotFoundException e) {
                     // If I couldn't find it, then it just may not be at that network
@@ -853,7 +847,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
          */
         if (cryptoTransaction == null){
             CantGetCryptoTransactionException exception = new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "The passed Transaction hash " + txHash + " is not stored anywhere!", "wrong transaction hash");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, exception);
             throw exception;
         }
 
@@ -877,7 +871,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
             CryptoTransaction cryptoTransaction = TransactionConverter.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain), CURRENCY);
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -962,7 +956,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                 try {
                     childTransaction = this.getTransactionFromBlockChain(blockchainNetworkType, entry.getKey(), entry.getValue());
                 } catch (CantGetTransactionsException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading child transaction from peer.", "Network issue - Timeout");
                 }
             }
@@ -981,7 +975,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
 
 
                     CantGetTransactionException e =  new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw e;
                 }
 
@@ -996,7 +990,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                  */
                 genesisTransaction = parentTransaction;
             } catch (CantGetTransactionsException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "Error downloading transaction from peer.", "Network issue - Timeout");
             }
         }
@@ -1018,7 +1012,7 @@ public class FermatCryptoNetworkManager extends AbstractBlockchainProviderManage
                 cryptoTransactions.add(TransactionConverter.getCryptoTransaction(entry.getValue(), entry.getKey(), CURRENCY));
             }
         } catch (CantGetTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_FERMAT_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "error getting list of Bitcoin Transactions", null);
         }
 

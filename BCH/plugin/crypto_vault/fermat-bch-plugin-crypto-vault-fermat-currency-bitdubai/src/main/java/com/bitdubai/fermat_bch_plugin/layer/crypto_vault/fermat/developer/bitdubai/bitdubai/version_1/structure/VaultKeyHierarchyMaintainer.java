@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.FermatNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
@@ -59,7 +60,7 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
      * platform services variables
      */
     PluginDatabaseSystem pluginDatabaseSystem;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    FermatNetworkManager fermatNetworkManager;
     UUID pluginId;
 
     /**
@@ -67,10 +68,10 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
      * @param vaultKeyHierarchy
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, FermatNetworkManager fermatNetworkManager, UUID pluginId) {
         this.vaultKeyHierarchy = vaultKeyHierarchy;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.fermatNetworkManager = fermatNetworkManager;
         this.pluginId = pluginId;
     }
 
@@ -200,7 +201,7 @@ public class VaultKeyHierarchyMaintainer  implements Agent {
              * A network becomes active when it generated address for an specified network (MainNet, RegTest or TestNet)
              */
             try {
-                bitcoinNetworkManager.monitorNetworkFromKeyList(CryptoVaults.BITCOIN_CURRENCY, getActiveNetworks(), allAccountsKeyList);
+                fermatNetworkManager.monitorNetworkFromKeyList(CryptoVaults.BITCOIN_CURRENCY, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
                 e.printStackTrace();
             }
