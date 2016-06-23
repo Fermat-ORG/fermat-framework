@@ -235,8 +235,8 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS, 0, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS, 0, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -259,10 +259,16 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Redeem Point system error",

@@ -561,7 +561,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractActorNetwork
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
+    public List<ActorAssetUser> getListActorAssetUserRegistered(int max, int offset) throws CantRequestListActorAssetUserRegisteredException {
 
         try {
 
@@ -574,10 +574,10 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractActorNetwork
                     null,
                     null,
                     null,
-                    null,
+                    max,
                     null,
                     NetworkServiceType.UNDEFINED,
-                    null,
+                    offset,
                     NetworkServiceType.ASSET_USER_ACTOR
             );
 

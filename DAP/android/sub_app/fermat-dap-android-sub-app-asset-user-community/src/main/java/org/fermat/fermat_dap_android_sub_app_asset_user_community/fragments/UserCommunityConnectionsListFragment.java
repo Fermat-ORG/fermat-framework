@@ -33,7 +33,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAppFriendsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions.SessionConstantsAssetUserCommunity;
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -156,8 +155,8 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         //menu.clear();
     }
@@ -167,10 +166,15 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION
+                    setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+//            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
+//                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Asset User system error",
