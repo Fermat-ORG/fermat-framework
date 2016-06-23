@@ -78,6 +78,16 @@ public interface GeolocationManager<
     A getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException;
 
     /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    A getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException;
+
+    /**
      * This method returns a random geo location represented in a GeoRectangle object.
      * @return
      * @throws CantCreateGeoRectangleException

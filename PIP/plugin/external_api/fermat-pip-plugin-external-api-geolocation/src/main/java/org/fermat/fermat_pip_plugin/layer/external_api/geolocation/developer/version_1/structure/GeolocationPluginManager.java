@@ -32,6 +32,7 @@ import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.ver
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonosProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.NominatimProcessor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -578,6 +579,35 @@ public class GeolocationPluginManager implements GeolocationManager {
      */
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return NominatimProcessor.getRandomGeLocation();
+    }
+
+    /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    public Address getAddressByCoordinate(double latitude, double longitude)
+            throws CantCreateAddressException {
+        float floatLatitude = castDoubleToCasting(latitude);
+        float floatLongitude = castDoubleToCasting(longitude);
+        return NominatimProcessor.getAddressByCoordinate(floatLatitude, floatLongitude);
+    }
+
+    private float castDoubleToCasting(double number){
+        try{
+            BigDecimal bigDecimal = new BigDecimal(number);
+            return bigDecimal.floatValue();
+        } catch (Exception e){
+            //In theory, it cannot happens, but, it does, I'll report and return 0.
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            return BigDecimal.ZERO.floatValue();
+        }
+
     }
 
 }
