@@ -122,6 +122,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onMethodCallback(CitiesImpl city) {
+        location=new DeviceLocation();
         location.setLatitude(city.getLatitude());
         location.setLongitude(city.getLongitude());
         distance=identity.getAccuracy();

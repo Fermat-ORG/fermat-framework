@@ -130,7 +130,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-                actorConnections = search.getResult(max, 0);
+                actorConnections = search.getResult(1000, 0);
 //                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
@@ -138,29 +138,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         ChatActorCommunityInformation worldActor;
-//<<<<<<< HEAD
-//        if(actorConnections != null && worldActorList != null){
-//            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
-//                for (int i = 0; i < worldActorList.size(); i++) {
-//
-//                    worldActor = worldActorList.get(i);
-//                    for (ChatActorConnection connectedActor : actorConnections) {
-//                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
-//                            worldActorList.set(
-//                                    i,
-//                                    new ChatActorCommunitySubAppModuleInformationImpl(
-//                                            worldActor.getPublicKey(),
-//                                            worldActor.getAlias(),
-//                                            worldActor.getImage(),
-//                                            connectedActor.getConnectionState(),
-//                                            connectedActor.getConnectionId(),
-//                                            worldActor.getStatus()
-//                                    )
-//                            );
-//                            break;
-//                        }
-//                    }
-//=======
         if(actorConnections != null && worldActorList != null
                 && actorConnections.size() > 0 && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
