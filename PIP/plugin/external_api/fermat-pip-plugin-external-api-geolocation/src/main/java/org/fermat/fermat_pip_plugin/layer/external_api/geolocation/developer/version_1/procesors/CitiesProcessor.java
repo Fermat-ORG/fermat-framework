@@ -82,4 +82,57 @@ public class CitiesProcessor {
 
     }
 
+    /**
+     * This method returns a city list filtered by city name.
+     * @param filter
+     * @return
+     */
+    public static List<City> getCitiesByFilter(String filter) throws CantGetCitiesListException {
+        filter = filter.toLowerCase();
+        try{
+            ClassLoader classLoader = CitiesProcessor.class.getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream(CITIES_FILENAME);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String read;
+            String[] arrayLine;
+            String cityNameFromCSV;
+            City city;
+            List<City> cities = new ArrayList<>();
+            float latitude;
+            float longitude;
+            while((read = bufferedReader.readLine()) != null) {
+                arrayLine = read.split(CSV_SEPARATOR);
+                try{
+                    cityNameFromCSV = arrayLine[CITY_NAME_INDEX];
+                } catch (ArrayIndexOutOfBoundsException e){
+                    //wrong city line, I'll ignored
+                    continue;
+                }
+                if (cityNameFromCSV.toLowerCase().contains(filter)){
+                    try{
+                        latitude = Float.parseFloat(arrayLine[CITY_LATITUDE_INDEX]);
+                        longitude = Float.parseFloat(arrayLine[CITY_LONGITUDE_INDEX]);
+                    } catch (NumberFormatException e){
+                        //If we got this exception, the data is corrupted, I'll skip this city.
+                        continue;
+                    }
+                    city = new CityRecord(
+                            cityNameFromCSV,
+                            latitude,
+                            longitude,
+                            arrayLine[CITY_COUNTRY_CODE_INDEX]);
+                    cities.add(city);
+                }
+            }
+            bufferedReader.close();
+            inputStream.close();
+            return cities;
+        } catch (IOException e) {
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Error reading the data stream");
+        }
+    }
+
 }
