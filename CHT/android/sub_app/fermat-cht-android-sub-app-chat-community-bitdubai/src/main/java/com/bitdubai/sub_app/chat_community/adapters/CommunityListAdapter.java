@@ -216,7 +216,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         }else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        if(data.getLocation().getLatitude()!=null && data.getLocation().getLongitude()!=null)
+        if(data.getLocation()!=null && data.getLocation()!=null)
+        //if(data.getLocation().getLatitude()!=null && data.getLocation().getLongitude()!=null)
             //Address address= moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
             holder.location_text.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
         else

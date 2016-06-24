@@ -53,8 +53,8 @@ public class GeolocationAdapter extends ArrayAdapter {
 //            if(convertView == null){
 //                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cht_comm_geolocation_results_item, parent, false);
 //            }
-            TextView Country = (TextView) convertView.findViewById(R.id.country_search);
-            TextView State = (TextView) convertView.findViewById(R.id.state_search);
+            TextView Country = (TextView) item.findViewById(R.id.country_search);
+            TextView State = (TextView) item.findViewById(R.id.state_search);
             Country.setText(dataSet.get(position).getCountryName());
             State.setText(dataSet.get(position).getName());
         } catch (Exception e) {

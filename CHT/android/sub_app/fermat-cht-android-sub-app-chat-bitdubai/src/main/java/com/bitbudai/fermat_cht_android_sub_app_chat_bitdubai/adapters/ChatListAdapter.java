@@ -78,7 +78,10 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         View item = inflater.inflate(R.layout.chat_list_listview, null, true);
         try {
             ImageView imagen = (ImageView) item.findViewById(R.id.image);//imagen.setImageResource(imgid.get(position));
-            imagen.setImageBitmap(Utils.getRoundedShape(imgId.get(position), 400));
+            if(imgId.get(position)!=null)
+                imagen.setImageBitmap(Utils.getRoundedShape(imgId.get(position), 400));
+            else
+                imagen.setImageResource(R.drawable.cht_center_profile_icon_center);//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
             contactname.setText(contactName.get(position));

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -169,7 +170,18 @@ public class ConnectionNotificationsFragment
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
-            swipeRefresh.setOnRefreshListener(this);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                            swipeRefresh.setRefreshing(false);
+                        }
+                    }, 2500);
+                }
+            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
@@ -188,7 +200,7 @@ public class ConnectionNotificationsFragment
 
     @Override
     public void onFragmentFocus () {
-        onRefresh();
+        //onRefresh();
     }
 
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {

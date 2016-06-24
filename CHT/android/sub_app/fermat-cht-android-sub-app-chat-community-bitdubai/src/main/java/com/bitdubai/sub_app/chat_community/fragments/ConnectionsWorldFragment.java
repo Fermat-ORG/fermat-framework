@@ -10,18 +10,22 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -249,7 +253,18 @@ public class ConnectionsWorldFragment
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                            swipeRefresh.setRefreshing(false);
+                        }
+                    }, 2500);
+                }
+            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
@@ -392,7 +407,8 @@ public class ConnectionsWorldFragment
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        location, distance, alias, max, offset);
+                        null, 0, null, 0, 0);
+                       // location, distance, alias, max, offset);
 //              for(ChatActorCommunityInformation chat: result){
 //                if(chat.getConnectionState()!= null){
 //                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
@@ -414,7 +430,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onFragmentFocus () {
-        onRefresh();
+        //onRefresh();
     }
 
     @Override
@@ -453,6 +469,15 @@ public class ConnectionsWorldFragment
                                 //Todo: callback to connectionworldagment to update view of browser filtering by the city or country selected
                             }
                         });
+
+                        Window window = geolocationDialog.getWindow();
+                        WindowManager.LayoutParams wlp = window.getAttributes();
+                        wlp.gravity = Gravity.TOP;
+                        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                        window.setAttributes(wlp);
+
+                        geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                         geolocationDialog.show();
 
                     } catch ( Exception e) {

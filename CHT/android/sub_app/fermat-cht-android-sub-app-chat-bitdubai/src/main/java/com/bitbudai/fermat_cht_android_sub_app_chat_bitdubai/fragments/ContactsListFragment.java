@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -242,9 +243,18 @@ public class ContactsListFragment
                         for (ChatActorCommunityInformation conta:con) {
                             contactname.add(conta.getAlias());
                             contactid.add(conta.getPublicKey());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(conta.getImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            contacticon.add(bmd.getBitmap());
+                            ByteArrayInputStream bytes;
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            if(conta.getImage()!=null) {
+                                bytes = new ByteArrayInputStream(conta.getImage());
+                                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                contacticon.add(bmd.getBitmap());
+                            }else{
+                                Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center); // the drawable (Captain Obvious, to the rescue!!!)
+                                Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                                contacticon.add(bitmap);
+                            }
                             contactStatus.add(conta.getStatus());
 //                            if(conta.getConnectionState()!=null)
 //                                contactStatus.add(conta.getConnectionState().toString());
@@ -580,7 +590,14 @@ public class ContactsListFragment
         contact.setAlias(adapter.getItem(position));
         contact.setContactStatus(adapter.getContactStatus(position));
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        adapter.getContactIcon(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+        if(adapter.getContactIcon(position)!=null)
+        {
+            adapter.getContactIcon(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+        }else {
+            Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center); // the drawable (Captain Obvious, to the rescue!!!)
+            Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        }
         byte[] byteArray = stream.toByteArray();
         contact.setProfileImage(byteArray);
         appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
