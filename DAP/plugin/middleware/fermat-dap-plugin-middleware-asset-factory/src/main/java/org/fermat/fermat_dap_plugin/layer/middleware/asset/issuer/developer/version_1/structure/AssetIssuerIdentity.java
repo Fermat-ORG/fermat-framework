@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**
@@ -10,7 +11,9 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 public class AssetIssuerIdentity implements IdentityAssetIssuer {
     String alias;
     String publicKey;
-    String mensage;
+    String message;
+    int accuracy;
+    Frequency frequency;
 
     @Override
     public String getAlias() {
@@ -39,7 +42,17 @@ public class AssetIssuerIdentity implements IdentityAssetIssuer {
 
     @Override
     public String createMessageSignature(String mensage) {
-        return this.mensage;
+        return this.message;
+    }
+
+    @Override
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     public void setAlias(String alias) {
