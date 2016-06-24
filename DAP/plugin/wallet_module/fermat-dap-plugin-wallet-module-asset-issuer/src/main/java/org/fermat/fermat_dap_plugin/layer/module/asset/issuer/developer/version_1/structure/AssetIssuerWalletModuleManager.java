@@ -24,6 +24,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
@@ -461,7 +462,11 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+        identityAssetIssuerManager.createNewIdentityAssetIssuer(
+                name,
+                profile_img,
+                identityAssetIssuerManager.getAccuracyDataDefault(),
+                identityAssetIssuerManager.getFrequencyDataDefault());
     }
 
     @Override
