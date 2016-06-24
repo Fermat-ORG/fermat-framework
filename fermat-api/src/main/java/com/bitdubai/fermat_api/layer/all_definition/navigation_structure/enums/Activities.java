@@ -351,6 +351,7 @@ public enum Activities implements FermatEnum {
     // DAP USER IDENTITY
     DAP_SUB_APP_ASSET_USER_IDENTITY("DAPSAAUI"),
     DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY("DAPSAAUICI"),
+    DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY("DSAAUIGA"),
 
 
     // DAP REDEEM POINT IDENTITY
@@ -452,6 +453,8 @@ public enum Activities implements FermatEnum {
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY;
             case "DAPSAAUICI":
                 return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY;
+            case "DSAAUIGA":
+                return Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_GEOLOCATION_ACTIVITY;
             case "DAPSAAII":
                 return Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY;
             case "DAPSAAIICI":
