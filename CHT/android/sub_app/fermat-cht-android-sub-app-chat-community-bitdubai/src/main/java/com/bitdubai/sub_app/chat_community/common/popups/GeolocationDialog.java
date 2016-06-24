@@ -104,18 +104,11 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             errorManager = appSession.getErrorManager();
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            mListView = (ListView) this.findViewById(R.id.geolocation_view);
-            noDatalabel = (TextView) this.findViewById(R.id.nodatalabel);
+            mListView = (ListView) findViewById(R.id.geolocation_view);
+            noDatalabel = (TextView) findViewById(R.id.nodatalabel);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
+            emptyView = (LinearLayout) findViewById(R.id.empty_view);
 
-            lupaButton = (ImageView) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
-            lupaButton.setOnClickListener( new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onRefresh();
-                        }
-                    }
-            );
             adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -125,6 +118,27 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                     cityFromList = (CitiesImpl) lstChatUserInformations.get(position);
                 }
             });
+
+            lupaButton = (ImageView) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
+            lupaButton.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //onRefresh();
+                            try {
+                                lstChatUserInformations = mChatActorCommunityManager.getCities(searchInput.getText().toString());
+                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
+                                mListView.setAdapter(adapter);
+                                adapter.refreshEvents(lstChatUserInformations);
+                            }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException |
+                            CantCreateCountriesListException  | CantGetCitiesListException e){
+                                if (getActivity() != null)
+                                    errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                            UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+                            }
+                        }
+                    }
+            );
+            showEmpty(true, emptyView);
         }catch (Exception e){
             System.out.println("Exception at Geolocation Dialog");
         }
@@ -157,6 +171,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                             result.length > 0) {
                         if (getActivity()!= null && adapter != null) {
                             lstChatUserInformations = (ArrayList<Cities>) result[0];
+                            mListView.setAdapter(adapter);
                             adapter.refreshEvents(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -197,10 +212,14 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         if (show &&
                 (noDatalabel.getVisibility() == View.GONE || noDatalabel.getVisibility() == View.INVISIBLE)) {
             noDatalabel.setVisibility(View.VISIBLE);
-            if (adapter != null)
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null) {
                 adapter.refreshEvents(null);
+                mListView.setAdapter(adapter);
+            }
         } else if (!show && noDatalabel.getVisibility() == View.VISIBLE) {
             noDatalabel.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
         }
     }
 

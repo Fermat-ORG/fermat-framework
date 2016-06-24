@@ -41,11 +41,11 @@
             android:src="@drawable/cht_comm_search_icon"
             />
     </LinearLayout>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:visibility="invisible"
-        />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="15dp"-->
+        <!--android:visibility="invisible"-->
+        <!--/>-->
 
         <ListView
             android:id="@+id/geolocation_view"

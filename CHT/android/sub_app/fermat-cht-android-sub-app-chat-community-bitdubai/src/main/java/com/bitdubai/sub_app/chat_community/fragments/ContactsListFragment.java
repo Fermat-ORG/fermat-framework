@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -162,7 +163,18 @@ public class ContactsListFragment
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-            swipeRefresh.setOnRefreshListener(this);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                            swipeRefresh.setRefreshing(false);
+                        }
+                    }, 2500);
+                }
+            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             showEmpty(true, emptyView);
             onRefresh();
@@ -170,14 +182,13 @@ public class ContactsListFragment
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
 
     @Override
     public void onFragmentFocus () {
-        onRefresh();
+        //onRefresh();
     }
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException, CantGetSelectedActorIdentityException {

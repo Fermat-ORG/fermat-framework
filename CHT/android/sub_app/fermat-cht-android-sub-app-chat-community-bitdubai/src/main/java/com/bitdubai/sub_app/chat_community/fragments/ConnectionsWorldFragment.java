@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -249,7 +250,18 @@ public class ConnectionsWorldFragment
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                            swipeRefresh.setRefreshing(false);
+                        }
+                    }, 2500);
+                }
+            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
@@ -392,7 +404,8 @@ public class ConnectionsWorldFragment
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        location, distance, alias, max, offset);
+                        null, 0, null, 0, 0);
+                       // location, distance, alias, max, offset);
 //              for(ChatActorCommunityInformation chat: result){
 //                if(chat.getConnectionState()!= null){
 //                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
@@ -414,7 +427,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onFragmentFocus () {
-        onRefresh();
+        //onRefresh();
     }
 
     @Override
