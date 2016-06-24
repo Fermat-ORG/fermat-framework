@@ -78,6 +78,7 @@ public abstract class AbstractPluginSubsystem {
 
     }
 
+
     public final AbstractPluginDeveloper getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
         if (developers.containsKey(pluginDeveloperReference)) {
@@ -103,4 +104,6 @@ public abstract class AbstractPluginSubsystem {
     public FermatContext getFermatContext() {
         return fermatContext;
     }
+
+
 }

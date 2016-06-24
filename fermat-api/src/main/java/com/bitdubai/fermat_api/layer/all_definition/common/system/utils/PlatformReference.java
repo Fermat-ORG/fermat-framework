@@ -47,7 +47,7 @@ public class PlatformReference implements Serializable{
     @Override
     public String toString() {
         return "PlatformReference{" +
-                ", platform=" + platform +
+                " platform=" + platform +
                 '}';
     }
 

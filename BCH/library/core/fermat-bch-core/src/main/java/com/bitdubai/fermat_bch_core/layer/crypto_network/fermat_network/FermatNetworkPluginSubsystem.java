@@ -26,7 +26,13 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
             if(o instanceof AbstractPluginDeveloper){
                 registerDeveloper((AbstractPluginDeveloper) o);
             }else{
+
+                System.err.println("##############################################\n");
+                System.err.println("##############################################\n");
                 System.err.println("Fermat network not found");
+                System.err.println("Plugin:"+o.getClass().getName());
+                System.err.println("##############################################\n");
+                System.err.println("##############################################\n");
             }
 
         } catch (Exception e) {

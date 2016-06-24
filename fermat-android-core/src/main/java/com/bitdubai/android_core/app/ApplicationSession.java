@@ -99,6 +99,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         super();
         instance = this;
         fermatSystem = FermatSystem.getInstance();
+        fermatSystem.setFermatContext(this);
 
 
     }
@@ -291,6 +292,6 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     @Override
     public Object loadPlugin(String pluginName) {
-        return null;
+        return classLoaderManager.load(pluginName);
     }
 }
