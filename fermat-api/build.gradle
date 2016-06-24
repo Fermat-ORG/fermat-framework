@@ -113,12 +113,12 @@ task apiFatJar(type: Jar) {
 //    }
 //}
 
-tasks.withType(FindBugs) {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
+//tasks.withType(FindBugs) {
+//    reports {
+//        xml.enabled = false
+//        html.enabled = true
+//    }
+//}
 
 
 publishing {
