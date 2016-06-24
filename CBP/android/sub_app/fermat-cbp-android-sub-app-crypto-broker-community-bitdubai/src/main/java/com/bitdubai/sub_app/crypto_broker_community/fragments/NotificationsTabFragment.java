@@ -1,38 +1,36 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.NotificationsAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.AcceptDialog;
@@ -47,84 +45,60 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class NotificationsTabFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
-        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, AcceptDialog.OnDismissListener {
+public class NotificationsTabFragment
+        extends FermatListFragment<CryptoBrokerCommunityInformation, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>>
+        implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
 
-    private static final int MAX = 20;
+    //Constants
+    private static final int MAX = 10;
+    private static final int SPAN_COUNT = 2;
+    protected static final String TAG = "ConnectionsTabFragment";
 
-    protected final String TAG = "NotificationsTabFragment";
-
-    private SwipeRefreshLayout swipeRefresh;
-    private boolean isRefreshing = false;
-    private View rootView;
-    private NotificationsAdapter adapter;
-    private LinearLayout emptyView;
+    //Managers
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
-    ImageView noData;
-    TextView noDatalabel;
 
-    /**
-     * Create a new instance of this fragment
-     *
-     * @return InstalledFragment instance object
-     */
+    private ArrayList<CryptoBrokerCommunityInformation> connectedActorList = new ArrayList<>();
+
+    private NotificationsAdapter adapter;
+    ImageView noNotifications;
+    private int offset;
+
     public static NotificationsTabFragment newInstance() {
         return new NotificationsTabFragment();
     }
 
+
+    /**
+     * Fragment interface implementation.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // setting up  module
-        moduleManager = appSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
-        cryptoBrokerInformationList = new ArrayList<>();
-    }
-
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.cbc_fragment_notifications_tab, container, false);
+            setHasOptionsMenu(true);
 
-            configureToolbar();
+            //Get managers
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
-            adapter = new NotificationsAdapter(getActivity(), cryptoBrokerInformationList);
-            adapter.setFermatListEventListener(this);
-            recyclerView.setAdapter(adapter);
-            noData = (ImageView) rootView.findViewById(R.id.nodata);
-            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
-            rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
-            onRefresh();
+            loadingSettings();
 
         } catch (Exception ex) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
+    }
 
-        return rootView;
+    @Override
+    protected void initViews(View rootView) {
+        super.initViews(rootView);
+
+        configureToolbar();
+
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+        noNotifications = (ImageView) rootView.findViewById(R.id.cbc_no_notifications);
     }
 
     @SuppressWarnings("deprecation")
@@ -140,132 +114,201 @@ public class NotificationsTabFragment extends AbstractFermatFragment<ReferenceAp
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private synchronized ArrayList<CryptoBrokerCommunityInformation> getMoreData() {
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
 
-        ArrayList<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.cbc_fragment_notifications_tab;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipeRefresh;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.cbc_notifications_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new NotificationsAdapter(getActivity(), connectedActorList);
+            adapter.setFermatListEventListener(this);
+        }
+
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+
+        return layoutManager;
+    }
+
+    @Override
+    public RecyclerView.OnScrollListener getScrollListener() {
+        //TODO: Descomentar esto cuando funcione lo de la paginacion en P2P
+//        if (scrollListener == null) {
+//            EndlessScrollListener endlessScrollListener = new EndlessScrollListener(getLayoutManager());
+//            endlessScrollListener.setOnLoadMoreDataListener(this);
+//            scrollListener = endlessScrollListener;
+//        }
+//
+//        return scrollListener;
+
+        return null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //TODO: colocar aqui el codigo para mostrar el help dialog
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
+        try {
+            AcceptDialog connectDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager,
+                    data, moduleManager.getSelectedActorIdentity());
+
+            connectDialog.setTitle("Confirm Disconnection");
+            connectDialog.setDescription(String.format("Do you want to disconnect from %1$s?", data.getAlias()));
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    onRefresh();
+                }
+            });
+
+            connectDialog.show();
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+            Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+    }
+
+    @Override
+    public void onLoadMoreData(int page, final int totalItemsCount) {
+        adapter.setLoadingData(true);
+        FermatWorker fermatWorker = new FermatWorker(getActivity(), this) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                return getMoreDataAsync(FermatRefreshTypes.NEW, totalItemsCount);
+            }
+        };
+
+        fermatWorker.execute();
+    }
+
+    @Override
+    public List<CryptoBrokerCommunityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-
-            int offset = 0;
-            dataSet.addAll(moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
-
+            offset = pos;
+            final CryptoBrokerCommunitySelectableIdentity selectedActorIdentity = moduleManager.getSelectedActorIdentity();
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listCryptoBrokersPendingLocalAction(selectedActorIdentity, MAX, offset);
+            dataSet.addAll(result);
         } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            e.printStackTrace();
         }
 
         return dataSet;
     }
 
     @Override
-    public void onRefresh() {
-        if (!isRefreshing) {
-            isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Notifications");
-            notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData();
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
-                    isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity() != null && adapter != null) {
-                            cryptoBrokerInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoBrokerInformationList);
-                            if (cryptoBrokerInformationList.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
-                }
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            adapter.setLoadingData(false);
+            if (result != null && result.length > 0) {
 
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
-                    try {
-                        isRefreshing = false;
-                        if (swipeRefresh != null)
-                            swipeRefresh.setRefreshing(false);
-                        if (getActivity() != null)
-                            Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if (adapter != null) {
+                    if (offset == 0) {
+                        connectedActorList.clear();
+                        connectedActorList.addAll((ArrayList) result[0]);
+                        adapter.changeDataSet(connectedActorList);
+                    } else {
+                        connectedActorList.addAll((ArrayList) result[0]);
+                        adapter.notifyItemRangeInserted(offset, connectedActorList.size() - 1);
                     }
+
                 }
-            });
-            worker.execute();
+            }
         }
-    }
 
-
-    @Override
-    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-        try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
-            //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
-            notificationAcceptDialog.setOnDismissListener(this);
-            notificationAcceptDialog.show();
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
-        }
+        showOrHideEmptyView();
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            Log.e(TAG, ex.getMessage(), ex);
+        }
 
+        Toast.makeText(getActivity(), "Sorry there was a problem loading the data", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * @param show
+     * Obtain Settings or create new Settings if first time opening subApp
      */
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            noData.setAnimation(anim);
-            noDatalabel.setAnimation(anim);
-            noData.setVisibility(View.VISIBLE);
-            noDatalabel.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
-            noData.setAnimation(anim);
-            emptyView.setBackgroundResource(0);
-            noDatalabel.setAnimation(anim);
-            noData.setVisibility(View.GONE);
-            noDatalabel.setVisibility(View.GONE);
-            rootView.setBackgroundResource(0);
-            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgcolor);
-            rootView.setBackground(bgcolor);
+    private void loadingSettings() {
+        CryptoBrokerCommunitySettings appSettings;
+        try {
+            appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            appSettings = null;
+        }
+
+        if (appSettings == null) {
+            appSettings = new CryptoBrokerCommunitySettings();
+            appSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        onRefresh();
+    /**
+     * Show or hide the empty view if there is data to show
+     */
+    private void showOrHideEmptyView() {
+        final boolean show = connectedActorList.isEmpty();
+        final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
+
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), animationResourceId);
+        if (show && (noNotifications.getVisibility() == View.GONE || noNotifications.getVisibility() == View.INVISIBLE)) {
+            noNotifications.setAnimation(anim);
+            noNotifications.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+
+        } else if (!show && noNotifications.getVisibility() == View.VISIBLE) {
+            noNotifications.setAnimation(anim);
+            noNotifications.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

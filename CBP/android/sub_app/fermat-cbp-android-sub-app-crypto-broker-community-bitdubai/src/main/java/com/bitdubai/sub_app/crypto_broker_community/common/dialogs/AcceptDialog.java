@@ -9,10 +9,10 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
 
@@ -22,8 +22,9 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
-        View.OnClickListener {
+public class AcceptDialog
+        extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, ResourceProviderManager>
+        implements View.OnClickListener {
 
     /**
      * UI components
@@ -32,10 +33,11 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<CryptoB
     CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
 
     CryptoBrokerCommunitySelectableIdentity identity;
+    private String description;
 
     public AcceptDialog(Activity activity,
                         ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
-                        SubAppResourcesProviderManager subAppResources,
+                        ResourceProviderManager subAppResources,
                         CryptoBrokerCommunityInformation cryptoBrokerInformation,
                         CryptoBrokerCommunitySelectableIdentity identity) {
 
@@ -103,4 +105,7 @@ public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<CryptoB
     }
 
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

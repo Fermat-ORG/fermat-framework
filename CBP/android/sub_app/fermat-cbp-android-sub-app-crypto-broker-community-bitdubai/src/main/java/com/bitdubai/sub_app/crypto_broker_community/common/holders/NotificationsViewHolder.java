@@ -2,10 +2,11 @@ package com.bitdubai.sub_app.crypto_broker_community.common.holders;
 
 import android.view.View;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -15,19 +16,23 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  */
 public class NotificationsViewHolder extends FermatViewHolder {
 
-    public FermatRoundedImageView userAvatar;
-    public FermatTextView userName;
+    private FermatTextView brokerName;
+    private FermatTextView notificationTime;
 
     /**
      * Constructor
      *
      * @param itemView cast ui elements
      */
-    public NotificationsViewHolder(View itemView) {
-        super(itemView);
+    public NotificationsViewHolder(View itemView, int type) {
+        super(itemView, type);
 
-        userName = (FermatTextView)itemView.findViewById(R.id.userName);
-        userAvatar = (FermatRoundedImageView)itemView.findViewById(R.id.imageView_avatar);
+        brokerName = (FermatTextView) itemView.findViewById(R.id.userName);
+        notificationTime = (FermatTextView) itemView.findViewById(R.id.cbc_notification_time);
+    }
 
+    public void bind(CryptoBrokerCommunityInformation data) {
+        brokerName.setText(data.getAlias());
+        notificationTime.setText("");
     }
 }

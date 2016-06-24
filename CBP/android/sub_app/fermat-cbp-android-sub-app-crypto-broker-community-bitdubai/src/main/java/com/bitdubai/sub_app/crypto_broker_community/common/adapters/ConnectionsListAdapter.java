@@ -72,8 +72,8 @@ public class ConnectionsListAdapter extends FermatAdapter<CryptoBrokerCommunityI
 
     @Override
     protected void bindHolder(FermatViewHolder holder, CryptoBrokerCommunityInformation data, int position) {
-        final ConnectionsViewHolder availableActorsViewHolder = (ConnectionsViewHolder) holder;
-        availableActorsViewHolder.bind(data);
+        final ConnectionsViewHolder connectionsViewHolder = (ConnectionsViewHolder) holder;
+        connectionsViewHolder.bind(data);
     }
 
     @Override

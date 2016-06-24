@@ -33,7 +33,7 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:textSize="15sp"
                 tools:text="UserName Smith"/>
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -56,8 +56,8 @@
                 android:textColor="@color/cbc_color_gray"
                 android:textSize="12sp"/>
 
-            <TextView
-                android:id="@+id/date"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbc_notification_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/status"
