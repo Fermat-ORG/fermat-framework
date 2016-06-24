@@ -32,7 +32,7 @@ public class AppNotificationAdapter extends FermatAdapter<CryptoBrokerCommunityI
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_notification;
+        return R.layout.cbc_fragment_notifications_tab_item;
     }
 
     @Override

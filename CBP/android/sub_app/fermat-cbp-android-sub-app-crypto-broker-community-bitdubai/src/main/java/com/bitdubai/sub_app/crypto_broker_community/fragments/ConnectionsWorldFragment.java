@@ -24,17 +24,23 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.OnLoadMoreDataListener;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
+import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,9 +213,27 @@ public class ConnectionsWorldFragment
     }
 
     @Override
-    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-//        appSession.setData(ACTOR_SELECTED, data);
-//        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+    public void onItemClickListener(final CryptoBrokerCommunityInformation data, final int position) {
+        try {
+            ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager,
+                    data, moduleManager.getSelectedActorIdentity());
+
+            connectDialog.setTitle("Connection Request");
+            connectDialog.setSubtitle("New Request");
+            connectDialog.setDescription(String.format("Do you want to send a connection request to %1$s?", data.getAlias()));
+            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateSelectedActorInList(data, position);
+                }
+            });
+
+            connectDialog.show();
+
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+            Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -302,6 +326,9 @@ public class ConnectionsWorldFragment
         }
     }
 
+    /**
+     * Launch a presentation dialog to create a identity or the list of available identities to select
+     */
     private void launchPresentationDialog() {
         try {
             if (launchActorCreationDialog) {
@@ -351,6 +378,9 @@ public class ConnectionsWorldFragment
         }
     }
 
+    /**
+     * Show or hide the empty view if there is data to show
+     */
     private void showOrHideEmptyView() {
         final boolean show = cryptoBrokerCommunityInformationList.isEmpty();
         final int animationResourceId = show ? android.R.anim.fade_in : android.R.anim.fade_out;
@@ -365,6 +395,33 @@ public class ConnectionsWorldFragment
             noContacts.setAnimation(anim);
             noContacts.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Update the actor information and notify the adapter to show the updated info
+     *
+     * @param actorInformation the actor information
+     * @param position         the actor's position in the adapter
+     */
+    private void updateSelectedActorInList(CryptoBrokerCommunityInformation actorInformation, int position) {
+        try {
+            final ConnectionState newConnectionState = (ConnectionState) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
+            appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
+
+            CryptoBrokerCommunityInformation updatedInfo = new CryptoBrokerCommunitySubAppModuleInformation(
+                    actorInformation.getPublicKey(),
+                    actorInformation.getAlias(),
+                    actorInformation.getImage(),
+                    newConnectionState,
+                    actorInformation.getConnectionId());
+
+            cryptoBrokerCommunityInformationList.set(position, updatedInfo);
+            adapter.notifyItemChanged(position);
+
+        } catch (Exception ignore) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ignore);
         }
     }
 }

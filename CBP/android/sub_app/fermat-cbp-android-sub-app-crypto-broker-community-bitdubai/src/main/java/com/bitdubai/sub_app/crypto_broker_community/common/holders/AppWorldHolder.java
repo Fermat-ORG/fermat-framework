@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 
@@ -50,13 +49,22 @@ public class AppWorldHolder extends FermatViewHolder {
     public void bind(CryptoBrokerCommunityInformation data) {
         brokerName.setText(data.getAlias());
 
-        if (data.getConnectionState() != null && data.getConnectionState() == ConnectionState.CONNECTED) {
-            connectionState.setImageResource(R.drawable.contacto_activo);
-            connectionText.setText("Is connected with you");
-            connectionText.setVisibility(View.VISIBLE);
-        } else {
-            connectionState.setImageResource(R.drawable.agregar_contacto);
-            connectionText.setVisibility(View.INVISIBLE);
+        if (data.getConnectionState() != null) {
+            switch (data.getConnectionState()) {
+                case CONNECTED:
+                    connectionState.setImageResource(R.drawable.contacto_activo);
+                    connectionText.setText("Is connected with you");
+                    connectionText.setVisibility(View.VISIBLE);
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    connectionState.setImageResource(R.drawable.agregar_contacto);
+                    connectionText.setText("Request sent");
+                    connectionText.setVisibility(View.VISIBLE);
+                default:
+                    connectionState.setImageResource(R.drawable.agregar_contacto);
+                    connectionText.setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
 
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));

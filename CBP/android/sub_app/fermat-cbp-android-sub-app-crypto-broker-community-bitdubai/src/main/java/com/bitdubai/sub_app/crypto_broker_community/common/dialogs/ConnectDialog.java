@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.common.popups;
+package com.bitdubai.sub_app.crypto_broker_community.common.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,19 +8,20 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 
 /**
@@ -29,22 +30,12 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener {
 
-    /**
-     * UI components
-     */
-    FermatButton positiveBtn;
-    FermatButton negativeBtn;
-    FermatTextView mDescription;
-    FermatTextView mUsername;
-    FermatTextView mSecondDescription;
-    FermatTextView mTitle;
-    CharSequence description;
-    CharSequence secondDescription;
-    CharSequence username;
-    CharSequence title;
+    private CharSequence description;
+    private CharSequence subtitle;
+    private CharSequence title;
 
     private final CryptoBrokerCommunityInformation information;
     private final CryptoBrokerCommunitySelectableIdentity identity;
@@ -52,7 +43,7 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
 
     public ConnectDialog(final Activity activity,
                          final ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
-                         final SubAppResourcesProviderManager subAppResources,
+                         final ResourceProviderManager subAppResources,
                          final CryptoBrokerCommunityInformation information,
                          final CryptoBrokerCommunitySelectableIdentity identity) {
 
@@ -62,38 +53,30 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
         this.identity = identity;
     }
 
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.description);
-        mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mSecondDescription = (FermatTextView) findViewById(R.id.second_description);
-        mTitle = (FermatTextView) findViewById(R.id.title);
-        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
-        mSecondDescription.setVisibility(View.VISIBLE);
+        FermatTextView mTitle = (FermatTextView) findViewById(R.id.cbc_title);
+        FermatTextView mSubtitle = (FermatTextView) findViewById(R.id.cbc_sub_title);
+        FermatTextView mDescription = (FermatTextView) findViewById(R.id.cbc_description);
+        FermatTextView positiveBtn = (FermatTextView) findViewById(R.id.positive_button);
+        FermatTextView negativeBtn = (FermatTextView) findViewById(R.id.negative_button);
+
+        mDescription.setText(description != null ? description : "");
+        mSubtitle.setText(subtitle != null ? subtitle : "");
+        mTitle.setText(title != null ? title : "");
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
-        mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
-        mTitle.setText(title != null ? title : "");
-
-    }
-
-    public void setSecondDescription(CharSequence secondDescription) {
-        this.secondDescription = secondDescription;
     }
 
     public void setDescription(CharSequence description) {
         this.description = description;
     }
 
-    public void setUsername(CharSequence username) {
-        this.username = username;
+    public void setSubtitle(CharSequence subtitle) {
+        this.subtitle = subtitle;
     }
 
     @Override
@@ -118,14 +101,13 @@ public class ConnectDialog extends FermatDialog<ReferenceAppFermatSession<Crypto
             try {
                 if (information != null && identity != null) {
 
-                    //System.out.println("*********** i'm the selected identity: "+identity);
-                    //System.out.println("*********** i'm the selected broker information: " + information);
+                    System.out.println("*********** i'm the selected identity: "+identity);
+                    System.out.println("*********** i'm the selected broker information: " + information);
 
                     getSession().getModuleManager().requestConnectionToCryptoBroker(identity, information);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
 
-                    //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", 2);
+                    getSession().setData(FragmentsCommons.CONNECTION_RESULT, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
                 } else {
                     Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();

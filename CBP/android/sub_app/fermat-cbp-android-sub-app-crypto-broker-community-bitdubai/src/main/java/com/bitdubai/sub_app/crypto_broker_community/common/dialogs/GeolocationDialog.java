@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.common.popups;
+package com.bitdubai.sub_app.crypto_broker_community.common.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;

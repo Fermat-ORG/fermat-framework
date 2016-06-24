@@ -35,7 +35,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.AcceptDialog;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.common.popups;
+package com.bitdubai.sub_app.crypto_broker_community.common.dialogs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerCancellingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
@@ -23,12 +23,9 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
 
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
- *
- * @author lnacosta
- * @version 1.0.0
+ * Created by Alejandro Bicelis on 15/02/2016
  */
-public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class CancelDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -37,7 +34,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
     FermatButton positiveBtn;
     FermatButton negativeBtn;
     FermatTextView mDescription;
-    FermatTextView mUsername;
+    FermatTextView subTitle;
     FermatTextView mTitle;
     CharSequence description;
     CharSequence username;
@@ -48,11 +45,11 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
     CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public DisconnectDialog(Activity activity,
-                            ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
-                            SubAppResourcesProviderManager subAppResources,
-                            CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
-                            CryptoBrokerCommunitySelectableIdentity identity) {
+    public CancelDialog(Activity activity,
+                        ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
+                        SubAppResourcesProviderManager subAppResources,
+                        CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
+                        CryptoBrokerCommunitySelectableIdentity identity) {
 
         super(activity, session, subAppResources);
 
@@ -61,21 +58,21 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
     }
 
 
-    @SuppressLint("SetTextI18n")
     @Override
+    @SuppressLint("SetTextI18n")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.description);
-        mUsername = (FermatTextView) findViewById(R.id.user_name);
-        mTitle = (FermatTextView) findViewById(R.id.title);
+        mDescription = (FermatTextView) findViewById(R.id.cbc_description);
+        subTitle = (FermatTextView) findViewById(R.id.cbc_sub_title);
+        mTitle = (FermatTextView) findViewById(R.id.cbc_title);
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
         mDescription.setText(description != null ? description : "");
-        mUsername.setText(username != null ? username : "");
+        subTitle.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
 
     }
@@ -110,22 +107,22 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
             try {
                 if (cryptoBrokerCommunityInformation != null && identity != null) {
 
-                    getSession().getModuleManager().disconnectCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
+                    getSession().getModuleManager().cancelCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
+                    Toast.makeText(getContext(), "Cancelled successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 1);
 
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CryptoBrokerDisconnectingFailedException e) {
+            } catch (CryptoBrokerCancellingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Could not cancel, please try again", Toast.LENGTH_SHORT).show();
             } catch (ConnectionRequestNotFoundException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "There has been an error. Could not cancel.", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();
