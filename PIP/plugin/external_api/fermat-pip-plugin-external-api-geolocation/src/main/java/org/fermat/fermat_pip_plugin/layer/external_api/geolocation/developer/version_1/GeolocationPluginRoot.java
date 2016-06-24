@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.structure.GeolocationPluginManager;
 
@@ -58,6 +59,7 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             //testGetGeoRectangle();
             //testAddress();
             //testRandomAddress();
+            //testDouble();
         } catch (Exception e) {
             reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -154,6 +156,19 @@ public class GeolocationPluginRoot extends AbstractPlugin {
             GeoRectangle geoRectangle = this.geolocationPluginManager.
                     getRandomGeoLocation();
             System.out.println("GEOLOCATION:"+geoRectangle);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("GEOLOCATION: Exception "+e);
+        }
+    }
+
+    private void testDouble(){
+        try{
+            double latitude = 9.91861;
+            double longitude = -68.30472;
+            Address address = this.geolocationPluginManager.
+                    getAddressByCoordinate(latitude, longitude);
+            System.out.println("GEOLOCATION:"+address);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("GEOLOCATION: Exception "+e);
