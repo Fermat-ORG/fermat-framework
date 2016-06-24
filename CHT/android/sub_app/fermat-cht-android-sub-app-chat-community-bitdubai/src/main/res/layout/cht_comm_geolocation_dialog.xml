@@ -55,7 +55,7 @@
             android:divider="@drawable/cht_list_divider" />
     <!--Empty view-->
     <LinearLayout
-        android:id="@+id/empty_view"
+        android:id="@+id/empty_view_geo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No data available"
-            android:id="@+id/nodatalabel"
+            android:id="@+id/nodatalabel_geo"
             android:textColor="#BCBEC0"
             android:textStyle="normal"
             android:textSize="12pt"

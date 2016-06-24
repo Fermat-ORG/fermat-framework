@@ -113,9 +113,9 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
             mListView = (ListView) findViewById(R.id.geolocation_view);
-            noDatalabel = (TextView) findViewById(R.id.nodatalabel);
+            noDatalabel = (TextView) findViewById(R.id.nodatalabel_geo);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
-            emptyView = (LinearLayout) findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) findViewById(R.id.empty_view_geo);
             closeButton = (ImageView) findViewById(R.id.close_geolocation_dialog);
 
             lupaButton = (ImageView) this.findViewById(R.id.lupita_button);
@@ -146,6 +146,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                                 adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback);
                                 mListView.setAdapter(adapter);
                                 adapter.refreshEvents(lstChatUserInformations);
+                               // onRefresh();
                             }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException |
                             CantCreateCountriesListException  | CantGetCitiesListException e){
                                 if (getActivity() != null)
