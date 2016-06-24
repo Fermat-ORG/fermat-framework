@@ -1262,7 +1262,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset Issuer");
+        runtimeTitleBar.setLabel("Wallet Asset Issuer");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
 //        runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1739,7 +1739,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Asset User");
+        runtimeTitleBar.setLabel("Wallet Asset User");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
 //        runtimeTitleBar.setTitleColor(titleBarLabelColor);
 //        runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2229,7 +2229,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Redeem Point");
+        runtimeTitleBar.setLabel("Wallet Redeem Point");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor("#ffffff");
 //        runtimeTitleBar.setIsTitleTextStatic(true);

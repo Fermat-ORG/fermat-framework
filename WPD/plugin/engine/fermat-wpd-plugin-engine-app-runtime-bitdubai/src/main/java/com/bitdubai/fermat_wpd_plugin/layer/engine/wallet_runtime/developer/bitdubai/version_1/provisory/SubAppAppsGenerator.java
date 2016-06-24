@@ -1072,8 +1072,6 @@ public class SubAppAppsGenerator {
         runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
         runtimeActivity.setColor("#03A9F4");
-        runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Asset Issuer Identity");
@@ -1093,11 +1091,11 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
         optionsMenu = new OptionsMenu();
-            menuItem = new OptionMenuItem(1);
-            menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        menuItem = new OptionMenuItem(1);
+        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_location", owner, SourceLocation.DEVELOPER_RESOURCES));
         menuItem.setLabel("Location");
         menuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);//SHOW_AS_ACTION_ALWAYS (2) - SHOW_AS_ACTION_WITH_TEXT (4)
-            optionsMenu.addMenuItem(menuItem);
+        optionsMenu.addMenuItem(menuItem);
 
         menuItem = new OptionMenuItem(2);
 //        menuItem.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
@@ -1106,6 +1104,37 @@ public class SubAppAppsGenerator {
         optionsMenu.addMenuItem(menuItem);
 
         runtimeActivity.setOptionsMenu(optionsMenu);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
+
+        //Activity Geolocation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+        runtimeActivity.setBackPublicKey(identityPublicKey);
+//        runtimeActivity.setBackgroundColor("#F9F9F9");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Geolocation");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new FermatRuntimeFragment();
+        runtimeFragment.setFragmentCode(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_FRAGMENT.getKey());
+
+        runtimeSubApp.addActivity(runtimeActivity);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
@@ -4021,7 +4050,7 @@ public class SubAppAppsGenerator {
         runtimeTab = new Tab();
         runtimeTab.setLabel("CHATS");
 
-        runtimeTab.setFragment(new FermatRuntimeFragment(1,owner,SourceLocation.DEVELOPER_RESOURCES,Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
+        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey()));
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setFragmentCode(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeFragment.setOwner(owner);
@@ -4595,7 +4624,7 @@ public class SubAppAppsGenerator {
         optionsMenuConn.addMenuItem(optionMenuItemConn);
 
         optionMenuItemConn = new OptionMenuItem(2);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1,"ic_welcome_dialog",owner,SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
         optionMenuItemConn.setLabel("Help");
         optionMenuItemConn.setShowAsAction(4);
         optionsMenuConn.addMenuItem(optionMenuItemConn);
