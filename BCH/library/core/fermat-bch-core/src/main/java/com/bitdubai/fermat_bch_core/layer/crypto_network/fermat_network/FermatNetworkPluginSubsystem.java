@@ -23,14 +23,16 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
     public void start() throws CantStartSubsystemException {
         try {
             Object o = getFermatContext().loadPlugin("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
-            if(o instanceof AbstractPluginDeveloper){
+            try {
                 registerDeveloper((AbstractPluginDeveloper) o);
-            }else{
-
+            }catch (Exception e){
                 System.err.println("##############################################\n");
                 System.err.println("##############################################\n");
                 System.err.println("Fermat network not found");
                 System.err.println("Plugin:"+o.getClass().getName());
+                System.err.println("Plugin extends from:"+o.getClass().getSuperclass().getName());
+                System.err.println("Search type:"+AbstractPluginDeveloper.class.getName());
+                e.printStackTrace();
                 System.err.println("##############################################\n");
                 System.err.println("##############################################\n");
             }

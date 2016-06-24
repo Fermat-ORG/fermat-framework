@@ -277,7 +277,8 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     public boolean isFermatRunning() {
         if(!fermatRunning){
             try {
-                fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+                if(getServicesHelpers().getClientSideBrokerServiceAIDL()!=null)
+                    fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
             }catch (Exception e){
                 e.printStackTrace();
             }
