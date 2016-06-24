@@ -103,7 +103,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -133,10 +133,10 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException | EncodeException iOException) {
-                LOG.error(iOException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
         }
     }
@@ -170,14 +170,17 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
               checkedInClient.setLongitude(0.0);
         }
 
-        /*
-         * Save into the data base
-         */
-        pair = getDaoFactory().getCheckedInClientDao().createInsertTransactionStatementPair(checkedInClient);
+
 
         if(!getDaoFactory().getCheckedInClientDao().exists(checkedInClient.getIdentityPublicKey())) {
+           /*
+            * Save into the data base
+            */
+            pair = getDaoFactory().getCheckedInClientDao().createInsertTransactionStatementPair(checkedInClient);
             databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
         }else {
+
+            pair = getDaoFactory().getCheckedInClientDao().createUpdateTransactionStatementPair(checkedInClient);
 
             if(validateProfileChange(profile))
                 databaseTransaction.addRecordToUpdate(pair.getTable(), pair.getRecord());

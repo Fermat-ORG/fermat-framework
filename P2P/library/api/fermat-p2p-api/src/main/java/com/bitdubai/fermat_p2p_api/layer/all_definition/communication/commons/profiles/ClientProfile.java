@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
@@ -21,7 +22,7 @@ public class ClientProfile extends Profile {
      * Constructor
      */
     public ClientProfile(){
-        super();
+        super(ProfileTypes.CLIENT);
     }
 
     /**
@@ -61,4 +62,10 @@ public class ClientProfile extends Profile {
         return GsonProvider.getGson().fromJson(jsonString, ClientProfile.class);
     }
 
+    @Override
+    public String toString() {
+        return "ClientProfile{" +
+                "deviceType='" + deviceType + '\'' +
+                '}';
+    }
 }

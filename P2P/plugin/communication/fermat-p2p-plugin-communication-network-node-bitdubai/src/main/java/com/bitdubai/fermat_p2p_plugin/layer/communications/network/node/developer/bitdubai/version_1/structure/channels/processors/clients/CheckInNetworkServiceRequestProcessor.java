@@ -15,6 +15,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedNetworkServicesHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantCreateTransactionStatementPairException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -118,7 +119,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -137,14 +138,11 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
-
         }
 
     }
@@ -155,7 +153,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
      * @param networkServiceProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private DatabaseTransactionStatementPair insertCheckedInNetworkService(NetworkServiceProfile networkServiceProfile) throws CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair insertCheckedInNetworkService(NetworkServiceProfile networkServiceProfile) throws CantCreateTransactionStatementPairException, CantReadRecordDataBaseException {
 
 
         /*
@@ -175,10 +173,10 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
             checkedInNetworkService.setLongitude(0.0);
         }
 
-        /*
-         * Save into the data base
-         */
-        return getDaoFactory().getCheckedInNetworkServiceDao().createInsertTransactionStatementPair(checkedInNetworkService);
+        if (!getDaoFactory().getCheckedInNetworkServiceDao().exists(networkServiceProfile.getIdentityPublicKey()))
+            return getDaoFactory().getCheckedInNetworkServiceDao().createInsertTransactionStatementPair(checkedInNetworkService);
+        else
+            return getDaoFactory().getCheckedInNetworkServiceDao().createUpdateTransactionStatementPair(checkedInNetworkService);
 
     }
 

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 
 /**
@@ -16,7 +17,7 @@ import java.security.InvalidParameterException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class Package {
+public class Package implements Serializable {
 
     /**
      * Represent the content value

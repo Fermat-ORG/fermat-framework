@@ -24,7 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
@@ -98,7 +98,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                                                  final String                 privateKey    ,
                                                  final DeviceUser             deviceUser    ,
                                                  long accuracy,
-                                                 Frecuency frecuency) throws CantCreateNewDeveloperException {
+                                                 Frequency frequency) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(cryptoCustomer.getAlias()))
@@ -115,7 +115,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             record.setStringValue(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME          , Boolean.toString(cryptoCustomer.isPublished()));
             record.setLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME, accuracy);
-            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frecuency);
+            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frequency);
 
             table.insertRecord(record);
 
@@ -132,14 +132,14 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
     public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile,
                                              long accuracy,
-                                             Frecuency frecuency) throws CantUpdateCustomerIdentityException {
+                                             Frequency frequency) throws CantUpdateCustomerIdentityException {
         try {
             DatabaseTable table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
             table.addStringFilter(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, alias);
             record.setLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME, accuracy);
-            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frecuency);
+            record.setFermatEnum(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME, frequency);
             table.updateRecord(record);
 
             updateCryptoCustomerIdentityProfileImage(publicKey, imageProfile);
@@ -347,9 +347,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
         String  alias        = record.getStringValue (CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME     );
         boolean published    = Boolean.parseBoolean(record.getStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME));
         long accuracy = record.getLongValue(CRYPTO_CUSTOMER_ACCURACY_COLUMN_NAME);
-        Frecuency frecuency = Frecuency.NONE;
+        Frequency frequency = Frequency.NONE;
         try {
-             frecuency = Frecuency.getByCode(record.getStringValue(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME));
+
+             frequency = Frequency.getByCode(CRYPTO_CUSTOMER_FRECUENCY_COLUMN_NAME);
+
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -364,7 +366,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 profileImage,
                 published,
                 accuracy,
-                frecuency
+                frequency
         );
     }
 
