@@ -12,7 +12,7 @@
         android:gravity="center"
         android:text="Please select an Identity"
         android:textColor="@color/color_white"
-        android:background="#1291A3"
+        android:background="@color/cbc_green"
         android:textSize="17sp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -29,7 +29,7 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:paddingTop="5dp"
-            tools:listitem="@layout/cbc_fragment_list_identities_item"/>
+            tools:listitem="@layout/cbc_dialog_selectable_identity_list_item"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

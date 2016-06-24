@@ -57,7 +57,7 @@ public class GeolocationDialog extends FermatDialog implements View.OnClickListe
     }
 
     protected int setLayoutId() {
-        return R.layout.cbc_comm_geolocation_dialog;
+        return R.layout.cbc_dialog_geolocation_browser;
     }
 
     protected int setWindowFeature() {

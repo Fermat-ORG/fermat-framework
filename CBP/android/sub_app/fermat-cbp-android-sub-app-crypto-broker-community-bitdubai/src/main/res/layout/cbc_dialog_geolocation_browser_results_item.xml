@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f0f0f0"
+    android:background="@color/color_white"
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/ubication_icon"
+        android:id="@+id/location_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
@@ -25,12 +25,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:layout_toEndOf="@id/ubication_icon"
-        android:layout_toRightOf="@id/ubication_icon"
+        android:layout_toEndOf="@id/location_icon"
+        android:layout_toRightOf="@id/location_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/color_black"
-        tools:text="State"/>
+        android:textColor="@color/cbc_color_gray"
+        tools:text="State"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/country_search"
@@ -41,11 +42,11 @@
         android:layout_below="@id/state_search"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toEndOf="@id/ubication_icon"
-        android:layout_toRightOf="@id/ubication_icon"
+        android:layout_toEndOf="@id/location_icon"
+        android:layout_toRightOf="@id/location_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/color_black"
+        android:textColor="@color/cbc_color_gray_light"
         android:textSize="18sp"
         tools:text="Country"/>
 
@@ -55,6 +56,6 @@
         android:layout_height="1dip"
         android:layout_below="@id/country_search"
         android:layout_marginTop="8dp"
-        android:background="#414042"/>
+        android:background="@color/color_gray_light"/>
 
 </RelativeLayout>

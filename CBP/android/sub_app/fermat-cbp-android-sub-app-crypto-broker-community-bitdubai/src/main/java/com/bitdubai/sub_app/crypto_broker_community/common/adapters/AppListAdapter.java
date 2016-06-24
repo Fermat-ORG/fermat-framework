@@ -48,9 +48,9 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     protected int getCardViewResource(int type) {
         if (type == DATA_ITEM)
-            return R.layout.cbc_comm_world_item;
+            return R.layout.cbc_fragment_browser_tab_list_item;
         if (type == LOADING_ITEM)
-            return R.layout.loading_more_list_item;
+            return R.layout.cbc_view_loading_more_list_item;
         return 0;
     }
 

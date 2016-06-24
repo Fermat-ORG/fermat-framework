@@ -95,7 +95,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.cbc_dialog_generic_use;
     }
 
     @Override

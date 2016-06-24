@@ -51,7 +51,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
         final Context context = activity.get();
         final LayoutInflater layoutInflaterService = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View headerView = layoutInflaterService.inflate(R.layout.cbc_row_navigation_drawer_community_header, null, false);
+        final View headerView = layoutInflaterService.inflate(R.layout.cbc_navigation_view_header, null, false);
 
         FermatWorker fermatWorker = new FermatWorker(context) {
             @Override

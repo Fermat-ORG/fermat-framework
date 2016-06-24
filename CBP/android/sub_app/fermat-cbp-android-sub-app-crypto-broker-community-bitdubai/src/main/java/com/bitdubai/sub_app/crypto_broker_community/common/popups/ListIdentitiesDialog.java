@@ -75,7 +75,7 @@ public class ListIdentitiesDialog extends FermatDialog<ReferenceAppFermatSession
 
     @Override
     protected int setLayoutId() {
-        return R.layout.cbc_fragment_list_identities;
+        return R.layout.cbc_dialog_selectable_identity_list;
     }
 
     @Override

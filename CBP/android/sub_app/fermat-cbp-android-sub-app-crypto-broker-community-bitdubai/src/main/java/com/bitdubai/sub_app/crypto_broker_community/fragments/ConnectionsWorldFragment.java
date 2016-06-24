@@ -140,7 +140,7 @@ public class ConnectionsWorldFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_connections_world_cbp;
+        return R.layout.cbc_fragment_browser_tab;
     }
 
     @Override

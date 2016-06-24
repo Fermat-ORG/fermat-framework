@@ -8,9 +8,9 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherProfileFragment;
-import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsWorldFragment;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
@@ -26,15 +26,6 @@ public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<
         AbstractFermatFragment currentFragment;
 
         switch (fragments) {
-            case CWP_WALLET_STORE_ALL_FRAGMENT:
-                currentFragment = ConnectionsWorldFragment.newInstance();
-                break;
-            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS:
-                currentFragment = ConnectionsFragment.newInstance();
-                break;
-            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_DETAIL:
-                currentFragment = null;
-                break;
             case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS:
                 currentFragment = ConnectionNotificationsFragment.newInstance();
                 break;
@@ -48,10 +39,7 @@ public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:
-                throw new FragmentNotFoundException(
-                        fragments.toString(),
-                        "Switch failed"
-                );
+                throw new FragmentNotFoundException(fragments.toString(), "Switch failed");
         }
         return currentFragment;
     }

@@ -93,7 +93,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_notifications, container, false);
+            rootView = inflater.inflate(R.layout.cbc_fragment_notifications_tab, container, false);
 
             configureToolbar();
 
