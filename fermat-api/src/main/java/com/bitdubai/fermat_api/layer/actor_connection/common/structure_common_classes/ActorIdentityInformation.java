@@ -34,7 +34,7 @@ public class ActorIdentityInformation {
         Validate.notNull(publicKey, "The Public Key can't be null.");
         Validate.notNull(actorType, "The Actor Type can't be null.");
         Validate.notNull(alias    , "The alias can't be null."     );
-        Validate.notNull(image    , "The image can't be null."     );
+//        Validate.notNull(image    , "The image can't be null."     );
 
         this.publicKey = publicKey;
         this.actorType = actorType;
@@ -51,7 +51,7 @@ public class ActorIdentityInformation {
         Validate.notNull(publicKey, "The Public Key can't be null.");
         Validate.notNull(actorType, "The Actor Type can't be null.");
         Validate.notNull(alias    , "The alias can't be null."     );
-        Validate.notNull(image    , "The image can't be null."     );
+//        Validate.notNull(image    , "The image can't be null."     );
 
         this.publicKey = publicKey;
         this.actorType = actorType;

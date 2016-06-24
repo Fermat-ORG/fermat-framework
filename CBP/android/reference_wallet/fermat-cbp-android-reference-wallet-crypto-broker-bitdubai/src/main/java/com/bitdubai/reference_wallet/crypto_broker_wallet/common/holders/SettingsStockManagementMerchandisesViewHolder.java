@@ -31,7 +31,6 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
         this.walletManager = walletManager;
         merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_earning_currency_pair_button);
         merchandiseButton.setEnabled(false);
-        merchandiseButton.setBackgroundColor(itemView.getResources().getColor(R.color.cbw_wizard_color));
     }
 
     public void bind(CryptoBrokerWalletAssociatedSetting data) {
@@ -43,7 +42,7 @@ public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHol
             if (merchandise.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(merchandiseCode))
                 availableBalance = BitcoinConverter.convert(availableBalance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
-            merchandiseButton.setText(String.format("%1$s %2$s", merchandiseCode, moneyFormat.format(availableBalance)));
+            merchandiseButton.setText(String.format("%1$s %2$s", moneyFormat.format(availableBalance), merchandiseCode));
         } catch (Exception e) {
             merchandiseButton.setText(String.format("%1$s --", merchandiseCode));
         }

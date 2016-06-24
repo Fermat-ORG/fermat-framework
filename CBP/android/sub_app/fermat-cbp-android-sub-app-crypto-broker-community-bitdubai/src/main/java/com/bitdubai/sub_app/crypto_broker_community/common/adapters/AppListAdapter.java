@@ -83,9 +83,23 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
         appWorldHolder.name.setText(data.getAlias());
 
         final ConnectionState connectionState = data.getConnectionState();
-        int visibility = connectionState != null && connectionState == ConnectionState.CONNECTED ? View.VISIBLE : View.GONE;
+
+        int visibility = View.GONE;
+        int connectionStateImage = R.drawable.ic_home_friend;
+
+//        int visibility = connectionState != null && connectionState == ConnectionState.CONNECTED ? View.VISIBLE : View.GONE;
+
+        if(connectionState != null){
+            if(connectionState == ConnectionState.CONNECTED){
+                visibility = View.VISIBLE;
+            }else if(connectionState == ConnectionState.PENDING_REMOTELY_ACCEPTANCE){
+                connectionStateImage = R.drawable.ic_home_friend_pending;
+                visibility = View.VISIBLE;
+            }
+        }
 
         appWorldHolder.connectionState.setVisibility(visibility);
+        appWorldHolder.connectionState.setImageResource(connectionStateImage);
 
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
