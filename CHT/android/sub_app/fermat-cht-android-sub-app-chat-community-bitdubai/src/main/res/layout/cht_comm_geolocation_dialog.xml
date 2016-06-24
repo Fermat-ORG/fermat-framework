@@ -6,20 +6,21 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 
+
     >
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:orientation="horizontal"
         android:background="#f9f9f9"
         >
         <ImageView
             android:id="@+id/close_geolocation_dialog"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:src="@drawable/cht_comm_cancel_icon"
+            android:src="@drawable/cht_comm_cance_black_icon"
             android:layout_gravity="center_vertical"
-            android:background="@color/color_black"
+            android:background="#F9F9F9"
 
             />
 
@@ -35,16 +36,16 @@
             />
         <ImageView
             android:id="@+id/lupita_button"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:background="@color/color_black"
-            android:src="@drawable/cht_comm_search_icon"
+            android:background="#f9f9f9"
+            android:src="@drawable/cht_comm_search_dark_icon"
             />
     </LinearLayout>
     <Space
         android:layout_width="match_parent"
         android:layout_height="15dp"
-        android:visibility="invisible"
+        android:alpha="0"
         />
 
         <ListView

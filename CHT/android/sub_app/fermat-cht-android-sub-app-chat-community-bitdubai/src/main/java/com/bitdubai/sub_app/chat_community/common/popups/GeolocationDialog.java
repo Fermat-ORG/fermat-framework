@@ -70,6 +70,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private CitiesImpl cityFromList;
     private ImageView lupaButton;
+    private ImageView closeButton;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
@@ -107,8 +108,17 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             mListView = (ListView) this.findViewById(R.id.geolocation_view);
             noDatalabel = (TextView) this.findViewById(R.id.nodatalabel);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
+            closeButton = (ImageView) findViewById(R.id.close_geolocation_dialog);
 
-            lupaButton = (ImageView) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
+            lupaButton = (ImageView) this.findViewById(R.id.lupita_button);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
             lupaButton.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -125,6 +135,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                     cityFromList = (CitiesImpl) lstChatUserInformations.get(position);
                 }
             });
+
         }catch (Exception e){
             System.out.println("Exception at Geolocation Dialog");
         }
