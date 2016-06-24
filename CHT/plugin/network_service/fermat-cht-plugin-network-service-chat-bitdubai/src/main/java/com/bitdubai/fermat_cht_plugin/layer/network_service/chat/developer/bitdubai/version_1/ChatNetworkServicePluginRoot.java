@@ -591,23 +591,24 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
                 chatMetadataRecord.setLocalActorType(senderType);
                 chatMetadataRecord.setMsgXML(msjContent);
-                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+//                if(!Objects.equals(chatMetadataRecord.getMessageStatus(), messageStatus)){
+            if(!chatMetadataRecord.getMessageStatus().getCode().equals(messageStatus.getCode())){
                     chatMetadataRecord.setMessageStatus(messageStatus);
                     final ChatMetadataRecord chatMetadataToSend = chatMetadataRecord;
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                sendMessage(
-                                        msjContent,
-                                        localActorPubKey,
-                                        getActorByPlatformComponentType(senderType),
-                                        remoteActorPubKey,
-                                        getActorByPlatformComponentType(receiverType)
-                                );
-                                getChatMetadataRecordDAO().update(chatMetadataToSend);
-                            } catch (CantUpdateRecordDataBaseException e) {
-                                e.printStackTrace();
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendMessage(
+                                msjContent,
+                                localActorPubKey,
+                                getActorByPlatformComponentType(senderType),
+                                remoteActorPubKey,
+                                getActorByPlatformComponentType(receiverType)
+                        );
+                        getChatMetadataRecordDAO().update(chatMetadataToSend);
+                    } catch (CantUpdateRecordDataBaseException e) {
+                        e.printStackTrace();
                             }
                         }
                     });
