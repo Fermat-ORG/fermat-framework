@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
@@ -101,7 +101,7 @@ public class CryptoCustomerCommunityManager
         List<CryptoCustomerActorConnection> actorConnections;
 
         try{
-            worldCustomerList = getCryptoCustomerSearch().getResult();
+            worldCustomerList = getCryptoCustomerSearch().getResult(max, offset);
         } catch (CantGetCryptoCustomerSearchResult e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -115,7 +115,7 @@ public class CryptoCustomerCommunityManager
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            actorConnections = search.getResult(max, offset);
 
         } catch (final CantListActorConnectionsException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -389,7 +389,7 @@ public class CryptoCustomerCommunityManager
         String createdPublicKey;
 
         try{
-            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frecuency.NONE);
+            final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img, 0, Frequency.NONE);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {

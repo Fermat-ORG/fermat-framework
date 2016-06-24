@@ -39,15 +39,15 @@ public abstract class CryptoBrokerSearch {
      *
      * @throws CantListCryptoBrokersException  if something goes wrong.
      */
-    public abstract List<CryptoBrokerExposingData> getResult() throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResult(Integer max, Integer offset) throws CantListCryptoBrokersException;
 
-    public abstract List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
-    public abstract List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
-    public abstract List<CryptoBrokerExposingData> getResultDistance(double distance) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResultDistance(double distance, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
-    public abstract List<CryptoBrokerExposingData> getResultAlias(String alias) throws CantListCryptoBrokersException;
+    public abstract List<CryptoBrokerExposingData> getResultAlias(String alias, Integer max, Integer offset) throws CantListCryptoBrokersException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,

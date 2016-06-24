@@ -21,7 +21,7 @@ public class WsCloudClientPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-         //   registerDeveloper(new DeveloperBitDubai());
+//            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

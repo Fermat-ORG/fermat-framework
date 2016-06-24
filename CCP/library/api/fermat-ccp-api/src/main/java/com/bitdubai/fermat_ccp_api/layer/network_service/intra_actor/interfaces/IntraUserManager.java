@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
@@ -40,7 +41,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
+    List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset,DeviceLocation location) throws ErrorSearchingSuggestionsException;
 
 
     /**

@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -46,8 +45,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
@@ -673,7 +670,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        Boolean isRegister = isRegisterInNodeCatalog();
+        Boolean isRegister = isRegisterInNodeCatalog(isSeedServer);
 
         LOG.info("Is Register? = " + isRegister);
         LOG.info("Am i a Seed Node? = " + isSeedServer);
@@ -864,7 +861,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Validate is register in the catalog
      * @return boolean
      */
-    private boolean isRegisterInNodeCatalog(){
+    private boolean isRegisterInNodeCatalog(boolean isSeedServer){
 
         HttpURLConnection httpURLConnection = null;
 
@@ -879,6 +876,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * If the configuration file says that is registered, validate against seed node
              */
             if (isRegister){
+
+                if (isSeedServer)
+                    return daoFactory.getNodesCatalogDao().exists(getIdentity().getPublicKey());
 
                 URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/registered/"+getIdentity().getPublicKey());
                 httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -932,20 +932,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Executing the clean check in tables");
 
-        if(daoFactory.getCheckedInClientDao().getAllCount() > 0){
-            LOG.info("Deleting CHECK_IN_CLIENT records");
-            daoFactory.getCheckedInClientDao().deleteAll();
-        }
+        LOG.info("Deleting CHECK_IN_CLIENT records");
+        daoFactory.getCheckedInClientDao().deleteAll();
 
-        if(daoFactory.getCheckedInNetworkServiceDao().getAllCount() > 0){
-            LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
-            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
-        }
+        LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
+        daoFactory.getCheckedInNetworkServiceDao().deleteAll();
 
-        if(daoFactory.getCheckedInActorDao().getAllCount() > 0){
-            LOG.info("Deleting CHECK_IN_ACTORS records");
-            daoFactory.getCheckedInActorDao().deleteAll();
-        }
+        LOG.info("Deleting CHECK_IN_ACTORS records");
+        daoFactory.getCheckedInActorDao().deleteAll();
 
     }
 

@@ -131,8 +131,8 @@ public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -140,10 +140,16 @@ public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS) {
-                setUpSettingsNetwork(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_REDEEM_SETTINGS
+                    setUpSettingsNetwork(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS) {
+//                setUpSettingsNetwork(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

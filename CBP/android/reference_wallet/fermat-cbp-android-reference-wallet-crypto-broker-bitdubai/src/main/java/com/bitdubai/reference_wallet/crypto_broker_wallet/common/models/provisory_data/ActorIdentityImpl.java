@@ -1,7 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.provisory_data;
 
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
@@ -59,7 +59,7 @@ public class ActorIdentityImpl implements ActorIdentity, Serializable {
     }
 
     @Override
-    public Frecuency getFrecuency() {
+    public Frequency getFrequency() {
         return null;
     }
 }

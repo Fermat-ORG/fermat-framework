@@ -341,17 +341,13 @@ public class ConnectionNotificationsFragment
         try {
             int id = item.getItemId();
             switch (id) {
-                case 2:
-                    showDialogHelp();
-                    break;
                 case 1:
+                    showDialogHelp();
                     break;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                     UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
     }

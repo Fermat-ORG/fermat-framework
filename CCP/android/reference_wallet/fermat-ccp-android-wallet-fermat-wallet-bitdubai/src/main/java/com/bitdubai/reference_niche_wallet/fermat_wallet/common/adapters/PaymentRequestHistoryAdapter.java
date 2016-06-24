@@ -7,11 +7,11 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.PaymentRequest;
+import com.bitdubai.reference_niche_wallet.fermat_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.SessionConstant;
@@ -76,7 +76,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.history_request_row;
+
+        return R.layout.fermat_wallet_history_request_row;
+
     }
 
     /**
@@ -89,13 +91,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
     @Override
     protected void bindHolder(final PaymentHistoryItemViewHolder holder, final PaymentRequest data, int position) {
 
-        try {
+       /* try {
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), data.getContact().getProfilePicture()));
         }catch (Exception e){
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
-        }
+        }*/
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), (int)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)));
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), ((ShowMoneyType)referenceWalletSession.getData(SessionConstant.TYPE_AMOUNT_SELECTED)).getCode()));
         holder.getTxt_amount().setTypeface(tf) ;
 
         if(data.getContact() != null)
@@ -155,11 +157,13 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         {
             holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
             holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_fromOrTo().setText("To ");
             holder.getTxt_state().setText(state);
             holder.getTxt_state().setTypeface(tf);
         }
         else
         {
+            holder.getTxt_fromOrTo().setText("From ");
             if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
@@ -213,7 +217,5 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
             }
         });
     }
-
-
 
 }

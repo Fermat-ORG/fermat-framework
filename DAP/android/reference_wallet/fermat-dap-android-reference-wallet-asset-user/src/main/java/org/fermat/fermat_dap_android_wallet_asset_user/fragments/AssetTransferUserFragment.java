@@ -144,8 +144,8 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User, Re
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 0, "Transfer")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 0, "Transfer")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT, 0, "Help")
         //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -155,6 +155,30 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User, Re
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
+
+            switch (id) {
+//                case 1://IC_ACTION_USER_HELP_TRANSFER_SELECT
+//                    setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                    break;
+                case 2://IC_ACTION_USER_ASSET_TRANSFER
+                    if (userSelected != null) {
+
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_transfer))
+                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        doTransfer(assetToTransfer.getDigitalAsset(), users, 1);
+                                    }
+                                }).build().show();
+
+                    } else {
+                        Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_user), Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+            }
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
                 setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
