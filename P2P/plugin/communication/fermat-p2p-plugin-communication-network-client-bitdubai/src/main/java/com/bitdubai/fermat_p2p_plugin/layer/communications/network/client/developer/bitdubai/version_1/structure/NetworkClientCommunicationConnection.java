@@ -21,6 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -520,6 +521,38 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             CantUnregisterProfileException fermatException = new CantUnregisterProfileException(
                     cantSendPackageException,
                     "profile:" + profile,
+                    "Cant send package."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
+    public void onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                           final String                   networkServicePublicKey ) throws CantRequestProfileListException {
+
+        ActorListMsgRequest actorListMsgRequest = new ActorListMsgRequest(
+                networkServicePublicKey,
+                discoveryQueryParameters,
+                clientIdentity.getPublicKey()
+        );
+        actorListMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(actorListMsgRequest, PackageType.ACTOR_LIST_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    cantSendPackageException,
+                    "discoveryQueryParameters:" + discoveryQueryParameters+" - networkServicePublicKey:" + networkServicePublicKey,
                     "Cant send package."
             );
 

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
@@ -23,9 +22,9 @@ public class ActorListMsgRespond extends MsgRespond {
     private List<ActorProfile> profileList;
 
     /**
-     * Represent the networkServiceType
+     * Represent the networkServicePublicKey
      */
-    private NetworkServiceType networkServiceType;
+    private String networkServicePublicKey;
 
     /**
      * Constructor with parameters
@@ -33,20 +32,20 @@ public class ActorListMsgRespond extends MsgRespond {
      * @param status
      * @param details
      * @param profileList
-     * @param networkServiceType
+     * @param networkServicePublicKey
      */
-    public ActorListMsgRespond(final STATUS             status            ,
-                               final String             details           ,
-                               final List<ActorProfile> profileList       ,
-                               final NetworkServiceType networkServiceType) {
+    public ActorListMsgRespond(final STATUS             status                 ,
+                               final String             details                ,
+                               final List<ActorProfile> profileList            ,
+                               final String             networkServicePublicKey) {
 
         super(
                 status ,
                 details
         );
 
-        this.profileList        = profileList       ;
-        this.networkServiceType = networkServiceType;
+        this.profileList             = profileList            ;
+        this.networkServicePublicKey = networkServicePublicKey;
     }
 
     /**
@@ -62,8 +61,8 @@ public class ActorListMsgRespond extends MsgRespond {
      * Gets the value of networkServiceType and returns
      * @return networkServiceType
      */
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
+    public String getNetworkServicePublicKey() {
+        return networkServicePublicKey;
     }
 
     /**
@@ -89,7 +88,7 @@ public class ActorListMsgRespond extends MsgRespond {
     public String toString() {
         return "ActorListMsgRespond{" +
                 "profileList=" + profileList +
-                ", networkServiceType=" + networkServiceType +
+                ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
                 '}';
     }
 }

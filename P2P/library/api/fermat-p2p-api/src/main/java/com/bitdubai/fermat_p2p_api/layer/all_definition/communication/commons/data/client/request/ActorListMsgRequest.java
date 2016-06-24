@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request;
 
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -18,43 +17,31 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
  */
 public class ActorListMsgRequest extends PackageContent {
 
-    private NetworkServiceType       networkServiceType;
-    private DiscoveryQueryParameters parameters        ;
-    private String                   clientPublicKey   ;
+    private String                   networkServicePublicKey;
+    private DiscoveryQueryParameters parameters             ;
+    private String                   clientPublicKey        ;
 
-    public ActorListMsgRequest(final NetworkServiceType       networkServiceType,
-                               final DiscoveryQueryParameters parameters        ,
-                               final String                   clientPublicKey   ) {
+    public ActorListMsgRequest(final String                   networkServicePublicKey,
+                               final DiscoveryQueryParameters parameters             ,
+                               final String                   clientPublicKey        ) {
 
         super(MessageContentType.JSON);
 
-        this.networkServiceType = networkServiceType;
-        this.parameters         = parameters        ;
-        this.clientPublicKey    = clientPublicKey   ;
+        this.networkServicePublicKey = networkServicePublicKey;
+        this.parameters              = parameters             ;
+        this.clientPublicKey         = clientPublicKey        ;
     }
 
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
-        this.networkServiceType = networkServiceType;
+    public String getNetworkServicePublicKey() {
+        return networkServicePublicKey;
     }
 
     public DiscoveryQueryParameters getParameters() {
         return parameters;
     }
 
-    public void setParameters(DiscoveryQueryParameters parameters) {
-        this.parameters = parameters;
-    }
-
     public String getClientPublicKey() {
         return clientPublicKey;
-    }
-
-    public void setClientPublicKey(String clientPublicKey) {
-        this.clientPublicKey = clientPublicKey;
     }
 
     /**
@@ -79,7 +66,7 @@ public class ActorListMsgRequest extends PackageContent {
     @Override
     public String toString() {
         return "ActorListMsgRequest{" +
-                "networkServiceType=" + networkServiceType +
+                "networkServicePublicKey=" + networkServicePublicKey +
                 ", parameters=" + parameters +
                 ", clientPublicKey='" + clientPublicKey + '\'' +
                 '}';
