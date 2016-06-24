@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -37,7 +38,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AvailableActorsListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
@@ -59,8 +60,7 @@ public class BrowserTabFragment
     //Constants
     private static final int MAX = 10;
     private static final int SPAN_COUNT = 2;
-    protected static final String TAG = "ConnectionsWorldFrag";
-    public static final String ACTOR_SELECTED = "actor_selected";
+    protected static final String TAG = "BrowserTabFragment";
 
     //Managers
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
@@ -72,7 +72,7 @@ public class BrowserTabFragment
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
 
-    private AppListAdapter adapter;
+    private AvailableActorsListAdapter adapter;
     ImageView noContacts;
     private int offset;
 
@@ -167,7 +167,7 @@ public class BrowserTabFragment
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
+            adapter = new AvailableActorsListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             adapter.setFermatListEventListener(this);
         }
 
@@ -183,9 +183,9 @@ public class BrowserTabFragment
                 public int getSpanSize(int position) {
                     final int itemViewType = adapter.getItemViewType(position);
                     switch (itemViewType) {
-                        case AppListAdapter.DATA_ITEM:
+                        case AvailableActorsListAdapter.DATA_ITEM:
                             return 1;
-                        case AppListAdapter.LOADING_ITEM:
+                        case AvailableActorsListAdapter.LOADING_ITEM:
                             return SPAN_COUNT;
                         default:
                             return GridLayoutManager.DEFAULT_SPAN_COUNT;
@@ -210,6 +210,12 @@ public class BrowserTabFragment
 //
 //        return scrollListener;
         return null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion, el help dialog y el SearchView
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

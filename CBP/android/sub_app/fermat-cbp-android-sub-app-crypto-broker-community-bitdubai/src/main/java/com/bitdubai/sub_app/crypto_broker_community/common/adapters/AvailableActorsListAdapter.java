@@ -9,7 +9,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.holders.AppWorldHolder;
+import com.bitdubai.sub_app.crypto_broker_community.common.holders.AvailableActorsViewHolder;
 import com.bitdubai.sub_app.crypto_broker_community.common.holders.LoadingMoreViewHolder;
 
 import java.util.List;
@@ -21,21 +21,21 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformation, FermatViewHolder> {
+public class AvailableActorsListAdapter extends FermatAdapter<CryptoBrokerCommunityInformation, FermatViewHolder> {
 
     public static final int DATA_ITEM = 1;
     public static final int LOADING_ITEM = 2;
     private boolean loadingData = true;
 
 
-    public AppListAdapter(Context context, List<CryptoBrokerCommunityInformation> dataSet) {
+    public AvailableActorsListAdapter(Context context, List<CryptoBrokerCommunityInformation> dataSet) {
         super(context, dataSet);
     }
 
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         if (type == DATA_ITEM)
-            return new AppWorldHolder(itemView, type);
+            return new AvailableActorsViewHolder(itemView, type);
         if (type == LOADING_ITEM)
             return new LoadingMoreViewHolder(itemView, type);
         return null;
@@ -62,7 +62,7 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
-        if (holder instanceof AppWorldHolder)
+        if (holder instanceof AvailableActorsViewHolder)
             super.onBindViewHolder(holder, position);
 
         else if (holder instanceof LoadingMoreViewHolder) {
@@ -73,8 +73,8 @@ public class AppListAdapter extends FermatAdapter<CryptoBrokerCommunityInformati
 
     @Override
     protected void bindHolder(FermatViewHolder holder, CryptoBrokerCommunityInformation data, int position) {
-        final AppWorldHolder appWorldHolder = (AppWorldHolder) holder;
-        appWorldHolder.bind(data);
+        final AvailableActorsViewHolder availableActorsViewHolder = (AvailableActorsViewHolder) holder;
+        availableActorsViewHolder.bind(data);
     }
 
     @Override

@@ -26,7 +26,7 @@
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/cbc_fragment_conections_tab_list_item"
+                tools:listitem="@layout/cbc_fragment_connections_tab_list_item"
                 android:divider="@drawable/cbp_list_divider" />
         </android.support.v4.widget.SwipeRefreshLayout>
 

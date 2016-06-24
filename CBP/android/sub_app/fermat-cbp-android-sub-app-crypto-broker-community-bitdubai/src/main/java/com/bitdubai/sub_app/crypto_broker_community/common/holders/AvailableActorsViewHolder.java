@@ -18,7 +18,7 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppWorldHolder extends FermatViewHolder {
+public class AvailableActorsViewHolder extends FermatViewHolder {
 
     private ImageView brokerImage;
     private ImageView connectionState;
@@ -35,7 +35,7 @@ public class AppWorldHolder extends FermatViewHolder {
      * @param itemView cast elements in layout
      * @param type     the view older type ID
      */
-    public AppWorldHolder(View itemView, int type) {
+    public AvailableActorsViewHolder(View itemView, int type) {
         super(itemView, type);
         res = itemView.getResources();
 
@@ -47,8 +47,6 @@ public class AppWorldHolder extends FermatViewHolder {
     }
 
     public void bind(CryptoBrokerCommunityInformation data) {
-        brokerName.setText(data.getAlias());
-
         if (data.getConnectionState() != null) {
             switch (data.getConnectionState()) {
                 case CONNECTED:
@@ -71,6 +69,8 @@ public class AppWorldHolder extends FermatViewHolder {
             }
         }
 
+        brokerName.setText(data.getAlias());
+        brokerLocation.setText("-- / --");
         brokerImage.setImageDrawable(getImgDrawable(data.getImage()));
     }
 

@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
-            tools:listitem="@layout/cbc_fragment_conections_tab_list_item"/>
+            tools:listitem="@layout/cbc_fragment_connections_tab_list_item"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

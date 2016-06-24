@@ -16,12 +16,13 @@
         android:layout_height="115dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/cbc_comm_bg_circula_friend_list"
+        android:layout_gravity="center_horizontal"
         android:scaleType="centerCrop"/>
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbc_broker_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="2dp"
@@ -35,16 +36,15 @@
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbc_location_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
-        android:text="-- / --"
         android:textColor="@color/cbc_location_text"
         android:textSize="14sp"
-        tools:ignore="HardcodedText"/>
+        tools:text="-- / --"/>
 
 </LinearLayout>
 

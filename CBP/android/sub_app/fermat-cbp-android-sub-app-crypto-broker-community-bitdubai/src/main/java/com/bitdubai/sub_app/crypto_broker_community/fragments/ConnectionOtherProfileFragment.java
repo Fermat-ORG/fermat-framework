@@ -65,7 +65,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Refer
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(BrowserTabFragment.ACTOR_SELECTED);
+        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData("actor_selected");
 
     }
 

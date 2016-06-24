@@ -34,7 +34,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.NotificationsAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.AcceptDialog;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class NotificationsTabFragment extends AbstractFermatFragment<ReferenceAp
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
-    private AppNotificationAdapter adapter;
+    private NotificationsAdapter adapter;
     private LinearLayout emptyView;
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -101,7 +101,7 @@ public class NotificationsTabFragment extends AbstractFermatFragment<ReferenceAp
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new AppNotificationAdapter(getActivity(), cryptoBrokerInformationList);
+            adapter = new NotificationsAdapter(getActivity(), cryptoBrokerInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             noData = (ImageView) rootView.findViewById(R.id.nodata);

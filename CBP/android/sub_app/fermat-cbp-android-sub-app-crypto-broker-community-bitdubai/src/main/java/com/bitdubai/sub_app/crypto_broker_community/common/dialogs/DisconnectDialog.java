@@ -10,15 +10,17 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 
 /**
@@ -27,7 +29,7 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
  * @author lnacosta
  * @version 1.0.0
  */
-public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, ResourceProviderManager>
         implements View.OnClickListener {
 
     /**
@@ -44,7 +46,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
 
     public DisconnectDialog(Activity activity,
                             ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
-                            SubAppResourcesProviderManager subAppResources,
+                            ResourceProviderManager subAppResources,
                             CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
                             CryptoBrokerCommunitySelectableIdentity identity) {
 
@@ -68,10 +70,15 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
-        mDescription.setText(description != null ? description : "");
-        mSubtitle.setText(subtitle != null ? subtitle : "");
-        mTitle.setText(title != null ? title : "");
 
+        if (title != null) mTitle.setText(title);
+        else mTitle.setVisibility(View.GONE);
+
+        if (subtitle != null) mSubtitle.setText(subtitle);
+        else mSubtitle.setVisibility(View.GONE);
+
+        if (description != null) mDescription.setText(description);
+        else mDescription.setVisibility(View.GONE);
     }
 
     public void setDescription(CharSequence description) {
@@ -108,7 +115,7 @@ public class DisconnectDialog extends FermatDialog<ReferenceAppFermatSession<Cry
                     Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", 1);
+                    getSession().setData(FragmentsCommons.CONNECTION_RESULT, ConnectionState.DISCONNECTED_LOCALLY);
 
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
