@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.google.gson.Gson;
@@ -31,7 +29,7 @@ public class GsonProvider {
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Timestamp.class, new TimestampAdapter());
-        builder.registerTypeAdapter(Profile.class, new ProfileAdapter());
+        builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
         builder.registerTypeAdapter(Location.class, new LocationAdapter());
         gson = builder.create();
     }

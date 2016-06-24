@@ -1,13 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-
-import java.io.IOException;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -47,40 +41,6 @@ public class ClientProfile extends Profile {
      */
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
-    }
-
-    public static Profile deserialize(final JsonObject jsonObject) {
-
-        ClientProfile clientProfile = new ClientProfile();
-
-        clientProfile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
-        Double latitude = jsonObject.get("lat").getAsDouble();
-        Double longitude = jsonObject.get("lng").getAsDouble();
-        clientProfile.setDeviceType(jsonObject.get("det").getAsString());
-
-        clientProfile.setLocation(
-                new NetworkNodeCommunicationDeviceLocation(
-                        latitude,
-                        longitude,
-                        null,
-                        0,
-                        null,
-                        0,
-                        LocationSource.UNKNOWN
-                )
-        );
-
-        return clientProfile;
-    }
-
-    @Override
-    public JsonObject serialize() {
-
-        JsonObject jsonObject = super.serialize();
-
-        jsonObject.addProperty("det", deviceType);
-
-        return jsonObject;
     }
 
     /**

@@ -1,15 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -187,52 +179,6 @@ public class ActorProfile extends Profile {
      */
     public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
         this.clientIdentityPublicKey = clientIdentityPublicKey;
-    }
-
-    public static Profile deserialize(final JsonObject jsonObject) {
-
-        ActorProfile actorProfile = new ActorProfile();
-
-        actorProfile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
-        Double latitude = jsonObject.get("lat").getAsDouble();
-        Double longitude = jsonObject.get("lng").getAsDouble();
-        actorProfile.setActorType(jsonObject.get("act").getAsString());
-        actorProfile.setAlias(jsonObject.get("ali").getAsString());
-        actorProfile.setName(jsonObject.get("nam").getAsString());
-        actorProfile.setExtraData(jsonObject.get("exd").getAsString());
-        actorProfile.setNsIdentityPublicKey(jsonObject.get("nspk").getAsString());
-        actorProfile.setClientIdentityPublicKey(jsonObject.get("clpk").getAsString());
-        actorProfile.setPhoto(Base64.decode(jsonObject.get("photo").getAsString(), Base64.DEFAULT));
-
-        actorProfile.setLocation(
-                new NetworkNodeCommunicationDeviceLocation(
-                        latitude,
-                        longitude,
-                        null,
-                        0,
-                        null,
-                        0,
-                        LocationSource.UNKNOWN
-                )
-        );
-
-        return actorProfile;
-    }
-
-    @Override
-    public JsonObject serialize() {
-
-        JsonObject jsonObject = super.serialize();
-
-        jsonObject.addProperty("act", actorType);
-        jsonObject.addProperty("ali", alias);
-        jsonObject.addProperty("nam", name);
-        jsonObject.addProperty("exd", extraData);
-        jsonObject.addProperty("nspk", nsIdentityPublicKey);
-        jsonObject.addProperty("clpk", clientIdentityPublicKey);
-        jsonObject.addProperty("photo", Base64.encodeToString(photo, Base64.DEFAULT));
-        
-        return jsonObject;
     }
 
     /**

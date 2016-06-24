@@ -21,16 +21,20 @@ public class TimestampAdapter extends TypeAdapter<Timestamp> {
     @Override
     public Timestamp read(final JsonReader in) throws IOException {
 
+        Timestamp timeStamp = null;
         in.beginObject();
         while (in.hasNext()) {
             switch (in.nextName()) {
                 case "time":
-                    return new Timestamp(Long.valueOf(in.nextString()));
+                    timeStamp = new Timestamp(Long.valueOf(in.nextString()));
             }
         }
         in.endObject();
 
-        throw new IOException("Malformed json without time value.");
+        if (timeStamp == null)
+            throw new IOException("Malformed json without time value.");
+
+        return timeStamp;
     }
 
     @Override

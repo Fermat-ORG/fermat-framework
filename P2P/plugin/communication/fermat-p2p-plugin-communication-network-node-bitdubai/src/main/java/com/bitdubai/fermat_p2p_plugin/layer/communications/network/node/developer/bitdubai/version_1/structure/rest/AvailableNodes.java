@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.AvailableNodes</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 26/04/16.
- *
+ *decis
  * @version 1.0
  * @since Java JDK 1.7
  */

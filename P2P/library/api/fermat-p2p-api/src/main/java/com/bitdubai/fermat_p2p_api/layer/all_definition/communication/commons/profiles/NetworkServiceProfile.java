@@ -1,13 +1,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.google.gson.JsonObject;
-
-import java.security.InvalidParameterException;
 
 /**
  * The Class <code>NetworkServiceProfile</code>
@@ -71,47 +66,6 @@ public class NetworkServiceProfile extends Profile {
      */
     public void setNetworkServiceType(NetworkServiceType networkServiceType) {
         this.networkServiceType = networkServiceType;
-    }
-
-    public static Profile deserialize(final JsonObject jsonObject) {
-
-        NetworkServiceProfile profile = new NetworkServiceProfile();
-
-        profile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
-        Double latitude = jsonObject.get("lat").getAsDouble();
-        Double longitude = jsonObject.get("lng").getAsDouble();
-        profile.setClientIdentityPublicKey(jsonObject.get("clpk").getAsString());
-
-        try {
-            profile.setNetworkServiceType(NetworkServiceType.getByCode(jsonObject.get("nst").getAsString()));
-        } catch (Exception exception) {
-            throw new InvalidParameterException("Bad NetworkServiceType value: "+jsonObject.get("nst").getAsString());
-        }
-
-        profile.setLocation(
-                new NetworkNodeCommunicationDeviceLocation(
-                        latitude,
-                        longitude,
-                        null,
-                        0,
-                        null,
-                        0,
-                        LocationSource.UNKNOWN
-                )
-        );
-
-        return profile;
-    }
-
-    @Override
-    public JsonObject serialize() {
-
-        JsonObject jsonObject = super.serialize();
-
-        jsonObject.addProperty("nst", networkServiceType.getCode());
-        jsonObject.addProperty("clpk", clientIdentityPublicKey);
-
-        return jsonObject;
     }
 
     /**
