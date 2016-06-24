@@ -469,17 +469,13 @@ public class ConnectionsWorldFragment
                                 //Todo: callback to connectionworldagment to update view of browser filtering by the city or country selected
                             }
                         });
-
                         Window window = geolocationDialog.getWindow();
                         WindowManager.LayoutParams wlp = window.getAttributes();
                         wlp.gravity = Gravity.TOP;
                         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
                         window.setAttributes(wlp);
-
                         geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
                         geolocationDialog.show();
-
                     } catch ( Exception e) {
                         e.printStackTrace();
                     }
