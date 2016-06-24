@@ -4,11 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeC
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -50,38 +49,23 @@ public class ClientProfile extends Profile {
         this.deviceType = deviceType;
     }
 
-    public static Profile readJson(final JsonReader in) throws IOException {
+    public static Profile deserialize(final JsonObject jsonObject) {
 
         ClientProfile clientProfile = new ClientProfile();
 
-        Double latitude = 0.0;
-        Double longitude = 0.0;
-
-        while (in.hasNext()) {
-            switch (in.nextName()) {
-                case "ipk":
-                    clientProfile.setIdentityPublicKey(in.nextString());
-                    break;
-                case "lat":
-                    latitude = in.nextDouble();
-                    break;
-                case "lng":
-                    longitude = in.nextDouble();
-                    break;
-                case "det":
-                    clientProfile.setDeviceType(in.nextString());
-                    break;
-            }
-        }
+        clientProfile.setIdentityPublicKey(jsonObject.get("ipk").getAsString());
+        Double latitude = jsonObject.get("lat").getAsDouble();
+        Double longitude = jsonObject.get("lng").getAsDouble();
+        clientProfile.setDeviceType(jsonObject.get("det").getAsString());
 
         clientProfile.setLocation(
                 new NetworkNodeCommunicationDeviceLocation(
-                        latitude ,
+                        latitude,
                         longitude,
-                        null     ,
-                        0        ,
-                        null     ,
-                        0        ,
+                        null,
+                        0,
+                        null,
+                        0,
                         LocationSource.UNKNOWN
                 )
         );
@@ -90,13 +74,13 @@ public class ClientProfile extends Profile {
     }
 
     @Override
-    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+    public JsonObject serialize() {
 
-        super.writeJson(out);
+        JsonObject jsonObject = super.serialize();
 
-        out.name("det").value(deviceType);
+        jsonObject.addProperty("det", deviceType);
 
-        return out;
+        return jsonObject;
     }
 
     /**

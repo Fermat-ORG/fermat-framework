@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * The enum class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes</code>
@@ -32,17 +31,14 @@ public enum ProfileTypes implements FermatEnum {
         this.code     = code    ;
     }
 
-    public static ProfileTypes getByCode(final String code) throws InvalidParameterException {
+    public static ProfileTypes getByCode(final String code) {
 
         for (ProfileTypes type : ProfileTypes.values()) {
             if(type.getCode().equals(code))
                 return type;
         }
 
-        throw new InvalidParameterException(
-                "Code Received: " + code,
-                "The received code is not valid for the ProfileTypes enum"
-        );
+        throw new java.security.InvalidParameterException("Code Received: " + code+" - The received code is not valid for the ProfileTypes enum");
     }
 
     @Override

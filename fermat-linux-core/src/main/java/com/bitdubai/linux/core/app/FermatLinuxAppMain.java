@@ -73,26 +73,6 @@ public class FermatLinuxAppMain {
 
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()));
 
-            NetworkClientManager clientManager = (NetworkClientManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
-
-            clientManager.getConnection().registeredProfileDiscoveryQuery(
-                    new DiscoveryQueryParameters(
-                            "CHT",
-                            null,
-                            null,
-                            null,
-                            null,
-                            new DeviceLocation(
-                                    0.0,0.0,System.currentTimeMillis(),0.0, LocationSource.IP_CALCULATED
-                            ),
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    )
-            );
-
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 
         } catch (Exception e) {

@@ -1,18 +1,19 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
-import java.io.IOException;
-import java.sql.Timestamp;
+import java.lang.reflect.Type;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.ProfileAdapter</code>
@@ -23,50 +24,30 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class ProfileAdapter extends TypeAdapter<Profile> {
+public class ProfileAdapter implements JsonSerializer<Profile>, JsonDeserializer<Profile> {
 
     @Override
-    public Profile read(final JsonReader in) throws IOException {
+    public Profile deserialize(final JsonElement                element,
+                               final Type                       type   ,
+                               final JsonDeserializationContext context) {
 
-        Profile profile = null;
+        JsonObject jsonObject = element.getAsJsonObject();
 
-        try {
-            in.beginObject();
-            while (in.hasNext()) {
-                switch (in.nextName()) {
-                    case "type":
-                        
-                        switch (ProfileTypes.getByCode(in.nextString())) {
-                            case ACTOR:
-                                profile = ActorProfile.readJson(in);
-                                break;
-                            case CLIENT:
-                                profile = ClientProfile.readJson(in);
-                                break;
-                            case NETWORK_SERVICE:
-                                profile = NetworkServiceProfile.readJson(in);
-                                break;
-                            case NODE:
-                                profile = NodeProfile.readJson(in);
-                                break;
-                        }
+        switch (ProfileTypes.getByCode(jsonObject.get("type").getAsString())) {
 
-                        break;
-                }
-            }
-            in.endObject();
-        } catch (InvalidParameterException invalidParameterException) {
-
-            throw new IOException("Malformed json.");
+            case ACTOR          : return ActorProfile.deserialize(jsonObject);
+            case CLIENT         : return ClientProfile.deserialize(jsonObject);
+            case NETWORK_SERVICE: return NetworkServiceProfile.deserialize(jsonObject);
+            case NODE           : return NodeProfile.deserialize(jsonObject);
+            default             : return null;
         }
-
-        return profile;
     }
 
     @Override
-    public void write(final JsonWriter out, final Profile profile) throws IOException {
-        out.beginObject();
-        profile.writeJson(out);
-        out.endObject();
+    public JsonElement serialize(final Profile                  element,
+                                 final Type                     type   ,
+                                 final JsonSerializationContext context) {
+
+        return element.serialize();
     }
 }

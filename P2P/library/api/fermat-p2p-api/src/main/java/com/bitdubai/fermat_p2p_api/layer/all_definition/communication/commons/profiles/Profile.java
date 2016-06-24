@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.p
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -92,19 +94,21 @@ public abstract class Profile implements Serializable {
      */
     public abstract String toJson();
 
-    public static Profile readJson(final JsonReader in) throws IOException {
+    public static Profile deserialize(final JsonObject jsonObject) {
 
         throw new NotImplementedException();
     }
 
-    public JsonWriter writeJson(final JsonWriter out) throws IOException {
+    public JsonObject serialize() {
 
-        out.name("type").value(type.getCode());
-        out.name("ipk").value(identityPublicKey);
-        out.name("lat").value(location.getLatitude());
-        out.name("lng").value(location.getLongitude());
+        JsonObject jsonObject = new JsonObject();
 
-        return out;
+        jsonObject.addProperty("typ", type.getCode());
+        jsonObject.addProperty("ipk", identityPublicKey);
+        jsonObject.addProperty("lat", location.getLatitude());
+        jsonObject.addProperty("lng", location.getLongitude());
+
+        return jsonObject;
     }
 
     @Override
