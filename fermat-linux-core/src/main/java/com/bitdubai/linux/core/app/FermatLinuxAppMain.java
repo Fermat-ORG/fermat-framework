@@ -26,6 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
@@ -72,6 +75,41 @@ public class FermatLinuxAppMain {
              */
 
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()));
+/*
+            final NetworkClientManager clientManager = (NetworkClientManager) fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
+
+            ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(4);
+
+            scheduledThreadPool.scheduleAtFixedRate(
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                clientManager.getConnection().registeredProfileDiscoveryQuery(
+                                        new DiscoveryQueryParameters(
+                                                "CHT",
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                null,
+                                                11,
+                                                null,
+                                                null,
+                                                0,
+                                                null
+                                        )
+                                );
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    15,
+                    5,
+                    TimeUnit.SECONDS
+            );*/
 
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 
