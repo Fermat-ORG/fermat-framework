@@ -63,6 +63,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.CloseReason;
@@ -534,14 +535,18 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public void onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+    public UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
                                            final String                   networkServicePublicKey ) throws CantRequestProfileListException {
 
+        UUID queryId = UUID.randomUUID();
+
         ActorListMsgRequest actorListMsgRequest = new ActorListMsgRequest(
+                queryId,
                 networkServicePublicKey,
                 discoveryQueryParameters,
                 clientIdentity.getPublicKey()
         );
+
         actorListMsgRequest.setMessageContentType(MessageContentType.JSON);
 
         try {
@@ -563,6 +568,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             throw fermatException;
         }
+
+        return queryId;
     }
 
     @Override

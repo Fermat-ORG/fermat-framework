@@ -5,6 +5,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorListReceivedEvent</code>
@@ -23,6 +24,11 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         SUCCESS,
         FAILED
     }
+
+    /**
+     * Represent the query id
+     */
+    private UUID queryID;
 
     /**
      * Represent the network service public key.
@@ -48,6 +54,10 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
         super(p2pEventType);
     }
 
+    public UUID getQueryID() {
+        return queryID;
+    }
+
     public String getNetworkServicePublicKey() {
         return networkServicePublicKey;
     }
@@ -58,6 +68,10 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
 
     public List<ActorProfile> getActorList() {
         return actorList;
+    }
+
+    public void setQueryID(UUID queryID) {
+        this.queryID = queryID;
     }
 
     public void setActorList(List<ActorProfile> actorList) {
@@ -75,7 +89,8 @@ public class NetworkClientActorListReceivedEvent extends AbstractEvent<P2pEventT
     @Override
     public String toString() {
         return "NetworkClientActorListReceivedEvent{" +
-                "networkServicePublicKey=" + networkServicePublicKey +
+                "queryID=" + queryID +
+                ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
                 ", actorList=" + actorList +
                 ", status=" + status +
                 '}';

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection</code>
@@ -60,11 +61,13 @@ public interface NetworkClientConnection {
      * when it get the results.
      *
      * @param discoveryQueryParameters  parameters for the query
-     * @param networkServicePublicKey   network service asking for the list of actors.
+     * @param networkServicePublicKey   network service asking for the list of actors
+     *
+     * @return query id
      *
      * @throws CantRequestProfileListException if something goes wrong.
      */
-     void onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+     UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
                                      final String                   networkServicePublicKey ) throws CantRequestProfileListException;
 
     /**

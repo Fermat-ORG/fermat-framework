@@ -5,6 +5,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest</code>
  * represent the message to request a list of actors<p/>
@@ -17,19 +19,26 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
  */
 public class ActorListMsgRequest extends PackageContent {
 
+    private UUID                     queryId                ;
     private String                   networkServicePublicKey;
     private DiscoveryQueryParameters parameters             ;
     private String                   clientPublicKey        ;
 
-    public ActorListMsgRequest(final String                   networkServicePublicKey,
+    public ActorListMsgRequest(final UUID                     queryId                ,
+                               final String                   networkServicePublicKey,
                                final DiscoveryQueryParameters parameters             ,
                                final String                   clientPublicKey        ) {
 
         super(MessageContentType.JSON);
 
+        this.queryId                 = queryId                ;
         this.networkServicePublicKey = networkServicePublicKey;
         this.parameters              = parameters             ;
         this.clientPublicKey         = clientPublicKey        ;
+    }
+
+    public UUID getQueryId() {
+        return queryId;
     }
 
     public String getNetworkServicePublicKey() {
@@ -63,10 +72,12 @@ public class ActorListMsgRequest extends PackageContent {
         return GsonProvider.getGson().fromJson(content, ActorListMsgRequest.class);
     }
 
+
     @Override
     public String toString() {
         return "ActorListMsgRequest{" +
-                "networkServicePublicKey=" + networkServicePublicKey +
+                "queryId=" + queryId +
+                ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
                 ", parameters=" + parameters +
                 ", clientPublicKey='" + clientPublicKey + '\'' +
                 '}';

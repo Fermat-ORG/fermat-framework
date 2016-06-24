@@ -4,6 +4,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorListMsgRespond</code>
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class ActorListMsgRespond extends MsgRespond {
 
+    private UUID queryId;
     /**
      * Represent the profile list
      */
@@ -37,7 +39,8 @@ public class ActorListMsgRespond extends MsgRespond {
     public ActorListMsgRespond(final STATUS             status                 ,
                                final String             details                ,
                                final List<ActorProfile> profileList            ,
-                               final String             networkServicePublicKey) {
+                               final String             networkServicePublicKey,
+                               final UUID               queryId                ) {
 
         super(
                 status ,
@@ -46,6 +49,7 @@ public class ActorListMsgRespond extends MsgRespond {
 
         this.profileList             = profileList            ;
         this.networkServicePublicKey = networkServicePublicKey;
+        this.queryId                 = queryId                ;
     }
 
     /**
@@ -63,6 +67,10 @@ public class ActorListMsgRespond extends MsgRespond {
      */
     public String getNetworkServicePublicKey() {
         return networkServicePublicKey;
+    }
+
+    public UUID getQueryId() {
+        return queryId;
     }
 
     /**
@@ -87,7 +95,8 @@ public class ActorListMsgRespond extends MsgRespond {
     @Override
     public String toString() {
         return "ActorListMsgRespond{" +
-                "profileList=" + profileList +
+                "queryId=" + queryId +
+                ", profileList=" + profileList +
                 ", networkServicePublicKey='" + networkServicePublicKey + '\'' +
                 '}';
     }

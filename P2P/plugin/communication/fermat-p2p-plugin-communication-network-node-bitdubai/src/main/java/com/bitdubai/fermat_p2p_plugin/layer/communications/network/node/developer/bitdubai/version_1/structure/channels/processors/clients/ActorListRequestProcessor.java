@@ -72,9 +72,10 @@ public class ActorListRequestProcessor extends PackageProcessor {
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
+        ActorListMsgRequest messageContent = null;
         try {
 
-            ActorListMsgRequest messageContent = ActorListMsgRequest.parseContent(packageReceived.getContent());
+            messageContent = ActorListMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -91,7 +92,7 @@ public class ActorListRequestProcessor extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                ActorListMsgRespond actorListMsgRespond = new ActorListMsgRespond(ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString(), actorsList, messageContent.getNetworkServicePublicKey());
+                ActorListMsgRespond actorListMsgRespond = new ActorListMsgRespond(ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString(), actorsList, messageContent.getNetworkServicePublicKey(), messageContent.getQueryId());
                 Package packageRespond = Package.createInstance(actorListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_LIST_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -111,7 +112,13 @@ public class ActorListRequestProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                ActorListMsgRespond actorCallMsgRespond = new ActorListMsgRespond(ActorListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), null, null);
+                ActorListMsgRespond actorCallMsgRespond = new ActorListMsgRespond(
+                        ActorListMsgRespond.STATUS.FAIL,
+                        exception.getLocalizedMessage(),
+                        null,
+                        null,
+                        messageContent == null ? null : messageContent.getQueryId()
+                );
                 Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_LIST_RESPONSE, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
