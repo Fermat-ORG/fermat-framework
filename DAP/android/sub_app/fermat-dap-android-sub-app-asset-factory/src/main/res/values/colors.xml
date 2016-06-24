@@ -55,7 +55,8 @@
     <color name="wizard_multimedia_wiz_button_2">#2585BA</color>
     <color name="wizard_properties_edit_background">#48479CC3</color>
     <color name="wizard_properties_edit_text">#4B5E75</color>
-    <color name="wizard_crypto_value_spinner">#BCC8D7</color>
+    <color name="wizard_crypto_value_spinner">#48479CC3</color>
+    <!--<color name="wizard_crypto_value_spinner">#BCC8D7</color>-->
     <color name="wizard_crypto_line">#ABBDCD</color>
     <color name="wizard_verify_background">#C9DFEF</color>
     <color name="wizard_verify_image_top">#1C1C1C</color>

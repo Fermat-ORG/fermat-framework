@@ -43,6 +43,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -52,6 +53,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.IdentityIssuerDialogCropImage;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
@@ -103,6 +105,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+
+    private int accuracy;
+    private Frequency frequency;
 
     ExecutorService executorService;
 
@@ -261,17 +266,17 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
     @Override
     public void onDestroy() {
         super.onDestroy();
+        appSession.setData(SessionConstants.IDENTITY_NAME, mIdentityName.getText().toString());
         executorService.shutdown();
     }
 
     private void setUpIdentity() {
         try {
 
-            identitySelected = (IdentityAssetIssuer) appSession.getData(SessionConstants.IDENTITY_SELECTED);
-
-            if (identitySelected != null) {
-                loadIdentity();
-            } else {
+//            identitySelected = (IdentityAssetIssuer) appSession.getData(SessionConstants.IDENTITY_SELECTED);
+//            if (identitySelected != null) {
+//                loadIdentity();
+//            } else {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -288,16 +293,18 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                                                         @Override
                                                         public void run() {
                                                             if (identitySelected != null) {
+                                                                mIdentityName.setText(identitySelected.getAlias());
                                                                 loadIdentity();
-                                                                isUpdate = true;
-                                                                createButton.setText("Save changes");
+                                                            }
+                                                            if(appSession.getData(SessionConstants.IDENTITY_NAME) != null) {
+                                                                mIdentityName.setText((String) appSession.getData(SessionConstants.IDENTITY_NAME));
                                                             }
                                                         }
                                                     }
                         );
                     }
                 }).start();
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -305,20 +312,22 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
 
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
-            Bitmap bitmap = null;
+            Bitmap bitmap;
             if (identitySelected.getImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_actor);
-
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
+            appSession.setData(SessionConstants.IDENTITY_SELECTED, identitySelected);
+
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
-        mIdentityName.setText(identitySelected.getAlias());
+        isUpdate = true;
+        createButton.setText("Update");
     }
 
 //    @Override
@@ -400,6 +409,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         final String brokerNameText = mIdentityName.getText().toString();
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
 
+        accuracy = getAccuracyData();
+        frequency = getFrequencyData();
+
         if (dataIsValid) {
             if (appSession.getModuleManager() != null) {
                 try {
@@ -409,7 +421,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                             public void run() {
                                 try {
                                     moduleManager.createNewIdentityAssetIssuer(brokerNameText,
-                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray);
+                                            (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray, accuracy, frequency);
+                                    cleanSessions();
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIdentityAssetIssuerException e) {
                                     e.printStackTrace();
@@ -422,9 +435,10 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
+                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray, accuracy, frequency);
                                     else
-                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage());
+                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage(), accuracy, frequency);
+                                    cleanSessions();
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -642,13 +656,13 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
             int id = item.getItemId();
 
             switch (id) {
-                //case IC_ACTION_ISSUER_IDENTITY_HELP_PRESENTATION:
-                case 2:
+                case 1:
+                    appSession.setData(SessionConstants.IDENTITY_NAME, mIdentityName.getText().toString());
+                    changeActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_GEOLOCATION_ACTIVITY, appSession.getAppPublicKey());
+                    break;
+                case 2: //case IC_ACTION_ISSUER_IDENTITY_HELP_PRESENTATION:
                     setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
-//                case 1:
-//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
-//                    break;
             }
 //            if (item.getItemId() == SessionConstants.IC_ACTION_ISSUER_IDENTITY_HELP_PRESENTATION) {
 //                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
@@ -876,5 +890,21 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<Referen
         String permission = "android.permission.CAMERA";
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private int getAccuracyData() {
+        return appSession.getData(SessionConstants.ACCURACY_DATA) == null ? moduleManager.getAccuracyDataDefault() :
+                (int) appSession.getData(SessionConstants.ACCURACY_DATA);
+    }
+
+    private Frequency getFrequencyData() {
+        return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
+                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+    }
+
+    private void cleanSessions() {
+        appSession.removeData(SessionConstants.ACCURACY_DATA);
+        appSession.removeData(SessionConstants.FREQUENCY_DATA);
+        appSession.removeData(SessionConstants.IDENTITY_NAME);
     }
 }
