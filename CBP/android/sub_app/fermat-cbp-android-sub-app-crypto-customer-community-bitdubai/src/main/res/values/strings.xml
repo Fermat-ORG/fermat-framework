@@ -18,4 +18,5 @@
     <string name="cbp_ccc_launch_action_creation_dialog_sub_title">This app let\'s you find Crypto Customers in Fermat. \nIt\'s main features are:</string>
     <string name="cbp_ccc_launch_action_creation_dialog_body">* Browse for Customers around you.\n* See their profiles.\n* Connect with them.</string>
     <string name="cbp_ccc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
+    <string name="no_users">No Users</string>
 </resources>

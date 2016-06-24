@@ -29,8 +29,8 @@ public class BankAccountViewHolder extends SingleDeletableItemViewHolder<BankAcc
     @Override
     public void bind(BankAccountNumber data) {
         banco.setText(data.getBankName());
-        alias.setText(data.getAccount());
-        numero.setText(data.getCurrencyType().getCode());
+        alias.setText(data.getCurrencyType().getCode());
+        numero.setText(data.getAccount());
     }
 
     @Override

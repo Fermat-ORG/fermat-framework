@@ -20,7 +20,9 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
@@ -29,8 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_customer_community.common.adapters.AppFriendsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +87,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             onRefresh();
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return rootView;

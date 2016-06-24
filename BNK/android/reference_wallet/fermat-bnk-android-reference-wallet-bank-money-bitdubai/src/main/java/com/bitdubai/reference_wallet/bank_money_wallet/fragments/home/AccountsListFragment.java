@@ -129,23 +129,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return true;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu,inflater);
-        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account").setIcon(R.drawable.bw_add_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, ReferenceWalletConstants.HELP_ACTION, 1, "Help").setIcon(R.drawable.bw_help_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItemId = item.getItemId();
-        if (selectedItemId == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
-            return true;
-        }
-        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
+        if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
             presentationDialog.show();
             return true;
         }

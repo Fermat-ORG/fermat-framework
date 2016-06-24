@@ -22,6 +22,8 @@ public class StockDestockViewHolder extends FermatViewHolder {
     private FermatTextView subTitle1;
     private FermatTextView subTitle2;
     CryptoBrokerWalletModuleManager moduleManager;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     public StockDestockViewHolder(View itemView, CryptoBrokerWalletModuleManager moduleManager) {
         super(itemView);
@@ -39,15 +41,15 @@ public class StockDestockViewHolder extends FermatViewHolder {
         try {
             if (data.getPlatform() == Platforms.BANKING_PLATFORM) {
                 //subTitle2.setText("balance: "+moduleManager.getAvailableBalance(data.getMerchandise(),"walletPublicKeyTest"));
-                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())));
+                subTitle2.setText("" + moneyFormat.format(moduleManager.getBalanceBankWallet(data.getWalletPublicKey(), data.getBankAccount())));
             }
             if (data.getPlatform() == Platforms.CASH_PLATFORM) {
-                subTitle2.setText("" + getDecimalFormat(moduleManager.getBalanceCashWallet(data.getWalletPublicKey())));
+                subTitle2.setText("" + moneyFormat.format((moduleManager.getBalanceCashWallet(data.getWalletPublicKey()))));
             }
             if (data.getPlatform() == Platforms.CRYPTO_CURRENCY_PLATFORM) {
                 long balanceBitcoinWallet = moduleManager.getBalanceBitcoinWallet(data.getWalletPublicKey());
                 double availableBalance = BitcoinConverter.convert(balanceBitcoinWallet, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
-                subTitle2.setText("" + getDecimalFormat(new BigDecimal(availableBalance)));
+                subTitle2.setText("" + moneyFormat.format((new BigDecimal(availableBalance))));
             }
 
         } catch (Exception e) {
@@ -64,7 +66,7 @@ public class StockDestockViewHolder extends FermatViewHolder {
         return "Crypto";
     }
 
-    private String getDecimalFormat(BigDecimal value) {
+    /*private String getDecimalFormat(BigDecimal value) {
         return DecimalFormat.getInstance().format(value.doubleValue());
-    }
+    }*/
 }
