@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -27,15 +26,16 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppNotificationAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.dialogs.AcceptDialog;
+import com.bitdubai.sub_app.crypto_broker_community.common.adapters.AppFriendsListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,53 +47,38 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
-        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, AcceptDialog.OnDismissListener {
+public class ConnectionsTabFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
+    public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
-
-    protected final String TAG = "ConnectionNotificationsFragment";
-
+    protected final String TAG = "NotificationsTabFragment";
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
     private View rootView;
-    private AppNotificationAdapter adapter;
+    private AppFriendsListAdapter adapter;
     private LinearLayout emptyView;
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private List<CryptoBrokerCommunityInformation> cryptoBrokerInformationList;
-    ImageView noData;
+    private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationArrayList;
     TextView noDatalabel;
+    ImageView noData;
 
-    /**
-     * Create a new instance of this fragment
-     *
-     * @return InstalledFragment instance object
-     */
-    public static ConnectionNotificationsFragment newInstance() {
-        return new ConnectionNotificationsFragment();
+    public static ConnectionsTabFragment newInstance() {
+        return new ConnectionsTabFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        cryptoBrokerInformationList = new ArrayList<>();
-    }
-
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        cryptoBrokerCommunityInformationArrayList = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.cbc_fragment_notifications_tab, container, false);
+            rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
 
             configureToolbar();
 
@@ -101,29 +86,24 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new AppNotificationAdapter(getActivity(), cryptoBrokerInformationList);
+            adapter = new AppFriendsListAdapter(getActivity(), cryptoBrokerCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-            noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
-
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
+            noData = (ImageView) rootView.findViewById(R.id.nodata);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
             emptyView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             onRefresh();
-
         } catch (Exception ex) {
             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
         return rootView;
     }
 
@@ -140,31 +120,14 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private synchronized ArrayList<CryptoBrokerCommunityInformation> getMoreData() {
-
-        ArrayList<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-
-            int offset = 0;
-            dataSet.addAll(moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset));
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-
-        return dataSet;
-    }
-
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-            notificationsProgressDialog.setMessage("Loading Notifications");
-            notificationsProgressDialog.setCancelable(false);
-            notificationsProgressDialog.show();
+            final ProgressDialog connectionsProgressDialog = new ProgressDialog(getActivity());
+            connectionsProgressDialog.setMessage("Loading Connections");
+            connectionsProgressDialog.setCancelable(false);
+            connectionsProgressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -176,16 +139,16 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+                    connectionsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            cryptoBrokerInformationList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoBrokerInformationList);
-                            if (cryptoBrokerInformationList.isEmpty()) {
+                            cryptoBrokerCommunityInformationArrayList = (ArrayList<CryptoBrokerCommunityInformation>) result[0];
+                            adapter.changeDataSet(cryptoBrokerCommunityInformationArrayList);
+                            if (cryptoBrokerCommunityInformationArrayList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
@@ -197,7 +160,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+                    connectionsProgressDialog.dismiss();
                     try {
                         isRefreshing = false;
                         if (swipeRefresh != null)
@@ -206,7 +169,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
                             Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                         ex.printStackTrace();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                                UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                     }
                 }
             });
@@ -214,29 +178,19 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
         }
     }
 
-
-    @Override
-    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+    private synchronized List<CryptoBrokerCommunityInformation> getMoreData() {
+        List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
         try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
-            //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
-            notificationAcceptDialog.setOnDismissListener(this);
-            notificationAcceptDialog.show();
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
+            int offset = 0;
+            dataSet.addAll(moduleManager.listAllConnectedCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset));
+        } catch (CantListCryptoBrokersException | CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
+        return dataSet;
     }
 
-    @Override
-    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
-    }
-
-    /**
-     * @param show
-     */
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -265,7 +219,13 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
-        onRefresh();
+    public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+        appSession.setData(ACTOR_SELECTED, data);
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {
+
     }
 }

@@ -52,7 +52,7 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsWorldFragment
+public class BrowserTabFragment
         extends FermatListFragment<CryptoBrokerCommunityInformation, ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>>
         implements FermatListItemListeners<CryptoBrokerCommunityInformation>, OnLoadMoreDataListener {
 
@@ -76,8 +76,8 @@ public class ConnectionsWorldFragment
     ImageView noContacts;
     private int offset;
 
-    public static ConnectionsWorldFragment newInstance() {
-        return new ConnectionsWorldFragment();
+    public static BrowserTabFragment newInstance() {
+        return new BrowserTabFragment();
     }
 
 
@@ -405,6 +405,9 @@ public class ConnectionsWorldFragment
      * @param position         the actor's position in the adapter
      */
     private void updateSelectedActorInList(CryptoBrokerCommunityInformation actorInformation, int position) {
+        if (appSession.getData(FragmentsCommons.CONNECTION_RESULT) == null)
+            return;
+
         try {
             final ConnectionState newConnectionState = (ConnectionState) appSession.getData(FragmentsCommons.CONNECTION_RESULT);
             appSession.removeData(FragmentsCommons.CONNECTION_RESULT);
@@ -419,9 +422,9 @@ public class ConnectionsWorldFragment
             cryptoBrokerCommunityInformationList.set(position, updatedInfo);
             adapter.notifyItemChanged(position);
 
-        } catch (Exception ignore) {
+        } catch (Exception ex) {
             errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_COMMUNITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ignore);
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
 }

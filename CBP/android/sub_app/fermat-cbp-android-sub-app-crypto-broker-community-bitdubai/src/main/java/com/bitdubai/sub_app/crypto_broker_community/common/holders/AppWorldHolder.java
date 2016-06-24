@@ -53,12 +53,16 @@ public class AppWorldHolder extends FermatViewHolder {
             switch (data.getConnectionState()) {
                 case CONNECTED:
                     connectionState.setImageResource(R.drawable.contacto_activo);
-                    connectionText.setText("Is connected with you");
+                    connectionText.setText(R.string.cbc_connection_state_connected);
                     connectionText.setVisibility(View.VISIBLE);
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
                     connectionState.setImageResource(R.drawable.agregar_contacto);
-                    connectionText.setText("Request sent");
+                    connectionText.setText(R.string.cbc_connection_state_pending_acceptance);
+                    connectionText.setVisibility(View.VISIBLE);
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    connectionState.setImageResource(R.drawable.agregar_contacto);
+                    connectionText.setText(R.string.cbc_connection_state_pending_acceptance);
                     connectionText.setVisibility(View.VISIBLE);
                 default:
                     connectionState.setImageResource(R.drawable.agregar_contacto);

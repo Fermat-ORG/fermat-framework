@@ -51,9 +51,10 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
+        android:text="-- / --"
         android:textColor="@color/cbc_location_text"
         android:textSize="14sp"
-        tools:text="Country - Place"/>
+        tools:ignore="HardcodedText"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbc_connection_text"
@@ -67,7 +68,7 @@
         android:textColor="@color/cbc_color_gray_light"
         android:textSize="12sp"
         android:visibility="visible"
-        tools:text="is now a connection"/>
+        tools:text="Is now a connection"/>
 
 </RelativeLayout>
 
