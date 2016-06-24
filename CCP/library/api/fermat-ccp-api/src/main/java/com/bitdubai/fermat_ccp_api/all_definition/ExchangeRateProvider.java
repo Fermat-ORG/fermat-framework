@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces;
+package com.bitdubai.fermat_ccp_api.all_definition;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -469,7 +469,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,70,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,50,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
@@ -511,7 +511,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
      */
     private byte[] toByteArray(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         return stream.toByteArray();
     }
 
@@ -556,7 +556,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         try {
             int id = item.getItemId();
 
-            if (id == 99)
+            if (id == 1)
                 showDialog();
 
             if (id == 2)
