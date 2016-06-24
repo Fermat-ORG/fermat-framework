@@ -120,7 +120,7 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
     GeoRectangle getGeoRectangleByLocation(String location)
             throws CantCreateGeoRectangleException;
 
-    Address getAddressByCoordinate(float latitude, float longitude)
+    Address getAddressByCoordinate(double latitude, double longitude)
             throws CantCreateAddressException;
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;

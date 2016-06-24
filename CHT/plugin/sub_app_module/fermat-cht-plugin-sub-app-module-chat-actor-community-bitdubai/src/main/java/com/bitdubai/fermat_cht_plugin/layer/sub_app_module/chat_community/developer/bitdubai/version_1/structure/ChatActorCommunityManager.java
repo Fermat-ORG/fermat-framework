@@ -504,7 +504,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+    public Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException {
         return geolocationManager.getAddressByCoordinate(latitude, longitude);
     }
 
@@ -579,7 +579,10 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(), i.getConnectionState());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(
+                                    i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(),
+                                    i.getConnectionState(), i.getCountry(), i.getState(),
+                                    i.getCity(), i.getConnectionState(), i.getAccuracy(), i.getFrecuency());
                     }
                 }
 
@@ -614,11 +617,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
     }
 
-
     @Override
     public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
-
-
 
     @Override
     public int[] getMenuNotifications() {

@@ -50,7 +50,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
 import com.bitdubai.sub_app.chat_community.common.popups.ContactDialog;
-import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
@@ -157,7 +156,7 @@ public class ContactsListFragment
             layoutManager = new GridLayoutManager(getActivity(),2, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
+            adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations, appSession, moduleManager);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);

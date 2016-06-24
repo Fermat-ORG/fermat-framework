@@ -49,10 +49,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
@@ -77,7 +79,7 @@ import static android.widget.Toast.makeText;
 public class ConnectionsWorldFragment
         extends AbstractFermatFragment<ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener,
-        FermatListItemListeners<ChatActorCommunityInformation> {
+        FermatListItemListeners<ChatActorCommunityInformation>, GeolocationDialog.AdapterCallback {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
@@ -116,6 +118,14 @@ public class ConnectionsWorldFragment
 
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
+    }
+
+    @Override
+    public void onMethodCallback(CitiesImpl city) {
+        location.setLatitude(city.getLatitude());
+        location.setLongitude(city.getLongitude());
+        distance=identity.getAccuracy();
+        onRefresh();
     }
 
     /**
@@ -457,17 +467,13 @@ public class ConnectionsWorldFragment
                 case 1:
                     break;
                 case 2:
-                    //todo: al llamar dialog de location t da este error, eso es
-                    // todo: porq hace falta poner lo del hilo y el addapter.changedataset
-                    // todo:No adapter attached; skipping layout
                     try {
                         GeolocationDialog geolocationDialog =
-                                new GeolocationDialog(getActivity(),appSession, null);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
+                                new GeolocationDialog(getActivity(),appSession, null, this);//,chatUserInformation, moduleManager.getSelectedActorIdentity());
                         geolocationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                //Todo: callback to connectionworldagment to update view of browser filtering by the city or country selected
-                            }
+                                }
                         });
 
                         Window window = geolocationDialog.getWindow();

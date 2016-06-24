@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.holders.CitiesListHolder;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
@@ -34,11 +35,19 @@ public class GeolocationAdapter extends ArrayAdapter {
 
     protected List<Cities> dataSet;
     private ErrorManager errorManager;
+    private CitiesImpl cityFromList;
+    private AdapterCallback mAdapterCallback;
 
-    public GeolocationAdapter(Context context, List<Cities> dataSet,ErrorManager errorManager){
+    public GeolocationAdapter(Context context, List<Cities> dataSet,ErrorManager errorManager,
+                              AdapterCallback mAdapterCallback){
         super(context, R.layout.cht_comm_geolocation_results_item, dataSet );
         this.dataSet = dataSet;
         this.errorManager = errorManager;
+        this.mAdapterCallback = mAdapterCallback;
+    }
+
+    public static interface AdapterCallback {
+        void onMethodCallback(CitiesImpl cityFromList);
     }
 
     public void refreshEvents(List<Cities> dataSet) {
@@ -57,11 +66,20 @@ public class GeolocationAdapter extends ArrayAdapter {
             TextView State = (TextView) item.findViewById(R.id.state_search);
             Country.setText(dataSet.get(position).getCountryName());
             State.setText(dataSet.get(position).getName());
+            final int pos=position;
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cityFromList = (CitiesImpl) dataSet.get(pos);
+                    mAdapterCallback.onMethodCallback(cityFromList);
+                }
+            });
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         return item;
     }
+
 //    @Override
 //    protected CitiesListHolder createHolder(View itemView, int type) {
 //        return new CitiesListHolder(itemView);

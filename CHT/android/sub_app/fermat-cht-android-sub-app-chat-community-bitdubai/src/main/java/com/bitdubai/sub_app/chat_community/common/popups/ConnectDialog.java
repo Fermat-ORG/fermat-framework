@@ -82,8 +82,8 @@ public class ConnectDialog
         positiveBtn = (FermatButton) findViewById(R.id.positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 //        mSecondDescription.setVisibility(View.GONE);
-        positiveBtn.setOnClickListener(this);
-        negativeBtn.setOnClickListener(this);
+//        positiveBtn.setOnClickListener(this);
+//        negativeBtn.setOnClickListener(this);
 //        mSecondDescription.setText(secondDescription != null ? secondDescription : "");
         mDescription.setText(description != null ? description : "");
 //        mUsername.setText(username != null ? username : "");
