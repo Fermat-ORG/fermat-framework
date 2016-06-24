@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection</code>
@@ -51,7 +53,22 @@ public interface NetworkClientConnection {
      *
      * @throws CantUnregisterProfileException if something goes wrong.
      */
-    void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
+     void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
+
+    /**
+     * Through this method we can ask to the fermat network a list of online actors.
+     * This method is asynchronous, it will raise a NETWORK_CLIENT_ACTOR_LIST_RECEIVED event
+     * when it get the results.
+     *
+     * @param discoveryQueryParameters  parameters for the query
+     * @param networkServicePublicKey   network service asking for the list of actors
+     *
+     * @return query id
+     *
+     * @throws CantRequestProfileListException if something goes wrong.
+     */
+     UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                     final String                   networkServicePublicKey ) throws CantRequestProfileListException;
 
     /**
      * Through the method <code>registeredProfileDiscoveryQuery</code> we can make a discovery query

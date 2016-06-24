@@ -21,6 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -62,6 +63,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.CloseReason;
@@ -530,6 +532,44 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             throw fermatException;
         }
+    }
+
+    @Override
+    public UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                           final String                   networkServicePublicKey ) throws CantRequestProfileListException {
+
+        UUID queryId = UUID.randomUUID();
+
+        ActorListMsgRequest actorListMsgRequest = new ActorListMsgRequest(
+                queryId,
+                networkServicePublicKey,
+                discoveryQueryParameters,
+                clientIdentity.getPublicKey()
+        );
+
+        actorListMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(actorListMsgRequest, PackageType.ACTOR_LIST_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    cantSendPackageException,
+                    "discoveryQueryParameters:" + discoveryQueryParameters+" - networkServicePublicKey:" + networkServicePublicKey,
+                    "Cant send package."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+
+        return queryId;
     }
 
     @Override
