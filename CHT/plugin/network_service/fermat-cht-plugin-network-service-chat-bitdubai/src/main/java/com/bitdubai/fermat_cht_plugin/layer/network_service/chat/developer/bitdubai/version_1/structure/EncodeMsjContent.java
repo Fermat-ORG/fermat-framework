@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -166,6 +167,10 @@ public class EncodeMsjContent {
      * @return
      */
     public static JsonObject decodeMsjContent(FermatMessage fermatMessage){
+        return parser.parse(fermatMessage.getContent()).getAsJsonObject();
+    }
+
+    public static JsonObject decodeMsjContent(NetworkServiceMessage fermatMessage){
         return parser.parse(fermatMessage.getContent()).getAsJsonObject();
     }
 }

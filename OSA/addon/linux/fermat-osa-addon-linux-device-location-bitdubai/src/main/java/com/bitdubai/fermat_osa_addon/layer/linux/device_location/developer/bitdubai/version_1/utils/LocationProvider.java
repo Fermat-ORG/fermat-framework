@@ -72,7 +72,7 @@ public final class LocationProvider {
                         latitude ,
                         longitude,
                         null     ,
-                        null     ,
+                        -1       ,
                         null     ,
                         System.currentTimeMillis(),
                         LocationSource.IP_CALCULATED

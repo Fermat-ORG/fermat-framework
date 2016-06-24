@@ -22,13 +22,13 @@ dependencies {
     compile project(':fermat-cbp-core')
     compile project(':fermat-ccp-core')
     compile project(':fermat-cht-core')
-//    compile files('src/libs/fermat-cht-core-1.0.jar')
     compile project(':fermat-csh-core')
     compile project(':fermat-dap-core')
     compile project(':fermat-p2p-core')
     compile project(':fermat-pip-core')
     compile project(':fermat-tky-core')
     compile project(':fermat-wpd-core')
+
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'

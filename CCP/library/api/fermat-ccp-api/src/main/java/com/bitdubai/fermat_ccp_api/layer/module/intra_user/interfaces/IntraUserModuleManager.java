@@ -68,8 +68,8 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return a list with information of intra users
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
-     List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
+    List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 
     /**
@@ -80,7 +80,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
 
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<IntraUserInformation> getCacheSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 
@@ -156,6 +156,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 30,timeoutUnit = TimeUnit.SECONDS)
      List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**

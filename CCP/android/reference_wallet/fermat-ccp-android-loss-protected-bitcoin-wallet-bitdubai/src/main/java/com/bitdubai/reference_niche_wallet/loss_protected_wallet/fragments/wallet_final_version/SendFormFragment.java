@@ -1,7 +1,12 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -14,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
@@ -58,26 +64,22 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantCreateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
+
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
@@ -174,8 +176,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
             }
 
 
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetSettingsException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -223,7 +223,10 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             setUpContactAddapter();
 
-
+            //(Hide keyboard)
+            final InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(contactName.getWindowToken(), 0);
 
             return rootView;
         } catch (Exception e) {
@@ -262,6 +265,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         errorConnectingFermatNetworkDialog.show();
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(savedInstanceState);
+
+            final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);
+
+        } catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
+    }
     private void setUpUI() {
         contactName = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
         spinnerArrow = (ImageView) rootView.findViewById(R.id.spinner_open);
@@ -303,7 +320,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 switch (position) {
                     case 0:
                         text = "[btc]";
-                        if (!amount.equals("") && amount != null){
+                        if (!amount.equals("") && amount != null) {
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -311,7 +328,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
 
@@ -327,7 +344,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
 
@@ -342,7 +359,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             } else {
                                 newAmount = amount;
                             }
-                        }else{
+                        } else {
                             newAmount = amount;
                         }
                         break;
@@ -427,14 +444,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                 return false;
             }
         });
-        contactName.postDelayed(new Runnable() {
+       /* contactName.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
                 InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 keyboard.showSoftInput(contactName, 0);
             }
-        }, 50);
+        }, 50);*/
         contactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -481,8 +498,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         }
         if (lossProtectedWalletContact != null) {
             try {
-                BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
-                bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+
+                if (lossProtectedWalletContact.getProfilePicture() != null) {
+
+                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), true);
+                    bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
+                } else
+                    Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
+
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
@@ -499,18 +522,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground()  {
-
-
                 try{
 
                     walletContactList = getWalletContactList();
-
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
                 return walletContactList;
-
             }
         };
 
@@ -658,9 +677,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
         });
 
         fermatWorker.execute();
-
-
-
     }
 
 
@@ -695,7 +711,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     private void sendCrypto() {
         try {
             //first check if have exchange rate info
-            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)!= 0){
+            if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)
+                    != 0){
                 if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                     CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWalletManager);
                     if (validAddress != null) {
@@ -711,7 +728,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
                         if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                             try {
-                                String notes = null;
+                                String notes = "";
                                 if (txt_notes.getText().toString().length() != 0) {
                                     notes = txt_notes.getText().toString();
                                 }
@@ -755,6 +772,14 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
                                                     blockchainNetworkType,
                                                     appSession);
                                             confirm_send_dialog.show();
+                                            confirm_send_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                                @Override
+                                                public void onDismiss(DialogInterface dialog) {
+                                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                                    onBack(null);
+                                                }
+                                            });
                                         }
                                         else
                                         {
@@ -868,6 +893,22 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+
+       /* imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getView().getWindowToken(), 0);*/
+
+
 
     }
 }

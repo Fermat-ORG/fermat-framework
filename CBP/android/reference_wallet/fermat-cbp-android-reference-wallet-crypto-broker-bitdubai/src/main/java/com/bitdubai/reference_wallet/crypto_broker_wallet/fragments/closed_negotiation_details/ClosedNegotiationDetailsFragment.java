@@ -14,21 +14,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ClosedNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSessionReferenceApp;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
 import java.util.Map;
 
@@ -37,7 +39,7 @@ import java.util.Map;
  * Created by Lozadaa on 22/02/16.
  */
 
-public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSessionReferenceApp, ResourceProviderManager> {
+public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerWalletModuleManager>, ResourceProviderManager> {
 
     private static final String TAG = "ClosedNegDetails";
 
@@ -59,7 +61,8 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
         try {
             errorManager = appSession.getErrorManager();
 
-            CustomerBrokerNegotiationInformation negotiationInfo = appSession.getNegotiationData();
+            Object data = appSession.getData(FragmentsCommons.NEGOTIATION_DATA);
+            CustomerBrokerNegotiationInformation negotiationInfo = (data != null) ? (CustomerBrokerNegotiationInformation) data : null;
             negotiationWrapper = new NegotiationWrapper(negotiationInfo, appSession);
 
         } catch (Exception ex) {

@@ -1,136 +1,157 @@
 <RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#F9F9F9"
+    android:background="@drawable/cht_comm_list_bg"
     android:paddingTop="8dp"
     android:paddingRight="16dp"
-    android:paddingLeft="16dp">
+    android:paddingLeft="16dp"
+    >
 
+    <ImageView
+        android:id="@+id/ring_image"
+        android:scaleType="centerCrop"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/cht_comm_circular_shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" />
     <ImageView
         android:id="@+id/profile_image"
         android:scaleType="centerCrop"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="82dp"
+        android:layout_height="82dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/cht_comm_bg_circula_friend_list"
-        tools:ignore="ContentDescription"
-        android:layout_marginLeft="5dp"
+        android:layout_marginTop="9dp"
+        android:layout_centerHorizontal="true"
         />
     <TextView
         android:id="@+id/community_name"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dip"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/profile_image"
-        android:maxLines="1"
-        android:text="title"
-        android:textColor="#212121"
-        android:textSize="20dip" />
-    <TextView
-        android:id="@+id/connection_state_user"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/community_name"
-        android:layout_toRightOf="@+id/profile_image"
-        android:ellipsize="end"
-        android:layout_marginLeft="10dp"
-        android:maxLines="3"
-        android:text="Online"
-        android:textColor="#0000FF"
-        android:textSize="12dip" />
-    <!--
-    <TextView
-        android:id="@+id/connection_state_user"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/connection_state"
-        android:layout_toRightOf="@+id/profile_image"
-        android:ellipsize="end"
-        android:layout_marginLeft="10dp"
-        android:maxLines="3"
-        android:text="desc"
-        android:textColor="#757575"
-        android:textSize="12dip" />-->
-    <TextView
         android:layout_below="@+id/profile_image"
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="false"
-        android:layout_height="2dp"
-        android:background="#DBDBDB" />
+        android:maxLines="1"
+        android:text="Person Namelsky"
+        android:textAlignment="center"
+        android:textStyle="normal"
+        android:textColor="#757575"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dip"
+        android:paddingTop="10dp" />
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_below="@+id/community_name"
+        android:padding="10dp"
+        android:id="@+id/location">
+        <ImageView
+            android:id="@+id/location_image"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/cht_comm_geotag_contact_icon"
+            />
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/location_image"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:maxLines="1"
+            android:text="Location - Place"
+            android:textColor="#47BF73"
+            android:textSize="12dp" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/connection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/location"
+        android:ellipsize="end"
+        android:paddingBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:maxLines="3"
+        android:text="is now a connection"
+        android:textColor="#757575"
+        android:visibility="gone"
+        android:textSize="10dp" />
 
     <ImageView
         android:id="@+id/connectedButton"
         android:scaleType="centerCrop"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cht_comm_accept_conncetion_icon"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:checked="true"
-        android:background="@drawable/connected_button"
-        tools:ignore="ContentDescription"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/connection_text"  />
 
     <ImageView
         android:id="@+id/blockedButton"
         android:scaleType="centerCrop"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cht_comm_delete_connetion_icon"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:checked="true"
-        android:background="@drawable/blocked_button"
-        tools:ignore="ContentDescription"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/connection_text" />
 
     <ImageView
         android:id="@+id/pendingButton"
         android:scaleType="centerCrop"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cht_comm_hold_conections_icon"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
-        android:checked="true"
-        android:background="@drawable/pending_button"
-        tools:ignore="ContentDescription"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/connection_text" />
 
-    <!--<RadioButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/connectedButton"-->
-        <!--android:buttonTint="@color/green"-->
-        <!--android:visibility="gone"-->
-        <!--android:checked="true"-->
-        <!--android:layout_alignBottom="@+id/connection_state_user"-->
-        <!--android:layout_alignEnd="@+id/community_name"-->
-        <!--android:layout_alignRight="@+id/community_name"/>-->
+    <ImageView
+        android:id="@+id/acceptButton"
+        android:scaleType="centerCrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cht_comm_hold_conections_icon"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/connection_text" />
 
-    <!--<RadioButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/blockedButton"-->
-        <!--android:buttonTint="@color/red"-->
-        <!--android:visibility="gone"-->
-        <!--android:checked="true"-->
-        <!--android:layout_alignBottom="@+id/connection_state_user"-->
-        <!--android:layout_alignEnd="@+id/community_name"-->
-        <!--android:layout_alignRight="@+id/community_name"/>-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:text="Add Contact"
+        android:textColor="#47BF73"
+        android:textAllCaps="false"
+        android:textSize="12dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/location"
+        android:background="@drawable/cht_comm_button_add_contact_bg"
+        android:shadowRadius="0"
+        android:id="@+id/add_contact_button"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        />
+    <TextView
+        android:layout_below="@+id/add_contact_button"
+        android:id="@+id/divider"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_height="20dp"/>
 
-    <!--<RadioButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/pendingButton"-->
-        <!--android:buttonTint="@color/yellow"-->
-        <!--android:visibility="gone"-->
-        <!--android:checked="true"-->
-        <!--android:layout_alignBottom="@+id/connection_state_user"-->
-        <!--android:layout_alignEnd="@+id/community_name"-->
-        <!--android:layout_alignRight="@+id/community_name"/>-->
 </RelativeLayout>

@@ -115,7 +115,7 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_redeem_point)
+                .setBannerRes(R.drawable.banner_redeem_point_community)
                 .setIconRes(R.drawable.reddem_point_community)
                 .setVIewColor(R.color.dap_community_redeem_view_color)
                 .setTitleTextColor(R.color.dap_community_redeem_view_color)
@@ -158,8 +158,8 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_redeem_help_icon)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         //menu.clear();
     }
@@ -169,10 +169,16 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
         int id = item.getItemId();
 
         try {
-            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
+            switch (id) {
+                case 1://IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION
+                    setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
             }
+
+//            if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
+//                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+//                return true;
+//            }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Asset User system error",

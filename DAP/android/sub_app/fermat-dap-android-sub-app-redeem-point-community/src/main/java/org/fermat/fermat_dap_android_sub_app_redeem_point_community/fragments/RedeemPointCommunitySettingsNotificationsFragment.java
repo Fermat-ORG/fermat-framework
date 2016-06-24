@@ -82,8 +82,8 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
     private void setUpSettings(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setBannerRes(R.drawable.banner_redeem_point_community)
                     .setIconRes(R.drawable.reddem_point_community)
                     .setVIewColor(R.color.dap_community_redeem_view_color)
                     .setTitleTextColor(R.color.dap_community_redeem_view_color)

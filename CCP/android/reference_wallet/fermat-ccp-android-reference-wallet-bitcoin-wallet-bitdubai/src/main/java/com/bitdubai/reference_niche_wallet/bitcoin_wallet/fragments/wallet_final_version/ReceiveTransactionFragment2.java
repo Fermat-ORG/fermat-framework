@@ -172,23 +172,17 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send")
-                .setIcon(R.drawable.ic_actionbar_send)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.bit_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
+            if(id == 2){
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
-            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+            }else {
                 setUpPresentation();
                 return true;
             }

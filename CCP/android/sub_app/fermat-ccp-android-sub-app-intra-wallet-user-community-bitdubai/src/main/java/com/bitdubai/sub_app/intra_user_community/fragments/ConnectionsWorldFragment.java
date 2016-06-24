@@ -34,7 +34,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
@@ -55,7 +54,6 @@ import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFe
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
 import com.bitdubai.sub_app.intra_user_community.constants.Constants;
 import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -263,8 +261,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-                final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users Cache");
+               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
                 notificationsProgressDialog.show();
                 //Get Fermat User Cache List First
@@ -280,7 +278,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                        notificationsProgressDialog.dismiss();
+                      notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -397,10 +395,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
-            final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+          /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
             notificationsProgressDialog.setMessage("Loading Crypto Wallet Users OnLine");
             notificationsProgressDialog.setCancelable(true);
-            notificationsProgressDialog.show();
+            notificationsProgressDialog.show();*/
 
             worker = new FermatWorker() {
                 @Override
@@ -413,7 +411,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                 @SuppressWarnings("unchecked")
                 @Override
                 public void onPostExecute(Object... result) {
-                    notificationsProgressDialog.dismiss();
+                 //   notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -426,6 +424,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                showEmpty(true, emptyView);
                                showEmpty(false, searchEmptyView);
                             } else {
+                               // Toast.makeText(getActivity(), "Not user found.", Toast.LENGTH_SHORT).show();
+
                                 adapter.changeDataSet(lstIntraUserInformations);
                                 showEmpty(false, emptyView);
                                 showEmpty(false, searchEmptyView);
@@ -440,7 +440,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    notificationsProgressDialog.dismiss();
+                  // notificationsProgressDialog.dismiss();
                     isRefreshing = false;
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
@@ -638,24 +638,32 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
          try {
 
-
-            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
              if(userList != null)
                 dataSet.addAll(userList);
              else {
-                 dataSet.addAll(lstIntraUserInformations);
-                 getActivity().runOnUiThread(new Runnable() {
-                     public void run() {
-                         Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
-                     }
-                 });
+                 if(lstIntraUserInformations!=null) {
+                     dataSet.addAll(lstIntraUserInformations);
+                     getActivity().runOnUiThread(new Runnable() {
+                         public void run() {
+                             Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                         }
+                     });
+                 }else{
+                     Log.e(TAG,"Request null");
+                 }
              }
 
 
         } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
+             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+             getActivity().runOnUiThread(new Runnable() {
+                 public void run() {
+                     Toast.makeText(getActivity(), "Request User List Time Out.", Toast.LENGTH_LONG).show();
+                 }
+             });
         }
         return dataSet;
     }
@@ -705,7 +713,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            //showCriptoUsersCache();
+                            showCriptoUsersCache();
+                            invalidate();
                         }
                     });
                 } else {
@@ -724,8 +733,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                     getActivity().finish();
                                 }
                             } else {
-                               // showCriptoUsersCache();
-                                invalidate();
+                                showCriptoUsersCache();
+
                             }
                         }
                     });
@@ -748,8 +757,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             if (isBackPressed) {
                                 getActivity().onBackPressed();
                             }
-                        } //else
-                            //showCriptoUsersCache();
+                        } else
+                            showCriptoUsersCache();
                     }
                 });
             }

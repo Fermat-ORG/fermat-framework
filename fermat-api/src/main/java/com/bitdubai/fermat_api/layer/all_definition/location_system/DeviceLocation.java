@@ -15,6 +15,7 @@ public class DeviceLocation implements Location {
 
     private Double latitude;
     private Double longitude;
+    private long accuracy;
     private Long time;
     private Double altitude;
     private LocationSource provider;
@@ -104,6 +105,11 @@ public class DeviceLocation implements Location {
         this.longitude = longitude;
     }
 
+    @Override
+    public void setAccuracy(long accuracy) {
+        this.accuracy = accuracy;
+    }
+
     /**
      *<p>This method gets de actual location network provider
      *
@@ -115,8 +121,8 @@ public class DeviceLocation implements Location {
     }
 
     @Override
-    public Double getAccuracy() {
-        return 0.0;
+    public long getAccuracy() {
+        return accuracy;
     }
 
     @Override

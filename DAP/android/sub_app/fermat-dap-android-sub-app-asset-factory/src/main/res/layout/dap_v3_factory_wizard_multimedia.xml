@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wizard_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageButton
+                android:id="@+id/wizardMultimediaStep1Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_multimedia_on"
+                android:background="@null"
+                android:layout_marginLeft="7dp"/>
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multimedia"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardMultimediaStep1Image"/>
+
+            <View
+                android:id="@+id/wizardTopLine1"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_toRightOf="@+id/wizardMultimediaStep1Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardMultimediaStep2Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_properties_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine1"/>
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset\nProperties"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardMultimediaStep1Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text1"
+                android:layout_marginLeft="38dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine2"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@+id/wizardMultimediaStep2Image"/>
+
+            <ImageButton
+                android:id="@+id/wizardMultimediaStep3Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_crypto_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine2"/>
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crypto\ncurrency"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardMultimediaStep2Image"
+                android:layout_toRightOf="@+id/text2"
+                android:gravity="center"
+                android:layout_marginLeft="45dp"/>
+
+            <View
+                android:id="@+id/wizardTopLine3"
+                android:layout_width="50dp"
+                android:layout_height="4dip"
+                android:background="@color/wizard_top_line_off"
+                android:layout_toRightOf="@+id/wizardMultimediaStep3Image"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="15dp"/>
+
+            <ImageButton
+                android:id="@+id/wizardMultimediaStep4Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wizard_verify_off"
+                android:background="@null"
+                android:layout_toRightOf="@+id/wizardTopLine3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify\nasset"
+                android:textSize="10sp"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@+id/wizardMultimediaStep4Image"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/text3"
+                android:layout_marginLeft="56dp"/>
+
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/wizardMultimediaButtonsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignLeft="@+id/wizardMultimediaAssetImage"
+            android:layout_alignRight="@+id/wizardMultimediaAssetImage">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardMultimediaPhotoButton"
+                android:layout_width="wrap_content"
+                android:layout_weight="1.0"
+                android:layout_height="40dp"
+                android:text="Photo"
+                android:fontFamily="Helvetica Neue LT Std 45"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_button_1"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/wizardMultimediaCameraButton"
+                android:layout_width="wrap_content"
+                android:layout_weight="1.0"
+                android:layout_height="40dp"
+                android:text="Gallery"
+                android:fontFamily="Helvetica Neue LT Std 45"
+                android:textSize="14sp"
+                android:background="@color/wizard_multimedia_button_2"
+                android:textColor="@color/wizard_multimedia_button_text"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/wizardMultimediaAssetImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/img_asset_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_below="@+id/wizardMultimediaButtonsLayout"
+            android:layout_above="@+id/wizardMultimediaNextButton" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/wizardMultimediaNextButton"
+            android:layout_width="314dp"
+            android:layout_height="35dp"
+            android:visibility="visible"
+            android:text="Next"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/wizard_multimedia_wiz_button_1"
+            android:textColor="@color/wizard_multimedia_button_text"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:id="@+id/wizardMultimediaSaveButton"
+            android:layout_width="314dp"
+            android:layout_height="35dp"
+            android:visibility="invisible"
+            android:text="Save"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/wizard_multimedia_wiz_button_1"
+            android:textColor="@color/wizard_multimedia_button_text"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

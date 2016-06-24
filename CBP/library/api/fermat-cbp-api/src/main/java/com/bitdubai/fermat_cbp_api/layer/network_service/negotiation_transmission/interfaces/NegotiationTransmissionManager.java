@@ -22,7 +22,7 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
      * @param transactionType the negotiation transaction type
      * @throws CantSendNegotiationToCryptoCustomerException
      */
-    void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException;
+    void sendNegotiationToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException;
 
     /**
      * Send Negotiation from Crypto Customer to Crypto Broker
@@ -31,7 +31,7 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
      * @param transactionType the negotiation transaction type
      * @throws CantSendNegotiationToCryptoBrokerException
      */
-    void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException;
+    void sendNegotiationToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException;
 
     /**
      * Send Confirmation of negotiation from Crypto Broker to Crypto Customer
@@ -40,7 +40,7 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
      * @param transactionType the negotiation transaction type
      * @throws CantSendConfirmToCryptoCustomerException
      */
-    void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException;
+    void sendConfirmNegotiationToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException;
 
     /**
      * Send Confirmation of negotiation from Crypto Broker to Crypto Customer
@@ -49,7 +49,7 @@ public interface NegotiationTransmissionManager extends FermatManager, Transacti
      * @param transactionType the negotiation transaction type
      * @throws CantSendConfirmToCryptoBrokerException
      */
-    void sendConfirmNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoBrokerException;
+    void sendConfirmNegotiationToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoBrokerException;
 
     /**
      * Send Confirmation of reception

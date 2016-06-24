@@ -31,7 +31,7 @@ public class BankWalletAsyncTransactionAgent extends AsyncTransactionAgent<BankT
             else
                 moduleManager.makeWithdraw(transaction);
             //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
+            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
         }catch(FermatException e){
             //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
         }

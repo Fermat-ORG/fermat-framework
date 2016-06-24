@@ -320,7 +320,7 @@ public class CustomerBrokerUpdateAgent implements
                                 System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n" +
                                         "\n - Status :" + purchaseNegotiation.getStatus().getCode());
                                 //SEND NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
                                 break;
 
@@ -329,7 +329,7 @@ public class CustomerBrokerUpdateAgent implements
                                 System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - SALE NEGOTIATION SEND negotiationId(XML): " + saleNegotiation.getNegotiationId() + " ****\n" +
                                         "\n - Status :" + saleNegotiation.getStatus().getCode());
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
 
                                 break;
                         }
@@ -357,12 +357,12 @@ public class CustomerBrokerUpdateAgent implements
                             case PURCHASE:
                                 System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND PURCHASE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND CONFIRM NEGOTIATION TO BROKER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                             case SALE:
                                 System.out.print("\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - CONFIRMATION SEND SALE NEGOTIATION negotiationId(XML): " + negotiationTransaction.getTransactionId() + " ****\n");
                                 //SEND NEGOTIATION TO CUSTOMER
-                                negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
+                                negotiationTransmissionManager.sendConfirmNegotiationToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 break;
                         }
 

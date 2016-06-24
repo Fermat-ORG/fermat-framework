@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -35,7 +36,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
+public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
     //Constants
@@ -59,10 +59,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    //Data
-    private CryptoBrokerCommunitySettings appSettings;
     private int offset = 0;
-    private int mNotificationsCount = 0;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
     //Flags
@@ -73,8 +70,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     //UI
     private View rootView;
     private LinearLayout emptyView;
-    private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -101,7 +96,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
 
             //Obtain Settings or create new Settings if first time opening subApp
-            appSettings = null;
+            CryptoBrokerCommunitySettings appSettings;
             try {
                 appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
@@ -127,11 +122,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                 launchListIdentitiesDialog = true;
             }
 
-            //Get notification requests count
-            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
-            //mNotificationsCount = 4;
-            //new FetchCountTask().execute();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -147,10 +137,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), cryptoBrokerCommunityInformationList);
             adapter.setFermatListEventListener(this);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
@@ -175,6 +165,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
                         .setImageRight(R.drawable.ic_profile_male)
+                        .setIsCheckEnabled(true)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override

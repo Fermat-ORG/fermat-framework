@@ -7,7 +7,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="colorAccent">@color/background_action_bar</item>
         <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
-        <item name="color">#f9f9f9</item>
+        <item name="color">#000</item>
         <item name="android:actionMenuTextColor">#3d3d3d</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="android:autoCompleteTextViewStyle">@style/cursorColor</item>
@@ -19,7 +19,7 @@
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="closeIcon">@drawable/cht_ic_close_white</item>
-        <item name="navigationIcon">@drawable/cht_ic_back</item>
+        <item name="navigationIcon">@drawable/cht_help_icon</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.NoActionBar">

@@ -32,9 +32,9 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
     private           String                   receiverPublicKey      ;
 
     private           Timestamp                shippingTimestamp      ;
-    private           Timestamp                deliveryTimestamp      ;
+    private transient Timestamp                deliveryTimestamp      ;
 
-    private           Boolean                  isBetweenActors        ;
+    private transient Boolean                  isBetweenActors        ;
     private transient FermatMessagesStatus     fermatMessagesStatus   ;
 
     private           String                   signature              ;

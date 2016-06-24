@@ -7,19 +7,20 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.fragmentFactory.BankMoneyWalletFragmentFactory;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSessionReferenceApp;
 
 /**
  * Created by memo on 22/12/15.
  */
-public class BankMoneyWalletFermatAppConnection extends AppConnections {
+public class BankMoneyWalletFermatAppConnection extends AppConnections<ReferenceAppFermatSession<BankMoneyWalletModuleManager>> {
 
     public BankMoneyWalletFermatAppConnection(Context activity) {
         super(activity);
@@ -42,7 +43,7 @@ public class BankMoneyWalletFermatAppConnection extends AppConnections {
     }
 
     @Override
-    public AbstractReferenceAppFermatSession getSession() { return new BankMoneyWalletSessionReferenceApp(); }
+    public ReferenceAppFermatSession<BankMoneyWalletModuleManager> getSession() { return getFullyLoadedSession(); }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {

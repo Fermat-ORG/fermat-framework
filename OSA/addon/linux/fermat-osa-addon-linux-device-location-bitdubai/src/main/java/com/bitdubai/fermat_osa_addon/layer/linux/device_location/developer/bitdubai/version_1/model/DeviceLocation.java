@@ -10,16 +10,16 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/04/2016.
  *
- * @author lnacosta
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public final class DeviceLocation implements Location {
 
-    private final double         latitude        ;
-    private final double         longitude       ;
+    private       double         latitude        ;
+    private       double         longitude       ;
     private final Double         altitude        ;
-    private final Double         accuracy        ;
+    private       long           accuracy        ;
     private final Double         altitudeAccuracy;
     private final long           time            ;
     private final LocationSource source          ;
@@ -37,7 +37,7 @@ public final class DeviceLocation implements Location {
     public DeviceLocation(final double         latitude        ,
                           final double         longitude       ,
                           final Double         altitude        ,
-                          final Double         accuracy        ,
+                          final long           accuracy        ,
                           final Double         altitudeAccuracy,
                           final long           time            ,
                           final LocationSource source          ) {
@@ -67,7 +67,7 @@ public final class DeviceLocation implements Location {
     }
 
     @Override
-    public Double getAccuracy() {
+    public long getAccuracy() {
         return accuracy;
     }
 
@@ -84,6 +84,19 @@ public final class DeviceLocation implements Location {
     @Override
     public LocationSource getSource() {
         return source;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    @Override
+    public void setAccuracy(long accuracy) {
+        this.accuracy = accuracy;
     }
 
     @Override

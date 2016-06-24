@@ -17,6 +17,11 @@ import com.squareup.picasso.Picasso;
  */
 public class FragmentsCommons {
 
+    public static final String NEGOTIATION_DATA = "negotiation_data";
+    public static final String CONTRACT_DATA = "contract_data";
+    public static final String CONFIGURED_DATA = "configured_data";
+    public static final String EXCHANGE_RATES = "EXCHANGE_RATES";
+
     public static int getClauseNumberImageRes(int clauseNumber) {
         switch (clauseNumber) {
             case 1:

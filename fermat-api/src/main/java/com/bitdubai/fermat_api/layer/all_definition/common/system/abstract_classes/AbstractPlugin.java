@@ -502,7 +502,12 @@ public abstract class
         PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
         if(pluginInfo!=null) {
             String[] mailTo = new String[]{pluginInfo.maintainerMail()};
-            errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),pluginVersionReference.getPlatform(),unexpectedPluginExceptionSeverity,exception,mailTo);
+            if (errorManager != null)
+                errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),pluginVersionReference.getPlatform(),unexpectedPluginExceptionSeverity,exception,mailTo);
+            else {
+                System.out.println("************ ERROR MANAGER NULL: "+this.getPluginVersionReference());
+                exception.printStackTrace();
+            }
         }else {
             System.err.println("The plugin is not implementing the annotation class,Error in Plugin: "+getClass().getName());
         }

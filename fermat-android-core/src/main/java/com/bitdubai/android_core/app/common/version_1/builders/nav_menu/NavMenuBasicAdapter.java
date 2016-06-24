@@ -51,7 +51,7 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
         int rowRes = 0;
         if(body.getRowLayout()!=null){
             FermatLayout fermatLayout = body.getRowLayout();
-            rowRes = ResourceLocationSearcherHelper.obtainRes(context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwnerAppPublicKey());
+            rowRes = ResourceLocationSearcherHelper.obtainRes(context, fermatLayout.getId(), fermatLayout.getSourceLocation(), fermatLayout.getOwner().getOwnerAppPublicKey());
         }
         return (rowRes!=0)?rowRes:com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.navigation_row;
     }
@@ -74,7 +74,7 @@ public class NavMenuBasicAdapter extends FermatAdapter<MenuItem, NavigationItemM
                 holder.getLabel().setTextColor(Color.parseColor(data.getTextColor()));
             }
             FermatDrawable icon = data.getFermatDrawable();
-            if(icon!=null) holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(context, icon.getId(), icon.getSourceLocation(), icon.getOwnerAppPublicKey()));
+            if(icon!=null) holder.getIcon().setImageResource(ResourceLocationSearcherHelper.obtainRes(context, icon.getId(), icon.getSourceLocation(), icon.getOwner().getOwnerAppPublicKey()));
         }catch (Exception e){
             e.printStackTrace();
         }

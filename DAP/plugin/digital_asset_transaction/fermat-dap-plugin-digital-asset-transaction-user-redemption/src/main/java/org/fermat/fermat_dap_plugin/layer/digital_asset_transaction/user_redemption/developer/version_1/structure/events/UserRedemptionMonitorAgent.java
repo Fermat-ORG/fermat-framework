@@ -37,7 +37,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DA
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendDAPMessageException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -231,7 +231,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
             } catch (InvalidParameterException | CantUpdateMessageStatusException | CantGetDAPMessagesException | CantAssetRedeemPointActorNotFoundException | CantSetObjectException | CantGetAssetRedeemPointActorsException e) {
                 userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
-            } catch (CantSendMessageException e) {
+            } catch (CantSendDAPMessageException e) {
                 userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCheckAssetUserRedemptionProgressException(e, "Exception in ASSET USER REDEMPTION monitor agent", "Cannot send actor information");
             }
@@ -255,7 +255,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
             }
         }
 
-        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantGetDAPMessagesException, CantUpdateMessageStatusException, CantSendMessageException, CantSetObjectException, CantAssetRedeemPointActorNotFoundException, CantGetAssetRedeemPointActorsException {
+        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantGetDAPMessagesException, CantUpdateMessageStatusException, CantSendDAPMessageException, CantSetObjectException, CantAssetRedeemPointActorNotFoundException, CantGetAssetRedeemPointActorsException {
             List<DAPMessage> newStatuses = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.USER_REDEMPTION);
             if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
                 for (DAPMessage message : newStatuses) {
@@ -395,7 +395,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger {
             bitcoinNetworkManager.broadcastTransaction(digitalAssetMetadata.getLastTransactionHash());
         }
 
-        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint redeemPoint) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
+        private void sendAssetMovement(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint redeemPoint) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendDAPMessageException {
             //Storing Users
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetIssuer actorReceiver = (ActorAssetIssuer) new AssetIssuerActorRecord(digitalAssetMetadata.getDigitalAsset().getName(), digitalAssetMetadata.getDigitalAsset().getPublicKey());

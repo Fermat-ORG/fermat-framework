@@ -60,7 +60,8 @@ public class NetworkClientConnectionsManager {
                     identity,
                     pluginRoot,
                     -1,
-                    Boolean.TRUE
+                    Boolean.TRUE,
+                    null // it should stablished to null to be save when is connected in ConneciontHistory
             );
 
             activeConnectionsToExternalNodes.put(uriToNode, networkClientCommunicationConnection);

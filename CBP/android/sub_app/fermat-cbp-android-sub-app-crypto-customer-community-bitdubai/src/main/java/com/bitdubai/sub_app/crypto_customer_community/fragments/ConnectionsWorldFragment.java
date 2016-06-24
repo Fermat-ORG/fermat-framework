@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -35,7 +36,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSessionReferenceApp;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
+public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     //Constants
@@ -171,6 +171,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
+                        .setIsCheckEnabled(true)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override

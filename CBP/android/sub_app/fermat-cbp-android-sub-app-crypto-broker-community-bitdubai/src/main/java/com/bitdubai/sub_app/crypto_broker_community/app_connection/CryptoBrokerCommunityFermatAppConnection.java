@@ -8,16 +8,17 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.notifications.CommunityNotificationPainterBuilder;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -25,7 +26,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<CryptoBrokerCommunitySubAppSessionReferenceApp> {
+public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>> {
 
     public CryptoBrokerCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -48,8 +49,8 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Cry
     }
 
     @Override
-    public CryptoBrokerCommunitySubAppSessionReferenceApp getSession() {
-        return new CryptoBrokerCommunitySubAppSessionReferenceApp();
+    public ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> getSession() {
+        return getFullyLoadedSession();
     }
 
 

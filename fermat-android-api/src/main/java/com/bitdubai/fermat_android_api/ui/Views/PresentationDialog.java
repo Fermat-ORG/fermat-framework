@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
@@ -26,7 +28,6 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
 
 /**
@@ -204,7 +205,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 
         if (id == R.id.btn_left) {
             try {
-                getSession().getModuleManager().createIdentity(btn_left.getText().toString(), "Available", convertImage(resImageLeft));
+                getSession().getModuleManager().createIdentity(btn_left.getText().toString(), "Available", ImagesUtils.toByteArray(convertImage(resImageLeft)));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
                 if (callback != null) callback.onError(e);
@@ -213,7 +214,7 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
             dismiss();
         } else if (id == R.id.btn_right) {
             try {
-                getSession().getModuleManager().createIdentity(btn_right.getText().toString(), "Available", convertImage(resImageRight));
+                getSession().getModuleManager().createIdentity(btn_right.getText().toString(), "Available", ImagesUtils.toByteArray(convertImage(resImageRight)));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
                 if (callback != null) callback.onError(e);
@@ -234,8 +235,13 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
 //                        M module = getSession().getModuleManager();
 //                        if(getSession().getModuleManager() instanceof ModuleManagerImpl) {
                 FermatSettings bitcoinWalletSettings = ((ModuleSettingsImpl) getSession().getModuleManager()).loadAndGetSettings(getSession().getAppPublicKey());
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
-                ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                if (bitcoinWalletSettings != null) {
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(!checkbox_not_show.isChecked());
+                    ((ModuleSettingsImpl) getSession().getModuleManager()).persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                } else {
+                    Log.e(TAG, "Error: Save Settings null, verify if the module is running");
+                }
+
 //                        }else{
 //                            Log.e(TAG,"ModuleManager is not implementing the ModuleManagerImpl interface, class: "+getSession().getModuleManager().getClass().getName());
 //                        }
@@ -250,11 +256,8 @@ public class PresentationDialog<M extends ModuleManager> extends FermatDialog<Re
         }
     }
 
-    private byte[] convertImage(int resImage) {
-        Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
+    private Bitmap convertImage(int resImage) {
+        return BitmapFactory.decodeResource(activity.getResources(), resImage);
     }
 
     @Override

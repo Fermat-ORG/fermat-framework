@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
@@ -41,12 +42,17 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
      * FLAGS
      */
     protected boolean isAttached;
+    /**
+     * If the fragment is visible for the user
+     */
+    private boolean isVisible;;
 
     /**
      * Platform
      */
     protected S appSession;
     protected R appResourcesProviderManager;
+    private FermatFragment fermatFragmentType;
 
 
     /**
@@ -54,6 +60,7 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
      */
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
+
 
     public enum ScreenSize{
         LARGE,NORMAL, UNDEFINED, SMALL
@@ -112,6 +119,11 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
 
     public void setAppResourcesProviderManager(R appResourcesProviderManager) {
         this.appResourcesProviderManager = appResourcesProviderManager;
+    }
+
+    @Override
+    public void setFragmentType(FermatFragment fermatFragmentType) {
+        this.fermatFragmentType = fermatFragmentType;
     }
 
     @Override
@@ -247,7 +259,7 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
     }
 
     protected void sendMail(String userTo, String bodyText) throws Exception {
-        ((FermatActivityManager)getActivity()).sendMailExternal(userTo,bodyText);
+        ((FermatActivityManager)getActivity()).sendMailExternal(userTo, bodyText);
     }
 
     protected final void onBack(String activityCodeBack){
@@ -326,6 +338,19 @@ public class AbstractFermatSettingsFragment<S extends ReferenceAppFermatSession,
      * This method will be called when the user press the back button
      */
     public void onBackPressed() {
+
+    }
+
+    @Override
+    public void setFragmentFocus(boolean isVisible) {
+        this.isVisible =isVisible;
+        onFragmentFocus();
+    }
+
+    /**
+     * This method is called when the fragment is on user's focus
+     */
+    public void onFragmentFocus() {
 
     }
 

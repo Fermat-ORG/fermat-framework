@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_api.layer.identity.intra_user.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
+
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
 
 import java.io.Serializable;
@@ -27,15 +29,25 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     private byte[] image;
     private String privateKey;
 
+    private long accuracy;
+    private Frecuency frecuency;
+
+
     /**
      * Constructor
      */
-    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image) {
+
+    public IntraWalletUserIdentity(String alias, String phrase,String publicKey, String privateKey, byte[] image,long accuracy,Frecuency frecuency) {
+
         this.alias = alias;
         this.phrase = phrase;
         this.publicKey = publicKey;
         this.image = image;
         this.privateKey = privateKey;
+
+        this.frecuency = frecuency;
+        this.accuracy = accuracy;
+
 //        this.pluginFileSystem = pluginFileSystem;
 //        this.pluginId = pluginId;
     }
@@ -48,6 +60,16 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
     @Override
     public byte[] getImage() {
         return image;
+    }
+
+    @Override
+    public long getAccuracy() {
+        return accuracy;
+    }
+
+    @Override
+    public Frecuency getFrecuency() {
+        return frecuency;
     }
 
     @Override
@@ -154,6 +176,8 @@ public class IntraWalletUserIdentity implements com.bitdubai.fermat_ccp_api.laye
                 ", phrase='" + phrase + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", privateKey='" + privateKey + '\'' +
+                ", Accuracy='" + accuracy + '\'' +
+                ", Frecuency='" + frecuency.getCode() + '\'' +
                 '}';
     }
 }

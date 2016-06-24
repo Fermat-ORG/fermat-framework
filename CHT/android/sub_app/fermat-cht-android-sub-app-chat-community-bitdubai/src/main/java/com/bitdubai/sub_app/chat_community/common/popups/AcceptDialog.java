@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.common.popups;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -47,7 +48,7 @@ public class AcceptDialog
     private FermatButton   positiveBtn;
     private FermatButton   negativeBtn;
 
-    public AcceptDialog(final Activity                       activity              ,
+    public AcceptDialog(final Context activity              ,
                         final ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> chatUserSubAppSession,
                         final SubAppResourcesProviderManager subAppResources       ,
                         final ChatActorCommunityInformation  chatUserInformation  ,
@@ -74,9 +75,9 @@ public class AcceptDialog
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(chatUserInformation.getAlias()+"?");
+        title.setText("Connection Request");
+        description.setText(chatUserInformation.getAlias() + " wants to be your friend in P2P Chat");
+        userName.setText("");
 
     }
 

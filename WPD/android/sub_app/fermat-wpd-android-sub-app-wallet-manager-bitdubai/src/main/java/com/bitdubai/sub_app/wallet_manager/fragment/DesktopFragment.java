@@ -316,9 +316,14 @@ public class DesktopFragment extends AbstractDesktopFragment<ReferenceAppFermatS
         try {
             lstItems = new ArrayList<>();
 
-            lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
+//TODO: Matias en este punto sa error de null point al arrancar y no muestra las wallets
+           lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
             lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
+
+//TODO: Matias en este punto sa error de null point al arrancar y no muestra las wallets
+            // Object arrived null in method: getInstalledWallets, this happen when an error occur in the module or if you activate the timeout, please check your module and contact furszy if the error persist.
+
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {

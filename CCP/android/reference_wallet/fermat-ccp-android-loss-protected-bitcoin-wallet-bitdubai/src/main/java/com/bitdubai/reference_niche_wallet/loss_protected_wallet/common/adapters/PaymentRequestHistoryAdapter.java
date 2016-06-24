@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Toast;
@@ -208,7 +209,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                     try {
 
                         //verify loss protected settings
-                        if(appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE) != 0){
+                        if(((double)appSession.getData(SessionConstant.ACTUAL_EXCHANGE_RATE)) != 0){
 
 
 
@@ -233,6 +234,15 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                             data.getAmount(),
                                             data.getRequestId(), appSession,blockchainNetworkType,lossProtectedWallet);
                                     confirm_send_dialog.show();
+
+                                    confirm_send_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            notifyDataSetChanged();
+                                            onRefreshList.onRefresh();
+                                        }
+                                    });
                                 }
                                 else
                                 {

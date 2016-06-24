@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.OptionsMenu;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.option_menu.OptionsMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
@@ -24,11 +24,11 @@ public interface FermatActivity extends Serializable{
 
     String getActivityType();
 
-    Map<String, Fragment> getFragments();
+    Map<String, FermatFragment> getFragments();
 
-    Fragment getLastFragment();
+    FermatFragment getLastFragment();
 
-    Fragment getFragment(String fragment);
+    FermatFragment getFragment(String fragment);
 
     TitleBar getTitleBar() ;
 

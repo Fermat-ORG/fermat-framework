@@ -168,7 +168,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         referenceWalletSession = appSession;
 
         setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/helvetica-neue.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
         errorManager = appSession.getErrorManager();
 
         _executor = Executors.newFixedThreadPool(2);
@@ -186,7 +186,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.main_act, container, false);
+            rootView = inflater.inflate(R.layout.fermat_wallet_contac_main_act, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -244,7 +244,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setLayoutParams(actionButtonParams)
-                .setBackgroundDrawable(R.drawable.btn_contact_selector)
+                .setBackgroundDrawable(R.drawable.fw_add_floatting_buttom)
                 .build();
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
@@ -253,10 +253,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button1 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_extra_user_buttom))
                 .setText("External User")
-                .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextColor(Color.BLACK)
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
@@ -264,10 +264,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         button2 = itemBuilder
                 .setSize(65)
                 .setPadding(0,0,padding,0)
-                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.fw_fermat_user_buttom))
                 .setText("Fermat User")
-                .setTextColor(Color.WHITE)
-                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
+                .setTextColor(Color.BLACK)
+                .setTextBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.bg_fermat_contacts))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
@@ -337,7 +337,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
         super.onCreateOptionsMenu(menu, inflater);
 
 
-        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(0, FermatWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.fw_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
@@ -348,7 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
             int id = item.getItemId();
 
-            if (id == FermatWalletConstants.IC_ACTION_HELP_CONTACT) {
+            if (id == 3) {
                 setUpTutorial(true);
                 return true;
             }
@@ -502,13 +502,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // set header view
-        View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
-        mListView.setPinnedHeaderView(pinnedHeaderView);
+      //  View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
+      //  mListView.setPinnedHeaderView(pinnedHeaderView);
 
         // set index bar view
-        IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view, mListView, false);
-        indexBarView.setData(mListView, mListItems, mListSectionPos);
-        mListView.setIndexBarView(indexBarView);
+       // IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.fermat_index_bar_view, mListView, false);
+       // indexBarView.setData(mListView, mListItems, mListSectionPos);
+       // mListView.setIndexBarView(indexBarView);
 /*
         // set preview text view
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
@@ -537,13 +537,13 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                     if (isFromActionBarSend != null) {
                         if (isFromActionBarSend) {
                             referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
 
                         } else {
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
                         }
                     } else {
-                        changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                        changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
                     }
 
 
@@ -597,7 +597,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
             walletContact.setName("");
             lauchCreateContactDialog(false);
         } else if (id == ID_BTN_INTRA_USER) {
-            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
+            changeActivity(Activities.CCP_BITCOIN_FERMAT_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
         }
     }
 
@@ -836,7 +836,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceAppFermatS
                             String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                             if (!prevSection.equals(currentSection)) {
-                                mListItems.add(currentSection);
+                               // mListItems.add(currentSection);
 
                                 // array list of section positions
                                 mListSectionPos.add(mListItems.indexOf(currentSection));

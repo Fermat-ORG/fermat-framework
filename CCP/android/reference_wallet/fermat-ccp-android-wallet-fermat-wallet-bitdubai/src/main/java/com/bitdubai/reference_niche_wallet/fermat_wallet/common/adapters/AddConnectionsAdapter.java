@@ -11,7 +11,6 @@ import com.bitdubai.android_fermat_ccp_wallet_fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.holders.IntraUserInfoViewHolder;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
@@ -42,7 +41,7 @@ public class AddConnectionsAdapter extends FermatAdapter<FermatWalletIntraUserAc
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_information_list_item;
+        return R.layout.fermat_wallet_intra_user_information_list_item;
     }
 
     @Override
@@ -107,6 +106,7 @@ public class AddConnectionsAdapter extends FermatAdapter<FermatWalletIntraUserAc
                 addConnectionCallback.setSelected(data, selected);
                 if (selected) {
                     holder.checkbox_connection.setChecked(true);
+                    holder.checkbox_connection.setBackground(ContextCompat.getDrawable(context,R.drawable.checkbox_icon));
                    // FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
                     addConnectionCallback.addMenuEnabled();
                     holder.container_data.setBackgroundColor(Color.parseColor("#666666"));

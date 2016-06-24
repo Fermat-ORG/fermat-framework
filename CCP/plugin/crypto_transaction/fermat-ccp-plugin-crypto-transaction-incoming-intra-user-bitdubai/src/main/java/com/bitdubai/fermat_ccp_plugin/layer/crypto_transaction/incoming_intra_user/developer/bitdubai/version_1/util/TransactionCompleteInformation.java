@@ -57,7 +57,7 @@ public class TransactionCompleteInformation {
                     timestamp                                                ,
                     memo,
                     cryptoTransaction.getBlockchainNetworkType(),
-                    CryptoCurrency.BITCOIN);
+                    cryptoTransaction.getCryptoCurrency());
 
         } catch (CantGetCryptoAddressBookRecordException e) {
 
@@ -92,7 +92,7 @@ public class TransactionCompleteInformation {
                     timestamp                                                ,
                     memo,
                     cryptoTransaction.getBlockchainNetworkType(),
-                    CryptoCurrency.BITCOIN
+                    cryptoTransaction.getCryptoCurrency()
 
             );
 

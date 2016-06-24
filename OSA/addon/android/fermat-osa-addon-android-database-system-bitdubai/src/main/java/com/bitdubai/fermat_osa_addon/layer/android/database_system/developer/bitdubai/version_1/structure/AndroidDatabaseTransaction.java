@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,21 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
 
     private List<DatabaseTable> selectTables;
     private List<DatabaseTableRecord>  selectRecords;
+
+    private List<DatabaseTable> deleteTables;
+    private List<DatabaseTableRecord>  deleteRecords;
+
+    private AndroidDatabase database;
+
+    public AndroidDatabaseTransaction(AndroidDatabase database) {
+        this.database = database;
+    }
+
+    @Override
+    public void execute() throws DatabaseTransactionFailedException {
+
+        database.executeTransaction(this);
+    }
 
     /**
      * DatabaseTransaction interface implementation.
@@ -64,10 +80,10 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
     public void addRecordToInsert(DatabaseTable table, DatabaseTableRecord record){
 
         if(insertTables == null)
-            insertTables = new ArrayList<DatabaseTable>();
+            insertTables = new ArrayList<>();
 
         if(insertRecords == null)
-            insertRecords = new ArrayList<DatabaseTableRecord>();
+            insertRecords = new ArrayList<>();
 
         insertTables.add(table);
         insertRecords.add(record);
@@ -77,15 +93,30 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
     public void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord){
 
         if(selectTables == null)
-            selectTables = new ArrayList<DatabaseTable>();
+            selectTables = new ArrayList<>();
 
         if(selectRecords == null)
-            selectRecords = new ArrayList<DatabaseTableRecord>();
+            selectRecords = new ArrayList<>();
 
         selectTables.add(selectTable);
         selectRecords.add(selectRecord);
 
     }
+
+    @Override
+    public void addRecordToDelete(DatabaseTable deleteTable, DatabaseTableRecord deleteRecord){
+
+        if(deleteTables == null)
+            deleteTables = new ArrayList<>();
+
+        if(deleteRecords == null)
+            deleteRecords = new ArrayList<>();
+
+        deleteTables.add(deleteTable);
+        deleteRecords.add(deleteRecord);
+
+    }
+
     /**
      * <p>This method gets list of DatabaseTableRecord object that will be modified
      *
@@ -111,6 +142,7 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
     public List<DatabaseTableRecord> getRecordsToSelect(){
         return  this.selectRecords;
     }
+
     /**
      *<p>This method gets list of DatabaseTable object that will be updated
      *

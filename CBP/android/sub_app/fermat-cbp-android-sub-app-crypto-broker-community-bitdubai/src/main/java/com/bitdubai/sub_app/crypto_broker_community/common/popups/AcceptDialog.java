@@ -6,14 +6,16 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSessionReferenceApp;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -21,7 +23,7 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessionReferenceApp, SubAppResourcesProviderManager> implements
+public class AcceptDialog extends FermatDialog<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements
         View.OnClickListener {
 
     /**
@@ -31,22 +33,17 @@ public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
     CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
 
     CryptoBrokerCommunitySelectableIdentity identity;
-    private FermatTextView title;
-    private FermatTextView description;
-    private FermatTextView userName;
-    private FermatButton positiveBtn;
-    private FermatButton negativeBtn;
 
-    public AcceptDialog(Activity                                a                                 ,
-                        CryptoBrokerCommunitySubAppSessionReferenceApp cryptoBrokerCommunitySubAppSession,
-                        SubAppResourcesProviderManager          subAppResources                   ,
-                        CryptoBrokerCommunityInformation        cryptoBrokerInformation           ,
-                        CryptoBrokerCommunitySelectableIdentity identity                          ) {
+    public AcceptDialog(Activity activity,
+                        ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager> session,
+                        SubAppResourcesProviderManager subAppResources,
+                        CryptoBrokerCommunityInformation cryptoBrokerInformation,
+                        CryptoBrokerCommunitySelectableIdentity identity) {
 
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(activity, session, subAppResources);
 
         this.cryptoBrokerCommunityInformation = cryptoBrokerInformation;
-        this.identity             = identity               ;
+        this.identity = identity;
     }
 
 
@@ -54,11 +51,11 @@ public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title = (FermatTextView) findViewById(R.id.title);
-        description = (FermatTextView) findViewById(R.id.description);
-        userName = (FermatTextView) findViewById(R.id.user_name);
-        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
+        FermatTextView title = (FermatTextView) findViewById(R.id.title);
+        FermatTextView description = (FermatTextView) findViewById(R.id.description);
+        FermatTextView userName = (FermatTextView) findViewById(R.id.user_name);
+        FermatButton positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        FermatButton negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -84,28 +81,28 @@ public class AcceptDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessio
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-           // try {
-                if (cryptoBrokerCommunityInformation != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
-                    //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
-                    Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
-                }
-                dismiss();
+            // try {
+            if (cryptoBrokerCommunityInformation != null && identity != null) {
+                Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
+                //getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), information.getName(), information.getPublicKey(), information.getProfileImage());
+                Toast.makeText(getContext(), cryptoBrokerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+            }
+            dismiss();
             /*} catch (CantAcceptRequestException e) {
                 e.printStackTrace();
             }*/
             dismiss();
         } else if (i == R.id.negative_button) {
             //try {
-                if (cryptoBrokerCommunityInformation != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
-                    // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
-                } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
-                }
-                dismiss();
+            if (cryptoBrokerCommunityInformation != null && identity != null) {
+                Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
+            } else {
+                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+            }
+            dismiss();
             /*} catch (IntraUserConnectionDenialFailedException e) {
                 e.printStackTrace();
             }*/

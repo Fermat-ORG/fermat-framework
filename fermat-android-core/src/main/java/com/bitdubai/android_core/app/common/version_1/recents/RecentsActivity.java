@@ -267,7 +267,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
                     res = R.drawable.banner_asset_user_wallet;
                     break;
                 case DAP_REDEEM_WALLET:
-                    res = R.drawable.banner_redeem_point;
+                    res = R.drawable.banner_redeem_point_wallet;
                     break;
                 case TKY_FAN_WALLET:
                     res = R.drawable.banner_tky;

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -21,8 +22,9 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSessionReferenceApp;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -31,7 +33,7 @@ import java.text.NumberFormat;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSessionReferenceApp, ResourceProviderManager> {
+public class CloseContractDetailsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerWalletModuleManager>, ResourceProviderManager> {
     private static final String TAG = "CloseContractDetails";
 
 
@@ -64,7 +66,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoC
 
     private void initViews(View rootView) {
 
-        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoCustomerWalletSessionReferenceApp.CONTRACT_DATA);
+        final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(FragmentsCommons.CONTRACT_DATA);
         ContractStatus status = contractBasicInfo.getStatus();
 
         ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
@@ -107,7 +109,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoC
         checkNegotiationDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                appSession.setNegotiationId(contractBasicInfo.getNegotiationId());
+                appSession.setData(FragmentsCommons.NEGOTIATION_ID, contractBasicInfo.getNegotiationId());
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
             }
         });

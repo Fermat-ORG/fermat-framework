@@ -7,6 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Nerio on 10/09/15.
  */
+
 public interface DAPActor extends Serializable {
 
     /**

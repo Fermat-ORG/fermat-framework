@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Select Network"
-        android:textColor="#005580"
+        android:textColor="@color/redeem_card_titlebar"
         android:textSize="17sp"
         app:typeface="ROBOTO_REGULAR"
         tools:ignore="HardcodedText" />

@@ -216,7 +216,7 @@ public class ChatActorNetworkServiceDao {
         }
     }
 
-  
+
         public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {

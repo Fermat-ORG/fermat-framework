@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
+import java.io.Serializable;
+
 /**
  * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Actors</code>
  * Lists all the Actors available on Fermat.
@@ -9,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
 
-public enum Actors implements FermatEnum {
+public enum Actors implements FermatEnum, Serializable {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 
     DatabaseTransaction newTransaction();
 
+    @Deprecated // execute directly from the transaction object. @see DatabaseTransaction.execute() method.
     void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
 
     DatabaseFactory getDatabaseFactory();

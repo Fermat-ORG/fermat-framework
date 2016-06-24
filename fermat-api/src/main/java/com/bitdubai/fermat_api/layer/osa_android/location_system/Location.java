@@ -18,7 +18,14 @@ public interface Location {
 
     Double getAltitude();
 
-    Double getAccuracy();
+    // when we can't know how exact it is, the returning value is -1
+    long getAccuracy();
+
+    void setLatitude(Double latitude);
+
+    void setLongitude(Double longitude);
+
+    void setAccuracy(long accuracy);
 
     Double getAltitudeAccuracy();
 

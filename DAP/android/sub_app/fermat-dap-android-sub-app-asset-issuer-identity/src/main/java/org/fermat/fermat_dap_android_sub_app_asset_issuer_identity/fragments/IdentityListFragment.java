@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer,ReferenceAppFermatSession>
+public class IdentityListFragment extends FermatListFragment<IdentityAssetIssuer, ReferenceAppFermatSession>
         implements FermatListItemListeners<IdentityAssetIssuer> {
 
 

@@ -34,7 +34,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.adapters.AssetRedeemSelec
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
-import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSessionReferenceApp;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -47,7 +46,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession, ResourceProviderManager>
+public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragment<RedeemPoint, ReferenceAppFermatSession<AssetUserWalletSubAppModuleManager>, ResourceProviderManager>
         implements FermatListItemListeners<RedeemPoint> {
 
     // Constants
@@ -56,12 +55,8 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    AssetUserSessionReferenceApp assetUserSession;
     // Data
     private List<RedeemPoint> redeemPoints;
-
-//    SettingsManager<AssetUserSettings> settingsManager;
-
     //UI
     private View noRPView;
     private Toolbar toolbar;
@@ -75,11 +70,10 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            assetUserSession = ((AssetUserSessionReferenceApp) appSession);
-            moduleManager = assetUserSession.getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            redeemPoints = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

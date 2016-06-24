@@ -132,31 +132,31 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 //                throw new CantCreateActorAssetIssuerException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
 //            }
         }
-
-        private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
-            try {
-                if (assetIssuerActorNetworkServiceManager != null && assetIssuerActorDao.getActorAssetIssuer() != null) {
-                    List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
-                    if (list.isEmpty()) {
-                        System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
-                        assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
-                    } else {
-                        System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        int recordInsert = assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
-                        System.out.println("Actor Asset Issuer - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
-                    }
-                }
-            } catch (CantRequestListActorAssetIssuerRegisteredException e) {
-                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantCreateActorAssetIssuerException("CAN'T REQUEST LIST ACTOR ASSET ISSUER NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetIssuerActorNetworkServiceManager);
-            } catch (CantAddPendingAssetIssuerException e) {
-                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantCreateActorAssetIssuerException("CAN'T ADD LIST ACTOR ASSET ISSUER IN BD ACTORS ", e, "", "");
-            } catch (CantGetAssetIssuerActorsException e) {
-                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantCreateActorAssetIssuerException("CAN'T GET ASSET ACTOR ASSET ISSUER", e, "", "");
-            }
-        }
+        //EN DESHUSO
+//        private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
+//            try {
+//                if (assetIssuerActorNetworkServiceManager != null && assetIssuerActorDao.getActorAssetIssuer() != null) {
+//                    List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+//                    if (list.isEmpty()) {
+//                        System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+//                        System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
+//                        assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
+//                    } else {
+//                        System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
+//                        int recordInsert = assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
+//                        System.out.println("Actor Asset Issuer - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
+//                    }
+//                }
+//            } catch (CantRequestListActorAssetIssuerRegisteredException e) {
+//                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//                throw new CantCreateActorAssetIssuerException("CAN'T REQUEST LIST ACTOR ASSET ISSUER NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetIssuerActorNetworkServiceManager);
+//            } catch (CantAddPendingAssetIssuerException e) {
+//                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//                throw new CantCreateActorAssetIssuerException("CAN'T ADD LIST ACTOR ASSET ISSUER IN BD ACTORS ", e, "", "");
+//            } catch (CantGetAssetIssuerActorsException e) {
+//                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//                throw new CantCreateActorAssetIssuerException("CAN'T GET ASSET ACTOR ASSET ISSUER", e, "", "");
+//            }
+//        }
     }
 }

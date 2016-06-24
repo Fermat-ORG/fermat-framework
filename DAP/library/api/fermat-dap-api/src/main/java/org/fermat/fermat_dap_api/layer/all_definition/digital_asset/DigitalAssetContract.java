@@ -3,13 +3,14 @@ package org.fermat.fermat_dap_api.layer.all_definition.digital_asset;
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.Contract;
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by rodrigo on 9/4/15.
  */
-public class DigitalAssetContract implements Contract {
+public class DigitalAssetContract implements Contract, Serializable {
     List<ContractProperty> properties;
 
     /**
