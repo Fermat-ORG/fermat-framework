@@ -17,12 +17,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -466,6 +469,15 @@ public class ConnectionsWorldFragment
                                 //Todo: callback to connectionworldagment to update view of browser filtering by the city or country selected
                             }
                         });
+
+                        Window window = geolocationDialog.getWindow();
+                        WindowManager.LayoutParams wlp = window.getAttributes();
+                        wlp.gravity = Gravity.TOP;
+                        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+                        window.setAttributes(wlp);
+
+                        geolocationDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                         geolocationDialog.show();
 
                     } catch ( Exception e) {

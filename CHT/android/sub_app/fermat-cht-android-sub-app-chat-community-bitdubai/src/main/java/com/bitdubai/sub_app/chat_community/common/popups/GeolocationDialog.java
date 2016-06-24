@@ -70,6 +70,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     private ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession;
     private CitiesImpl cityFromList;
     private ImageView lupaButton;
+    private ImageView closeButton;
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
@@ -108,7 +109,24 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             noDatalabel = (TextView) findViewById(R.id.nodatalabel);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
             emptyView = (LinearLayout) findViewById(R.id.empty_view);
+            closeButton = (ImageView) findViewById(R.id.close_geolocation_dialog);
 
+            lupaButton = (ImageView) this.findViewById(R.id.lupita_button);
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
+            lupaButton.setOnClickListener( new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onRefresh();
+                        }
+                    }
+            );
             adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
