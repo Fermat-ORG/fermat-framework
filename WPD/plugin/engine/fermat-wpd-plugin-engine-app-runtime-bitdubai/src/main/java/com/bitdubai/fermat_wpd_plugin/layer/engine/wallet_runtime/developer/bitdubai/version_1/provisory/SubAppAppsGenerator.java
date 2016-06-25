@@ -4860,6 +4860,12 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#075E54");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setLabelSize(18);
+        leftIconMenuItem = new MenuItem();
+
+        leftIconMenuItem.setFermatDrawable(new FermatDrawable(7, "open_nav", owner, SourceLocation.DEVELOPER_RESOURCES));
+        leftIconMenuItem.setAppLinkPublicKey("back");
+        runtimeTitleBar.setNavItem(leftIconMenuItem);
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new FermatRuntimeFragment();

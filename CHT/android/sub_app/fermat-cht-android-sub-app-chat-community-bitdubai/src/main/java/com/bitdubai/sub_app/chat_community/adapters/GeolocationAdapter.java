@@ -3,51 +3,81 @@ package com.bitdubai.sub_app.chat_community.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
+import com.bitdubai.sub_app.chat_community.holders.CitiesListHolder;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by roy on 13/06/16.
  */
-public class GeolocationAdapter extends FermatAdapter<ChatActorCommunityInformation, ContactsListHolder> {
+public class GeolocationAdapter extends ArrayAdapter {
 
-    public GeolocationAdapter(Context context, List<ChatActorCommunityInformation> dataset){
-        super(context, dataset);
+    protected List<ExtendedCity> dataSet;
+    private ErrorManager errorManager;
+    private CitiesImpl cityFromList;
+    private AdapterCallback mAdapterCallback;
+    private GeolocationDialog locationDialog;
+
+    public GeolocationAdapter(Context context, List<ExtendedCity> dataSet, ErrorManager errorManager,
+                              AdapterCallback mAdapterCallback, GeolocationDialog locationDialog){
+        super(context, R.layout.cht_comm_geolocation_results_item, dataSet);
+        this.dataSet = dataSet;
+        this.errorManager = errorManager;
+        this.mAdapterCallback = mAdapterCallback;
+        this.locationDialog = locationDialog;
     }
 
-    @Override
-    protected ContactsListHolder createHolder(View itemView, int type) {
-        return new ContactsListHolder(itemView);
+    public static interface AdapterCallback {
+        void onMethodCallback(CitiesImpl cityFromList);
     }
 
-    @Override
-    protected int getCardViewResource() {
-        return R.layout.cht_comm_geolocation_results_item;
+    public void refreshEvents(List<ExtendedCity> dataSet) {
+        this.dataSet = dataSet;
+        notifyDataSetChanged();
     }
 
-    @Override
-    protected void bindHolder(ContactsListHolder holder, ChatActorCommunityInformation data, int position) {
-        if (data.getPublicKey() != null) {
-            holder.friendName.setText(data.getAlias());
-            if (data.getImage() != null && data.getImage().length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
-                //holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View item = inflater.inflate(R.layout.cht_comm_geolocation_results_item, null, true);
+        try {
+            TextView Country = (TextView) item.findViewById(R.id.country_search);
+            TextView State = (TextView) item.findViewById(R.id.state_search);
+            Country.setText(dataSet.get(position).getCountryName());
+            State.setText(dataSet.get(position).getName());
+            final int pos=position;
+            item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cityFromList = (CitiesImpl) dataSet.get(pos);
+                    mAdapterCallback.onMethodCallback(cityFromList);
+                    locationDialog.dismiss();
+                }
+            });
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_COMMUNITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-    }
-
-    public int getSize() {
-        if (dataSet != null)
-            return dataSet.size();
-        return 0;
+        return item;
     }
 }

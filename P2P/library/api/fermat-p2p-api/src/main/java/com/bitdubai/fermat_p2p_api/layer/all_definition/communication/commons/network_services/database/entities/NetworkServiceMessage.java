@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.TimestampAdapter;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -138,12 +138,12 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
 
     public String toJson() {
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampAdapter()).create();
         return gson.toJson(this);
     }
 
     public static NetworkServiceMessage parseContent(String content) {
-        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampAdapter()).create();
         return gson.fromJson(content, NetworkServiceMessage.class);
     }
 

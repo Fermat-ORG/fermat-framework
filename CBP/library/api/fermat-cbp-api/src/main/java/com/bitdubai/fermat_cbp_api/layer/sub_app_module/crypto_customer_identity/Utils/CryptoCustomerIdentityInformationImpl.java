@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
@@ -19,30 +19,31 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     private final String publicKey;
     private final byte[] profileImage;
     private final ExposureLevel exposureLevel;
-    private long accuracy;
-    private Frecuency frecuency;
+    private long   accuracy;
+    private Frequency frequency;
+
 
     public CryptoCustomerIdentityInformationImpl(final String alias,
                                                  final String publicKey,
                                                  final byte[] profileImage,
                                                  final ExposureLevel exposureLevel,
                                                  final long accuracy,
-                                                 final Frecuency frecuency) {
+                                                 final Frequency frequency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.exposureLevel = exposureLevel;
-        this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.accuracy      = accuracy     ;
+        this.frequency = frequency;
     }
 
-    public CryptoCustomerIdentityInformationImpl(CryptoCustomerIdentityInformation identityInfo, int accuracy, Frecuency frequency) {
+    public CryptoCustomerIdentityInformationImpl(CryptoCustomerIdentityInformation identityInfo, int accuracy, Frequency frequency) {
         this.alias = identityInfo.getAlias();
         this.publicKey = identityInfo.getPublicKey();
         this.profileImage = identityInfo.getProfileImage();
         this.exposureLevel = identityInfo.isPublished() ? ExposureLevel.PUBLISH : ExposureLevel.HIDE;
         this.accuracy = accuracy;
-        this.frecuency = frequency;
+        this.frequency = frequency;
     }
 
     @Override
@@ -71,8 +72,8 @@ public class CryptoCustomerIdentityInformationImpl implements CryptoCustomerIden
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 
     public boolean equals(Object o) {

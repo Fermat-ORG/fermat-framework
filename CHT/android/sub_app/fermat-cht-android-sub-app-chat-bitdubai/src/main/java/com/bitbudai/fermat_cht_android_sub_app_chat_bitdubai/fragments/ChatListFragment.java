@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -403,7 +404,14 @@ public class ChatListFragment
                     contact.setRemoteActorPublicKey(adapter.getContactIdItem(position));
                     contact.setAlias(adapter.getItem(position));
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    if(adapter.getImgIdItem(position)!=null)
+                    {
+                        adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    } else {
+                        Drawable d = getResources().getDrawable(R.drawable.cht_center_profile_icon_center); // the drawable (Captain Obvious, to the rescue!!!)
+                        Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    }
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
                     appSession.setData(ChatSessionReferenceApp.CONTACT_DATA, contact);
@@ -464,8 +472,8 @@ public class ChatListFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
+        //menu.clear();
+        //super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.chat_list_menu, menu);
         // Locate the search item = (MenuItem) fermatFragmentType.getOptionsMenu().getItem(1);
         //OptionsMenu menuu = fermatFragmentType.getOptionsMenu();

@@ -6,14 +6,14 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by franklin on 01/04/16.
  */
-public enum Frecuency implements FermatEnum {
+public enum Frequency implements FermatEnum {
     /**
-     * Definition types frecuency
+     * Definition types frequency
      */
-    LOW    ("LOW"),
-    NORMAL ("NORMAL"),
-    HIGH   ("HIGH"),
-    NONE   ("NONE");
+    LOW    ("LO"),
+    NORMAL ("NL"),
+    HIGH   ("HI"),
+    NONE   ("NN");
 
     /**
      * Represent the code of the message status
@@ -25,7 +25,7 @@ public enum Frecuency implements FermatEnum {
      *
      * @param code the valid code
      */
-    Frecuency(String code) {
+    Frequency(String code) {
         this.code = code;
     }
     /**
@@ -45,17 +45,13 @@ public enum Frecuency implements FermatEnum {
      * @return MessagesStatus enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static Frecuency getByCode(String code) throws InvalidParameterException {
+    public static Frequency getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "LOW":
-                return Frecuency.LOW;
-            case "NORMAL":
-                return Frecuency.NORMAL;
-            case "HIGH":
-                return Frecuency.HIGH;
-            case "NONE":
-                return Frecuency.NONE;
+            case "LO":return LOW;
+            case "NL":return NORMAL;
+            case "HI":return HIGH;
+            case "NN":return NONE;
         }
 
         /**
