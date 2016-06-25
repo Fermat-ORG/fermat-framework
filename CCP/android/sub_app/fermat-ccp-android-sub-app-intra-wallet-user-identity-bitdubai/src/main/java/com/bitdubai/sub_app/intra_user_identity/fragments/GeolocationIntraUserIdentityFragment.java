@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +39,9 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
+
 
 public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<IntraUserIdentityModuleManager>, SubAppResourcesProviderManager>{
 
@@ -48,7 +52,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     Toolbar toolbar;
     long acurracydata;
     Frecuency frecuencydata;
-    IntraUserModuleIdentity identity;
+    IntraWalletUserIdentity identity;
 
 
 
@@ -91,7 +95,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         //Check if a default identity is configured
         if(identity==null){
             try{
-                identity = (IntraUserModuleIdentity)moduleManager.getSelectedActorIdentity();
+                identity = moduleManager.getIntraWalletUsers();
             }catch (Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
@@ -107,6 +111,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     private void initViews(View layout) {
         // Spinner Drop down elements
         List<Frecuency> dataspinner = new ArrayList<Frecuency>();
+        dataspinner.add(Frecuency.NONE);
         dataspinner.add(Frecuency.LOW);
         dataspinner.add(Frecuency.NORMAL);
         dataspinner.add(Frecuency.HIGH);
@@ -156,6 +161,24 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+           // if (id == 1)
+                //showDialog();
+
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void saveAndGoBack(){
         try {
             if(ExistIdentity()){
@@ -169,7 +192,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     @Override
     public void onBackPressed(){
         saveAndGoBack();
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY, appSession.getAppPublicKey());
+        changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY, appSession.getAppPublicKey());
         //super.onBackPressed();
     }
 
@@ -210,7 +233,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetIntraUserIdentityException {
         checkIdentity();
         if(identity!=null){
-            accuracy.setText(""+identity.get());
+            accuracy.setText(""+identity.getAccuracy());
             if (!identity.getFrecuency().equals(null)) {
                 int spinnerPosition = dataAdapter.getPosition(identity.getFrecuency());
                 frequency.setSelection(spinnerPosition);

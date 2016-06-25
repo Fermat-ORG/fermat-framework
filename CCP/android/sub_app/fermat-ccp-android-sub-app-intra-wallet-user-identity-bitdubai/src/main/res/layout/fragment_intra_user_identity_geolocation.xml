@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:text="Accurancy (km)"
         android:id="@+id/textView"
-        android:textColor="#919090"
-        android:textStyle="bold"
+        android:textColor="#ffffff"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
@@ -42,9 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Frecuency"
-        android:textStyle="bold"
         android:id="@+id/textView2"
-        android:textColor="#919090"
+        android:textColor="#ffffff"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
