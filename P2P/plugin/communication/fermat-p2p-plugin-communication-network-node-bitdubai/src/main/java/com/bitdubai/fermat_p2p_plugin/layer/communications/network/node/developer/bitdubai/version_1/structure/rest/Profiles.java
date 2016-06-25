@@ -99,7 +99,7 @@ public class Profiles implements RestFulServices {
             /*
              * hold the result list
              */
-            List<ActorProfile> resultList = filterActors(discoveryQueryParameters, clientIdentityPublicKey);
+            List<ActorProfile> resultList = filterActorsTemporal(discoveryQueryParameters, clientIdentityPublicKey);
 
             LOG.info("filteredLis.size() =" + resultList.size());
 
@@ -346,6 +346,44 @@ public class Profiles implements RestFulServices {
             daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
 
         return daoFactory;
+
+    }
+
+    /*
+     * TOD: uso temporal para que los muchachos puedan probar su plugin
+     * mientra resolvemos lo de Actor_catalogs
+     */
+    private List<ActorProfile> filterActorsTemporal(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
+        List<ActorProfile> profileList = new ArrayList<>();
+        List<CheckedInActor> listActorsLetf;
+        Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
+
+        int max    = 10;
+        int offset =  0;
+
+        if( discoveryQueryParameters.getMax() != null &&
+                discoveryQueryParameters.getOffset() != null &&
+                discoveryQueryParameters.getMax() > 0 &&
+                discoveryQueryParameters.getOffset() >= 0) {
+            max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+            offset = discoveryQueryParameters.getOffset();
+        }
+
+        if (discoveryQueryParameters.getLocation() != null)
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+        else
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAll(filters, max, offset);
+
+        if(listActorsLetf != null) {
+            for (CheckedInActor actor : listActorsLetf) {
+
+                if (!actor.getClientIdentityPublicKey().equals(clientIdentityPublicKey))
+                    profileList.add(getActorProfileFromCheckedInActor(actor));
+
+            }
+        }
+
+        return profileList;
 
     }
 
