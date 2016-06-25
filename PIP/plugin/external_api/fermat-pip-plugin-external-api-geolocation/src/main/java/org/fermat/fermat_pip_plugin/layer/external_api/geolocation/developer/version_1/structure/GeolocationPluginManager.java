@@ -170,7 +170,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.getTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
-                    GeolocationConfiguration.COUNTRIES_BACKUP_FILE+pathFilter,
+                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE+pathFilter,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.loadFromMedia();
@@ -522,7 +522,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.createTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_CITIES_FILE,
-                    GeolocationConfiguration.CITIES_BACKUP_FILE + pathFilter,
+                    GeolocationConfiguration.FILTERED_CITIES_BACKUP_FILE + pathFilter,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.setContent(dependenciesListXML);
@@ -565,13 +565,17 @@ public class GeolocationPluginManager implements GeolocationManager {
             for(City city : filteredCityList){
                 countryCode = city.getCountryCode();
                 country = allCountryList.get(countryCode);
+                System.out.println("GEOLOCATION:"+city+" - "+country);
+                if(country==null){
+                    //In theory, it cannot happen, but, we will continue
+                    continue;
+                }
                 extendedCity = new ExtendedCityRecord(city,country);
                 extendedCityList.add(extendedCity);
             }
             //Now, I'll include all the information got in filteredCountryList.
             List<City> cityListByCountryCode;
             for(Map.Entry<String, Country> entry: filteredCountryList.entrySet()){
-                country = entry.getValue();
                 countryCode = entry.getKey();
                 cityListByCountryCode = getCitiesByCountryCode(countryCode);
                 for(City city : cityListByCountryCode){
