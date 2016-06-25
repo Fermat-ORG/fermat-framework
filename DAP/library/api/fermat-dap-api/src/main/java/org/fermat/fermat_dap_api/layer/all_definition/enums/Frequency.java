@@ -10,10 +10,10 @@ public enum Frequency implements FermatEnum {
     /**
      * Definition types frequency
      */
-    LOW    ("LOW"),
-    NORMAL ("NORMAL"),
-    HIGH   ("HIGH"),
-    NONE   ("NONE");
+    NONE("NONE"),
+    LOW("LOW"),
+    NORMAL("NORMAL"),
+    HIGH("HIGH"),;
 
     /**
      * Represent the code of the message status
@@ -28,6 +28,7 @@ public enum Frequency implements FermatEnum {
     Frequency(String code) {
         this.code = code;
     }
+
     /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
@@ -35,7 +36,7 @@ public enum Frequency implements FermatEnum {
      */
     @Override
     public String getCode() {
-        return this.code ;
+        return this.code;
     }
 
     /**
@@ -48,14 +49,14 @@ public enum Frequency implements FermatEnum {
     public static Frequency getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
+            case "NONE":
+                return Frequency.NONE;
             case "LOW":
                 return Frequency.LOW;
             case "NORMAL":
                 return Frequency.NORMAL;
             case "HIGH":
                 return Frequency.HIGH;
-            case "NONE":
-                return Frequency.NONE;
         }
 
         /**
