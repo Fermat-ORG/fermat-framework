@@ -292,7 +292,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         ExposureLevel published = ExposureLevel.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_EXPOSURE_LEVEL_COLUMN_NAME));
         KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
         long accuracy = record.getLongValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ACCURACY_COLUMN_NAME);
-        Frequency frequency = Frequency.getByCode(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME);
+        Frequency frequency = Frequency.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FRECUENCY_COLUMN_NAME));
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published, accuracy, frequency);
 
     }
