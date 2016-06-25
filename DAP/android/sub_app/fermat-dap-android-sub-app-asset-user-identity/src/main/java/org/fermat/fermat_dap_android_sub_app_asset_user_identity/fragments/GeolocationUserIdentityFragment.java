@@ -26,6 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Identi
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.interfaces.AssetUserIdentityModuleManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GeolocationUserIdentityFragment extends AbstractFermatFragment<ReferenceAppFermatSession<AssetUserIdentityModuleManager>, ResourceProviderManager> {
@@ -68,13 +69,11 @@ public class GeolocationUserIdentityFragment extends AbstractFermatFragment<Refe
     private void initViews(View layout) {
         // Spinner Drop down elements
         List<Frequency> dataSpinner = new ArrayList<>();
-        dataSpinner.add(Frequency.NONE);
-        dataSpinner.add(Frequency.LOW);
-        dataSpinner.add(Frequency.NORMAL);
-        dataSpinner.add(Frequency.HIGH);
+        dataSpinner.addAll(Arrays.asList(Frequency.values()));
 
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
+        accuracy.requestFocus();
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
         frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
@@ -124,6 +123,7 @@ public class GeolocationUserIdentityFragment extends AbstractFermatFragment<Refe
         if(appSession.getData(SessionConstants.ACCURACY_DATA) != null) {
             int accuracyTemp = (int) appSession.getData(SessionConstants.ACCURACY_DATA);
             accuracy.setText(String.format("%s", Integer.toString(accuracyTemp)));
+
             int spinnerPosition = dataAdapter.getPosition((Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA));
             frequency.setSelection(spinnerPosition);
         } else {
@@ -138,8 +138,11 @@ public class GeolocationUserIdentityFragment extends AbstractFermatFragment<Refe
                     frequency.setSelection(spinnerPosition);
                 }
             } else {
-                accuracy.setText("0");
-                frequency.setSelection(2);
+                int accuracyTemp = appSession.getModuleManager().getAccuracyDataDefault();
+                accuracy.setText(String.format("%s", Integer.toString(accuracyTemp)));
+
+                int spinnerPosition = dataAdapter.getPosition(appSession.getModuleManager().getFrequencyDataDefault());
+                frequency.setSelection(spinnerPosition);
             }
         }
     }
