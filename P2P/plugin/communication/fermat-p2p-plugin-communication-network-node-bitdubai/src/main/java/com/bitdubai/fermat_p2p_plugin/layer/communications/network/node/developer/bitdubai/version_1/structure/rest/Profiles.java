@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
@@ -137,15 +140,16 @@ public class Profiles implements RestFulServices {
 
             try {
 
-                System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
+                //System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
                 if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey())) {
-                    System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
+                    //System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
 
                     if (daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
                         actors.add(actorsCatalog);
 
-                } else if(isActorOnline(actorsCatalog))
+                } else if(isActorOnline(actorsCatalog)) {
                     actors.add(actorsCatalog);
+                }
 
             } catch (CantReadRecordDataBaseException e) {
                 e.printStackTrace();
@@ -165,12 +169,12 @@ public class Profiles implements RestFulServices {
      */
     private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        Map<String,ActorProfile> profileList = new HashMap();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
 
-        int max    = 10;
+        int max    = 100;
         int offset =  0;
 
         if( discoveryQueryParameters.getMax() != null &&
@@ -200,12 +204,62 @@ public class Profiles implements RestFulServices {
                 actorProfile.setExtraData(actorsCatalog.getExtraData());
                 actorProfile.setLocation(actorsCatalog.getLastLocation());
 
-                profileList.add(actorProfile);
+                profileList.put(actorsCatalog.getIdentityPublicKey(), actorProfile);
+            }
+        }
+
+        if(discoveryQueryParameters.getMax() > 0 && profileList.size() < discoveryQueryParameters.getMax())
+            profileList = profileList(profileList, discoveryQueryParameters.getMax());
+
+        return new ArrayList<>(profileList.values());
+
+    }
+
+    /*
+     * get the other actors that left in the list to the same max
+     */
+    private Map<String,ActorProfile> profileList(Map<String,ActorProfile> profileList, int max) throws CantReadRecordDataBaseException {
+
+        List<CheckedInActor> listActorsLetf = daoFactory.getCheckedInActorDao().findAll();
+
+        if(listActorsLetf != null){
+
+            for(CheckedInActor actor : listActorsLetf){
+
+                if(!profileList.containsKey(actor.getIdentityPublicKey()))
+                    profileList.put(actor.getIdentityPublicKey(), getActorProfileFromCheckedInActor(actor));
+
+                if(profileList.size() == max)
+                    break;
+
             }
         }
 
         return profileList;
+    }
 
+    /*
+     * get ActorProfile From CheckedInActor
+     */
+    private ActorProfile getActorProfileFromCheckedInActor(CheckedInActor actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(new NetworkNodeCommunicationDeviceLocation(
+                actor.getLatitude(),
+                actor.getLongitude(),
+                null     ,
+                0        ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN));
+
+        return actorProfile;
     }
 
     /**
