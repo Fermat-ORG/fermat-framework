@@ -89,7 +89,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     }
 
     public static interface AdapterCallback extends GeolocationAdapter.AdapterCallback {
-        void onMethodCallback(CitiesImpl cityFromList);
+        void onMethodCallback(ExtendedCity cityFromList);
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -148,48 +148,48 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         return Window.FEATURE_NO_TITLE;
     }
 
-    public void onRefresh(){
-        if (!isRefreshing) {
-            isRefreshing = true;
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    return getMoreData(searchInput.getText().toString());
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @SuppressWarnings("unchecked")
-                @Override
-                public void onPostExecute(Object... result) {
-                    isRefreshing = false;
-                    if (result != null &&
-                            result.length > 0) {
-                        if (getActivity()!= null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
-                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
-                            mListView.setAdapter(adapter);
-                            adapter.refreshEvents(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
-                            }
-                        }
-                    } else
-                        showEmpty(true, emptyView);
-                }
-
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    isRefreshing = false;
-                    if (getActivity() != null)
-                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                }
-            });
-            worker.execute();
-        }
-    }
+//    public void onRefresh(){
+//        if (!isRefreshing) {
+//            isRefreshing = true;
+//            FermatWorker worker = new FermatWorker() {
+//                @Override
+//                protected Object doInBackground() throws Exception {
+//                    return getMoreData(searchInput.getText().toString());
+//                }
+//            };
+//            worker.setContext(getActivity());
+//            worker.setCallBack(new FermatWorkerCallBack() {
+//                @SuppressWarnings("unchecked")
+//                @Override
+//                public void onPostExecute(Object... result) {
+//                    isRefreshing = false;
+//                    if (result != null &&
+//                            result.length > 0) {
+//                        if (getActivity()!= null && adapter != null) {
+//                            lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
+//                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
+//                            mListView.setAdapter(adapter);
+//                            adapter.refreshEvents(lstChatUserInformations);
+//                            if (lstChatUserInformations.isEmpty()) {
+//                                showEmpty(true, emptyView);
+//                            } else {
+//                                showEmpty(false, emptyView);
+//                            }
+//                        }
+//                    } else
+//                        showEmpty(true, emptyView);
+//                }
+//
+//                @Override
+//                public void onErrorOccurred(Exception ex) {
+//                    isRefreshing = false;
+//                    if (getActivity() != null)
+//                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+//                }
+//            });
+//            worker.execute();
+//        }
+//    }
 
     private synchronized List<ExtendedCity> getMoreData(String filter) {
         System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");

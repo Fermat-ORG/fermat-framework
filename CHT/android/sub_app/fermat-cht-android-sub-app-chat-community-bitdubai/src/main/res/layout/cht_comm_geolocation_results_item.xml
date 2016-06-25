@@ -1,11 +1,7 @@
-<RelativeLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#f0f0f0"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-<LinearLayout
-
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +10,7 @@
         <LinearLayout
             android:id="@+id/search_information"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
 
@@ -22,7 +18,6 @@
                 android:id="@+id/ubication_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:src="@drawable/cht_geolacation_light_icon"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
@@ -35,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_alignLeft="@id/ubication_icon"
+
                 >
                 <TextView
                     android:id="@+id/country_search"
@@ -43,15 +38,17 @@
                     android:layout_height="wrap_content"
                     android:text="Country"
                     android:textColor="@color/color_black"
-                    android:textSize="18sp"
-                    android:layout_marginTop="5dp"
+                    android:textSize="18dp"
+                    android:paddingTop="5dp"
                     />
                 <TextView
                     android:id="@+id/state_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="State"
+                    android:textSize="12dp"
                     android:textColor="@color/color_black"
+                    android:paddingBottom="5dp"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -64,4 +61,3 @@
             android:layout_marginTop="8dp"
             />
 </LinearLayout>
-</RelativeLayout>

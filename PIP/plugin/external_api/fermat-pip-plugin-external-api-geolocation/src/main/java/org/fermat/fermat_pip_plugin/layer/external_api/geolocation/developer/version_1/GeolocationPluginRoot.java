@@ -181,7 +181,7 @@ public class GeolocationPluginRoot extends AbstractPlugin {
 
     private void testFilteredList(){
         try{
-            String filter = "Merida";
+            String filter = "Mar";
             List<ExtendedCity> extendedCityList =
                     this.geolocationPluginManager.getExtendedCitiesByFilter(filter);
             System.out.println("GEOLOCATION: "+extendedCityList);
