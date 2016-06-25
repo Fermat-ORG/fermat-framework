@@ -79,7 +79,7 @@ public class ContactsListFragment
     private ErrorManager errorManager;
     private SettingsManager<ChatActorCommunitySettings> settingsManager;
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 20;
+    private static final int MAX = 8;
     protected final String TAG = "ContactsListFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
@@ -162,18 +162,19 @@ public class ContactsListFragment
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
-            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onRefresh();
-                            swipeRefresh.setRefreshing(false);
-                        }
-                    }, 2500);
-                }
-            });
+            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            onRefresh();
+//                            swipeRefresh.setRefreshing(false);
+//                        }
+//                    }, 5000);
+//                }
+//            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             showEmpty(true, emptyView);
             onRefresh();

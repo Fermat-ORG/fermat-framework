@@ -126,8 +126,6 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
-    List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException;
-
     List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
     @Override

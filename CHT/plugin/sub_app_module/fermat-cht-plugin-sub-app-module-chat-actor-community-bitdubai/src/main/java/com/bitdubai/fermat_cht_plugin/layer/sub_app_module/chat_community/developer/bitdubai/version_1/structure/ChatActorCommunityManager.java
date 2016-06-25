@@ -492,32 +492,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException{
-
-        List<Cities> cities = new ArrayList<>();
-        Country country;
-
-        try {
-            HashMap<String, Country> CitiesMap = geolocationManager.getCountryList();
-            for(Map.Entry<String, Country> entry: CitiesMap.entrySet()){
-
-                country = entry.getValue();
-                List<City> cityList = geolocationManager.getCitiesByCountryCode(country.getCountryShortName());
-
-                for(City city: cityList){
-                    if(city.getName().toLowerCase().contains(filter.toLowerCase()) || country.getCountryName().toLowerCase().contains(filter.toLowerCase()))
-                        cities.add(new CitiesImpl(city.getName(), city.getCountryCode(), city.getLatitude(), city.getLongitude(), country.getCountryName(), country.getCountryShortName(), country.getGeoRectangle()));
-                }
-            }
-
-        } catch (Exception e){
-            System.out.println("Can't return List<Cities>");
-        }
-
-        return cities;
-    }
-
-    @Override
     public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
         return geolocationManager.getExtendedCitiesByFilter(filter);
     }

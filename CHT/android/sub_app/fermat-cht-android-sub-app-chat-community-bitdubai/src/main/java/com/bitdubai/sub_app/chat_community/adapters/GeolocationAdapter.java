@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.holders.CitiesListHolder;
@@ -34,13 +34,13 @@ import java.util.List;
  */
 public class GeolocationAdapter extends ArrayAdapter {
 
-    protected List<Cities> dataSet;
+    protected List<ExtendedCity> dataSet;
     private ErrorManager errorManager;
     private CitiesImpl cityFromList;
     private AdapterCallback mAdapterCallback;
     private GeolocationDialog locationDialog;
 
-    public GeolocationAdapter(Context context, List<Cities> dataSet,ErrorManager errorManager,
+    public GeolocationAdapter(Context context, List<ExtendedCity> dataSet, ErrorManager errorManager,
                               AdapterCallback mAdapterCallback, GeolocationDialog locationDialog){
         super(context, R.layout.cht_comm_geolocation_results_item, dataSet);
         this.dataSet = dataSet;
@@ -53,7 +53,7 @@ public class GeolocationAdapter extends ArrayAdapter {
         void onMethodCallback(CitiesImpl cityFromList);
     }
 
-    public void refreshEvents(List<Cities> dataSet) {
+    public void refreshEvents(List<ExtendedCity> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
