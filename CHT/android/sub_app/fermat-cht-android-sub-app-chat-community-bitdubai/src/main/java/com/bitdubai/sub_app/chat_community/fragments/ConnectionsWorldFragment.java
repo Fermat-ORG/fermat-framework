@@ -126,6 +126,7 @@ public class ConnectionsWorldFragment
         location.setLatitude(city.getLatitude());
         location.setLongitude(city.getLongitude());
         distance=identity.getAccuracy();
+        location.setAccuracy((long) distance);
         onRefresh();
     }
 
@@ -418,8 +419,8 @@ public class ConnectionsWorldFragment
             List<ChatActorCommunityInformation> result;
             if(identity != null) {
                 result = moduleManager.listWorldChatActor(identity.getPublicKey(), identity.getActorType(),
-                        null, 0, null, 0, 0);
-                       // location, distance, alias, max, offset);
+                        //null, 0, null, 0, 0);
+                       location, distance, alias, max, offset);
 //              for(ChatActorCommunityInformation chat: result){
 //                if(chat.getConnectionState()!= null){
 //                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){

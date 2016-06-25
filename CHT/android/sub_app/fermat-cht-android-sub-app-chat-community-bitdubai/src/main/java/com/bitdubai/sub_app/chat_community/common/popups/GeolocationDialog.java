@@ -117,7 +117,6 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             searchInput = (EditText) findViewById(R.id.geolocation_input);
             emptyView = (LinearLayout) findViewById(R.id.empty_view_geo);
             closeButton = (ImageView) findViewById(R.id.close_geolocation_dialog);
-
             lupaButton = (ImageView) this.findViewById(R.id.lupita_button);
 
             closeButton.setOnClickListener(new View.OnClickListener() {
@@ -127,21 +126,14 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                 }
             });
 
-            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback);
+            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
             mListView.setAdapter(adapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    dismiss();
-                }
-            });
-
             lupaButton.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             try {
                                 lstChatUserInformations = mChatActorCommunityManager.getCities(searchInput.getText().toString());
-                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback);
+                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                                 mListView.setAdapter(adapter);
                                 adapter.refreshEvents(lstChatUserInformations);
                               // onRefresh();
@@ -187,7 +179,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                             result.length > 0) {
                         if (getActivity()!= null && adapter != null) {
                             lstChatUserInformations = (ArrayList<Cities>) result[0];
-                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback);
+                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                             mListView.setAdapter(adapter);
                             adapter.refreshEvents(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {

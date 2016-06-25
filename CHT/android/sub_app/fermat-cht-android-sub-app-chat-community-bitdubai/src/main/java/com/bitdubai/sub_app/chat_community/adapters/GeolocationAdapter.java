@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.holders.CitiesListHolder;
 import com.bitdubai.sub_app.chat_community.holders.ContactsListHolder;
 
@@ -37,13 +38,15 @@ public class GeolocationAdapter extends ArrayAdapter {
     private ErrorManager errorManager;
     private CitiesImpl cityFromList;
     private AdapterCallback mAdapterCallback;
+    private GeolocationDialog locationDialog;
 
     public GeolocationAdapter(Context context, List<Cities> dataSet,ErrorManager errorManager,
-                              AdapterCallback mAdapterCallback){
-        super(context, R.layout.cht_comm_geolocation_results_item, dataSet );
+                              AdapterCallback mAdapterCallback, GeolocationDialog locationDialog){
+        super(context, R.layout.cht_comm_geolocation_results_item, dataSet);
         this.dataSet = dataSet;
         this.errorManager = errorManager;
         this.mAdapterCallback = mAdapterCallback;
+        this.locationDialog = locationDialog;
     }
 
     public static interface AdapterCallback {
@@ -59,9 +62,6 @@ public class GeolocationAdapter extends ArrayAdapter {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.cht_comm_geolocation_results_item, null, true);
         try {
-//            if(convertView == null){
-//                convertView = LayoutInflater.from(getContext()).inflate(R.layout.cht_comm_geolocation_results_item, parent, false);
-//            }
             TextView Country = (TextView) item.findViewById(R.id.country_search);
             TextView State = (TextView) item.findViewById(R.id.state_search);
             Country.setText(dataSet.get(position).getCountryName());
@@ -72,6 +72,7 @@ public class GeolocationAdapter extends ArrayAdapter {
                 public void onClick(View v) {
                     cityFromList = (CitiesImpl) dataSet.get(pos);
                     mAdapterCallback.onMethodCallback(cityFromList);
+                    locationDialog.dismiss();
                 }
             });
         } catch (Exception e) {
@@ -79,28 +80,4 @@ public class GeolocationAdapter extends ArrayAdapter {
         }
         return item;
     }
-
-//    @Override
-//    protected CitiesListHolder createHolder(View itemView, int type) {
-//        return new CitiesListHolder(itemView);
-//    }
-
-//    @Override
-//    protected int getCardViewResource() {
-//        return R.layout.cht_comm_geolocation_results_item;
-//    }
-
-//    @Override
-//    protected void bindHolder(CitiesListHolder holder, Cities data, int position) {
-//        if (data.getCountryName() != null || data.getName() != null) {
-//            holder.city.setText(data.getCountryName());
-//            holder.state.setText(data.getName());
-//        }
-//    }
-
-//    public int getSize() {
-//        if (dataSet != null)
-//            return dataSet.size();
-//        return 0;
-//    }
 }
