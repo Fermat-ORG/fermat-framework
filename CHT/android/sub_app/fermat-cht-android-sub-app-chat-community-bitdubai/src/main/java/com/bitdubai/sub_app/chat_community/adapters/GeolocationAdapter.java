@@ -42,7 +42,7 @@ public class GeolocationAdapter extends ArrayAdapter {
 
     public GeolocationAdapter(Context context, List<ExtendedCity> dataSet, ErrorManager errorManager,
                               AdapterCallback mAdapterCallback, GeolocationDialog locationDialog){
-        super(context, R.layout.cht_comm_geolocation_results_item, dataSet);
+        super(context, R.layout.cht_comm_geolocation_item, dataSet);
         this.dataSet = dataSet;
         this.errorManager = errorManager;
         this.mAdapterCallback = mAdapterCallback;
@@ -60,10 +60,10 @@ public class GeolocationAdapter extends ArrayAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.cht_comm_geolocation_results_item, null, true);
+        View item = inflater.inflate(R.layout.cht_comm_geolocation_item, null, true);
         try {
-            TextView Country = (TextView) item.findViewById(R.id.country_search);
-            TextView State = (TextView) item.findViewById(R.id.state_search);
+            TextView Country = (TextView) item.findViewById(R.id.country_search2);
+            TextView State = (TextView) item.findViewById(R.id.state_search2);
             Country.setText(dataSet.get(position).getCountryName());
             State.setText(dataSet.get(position).getName());
             final int pos=position;
