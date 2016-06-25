@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -121,6 +123,36 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
 
             throw new CantReadRecordDataBaseException(e, "Table Name: " + super.getTableName(), "Invalid parameter found, maybe the enum is wrong.");
         }
+    }
+
+    /**
+     * (non-javadoc)
+     * @see AbstractBaseDao#getEntityFromDatabaseTableRecord(DatabaseTableRecord)
+     */
+    protected ActorProfile getActorProfileFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
+
+        ActorProfile actorProfile = new ActorProfile();
+
+        try{
+
+            actorProfile.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+            actorProfile.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NAME_COLUMN_NAME));
+            actorProfile.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ALIAS_COLUMN_NAME));
+            actorProfile.setActorType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_ACTOR_TYPE_COLUMN_NAME));
+            actorProfile.setPhoto(Base64.decodeBase64(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_PHOTO_COLUMN_NAME)));
+            DeviceLocation deviceLocation = new DeviceLocation();
+            deviceLocation.setLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LATITUDE_COLUMN_NAME));
+            deviceLocation.setLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_LAST_LONGITUDE_COLUMN_NAME));
+            actorProfile.setLocation(deviceLocation);
+            actorProfile.setExtraData(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME));
+
+        }catch (Exception e){
+            //e.printStackTrace();
+
+            return null;
+        }
+
+        return actorProfile;
     }
 
     /**
