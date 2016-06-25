@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.CantGetCurrentIPAddressException;
@@ -31,7 +32,7 @@ public final class LocationProvider {
 
         try {
 
-            String ipAddress = com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper.getCurrentIPAddress();
+            String ipAddress = IPAddressHelper.getCurrentIPAddress();
 
             return acquireLocationThroughIP(ipAddress);
 

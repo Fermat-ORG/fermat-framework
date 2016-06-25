@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
@@ -31,7 +32,7 @@ public class NodeProfile extends Profile {
      * Constructor
      */
     public NodeProfile(){
-        super();
+        super(ProfileTypes.NODE);
     }
 
     /**

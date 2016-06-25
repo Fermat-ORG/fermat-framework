@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -74,14 +73,11 @@ public class ContactsListFragment
     private ContactListAdapter adapter; // The main query adapter
     public List<Contact> contacts;
     private ChatManager chatManager;
-    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
     private ChatSessionReferenceApp chatSession;
     private ChatPreferenceSettings chatSettings;
     ChatActorCommunitySelectableIdentity chatIdentity;
     PresentationDialog presentationDialog;
-    //private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";

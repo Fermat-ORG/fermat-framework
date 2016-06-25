@@ -12,15 +12,20 @@ import java.net.URL;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/04/2016.
  *
- * @author lnacosta
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public final class IPAddressHelper {
 
     private static final String PUBLIC_ADDRESS_URL = "http://ipinfo.io/ip";
 
+    private static String ipAddress;
+
     public static String getCurrentIPAddress() throws CantGetCurrentIPAddressException {
+
+        if (ipAddress != null)
+            return ipAddress;
 
         HttpURLConnection conn = null;
         try {
@@ -29,9 +34,10 @@ public final class IPAddressHelper {
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = reader.readLine();
 
-            if (conn.getResponseCode() == 200)
-                return response.trim();
-            else
+            if (conn.getResponseCode() == 200) {
+                ipAddress = response.trim();
+                return ipAddress;
+            } else
                 throw new CantGetCurrentIPAddressException(
                         null,
                         "",

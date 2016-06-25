@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.identity;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
@@ -27,6 +27,6 @@ public interface ActorIdentity extends Serializable {
 
     long getAccuracy();
 
-    Frecuency getFrecuency();
+    Frequency getFrequency();
 
 }

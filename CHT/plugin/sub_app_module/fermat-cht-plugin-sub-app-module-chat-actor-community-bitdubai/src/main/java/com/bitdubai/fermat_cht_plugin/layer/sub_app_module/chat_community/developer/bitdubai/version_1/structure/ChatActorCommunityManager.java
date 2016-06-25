@@ -65,6 +65,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
@@ -130,7 +131,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-                actorConnections = search.getResult(max, 0);
+                actorConnections = search.getResult(1000, 0);
 //                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
@@ -138,29 +139,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         ChatActorCommunityInformation worldActor;
-//<<<<<<< HEAD
-//        if(actorConnections != null && worldActorList != null){
-//            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
-//                for (int i = 0; i < worldActorList.size(); i++) {
-//
-//                    worldActor = worldActorList.get(i);
-//                    for (ChatActorConnection connectedActor : actorConnections) {
-//                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
-//                            worldActorList.set(
-//                                    i,
-//                                    new ChatActorCommunitySubAppModuleInformationImpl(
-//                                            worldActor.getPublicKey(),
-//                                            worldActor.getAlias(),
-//                                            worldActor.getImage(),
-//                                            connectedActor.getConnectionState(),
-//                                            connectedActor.getConnectionId(),
-//                                            worldActor.getStatus()
-//                                    )
-//                            );
-//                            break;
-//                        }
-//                    }
-//=======
         if(actorConnections != null && worldActorList != null
                 && actorConnections.size() > 0 && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
@@ -504,7 +482,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+    public Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException {
         return geolocationManager.getAddressByCoordinate(latitude, longitude);
     }
 
@@ -537,6 +515,11 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         return cities;
+    }
+
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
     }
 
     @Override
@@ -579,7 +562,10 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(), i.getConnectionState());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(
+                                    i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(),
+                                    i.getConnectionState(), i.getCountry(), i.getState(),
+                                    i.getCity(), i.getConnectionState(), i.getAccuracy(), i.getFrecuency());
                     }
                 }
 
@@ -614,11 +600,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
     }
 
-
     @Override
     public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
-
-
 
     @Override
     public int[] getMenuNotifications() {

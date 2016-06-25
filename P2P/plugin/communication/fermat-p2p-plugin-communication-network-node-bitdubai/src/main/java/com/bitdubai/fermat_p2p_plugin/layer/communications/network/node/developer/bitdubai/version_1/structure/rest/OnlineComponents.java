@@ -168,44 +168,59 @@ public class OnlineComponents implements RestFulServices {
         LOG.info("Executing isActorOnline");
         LOG.info("identityPublicKey = "+identityPublicKey);
 
-        try {
+        try{
 
-            daoFactory.getCheckedInActorDao().findById(identityPublicKey);
+            try {
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success" , Boolean.TRUE);
-            jsonObject.addProperty("isOnline", Boolean.TRUE);
-            jsonObject.addProperty("sameNode", Boolean.TRUE);
-
-            return Response.status(200).entity(gson.toJson(jsonObject)).build();
-
-        } catch (RecordNotFoundException recordNotFoundException ) {
-
-            String nodePublicKey = getNodePublicKeyFromActor(identityPublicKey);
-
-            if (nodePublicKey.equals(pluginRoot.getIdentity().getPublicKey())) {
+                daoFactory.getCheckedInActorDao().findById(identityPublicKey);
 
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("success", Boolean.TRUE);
-                jsonObject.addProperty("isOnline", Boolean.FALSE);
+                jsonObject.addProperty("success" , Boolean.TRUE);
+                jsonObject.addProperty("isOnline", Boolean.TRUE);
                 jsonObject.addProperty("sameNode", Boolean.TRUE);
 
                 return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
-            } else {
+            } catch (RecordNotFoundException recordNotFoundException ) {
 
-                String nodeUrl = getNodeUrl(nodePublicKey);
+                try {
+                    String nodePublicKey = getNodePublicKeyFromActor(identityPublicKey);
 
-                Boolean isOnline = isActorOnline(identityPublicKey, nodeUrl);
+                    if (nodePublicKey.equals(pluginRoot.getIdentity().getPublicKey())) {
 
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("success" , Boolean.TRUE);
-                jsonObject.addProperty("isOnline", isOnline);
-                jsonObject.addProperty("sameNode", Boolean.FALSE);
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("success", Boolean.TRUE);
+                        jsonObject.addProperty("isOnline", Boolean.FALSE);
+                        jsonObject.addProperty("sameNode", Boolean.TRUE);
 
-                return Response.status(200).entity(gson.toJson(jsonObject)).build();
+                        return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
+                    } else {
+
+                        String nodeUrl = getNodeUrl(nodePublicKey);
+
+                        Boolean isOnline = isActorOnline(identityPublicKey, nodeUrl);
+
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("success", Boolean.TRUE);
+                        jsonObject.addProperty("isOnline", isOnline);
+                        jsonObject.addProperty("sameNode", Boolean.FALSE);
+
+                        return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+                    }
+                } catch (RecordNotFoundException exception) {
+
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("success" , Boolean.FALSE);
+                    jsonObject.addProperty("isOnline", Boolean.FALSE);
+                    jsonObject.addProperty("sameNode", Boolean.FALSE);
+                    jsonObject.addProperty("details" , "Actor not found in catalog.");
+
+                    return Response.status(200).entity(gson.toJson(jsonObject)).build();
+                }
             }
+
 
         } catch (Exception e) {
 
@@ -213,6 +228,7 @@ public class OnlineComponents implements RestFulServices {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success" , Boolean.FALSE);
             jsonObject.addProperty("isOnline", Boolean.FALSE);
+            jsonObject.addProperty("sameNode", Boolean.FALSE);
             jsonObject.addProperty("details" , e.getMessage());
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
@@ -221,16 +237,13 @@ public class OnlineComponents implements RestFulServices {
 
     }
 
-    private String getNodePublicKeyFromActor(final String publicKey) {
+    private String getNodePublicKeyFromActor(final String publicKey) throws RecordNotFoundException {
 
         try {
 
             ActorsCatalog actorsCatalog = daoFactory.getActorsCatalogDao().findById(publicKey);
             return actorsCatalog.getNodeIdentityPublicKey();
 
-        } catch (RecordNotFoundException exception) {
-
-            throw new RuntimeException("Actor not found in catalog: "+exception.getMessage());
         } catch (Exception exception) {
 
             throw new RuntimeException("Problem trying to find the actor in the catalog: "+exception.getMessage());

@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -46,10 +45,9 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkNodeIdentityException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
@@ -385,7 +383,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         }else {
 
             LOG.info("Configuration file doesn't exit");
-            ConfigurationManager.create(identity.getPublicKey());
+            ConfigurationManager.create(identity.getPublicKey(), isSeedServer(serverIp));
             ConfigurationManager.load();
         }
 
@@ -430,11 +428,11 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void initializeIdentity() throws CantInitializeNetworkNodeIdentityException {
 
-        System.out.println("Calling method - initializeIdentity()...");
+        LOG.info("Calling method - initializeIdentity()...");
 
         try {
 
-            System.out.println("Loading identity...");
+            LOG.info("Loading identity...");
 
          /*
           * Load the file with the identity
@@ -442,7 +440,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
-            System.out.println("content = " + content);
+            LOG.info("content = " + content);
 
             identity = new ECCKeyPair(content);
 
@@ -454,15 +452,15 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             try {
 
-                System.out.println("No previous identity found - Proceeding to create new one...");
+                LOG.info("No previous identity found - Proceeding to create new one...");
 
                 /*
                  * Create the new identity
                  */
                 identity = new ECCKeyPair();
 
-                System.out.println("identity.getPrivateKey() = " + identity.getPrivateKey());
-                System.out.println("identity.getPublicKey() = " + identity.getPublicKey());
+                LOG.info("identity.getPrivateKey() = " + identity.getPrivateKey());
+                LOG.info("identity.getPublicKey() = " + identity.getPublicKey());
 
                 /*
                  * save the identity into the identity file
@@ -499,13 +497,13 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      *
      * @throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException
      */
-    private void initializeDb() throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException {
+    private void initializeDb() throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException, CantReadRecordDataBaseException, CantDeleteRecordDataBaseException {
 
-        System.out.println("Calling method - initializeDb()...");
+        LOG.info("Calling method - initializeDb()...");
 
         try {
 
-            System.out.println("Loading database...");
+            LOG.info("Loading database...");
             /*
              * Open new database connection
              */
@@ -528,7 +526,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             try {
 
-                System.out.println("No previous data base found - Proceeding to create new one...");
+                LOG.info("No previous data base found - Proceeding to create new one...");
 
                 /*
                  * We create the new database
@@ -554,7 +552,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Instantiate daoFactory
              */
             this.daoFactory = new DaoFactory(dataBase);
-
+            cleanCheckInTables();
         }
 
     }
@@ -672,7 +670,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        Boolean isRegister = isRegisterInNodeCatalog();
+        Boolean isRegister = isRegisterInNodeCatalog(isSeedServer);
 
         LOG.info("Is Register? = " + isRegister);
         LOG.info("Am i a Seed Node? = " + isSeedServer);
@@ -863,7 +861,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Validate is register in the catalog
      * @return boolean
      */
-    private boolean isRegisterInNodeCatalog(){
+    private boolean isRegisterInNodeCatalog(boolean isSeedServer){
 
         HttpURLConnection httpURLConnection = null;
 
@@ -878,6 +876,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * If the configuration file says that is registered, validate against seed node
              */
             if (isRegister){
+
+                if (isSeedServer)
+                    return daoFactory.getNodesCatalogDao().exists(getIdentity().getPublicKey());
 
                 URL url = new URL("http://" + SeedServerConf.DEFAULT_IP + ":" + SeedServerConf.DEFAULT_PORT + "/fermat/rest/api/v1/nodes/registered/"+getIdentity().getPublicKey());
                 httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -918,6 +919,27 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             if (httpURLConnection != null)
                 httpURLConnection.disconnect();
         }
+
+    }
+
+    /**
+     * This method clean all data from de check in tables.
+     *  - CHECK_IN_CLIENT
+     *  - CHECK_IN_NETWORK_SERVICE
+     *  - CHECK_IN_ACTORS
+     */
+    private void cleanCheckInTables() throws CantReadRecordDataBaseException, CantDeleteRecordDataBaseException {
+
+        LOG.info("Executing the clean check in tables");
+
+        LOG.info("Deleting CHECK_IN_CLIENT records");
+        daoFactory.getCheckedInClientDao().deleteAll();
+
+        LOG.info("Deleting CHECK_IN_NETWORK_SERVICE records");
+        daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+
+        LOG.info("Deleting CHECK_IN_ACTORS records");
+        daoFactory.getCheckedInActorDao().deleteAll();
 
     }
 
