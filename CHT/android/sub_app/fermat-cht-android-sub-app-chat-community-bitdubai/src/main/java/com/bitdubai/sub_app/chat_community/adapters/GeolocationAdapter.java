@@ -50,7 +50,7 @@ public class GeolocationAdapter extends ArrayAdapter {
     }
 
     public static interface AdapterCallback {
-        void onMethodCallback(CitiesImpl cityFromList);
+        void onMethodCallback(ExtendedCity cityFromList);
     }
 
     public void refreshEvents(List<ExtendedCity> dataSet) {
@@ -70,8 +70,7 @@ public class GeolocationAdapter extends ArrayAdapter {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cityFromList = (CitiesImpl) dataSet.get(pos);
-                    mAdapterCallback.onMethodCallback(cityFromList);
+                    mAdapterCallback.onMethodCallback(dataSet.get(pos));
                     locationDialog.dismiss();
                 }
             });

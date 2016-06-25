@@ -33,6 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -43,6 +45,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -55,14 +58,17 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
+import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.chat_community.common.popups.GeolocationDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +96,8 @@ public class ConnectionsWorldFragment
     //Managers
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    private ChatCommunityFermatAppConnection appConnection;
+    FermatApplicationCaller applicationsHelper;
     //Data
     private ChatActorCommunitySettings appSettings;
     private ChatActorCommunitySelectableIdentity identity;
@@ -121,10 +128,10 @@ public class ConnectionsWorldFragment
     }
 
     @Override
-    public void onMethodCallback(CitiesImpl city) {
+    public void onMethodCallback(ExtendedCity city) {
         location=new DeviceLocation();
-        location.setLatitude(city.getLatitude());
-        location.setLongitude(city.getLongitude());
+        location.setLatitude((double) city.getLatitude());
+        location.setLongitude((double) city.getLongitude());
         distance=identity.getAccuracy();
         location.setAccuracy((long) distance);
         offset=0;
@@ -143,7 +150,7 @@ public class ConnectionsWorldFragment
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
@@ -326,6 +333,11 @@ public class ConnectionsWorldFragment
                 public void onDismiss(DialogInterface dialog) {
                     invalidate();
                     onRefresh();
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
             presentationChatCommunityDialog.show();

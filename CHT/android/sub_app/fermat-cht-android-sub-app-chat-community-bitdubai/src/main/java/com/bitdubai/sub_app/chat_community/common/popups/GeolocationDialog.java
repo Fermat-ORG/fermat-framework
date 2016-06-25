@@ -89,7 +89,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     }
 
     public static interface AdapterCallback extends GeolocationAdapter.AdapterCallback {
-        void onMethodCallback(CitiesImpl cityFromList);
+        void onMethodCallback(ExtendedCity cityFromList);
     }
 
     protected void onCreate(Bundle savedInstanceState){
