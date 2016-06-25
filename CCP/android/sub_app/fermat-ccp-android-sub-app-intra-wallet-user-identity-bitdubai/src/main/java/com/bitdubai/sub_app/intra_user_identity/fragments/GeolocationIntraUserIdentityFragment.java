@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
@@ -47,7 +48,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     Toolbar toolbar;
     long acurracydata;
     Frecuency frecuencydata;
-    IntraWalletUserIdentity identity;
+    IntraUserModuleIdentity identity;
 
 
 
@@ -90,7 +91,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         //Check if a default identity is configured
         if(identity==null){
             try{
-                identity = (IntraWalletUserIdentity)moduleManager.getSelectedActorIdentity();
+                identity = (IntraUserModuleIdentity)moduleManager.getSelectedActorIdentity();
             }catch (Exception e){
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
@@ -129,7 +130,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     try {
-                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString());
+                        frecuencydata = Frecuency.getByCode(parent.getItemAtPosition(position).toString().toLowerCase());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
                     } catch (InvalidParameterException e) {
@@ -142,6 +143,9 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
                 }
             });
         } catch (CantGetIntraUserIdentityException e) {
+            e.printStackTrace();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -206,7 +210,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frecuency> dataAdapter) throws CantGetIntraUserIdentityException {
         checkIdentity();
         if(identity!=null){
-            accuracy.setText(""+identity.getAccuracy());
+            accuracy.setText(""+identity.get());
             if (!identity.getFrecuency().equals(null)) {
                 int spinnerPosition = dataAdapter.getPosition(identity.getFrecuency());
                 frequency.setSelection(spinnerPosition);
