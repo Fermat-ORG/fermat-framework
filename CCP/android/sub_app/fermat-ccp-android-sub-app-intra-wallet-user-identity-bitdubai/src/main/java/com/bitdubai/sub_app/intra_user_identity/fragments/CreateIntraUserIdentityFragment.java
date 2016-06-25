@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -56,7 +55,6 @@ import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationIntraUs
 import com.bitdubai.sub_app.intra_user_identity.session.SessionConstants;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.bitdubai.sub_app.intra_user_identity.util.DialogCropImage;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -102,7 +100,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private boolean contextMenuInUse = false;
     private IntraUserIdentityModuleManager moduleManager;
     private Uri imageToUploadUri;
-    private Bitmap chatBitmap;
+    private Bitmap imageBitmap;
+    //private Bitmap imageBitmap = null;
+
     private ImageView mChatImage;
     ExecutorService executorService;
 
@@ -339,7 +339,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             contextMenuInUse = true;
-            Bitmap imageBitmap = null;
             ImageView pictureView = mBrokerImage;
 
             switch (requestCode) {
@@ -365,24 +364,24 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
                         Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
                         if (reducedSizeBitmap != null) {
-                            chatBitmap = reducedSizeBitmap;
+                            imageBitmap = reducedSizeBitmap;
                         }
                     }
                     try {
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
-                                if (chatBitmap != null) {
-                                    if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
-                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                                if (imageBitmap != null) {
+                                    if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                                    mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                                    imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                                    mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                                 } else {
-                                                    chatBitmap = null;
+                                                    imageBitmap = null;
                                                 }
                                             }
                                         });
@@ -431,20 +430,20 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
-                            chatBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            if (chatBitmap.getWidth() >= 192 && chatBitmap.getHeight() >= 192) {
+                            if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                 // cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, chatBitmap);
+                                final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
-                                            chatBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
-                                            mChatImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), chatBitmap));
+                                            imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
+                                            mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
                                         } else {
-                                            chatBitmap = null;
+                                            imageBitmap = null;
                                         }
                                     }
                                 });
@@ -456,7 +455,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
                         }
                     } catch (Exception e) {
-                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                       // errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                         Toast.makeText(getActivity().getApplicationContext(), "Error loading the image", Toast.LENGTH_SHORT).show();
                     }
 

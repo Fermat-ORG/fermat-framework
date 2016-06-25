@@ -208,7 +208,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             toolbar = getToolbar();
-            toolbar.setTitle("Cripto wallet users");
+            toolbar.setTitle("Crypto wallet users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
