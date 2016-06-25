@@ -14,16 +14,19 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUpdateRegisteredProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.UpdateActorProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -60,6 +63,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.CloseReason;
@@ -433,6 +437,54 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
+    public void updateRegisteredProfile(final Profile profile) throws CantUpdateRegisteredProfileException {
+
+        PackageContent profileUpdateMsgRequest;
+
+        PackageType packageType;
+
+        if (profile instanceof ActorProfile) {
+            packageType = PackageType.UPDATE_ACTOR_PROFILE_REQUEST;
+            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+            profileUpdateMsgRequest = new UpdateActorProfileMsgRequest(profile);
+            profileUpdateMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        } else {
+            CantUpdateRegisteredProfileException fermatException = new CantUpdateRegisteredProfileException(
+                    "profile:" + profile,
+                    "Unsupported profile type."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+
+        try {
+
+            sendPackage(profileUpdateMsgRequest, packageType);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantUpdateRegisteredProfileException fermatException = new CantUpdateRegisteredProfileException(
+                    cantSendPackageException,
+                    "profile:" + profile,
+                    "Cant send package."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
     public void unregisterProfile(final Profile profile) throws CantUnregisterProfileException {
 
         CheckOutProfileMsgRequest checkOutProfileMsgRequest = new CheckOutProfileMsgRequest(profile);
@@ -480,6 +532,44 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             throw fermatException;
         }
+    }
+
+    @Override
+    public UUID onlineActorsDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters,
+                                           final String                   networkServicePublicKey ) throws CantRequestProfileListException {
+
+        UUID queryId = UUID.randomUUID();
+
+        ActorListMsgRequest actorListMsgRequest = new ActorListMsgRequest(
+                queryId,
+                networkServicePublicKey,
+                discoveryQueryParameters,
+                clientIdentity.getPublicKey()
+        );
+
+        actorListMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(actorListMsgRequest, PackageType.ACTOR_LIST_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    cantSendPackageException,
+                    "discoveryQueryParameters:" + discoveryQueryParameters+" - networkServicePublicKey:" + networkServicePublicKey,
+                    "Cant send package."
+            );
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+
+        return queryId;
     }
 
     @Override

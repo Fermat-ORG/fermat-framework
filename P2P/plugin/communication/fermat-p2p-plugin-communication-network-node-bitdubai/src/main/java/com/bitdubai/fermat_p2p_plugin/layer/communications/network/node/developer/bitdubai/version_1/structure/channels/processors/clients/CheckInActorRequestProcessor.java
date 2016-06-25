@@ -123,7 +123,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -131,6 +131,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getCause());
 
                 /*
@@ -142,16 +143,13 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
                 exception.printStackTrace();
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
-
         }
 
     }
@@ -162,7 +160,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws  CantCreateTransactionStatementPairException {
+    private DatabaseTransactionStatementPair insertCheckedInActor(final ActorProfile actorProfile) throws CantCreateTransactionStatementPairException, CantReadRecordDataBaseException {
 
 
 
@@ -188,10 +186,11 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                 checkedInActor.setLongitude(0.0);
             }
 
-            /*
-             * Save into the data base
-             */
-            return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+
+          if(!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey()))
+             return getDaoFactory().getCheckedInActorDao().createInsertTransactionStatementPair(checkedInActor);
+          else
+              return getDaoFactory().getCheckedInActorDao().createUpdateTransactionStatementPair(checkedInActor);
 
     }
 

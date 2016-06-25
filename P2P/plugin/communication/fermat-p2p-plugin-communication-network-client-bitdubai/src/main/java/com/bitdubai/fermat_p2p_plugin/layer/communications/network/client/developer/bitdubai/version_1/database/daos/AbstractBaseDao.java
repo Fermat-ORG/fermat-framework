@@ -379,6 +379,10 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         }
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
     /**
      * Construct a Entity whit the values of the a DatabaseTableRecord pass
      * by parameter
