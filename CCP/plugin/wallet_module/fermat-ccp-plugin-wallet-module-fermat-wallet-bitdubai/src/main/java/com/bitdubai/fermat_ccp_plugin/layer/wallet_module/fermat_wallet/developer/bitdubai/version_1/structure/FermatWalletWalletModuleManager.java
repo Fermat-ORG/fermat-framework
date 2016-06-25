@@ -54,10 +54,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.C
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletTransactionSummary;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.fermat_wallet.interfaces.FermatWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
@@ -131,7 +127,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSetBasicWalletExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.event_handlers.BlockchainDownloadUpToDateEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
@@ -151,6 +147,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
+
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -343,10 +340,37 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
     }
 
     @Override
-    public  List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
+    public  List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException {
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+
+            //looking all providers
+
+            Map<UUID, String> providers = exchangeProviderFilterManagerproviderFilter.getProviderNames();
+
+            Iterator entries = providers.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry thisEntry = (Map.Entry) entries.next();
+                Object key = thisEntry.getKey();
+                Object value = thisEntry.getValue();
+
+                filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
+
+            }
+
+        }
+        catch (Exception e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
+        }
+
+        return filteredProviders;
+    }
+
+    @Override
+    public  List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException {
+        List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.FERMAT, fiatCurrency);
 
             Collection<CurrencyExchangeRateProviderManager> providers = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
 

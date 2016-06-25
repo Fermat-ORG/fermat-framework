@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -54,7 +55,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.TransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.WalletContactNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
+import com.bitdubai.fermat_ccp_api.all_definition.ExchangeRateProvider;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -86,12 +87,18 @@ public interface FermatWallet extends Serializable,ModuleManager<FermatWalletSet
     ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException;
 
     /**
-     * Through the method <code>getExchangeRateProviderManagers</code> you can get the list of exchange rate providers
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers
      * @return
      * @throws CantGetCurrencyExchangeProviderException
      */
-    List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
+    List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException;
 
+    /**
+     * Through the method <code>getExchangeRateProviders</code> you can get the list of exchange rate providers by fiat currency to fermat
+     * @return
+     * @throws CantGetCurrencyExchangeProviderException
+     */
+    List<ExchangeRateProvider> getExchangeRateProviderManagers(FiatCurrency fiatCurrency) throws CantGetCurrencyExchangeProviderException;
     /**
      * List all wallet contact related to an specific wallet.
      *

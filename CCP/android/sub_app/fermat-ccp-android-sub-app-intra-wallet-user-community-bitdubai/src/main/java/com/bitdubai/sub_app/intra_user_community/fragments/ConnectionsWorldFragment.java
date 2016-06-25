@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -207,7 +208,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
             toolbar = getToolbar();
-            toolbar.setTitle("Cripto wallet users");
+            toolbar.setTitle("Crypto wallet users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.search_edit_text, null);
 
@@ -260,10 +261,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
             if (!isRefreshing) {
                 isRefreshing = true;
-               /* final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
-                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users Cache");
+               final ProgressDialog notificationsProgressDialog = new ProgressDialog(getActivity());
+                notificationsProgressDialog.setMessage("Loading Crypto Wallet Users...");
                 notificationsProgressDialog.setCancelable(false);
-                notificationsProgressDialog.show();*/
+                notificationsProgressDialog.show();
                 //Get Fermat User Cache List First
                 worker = new FermatWorker() {
                     @Override
@@ -277,7 +278,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     @SuppressWarnings("unchecked")
                     @Override
                     public void onPostExecute(Object... result) {
-                      //  notificationsProgressDialog.dismiss();
+                      notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -325,7 +326,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
 
                     @Override
                     public void onErrorOccurred(Exception ex) {
-                        //notificationsProgressDialog.dismiss();
+                        notificationsProgressDialog.dismiss();
                         isRefreshing = false;
                         if (swipeRefresh != null)
                             swipeRefresh.setRefreshing(false);
@@ -712,7 +713,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                     presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
-                            //showCriptoUsersCache();
+                            showCriptoUsersCache();
                             invalidate();
                         }
                     });
@@ -732,8 +733,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                                     getActivity().finish();
                                 }
                             } else {
-                               // showCriptoUsersCache();
-                                invalidate();
+                                showCriptoUsersCache();
+
                             }
                         }
                     });
@@ -756,8 +757,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
                             if (isBackPressed) {
                                 getActivity().onBackPressed();
                             }
-                        } //else
-                            //showCriptoUsersCache();
+                        } else
+                            showCriptoUsersCache();
                     }
                 });
             }

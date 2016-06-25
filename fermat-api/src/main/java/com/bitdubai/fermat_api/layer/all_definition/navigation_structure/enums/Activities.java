@@ -342,6 +342,7 @@ public enum Activities implements FermatEnum {
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
+    CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY("CCPSAIIGI"),
     // DAP ISSUER IDENTITY
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY("DAPSAAII"),
     DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY("DAPSAAIICI"),
@@ -753,6 +754,8 @@ public enum Activities implements FermatEnum {
 
             case "CCPSAISI":
                 return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
+            case "CCPSAIIGI":
+                return Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY;
             case "CCPSAIICI":
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":

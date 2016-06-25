@@ -386,6 +386,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeAppNavigationStructure = buildChatCommunityIdentityComboApp();
         recordNavigationStructureIsNotExist(runtimeAppNavigationStructure);
 
+
+
         /**
          * SubApp generator
          */
@@ -6534,6 +6536,8 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         return runtimeWalletNavigationStructure;
     }
+
+
 
 
     private SideMenu loadSideMenuChatCombo(String publicKey) {
