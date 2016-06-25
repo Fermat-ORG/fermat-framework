@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDe
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,4 +37,6 @@ public interface DeveloperPluginInterface {
     void start() throws CantStartPluginDeveloperException;
 
     Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version,Class[] interfaces) throws VersionNotFoundException;
+
+    List<PluginVersionReference> listVersionsMati();
 }

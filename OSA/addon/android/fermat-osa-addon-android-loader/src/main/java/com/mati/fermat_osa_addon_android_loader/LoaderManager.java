@@ -19,16 +19,16 @@ public class LoaderManager<O extends Application & FermatContext> {
         classLoaderManager = new ClassLoaderManager<>(fermatContext);
     }
 
-    public Object objectProxyFactory(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface){
-        return objectToProxyFactory(load(moduleName),interfaceLoader,interfaces,returnInterface);
+    public Object objectProxyFactory(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args){
+        return objectToProxyFactory(load(moduleName,args),interfaceLoader,interfaces,returnInterface);
     }
 
-    public Object load(String moduleName){
-        return classLoaderManager.load(moduleName);
+    public Object load(String moduleName,Object... args){
+        return classLoaderManager.load(moduleName,args);
     }
 
     public Object objectToProxyFactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
-        InvocationHandler invocationHandler = new ObjectInvocationHandler(base);
+        InvocationHandler invocationHandler = new ObjectInvocationHandler(this,base);
         return Proxy.newProxyInstance(
                 interfaceLoader,
                 interfaces,

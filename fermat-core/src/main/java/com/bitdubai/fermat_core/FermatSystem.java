@@ -487,6 +487,54 @@ public final class FermatSystem {
         this.isStarted = true;
     }
 
+    public final void startAllRegisteredPlatformsMati() throws CantStartAllRegisteredPlatformsException {
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
+        //map of pluginVersionReference and the plugin enum code
+        final List<PluginVersionReference> pluginList = this.fermatSystemContext.listPluginVersionsMati();
+        System.out.println("---------------------------------------------\n");
+        System.out.println("Starting addons");
+        System.out.println("---------------------------------------------\n");
+        for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
+            try {
+                fermatAddonManager.startAddonAndReferences(addon.getValue());
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+
+        try {
+
+            List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
+            for (AbstractPlugin abstractPlugin : list) {
+                System.out.println("---------------------------------------------\n");
+                System.out.println("Cloud client starting");
+                System.out.println("---------------------------------------------\n");
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
+            }
+        } catch (PlatformNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantStartPluginException e) {
+            e.printStackTrace();
+        }
+
+        for (PluginVersionReference pluginVersionReference : pluginList) {
+            try {
+                fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+//        for(ConcurrentHashMap.Entry<PluginVersionReference, String> plugin : pluginList.entrySet()) {
+//            try {
+//                fermatPluginManager.startPluginAndReferences(plugin.getKey());
+//            } catch (Exception e) {
+//                System.err.println(e.toString());
+//            }
+//        }
+
+        this.isStarted = true;
+    }
+
     public void setFermatContext(FermatContext fermatContext) {
         this.fermatContext = fermatContext;
     }

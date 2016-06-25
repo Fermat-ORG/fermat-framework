@@ -14,6 +14,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -113,26 +114,55 @@ public abstract class AbstractPluginSubsystem {
 
 
     public final DeveloperPluginInterface getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
-
-        if (developers.containsKey(pluginDeveloperReference)) {
-            return developers.get(pluginDeveloperReference);
-        } else {
-            throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+        //todo: no encuentra al developer por esó está comentado y puesto en duro, hay que ver porqué el hashcode es distinto.
+        if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+//            if (developers.containsKey(pluginDeveloperReference)) {
+//                return developers.get(pluginDeveloperReference);
+//            } else {
+//                throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+//            }
+            return developers.values().iterator().next();
+        }else {
+            if (developers.containsKey(pluginDeveloperReference)) {
+                return developers.get(pluginDeveloperReference);
+            } else {
+                throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
+            }
         }
     }
 
     public final void fillVersions(final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions) {
-
         for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
-            ConcurrentHashMap concurrentHashMap = null;
-            if(pluginReference.getPlugin() == Plugins.FERMAT_NETWORK){
-                concurrentHashMap = developer.getValue().listVersions();
-            }else{
-                concurrentHashMap = developer.getValue().listVersions();
+            try {
+                ConcurrentHashMap concurrentHashMap = null;
+                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                    concurrentHashMap = developer.getValue().listVersions();
+                } else {
+                    concurrentHashMap = developer.getValue().listVersions();
+                }
+                versions.putAll(concurrentHashMap);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            versions.putAll(concurrentHashMap);
-
         }
+
+    }
+
+    public final void fillVersionsMati(final List<PluginVersionReference> versions) {
+        for(ConcurrentHashMap.Entry<PluginDeveloperReferenceInterface, DeveloperPluginInterface> developer : developers.entrySet()) {
+            try {
+                List<PluginVersionReference> concurrentHashMap = null;
+                if (pluginReference.getPlugin().getCode().equals(Plugins.FERMAT_NETWORK.getCode())) {
+                    concurrentHashMap = developer.getValue().listVersionsMati();
+                } else {
+                    concurrentHashMap = developer.getValue().listVersionsMati();
+                }
+                versions.addAll(concurrentHashMap);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public PluginReference getPluginReference() {

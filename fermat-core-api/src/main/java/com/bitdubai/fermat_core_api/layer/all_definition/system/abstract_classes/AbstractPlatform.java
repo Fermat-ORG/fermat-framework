@@ -30,6 +30,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.Plugi
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -237,6 +238,12 @@ public abstract class AbstractPlatform {
 
         for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
             layer.getValue().fillPluginVersions(versions);
+    }
+
+    public final void fillPluginVersionsMati(final List<PluginVersionReference> versions) {
+
+        for(ConcurrentHashMap.Entry<LayerReference, AbstractLayer> layer : layers.entrySet())
+            layer.getValue().fillPluginVersionsMati(versions);
     }
 
     public final PlatformReference getPlatformReference() {

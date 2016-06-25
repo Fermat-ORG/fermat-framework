@@ -13,7 +13,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -58,6 +62,10 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
 
 
     public Collection<AbstractPlugin> getVersions() {
+        if(versions==null){
+            System.out.println("Versions null, pluginDeveloper code: "+pluginDeveloperReference.getPluginReference().getPlugin().getCode());
+            return Collections.emptyList();
+        }
         return versions.values();
     }
 
@@ -110,8 +118,13 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
                         interfaces,
                         interfaces[0]);
             } else {
-
-                throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
+                AbstractPlugin abstractPlugin =versions.values().iterator().next();
+                return fermatContext.objectToProxyfactory(
+                        abstractPlugin,
+                        interfaces.getClass().getClassLoader(),
+                        interfaces,
+                        interfaces[0]);
+//                throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
             }
         }catch (Exception e){
             //todo: mejorar esta captura de excepción
@@ -125,6 +138,27 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
     public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listVersions() {
 
         return versions;
+    }
+
+    @Override
+    public List<PluginVersionReference> listVersionsMati() {
+        List<PluginVersionReference> pluginVersionReferences = new ArrayList<>();
+        if(versions!=null) {
+            if(!versions.isEmpty()) {
+                Enumeration<PluginVersionReference> v = versions.keys();
+                for(int i=0;i<versions.size();i++){
+                    if(v.hasMoreElements()){
+                        pluginVersionReferences.add(v.nextElement());
+                    }
+                }
+//                for (PluginVersionReference pluginVersionReference = v.nextElement(); v.hasMoreElements(); ){
+//                    pluginVersionReferences.add(pluginVersionReference);
+//                }
+            }
+        }else{
+            System.out.println("Versions null, pluginDeveloper code: "+pluginDeveloperReference.getPluginReference().getPlugin().getCode());
+        }
+        return pluginVersionReferences;
     }
 
     public final PluginDeveloperReference getPluginDeveloperReference() {

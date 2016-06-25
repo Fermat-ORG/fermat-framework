@@ -9,7 +9,7 @@
     <dependency>
       <groupId>com.bitdubai.fermat.api</groupId>
       <artifactId>fermat-api</artifactId>
-      <version>2.0.9</version>
+      <version>2.0.10</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>

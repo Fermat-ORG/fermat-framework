@@ -6,6 +6,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatContext;
+import com.mati.fermat_osa_addon_android_loader.structure.MfClassUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,14 +30,24 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
     }
 
 
-    public Object load(String pluginName){
+    public Object load(String pluginName, Object[] args){
         ClassLoader classLoader = loadAllPlugin();
 
         FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
 
         try {
             Class klass1 = classLoaderManger.loadClass(pluginName);
-            Constructor<?> constructor = klass1.getConstructor();
+            Constructor<?> constructor = null;
+            if(args!=null){
+                if (args.length>0){
+                    Class<?>[] paramTypes = MfClassUtils.getTypes(args,classLoaderManger);
+                    constructor = klass1.getDeclaredConstructor(paramTypes);
+                }else{
+                    constructor = klass1.getConstructor();
+                }
+            }else{
+                constructor = klass1.getConstructor();
+            }
             Object myClass = constructor.newInstance();
             for (Method method : myClass.getClass().getMethods()) {
                 Log.i("App", method.getName());

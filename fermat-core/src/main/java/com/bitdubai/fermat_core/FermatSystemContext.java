@@ -30,6 +30,8 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.Layer
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -281,6 +283,17 @@ public final class FermatSystemContext {
 
         for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
             platform.getValue().fillPluginVersions(versions);
+
+        return versions;
+    }
+
+    public final List<PluginVersionReference> listPluginVersionsMati() {
+
+//        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions = new ConcurrentHashMap<>();
+        List<PluginVersionReference> versions = new ArrayList<>();
+
+        for(ConcurrentHashMap.Entry<PlatformReference, AbstractPlatform> platform : platforms.entrySet())
+            platform.getValue().fillPluginVersionsMati(versions);
 
         return versions;
     }

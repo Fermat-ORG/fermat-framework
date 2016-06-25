@@ -17,6 +17,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -152,6 +153,12 @@ public abstract class AbstractLayer {
 
         for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
             plugin.getValue().fillVersions(versions);
+    }
+
+    public final void fillPluginVersionsMati(final List<PluginVersionReference> versions) {
+
+        for(ConcurrentHashMap.Entry<PluginReference, AbstractPluginSubsystem> plugin : plugins.entrySet())
+            plugin.getValue().fillVersionsMati(versions);
     }
 
     public final LayerReference getLayerReference() {

@@ -39,7 +39,8 @@ public class NotificationServiceHelper {
                 notificationService = ((NotificationService.LocalBinder) service).getService();
                 mNotificationServiceConnected = true;
             }catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
+                Log.e(TAG,"Exception in onServiceConnected from NotificationServiceHelper");
             }
         }
     };

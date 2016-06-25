@@ -280,7 +280,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
                 if(getServicesHelpers().getClientSideBrokerServiceAIDL()!=null)
                     fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
             }catch (Exception e){
-                e.printStackTrace();
+                Log.e(TAG,"isFermatRunning launch exception");
             }
         }
         return fermatRunning;
@@ -301,10 +301,17 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         return loaderManager.objectToProxyFactory(base,interfaceLoader,interfaces,returnInterface);
     }
 
+//    public ProxyBuilder
+
     @Override
-    public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters) {
-        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
+    public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args) {
+        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
     }
+
+//    @Override
+//    public Object loadProxyObject(FermatContext fermatContext, String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
+//        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
+//    }
 //    public <I> I loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,I returnInterface) {
 //        return (I) loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
 //    }
