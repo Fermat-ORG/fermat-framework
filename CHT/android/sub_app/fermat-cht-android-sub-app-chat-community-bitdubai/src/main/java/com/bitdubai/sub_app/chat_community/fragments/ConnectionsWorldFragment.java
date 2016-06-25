@@ -83,7 +83,7 @@ public class ConnectionsWorldFragment
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";
-    private static final int MAX = 10;
+    private static final int MAX = 8;
     protected final String TAG = "Recycler Base";
 
 
@@ -127,6 +127,7 @@ public class ConnectionsWorldFragment
         location.setLongitude(city.getLongitude());
         distance=identity.getAccuracy();
         location.setAccuracy((long) distance);
+        offset=0;
         onRefresh();
     }
 
@@ -200,60 +201,62 @@ public class ConnectionsWorldFragment
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        onRefresh();
+//                        if (!isRefreshing) {
 
-                        if (!isRefreshing) {
-                            if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                isRefreshing = true;
-                                Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
-                                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-                                progressDialog.setMessage("Please wait");
-                                progressDialog.setCancelable(false);
-                                progressDialog.show();
-                                FermatWorker worker = new FermatWorker() {
-                                    @Override
-                                    protected Object doInBackground() throws Exception {
-                                        return getMoreData(location, distance, alias, MAX, pastVisiblesItems);
-                                    }
-                                };
-                                worker.setContext(getActivity());
-                                worker.setCallBack(new FermatWorkerCallBack() {
-                                    @SuppressWarnings("unchecked")
-                                    @Override
-                                    public void onPostExecute(Object... result) {
-                                        isRefreshing = true;
-                                        if (swipeRefresh != null)
-                                            swipeRefresh.setRefreshing(false);
-                                        if (result != null &&
-                                                result.length > 0) {
-                                            progressDialog.dismiss();
-                                            if (getActivity() != null && adapter != null) {
-                                                lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                                adapter.changeDataSet(lstChatUserInformations);
-                                                if (lstChatUserInformations.isEmpty()) {
-                                                    showEmpty(true, emptyView);
-                                                } else {
-                                                    showEmpty(false, emptyView);
-                                                }
-                                            }
-                                        } else
-                                            showEmpty(true, emptyView);
-                                    }
-
-                                    @Override
-                                    public void onErrorOccurred(Exception ex) {
-                                        progressDialog.dismiss();
-                                        isRefreshing = true;
-                                        if (swipeRefresh != null)
-                                            swipeRefresh.setRefreshing(false);
-                                        if (getActivity() != null)
-                                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-                                    }
-                                });
-                                worker.execute();
-                                //Log.v("...", "Last Item Wow !");
-                                //Do pagination.. i.e. fetch new data
-                            }
-                        }
+//                            if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                                isRefreshing = true;
+//                                Toast.makeText(getActivity(), "Last one",Toast.LENGTH_SHORT);
+//                                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//                                progressDialog.setMessage("Please wait");
+//                                progressDialog.setCancelable(false);
+//                                progressDialog.show();
+//                                FermatWorker worker = new FermatWorker() {
+//                                    @Override
+//                                    protected Object doInBackground() throws Exception {
+//                                        return getMoreData(location, distance, alias, MAX, pastVisiblesItems);
+//                                    }
+//                                };
+//                                worker.setContext(getActivity());
+//                                worker.setCallBack(new FermatWorkerCallBack() {
+//                                    @SuppressWarnings("unchecked")
+//                                    @Override
+//                                    public void onPostExecute(Object... result) {
+//                                        isRefreshing = false;
+//                                        if (swipeRefresh != null) {
+//                                            swipeRefresh.setRefreshing(false);
+//                                            if (result != null &&
+//                                                    result.length > 0) {
+//                                                progressDialog.dismiss();
+//                                                if (getActivity() != null && adapter != null) {
+//                                                    lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
+//                                                    adapter.changeDataSet(lstChatUserInformations);
+//                                                    if (lstChatUserInformations.isEmpty()) {
+//                                                        showEmpty(true, emptyView);
+//                                                    } else {
+//                                                        showEmpty(false, emptyView);
+//                                                    }
+//                                                }
+//                                            } else
+//                                                showEmpty(true, emptyView);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onErrorOccurred(Exception ex) {
+//                                        progressDialog.dismiss();
+//                                        isRefreshing = false;
+//                                        if (swipeRefresh != null)
+//                                            swipeRefresh.setRefreshing(false);
+//                                        if (getActivity() != null)
+//                                            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+//                                    }
+//                                });
+//                                worker.execute();
+//                                //Log.v("...", "Last Item Wow !");
+//                                //Do pagination.. i.e. fetch new data
+//                            }
+//                        }
                     }
                 }
             });
@@ -265,69 +268,71 @@ public class ConnectionsWorldFragment
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onRefresh();
-                            swipeRefresh.setRefreshing(false);
-                        }
-                    }, 2500);
-                }
-            });
+            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            onRefresh();
+//                            swipeRefresh.setRefreshing(false);
+//                        }
+//                    }, 5000);
+//                }
+//            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
             showEmpty(true, emptyView);
-
-            if (launchActorCreationDialog) {
-                PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.chat_banner_community)
-                        .setIconRes(R.drawable.chat_subapp)
-                        .setSubTitle(R.string.cht_creation_dialog_sub_title)
-                        .setBody(R.string.cht_creation_dialog_body)
-                        .setTextFooter(R.string.cht_creation_dialog_footer)
-                        .setTextNameLeft(R.string.cht_creation_name_left)
-                        .setTextNameRight(R.string.cht_creation_name_right)
-                        .setImageRight(R.drawable.ic_profile_male)
-                        .build();
-                presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-                    }
-                });
-                presentationDialog.show();
-            } else if (launchListIdentitiesDialog) {
-                PresentationChatCommunityDialog presentationChatCommunityDialog =
-                        new PresentationChatCommunityDialog(getActivity(),
-                                appSession,
-                                null,
-                                moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
-                        );
-                presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        invalidate();
-                        onRefresh();
-                    }
-                });
-                presentationChatCommunityDialog.show();
-            } else {
-                onRefresh();
-            }
-
+            launchPresentationDialog();
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
         }
         return rootView;
+    }
+
+    private void launchPresentationDialog() {
+        if (launchActorCreationDialog) {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                    .setBannerRes(R.drawable.chat_banner_community)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setSubTitle(R.string.cht_creation_dialog_sub_title)
+                    .setBody(R.string.cht_creation_dialog_body)
+                    .setTextFooter(R.string.cht_creation_dialog_footer)
+                    .setTextNameLeft(R.string.cht_creation_name_left)
+                    .setTextNameRight(R.string.cht_creation_name_right)
+                    .setImageRight(R.drawable.ic_profile_male)
+                    .build();
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    invalidate();
+                    onRefresh();
+                }
+            });
+            presentationDialog.show();
+        } else if (launchListIdentitiesDialog) {
+            PresentationChatCommunityDialog presentationChatCommunityDialog =
+                    new PresentationChatCommunityDialog(getActivity(),
+                            appSession,
+                            null,
+                            moduleManager,
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES
+                    );
+            presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    invalidate();
+                    onRefresh();
+                }
+            });
+            presentationChatCommunityDialog.show();
+        } else {
+            invalidate();
+            onRefresh();
+        }
     }
 
     @Override
@@ -341,7 +346,7 @@ public class ConnectionsWorldFragment
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return getMoreData(location, distance, alias, MAX, offset);
+                    return getMoreDataAsync(location, distance, alias, MAX, offset);
                 }
             };
             worker.setContext(getActivity());
@@ -350,29 +355,41 @@ public class ConnectionsWorldFragment
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    if (swipeRefresh != null)
+                    if (swipeRefresh != null && isAttached) {
                         swipeRefresh.setRefreshing(false);
-                    if (result != null &&
-                            result.length > 0) {
-                        progressDialog.dismiss();
-                        if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
-                            if (lstChatUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
-                            } else {
-                                showEmpty(false, emptyView);
+                        if (result != null &&
+                                result.length > 0) {
+                            progressDialog.dismiss();
+                            if (getActivity() != null && adapter != null) {
+                                if (offset == 0) {
+                                    if(lstChatUserInformations!=null){
+                                        lstChatUserInformations.clear();
+                                        lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    }
+                                    else{
+                                        lstChatUserInformations=(ArrayList<ChatActorCommunityInformation>) result[0];
+                                    }
+                                    adapter.changeDataSet(lstChatUserInformations);
+                                } else {
+                                    lstChatUserInformations.addAll((ArrayList<ChatActorCommunityInformation>) result[0]);
+                                    adapter.notifyItemRangeInserted(offset, lstChatUserInformations.size() - 1);
+                                }
+                                if (lstChatUserInformations.isEmpty()) {
+                                    showEmpty(true, emptyView);
+                                } else {
+                                    showEmpty(false, emptyView);
+                                }
                             }
-                        }
-                    } else
-                        showEmpty(true, emptyView);
+                        } else
+                            showEmpty(true, emptyView);
+                    }
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     progressDialog.dismiss();
                     isRefreshing = false;
-                    if (swipeRefresh != null)
+                    if (swipeRefresh != null && isAttached)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -412,7 +429,7 @@ public class ConnectionsWorldFragment
         }
     }
 
-    private synchronized List<ChatActorCommunityInformation> getMoreData(DeviceLocation location, double distance, String alias,int max, int offset) {
+    private List<ChatActorCommunityInformation> getMoreDataAsync(DeviceLocation location, double distance, String alias,int max, int offset) {
         System.out.println("****************** GETMORE DATA SYNCRHINIEZED ENTERING");
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
@@ -431,7 +448,7 @@ public class ConnectionsWorldFragment
 //                else dataSet.add(chat);
 //            }
                 dataSet.addAll(result);
-                //offset = dataSet.size();
+                offset = dataSet.size();
             }
         } catch (Exception e) {
             e.printStackTrace();

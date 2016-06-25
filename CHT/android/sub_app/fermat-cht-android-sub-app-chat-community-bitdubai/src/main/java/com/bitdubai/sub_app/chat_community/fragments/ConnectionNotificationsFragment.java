@@ -170,18 +170,32 @@ public class ConnectionNotificationsFragment
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
-            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onRefresh();
-                            swipeRefresh.setRefreshing(false);
-                        }
-                    }, 2500);
-                }
-            });
+            swipeRefresh.setOnRefreshListener(this);
+//            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                lstChatUserInformations = moduleManager.listChatActorPendingLocalAction(identity.getPublicKey(),
+//                                        identity.getActorType(), MAX, offset);
+//                                adapter.changeDataSet(lstChatUserInformations);
+//                                if (lstChatUserInformations.isEmpty()) {
+//                                    showEmpty(true, emptyView);
+//                                } else {
+//                                    showEmpty(false, emptyView);
+//                                }
+//                            }catch (CantListChatActorException e){
+//                                e.printStackTrace();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                            swipeRefresh.setRefreshing(false);
+//                        }
+//                    }, 5000);
+//                }
+//            });
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));

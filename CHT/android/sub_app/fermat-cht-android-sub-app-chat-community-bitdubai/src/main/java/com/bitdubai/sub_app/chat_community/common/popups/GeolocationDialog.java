@@ -33,24 +33,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunityManager;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateBackupFileException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateCountriesListException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantGetCitiesListException;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
-import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.adapters.GeolocationAdapter;
 
 import org.json.JSONArray;
@@ -74,7 +63,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
 
     //THREAD ATTRIBUTES
     private boolean isRefreshing = false;
-    private List<Cities> lstChatUserInformations = new ArrayList<>();
+    private List<ExtendedCity> lstChatUserInformations = new ArrayList<>();
     private GeolocationAdapter adapter;
     private ErrorManager errorManager;
     private LinearLayout emptyView;
@@ -132,13 +121,12 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                         @Override
                         public void onClick(View v) {
                             try {
-                                lstChatUserInformations = mChatActorCommunityManager.getCities(searchInput.getText().toString());
+                                lstChatUserInformations = mChatActorCommunityManager.getExtendedCitiesByFilter(searchInput.getText().toString());
                                 adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                                 mListView.setAdapter(adapter);
                                 adapter.refreshEvents(lstChatUserInformations);
                               // onRefresh();
-                            }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException |
-                            CantCreateCountriesListException  | CantGetCitiesListException e){
+                            }catch (CantGetCitiesListException e){
                                 if (getActivity() != null)
                                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
                                             UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -178,7 +166,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity()!= null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<Cities>) result[0];
+                            lstChatUserInformations = (ArrayList<ExtendedCity>) result[0];
                             adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                             mListView.setAdapter(adapter);
                             adapter.refreshEvents(lstChatUserInformations);
@@ -203,12 +191,12 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
         }
     }
 
-    private synchronized List<Cities> getMoreData(String filter) {
+    private synchronized List<ExtendedCity> getMoreData(String filter) {
         System.out.println("****************** GETMORE DATA SYNCHRONIZED ENTERING");
-        List<Cities> dataSet = new ArrayList<>();
+        List<ExtendedCity> dataSet = new ArrayList<>();
 
         try {
-            List<Cities> result = mChatActorCommunityManager.getCities(filter);
+            List<ExtendedCity> result = mChatActorCommunityManager.getExtendedCitiesByFilter(filter);
             dataSet.addAll(result);
         } catch (Exception e) {
             e.printStackTrace();
