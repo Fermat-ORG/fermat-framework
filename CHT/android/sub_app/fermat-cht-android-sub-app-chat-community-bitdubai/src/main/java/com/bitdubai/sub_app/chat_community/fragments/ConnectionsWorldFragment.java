@@ -208,6 +208,7 @@ public class ConnectionsWorldFragment
                         visibleItemCount = layoutManager.getChildCount();
                         totalItemCount = layoutManager.getItemCount();
                         pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+                        offset=totalItemCount;
                         onRefresh();
 //                        if (!isRefreshing) {
 
