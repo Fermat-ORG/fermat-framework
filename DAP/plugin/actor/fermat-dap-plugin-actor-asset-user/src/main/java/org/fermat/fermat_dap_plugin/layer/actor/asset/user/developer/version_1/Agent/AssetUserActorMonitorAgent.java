@@ -12,15 +12,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.AssetUserActorPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.structure.AssetUserActorDao;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -131,7 +126,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 //                throw new CantCreateAssetUserActorException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET USER IN ACTOR NETWORK SERVICE", e, "", "");
 //            }
         }
-            //EN DESHUSO
+        //EN DESHUSO
 //        private void listByActorAssetUserNetworkService() throws CantCreateAssetUserActorException {
 //            try {
 //                if (assetUserActorNetworkServiceManager != null && assetUserActorDao.getActorAssetUser() != null) {

@@ -71,7 +71,7 @@ public class AssetIssuerFermatAppConnection extends AppConnections<ReferenceAppF
     public int getResource(int id) {
         int resId = 0;
 
-        switch (id){
+        switch (id) {
             case 1:
                 resId = R.drawable.ic_geolacation;
                 break;

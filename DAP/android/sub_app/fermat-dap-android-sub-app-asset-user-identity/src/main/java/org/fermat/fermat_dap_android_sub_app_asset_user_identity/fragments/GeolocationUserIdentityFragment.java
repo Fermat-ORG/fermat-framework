@@ -120,7 +120,7 @@ public class GeolocationUserIdentityFragment extends AbstractFermatFragment<Refe
     }
 
     private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetAssetUserActorsException {
-        if(appSession.getData(SessionConstants.ACCURACY_DATA) != null) {
+        if (appSession.getData(SessionConstants.ACCURACY_DATA) != null) {
             int accuracyTemp = (int) appSession.getData(SessionConstants.ACCURACY_DATA);
             accuracy.setText(String.format("%s", Integer.toString(accuracyTemp)));
 

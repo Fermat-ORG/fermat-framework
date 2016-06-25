@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
@@ -117,7 +116,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     }
 
     @Override
-    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND,timeout = 20,timeoutUnit = TimeUnit.SECONDS)
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 20, timeoutUnit = TimeUnit.SECONDS)
     public List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered(int max, int offset) throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list = null;
         List<AssetIssuerActorRecord> assetIssuerActorRecords = null;

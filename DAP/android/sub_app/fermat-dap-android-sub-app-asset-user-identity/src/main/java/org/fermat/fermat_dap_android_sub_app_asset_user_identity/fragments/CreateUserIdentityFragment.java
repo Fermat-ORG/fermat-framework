@@ -461,7 +461,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray, accuracy, frequency);                                     publishResult(CREATE_IDENTITY_SUCCESS);
+                                    moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray, accuracy, frequency);
+                                    publishResult(CREATE_IDENTITY_SUCCESS);
                                     cleanSessions();
                                 } catch (CantCreateNewIdentityAssetUserException e) {
                                     e.printStackTrace();
@@ -932,7 +933,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment<Reference
 
     private Frequency getFrequencyData() {
         return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
-        (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
     }
 
     private void activateButton() {

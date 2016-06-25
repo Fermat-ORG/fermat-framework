@@ -42,7 +42,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -59,14 +58,12 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
+import org.fermat.fermat_dap_android_sub_app_asset_factory.util.FactoryDialogCropImage;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-
-//import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.IdentityIssuerDialogCropImage;
-import org.fermat.fermat_dap_android_sub_app_asset_factory.util.FactoryDialogCropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,6 +77,8 @@ import java.util.UUID;
 
 import static android.widget.Toast.makeText;
 
+//import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.IdentityIssuerDialogCropImage;
+
 /**
  * Created by frank on 12/15/15.
  */
@@ -91,7 +90,6 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
     private Bitmap mIdentityBitmap;
 
     private byte[] brokerImageByteArray;
-
 
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -586,7 +584,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
 //                                                    wizardMultimediaAssetImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                                     Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
                                                     brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
-                                                    if (mIdentityBitmap != null){
+                                                    if (mIdentityBitmap != null) {
                                                         hasResource = true;
                                                     }
 
@@ -630,7 +628,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
 //                                            wizardMultimediaAssetImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), mIdentityBitmap));
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
-                                            if (mIdentityBitmap != null){
+                                            if (mIdentityBitmap != null) {
                                                 hasResource = true;
                                             }
 
@@ -684,10 +682,9 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), mIdentityBitmap)).into(wizardMultimediaAssetImage);
                                             brokerImageByteArray = ImagesUtils.toByteArray(mIdentityBitmap);
 
-                                            if (mIdentityBitmap != null){
+                                            if (mIdentityBitmap != null) {
                                                 hasResource = true;
                                             }
-
 
 
                                         } else {
@@ -780,6 +777,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             return null;
         }
     }
+
     private boolean checkCameraPermission() {
         String permission = "android.permission.CAMERA";
         int res = getActivity().checkCallingOrSelfPermission(permission);
@@ -849,6 +847,7 @@ public class WizardMultimediaFragment extends AbstractFermatFragment<ReferenceAp
             return null;
         }
     }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);

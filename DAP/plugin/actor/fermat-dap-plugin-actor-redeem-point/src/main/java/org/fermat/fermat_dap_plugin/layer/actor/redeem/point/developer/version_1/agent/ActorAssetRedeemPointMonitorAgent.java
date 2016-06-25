@@ -12,15 +12,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.RedeemPointActorPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.exceptions.CantAddPendingRedeemPointException;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.structure.RedeemPointActorDao;
 
-import java.util.List;
 import java.util.UUID;
 
 /**

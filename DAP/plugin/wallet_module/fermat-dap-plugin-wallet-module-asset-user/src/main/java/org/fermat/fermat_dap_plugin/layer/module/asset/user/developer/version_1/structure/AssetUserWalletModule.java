@@ -637,9 +637,9 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         identityAssetUserManager.createNewIdentityAssetUser(name,
-                                                            profile_img,
-                                                            identityAssetUserManager.getAccuracyDataDefault(),
-                                                            identityAssetUserManager.getFrequencyDataDefault());
+                profile_img,
+                identityAssetUserManager.getAccuracyDataDefault(),
+                identityAssetUserManager.getFrequencyDataDefault());
     }
 
     @Override

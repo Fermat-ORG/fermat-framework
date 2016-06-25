@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.CreateUserIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.GeolocationUserIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.fragments.IdentityListFragment;
