@@ -2,20 +2,9 @@ package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractAddonSubsystem;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.LayerNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.DeveloperPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -24,6 +13,22 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.Platform
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractAddonSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.LayerNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -146,14 +151,37 @@ public final class FermatSystemContext {
      */
     public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
+        AbstractPlugin abstractPlugin = null;
         try {
-
-            return getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
+            if (isPluginLoadedInTheNewWay(pluginVersionReference)) {
+                abstractPlugin = (AbstractPlugin) getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).
+                        getPluginByVersionMati(
+                                pluginVersionReference.getPlatform().getCode(),
+                                pluginVersionReference.getLayers().getCode(),
+                                pluginVersionReference.getPlugins().getCode(),
+                                pluginVersionReference.getDeveloper().getCode(),
+                                pluginVersionReference.getVersion().toString(),
+                                new Class[]{AbstractPlugin.class}
+                        );
+            } else
+                abstractPlugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
 
         } catch (DeveloperNotFoundException e) {
 
             throw new VersionNotFoundException(e, pluginVersionReference.toString(), "version not found in the platform of the system context.");
         }
+        return abstractPlugin;
+    }
+
+    private boolean isPluginLoadedInTheNewWay(PluginVersionReference pluginVersionReference){
+        PluginVersionReference pluginVersionReference2 = new PluginVersionReference(
+                Platforms.BLOCKCHAINS,
+                Layers.CRYPTO_NETWORK,
+                Plugins.FERMAT_NETWORK,
+                Developers.BITDUBAI,
+                new Version());
+
+        return pluginVersionReference.equals(pluginVersionReference2);
     }
 
     /**
@@ -165,7 +193,7 @@ public final class FermatSystemContext {
      *
      * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
      */
-    public final AbstractPluginDeveloper getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
+    public final DeveloperPluginInterface getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
         try {
 

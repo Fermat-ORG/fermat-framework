@@ -23,11 +23,14 @@ public class AddonVersionReference {
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private AddonDeveloperReference addonDeveloperReference;
-    private final Version                 version                ;
+    private  Version                 version                ;
 
     public AddonVersionReference(final Version version) {
 
         this.version = version;
+    }
+
+    public AddonVersionReference() {
     }
 
     public AddonVersionReference(final AddonDeveloperReference addonDeveloperReference,
@@ -120,7 +123,8 @@ public class AddonVersionReference {
         int c = 0;
         if(addonDeveloperReference != null)
             c+= addonDeveloperReference.hashCode();
-        c += version.hashCode();
+        if(version!=null)
+            c += version.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 

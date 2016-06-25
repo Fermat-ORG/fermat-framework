@@ -17,11 +17,14 @@ public class LayerReference implements Serializable{
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private       PlatformReference platformReference;
-    private final Layers            layer            ;
+    private  Layers            layer            ;
 
     public LayerReference(final Layers layer) {
 
         this.layer = layer;
+    }
+
+    public LayerReference() {
     }
 
     public LayerReference(final PlatformReference platformReference,
@@ -65,6 +68,7 @@ public class LayerReference implements Serializable{
     public int hashCode() {
         int c = 0;
 
+        if(layer!=null)
         c += layer .hashCode();
 
         if (platformReference != null)

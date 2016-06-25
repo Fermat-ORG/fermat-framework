@@ -21,7 +21,7 @@ import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.github.anrwatchdog.ANRWatchDog;
-import com.mati.fermat_osa_addon_android_loader.ClassLoaderManager;
+import com.mati.fermat_osa_addon_android_loader.LoaderManager;
 import com.mati.fermat_osa_addon_android_loader.Smith;
 
 import org.acra.ACRA;
@@ -89,7 +89,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
      */
     private ClassLoader mBaseClassLoader;
 
-    private ClassLoaderManager classLoaderManager;
+    private LoaderManager loaderManager;
 
     /**
      *  Application session constructor
@@ -180,7 +180,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
             e.printStackTrace();
         }
 
-        classLoaderManager = new ClassLoaderManager<>(this);
+        loaderManager = new LoaderManager<>(this);
 
 //        loadProcessInfo();
 
@@ -292,7 +292,20 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     }
 
     @Override
-    public Object loadPlugin(String pluginName) {
-        return classLoaderManager.load(pluginName);
+    public Object loadObject(String pluginName) {
+        return loaderManager.load(pluginName);
     }
+
+    @Override
+    public Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
+        return loaderManager.objectToProxyFactory(base,interfaceLoader,interfaces,returnInterface);
+    }
+
+    @Override
+    public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters) {
+        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
+    }
+//    public <I> I loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,I returnInterface) {
+//        return (I) loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
+//    }
 }

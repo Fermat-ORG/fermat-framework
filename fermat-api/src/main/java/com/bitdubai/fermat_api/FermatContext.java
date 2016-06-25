@@ -7,6 +7,12 @@ public interface FermatContext {
 
     ClassLoader getBaseClassLoader();
 
-    Object loadPlugin(String pluginName);
+    Object loadObject(String pluginName);
+
+    Object objectToProxyfactory(Object base,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface);
+
+    Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... parameters);
+
+
 
 }

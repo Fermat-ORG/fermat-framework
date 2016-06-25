@@ -1,10 +1,17 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.DeveloperPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,11 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
  */
-public abstract class AbstractPluginDeveloper {
+public abstract class AbstractPluginDeveloper implements DeveloperPluginInterface {
 
     private final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> versions;
 
-    private final PluginDeveloperReference pluginDeveloperReference;
+    private PluginDeveloperReference pluginDeveloperReference;
+
+    private FermatContext fermatContext;
 
     /**
      * normal constructor with params.
@@ -27,9 +36,22 @@ public abstract class AbstractPluginDeveloper {
      *
      * @param pluginDeveloperReference a directly built developer reference.
      */
-    public AbstractPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) {
+    public AbstractPluginDeveloper(PluginDeveloperReference pluginDeveloperReference) {
 
         this.pluginDeveloperReference = pluginDeveloperReference;
+
+        this.versions = new ConcurrentHashMap<>();
+    }
+
+    public AbstractPluginDeveloper() {
+        this.versions = new ConcurrentHashMap<>();
+    }
+
+    public AbstractPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference,FermatContext fermatContext) {
+
+        this.pluginDeveloperReference = pluginDeveloperReference;
+
+        this.fermatContext = fermatContext;
 
         this.versions = new ConcurrentHashMap<>();
     }
@@ -47,7 +69,7 @@ public abstract class AbstractPluginDeveloper {
      *
      * @throws CantRegisterVersionException if something goes wrong.
      */
-    protected final void registerVersion(final AbstractPlugin abstractPlugin) throws CantRegisterVersionException {
+    public final void registerVersion(final AbstractPlugin abstractPlugin) throws CantRegisterVersionException {
 
         PluginVersionReference pluginVersionReference = abstractPlugin.getPluginVersionReference();
 
@@ -66,6 +88,39 @@ public abstract class AbstractPluginDeveloper {
             throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
         }
     }
+
+    public final Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version,Class[] interfaces) throws VersionNotFoundException {
+        PluginVersionReference pluginVersionReference = null;
+        try {
+            pluginVersionReference = new PluginVersionReference(
+                    Platforms.getByCode(platformCode),
+                    Layers.getByCode(layerCode),
+                    Plugins.getByCode(pluginsCode),
+                    Developers.BITDUBAI,
+                    new Version());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            if (versions.containsKey(pluginVersionReference)) {
+                AbstractPlugin abstractPlugin = versions.get(pluginVersionReference);
+                return fermatContext.objectToProxyfactory(
+                        abstractPlugin,
+                        interfaces.getClass().getClassLoader(),
+                        interfaces,
+                        interfaces[0]);
+            } else {
+
+                throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
+            }
+        }catch (Exception e){
+            //todo: mejorar esta captura de excepción
+            System.err.println("Mejorar esta captura de excepción");
+            throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.",e);
+        }
+    }
+
+
 
     public final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> listVersions() {
 

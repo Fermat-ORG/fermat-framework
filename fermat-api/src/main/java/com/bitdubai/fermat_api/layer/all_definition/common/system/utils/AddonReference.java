@@ -14,11 +14,14 @@ public class AddonReference {
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private       LayerReference layerReference;
-    private final Addons         addon         ;
+    private  Addons         addon         ;
 
     public AddonReference(final Addons addon) {
 
         this.addon = addon;
+    }
+
+    public AddonReference() {
     }
 
     public AddonReference(final LayerReference layerReference,
@@ -53,7 +56,8 @@ public class AddonReference {
     @Override
     public int hashCode() {
         int c = 0;
-        c += addon .hashCode();
+        if(addon!=null)
+            c += addon .hashCode();
         if (layerReference != null)
             c += layerReference.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;

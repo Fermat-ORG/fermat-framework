@@ -34,9 +34,13 @@ public class NotificationServiceHelper {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.i(TAG,"Connected");
-            notificationService = ((NotificationService.LocalBinder)service).getService();
-            mNotificationServiceConnected = true;
+            Log.i(TAG, "Connected");
+            try {
+                notificationService = ((NotificationService.LocalBinder) service).getService();
+                mNotificationServiceConnected = true;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     };
 

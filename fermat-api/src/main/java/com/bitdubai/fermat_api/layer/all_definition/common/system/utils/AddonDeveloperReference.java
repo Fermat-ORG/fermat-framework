@@ -14,11 +14,14 @@ public class AddonDeveloperReference {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private AddonReference addonReference;
-    private final Developers     developer     ;
+    private  Developers     developer     ;
 
     public AddonDeveloperReference(final Developers developer) {
 
         this.developer = developer;
+    }
+
+    public AddonDeveloperReference() {
     }
 
     public AddonDeveloperReference(final AddonReference addonReference,
@@ -54,7 +57,8 @@ public class AddonDeveloperReference {
     @Override
     public final int hashCode() {
         int c = 0;
-        c += developer.hashCode();
+        if(developer!=null)
+            c += developer.hashCode();
         if(addonReference != null)
             c+= addonReference.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
