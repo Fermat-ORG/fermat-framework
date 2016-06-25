@@ -11,8 +11,19 @@ project(':fermat-bch-api').projectDir = new File('BCH/library/api/fermat-bch-api
 include ':fermat-bch-core'
 project(':fermat-bch-core').projectDir = new File('BCH/library/core/fermat-bch-core')
 
+/**
+ * Crypto Network
+ */
+
 include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+
+include ':fermat-bch-plugin-crypto-network-fermat-bitdubai'
+project(':fermat-bch-plugin-crypto-network-fermat-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-fermat-bitdubai')
+
+/**
+ * Crypto Router
+ */
 
 include ':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai'
 project(':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('BCH/plugin/crypto_router/fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai')
@@ -20,19 +31,26 @@ project(':fermat-bch-plugin-crypto-router-incoming-crypto-bitdubai').projectDir 
 include ':fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai'
 project(':fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai').projectDir = new File('BCH/plugin/crypto_module/fermat-bch-plugin-crypto-module-crypto-address-book-bitdubai')
 
+/**
+ * Crypto Vault
+ */
 include ':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai')
 
-/*TODO COMMENTED IS NOT IN USE
-include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
-project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
-*/
+
 include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
 include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
 
+include ':fermat-bch-plugin-crypto-vault-fermat-currency-bitdubai'
+project(':fermat-bch-plugin-crypto-vault-fermat-currency-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-fermat-currency-bitdubai')
+
+
+/**
+ * Middleware
+ */
 
 include ':fermat-bch-plugin-middleware-crypto-addresses-bitdubai'
 project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai').projectDir = new File('BCH/plugin/middleware/fermat-bch-plugin-middleware-crypto-addresses-bitdubai')

@@ -32,6 +32,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -105,7 +106,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             errorManager = appSession.getErrorManager();
 
             moduleManager = appSession.getModuleManager();
-            setHasOptionsMenu(true);
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -468,7 +469,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,50,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,70,stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
@@ -527,9 +528,11 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         super.onCreateOptionsMenu(menu, inflater);
         //inflater.inflate(R.menu.menu_main, menu);
 
-        try {
+      /*  try {
             menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+
 
             final MenuItem action_help = menu.findItem(R.id.action_help);
             menu.findItem(R.id.action_help).setVisible(true);
@@ -543,7 +546,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
         } catch (Exception e) {
 
-        }
+        }*/
 
     }
 
@@ -556,6 +559,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             if (id == 99)
                 showDialog();
 
+            if (id == 2)
+                if(identitySelected!=null)
+                    changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
+                else
+                    showDialog();
+
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -564,4 +574,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

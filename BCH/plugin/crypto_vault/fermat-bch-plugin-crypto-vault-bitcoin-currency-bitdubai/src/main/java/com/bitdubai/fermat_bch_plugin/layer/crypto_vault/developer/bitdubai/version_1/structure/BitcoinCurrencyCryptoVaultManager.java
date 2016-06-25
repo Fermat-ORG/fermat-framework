@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BlockchainNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
@@ -180,17 +180,17 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+        if (BlockchainNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
             try {
                 // If only one network is enabled, then I will return the default
                 if (getDao().getActiveNetworkTypes().size() == 1)
-                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 else {
                     // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
                     return networkParameters;
                 }
             } catch (CantExecuteDatabaseOperationException e) {
-                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return BlockchainNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
         } else
             return networkParameters;
@@ -221,7 +221,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I extract the network Parameter from the address
          */
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * If the address is correct, then no exception raised.
@@ -285,7 +285,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address
@@ -522,7 +522,7 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         /**
          * I get the networkParameter
          */
-        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        final NetworkParameters networkParameters = BlockchainNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         /**
          * I get the bitcoin address

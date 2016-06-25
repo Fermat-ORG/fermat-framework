@@ -36,6 +36,7 @@ public enum EventSource implements FermatEnum {
     CRYPTO_ADDRESS_BOOK                     ("CAB"),
     CRYPTO_BROKER_ACTOR_CONNECTION          ("CBAC"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
+    CRYPTO_NETWORK_FERMAT_PLUGIN            ("CNF"),
     CRYPTO_ROUTER                           ("CCR"),
     CRYPTO_VAULT                            ("CCV"),
     CUSTOMER_OFFLINE_PAYMENT                ("CFP"),
@@ -122,6 +123,7 @@ public enum EventSource implements FermatEnum {
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CBAC":   return CRYPTO_BROKER_ACTOR_CONNECTION;
             case "CNB":    return CRYPTO_NETWORK_BITCOIN_PLUGIN;
+            case "CNF":    return CRYPTO_NETWORK_FERMAT_PLUGIN;
             case "CCR":    return CRYPTO_ROUTER;
             case "CCV":    return CRYPTO_VAULT;
             case "DCO":    return DEVICE_CONNECTIVITY;

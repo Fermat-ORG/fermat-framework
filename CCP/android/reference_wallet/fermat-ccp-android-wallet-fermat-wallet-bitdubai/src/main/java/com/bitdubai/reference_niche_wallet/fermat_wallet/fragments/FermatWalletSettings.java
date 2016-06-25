@@ -171,9 +171,9 @@ public class FermatWalletSettings extends FermatPreferenceFragment<ReferenceAppF
             list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
 
 
-            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.parseColor("#54ACEC")));
 
-            list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.GRAY));
+            list.add(new PreferenceSettingsLinkText(13, "Received Regtest Bitcoins", "", 15, Color.parseColor("#54ACEC")));
 
             //list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 

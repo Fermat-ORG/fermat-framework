@@ -5,7 +5,6 @@
     android:background="#f9f9f9"
     android:touchscreenBlocksFocus="false"
     >
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +14,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
-
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +24,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:theme="@style/Base.V7.Widget.AppCompat.EditText" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +33,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="5dp" />
-
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,5 +44,4 @@
         android:foregroundTint="#000000"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
-
 </LinearLayout>
