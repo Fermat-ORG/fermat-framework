@@ -10,6 +10,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
@@ -95,7 +96,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         }
     }
 
-    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage, int accuracy, Frequency frequency) throws CantCreateNewIdentityAssetUserException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -103,9 +104,9 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getAssetUserIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getAssetUserIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, accuracy, frequency);
 
-            IdentityAssetUser identityAssetUser = new IdentityAssetUsermpl(alias, publicKey, privateKey, profileImage);
+            IdentityAssetUser identityAssetUser = new IdentityAssetUsermpl(alias, publicKey, privateKey, profileImage, accuracy, frequency);
 
             registerIdentities();
 
@@ -119,9 +120,9 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         }
     }
 
-    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage, int accuracy, Frequency frequency) throws CantUpdateIdentityAssetUserException {
         try {
-            getAssetUserIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
+            getAssetUserIdentityDao().updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage, accuracy, frequency);
 
             registerIdentities();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
@@ -173,6 +174,16 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
             assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
+    }
+
+    @Override
+    public int getAccuracyDataDefault() {
+        return 0;
+    }
+
+    @Override
+    public Frequency getFrequencyDataDefault() {
+        return Frequency.NORMAL;
     }
 
     public void registerIdentities() throws CantListAssetUserIdentitiesException {
