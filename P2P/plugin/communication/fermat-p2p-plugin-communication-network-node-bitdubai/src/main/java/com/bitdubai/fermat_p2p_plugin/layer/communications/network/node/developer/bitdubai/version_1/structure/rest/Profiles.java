@@ -209,7 +209,7 @@ public class Profiles implements RestFulServices {
         }
 
         if(discoveryQueryParameters.getMax() > 0 && profileList.size() < discoveryQueryParameters.getMax())
-            profileList = profileList(profileList, discoveryQueryParameters.getMax());
+            profileList = profileList(profileList, discoveryQueryParameters.getMax(), filters, clientIdentityPublicKey);
 
         return new ArrayList<>(profileList.values());
 
@@ -218,15 +218,15 @@ public class Profiles implements RestFulServices {
     /*
      * get the other actors that left in the list to the same max
      */
-    private Map<String,ActorProfile> profileList(Map<String,ActorProfile> profileList, int max) throws CantReadRecordDataBaseException {
+    private Map<String,ActorProfile> profileList(Map<String,ActorProfile> profileList, int max, Map<String, Object> filters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException {
 
-        List<CheckedInActor> listActorsLetf = daoFactory.getCheckedInActorDao().findAll();
+        List<CheckedInActor> listActorsLetf = daoFactory.getCheckedInActorDao().findAll(filters);
 
         if(listActorsLetf != null){
 
             for(CheckedInActor actor : listActorsLetf){
 
-                if(!profileList.containsKey(actor.getIdentityPublicKey()))
+                if(!profileList.containsKey(actor.getIdentityPublicKey()) && !actor.getClientIdentityPublicKey().equals(clientIdentityPublicKey))
                     profileList.put(actor.getIdentityPublicKey(), getActorProfileFromCheckedInActor(actor));
 
                 if(profileList.size() == max)
