@@ -42,6 +42,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListBankAccountsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -97,8 +100,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
-    private List<BankAccountNumber> bankAccountList;
-    private List<String> locationList;
+    private List<BankAccountNumber> bankAccountList = new ArrayList<>();;
+    private List<String> locationList = new ArrayList<>();;
 
 
     public static OpenNegotiationDetailsFragment newInstance() {
@@ -116,15 +119,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             errorManager = appSession.getErrorManager();
             clausesTemp = new HashMap<>();
 
-
             //Try to load appSession BANK_ACCOUNT_LIST data
             Object data = appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
             if(data == null) {
-
+            if(bankAccountList == null) {
                 //Get saved locations from settings
                 bankAccountList = moduleManager.getListOfBankAccounts();
-
-                //Save locations to appSession BANK_ACCOUNT_LIST data
+            }
+//                Save locations to appSession BANK_ACCOUNT_LIST data
                 appSession.setData(FragmentsCommons.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
                 bankAccountList = (List<BankAccountNumber>) data;
@@ -141,7 +143,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
                     locationList.add(locationAux.getLocation());
                 }
 
-                //Save locations to appSession LOCATION_LIST data
+//                //Save locations to appSession LOCATION_LIST data
                 appSession.setData(FragmentsCommons.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
@@ -966,6 +968,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
+
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -978,6 +981,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Refer
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
                     String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
+
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);

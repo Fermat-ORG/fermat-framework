@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantTruncateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,6 +60,24 @@ public interface DatabaseTable {
     void addFermatEnumFilter(String columnName, FermatEnum value, DatabaseFilterType type);
 
     void addFilterOrder(String columnName, DatabaseFilterOrder direction);
+
+    /**
+     * Through this method you can order the results of the query by nearby locations to a defined point.
+     * The distance to the point will be returned in the query by the field @distanceField
+     * This method was thought having in count that we're managing long coordinates and never degree coordinates.
+     *
+     * @param latitudeField   field representing the latitude in the table
+     * @param longitudeField  field representing the longitude in the table
+     * @param point           to get the near locations
+     * @param direction       of the order (DESC/ASC) by default is ASC
+     * @param distanceField   label for the field of the returning distance between the point and the record.
+     */
+    // TODO implement in android version
+    void addNearbyLocationOrder(String              latitudeField ,
+                                String              longitudeField,
+                                Location            point         ,
+                                DatabaseFilterOrder direction     ,
+                                String              distanceField );
 
     void addUUIDFilter(String columnName, UUID value, DatabaseFilterType type);
 

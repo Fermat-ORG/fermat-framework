@@ -39,7 +39,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 		this.lastConnectionTimestamp  = new Timestamp(System.currentTimeMillis());
 		this.offlineCounter           = null;
 		this.lateNotificationsCounter = null;
-        this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
+        //this.lastLocation = new NetworkNodeCommunicationDeviceLocation();
 	}
 
 	public String getIdentityPublicKey() {
@@ -107,6 +107,7 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 	}
 
     public NetworkNodeCommunicationDeviceLocation getLastLocation() {
+
         return lastLocation;
     }
 

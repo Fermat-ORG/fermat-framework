@@ -110,7 +110,8 @@
     <string name="cbw_select_your_bank_account">Your Bank Accounts</string>
     <string name="cbw_no_selected_bank_account">No Selected Bank Accounts</string>
     <string name="cbw_select_your_bank_account_text">Add <b>bank accounts</b> to your Broker Wallet from which you can <b>restock</b> or <b>destock</b> funds.</string>
-    <string name="cbw_stock_management_text">Manage your Stock, set up Automatic Restock and set a Spread.</string>
+    <string name="cbw_stock_management_text">Add or remove from your Stock by tapping an Associated Wallet and setting an Amount</string>
+    <string name="cbw_stock_management_spread_text">Set a Spread (the difference between ask and bid price of your Merchandise)</string>
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
@@ -199,6 +200,7 @@
     <string name="cbw_wizard_stock_merchandise_title">Select Stock Wallets</string>
     <string name="cbw_wizard_stock_merchandise_description">Associate at least <b>two</b> of your wallets, from which you can withdraw funds to use as stock.</string>
     <string name="cbw_select_stock_merchandise">YOUR WALLETS</string>
+    <string name="cbw_your_stock">YOUR STOCK</string>
     <string name="cbw_associated_wallets">ASSOCIATED WALLETS</string>
 
     <!-- Earnings Wizard and Settings pages-->

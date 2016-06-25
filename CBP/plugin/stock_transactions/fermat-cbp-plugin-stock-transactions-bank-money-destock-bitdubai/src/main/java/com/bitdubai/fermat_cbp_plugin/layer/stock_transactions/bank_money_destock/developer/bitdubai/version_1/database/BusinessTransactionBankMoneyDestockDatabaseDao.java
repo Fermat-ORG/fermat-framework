@@ -162,7 +162,9 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
             for (DatabaseTableRecord bankMoneyRestockRecord : bankMoneyRestockData) {
                 final BankMoneyTransaction bankMoneyTransaction = getBankMoneyDestockTransaction(bankMoneyRestockRecord);
-                bankMoneyTransactions.add(bankMoneyTransaction);
+
+                if(!bankMoneyTransaction.getTransactionStatus().equals(TransactionStatusRestockDestock.COMPLETED))
+                    bankMoneyTransactions.add(bankMoneyTransaction);
             }
 
             return bankMoneyTransactions;

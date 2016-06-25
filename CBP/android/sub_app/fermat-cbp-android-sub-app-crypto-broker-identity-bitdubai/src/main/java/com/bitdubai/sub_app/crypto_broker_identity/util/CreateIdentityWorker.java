@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 
 
@@ -15,14 +15,14 @@ public class CreateIdentityWorker extends FermatWorker {
     private static final int SUCCESS = 1;
 
     private final String alias;
-    private Frecuency frecuency;
+    private Frequency frecuency;
     private int accuracy;
     private byte[] imgByteArray;
     private CryptoBrokerIdentityModuleManager moduleManager;
 
 
     public CreateIdentityWorker(Context context, CryptoBrokerIdentityModuleManager moduleManager, FermatWorkerCallBack callBack,
-                                String alias, byte[] imgByteArray, int accuracy, Frecuency frecuency) {
+                                String alias, byte[] imgByteArray, int accuracy, Frequency frecuency) {
         super(context, callBack);
 
         this.moduleManager = moduleManager;
