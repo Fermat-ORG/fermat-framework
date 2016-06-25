@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
@@ -216,10 +217,19 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         }else
             holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
 
-        if(data.getLocation()!=null && data.getLocation()!=null)
-        //if(data.getLocation().getLatitude()!=null && data.getLocation().getLongitude()!=null)
-            //Address address= moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
-            holder.location_text.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
+        Address address= null;
+        if(data.getLocation() != null ){
+            try {
+                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
+                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
+            }catch(CantCreateAddressException e){
+                address = null;
+            }catch(Exception e){
+                address = null;
+            }
+        }
+        if (address!=null)
+            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
         else
             holder.location_text.setText("Searching...");//TODO: put here location
 

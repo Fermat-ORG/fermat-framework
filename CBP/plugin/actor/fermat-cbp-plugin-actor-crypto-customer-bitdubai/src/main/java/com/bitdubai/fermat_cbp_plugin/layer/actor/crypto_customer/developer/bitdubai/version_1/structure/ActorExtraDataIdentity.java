@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
@@ -17,14 +17,14 @@ public class ActorExtraDataIdentity implements ActorIdentity, Serializable {
     private String publicKey;
     private byte[] image;
     long accuracy;
-    Frecuency frecuency;
+    Frequency frequency;
 
-    public ActorExtraDataIdentity(String alias, String publicKey, byte[] image, long accuracy, Frecuency frecuency){
+    public ActorExtraDataIdentity(String alias, String publicKey, byte[] image, long accuracy, Frequency frequency){
         this.alias = alias;
         this.publicKey = publicKey;
         this.image = image;
         this.accuracy = accuracy;
-        this.frecuency = frecuency;
+        this.frequency = frequency;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ActorExtraDataIdentity implements ActorIdentity, Serializable {
     }
 
     @Override
-    public Frecuency getFrecuency() {
-        return frecuency;
+    public Frequency getFrequency() {
+        return frequency;
     }
 }

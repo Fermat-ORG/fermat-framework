@@ -3,15 +3,16 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorCallRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorListRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorTraceDiscoveryQueryRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.AddActorIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.MessageTransmitProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.UpdateActorProfileIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.utils.DatabaseTransactionStatementPair;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
@@ -102,6 +104,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
          * channel
          */
         registerMessageProcessor(new ActorCallRequestProcessor(this));
+        registerMessageProcessor(new ActorListRequestProcessor(this));
         registerMessageProcessor(new ActorTraceDiscoveryQueryRequestProcessor(this));
         registerMessageProcessor(new AddActorIntoCatalogProcessor(this));
         registerMessageProcessor(new CheckInActorRequestProcessor(this));
@@ -113,6 +116,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
         registerMessageProcessor(new CheckOutNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new MessageTransmitProcessor(this));
         registerMessageProcessor(new NearNodeListRequestProcessor(this));
+        registerMessageProcessor(new UpdateActorProfileIntoCatalogProcessor(this));
 
     }
 
@@ -258,36 +262,36 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
                         pair = insertCheckedNetworkServicesHistory(checkedInNetworkService);
                         databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
+                    }
+                }
+
+               /*
+                * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                */
+                List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
+                        findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                clientPublicKey);
+
+                if(listCheckedInActor != null){
+
+                    for(CheckedInActor actor : listCheckedInActor){
+
                         /*
-                         * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                         * DELETE from table CheckedInActor
                          */
-                        List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
-                                findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                                        checkedInNetworkService.getIdentityPublicKey());
+                        pair = getDaoFactory().getCheckedInActorDao().createDeleteTransactionStatementPair(actor.getId());
+                        databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
 
-                        if(listCheckedInActor != null){
+                        LOG.info("DELETE Actor " + actor.toString());
 
-                            for(CheckedInActor actor : listCheckedInActor){
-
-                                /*
-                                 * DELETE from table CheckedInActor
-                                 */
-                                pair = getDaoFactory().getCheckedInActorDao().createDeleteTransactionStatementPair(actor.getId());
-                                databaseTransaction.addRecordToDelete(pair.getTable(), pair.getRecord());
-
-                                LOG.info("DELETE Actor " + actor.toString());
-
-                                /*
-                                 * Create a new row into the table CheckedActorsHistory
-                                 */
-                                pair = insertCheckedActorsHistory(actor);
-                                databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
-
-                            }
-
-                        }
+                        /*
+                         * Create a new row into the table CheckedActorsHistory
+                         */
+                        pair = insertCheckedActorsHistory(actor);
+                        databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
                     }
+
                 }
 
                 databaseTransaction.execute();

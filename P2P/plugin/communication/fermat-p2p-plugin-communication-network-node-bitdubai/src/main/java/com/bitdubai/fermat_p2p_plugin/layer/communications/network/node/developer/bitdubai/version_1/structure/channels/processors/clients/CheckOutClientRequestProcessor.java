@@ -123,7 +123,7 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                     /*
                      * Send the respond
                      */
-                    session.getBasicRemote().sendObject(packageRespond);
+                    session.getAsyncRemote().sendObject(packageRespond);
 
                 } else {
                     throw new Exception("The Profile is no actually check in");
@@ -146,14 +146,11 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
-
         }
 
     }

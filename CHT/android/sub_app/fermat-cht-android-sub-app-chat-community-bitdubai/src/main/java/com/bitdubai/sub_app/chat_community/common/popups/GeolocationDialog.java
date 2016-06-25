@@ -80,20 +80,27 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
     private LinearLayout emptyView;
     private final Activity activity;
     TextView noDatalabel;
+    private AdapterCallback mAdapterCallback;
 
     //SETTERS ATTRIBUTES
     String Country;
     String State;
     String Input;
 
-    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession, ResourceProviderManager resources){
+    public GeolocationDialog (Activity activity, ReferenceAppFermatSession<ChatActorCommunitySubAppModuleManager> appSession,
+                              ResourceProviderManager resources, AdapterCallback mAdapterCallback){
         super(activity, appSession, null);
         this.appSession = appSession;
         this.activity = activity;
+        this.mAdapterCallback = mAdapterCallback;
     }
 
     public void onClick(View v) {
         int id = v.getId();
+    }
+
+    public static interface AdapterCallback extends GeolocationAdapter.AdapterCallback {
+        void onMethodCallback(CitiesImpl cityFromList);
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -106,11 +113,10 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
             mChatActorCommunityManager.setAppPublicKey(appSession.getAppPublicKey());
 
             mListView = (ListView) findViewById(R.id.geolocation_view);
-            noDatalabel = (TextView) findViewById(R.id.nodatalabel);
+            noDatalabel = (TextView) findViewById(R.id.nodatalabel_geo);
             searchInput = (EditText) findViewById(R.id.geolocation_input);
-            emptyView = (LinearLayout) findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) findViewById(R.id.empty_view_geo);
             closeButton = (ImageView) findViewById(R.id.close_geolocation_dialog);
-
             lupaButton = (ImageView) this.findViewById(R.id.lupita_button);
 
             closeButton.setOnClickListener(new View.OnClickListener() {
@@ -120,33 +126,17 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                 }
             });
 
-            lupaButton.setOnClickListener( new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onRefresh();
-                        }
-                    }
-            );
-            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
+            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
             mListView.setAdapter(adapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //cityFromList = (CitiesImpl) parent.getItemAtPosition(position);
-                    cityFromList = (CitiesImpl) lstChatUserInformations.get(position);
-                }
-            });
-
-            lupaButton = (ImageView) this.findViewById(R.id.lupita_button); ///TODO Roy: checar cómo hacer el ImageView del layout un botón sin usar ImageButton.
             lupaButton.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //onRefresh();
                             try {
                                 lstChatUserInformations = mChatActorCommunityManager.getCities(searchInput.getText().toString());
-                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager);
+                                adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                                 mListView.setAdapter(adapter);
                                 adapter.refreshEvents(lstChatUserInformations);
+                              // onRefresh();
                             }catch (CantConnectWithExternalAPIException | CantCreateBackupFileException |
                             CantCreateCountriesListException  | CantGetCitiesListException e){
                                 if (getActivity() != null)
@@ -189,6 +179,7 @@ public class GeolocationDialog extends FermatDialog<ReferenceAppFermatSession, S
                             result.length > 0) {
                         if (getActivity()!= null && adapter != null) {
                             lstChatUserInformations = (ArrayList<Cities>) result[0];
+                            adapter = new GeolocationAdapter(getActivity(), lstChatUserInformations, errorManager, mAdapterCallback, GeolocationDialog.this);
                             mListView.setAdapter(adapter);
                             adapter.refreshEvents(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {

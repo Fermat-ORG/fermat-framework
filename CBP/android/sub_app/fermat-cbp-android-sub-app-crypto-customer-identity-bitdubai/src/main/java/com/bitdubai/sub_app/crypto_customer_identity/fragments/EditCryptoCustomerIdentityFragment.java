@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.Frecuency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.Utils.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
@@ -282,7 +282,7 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
 
         } else {
             final int accuracy = getAccuracyData();
-            final Frecuency frequency = getFrequencyData();
+            final Frequency frequency = getFrequencyData();
 
             CryptoCustomerIdentityInformationImpl identity = new CryptoCustomerIdentityInformationImpl(customerNameText, cryptoCustomerPublicKey,
                     imgInBytes, ExposureLevel.PUBLISH, accuracy, frequency);
@@ -313,8 +313,8 @@ public class EditCryptoCustomerIdentityFragment extends AbstractFermatFragment<R
                 (int) appSession.getData(FragmentsCommons.ACCURACY_DATA);
     }
 
-    private Frecuency getFrequencyData() {
-        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frecuency.NONE :
-                (Frecuency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
+    private Frequency getFrequencyData() {
+        return appSession.getData(FragmentsCommons.FREQUENCY_DATA) == null ? Frequency.NONE :
+                (Frequency) appSession.getData(FragmentsCommons.FREQUENCY_DATA);
     }
 }

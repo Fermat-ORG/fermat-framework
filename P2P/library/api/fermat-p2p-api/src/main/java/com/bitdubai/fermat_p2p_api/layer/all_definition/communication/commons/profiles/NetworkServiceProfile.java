@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.enums.ProfileTypes;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
@@ -28,7 +29,7 @@ public class NetworkServiceProfile extends Profile {
      * Constructor
      */
     public NetworkServiceProfile(){
-        super();
+        super(ProfileTypes.NETWORK_SERVICE);
     }
 
     /**

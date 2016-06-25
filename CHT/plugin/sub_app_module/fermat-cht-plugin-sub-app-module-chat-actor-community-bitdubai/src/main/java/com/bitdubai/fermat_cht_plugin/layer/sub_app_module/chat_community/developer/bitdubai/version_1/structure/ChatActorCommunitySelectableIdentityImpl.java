@@ -2,12 +2,14 @@ package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cht_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetSelectedActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 23/06/16.
  */
 
 public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommunitySelectableIdentity {
@@ -17,13 +19,28 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
     public final String alias;
     public final byte[] image;
     public final String status;
+    private String country;
+    private String state;
+    private String city;
+    private String connectionState;
+    private long   accuracy;
+    private Frecuency frecuency;
 
-    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias, byte[] image, String status){
+    ChatActorCommunitySelectableIdentityImpl(String publicKey, Actors actorType, String alias,
+                                             byte[] image, String status, String country,
+                                             String state, String city, String connectionState,
+                                             long accuracy, Frecuency frecuency){
         this.publicKey = publicKey;
         this.actorType = actorType;
         this.alias = alias;
         this.image = image;
         this.status= status;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.connectionState = connectionState;
+        this.accuracy = accuracy;
+        this.frecuency = frecuency;
     }
 
     ChatActorCommunitySelectableIdentityImpl(final ChatIdentity chatIdentity) {
@@ -33,6 +50,12 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         this.actorType = Actors.CHAT         ;
         this.image     = chatIdentity.getImage();
         this.status    = chatIdentity.getConnectionState();
+        this.country = chatIdentity.getCountry();
+        this.state = chatIdentity.getState();
+        this.city = chatIdentity.getCity();
+        this.connectionState = chatIdentity.getConnectionState();
+        this.accuracy = chatIdentity.getAccuracy();
+        this.frecuency = chatIdentity.getFrecuency();
     }
 
 
@@ -68,6 +91,31 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
         return status;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getConnectionState() {
+        return connectionState;
+    }
+
+    public long getAccuracy() {
+        return accuracy;
+    }
+
+
+    public Frecuency getFrequency() {
+        return frecuency;
+    }
+
     @Override
     public String toString() {
         return "ChatActorCommunitySelectableIdentityImpl{" +
@@ -75,6 +123,12 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
                 ", actorType=" + actorType +
                 ", alias='" + alias + '\'' +
                 ", image=" + (image != null) +
+                ", country='" + country + '\'' +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", connectionState='" + connectionState + '\'' +
+                ", accuracy='" + accuracy + '\'' +
+                ", frequency='" + (frecuency != null) +
                 '}';
     }
 }
