@@ -52,6 +52,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -64,13 +65,19 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -124,7 +131,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(publicKey, actorType);
                 final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-                actorConnections = search.getResult(max, 0);
+                actorConnections = search.getResult(1000, 0);
 //                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
@@ -132,29 +139,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
 
         ChatActorCommunityInformation worldActor;
-//<<<<<<< HEAD
-//        if(actorConnections != null && worldActorList != null){
-//            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
-//                for (int i = 0; i < worldActorList.size(); i++) {
-//
-//                    worldActor = worldActorList.get(i);
-//                    for (ChatActorConnection connectedActor : actorConnections) {
-//                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey())) {
-//                            worldActorList.set(
-//                                    i,
-//                                    new ChatActorCommunitySubAppModuleInformationImpl(
-//                                            worldActor.getPublicKey(),
-//                                            worldActor.getAlias(),
-//                                            worldActor.getImage(),
-//                                            connectedActor.getConnectionState(),
-//                                            connectedActor.getConnectionId(),
-//                                            worldActor.getStatus()
-//                                    )
-//                            );
-//                            break;
-//                        }
-//                    }
-//=======
         if(actorConnections != null && worldActorList != null
                 && actorConnections.size() > 0 && worldActorList.size() > 0) {
             for (int i = 0; i < worldActorList.size(); i++) {
@@ -498,7 +482,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public Address getAddressByCoordinate(float latitude, float longitude) throws CantCreateAddressException {
+    public Address getAddressByCoordinate(double latitude, double longitude) throws CantCreateAddressException {
         return geolocationManager.getAddressByCoordinate(latitude, longitude);
     }
 
@@ -508,11 +492,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<Cities> getCities(String filter) {
-        //Recorrer mapa
-        //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
-        //que es lo que retorno ya lleno
-        return null;
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException {
+        return geolocationManager.getExtendedCitiesByFilter(filter);
     }
 
     @Override
@@ -555,7 +536,10 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(), i.getConnectionState());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(
+                                    i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage(),
+                                    i.getConnectionState(), i.getCountry(), i.getState(),
+                                    i.getCity(), i.getConnectionState(), i.getAccuracy(), i.getFrecuency());
                     }
                 }
 
@@ -569,7 +553,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         //TODO: Revisar este metodo que hace aca
-        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null);
 
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
@@ -590,11 +574,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         }
     }
 
-
     @Override
     public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
-
-
 
     @Override
     public int[] getMenuNotifications() {

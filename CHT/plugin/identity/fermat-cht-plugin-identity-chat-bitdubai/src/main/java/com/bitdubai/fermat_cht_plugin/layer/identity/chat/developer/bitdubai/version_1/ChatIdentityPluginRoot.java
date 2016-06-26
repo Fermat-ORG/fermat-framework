@@ -83,7 +83,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public void start() throws CantStartPluginException {
-        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, this, deviceUserManager, pluginFileSystem, chatManager);
+        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, this, deviceUserManager, pluginFileSystem, chatManager, locationManager);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
             System.out.println("******* Init Chat Identity ******");
