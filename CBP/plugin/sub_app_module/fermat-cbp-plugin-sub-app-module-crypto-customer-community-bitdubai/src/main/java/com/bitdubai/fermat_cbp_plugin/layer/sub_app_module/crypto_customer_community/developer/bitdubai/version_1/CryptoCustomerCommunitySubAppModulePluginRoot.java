@@ -40,7 +40,7 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_CUSTOMER     )
     CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
-    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .NOMINATIM)
+    @NeededPluginReference (platform = Platforms.PLUG_INS_PLATFORM  , layer = Layers.EXTERNAL_API  , plugin  = Plugins .GEOLOCATION)
     private GeolocationManager geolocationManager;
 
     CryptoCustomerCommunityManager moduleManager;

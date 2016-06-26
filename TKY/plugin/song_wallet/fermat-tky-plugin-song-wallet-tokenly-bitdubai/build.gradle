@@ -1,7 +1,5 @@
 apply plugin: 'java'
 
 dependencies {
-    compile project(':fermat-api')
-    compile project(':fermat-pip-api')
     compile project(':fermat-tky-api')
 }

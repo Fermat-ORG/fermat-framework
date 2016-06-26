@@ -21,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeolocationManager;
 
@@ -31,10 +32,13 @@ import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.ver
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonamesProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.GeonosProcessor;
 import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.procesors.NominatimProcessor;
+import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.version_1.records.ExtendedCityRecord;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -66,7 +70,7 @@ public class GeolocationPluginManager implements GeolocationManager {
     /**
      * Represents the file privacy of countries backup.
      */
-    FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
+    FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
 
     /**
      * Constructor with parameters
@@ -104,7 +108,7 @@ public class GeolocationPluginManager implements GeolocationManager {
                 countriesList = createCountriesBackupFile();
                 return countriesList;
             }
-            //The file exists we gonna get the list from backup file
+            //The file exists we're gonna get the list from backup file
             PluginTextFile backupFile = pluginFileSystem.getTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
@@ -138,6 +142,119 @@ public class GeolocationPluginManager implements GeolocationManager {
                     "Getting the countries list",
                     "Unexpected Exception");
         }
+    }
+
+    /**
+     * This method returns a list of Countries available in an external api by a given filter
+     * @return
+     */
+    @Override
+    public HashMap getCountryListByFilter(String filter)
+            throws CantConnectWithExternalAPIException,
+            CantCreateBackupFileException,
+            CantCreateCountriesListException {
+        HashMap<String, Country> countriesList = new HashMap<>();
+        String pathFilter = filter.toLowerCase().replace(" ","-");
+        try{
+            boolean backupFileExists = pluginFileSystem.isTextFileExist(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
+                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE+pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            if(!backupFileExists){
+                countriesList = createCountryListByFilterBackupFile(filter, pathFilter);
+                return countriesList;
+            }
+            //The file exists we're gonna get the list from backup file
+            PluginTextFile backupFile = pluginFileSystem.getTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
+                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE+pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.loadFromMedia();
+            String stringCountriesData = backupFile.getContent();
+            if(stringCountriesData==null||stringCountriesData.isEmpty()){
+                //I'll return an empty list
+                return countriesList;
+            }
+            countriesList = (HashMap<String, Country>) XMLParser.parseXML(
+                    stringCountriesData,
+                    countriesList);
+            return countriesList;
+        } catch (CantGetJSonObjectException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantCreateCountriesListException(
+                    e,
+                    "Getting the filtered countries list",
+                    "Cannot get the data from a Json Object");
+        } catch (Exception e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantCreateCountriesListException(
+                    e,
+                    "Getting the the filtered countries list",
+                    "Unexpected Exception");
+        }
+    }
+
+    /**
+     * This method creates a backup file with the filtered country hashmap.
+     * @param filter
+     * @return
+     * @throws CantConnectWithExternalAPIException
+     * @throws CantCreateBackupFileException
+     * @throws CantCreateCountriesListException
+     */
+    private HashMap createCountryListByFilterBackupFile(String filter, String pathFilter)
+            throws CantConnectWithExternalAPIException,
+            CantCreateBackupFileException,
+            CantCreateCountriesListException {
+        try{
+            filter = filter.toLowerCase();
+            //Get the country hashMap
+            HashMap<String, Country> countryHashMap = getCountryList();
+            HashMap<String, Country> filteredCountryHashMap = new HashMap<>();
+            Country country;
+            String countryCode;
+            String countryName;
+            //We're going to create a filtered Map
+            for(Map.Entry<String, Country> entry: countryHashMap.entrySet()){
+                country = entry.getValue();
+                countryName = country.getCountryName();
+                if(countryName.toLowerCase().contains(filter)){
+                    countryCode = entry.getKey();
+                    filteredCountryHashMap.put(countryCode,country);
+                }
+            }
+            //Parse the countries list to XML
+            String countriesListXML = XMLParser.parseObject(filteredCountryHashMap);
+            //Create file
+            PluginTextFile backupFile = pluginFileSystem.createTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_COUNTRIES_FILE,
+                    GeolocationConfiguration.FILTERED_COUNTRIES_BACKUP_FILE + pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.setContent(countriesListXML);
+            backupFile.persistToMedia();
+            return filteredCountryHashMap;
+        } catch (CantPersistFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with countries list",
+                    "Cannot persist the backup file in the device");
+        } catch (CantCreateFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with countries list",
+                    "Cannot create the backup file in the device");
+        }
+
     }
 
     /**
@@ -300,7 +417,7 @@ public class GeolocationPluginManager implements GeolocationManager {
             PluginTextFile backupFile = pluginFileSystem.getTextFile(
                     pluginId,
                     GeolocationConfiguration.PATH_TO_CITIES_FILE,
-                    GeolocationConfiguration.CITIES_BACKUP_FILE+countryCode,
+                    GeolocationConfiguration.CITIES_BACKUP_FILE + countryCode,
                     FILE_PRIVACY,
                     FILE_LIFE_SPAN);
             backupFile.loadFromMedia();
@@ -329,6 +446,170 @@ public class GeolocationPluginManager implements GeolocationManager {
                     e,
                     "Getting the cities list",
                     "Unexpected Exception");
+        }
+    }
+
+    @Override
+    public List<City> getCitiesByFilter(String filter) throws CantGetCitiesListException {
+        List<City> citiesList = new ArrayList<>();
+        try{
+            String pathFilter = filter.toLowerCase().replace(" ", "-");
+            boolean backupFileExists = pluginFileSystem.isTextFileExist(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.FILTERED_CITIES_BACKUP_FILE+pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            if(!backupFileExists){
+                citiesList = createFilteredCitiesBackupFile(filter, pathFilter);
+                return citiesList;
+            }
+            //The file exists we gonna get the list from backup file
+            PluginTextFile backupFile = pluginFileSystem.getTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.FILTERED_CITIES_BACKUP_FILE + pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.loadFromMedia();
+            String stringCitiesData = backupFile.getContent();
+            if(stringCitiesData==null||stringCitiesData.isEmpty()){
+                //I'll return an empty list
+                return citiesList;
+            }
+            citiesList = (List<City>) XMLParser.parseXML(
+                    stringCitiesData,
+                    citiesList);
+            return citiesList;
+        }  catch (CantGetJSonObjectException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Cannot get the data from a Json Object");
+        } catch (Exception e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Unexpected Exception");
+        }
+    }
+
+    /**
+     * This method creates invokes the geoname API and create a file with the dependencies list
+     * @return
+     * @throws CantConnectWithExternalAPIException
+     * @throws CantGetJSonObjectException
+     * @throws CantCreateBackupFileException
+     */
+    private List<City> createFilteredCitiesBackupFile(String filter, String pathFilter)
+            throws CantConnectWithExternalAPIException,
+            CantGetJSonObjectException,
+            CantCreateBackupFileException,
+            CantGetCitiesListException {
+        //We ask for the country list in geonames API
+        List<City> citiesList = CitiesProcessor.
+                getCitiesByFilter(filter);
+        //Parse the dependencies list to XML
+        String dependenciesListXML = XMLParser.parseObject(citiesList);
+        try{
+            //Create file
+            PluginTextFile backupFile = pluginFileSystem.createTextFile(
+                    pluginId,
+                    GeolocationConfiguration.PATH_TO_CITIES_FILE,
+                    GeolocationConfiguration.FILTERED_CITIES_BACKUP_FILE + pathFilter,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            backupFile.setContent(dependenciesListXML);
+            backupFile.persistToMedia();
+            return citiesList;
+        } catch (CantPersistFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with cities list",
+                    "Cannot persist the backup file in the device");
+        } catch (CantCreateFileException e) {
+            throw new CantCreateBackupFileException(
+                    e,
+                    "Creating backup file with cities list",
+                    "Cannot create the backup file in the device");
+        }
+    }
+
+    /**
+     * This method returns the cities list filtered by a given filter.
+     * @param filter
+     * @return
+     * @throws CantGetCitiesListException
+     */
+    @Override
+    public List<ExtendedCity> getExtendedCitiesByFilter(String filter)
+            throws CantGetCitiesListException {
+        try{
+            List<ExtendedCity> extendedCityList = new ArrayList<>();
+            //First, we get the countries Map
+            HashMap<String, Country> allCountryList = getCountryList();
+            //Now, we get the filtered country list
+            HashMap<String, Country> filteredCountryList = getCountryListByFilter(filter);
+            //We get the filtered cities list
+            List<City> filteredCityList = getCitiesByFilter(filter);
+            //We're gonna include all this cities in extendedCityList
+            ExtendedCity extendedCity;
+            String countryCode;
+            Country country;
+            for(City city : filteredCityList){
+                countryCode = city.getCountryCode();
+                country = allCountryList.get(countryCode);
+                System.out.println("GEOLOCATION:"+city+" - "+country);
+                if(country==null){
+                    //In theory, it cannot happen, but, we will continue
+                    continue;
+                }
+                extendedCity = new ExtendedCityRecord(city,country);
+                extendedCityList.add(extendedCity);
+            }
+            //Now, I'll include all the information got in filteredCountryList.
+            List<City> cityListByCountryCode;
+            for(Map.Entry<String, Country> entry: filteredCountryList.entrySet()){
+                countryCode = entry.getKey();
+                cityListByCountryCode = getCitiesByCountryCode(countryCode);
+                for(City city : cityListByCountryCode){
+                    countryCode = city.getCountryCode();
+                    country = allCountryList.get(countryCode);
+                    extendedCity = new ExtendedCityRecord(city,country);
+                    extendedCityList.add(extendedCity);
+                }
+            }
+            return extendedCityList;
+        } catch (CantConnectWithExternalAPIException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Cannot connect with external api");
+        } catch (CantCreateCountriesListException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Cannot create country list");
+        } catch (CantCreateBackupFileException e) {
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantGetCitiesListException(
+                    e,
+                    "Getting the cities list",
+                    "Cannot create backup file");
         }
     }
 
@@ -538,8 +819,8 @@ public class GeolocationPluginManager implements GeolocationManager {
         float south = geoRectangle.getSouth();
         float west = geoRectangle.getWest();
         float east = geoRectangle.getEast();
-        //System.out.println("NOMINATIM GEO-R:"+geoRectangle);
-        //System.out.println("NOMINATIM CITI:"+city);
+        //System.out.println("GEOLOCATION GEO-R:"+geoRectangle);
+        //System.out.println("GEOLOCATION CITI:"+city);
         //Check latitude
         boolean isLatitudeOk = north>=cityLatitude&&south<=cityLatitude;
         boolean isLongitudeOk = east>=cityLongitude&&west<=cityLongitude;
@@ -578,6 +859,35 @@ public class GeolocationPluginManager implements GeolocationManager {
      */
     public GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException {
         return NominatimProcessor.getRandomGeLocation();
+    }
+
+    /**
+     * This method returns an address by a given latitude and longitude.
+     * The address contains a GeoRectangle object.
+     * @param latitude
+     * @param longitude
+     * @return
+     * @throws CantCreateAddressException
+     */
+    public Address getAddressByCoordinate(double latitude, double longitude)
+            throws CantCreateAddressException {
+        float floatLatitude = castDoubleToCasting(latitude);
+        float floatLongitude = castDoubleToCasting(longitude);
+        return NominatimProcessor.getAddressByCoordinate(floatLatitude, floatLongitude);
+    }
+
+    private float castDoubleToCasting(double number){
+        try{
+            BigDecimal bigDecimal = new BigDecimal(number);
+            return bigDecimal.floatValue();
+        } catch (Exception e){
+            //In theory, it cannot happens, but, it does, I'll report and return 0.
+            geolocationPluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            return BigDecimal.ZERO.floatValue();
+        }
+
     }
 
 }
