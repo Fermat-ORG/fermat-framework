@@ -83,6 +83,8 @@ public class FermatCryptoNetworkDatabaseDao {
             initializeDatabase();
         } catch (CantInitializeFermatCryptoNetworkDatabaseException e) {
             e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -108,6 +110,24 @@ public class FermatCryptoNetworkDatabaseDao {
 
         } catch (DatabaseNotFoundException e) {
 
+             /*
+              * The database no exist may be the first time the plugin is running on this device,
+              * We need to create the new database
+              */
+            FermatCryptoNetworkDatabaseFactory FermatCryptoNetworkDatabaseFactory = new FermatCryptoNetworkDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+                  /*
+                   * We create the new database
+                   */
+                database = FermatCryptoNetworkDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                  /*
+                   * The database cannot be created. I can not handle this situation.
+                   */
+                throw new CantInitializeFermatCryptoNetworkDatabaseException(cantCreateDatabaseException.getMessage());
+            }
+        } catch (Exception e){
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database

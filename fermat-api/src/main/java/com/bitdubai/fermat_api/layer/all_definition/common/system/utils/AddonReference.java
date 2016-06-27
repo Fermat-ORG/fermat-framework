@@ -2,13 +2,15 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 
+import java.io.Serializable;
+
 /**
  * The class <code>AddonReference</code>
  * haves all the information of a AddonReference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class AddonReference {
+public class AddonReference implements Serializable{
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
 /**
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class AddonVersionReference {
+public class AddonVersionReference implements Serializable{
 
     private static final String KEY_SEPARATOR = "+";
 
