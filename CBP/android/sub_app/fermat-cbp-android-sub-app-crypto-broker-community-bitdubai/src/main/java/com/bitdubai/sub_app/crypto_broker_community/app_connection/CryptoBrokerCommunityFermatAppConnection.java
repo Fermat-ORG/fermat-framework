@@ -84,13 +84,13 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
     public int getResource(int id) {
         switch (id) {
             case FragmentsCommons.HELP_OPTION_MENU_ID:
-                return R.drawable.cbc_help_icon;
+                return R.drawable.interrogacion_blanco;
 
             case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
-                return R.drawable.cbc_comm_ubication_icon;
+                return R.drawable.localizacion_blanco;
 
             case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
-                return R.drawable.cbc_comm_search_icon;
+                return R.drawable.lupa;
 
             default:
                 return 0;

@@ -78,7 +78,7 @@ public class CustomerCommunityWalletNavigationViewAdapter extends FermatAdapter<
                 holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_friends_selected);
                 break;
             case 1:
-                holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_connections_selected);
+                holder.getIcon().setImageResource(R.drawable.ccc_ic_nav_connections_selected);
                 break;
             case 2:
                 holder.getIcon().setImageResource(R.drawable.cbc_ic_nav_notifications_selected);

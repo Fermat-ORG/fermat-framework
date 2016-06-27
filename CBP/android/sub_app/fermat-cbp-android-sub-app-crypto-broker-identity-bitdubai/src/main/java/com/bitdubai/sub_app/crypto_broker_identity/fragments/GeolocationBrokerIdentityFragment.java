@@ -15,11 +15,15 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.Frequency;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.FragmentsCommons;
@@ -97,8 +101,9 @@ public class GeolocationBrokerIdentityFragment
                         frequencyData = Frequency.getByCode(parent.getItemAtPosition(position).toString());
                         ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#616161"));
                         (parent.getChildAt(0)).setBackgroundColor(Color.parseColor("#F9f9f9"));
-                    } catch (InvalidParameterException e) {
-                        e.printStackTrace();
+                    } catch (InvalidParameterException ex) {
+                        appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW,
+                                UnexpectedUIExceptionSeverity.UNSTABLE, ex);
                     }
                 }
 
@@ -106,8 +111,9 @@ public class GeolocationBrokerIdentityFragment
                 public void onNothingSelected(AdapterView<?> parent) {
                 }
             });
-        } catch (CantGetChatIdentityException e) {
-            e.printStackTrace();
+        } catch (CantGetCryptoBrokerIdentityException ex) {
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
     }
@@ -128,7 +134,7 @@ public class GeolocationBrokerIdentityFragment
         }
     }
 
-    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetChatIdentityException {
+    private void setValues(Spinner frequency, EditText accuracy, ArrayAdapter<Frequency> dataAdapter) throws CantGetCryptoBrokerIdentityException {
         final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(FragmentsCommons.IDENTITY_INFO);
 
         if (identityInfo != null) {

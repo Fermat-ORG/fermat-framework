@@ -67,14 +67,16 @@ public class BrowserTabFragment
     private ErrorManager errorManager;
 
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList = new ArrayList<>();
+    private int offset;
 
     //Flags
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
 
     private AvailableActorsListAdapter adapter;
-    ImageView noContacts;
-    private int offset;
+    private ImageView noContacts;
+    private PresentationDialog helpDialog;
+
 
     public static BrowserTabFragment newInstance() {
         return new BrowserTabFragment();
@@ -87,29 +89,20 @@ public class BrowserTabFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        moduleManager = appSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+        loadSettings();
+
+        //Check if a default identity is configured
         try {
-            setHasOptionsMenu(true);
-
-            //Get managers
-            moduleManager = appSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-            loadingSettings();
-
-            //Check if a default identity is configured
-            try {
-                moduleManager.getSelectedActorIdentity();
-            } catch (CantGetSelectedActorIdentityException e) {
-                //There are no identities in device
-                launchActorCreationDialog = true;
-            } catch (ActorIdentityNotSelectedException e) {
-                //There are identities in device, but none selected
-                launchListIdentitiesDialog = true;
-            }
-
-        } catch (Exception ex) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+            moduleManager.getSelectedActorIdentity();
+        } catch (CantGetSelectedActorIdentityException e) {
+            launchActorCreationDialog = true;  //There are no identities in device
+        } catch (ActorIdentityNotSelectedException e) {
+            launchListIdentitiesDialog = true; //There are identities in device, but none selected
         }
     }
 
@@ -214,8 +207,32 @@ public class BrowserTabFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion, el help dialog y el SearchView
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                if (helpDialog == null)
+                    helpDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.cbc_banner)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                            .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                            .setIsCheckEnabled(true)
+                            .build();
+
+                helpDialog.show();
+
+                return true;
+
+            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el filtro de geolocalizacion
+                return true;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                //TODO: colocar aqui el codigo para mostrar el SearchView
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -313,7 +330,7 @@ public class BrowserTabFragment
     /**
      * Obtain Settings or create new Settings if first time opening subApp
      */
-    private void loadingSettings() {
+    private void loadSettings() {
         CryptoBrokerCommunitySettings appSettings;
         try {
             appSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -340,14 +357,13 @@ public class BrowserTabFragment
             if (launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setBannerRes(R.drawable.cbc_banner)
                         .setIconRes(R.drawable.crypto_broker)
                         .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
-                        .setImageRight(R.drawable.ic_profile_male)
                         .setIsCheckEnabled(true)
                         .build();
 
