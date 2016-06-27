@@ -3522,7 +3522,6 @@ public class SubAppAppsGenerator {
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
-
         //Tabs Browser
         runtimeTab = new Tab();
         runtimeTab.setLabel("BROWSER");
@@ -3602,20 +3601,27 @@ public class SubAppAppsGenerator {
     }
 
     private void createCryptoCustomerCommunitySubAppNavigationStructure() throws InvalidParameterException {
+        final int SEARCH_FILTER_OPTION_MENU_ID = 1;
+        final int LOCATION_FILTER_OPTION_MENU_ID = 2;
+        final int HELP_OPTION_MENU_ID = 3;
+        final String PUBLIC_KEY = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
+        final Owner owner = new Owner(PUBLIC_KEY);
+
         TitleBar runtimeTitleBar;
         StatusBar statusBar;
         Activity runtimeActivity;
         FermatRuntimeFragment runtimeFragment;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
+        OptionsMenu optionsMenu;
+        OptionMenuItem optionMenuItem;
 
 
-        AppNavigationStructure subAppBrokerCommunity = new AppNavigationStructure();
+        AppNavigationStructure subAppCustomerCommunity = new AppNavigationStructure();
 
-        String communityPublicKey = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
-        subAppBrokerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
-        subAppBrokerCommunity.setPublicKey(communityPublicKey);
-        listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
+        subAppCustomerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
+        subAppCustomerCommunity.setPublicKey(PUBLIC_KEY);
+        listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
 
         statusBar = new StatusBar();
         statusBar.setColor("#0072bc");
@@ -3625,7 +3631,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setBackgroundColor("#f9f9f9");
-        subAppBrokerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
+        subAppCustomerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
 
         runtimeActivity.setStatusBar(statusBar);
 
@@ -3637,20 +3643,13 @@ public class SubAppAppsGenerator {
         runtimeTitleBar.setColor("#0072bc");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        //Owner
-        Owner owner = new Owner();
-        owner.setOwnerAppPublicKey(communityPublicKey);
-
         runtimeFragment = new FermatRuntimeFragment();
         runtimeFragment.setOwner(owner);
         runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
 
-        //runtimeActivity.setSideMenu(runtimeSideMenu);
-        //chtComm.addActivity(runtimeActivity);
-
-        //Menu Tabs
+        //TabStrip
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#0072bc");
         runtimeTabStrip.setTabsTextColor("#F9F9F9");
@@ -3660,84 +3659,75 @@ public class SubAppAppsGenerator {
         //Tabs Browser
         runtimeTab = new Tab();
         runtimeTab.setLabel("BROWSER");
-        runtimeTab.setFragment(new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey()));
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setOwner(owner);
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
-
-        OptionsMenu optionsMenuBrowser = new OptionsMenu();
-        OptionMenuItem optionMenuItemBrowser = new OptionMenuItem(1);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Search");
-        optionMenuItemBrowser.setShowAsAction(2);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
-
-        optionMenuItemBrowser = new OptionMenuItem(2);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(2, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Location");
-        optionMenuItemBrowser.setShowAsAction(2);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
-
-        optionMenuItemBrowser = new OptionMenuItem(3);
-        optionMenuItemBrowser.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemBrowser.setLabel("Help");
-        optionMenuItemBrowser.setShowAsAction(2);
-        optionsMenuBrowser.addMenuItem(optionMenuItemBrowser);
-
-        runtimeFragment.setOptionsMenu(optionsMenuBrowser);
-
+        runtimeFragment = new FermatRuntimeFragment(1, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeTabStrip.addTab(runtimeTab);
 
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
+
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(LOCATION_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(LOCATION_FILTER_OPTION_MENU_ID, "location", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Location");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "help", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
         //Tabs Connections
         runtimeTab = new Tab();
         runtimeTab.setLabel("CONNECTIONS");
-        runtimeTab.setFragment(new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey()));
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setOwner(owner);
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
-
-        OptionsMenu optionsMenuConn = new OptionsMenu();
-        OptionMenuItem optionMenuItemConn = new OptionMenuItem(1);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(3, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemConn.setLabel("Search");
-        optionMenuItemConn.setShowAsAction(2);
-        optionsMenuConn.addMenuItem(optionMenuItemConn);
-
-        optionMenuItemConn = new OptionMenuItem(2);
-        optionMenuItemConn.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemConn.setLabel("Help");
-        optionMenuItemConn.setShowAsAction(1);
-        optionsMenuConn.addMenuItem(optionMenuItemConn);
-
-        runtimeFragment.setOptionsMenu(optionsMenuConn);
-
+        runtimeFragment = new FermatRuntimeFragment(2, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
-        //Tabs Requests
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
+
+        optionMenuItem = new OptionMenuItem(SEARCH_FILTER_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(SEARCH_FILTER_OPTION_MENU_ID, "search", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Search");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_ALWAYS);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        // Tab Requests
         runtimeTab = new Tab();
         runtimeTab.setLabel("REQUESTS");
-        runtimeTab.setFragment(new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey()));
-        runtimeFragment = new FermatRuntimeFragment();
-        runtimeFragment.setOwner(owner);
-        runtimeFragment.setFragmentCode(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
-
-        OptionsMenu optionsMenuNot = new OptionsMenu();
-        OptionMenuItem optionMenuItemNot = new OptionMenuItem(1);
-        optionMenuItemNot.setFermatDrawable(new FermatDrawable(1, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
-        optionMenuItemNot.setLabel("Help");
-        optionMenuItemNot.setShowAsAction(1);
-        optionsMenuNot.addMenuItem(optionMenuItemNot);
-
-        runtimeFragment.setOptionsMenu(optionsMenuNot);
-
+        runtimeFragment = new FermatRuntimeFragment(3, owner, SourceLocation.DEVELOPER_RESOURCES, Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeTab.setFragment(runtimeFragment);
         runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
-        subAppBrokerCommunity.addActivity(runtimeActivity);
-        listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
+        optionsMenu = new OptionsMenu();
+        runtimeFragment.setOptionsMenu(optionsMenu);
+
+        optionMenuItem = new OptionMenuItem(HELP_OPTION_MENU_ID);
+        optionMenuItem.setFermatDrawable(new FermatDrawable(HELP_OPTION_MENU_ID, "ic_welcome_dialog", owner, SourceLocation.DEVELOPER_RESOURCES));
+        optionMenuItem.setLabel("Help");
+        optionMenuItem.setShowAsAction(OptionMenuItem.SHOW_AS_ACTION_IF_ROOM);
+        optionsMenu.addMenuItem(optionMenuItem);
+
+        subAppCustomerCommunity.addActivity(runtimeActivity);
+        listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
     }
 
     private void createDeveloperSubAppNavigationStructure() throws InvalidParameterException {

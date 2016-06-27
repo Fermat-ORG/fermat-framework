@@ -95,6 +95,5 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Ref
             default:
                 return 0;
         }
-
     }
 }

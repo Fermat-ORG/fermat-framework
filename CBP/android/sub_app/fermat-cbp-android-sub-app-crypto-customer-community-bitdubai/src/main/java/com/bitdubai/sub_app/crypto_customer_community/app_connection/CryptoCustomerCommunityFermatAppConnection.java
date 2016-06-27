@@ -16,9 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
-import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
+import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.common.navigationDrawer.CustomerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_customer_community.common.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
+import com.bitdubai.sub_app.crypto_customer_community.util.FragmentsCommons;
+
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
@@ -76,5 +79,22 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections<R
         return CommunityNotificationPainterBuilder.getNotification(
                 code
         );
+    }
+
+    @Override
+    public int getResource(int id) {
+        switch (id) {
+            case FragmentsCommons.HELP_OPTION_MENU_ID:
+                return R.drawable.ccc_help_icon;
+
+            case FragmentsCommons.LOCATION_FILTER_OPTION_MENU_ID:
+                return R.drawable.ccc_location_icon_white;
+
+            case FragmentsCommons.SEARCH_FILTER_OPTION_MENU_ID:
+                return R.drawable.ccc_search_icon_withe;
+
+            default:
+                return 0;
+        }
     }
 }
