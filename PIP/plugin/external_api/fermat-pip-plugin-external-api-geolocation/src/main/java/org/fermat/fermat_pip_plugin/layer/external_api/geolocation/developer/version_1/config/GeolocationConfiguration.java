@@ -16,6 +16,11 @@ public class GeolocationConfiguration {
     public static final String COUNTRIES_BACKUP_FILE = "countries-backup";
 
     /**
+     * Represents the backup-file name.
+     */
+    public static final String FILTERED_COUNTRIES_BACKUP_FILE = "filtered-countries-backup";
+
+    /**
      * Represents the backup-file path.
      */
     public static final String PATH_TO_COUNTRIES_FILE = "";
@@ -34,6 +39,16 @@ public class GeolocationConfiguration {
      * Represents the backup-file name.
      */
     public static final String CITIES_BACKUP_FILE = "cities-backup";
+
+    /**
+     * Represents the backup-file name.
+     */
+    public static final String FILTERED_CITIES_BACKUP_FILE = "filtered-cities-backup";
+
+    /**
+     * Represents the backup-file name.
+     */
+    public static final String EXTENDED_CITIES_BACKUP_FILE = "extended-cities-backup";
 
     /**
      * Represents the backup-file path.

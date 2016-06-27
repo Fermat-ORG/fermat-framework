@@ -43,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import java.io.Serializable;
@@ -120,12 +121,12 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Se
     GeoRectangle getGeoRectangleByLocation(String location)
             throws CantCreateGeoRectangleException;
 
-    Address getAddressByCoordinate(float latitude, float longitude)
+    Address getAddressByCoordinate(double latitude, double longitude)
             throws CantCreateAddressException;
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
 
-    List<Cities> getCities(String filter);
+    List<ExtendedCity> getExtendedCitiesByFilter(String filter) throws CantGetCitiesListException;
 
     @Override
     ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException;

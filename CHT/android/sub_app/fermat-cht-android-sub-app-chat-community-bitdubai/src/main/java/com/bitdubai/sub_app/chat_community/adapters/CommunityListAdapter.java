@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Address;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
@@ -25,6 +27,7 @@ import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -211,11 +214,24 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
             holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-            if(!data.getCountry().equals("") || !data.getState().equals("") || !data.getCity().equals(""))
-                holder.location_text.setText(data.getCity() + " " + data.getState() + " " + data.getCountry());//TODO: put here location
-            else
-                holder.location_text.setText("Searching...");//TODO: put here location
+        }else
+            holder.thumbnail.setImageResource(R.drawable.cht_comm_icon_user);
+
+        Address address= null;
+        if(data.getLocation() != null ){
+            try {
+                if(data.getLocation().getLatitude()!=0 && data.getLocation().getLongitude()!=0)
+                    address = moduleManager.getAddressByCoordinate(data.getLocation().getLatitude(), data.getLocation().getLongitude());
+            }catch(CantCreateAddressException e){
+                address = null;
+            }catch(Exception e){
+                address = null;
+            }
         }
+        if (address!=null)
+            holder.location_text.setText(address.getCity() + " " + address.getState() + " " + address.getCountry());//TODO: put here location
+        else
+            holder.location_text.setText("Searching...");//TODO: put here location
 
         final ChatActorCommunityInformation dat=data;
         holder.add_contact_button.setOnClickListener(new View.OnClickListener() {
