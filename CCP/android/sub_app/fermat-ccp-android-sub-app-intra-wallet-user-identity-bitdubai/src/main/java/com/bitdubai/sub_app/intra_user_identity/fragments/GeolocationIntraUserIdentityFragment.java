@@ -36,6 +36,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
 import com.bitdubai.fermat_ccp_api.all_definition.enums.Frecuency;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.intra_user_identity.common.popup.PresentationGeolocationIntraUserIdentityDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,11 +168,8 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
-           // if (id == 1)
-                //showDialog();
-
-
+            if (id == 1)
+                showDialog();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -242,6 +241,12 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         }
     }
 
+    public void showDialog(){
+        if(getActivity()!=null) {
+            PresentationGeolocationIntraUserIdentityDialog presentation = new PresentationGeolocationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+            presentation.show();
+        }
+    }
 
 
 }
