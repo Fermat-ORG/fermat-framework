@@ -28,6 +28,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactLis
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessionReferenceApp;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_connections;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -78,6 +81,7 @@ public class ContactsListFragment
     private ChatPreferenceSettings chatSettings;
     ChatActorCommunitySelectableIdentity chatIdentity;
     PresentationDialog presentationDialog;
+    FermatApplicationCaller applicationsHelper;
     ListView list;
     // Defines a tag for identifying log entries
     String TAG="CHT_ContactsListFragment";
@@ -110,13 +114,10 @@ public class ContactsListFragment
         super.onCreate(savedInstanceState);
 
         try{
-            //chatSession=((ChatSessionReferenceApp) appSession);
             chatManager= appSession.getModuleManager();
-            //chatManager=moduleManager.getChatManager();
             chatManager.setAppPublicKey(appSession.getAppPublicKey());
             errorManager=appSession.getErrorManager();
-            //toolbar = getToolbar();
-            //toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+            applicationsHelper = ((FermatApplicationSession)getActivity().getApplicationContext()).getApplicationManager();
             adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, contactStatus, chatManager,
                     null, errorManager, chatSession, appSession, this);
             chatSettings = null;
@@ -485,7 +486,7 @@ public class ContactsListFragment
         try {
             int id = item.getItemId();
             switch (id) {
-                case 2:
+                case 4:
                     PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.cht_banner)
@@ -497,6 +498,20 @@ public class ContactsListFragment
                      presentationDialog.show();
                     break;
                 case 1:
+                    break;
+                case 2:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        applicationsHelper.openFermatApp(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         } catch (Exception e) {

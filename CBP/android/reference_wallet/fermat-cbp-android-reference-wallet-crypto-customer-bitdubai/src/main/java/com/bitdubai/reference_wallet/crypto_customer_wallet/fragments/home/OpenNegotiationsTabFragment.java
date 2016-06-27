@@ -108,22 +108,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.ccw_menu_home, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_start_negotiation) {
-            changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST, appSession.getAppPublicKey());
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
             adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);

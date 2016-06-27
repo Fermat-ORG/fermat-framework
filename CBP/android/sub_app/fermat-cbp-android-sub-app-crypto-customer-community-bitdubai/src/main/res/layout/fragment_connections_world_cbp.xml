@@ -1,30 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F9F9F9"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#F9F9F9" />
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/gridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/cbc_list_divider"
-            tools:listitem="@layout/cht_comm_world_item" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-    <!--Empty view-->
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
@@ -39,22 +21,18 @@
             android:layout_height="180dp"
             android:src="@drawable/cht_comm_icon_no_user_full"
             android:gravity="center"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_gravity="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Users"
+            android:text="@string/no_users"
             android:id="@+id/nodatalabel"
             android:textColor="#BCBEC0"
             android:textStyle="normal"
-            android:textSize="12pt"
-            android:layout_below="@+id/nodata"
-            android:layout_centerHorizontal="true" />
+            android:textSize="12pt"/>
 
     </LinearLayout>
-    <!--Empty view-->
+
     <LinearLayout
         android:id="@+id/search_empty_view"
         android:layout_width="match_parent"
@@ -68,7 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             tools:ignore="ContentDescription" />
-        <!-- android:src="@drawable/img_home_empty"-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +66,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/no_connection_view"
         android:layout_width="match_parent"
@@ -104,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             tools:ignore="ContentDescription" />
-        <!-- android:src="@drawable/img_home_no_connection"-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -132,6 +107,7 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/no_fermat_connection_view"
         android:layout_width="match_parent"
@@ -146,7 +122,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             tools:ignore="ContentDescription" />
-        <!--android:src="@drawable/img_home_no_connection"-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -174,4 +149,19 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
-</RelativeLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/cht_comm_world_item"
+            android:visibility="visible"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</FrameLayout>

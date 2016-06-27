@@ -51,7 +51,7 @@
             android:id="@+id/geolocation_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/cht_comm_geolocation_results_item"
+            tools:listitem="@layout/cht_comm_geolocation_item"
             android:divider="@drawable/cht_list_divider" />
     <!--Empty view-->
     <LinearLayout

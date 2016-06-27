@@ -164,24 +164,24 @@ public class SettingsCreateNewBankAccountFragment
                 accountNumberEditText.getText().toString(),
                 accountAliasEditText.getText().toString(), "");
 
-        if (data.isAllDataFilled()) {
-            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
-            bankAccounts.add(data);
+        if (data.isAllDataFilled() && moduleManager != null) {
 
-            if (moduleManager != null) {
-                for (BankAccountNumber bankAccount : bankAccounts) {
-                    try {
-                        moduleManager.createNewBankAccount(bankAccount.getAccount(), bankAccount.getCurrencyType());
-                    } catch (CantCreateBankAccountPurchaseException ignore) {
-                    }
-                }
-            }
+
+            //Try to save the bank account
+            try {
+                moduleManager.createNewBankAccount(data.toString(), data.getCurrencyType());
+
+                //Add new bank account to session
+                List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(FragmentsCommons.BANK_ACCOUNT_LIST);
+                bankAccounts.add(data);
+
+            } catch (CantCreateBankAccountPurchaseException ignore) { }
 
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
-
-        } else {
-            Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
         }
+        else
+            Toast.makeText(getActivity(), "Please fill all the fields", Toast.LENGTH_LONG).show();
+
     }
 
     private List<String> getListOfCurrenciesNames(FiatCurrency[] countries) {
