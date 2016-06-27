@@ -83,6 +83,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private Handler mHandler;
+    private int offset = 0;
 
 
     public static ReceiveTransactionFragment2 newInstance() {
@@ -265,8 +266,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
-                BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(
-                        moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
                 int MAX_TRANSACTIONS = 20;
                 List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(

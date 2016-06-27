@@ -208,7 +208,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                 offset = 0;
 
             lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,10,offset);
-            offset+=MAX_TRANSACTIONS;
+            offset+=1;
         } catch (Exception e) {
             appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

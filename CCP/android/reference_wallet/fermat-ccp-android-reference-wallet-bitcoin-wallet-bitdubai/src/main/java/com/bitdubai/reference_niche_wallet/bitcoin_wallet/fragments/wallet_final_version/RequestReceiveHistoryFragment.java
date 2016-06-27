@@ -71,6 +71,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
     BlockchainNetworkType blockchainNetworkType;
+    BitcoinWalletSettings bitcoinWalletSettings;
 
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
     FloatingActionMenu actionMenu = null;
@@ -114,9 +115,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             });
 
 
-
-
-            BitcoinWalletSettings bitcoinWalletSettings;
             try {
                 bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
@@ -274,11 +272,18 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
         try {
+
+            try {
+                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            }catch (Exception e){
+
+            }
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
-            offset+=MAX_TRANSACTIONS;
+            offset+=1;
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
