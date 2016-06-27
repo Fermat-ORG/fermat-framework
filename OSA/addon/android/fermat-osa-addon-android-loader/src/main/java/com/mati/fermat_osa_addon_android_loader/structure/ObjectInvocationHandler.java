@@ -62,7 +62,8 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     result = m.invoke(object, args);
                 }
             } catch (InvocationTargetException e) {
-                System.out.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + "." + "\n");
+                System.err.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + "." + "\n");
+                e.getTargetException().printStackTrace();
                 return e.getTargetException();
             }
             Class<?> returnTypeClazz = method.getReturnType();
@@ -85,6 +86,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                                 objectToReturn = loadObject(result, returnTypeClazz);
                             } else {
                                 if (method.getName().equals("listVersionsMati")) {
+                                    //todo: esto no es necesario, está a modo de prueba, hay que borrarlo
                                     List<PluginVersionReference> pluginVersionReferences = new ArrayList<>();
                                     List<Object> list = (List) result;
                                     for (Object o : list) {
@@ -109,6 +111,9 @@ public class ObjectInvocationHandler implements InvocationHandler {
                                             }
                                         }
                                         objectToReturn = listToReturn;
+                                    }else {
+                                        System.out.println("Trying to return a collection, please check this" + "\n");
+                                        objectToReturn = rebuild(result);
                                     }
                                 }
                             }
@@ -124,7 +129,8 @@ public class ObjectInvocationHandler implements InvocationHandler {
                         try {
                             objectToReturn = Enum.valueOf((Class<Enum>) returnTypeClazz, result.toString());
                         } catch (Exception e) {
-                            System.out.println("Error al cargar el enum, enum: " + returnTypeClazz.getName() + "\n");
+                            System.err.println("Error al cargar el enum, enum: " + returnTypeClazz.getName() + "\n");
+                            e.printStackTrace();
                             objectToReturn = e;
                         }
                     }
@@ -135,13 +141,16 @@ public class ObjectInvocationHandler implements InvocationHandler {
             }
 
         }catch (InvocationTargetException e){
-            System.out.println("InvocationException: Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
+            System.err.println("InvocationException: (bottom catch) Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
+            e.printStackTrace();
             return e.getTargetException();
         }catch (Exception e){
-            System.out.println("Exception unknown");
+            System.err.println("Exception unknown");
+            e.printStackTrace();
             throw new Exception("Exception in ObjectInvocationHandler",e);
         } catch (Throwable throwable) {
-            System.out.println("Exception unknown");
+            System.err.println("Exception unknown");
+            throwable.printStackTrace();
             throw new Exception("Exception in loadObject",throwable);
         }
         return objectToReturn;
@@ -172,6 +181,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                             if (Collection.class.isAssignableFrom(field.getType())) {
                                 System.out.println("Object is a collection, type: " + field.getGenericType() + ", ObjectToConvert: " + objectToConvert + ", returnTypeClass: " + returnTypeClazz + "\n");
 //                                SerializationUtils.clone((Serializable) field.get(objectToReturn))
+                                objectToReturn = rebuild(objectToConvert);
                             } else {
                                 String fieldName = field.getName();
                                 field.setAccessible(true);
@@ -190,16 +200,17 @@ public class ObjectInvocationHandler implements InvocationHandler {
                                         }
                                         fieldToReturn.set(objectToReturn, fieldConvertedObject);
                                     } catch (IllegalArgumentException e) {
-                                        System.out.print("IllegalArgumentException: fieldToReturn: " + field.getName() + ", Object to return class name: " + returnTypeClazz + ".\n");
+                                        System.err.print("IllegalArgumentException: fieldToReturn: " + field.getName() + ", Object to return class name: " + returnTypeClazz + ".\n");
                                         e.printStackTrace();
                                     }
                                 }
                             }
 
                         }catch (InvocationTargetException e){
+                            e.getTargetException().printStackTrace();
                             objectToReturn = e.getTargetException();
                         } catch (Exception e) {
-                            System.out.println("InvocationTargetException: field name: " + field.getName() + " object to return: " + objectToReturn);
+                            System.err.println("InvocationTargetException: field name: " + field.getName() + " object to return: " + objectToReturn);
                             e.printStackTrace();
                         }
                     }
@@ -208,7 +219,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     try {
                         objectToReturn = Enum.valueOf((Class<Enum>) returnTypeClazz, objectToConvert.toString());
                     }catch (Exception e){
-                        System.out.println("EnumException: Forma de cargar el enum falló, enum: "+returnTypeClazz.getName()+"\n");
+                        System.err.println("EnumException: Forma de cargar el enum falló, enum: "+returnTypeClazz.getName()+"\n");
                         e.printStackTrace();
                     }
                 }
@@ -219,14 +230,15 @@ public class ObjectInvocationHandler implements InvocationHandler {
 
 
         } catch (NoSuchMethodException e) {
-            System.out.println("NoSuchMethodException: object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
-            //e.printStackTrace();
-            byte[] serializable = null;
+            System.err.println("NoSuchMethodException: object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
+            e.printStackTrace();
             objectToReturn = rebuild(objectToConvert);
             if (objectToReturn==null) e.printStackTrace();
+            else System.out.println("Devolviendo objeto re construido!");
             //throw new Exception("Error in ObjectInvocationHandler, object type: "+clazz.getName(),e);
         } catch (InvocationTargetException e) {
-            System.out.print("IllegalArgumentException: object to convert: " + objectToConvert + ", Object to return class name: " + returnTypeClazz + ".\n");
+            System.err.print("IllegalArgumentException: object to convert: " + objectToConvert + ", Object to return class name: " + returnTypeClazz + ".\n");
+            e.getTargetException().printStackTrace();
             objectToReturn = e.getTargetException();
         } catch (InstantiationException e) {
             e.printStackTrace();
