@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.NetworkNodeCommunicationDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
@@ -96,7 +99,7 @@ public class Profiles implements RestFulServices {
             /*
              * hold the result list
              */
-            List<ActorProfile> resultList = filterActors(discoveryQueryParameters, clientIdentityPublicKey);
+            List<ActorProfile> resultList = filterActorsTemporal(discoveryQueryParameters, clientIdentityPublicKey);
 
             LOG.info("filteredLis.size() =" + resultList.size());
 
@@ -137,15 +140,16 @@ public class Profiles implements RestFulServices {
 
             try {
 
-                System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
+                //System.out.println("la identidad:"+actorsCatalog.getAlias()+" pertenece al nodo: "+actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey()));
                 if(actorsCatalog.getNodeIdentityPublicKey().equals(pluginRoot.getIdentity().getPublicKey())) {
-                    System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
+                    //System.out.println("la identidad:"+actorsCatalog.getAlias()+" esta checkeada: "+daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()));
 
                     if (daoFactory.getCheckedInActorDao().exists(actorsCatalog.getIdentityPublicKey()))
                         actors.add(actorsCatalog);
 
-                } else if(isActorOnline(actorsCatalog))
+                } else if(isActorOnline(actorsCatalog)) {
                     actors.add(actorsCatalog);
+                }
 
             } catch (CantReadRecordDataBaseException e) {
                 e.printStackTrace();
@@ -165,7 +169,7 @@ public class Profiles implements RestFulServices {
      */
     private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        Map<String,ActorProfile> profileList = new HashMap();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
@@ -200,12 +204,62 @@ public class Profiles implements RestFulServices {
                 actorProfile.setExtraData(actorsCatalog.getExtraData());
                 actorProfile.setLocation(actorsCatalog.getLastLocation());
 
-                profileList.add(actorProfile);
+                profileList.put(actorsCatalog.getIdentityPublicKey(), actorProfile);
+            }
+        }
+
+        if(discoveryQueryParameters.getMax() > 0 && profileList.size() < discoveryQueryParameters.getMax())
+            profileList = getListActorsLetf(profileList, discoveryQueryParameters.getMax(), filters, clientIdentityPublicKey);
+
+        return new ArrayList<>(profileList.values());
+
+    }
+
+    /*
+     * get the other actors that left in the list to the same max
+     */
+    private Map<String,ActorProfile> getListActorsLetf(Map<String,ActorProfile> profileList, int max, Map<String, Object> filters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException {
+
+        List<CheckedInActor> listActorsLetf = daoFactory.getCheckedInActorDao().findAll(filters);
+
+        if(listActorsLetf != null && (listActorsLetf.size() > 0)){
+
+            for(int i = listActorsLetf.size()-1; i >= 0; i--){
+
+                if(!profileList.containsKey(listActorsLetf.get(i).getIdentityPublicKey()) && !listActorsLetf.get(i).getClientIdentityPublicKey().equals(clientIdentityPublicKey))
+                    profileList.put(listActorsLetf.get(i).getIdentityPublicKey(), getActorProfileFromCheckedInActor(listActorsLetf.get(i)));
+
+                if(profileList.size() == max)
+                    break;
+
             }
         }
 
         return profileList;
+    }
 
+    /*
+     * get ActorProfile From CheckedInActor
+     */
+    private ActorProfile getActorProfileFromCheckedInActor(CheckedInActor actor){
+
+        ActorProfile actorProfile = new ActorProfile();
+        actorProfile.setIdentityPublicKey(actor.getIdentityPublicKey());
+        actorProfile.setAlias(actor.getAlias());
+        actorProfile.setName(actor.getName());
+        actorProfile.setActorType(actor.getActorType());
+        actorProfile.setPhoto(actor.getPhoto());
+        actorProfile.setExtraData(actor.getExtraData());
+        actorProfile.setLocation(new NetworkNodeCommunicationDeviceLocation(
+                actor.getLatitude(),
+                actor.getLongitude(),
+                null     ,
+                0        ,
+                null     ,
+                System.currentTimeMillis(),
+                LocationSource.UNKNOWN));
+
+        return actorProfile;
     }
 
     /**
@@ -292,6 +346,44 @@ public class Profiles implements RestFulServices {
             daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
 
         return daoFactory;
+
+    }
+
+    /*
+     * TOD: uso temporal para que los muchachos puedan probar su plugin
+     * mientra resolvemos lo de Actor_catalogs
+     */
+    private List<ActorProfile> filterActorsTemporal(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
+        List<ActorProfile> profileList = new ArrayList<>();
+        List<CheckedInActor> listActorsLetf;
+        Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
+
+        int max    = 10;
+        int offset =  0;
+
+        if( discoveryQueryParameters.getMax() != null &&
+                discoveryQueryParameters.getOffset() != null &&
+                discoveryQueryParameters.getMax() > 0 &&
+                discoveryQueryParameters.getOffset() >= 0) {
+            max = (discoveryQueryParameters.getMax() > 100) ? 100 : discoveryQueryParameters.getMax();
+            offset = discoveryQueryParameters.getOffset();
+        }
+
+        if (discoveryQueryParameters.getLocation() != null)
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAllNearestTo(filters, max, offset, discoveryQueryParameters.getLocation());
+        else
+            listActorsLetf = getDaoFactory().getCheckedInActorDao().findAll(filters, max, offset);
+
+        if(listActorsLetf != null) {
+            for (CheckedInActor actor : listActorsLetf) {
+
+                if (!actor.getClientIdentityPublicKey().equals(clientIdentityPublicKey))
+                    profileList.add(getActorProfileFromCheckedInActor(actor));
+
+            }
+        }
+
+        return profileList;
 
     }
 
