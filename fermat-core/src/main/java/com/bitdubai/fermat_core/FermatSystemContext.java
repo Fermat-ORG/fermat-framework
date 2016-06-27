@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.AbstractPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.DeveloperPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
@@ -46,16 +48,18 @@ public final class FermatSystemContext {
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
     private final Object osContext;
+    private final FermatContext fermatContext;
 
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext(final Object osContext) {
+    public FermatSystemContext(final Object osContext,FermatContext fermatContext) {
 
         this.osContext = osContext;
         this.platforms = new ConcurrentHashMap<>();
+        this.fermatContext = fermatContext;
     }
 
     /**
@@ -151,12 +155,12 @@ public final class FermatSystemContext {
      *
      * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
      */
-    public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
+    public final AbstractPluginInterface getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
-        AbstractPlugin abstractPlugin = null;
+        AbstractPluginInterface abstractPlugin = null;
         try {
             if (isPluginLoadedInTheNewWay(pluginVersionReference)) {
-                abstractPlugin = (AbstractPlugin) getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).
+                Object plugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).
                         getPluginByVersionMati(
                                 pluginVersionReference.getPlatform().getCode(),
                                 pluginVersionReference.getLayers().getCode(),
@@ -165,6 +169,15 @@ public final class FermatSystemContext {
                                 pluginVersionReference.getVersion().toString(),
                                 new Class[]{AbstractPlugin.class}
                         );
+                //todo: provando con esto así, si no funciona debo pasar las interfaces a interfaces cargadas por el base classloader y no que vengan externos
+//                Class<?>[] interfaces = plugin.getClass().getInterfaces();
+
+
+                abstractPlugin = (AbstractPluginInterface) fermatContext.objectToProxyfactory(
+                                plugin,
+                                getClass().getClassLoader(),
+                                new Class[]{AbstractPluginInterface.class},
+                                AbstractPluginInterface.class);
             } else
                 abstractPlugin = getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
 

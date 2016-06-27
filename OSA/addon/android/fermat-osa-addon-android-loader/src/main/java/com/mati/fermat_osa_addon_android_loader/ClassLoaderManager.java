@@ -6,7 +6,7 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatContext;
-import com.mati.fermat_osa_addon_android_loader.structure.MfClassUtils;
+import com.bitdubai.fermat_api.layer.all_definition.util.MfClassUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import dalvik.system.DexClassLoader;
 
@@ -25,8 +27,11 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
     private static final String TAG = "ClassLoaderManager";
     O context;
 
+    Map<String,FermatClassLoader> externalLoaders;
+
     public ClassLoaderManager(O context) {
         this.context = context;
+        externalLoaders = new HashMap<>();
     }
 
 
@@ -34,7 +39,10 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
         ClassLoader classLoader = loadAllPlugin();
 
         FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
+        if (!externalLoaders.containsKey("bch")){
+            externalLoaders.put("bch",classLoaderManger);
 
+        }
         try {
             Class klass1 = classLoaderManger.loadClass(pluginName);
             Constructor<?> constructor = null;
@@ -43,10 +51,10 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
                     Class<?>[] paramTypes = MfClassUtils.getTypes(args,classLoaderManger);
                     constructor = klass1.getDeclaredConstructor(paramTypes);
                 }else{
-                    constructor = klass1.getConstructor();
+                    constructor = klass1.getDeclaredConstructor();
                 }
             }else{
-                constructor = klass1.getConstructor();
+                constructor = klass1.getDeclaredConstructor();
             }
             Object myClass = constructor.newInstance();
             for (Method method : myClass.getClass().getMethods()) {
@@ -66,6 +74,26 @@ public class ClassLoaderManager<O extends Application & FermatContext> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Class<?> load(String className){
+        ClassLoader classLoader = loadAllPlugin();
+
+        FermatClassLoader classLoaderManger = new FermatClassLoader(context.getApplicationContext().getClassLoader().getParent(),classLoader,customClassLoader());
+
+        try {
+            return classLoaderManger.loadClass(className);
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ClassLoader getExternalLoader(String name){
+        return externalLoaders.get("bch");
     }
 
 

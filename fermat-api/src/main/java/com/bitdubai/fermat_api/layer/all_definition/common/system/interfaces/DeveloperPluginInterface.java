@@ -39,4 +39,6 @@ public interface DeveloperPluginInterface {
     Object getPluginByVersionMati(String platformCode, String layerCode, String pluginsCode, String developerCode, String version,Class[] interfaces) throws VersionNotFoundException;
 
     List<PluginVersionReference> listVersionsMati();
+
+    void setFermatContext(Object fermatContext);
 }

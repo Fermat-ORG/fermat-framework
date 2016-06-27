@@ -308,6 +308,9 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
     }
 
+    public ClassLoader getExternalLoader(String name){
+        return loaderManager.getExternalLoader(name);
+    }
 //    @Override
 //    public Object loadProxyObject(FermatContext fermatContext, String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
 //        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);

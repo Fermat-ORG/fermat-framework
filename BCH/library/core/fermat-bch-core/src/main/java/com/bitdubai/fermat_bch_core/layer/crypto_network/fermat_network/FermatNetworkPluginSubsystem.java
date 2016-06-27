@@ -29,9 +29,15 @@ public class FermatNetworkPluginSubsystem extends AbstractPluginSubsystem {
                         "com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai",
                         DeveloperPluginInterface.class.getClassLoader(),
                         AbstractPluginDeveloper.class.getInterfaces(),
-                        DeveloperPluginInterface.class,
-                        getFermatContext()
+                        DeveloperPluginInterface.class
                         );
+
+
+                ClassLoader externalClassLoader = getFermatContext().getExternalLoader("bch");
+
+                Class interfaces = externalClassLoader.loadClass(FermatContext.class.getName());
+                Object externalFermatContext = getFermatContext().objectToProxyfactory(getFermatContext(), externalClassLoader, new Class[]{interfaces}, interfaces);
+                developerPluginInterfaceClass.setFermatContext(externalFermatContext);
 
 //                ObjectHandler objectHandler = new ObjectHandler(o);
                 registerDeveloperMati(developerPluginInterfaceClass);

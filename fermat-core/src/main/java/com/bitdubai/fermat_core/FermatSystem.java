@@ -91,9 +91,9 @@ public final class FermatSystem {
     public void start(final Object           osContext  ,
                             final AbstractPlatform osaPlatform) throws CantStartSystemException {
 
-        this.fermatSystemContext = new FermatSystemContext(osContext);
+        this.fermatSystemContext = new FermatSystemContext(osContext,fermatContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
-        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
+        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager,fermatContext);
 
         try {
 

@@ -118,6 +118,24 @@ public class AddonVersionReference {
                 ((addonDeveloperReference == null && that.getAddonDeveloperReference() == null) || (addonDeveloperReference != null && addonDeveloperReference.equals(that.getAddonDeveloperReference())));
     }
 
+
+    public Platforms getPlatform(){
+        return addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform();
+    }
+
+    public Layers getLayers(){
+        return addonDeveloperReference.getAddonReference().getLayerReference().getLayer();
+    }
+
+    public Addons getAddon(){
+        return addonDeveloperReference.getAddonReference().getAddon();
+    }
+
+    public Developers getDeveloper(){
+        return addonDeveloperReference.getDeveloper();
+
+    }
+
     @Override
     public final int hashCode() {
         int c = 0;

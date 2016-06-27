@@ -24,7 +24,7 @@ public class LoaderManager<O extends Application & FermatContext> {
     }
 
     public Object load(String moduleName,Object... args){
-        return classLoaderManager.load(moduleName,args);
+        return classLoaderManager.load(moduleName, args);
     }
 
     public Object objectToProxyFactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
@@ -36,4 +36,7 @@ public class LoaderManager<O extends Application & FermatContext> {
     }
 
 
+    public ClassLoader getExternalLoader(String name) {
+        return classLoaderManager.getExternalLoader(name);
+    }
 }

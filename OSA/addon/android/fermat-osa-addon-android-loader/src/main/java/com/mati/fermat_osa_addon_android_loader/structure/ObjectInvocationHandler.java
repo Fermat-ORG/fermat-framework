@@ -1,10 +1,13 @@
 package com.mati.fermat_osa_addon_android_loader.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.util.MfClassUtils;
 import com.mati.fermat_osa_addon_android_loader.LoaderManager;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.ClassUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -32,17 +35,22 @@ public class ObjectInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Object object = null;
+        try {
+            object = callMethod(method, args);
+        }catch (Throwable e){
+            e.printStackTrace();
+        }
+        if(object instanceof Throwable){
+            throw (Throwable) object;
+        }
+        return object;
+    }
+
+    private Object callMethod(Method method, Object[] args) throws Exception {
         Object objectToReturn = null;
         try {
             Class<?>[] parameterTypes = MfClassUtils.getTypes(args);
-//            if (args != null) {
-//                if(args.length>0) {
-//                    parameterTypes = new Class[args.length];
-//                    for (int i = 0; i < args.length; i++) {
-//                        parameterTypes[i] = args[i].getClass();
-//                    }
-//                }
-//            }
             Method m = null;
             Object result = null;
             try {
@@ -50,44 +58,29 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     m = object.getClass().getMethod(method.getName());
                     result = m.invoke(object);
                 } else {
-                    m = object.getClass().getMethod(method.getName(), parameterTypes);
+                    m = object.getClass().getMethod(method.getName(), method.getParameterTypes());
                     result = m.invoke(object, args);
                 }
-            }catch (InvocationTargetException e){
-                System.out.println("Method: " + m.getName() + ", object: " + object.getClass() + ", args: " +((parameterTypes!=null)? Arrays.toString(args):null)+ "."+"\n");
-                throw new Exception(e);
+            } catch (InvocationTargetException e) {
+                System.out.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + "." + "\n");
+                return e.getTargetException();
             }
             Class<?> returnTypeClazz = method.getReturnType();
-            if(returnTypeClazz==null || returnTypeClazz.equals(Void.TYPE)){
-                System.out.println("devolviendo void/null"+"\n");
+            if (returnTypeClazz == null || returnTypeClazz.equals(Void.TYPE)) {
+                System.out.println("devolviendo void/null" + "\n");
                 return null;
             }
-//            if(returnTypeClazz.getSuperclass().getName().equals("com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin")){
-//                System.out.println("########################\n");
-//                System.out.println("Es un abstractPlugin el objeto a devolver!");
-//                System.out.println("########################\n");
-//            }
-//            if(method.getName().equals("listVersionsMati")){
-//                List<PluginVersionReference> pluginVersionReferences = new ArrayList<>();
-//                List<Object> list = (List) result;
-//                for (Object o : list) {
-//                    Object abstractPlugin = loaderManager.objectToProxyFactory(o,getClass().getClassLoader(),o.getClass().getInterfaces(), AbstractPlugin.class);
-//                    pluginVersionReferences.add(abstractPlugin);
-//                }
-//            }
-            if(method.getName().equals("getVersions")){
+            if (method.getName().equals("getVersions")) {
                 System.out.println("**************************\n");
-                System.out.println("Method getVersions, please check this. si llega hasta acá vamos mejor que antes");
+                System.out.println("Method getVersions");
                 System.out.println("**************************\n");
-            }if(method.getName().equals("getPluginByVersionMati")){
-                System.out.println("**************************\n");
-                System.out.println("Method getPluginByVersionMati, devolviendo version");
-                System.out.println("**************************\n");
+            }
+            if (method.getName().equals("getPluginByVersionMati")) {
                 return result;
             } else {
                 if (!returnTypeClazz.isPrimitive() && !ClassUtils.isPrimitiveOrWrapper(returnTypeClazz)) {
                     if (!returnTypeClazz.isEnum()) {
-                        if(!returnTypeClazz.equals(String.class)) {
+                        if (!returnTypeClazz.equals(String.class)) {
                             if (!Collection.class.isAssignableFrom(returnTypeClazz)) {
                                 objectToReturn = loadObject(result, returnTypeClazz);
                             } else {
@@ -99,42 +92,60 @@ public class ObjectInvocationHandler implements InvocationHandler {
                                         pluginVersionReferences.add(pluginVersionReference);
                                     }
                                     objectToReturn = pluginVersionReferences;
+                                } else {
+                                    System.out.println("Object is a collection, type: " + result.getClass().getName() + ", ObjectToConvert: " + result + ", returnTypeClass: " + returnTypeClazz + "\n");
+                                    if (returnTypeClazz.equals(List.class) || returnTypeClazz.equals(ArrayList.class)) {
+                                        System.out.println("is a list/arraylist" + "\n");
+                                        List list = (List) result;
+                                        List<Object> listToReturn = new ArrayList<>();
+                                        if (!list.isEmpty()) {
+                                            System.out.println("list is not empty" + "\n");
+                                            for (Object o : list) {
+                                                Class<?> clazzListElement = getClass().getClassLoader().loadClass(o.getClass().getName());
+                                                System.out.println("list elements:" + clazzListElement.getName() + "\n");
+                                                Object objectConverted = loadObject(o, clazzListElement);
+                                                System.out.println("object returned from loadObject loading list::" + objectConverted + "\n");
+                                                listToReturn.add(objectConverted);
+                                            }
+                                        }
+                                        objectToReturn = listToReturn;
+                                    }
                                 }
-                                System.out.println("Object is a collection, type: " + result.getClass().getName() + ", ObjectToConvert: " + result + ", returnTypeClass: " + returnTypeClazz + "\n");
                             }
-                        }else {
+                        } else {
                             try {
                                 System.out.println("Object is a String, type: " + result.getClass().getName() + ", ObjectToConvert: " + result + ", returnTypeClass: " + returnTypeClazz + "\n");
                                 objectToReturn = result.toString();
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     } else {
-                        System.out.println("******\n");
-                        System.out.println("Object to return is enum, please see this..");
-                        System.out.println("++++++\n");
                         try {
                             objectToReturn = Enum.valueOf((Class<Enum>) returnTypeClazz, result.toString());
                         } catch (Exception e) {
-                            System.out.println("Error al cargar el enum, enum: " + returnTypeClazz.getName()+"\n");
-                            e.printStackTrace();
+                            System.out.println("Error al cargar el enum, enum: " + returnTypeClazz.getName() + "\n");
+                            objectToReturn = e;
                         }
                     }
                 } else {
-                    System.out.println("devolviendo primitivo"+"\n");
+                    System.out.println("devolviendo primitivo" + "\n");
                     return result;
                 }
             }
 
+        }catch (InvocationTargetException e){
+            System.out.println("InvocationException: Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
+            return e.getTargetException();
         }catch (Exception e){
-            e.printStackTrace();
-            throw new Exception("Error in ObjectInvocationHandler",e);
+            throw new Exception("Exception in ObjectInvocationHandler",e);
+        } catch (Throwable throwable) {
+            throw new Exception("Exception in loadObject",throwable);
         }
         return objectToReturn;
     }
 
-    private Object loadObject(Object objectToConvert,Class returnTypeClazz){
+    private Object loadObject(Object objectToConvert,Class returnTypeClazz) throws Throwable {
         Constructor<?> constructor = null;
         Object objectToReturn = null;
         if(objectToConvert==null){
@@ -151,26 +162,28 @@ public class ObjectInvocationHandler implements InvocationHandler {
                         try {
                             int modifiers = field.getModifiers();
                             if (Modifier.isStatic(modifiers)) {
-                                if(Modifier.isFinal(modifiers)){
-                                    System.out.println("Object to set is constant, jumping one loop"+"\n");
+                                if (Modifier.isFinal(modifiers)) {
+                                    System.out.println("Object to set is constant, jumping one loop" + "\n");
                                     continue;
                                 }
                             }
                             if (Collection.class.isAssignableFrom(field.getType())) {
-                                System.out.println("Object is a collection, type: " + field.getType() + ", ObjectToConvert: " + objectToConvert + ", returnTypeClass: " + returnTypeClazz+"\n");
+                                System.out.println("Object is a collection, type: " + field.getGenericType() + ", ObjectToConvert: " + objectToConvert + ", returnTypeClass: " + returnTypeClazz + "\n");
 //                                SerializationUtils.clone((Serializable) field.get(objectToReturn))
-                            }else {
+                            } else {
                                 String fieldName = field.getName();
                                 field.setAccessible(true);
                                 Object fieldObject = field.get(objectToConvert);
-                                if(fieldObject!=null) {
+                                if (fieldObject != null) {
                                     try {
                                         Field fieldToReturn = objectToReturn.getClass().getDeclaredField(fieldName);
                                         fieldToReturn.setAccessible(true);
                                         Object fieldConvertedObject = null;
-                                        if(fieldToReturn.getType().equals(String.class)){
+                                        if (ClassUtils.isPrimitiveOrWrapper(field.getType())) {
+                                            fieldConvertedObject = fieldObject;
+                                        } else if (fieldToReturn.getType().equals(String.class)) {
                                             fieldConvertedObject = fieldObject.toString();
-                                        }else {
+                                        } else {
                                             fieldConvertedObject = loadObject(fieldObject, fieldToReturn.getType());
                                         }
                                         fieldToReturn.set(objectToReturn, fieldConvertedObject);
@@ -180,6 +193,9 @@ public class ObjectInvocationHandler implements InvocationHandler {
                                     }
                                 }
                             }
+
+                        }catch (InvocationTargetException e){
+                            objectToReturn = e.getTargetException();
                         } catch (Exception e) {
                             System.out.println("field name: " + field.getName() + " object to return: " + objectToReturn);
                             e.printStackTrace();
@@ -201,12 +217,20 @@ public class ObjectInvocationHandler implements InvocationHandler {
 
 
         } catch (NoSuchMethodException e) {
-            System.out.println("object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null")+"\n");
-            e.printStackTrace();
-            return objectToConvert;
+            System.out.println("NoSuchMethodException, object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
+            //e.printStackTrace();
+            byte[] serializable = null;
+            try {
+                //test
+                serializable = SerializationUtils.serialize((Serializable) objectToConvert);
+                objectToReturn = SerializationUtils.deserialize(serializable);
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
             //throw new Exception("Error in ObjectInvocationHandler, object type: "+clazz.getName(),e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            System.out.print("IllegalArgumentException: object to convert: " + objectToConvert + ", Object to return class name: " + returnTypeClazz + ".\n");
+            objectToReturn = e.getTargetException();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -214,6 +238,6 @@ public class ObjectInvocationHandler implements InvocationHandler {
         } catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return objectToReturn;
     }
 }

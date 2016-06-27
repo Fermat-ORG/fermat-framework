@@ -2,8 +2,6 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_clas
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatContext;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededIndirectPluginReferences;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededLayerReference;
@@ -13,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.AbstractPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
@@ -46,8 +45,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  * Modified by Matias Furszyfer, todo: tenemos que sacar esos concurrentMaps leon, no sirve que esten así.
  */
-public abstract class
-        AbstractPlugin implements FermatManager, Plugin, Service {
+public abstract class AbstractPlugin implements AbstractPluginInterface {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -236,12 +234,12 @@ public abstract class
         return this.indirectNeededPluginReferences;
     }
 
-    private void collectReferences() throws CantCollectReferencesException {
+    public void collectReferences() throws CantCollectReferencesException {
 
         collectReferences(this.getClass());
     }
 
-    private void collectReferences(Class toCollectClass) throws CantCollectReferencesException {
+    public void collectReferences(Class toCollectClass) throws CantCollectReferencesException {
 
         // collect superclass references
         if (toCollectClass.getSuperclass() != null)
@@ -375,7 +373,7 @@ public abstract class
         }
     }
 
-    public final void assignAddonReferenceMati(String platformCode, String layerCode, String addonCode, String developerCode, String version,final FermatManager fermatManager) throws CantAssignReferenceException   ,
+    public final void assignAddonReferenceMati(String platformCode, String layerCode, String addonCode, String developerCode, String version,final Object fermatManager) throws CantAssignReferenceException   ,
             IncompatibleReferenceException {
 
         AddonVersionReference addonVersionReference = null;
@@ -393,18 +391,18 @@ public abstract class
 
         try {
 
-            Class[] interfaces = fermatManager.getClass().getInterfaces();
-            Class[] myInterfaces = new Class[interfaces.length];
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            for (int i = 0; i < interfaces.length; i++) {
-                try {
-                    myInterfaces[i] = classLoader.loadClass(interfaces[i].getName());
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            FermatManager myManager = (FermatManager) pluginContext.objectToProxyfactory(fermatManager, this.getClass().getClassLoader(), myInterfaces, FermatManager.class);
+//            Class[] interfaces = fermatManager.getClass().getInterfaces();
+//            Class[] myInterfaces = new Class[interfaces.length];
+//            ClassLoader classLoader = this.getClass().getClassLoader();
+//            for (int i = 0; i < interfaces.length; i++) {
+//                try {
+//                    myInterfaces[i] = classLoader.loadClass(interfaces[i].getName());
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            FermatManager myManager = (FermatManager) pluginContext.objectToProxyfactory(fermatManager, this.getClass().getClassLoader(), myInterfaces, FermatManager.class);
 
             try {
 
@@ -417,7 +415,7 @@ public abstract class
                     );
                 }
 
-                if (myManager == null) {
+                if (fermatManager == null) {
                     throw new CantAssignReferenceException(
                             "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon is null. " + addonVersionReference.toString(),
                             "Please check the given addon."
@@ -426,16 +424,16 @@ public abstract class
 
                 final Class<?> refManager = field.getType();
 
-                if (refManager.isAssignableFrom(myManager.getClass())) {
+                if (refManager.isAssignableFrom(fermatManager.getClass())) {
                     field.setAccessible(true);
-                    field.set(this, refManager.cast(myManager));
+                    field.set(this, refManager.cast(fermatManager));
 
                     this.addonNeededReferences.remove(addonVersionReference);
 
                 } else {
                     throw new IncompatibleReferenceException(
                             "Working Plugin: " + this.getPluginVersionReference().toString3() +
-                                    " ---- classExpected: " + refManager.getName() + " --- classReceived: " + myManager.getClass().getName(),
+                                    " ---- classExpected: " + refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
                             ""
                     );
                 }
@@ -454,7 +452,7 @@ public abstract class
         }
     }
 
-    public final void assignPluginReference(final AbstractPlugin abstractPlugin) throws CantAssignReferenceException   ,
+    public final void assignPluginReference(final AbstractPluginInterface abstractPlugin) throws CantAssignReferenceException   ,
             IncompatibleReferenceException {
 
         final PluginVersionReference pvr = abstractPlugin.getPluginVersionReference();

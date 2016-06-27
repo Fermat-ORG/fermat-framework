@@ -119,11 +119,12 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
                         interfaces[0]);
             } else {
                 AbstractPlugin abstractPlugin =versions.values().iterator().next();
-                return fermatContext.objectToProxyfactory(
-                        abstractPlugin,
-                        interfaces.getClass().getClassLoader(),
-                        interfaces,
-                        interfaces[0]);
+                return abstractPlugin;
+//                return fermatContext.objectToProxyfactory(
+//                        abstractPlugin,
+//                        interfaces.getClass().getClassLoader(),
+//                        interfaces,
+//                        interfaces[0]);
 //                throw new VersionNotFoundException(pluginVersionReference.toString3(), "version not found in the specified plugin developer.");
             }
         }catch (Exception e){
@@ -163,6 +164,18 @@ public abstract class AbstractPluginDeveloper implements DeveloperPluginInterfac
 
     public final PluginDeveloperReference getPluginDeveloperReference() {
         return pluginDeveloperReference;
+    }
+
+    public FermatContext getFermatContext() {
+        return fermatContext;
+    }
+
+    public void setFermatContext(Object fermatContext) {
+        try {
+            this.fermatContext = (FermatContext) fermatContext;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public abstract void start() throws CantStartPluginDeveloperException;
