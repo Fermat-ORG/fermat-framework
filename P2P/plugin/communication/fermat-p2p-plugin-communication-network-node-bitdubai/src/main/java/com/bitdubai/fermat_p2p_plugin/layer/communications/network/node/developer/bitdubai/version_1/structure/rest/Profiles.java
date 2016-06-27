@@ -174,7 +174,7 @@ public class Profiles implements RestFulServices {
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actorsList;
 
-        int max    = 100;
+        int max    = 10;
         int offset =  0;
 
         if( discoveryQueryParameters.getMax() != null &&
@@ -222,12 +222,12 @@ public class Profiles implements RestFulServices {
 
         List<CheckedInActor> listActorsLetf = daoFactory.getCheckedInActorDao().findAll(filters);
 
-        if(listActorsLetf != null){
+        if(listActorsLetf != null && (listActorsLetf.size() > 0)){
 
-            for(CheckedInActor actor : listActorsLetf){
+            for(int i = listActorsLetf.size()-1; i >= 0; i--){
 
-                if(!profileList.containsKey(actor.getIdentityPublicKey()) && !actor.getClientIdentityPublicKey().equals(clientIdentityPublicKey))
-                    profileList.put(actor.getIdentityPublicKey(), getActorProfileFromCheckedInActor(actor));
+                if(!profileList.containsKey(listActorsLetf.get(i).getIdentityPublicKey()) && !listActorsLetf.get(i).getClientIdentityPublicKey().equals(clientIdentityPublicKey))
+                    profileList.put(listActorsLetf.get(i).getIdentityPublicKey(), getActorProfileFromCheckedInActor(listActorsLetf.get(i)));
 
                 if(profileList.size() == max)
                     break;
