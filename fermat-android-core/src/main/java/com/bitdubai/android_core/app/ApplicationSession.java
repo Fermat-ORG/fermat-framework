@@ -18,8 +18,11 @@ import com.bitdubai.android_core.app.common.version_1.util.services_helpers.Serv
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.github.anrwatchdog.ANRWatchDog;
+import com.mati.fermat_osa_addon_android_loader.LoaderManager;
+import com.mati.fermat_osa_addon_android_loader.Smith;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -39,7 +42,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem> {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem>,FermatContext {
 
     private final String TAG = "ApplicationSession";
 
@@ -82,6 +85,13 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     private ServicesHelpers servicesHelpers;
 
     /**
+     * Base loader
+     */
+    private ClassLoader mBaseClassLoader;
+
+    private LoaderManager loaderManager;
+
+    /**
      *  Application session constructor
      */
 
@@ -89,6 +99,7 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
         super();
         instance = this;
         fermatSystem = FermatSystem.getInstance();
+        fermatSystem.setFermatContext(this);
 
 
     }
@@ -155,6 +166,21 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
                 ACRA.getErrorReporter().uncaughtException(thread,e);
             }
         });
+
+        try {
+            Log.d(TAG, "Starting app");
+            //loading the main class loader
+            Context mBase = new Smith<Context>(this, "mBase").get();
+            Object mPackageInfo = new Smith<Object>(mBase, "mPackageInfo")
+                    .get();
+            Smith<ClassLoader> sClassLoader = new Smith<ClassLoader>(
+                    mPackageInfo, "mClassLoader");
+            mBaseClassLoader = sClassLoader.get();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        loaderManager = new LoaderManager<>(this);
 
 //        loadProcessInfo();
 
@@ -250,8 +276,46 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
 
     public boolean isFermatRunning() {
         if(!fermatRunning){
-            fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+            try {
+                if(getServicesHelpers().getClientSideBrokerServiceAIDL()!=null)
+                    fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+            }catch (Exception e){
+                Log.e(TAG,"isFermatRunning launch exception");
+            }
         }
         return fermatRunning;
     }
+
+    @Override
+    public ClassLoader getBaseClassLoader() {
+        return mBaseClassLoader;
+    }
+
+    @Override
+    public Object loadObject(String pluginName) {
+        return loaderManager.load(pluginName);
+    }
+
+    @Override
+    public Object objectToProxyfactory(Object base, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface) {
+        return loaderManager.objectToProxyFactory(base,interfaceLoader,interfaces,returnInterface);
+    }
+
+//    public ProxyBuilder
+
+    @Override
+    public Object loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,Object returnInterface,Object... args) {
+        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
+    }
+
+    public ClassLoader getExternalLoader(String name){
+        return loaderManager.getExternalLoader(name);
+    }
+//    @Override
+//    public Object loadProxyObject(FermatContext fermatContext, String moduleName, ClassLoader interfaceLoader, Class[] interfaces, Object returnInterface, Object... args) {
+//        return loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface,args);
+//    }
+//    public <I> I loadProxyObject(String moduleName,ClassLoader interfaceLoader,Class[] interfaces,I returnInterface) {
+//        return (I) loaderManager.objectProxyFactory(moduleName,interfaceLoader,interfaces,returnInterface);
+//    }
 }

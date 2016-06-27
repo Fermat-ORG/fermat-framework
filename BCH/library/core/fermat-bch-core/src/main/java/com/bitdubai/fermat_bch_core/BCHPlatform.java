@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
@@ -19,8 +20,9 @@ import com.bitdubai.fermat_bch_core.layer.middleware.MiddlewareLayer;
  */
 public class BCHPlatform extends AbstractPlatform {
 
-    public BCHPlatform() {
-        super(new PlatformReference(Platforms.BLOCKCHAINS));
+
+    public BCHPlatform(FermatContext fermatContext) {
+        super(new PlatformReference(Platforms.BLOCKCHAINS),fermatContext);
     }
 
     @Override
@@ -29,7 +31,7 @@ public class BCHPlatform extends AbstractPlatform {
         try {
 
             registerLayer(new CryptoModuleLayer() );
-            registerLayer(new CryptoNetworkLayer());
+            registerLayer(new CryptoNetworkLayer(getFermatContext()));
             registerLayer(new CryptoRouterLayer() );
             registerLayer(new CryptoVaultLayer()  );
             registerLayer(new MiddlewareLayer()   );

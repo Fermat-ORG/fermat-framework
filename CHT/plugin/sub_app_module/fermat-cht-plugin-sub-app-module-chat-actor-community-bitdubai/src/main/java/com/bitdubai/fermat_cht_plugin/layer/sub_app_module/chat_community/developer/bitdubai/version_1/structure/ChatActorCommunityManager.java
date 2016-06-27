@@ -52,6 +52,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.Cities;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.ultils.CitiesImpl;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantConnectWithExternalAPIException;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.exceptions.CantCreateAddressException;
@@ -69,8 +70,13 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Geo
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -508,11 +514,29 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     }
 
     @Override
-    public List<Cities> getCities(String filter) {
-        //Recorrer mapa
-        //por cada valor del mapa de country code vas a recorrer llamando al metodo getCitiesByCountryCode y lo vas a recorrer y lo vas agrrgar en una lista de tipo cities
-        //que es lo que retorno ya lleno
-        return null;
+    public List<Cities> getCities(String filter) throws CantConnectWithExternalAPIException, CantCreateBackupFileException, CantCreateCountriesListException, CantGetCitiesListException{
+
+        List<Cities> cities = new ArrayList<>();
+        Country country;
+
+        try {
+            HashMap<String, Country> CitiesMap = geolocationManager.getCountryList();
+            for(Map.Entry<String, Country> entry: CitiesMap.entrySet()){
+
+                country = entry.getValue();
+                List<City> cityList = geolocationManager.getCitiesByCountryCode(country.getCountryShortName());
+
+                for(City city: cityList){
+                    if(city.getName().toLowerCase().contains(filter.toLowerCase()) || country.getCountryName().toLowerCase().contains(filter.toLowerCase()))
+                        cities.add(new CitiesImpl(city.getName(), city.getCountryCode(), city.getLatitude(), city.getLongitude(), country.getCountryName(), country.getCountryShortName(), country.getGeoRectangle()));
+                }
+            }
+
+        } catch (Exception e){
+            System.out.println("Can't return List<Cities>");
+        }
+
+        return cities;
     }
 
     @Override
@@ -569,7 +593,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         //TODO: Revisar este metodo que hace aca
-        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available", 0, null);
 
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;

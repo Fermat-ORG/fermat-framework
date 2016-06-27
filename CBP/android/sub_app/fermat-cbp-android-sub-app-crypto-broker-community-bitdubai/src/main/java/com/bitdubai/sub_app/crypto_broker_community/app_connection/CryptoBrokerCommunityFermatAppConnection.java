@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
-import com.bitdubai.sub_app.crypto_broker_community.notifications.CommunityNotificationPainterBuilder;
+import com.bitdubai.sub_app.crypto_broker_community.common.navigationDrawer.BrokerCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.crypto_broker_community.common.notifications.CommunityNotificationPainterBuilder;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.

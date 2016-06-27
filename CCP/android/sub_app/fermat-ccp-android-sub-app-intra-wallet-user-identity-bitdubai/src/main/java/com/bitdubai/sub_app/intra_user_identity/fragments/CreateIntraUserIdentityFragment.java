@@ -120,7 +120,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             errorManager = appSession.getErrorManager();
 
             moduleManager = appSession.getModuleManager();
-            setHasOptionsMenu(true);
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -691,6 +691,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
         return super.onOptionsItemSelected(item);
     }
 
+
     private Bitmap getBitmap(String path) {
         Uri uri = Uri.fromFile(new File(path));
         InputStream in = null;
@@ -826,6 +827,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
             return null;
         }
     }
+
 
 
 }

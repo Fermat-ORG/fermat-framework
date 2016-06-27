@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededIndirectPluginReferences;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededLayerReference;
@@ -12,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.AbstractPluginInterface;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.Develope
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -44,12 +45,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  * Modified by Matias Furszyfer, todo: tenemos que sacar esos concurrentMaps leon, no sirve que esten así.
  */
-public abstract class
-        AbstractPlugin implements FermatManager, Plugin, Service {
+public abstract class AbstractPlugin implements AbstractPluginInterface {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     protected ErrorManager errorManager;
+
+    private FermatContext pluginContext;
 
 
     private final ConcurrentHashMap<AddonVersionReference , Field> addonNeededReferences         ;
@@ -76,6 +78,20 @@ public abstract class
 
         this.referencesCollected    = false;
         this.serviceStatus          = ServiceStatus.CREATED;
+    }
+
+    public AbstractPlugin(final PluginVersionReference pluginVersionReference,FermatContext pluginContext) {
+
+        this.pluginVersionReference = pluginVersionReference;
+
+        this.addonNeededReferences          = new ConcurrentHashMap   <>();
+        this.pluginNeededReferences         = new ConcurrentHashMap   <>();
+        this.layerNeededReferences          = new ConcurrentHashMap   <>();
+        this.indirectNeededPluginReferences = new CopyOnWriteArrayList<>();
+
+        this.referencesCollected    = false;
+        this.serviceStatus          = ServiceStatus.CREATED;
+        this.pluginContext = pluginContext;
     }
 
 
@@ -218,12 +234,12 @@ public abstract class
         return this.indirectNeededPluginReferences;
     }
 
-    private void collectReferences() throws CantCollectReferencesException {
+    public void collectReferences() throws CantCollectReferencesException {
 
         collectReferences(this.getClass());
     }
 
-    private void collectReferences(Class toCollectClass) throws CantCollectReferencesException {
+    public void collectReferences(Class toCollectClass) throws CantCollectReferencesException {
 
         // collect superclass references
         if (toCollectClass.getSuperclass() != null)
@@ -357,7 +373,86 @@ public abstract class
         }
     }
 
-    public final void assignPluginReference(final AbstractPlugin abstractPlugin) throws CantAssignReferenceException   ,
+    public final void assignAddonReferenceMati(String platformCode, String layerCode, String addonCode, String developerCode, String version,final Object fermatManager) throws CantAssignReferenceException   ,
+            IncompatibleReferenceException {
+
+        AddonVersionReference addonVersionReference = null;
+        try {
+            addonVersionReference = new AddonVersionReference(
+                    Platforms.getByCode(platformCode),
+                    Layers.getByCode(layerCode),
+                    Addons.getByKey(addonCode),
+                    Developers.BITDUBAI,
+                    new Version());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+
+//            Class[] interfaces = fermatManager.getClass().getInterfaces();
+//            Class[] myInterfaces = new Class[interfaces.length];
+//            ClassLoader classLoader = this.getClass().getClassLoader();
+//            for (int i = 0; i < interfaces.length; i++) {
+//                try {
+//                    myInterfaces[i] = classLoader.loadClass(interfaces[i].getName());
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            FermatManager myManager = (FermatManager) pluginContext.objectToProxyfactory(fermatManager, this.getClass().getClassLoader(), myInterfaces, FermatManager.class);
+
+            try {
+
+                final Field field = this.addonNeededReferences.get(addonVersionReference);
+
+                if (field == null) {
+                    throw new CantAssignReferenceException(
+                            "Plugin receiving: " + this.getPluginVersionReference() + " ---- Given addon: " + addonVersionReference.toString(),
+                            "The Plugin doesn't need the given reference."
+                    );
+                }
+
+                if (fermatManager == null) {
+                    throw new CantAssignReferenceException(
+                            "Plugin receiving: " + this.pluginVersionReference + " ---- Given addon is null. " + addonVersionReference.toString(),
+                            "Please check the given addon."
+                    );
+                }
+
+                final Class<?> refManager = field.getType();
+
+                if (refManager.isAssignableFrom(fermatManager.getClass())) {
+                    field.setAccessible(true);
+                    field.set(this, refManager.cast(fermatManager));
+
+                    this.addonNeededReferences.remove(addonVersionReference);
+
+                } else {
+                    throw new IncompatibleReferenceException(
+                            "Working Plugin: " + this.getPluginVersionReference().toString3() +
+                                    " ---- classExpected: " + refManager.getName() + " --- classReceived: " + fermatManager.getClass().getName(),
+                            ""
+                    );
+                }
+
+            } catch (final IllegalAccessException e) {
+
+                throw new CantAssignReferenceException(
+                        e,
+                        "Working Plugin: " + this.getPluginVersionReference().toString3() + " +++++ Reference to assign: " + addonVersionReference.toString(),
+                        "Error assigning references for the Plugin."
+                );
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public final void assignPluginReference(final AbstractPluginInterface abstractPlugin) throws CantAssignReferenceException   ,
             IncompatibleReferenceException {
 
         final PluginVersionReference pvr = abstractPlugin.getPluginVersionReference();

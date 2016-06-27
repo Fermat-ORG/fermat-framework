@@ -106,20 +106,16 @@ public class ConnectionNotificationsFragment
 
             // setting up  module
             chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
-            //chatUserSubAppSession = ((ChatUserSubAppSessionReferenceApp) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
             lstChatUserInformations = new ArrayList<>();
 
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
                 appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-                //appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
@@ -127,7 +123,6 @@ public class ConnectionNotificationsFragment
                 appSettings.setIsPresentationHelpEnabled(true);
                 try {
                     moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                    //settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -281,7 +276,17 @@ public class ConnectionNotificationsFragment
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, identity);
-            notificationAcceptDialog.setOnDismissListener(this);
+            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    try {
+                        onRefresh();
+                    }catch (Exception e) {
+                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
+                                UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                    }
+                }
+            });
             notificationAcceptDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -290,9 +295,7 @@ public class ConnectionNotificationsFragment
     }
 
     @Override
-    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
-
-    }
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) { }
 
     /**
      * @param show

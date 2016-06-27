@@ -59,7 +59,7 @@ public class EditIdentityExecutor {
 
         try {
             //TODO: Jose Cardozo revisa que tienes que pasarle el Location
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE, null);
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState, 0, Frecuency.NONE);
 
         } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();

@@ -888,11 +888,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
             accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ") + 8);
 
-            if (accountTypeString.equalsIgnoreCase("Checking")) {
+            if (accountTypeString.equalsIgnoreCase("Checking"))
                 accountTypeString = "CHC";
-            } else {
+            else
                 accountTypeString = "SAV";
-            }
 
             try {
                 accountType = BankAccountType.getByCode(accountTypeString);
