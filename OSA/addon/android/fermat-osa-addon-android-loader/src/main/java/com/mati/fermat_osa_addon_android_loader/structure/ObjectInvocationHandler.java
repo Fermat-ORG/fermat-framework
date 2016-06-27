@@ -67,7 +67,15 @@ public class ObjectInvocationHandler implements InvocationHandler {
                 return e.getTargetException();
             }
             if(result instanceof Serializable){
-                objectToReturn = rebuild(result);
+                try {
+                    byte[] o = Serializer.prepareData(result);
+                    //class loader de la plataforma por ahora
+                    if (o!=null) objectToReturn = Serializer.desearialize(o, getClass().getClassLoader());
+                }catch (Exception e){
+//                    e.printStackTrace();
+                    System.out.println("Objeto no serializable");
+                }
+//                objectToReturn = rebuild(result);
             }
             if(objectToReturn==null) {
                 Class<?> returnTypeClazz = method.getReturnType();

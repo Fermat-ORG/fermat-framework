@@ -34,8 +34,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.fermat.interfaces.Fermat
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.database.FermatCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;
-import com.google.common.util.concurrent.FutureCallback;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.EventManager;import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
