@@ -146,7 +146,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
             return false;
         }
 
-        final String memo = "Unhold funds, destock from the Broker Wallet";
+        final String memo = "Unheld funds, destocked from the Broker Wallet";
 
         System.out.println("*************DESTOCK DIALOG****************  [" + walletPlatform + "]");
 

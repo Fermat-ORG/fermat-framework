@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Color;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.ReferenceAppFermatSession;
@@ -56,11 +57,16 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Rede
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.Frequency;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import static android.widget.Toast.makeText;
 
@@ -109,6 +115,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+
+    private int accuracy;
+    private Frequency frequency;
 
     ExecutorService executorService;
 
@@ -222,17 +231,90 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
+        createButton.setEnabled(false);
+        createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+
 
         mIdentityName.requestFocus();
         registerForContextMenu(mIdentityImage);
 
-//        mIdentityContactInformation.requestFocus();
-//        mIdentityAddressCountryName.requestFocus();
-//        mIdentityAddressProvinceName.requestFocus();
-//        mIdentityAddressCityName.requestFocus();
-//        mIdentityAddressPostalCode.requestFocus();
-//        mIdentityAddressStreetName.requestFocus();
-//        mIdentityAddressHouseNumber.requestFocus();
+        mIdentityName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ActiveActorIdentityInformation activeActorIdentityInformation;
+                        try {
+                            activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
+                            if (activeActorIdentityInformation != null) {
+                                if (activeActorIdentityInformation.getAlias().trim().equals(mIdentityName.getText().toString().trim())) {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                } else {
+                                    activateButton();
+                                }
+                            } else {
+                                if (mIdentityName.getText().toString().trim().length() > 0) {
+                                    activateButton();
+                                } else {
+                                    deactivatedButton();
+                                    verifyFieldGeo();
+                                }
+                            }
+                        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+//    mIdentityName.setOnKeyListener(new View.OnKeyListener() {
+//        @Override
+//        public boolean onKey (View v,int keyCode, KeyEvent event){
+////                String count = Integer.toString(mIdentityName.getText().toString().trim().length());
+//        getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ActiveActorIdentityInformation activeActorIdentityInformation;
+//                try {
+//                    activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
+//                    if (activeActorIdentityInformation != null) {
+//                        if (activeActorIdentityInformation.getAlias().trim().equals(mIdentityName.getText().toString().trim())) {
+//                            createButton.setEnabled(false);
+//                            createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+//                        } else {
+//                            createButton.setEnabled(true);
+//                            createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+//                        }
+//                    } else {
+//                        if (mIdentityName.getText().toString().trim().length() > 0) {
+//                            createButton.setEnabled(true);
+//                            createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+//                        } else {
+//                            createButton.setEnabled(false);
+//                                    createButton.setBackgroundColor(Color.parseColor("#B3B3B3"));
+//                                }
+//                            }
+//                        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                return false;
+//            }
+//        });
 
         mIdentityImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,7 +340,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
             public void run() {
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY.getCode(), appSession.getAppPublicKey());
+
                         if (!isUpdate) {
                             Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         } else {
@@ -283,43 +365,71 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
     @Override
     public void onDestroy() {
         super.onDestroy();
+        appSession.setData(SessionConstants.IDENTITY_NAME, mIdentityName.getText().toString());
         executorService.shutdown();
     }
 
     private void setUpIdentity() {
         try {
 
-            identitySelected = (RedeemPointIdentity) appSession.getData(SessionConstants.IDENTITY_SELECTED);
-
-            if (identitySelected != null) {
-                loadIdentity();
-            } else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ActiveActorIdentityInformation activeActorIdentityInformation = null;
-                        try {
-                            activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
+            new Thread(new Runnable() {
+                 @Override
+                public void run() {
+                    ActiveActorIdentityInformation activeActorIdentityInformation = null;
+                    try {
+                        activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
                         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                            e.printStackTrace();
+                        e.printStackTrace();
                         }
-                        if (activeActorIdentityInformation != null) {
-                            identitySelected = (RedeemPointIdentity) activeActorIdentityInformation;
+                    if (activeActorIdentityInformation != null) {
+                        identitySelected = (RedeemPointIdentity) activeActorIdentityInformation;
                         }
-                        getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            if (identitySelected != null) {
-                                                                loadIdentity();
-                                                                isUpdate = true;
-                                                                createButton.setText("Save changes");
-                                                            }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (identitySelected != null) {
+                                mIdentityName.setText(identitySelected.getAlias());
+                                loadIdentity();
+                                } else {
+                                createButton.setEnabled(false);
+                                }
+                            if (appSession.getData(SessionConstants.IDENTITY_NAME) != null) {
+                                mIdentityName.setText((String) appSession.getData(SessionConstants.IDENTITY_NAME));
+////            identitySelected = (RedeemPointIdentity) appSession.getData(SessionConstants.IDENTITY_SELECTED);
+////
+////            if (identitySelected != null) {
+////                loadIdentity();
+////            } else {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ActiveActorIdentityInformation activeActorIdentityInformation = null;
+//                        try {
+//                            activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
+//                        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        if (activeActorIdentityInformation != null) {
+//                            identitySelected = (RedeemPointIdentity) activeActorIdentityInformation;
+//                        }
+//                        getActivity().runOnUiThread(new Runnable() {
+//                                                        @Override
+//                                                        public void run() {
+//                                                            if (identitySelected != null) {
+//                                                                mIdentityName.setText(identitySelected.getAlias());
+//                                                                loadIdentity();
+////                                                                isUpdate = true;
+////                                                                createButton.setText("Save changes");
+//                                                            }
+//                                                            if(appSession.getData(SessionConstants.IDENTITY_NAME) != null){
+//                                                                mIdentityName.setText((String) appSession.getData(SessionConstants.IDENTITY_NAME));
+                                                           }
                                                         }
                                                     }
                         );
                     }
                 }).start();
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -327,20 +437,23 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private void loadIdentity() {
         if (identitySelected.getImage() != null) {
-            Bitmap bitmap = null;
+            Bitmap bitmap;
             if (identitySelected.getImage().length > 0) {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_actor);
-
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }
+            appSession.setData(SessionConstants.IDENTITY_SELECTED, identitySelected);
+
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
             brokerImageByteArray = ImagesUtils.toByteArray(bitmap);
             mIdentityImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
-        mIdentityName.setText(identitySelected.getAlias());
+
+        isUpdate = true;
+        createButton.setText("Update");
         mIdentityContactInformation.setText(identitySelected.getContactInformation());
         mIdentityAddressCountryName.setText(identitySelected.getCountryName());
         mIdentityAddressProvinceName.setText(identitySelected.getProvinceName());
@@ -436,6 +549,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         final String brokerAddressHouseNumber = mIdentityAddressHouseNumber.getText().toString();
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
 
+        accuracy = getAccuracyData();
+        frequency = getFrequencyData();
+
         if (dataIsValid) {
             if (appSession.getModuleManager() != null) {
                 try {
@@ -447,7 +563,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                     moduleManager.createNewRedeemPoint(brokerNameText,
                                             (brokerImageByteArray == null) ? ImagesUtils.toByteArray(convertImage(R.drawable.profile_actor)) : brokerImageByteArray,
                                             brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
-                                            brokerAddressStreetName, brokerAddressHouseNumber);
+                                            brokerAddressStreetName, brokerAddressHouseNumber, accuracy, frequency);
+                                    cleanSessions();
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewRedeemPointException e) {
                                     e.printStackTrace();
@@ -461,10 +578,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                                 try {
                                     if (updateProfileImage)
                                         moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray, brokerContactInformation,
-                                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber);
+                                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber,
+                                                accuracy, frequency);
                                     else
                                         moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage(), brokerContactInformation,
-                                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber);
+                                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber,
+                                                accuracy, frequency);
+                                    cleanSessions();
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -655,8 +775,11 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 //    }
 
     private boolean validateIdentityData(String brokerNameText, byte[] brokerImageBytes) {
-        if (brokerNameText.isEmpty())
-            return false;
+//        if (brokerNameText.isEmpty())
+          if (brokerNameText.isEmpty()) {
+              Toast.makeText(getActivity(),"Please enter a Name or Alias", Toast.LENGTH_SHORT).show();
+              return false;
+          }
         if (brokerImageBytes == null)
             return true;
         if (brokerImageBytes.length > 0)
@@ -680,12 +803,13 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
             switch (id) {
                 //case IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION:
+                case 1:
+                    appSession.setData(SessionConstants.IDENTITY_NAME, mIdentityName.getText().toString());
+                    changeActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_GEOLOCATION_ACTIVITY, appSession.getAppPublicKey());
+                    break;
                 case 2:
                     setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                     break;
-//                case 1:
-//                    changeActivity(Activities.CHT_CHAT_GEOLOCATION_IDENTITY, appSession.getAppPublicKey());
-//                    break;
             }
 //            if (item.getItemId() == SessionConstants.IC_ACTION_REDEEM_IDENTITY_HELP_PRESENTATION) {
 //                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
@@ -914,4 +1038,56 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
+
+    private int getAccuracyData() {
+        return appSession.getData(SessionConstants.ACCURACY_DATA) == null ? moduleManager.getAccuracyDataDefault() :
+                (int) appSession.getData(SessionConstants.ACCURACY_DATA);
+    }
+
+    private Frequency getFrequencyData() {
+        return appSession.getData(SessionConstants.FREQUENCY_DATA) == null ? moduleManager.getFrequencyDataDefault() :
+                (Frequency) appSession.getData(SessionConstants.FREQUENCY_DATA);
+    }
+
+    private void cleanSessions() {
+         appSession.removeData(SessionConstants.ACCURACY_DATA);
+         appSession.removeData(SessionConstants.FREQUENCY_DATA);
+         appSession.removeData(SessionConstants.IDENTITY_NAME);
+     }
+
+    private void activateButton(){
+        createButton.setEnabled(true);
+        createButton.setBackgroundColor(Color.parseColor("#0072BC"));
+    }
+
+    private void deactivatedButton() {
+        createButton.setEnabled(false);
+        createButton.setBackgroundColor(Color.GRAY);
+        }
+
+    private void verifyFieldGeo() {
+        if (appSession.getData(SessionConstants.ACCURACY_DATA) != null) {
+            final RedeemPointIdentity identityInfo = (RedeemPointIdentity) appSession.getData(SessionConstants.IDENTITY_SELECTED);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (identityInfo != null) {
+                        if (identityInfo.getAccuracy() == getAccuracyData()) {
+                            deactivatedButton();
+
+                            if (identityInfo.getFrequency().getCode().equals(getFrequencyData().getCode())) {
+                                deactivatedButton();
+                                } else {
+                                activateButton();
+                                }
+                            } else {
+                            activateButton();
+                            }
+                        } else {
+                        activateButton();
+                        }
+                    }
+                });
+            }
+        }
 }

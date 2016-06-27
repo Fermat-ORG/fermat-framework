@@ -24,6 +24,7 @@ import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Add
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.City;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.Country;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.CountryDependency;
+import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.ExtendedCity;
 import com.bitdubai.fermat_pip_api.layer.external_api.geolocation.interfaces.GeoRectangle;
 
 import java.io.Serializable;
@@ -245,4 +246,8 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
             throws CantCreateAddressException;
 
     GeoRectangle getRandomGeoLocation() throws CantCreateGeoRectangleException;
+
+    List<ExtendedCity> getExtendedCitiesByFilter(String filter)
+            throws CantGetCitiesListException;
+
 }
