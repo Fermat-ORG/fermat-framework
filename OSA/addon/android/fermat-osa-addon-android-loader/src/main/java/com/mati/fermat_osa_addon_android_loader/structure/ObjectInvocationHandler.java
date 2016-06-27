@@ -63,7 +63,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                 }
             } catch (InvocationTargetException e) {
                 System.err.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + "." + "\n");
-                e.getTargetException().printStackTrace();
+//                e.getTargetException().printStackTrace();
                 return e.getTargetException();
             }
             if(result instanceof Serializable){
