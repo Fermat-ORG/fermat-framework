@@ -138,8 +138,10 @@ public class ObjectInvocationHandler implements InvocationHandler {
             System.out.println("InvocationException: Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
             return e.getTargetException();
         }catch (Exception e){
+            System.out.println("Exception unknown");
             throw new Exception("Exception in ObjectInvocationHandler",e);
         } catch (Throwable throwable) {
+            System.out.println("Exception unknown");
             throw new Exception("Exception in loadObject",throwable);
         }
         return objectToReturn;
@@ -197,7 +199,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                         }catch (InvocationTargetException e){
                             objectToReturn = e.getTargetException();
                         } catch (Exception e) {
-                            System.out.println("field name: " + field.getName() + " object to return: " + objectToReturn);
+                            System.out.println("InvocationTargetException: field name: " + field.getName() + " object to return: " + objectToReturn);
                             e.printStackTrace();
                         }
                     }
@@ -206,27 +208,22 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     try {
                         objectToReturn = Enum.valueOf((Class<Enum>) returnTypeClazz, objectToConvert.toString());
                     }catch (Exception e){
-                        System.out.println("Forma de cargar el enum falló, enum: "+returnTypeClazz.getName()+"\n");
+                        System.out.println("EnumException: Forma de cargar el enum falló, enum: "+returnTypeClazz.getName()+"\n");
                         e.printStackTrace();
                     }
                 }
             }else{
-                System.out.println("is not Object class, type: "+returnTypeClazz+". returning without load class\n");
+                System.out.println("is primitive class, type: "+returnTypeClazz+". returning without load class\n");
             }
             return objectToReturn;
 
 
         } catch (NoSuchMethodException e) {
-            System.out.println("NoSuchMethodException, object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
+            System.out.println("NoSuchMethodException: object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
             //e.printStackTrace();
             byte[] serializable = null;
-            try {
-                //test
-                serializable = SerializationUtils.serialize((Serializable) objectToConvert);
-                objectToReturn = SerializationUtils.deserialize(serializable);
-            }catch (Exception e1){
-                e1.printStackTrace();
-            }
+            objectToReturn = rebuild(objectToConvert);
+            if (objectToReturn==null) e.printStackTrace();
             //throw new Exception("Error in ObjectInvocationHandler, object type: "+clazz.getName(),e);
         } catch (InvocationTargetException e) {
             System.out.print("IllegalArgumentException: object to convert: " + objectToConvert + ", Object to return class name: " + returnTypeClazz + ".\n");
@@ -237,6 +234,19 @@ public class ObjectInvocationHandler implements InvocationHandler {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
+        }
+        return objectToReturn;
+    }
+
+    private Object rebuild(Object objectToConvert){
+        Object objectToReturn = null;
+        try {
+            byte[] serializable = null;
+            //test
+            serializable = SerializationUtils.serialize((Serializable) objectToConvert);
+            objectToReturn = SerializationUtils.deserialize(serializable);
+        }catch (Exception e1){
+            e1.printStackTrace();
         }
         return objectToReturn;
     }
