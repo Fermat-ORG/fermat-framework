@@ -113,7 +113,7 @@ public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserI
 
         try
         {
-            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage);
+            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage, accuracy, frecuency);
 
 
         } catch (CantUpdateIdentityException e) {
