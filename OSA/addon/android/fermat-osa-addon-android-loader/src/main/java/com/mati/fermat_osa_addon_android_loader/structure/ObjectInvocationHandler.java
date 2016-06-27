@@ -62,7 +62,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
                     result = m.invoke(object, args);
                 }
             } catch (InvocationTargetException e) {
-                System.err.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + "." + "\n");
+                System.err.println("InvocationException: Method: " + m.getName() + ", object: " + object.getClass() + ", args: " + ((parameterTypes != null) ? Arrays.toString(args) : null) + ". This exception is controlled by the plugin that make the call" + "\n");
 //                e.getTargetException().printStackTrace();
                 return e.getTargetException();
             }
