@@ -577,7 +577,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ReferenceAp
         try {
             int id = item.getItemId();
 
-            if (id == R.id.action_help)
+            if (id == 1)
                 showDialogHelp();
 
         } catch (Exception e) {

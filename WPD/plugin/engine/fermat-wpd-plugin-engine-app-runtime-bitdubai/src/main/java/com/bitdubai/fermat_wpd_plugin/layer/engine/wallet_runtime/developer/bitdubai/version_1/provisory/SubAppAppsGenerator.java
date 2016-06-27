@@ -423,6 +423,7 @@ public class SubAppAppsGenerator {
 
             statusBar = new StatusBar();
             statusBar.setColor("#0072bb");
+
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
@@ -432,6 +433,20 @@ public class SubAppAppsGenerator {
             runtimeTitleBar.setColor("#0072bb");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            //Menu
+
+
+            OptionsMenu optionsMenu = new OptionsMenu();
+            Owner owner = new Owner();
+            owner.setOwnerAppPublicKey(SubAppsPublicKeys.CCP_COMMUNITY.getCode());
+
+            //Help optionMenu
+            OptionMenuItem optionMenuItem = new OptionMenuItem(1);
+            optionMenuItem.setFermatDrawable(new FermatDrawable(1, "ic_help", owner, SourceLocation.DEVELOPER_RESOURCES));
+            optionMenuItem.setLabel("Help");
+            optionMenuItem.setShowAsAction(2);
+            optionsMenu.addMenuItem(optionMenuItem);
 
 /*            runtimeOptionsMenu = new OptionsMenu();
             runtimeMenuItem = new MenuItem();
