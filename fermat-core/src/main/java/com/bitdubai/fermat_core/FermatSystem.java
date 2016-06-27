@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -25,7 +26,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
-import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
@@ -40,10 +40,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.Platf
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
-
-import org.fermat.fermat_dap_core.DAPPlatform;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -58,6 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class FermatSystem {
 
     private static volatile FermatSystem INSTANCE = null;
+    private FermatContext fermatContext;
 
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
@@ -108,7 +106,7 @@ public final class FermatSystem {
 
         try {
            // fermatSystemContext.registerPlatform(new ARTPlatform());
-            fermatSystemContext.registerPlatform(new BCHPlatform());
+            fermatSystemContext.registerPlatform(new BCHPlatform(fermatContext));
             fermatSystemContext.registerPlatform(new BNKPlatform());
            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());

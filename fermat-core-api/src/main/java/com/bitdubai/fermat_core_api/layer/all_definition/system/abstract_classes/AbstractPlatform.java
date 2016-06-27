@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -35,14 +36,20 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPlatform {
 
+    private FermatContext fermatContext;
+
     private Map<LayerReference, AbstractLayer> layers;
 
-    private final PlatformReference        platformReference;
+    private PlatformReference        platformReference;
 
     public AbstractPlatform(final PlatformReference platformReference) {
 
         this.layers            = new ConcurrentHashMap<>();
         this.platformReference = platformReference;
+    }
+
+    public AbstractPlatform(FermatContext fermatContext) {
+        this.fermatContext = fermatContext;
     }
 
     /**

@@ -18,8 +18,10 @@ import com.bitdubai.android_core.app.common.version_1.util.services_helpers.Serv
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
+import com.bitdubai.fermat_api.FermatContext;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.github.anrwatchdog.ANRWatchDog;
+import com.mati.fermat_osa_addon_android_loader.Smith;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -39,7 +41,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem> {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession<FermatSystem>,FermatContext {
 
     private final String TAG = "ApplicationSession";
 
@@ -80,6 +82,11 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
      * Services helpers
      */
     private ServicesHelpers servicesHelpers;
+
+    /**
+     * Base loader
+     */
+    private ClassLoader mBaseClassLoader;
 
     /**
      *  Application session constructor
@@ -155,6 +162,19 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
                 ACRA.getErrorReporter().uncaughtException(thread,e);
             }
         });
+
+        try {
+            Log.d(TAG, "Starting app");
+            //loading the main class loader
+            Context mBase = new Smith<Context>(this, "mBase").get();
+            Object mPackageInfo = new Smith<Object>(mBase, "mPackageInfo")
+                    .get();
+            Smith<ClassLoader> sClassLoader = new Smith<ClassLoader>(
+                    mPackageInfo, "mClassLoader");
+            mBaseClassLoader = sClassLoader.get();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 //        loadProcessInfo();
 
@@ -253,5 +273,10 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
             fermatRunning = getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
         }
         return fermatRunning;
+    }
+
+    @Override
+    public ClassLoader getBaseClassLoader() {
+        return mBaseClassLoader;
     }
 }

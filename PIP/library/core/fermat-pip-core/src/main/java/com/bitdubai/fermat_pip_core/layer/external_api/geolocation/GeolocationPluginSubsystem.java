@@ -13,7 +13,7 @@ import org.fermat.fermat_pip_plugin.layer.external_api.geolocation.developer.Dev
 public class GeolocationPluginSubsystem extends AbstractPluginSubsystem {
 
     public GeolocationPluginSubsystem() {
-        super(new PluginReference(Plugins.NOMINATIM));
+        super(new PluginReference(Plugins.GEOLOCATION));
     }
 
     @Override

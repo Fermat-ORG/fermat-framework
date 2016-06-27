@@ -53,7 +53,7 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 public class DesktopActivity extends FermatActivity implements FermatScreenSwapper,DesktopAppSelector {
 
 
-
+    private static final String TAG = "DesktopActivity";
     private BottomMenuReveal bottomMenuReveal;
 
     /**
@@ -74,6 +74,10 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
+//        ClassLoaderManager classLoaderManager = new ClassLoaderManager(ApplicationSession.getInstance());
+//        Object o = classLoaderManager.load("com.bitdubai.fermat_bch_plugin.layer.crypto_network.fermat.developer.bitdubai.DeveloperBitDubai");
+//
+//        Log.i(TAG,o.toString());
 
     }
     @Override
