@@ -101,6 +101,10 @@ public class FermatCryptoNetworkDatabaseDao {
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
+            if(database==null){
+                System.err.println("database null in FermatCryptoNetworkDatabaseDAO, please check this");
+            }
+
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
