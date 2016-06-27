@@ -99,7 +99,7 @@
                 android:paddingRight="30dp"
                 android:paddingStart="20dp"
                 android:paddingTop="7sp"
-                android:text="This app helps you configure your Fermat network identity location. Its features include:"
+                android:text="This params helps you configure your Fermat network identity location. Its features include:"
                 android:textColor="#1d1d26"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
@@ -130,7 +130,7 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
                     android:paddingStart="16dp"
-                    android:text="* Managing your location. \n * Set Accuracy in Km. \n * Select Frequency of updating."
+                    android:text="* Set Accuracy in Km. This is the range of precision to show where you're located on the Fermat network. \n * Select Frequency. This is the rate of how often the location is updated"
                     android:textColor="#1d1d26"
                     android:textSize="14sp"
                     tools:ignore="HardcodedText" />
