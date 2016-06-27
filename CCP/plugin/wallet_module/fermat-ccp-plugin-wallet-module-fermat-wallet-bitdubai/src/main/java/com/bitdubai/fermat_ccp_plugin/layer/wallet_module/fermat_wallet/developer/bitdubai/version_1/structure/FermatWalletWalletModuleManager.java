@@ -339,10 +339,12 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
         return rate;
     }
 
+    //dollar fiat currency
     @Override
     public  List<ExchangeRateProvider> getExchangeRateProviders() throws CantGetCurrencyExchangeProviderException {
         List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
+
 
             //looking all providers
 
@@ -357,6 +359,7 @@ public class FermatWalletWalletModuleManager extends ModuleManagerImpl<FermatWal
                 filteredProviders.add(new FermatWalletExchangeRateProvider((UUID) key, String.valueOf(value)));
 
             }
+
 
         }
         catch (Exception e) {

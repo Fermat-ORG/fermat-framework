@@ -148,7 +148,7 @@
                 android:background="#1271A7"
                 android:text="@string/ccw_providers"
                 android:textColor="@color/white"
-                android:textSize="14sp"/>
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <FrameLayout

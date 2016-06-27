@@ -109,7 +109,7 @@ public class ImageUtil {
      * @param newHeight
      * @return BufferedImage
      */
-    private static BufferedImage resize(BufferedImage originalImage, int newWidth, int newHeight){
+    public static BufferedImage resize(BufferedImage originalImage, int newWidth, int newHeight){
 
         BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, originalImage.getType());
         Graphics2D g = resizedImage.createGraphics();

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Alejandro Bicelis on 2/2/2016.
  */
@@ -29,17 +30,39 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
-    public List<CryptoCustomerCommunityInformation> getResult() throws CantGetCryptoCustomerSearchResult {
+    public List<CryptoCustomerCommunityInformation> getResult(Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult {
 
         try {
 
             CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult();
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(max, offSet);
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 
-            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
+            for (CryptoCustomerExposingData customerExposingData : cryptoCustomerExposingDataList)
+                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(customerExposingData));
+
+            return cryptoCustomerCommunityInformationList;
+
+        } catch (final Exception exception) {
+
+            throw new CantGetCryptoCustomerSearchResult("", exception, "", "Unhandled Error.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult {
+
+        try {
+
+            CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
+
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(publicKey, deviceLocation, distance, alias, max, offSet);
+
+            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+
+            for (CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
                 cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
 
             return cryptoCustomerCommunityInformationList;
@@ -51,17 +74,17 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
-    public List<CryptoCustomerCommunityInformation> getResult(String publicKey, DeviceLocation deviceLocation, double distance, String alias, Integer offSet, Integer max) throws CantGetCryptoCustomerSearchResult {
+    public List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult {
 
         try {
 
             CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResult(publicKey, deviceLocation, distance, alias, offSet, max);
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultLocation(deviceLocation, max, offSet);
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 
-            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
+            for (CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
                 cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
 
             return cryptoCustomerCommunityInformationList;
@@ -73,17 +96,17 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
-    public List<CryptoCustomerCommunityInformation> getResultLocation(DeviceLocation deviceLocation) throws CantGetCryptoCustomerSearchResult {
+    public List<CryptoCustomerCommunityInformation> getResultDistance(double distance, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult {
 
         try {
 
             CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultLocation(deviceLocation);
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultDistance(distance, max, offSet);
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 
-            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
+            for (CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
                 cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
 
             return cryptoCustomerCommunityInformationList;
@@ -95,40 +118,18 @@ public class CryptoCustomerCommunitySubAppModuleCommunitySearch implements Crypt
     }
 
     @Override
-    public List<CryptoCustomerCommunityInformation> getResultDistance(double distance) throws CantGetCryptoCustomerSearchResult {
+    public List<CryptoCustomerCommunityInformation> getResultAlias(String alias, Integer max, Integer offSet) throws CantGetCryptoCustomerSearchResult {
 
         try {
 
             CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
 
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultDistance(distance);
+            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultAlias(alias, max, offSet);
 
             final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
 
-            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
-
-            return cryptoCustomerCommunityInformationList;
-
-        } catch (final Exception exception) {
-
-            throw new CantGetCryptoCustomerSearchResult("", exception, "", "Unhandled Error.");
-        }
-    }
-
-    @Override
-    public List<CryptoCustomerCommunityInformation> getResultAlias(String alias) throws CantGetCryptoCustomerSearchResult {
-
-        try {
-
-            CryptoCustomerSearch cryptoCustomerSearch = cryptoCustomerActorNetworkServiceManager.getSearch();
-
-            final List<CryptoCustomerExposingData> cryptoCustomerExposingDataList = cryptoCustomerSearch.getResultAlias(alias);
-
-            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
-
-            for(CryptoCustomerExposingData cced : cryptoCustomerExposingDataList)
-                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cced));
+            for (CryptoCustomerExposingData cryptoCustomerExposingData : cryptoCustomerExposingDataList)
+                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(cryptoCustomerExposingData));
 
             return cryptoCustomerCommunityInformationList;
 

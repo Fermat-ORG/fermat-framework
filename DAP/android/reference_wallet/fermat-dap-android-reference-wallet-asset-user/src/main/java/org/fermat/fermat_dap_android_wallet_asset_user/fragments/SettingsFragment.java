@@ -149,14 +149,20 @@ public class SettingsFragment extends AbstractFermatFragment<ReferenceAppFermatS
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS, 0, "Help")
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
+
+            switch (id) {
+                case 1://IC_ACTION_USER_HELP_SETTINGS
+                    setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                    break;
+            }
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS) {
                 setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());

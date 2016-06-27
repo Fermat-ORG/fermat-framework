@@ -11,6 +11,10 @@ public class Owner {
     public Owner() {
     }
 
+    public Owner(String ownerAppPublicKey) {
+        this.ownerAppPublicKey= ownerAppPublicKey;
+    }
+
     public String getOwnerAppPublicKey() {
         return ownerAppPublicKey;
     }

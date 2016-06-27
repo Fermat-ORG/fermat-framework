@@ -51,6 +51,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
      */
     ReferenceAppFermatSession referenceWalletSession;
     String walletPublicKey = "reference_wallet";
+    BitcoinWalletSettings bitcoinWalletSettings;
     /**
      * MANAGERS
      */
@@ -115,6 +116,12 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             });
 
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 825312167d0d5d0c4570466693a95df656921615
             try {
                 bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();

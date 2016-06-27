@@ -75,6 +75,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
         toolbar = getToolbar();
+
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ccp_ic_back_buttom));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +106,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
     /**
      * Initializes the views of this Fragment
      *
-     * @param layout layout of this Fragment containing the views
+     * @param layout layout of this Fragment contta aining the views
      */
 
     private void initViews(View layout) {
@@ -150,9 +151,13 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         } catch (CantGetIntraUserIdentityException e) {
             e.printStackTrace();
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        }
+
 
     }
 

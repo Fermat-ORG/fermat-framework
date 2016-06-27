@@ -18,4 +18,5 @@
     <string name="cbp_cbc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
     <string name="cbp_cbc_launch_action_creation_name_left">Customer</string>
     <string name="cbp_cbc_launch_action_creation_name_right">Broker</string>
+    <string name="notifications">Notifications</string>
 </resources>
