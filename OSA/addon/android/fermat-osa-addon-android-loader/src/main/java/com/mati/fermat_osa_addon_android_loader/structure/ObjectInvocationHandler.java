@@ -143,6 +143,7 @@ public class ObjectInvocationHandler implements InvocationHandler {
         }catch (InvocationTargetException e){
             System.err.println("InvocationException: (bottom catch) Method: " + method.getName() + ", object: " + object.getClass() + ", args: " + ((args != null) ? Arrays.toString(args) : null) + "." + "\n");
             e.printStackTrace();
+            System.err.println("...\n");
             return e.getTargetException();
         }catch (Exception e){
             System.err.println("Exception unknown");
@@ -226,9 +227,6 @@ public class ObjectInvocationHandler implements InvocationHandler {
             }else{
                 System.out.println("is primitive class, type: "+returnTypeClazz+". returning without load class\n");
             }
-            return objectToReturn;
-
-
         } catch (NoSuchMethodException e) {
             System.err.println("NoSuchMethodException: object returned that launch the exception: " + returnTypeClazz.getName() + " object to convert: " + ((objectToConvert != null) ? objectToConvert.toString() : "null") + "\n");
             objectToReturn = rebuild(objectToConvert);
