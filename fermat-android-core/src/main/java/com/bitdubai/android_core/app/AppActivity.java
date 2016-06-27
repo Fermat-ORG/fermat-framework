@@ -480,8 +480,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     @Override
     public void setTabCustomImageView(int position,View view) {
         TabLayout.Tab tab = tabLayout.getTabAt(position);
-//        ImageView imageView = new ImageView(this);
-//        imageView.setImageDrawable(new BadgeDrawable.BadgeDrawableBuilder(this).setCount().setPosition(BadgeDrawable.Position.CENTER).build());
         if(tab!=null) tab.setCustomView(view);
     }
 
