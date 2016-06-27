@@ -343,8 +343,8 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                   // Bundle extras = data.getExtras();
-                   // imageBitmap = (Bitmap) extras.get("data");
+                    Bundle extras = data.getExtras();
+                    imageBitmap = (Bitmap) extras.get("data");
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
@@ -371,7 +371,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                         if (checkCameraPermission()) {
                             if (checkWriteExternalPermission()) {
                                 if (imageBitmap != null) {
-                                    if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
+                                  //  if (imageBitmap.getWidth() >= 192 && imageBitmap.getHeight() >= 192) {
                                         final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, imageBitmap);
                                         dialogCropImage.show();
                                         dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -380,16 +380,18 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                                 if (dialogCropImage.getCroppedImage() != null) {
                                                     imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImage.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                                     mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+                                                    brokerImageByteArray = toByteArray(imageBitmap);
+                                                    updateProfileImage = true;
                                                 } else {
                                                     imageBitmap = null;
                                                 }
                                             }
                                         });
-                                    } else {
-                                        Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                   // } else {
+                                  //      Toast.makeText(getActivity(), "The image selected is too small. Please select a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
                                         // cryptoBrokerBitmap = null;
                                         //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                                    }
+                                   // }
                                 } else {
                                     Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
                                     //  cryptoBrokerBitmap = null;
@@ -442,6 +444,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Refe
                                         if (dialogCropImagee.getCroppedImage() != null) {
                                             imageBitmap = getResizedBitmap(rotateBitmap(dialogCropImagee.getCroppedImage(), ExifInterface.ORIENTATION_NORMAL), dpToPx(), dpToPx());
                                             mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+                                            brokerImageByteArray = toByteArray(imageBitmap);
+
+                                            updateProfileImage = true;
                                         } else {
                                             imageBitmap = null;
                                         }
