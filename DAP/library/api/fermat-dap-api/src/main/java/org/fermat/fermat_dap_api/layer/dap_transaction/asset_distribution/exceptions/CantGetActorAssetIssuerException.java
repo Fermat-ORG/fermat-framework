@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions;
+package org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions;
 
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
