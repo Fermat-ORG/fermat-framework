@@ -114,14 +114,14 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
         // Spinner element
         accuracy = (EditText) layout.findViewById(R.id.accuracy);
         frequency = (Spinner) layout.findViewById(R.id.spinner_frequency);
-        frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
+       // frequency.setBackgroundColor(Color.parseColor("#f9f9f9"));
 
-      /*  try {
+        try {
             ArrayAdapter<Frecuency> dataAdapter = new ArrayAdapter<Frecuency>(getActivity(),
                     R.layout.frecuency_iden_spinner_item, dataspinner);
             //android.R.layout.simple_spinner_item, dataspinner);
             dataAdapter.setDropDownViewResource(R.layout.frecuency_iden_spinner_item);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             frequency.setAdapter(dataAdapter);
 
             setValues(frequency, accuracy, dataAdapter);
@@ -144,7 +144,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             });
         } catch (CantGetIntraUserIdentityException e) {
             e.printStackTrace();
-        }*/
+        }
 
     }
 
