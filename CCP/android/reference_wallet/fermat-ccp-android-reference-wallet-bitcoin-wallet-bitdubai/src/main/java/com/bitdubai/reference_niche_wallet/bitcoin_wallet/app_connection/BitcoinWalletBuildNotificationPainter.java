@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class BitcoinWalletBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(CryptoWallet moduleManager,String code,String walletPublicKey, String codeReurn )
+    public static NotificationPainter getNotification(CryptoWallet moduleManager,String code,String walletPublicKey, String codeReturn )
     {
         NotificationPainter notification = null;
         try {
@@ -35,15 +35,15 @@ public class BitcoinWalletBuildNotificationPainter {
                             loggedIntraUserPublicKey = moduleManager.getSelectedActorIdentity().getPublicKey();
                             try{
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
-                                notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReurn);
+                                notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,codeReturn);
 
                             }catch(Exception ex) {
-                                notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReurn);
+                                notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReturn);
                             }
 
 
                         }else{
-                            notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true,codeReturn);
                         }
                         break;
                     case "TRANSACTIONREVERSE":
@@ -52,14 +52,14 @@ public class BitcoinWalletBuildNotificationPainter {
 
                             try{
                                  transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                                 notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,codeReurn);
+                                 notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,codeReturn);
 
                              }catch(Exception ex) {
-                                notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReurn);
+                                notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReturn);
                             }
                         }else
                         {
-                            notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,codeReturn);
                         }
                         break;
 
@@ -68,33 +68,33 @@ public class BitcoinWalletBuildNotificationPainter {
                         if(moduleManager != null){
 
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,codeReturn);
                         }
                         else
                         {
-                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,codeReturn);
                         }
                         break;
 
                     case "PAYMENTDENIED":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,codeReturn);
                         }
                         else
                         {
-                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,codeReturn);
                         }
                         break;
 
                     case "PAYMENTERROR":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,codeReturn);
                         }
                         else
                         {
-                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,codeReurn);
+                            notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,codeReturn);
                         }
                         break;
 

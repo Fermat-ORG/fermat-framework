@@ -5180,7 +5180,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          *
          * */
        optionsMenu = new OptionsMenu();
-        optionMenuItem = new OptionMenuItem(2);
+         optionMenuItem = new OptionMenuItem(2);
         owner = new Owner();
         owner.setOwnerAppPublicKey(WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode());
         optionMenuItem.setFermatDrawable(new FermatDrawable(2, "loss_help_icon", owner, SourceLocation.DEVELOPER_RESOURCES));

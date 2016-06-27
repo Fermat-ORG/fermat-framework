@@ -738,7 +738,7 @@ public class HomeFragment extends AbstractFermatFragment<ReferenceAppFermatSessi
 
             int id = item.getItemId();
 
-            if(id ==2){
+            if(id ==1){
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,appSession.getAppPublicKey());
                 return true;
             }else {
