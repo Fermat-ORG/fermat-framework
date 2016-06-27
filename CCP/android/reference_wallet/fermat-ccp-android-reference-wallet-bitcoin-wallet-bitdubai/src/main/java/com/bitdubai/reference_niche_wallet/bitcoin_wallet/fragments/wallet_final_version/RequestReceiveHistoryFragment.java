@@ -72,8 +72,6 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
     BlockchainNetworkType blockchainNetworkType;
-    BitcoinWalletSettings bitcoinWalletSettings;
-
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
     FloatingActionMenu actionMenu = null;
     /**
@@ -116,12 +114,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             });
 
 
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> 825312167d0d5d0c4570466693a95df656921615
             try {
                 bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
@@ -281,7 +274,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         try {
 
             try {
-                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
@@ -292,7 +285,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
             lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, this.blockchainNetworkType ,10,offset);
             offset+=1;
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+            appSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
@@ -351,7 +344,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
     public void setReferenceWalletSession(ReferenceAppFermatSession referenceWalletSession) {
-        this.referenceWalletSession = referenceWalletSession;
+        this.appSession = referenceWalletSession;
     }
 
    /* @Override

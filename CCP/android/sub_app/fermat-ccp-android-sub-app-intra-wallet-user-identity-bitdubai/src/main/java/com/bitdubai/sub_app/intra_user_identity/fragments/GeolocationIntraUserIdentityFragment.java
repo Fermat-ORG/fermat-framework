@@ -156,7 +156,7 @@ public class GeolocationIntraUserIdentityFragment extends AbstractFermatFragment
             e.printStackTrace();
         }
 
-        }
+
 
 
     }
