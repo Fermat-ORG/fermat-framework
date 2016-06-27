@@ -35,10 +35,13 @@ import com.bitdubai.sub_app.crypto_broker_community.util.FragmentsCommons;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
+ * <p/>
+ * Is no longer in use. It will be removed
  *
  * @author lnacosta
  * @version 1.0.0
  */
+@Deprecated
 public class ConnectionOtherProfileFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoBrokerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements Dialog.OnDismissListener, Button.OnClickListener {
 

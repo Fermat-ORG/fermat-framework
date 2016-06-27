@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionsWorldFragment
+public class BrowserTabFragment
         extends FermatListFragment<CryptoCustomerCommunityInformation, ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation>, OnLoadMoreDataListener {
 
@@ -72,8 +72,8 @@ public class ConnectionsWorldFragment
     ImageView noData;
     private int offset;
 
-    public static ConnectionsWorldFragment newInstance() {
-        return new ConnectionsWorldFragment();
+    public static BrowserTabFragment newInstance() {
+        return new BrowserTabFragment();
     }
 
 

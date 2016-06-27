@@ -42,11 +42,11 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 04/02/2016.
  */
-public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
+public class ConnectionsTabFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager> implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private static final int MAX = 20;
-    protected final String TAG = "ConnectionNotificationsFragment";
+    protected final String TAG = "RequestsTabFragment";
     private int offset = 0;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -61,8 +61,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ReferenceApp
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationArrayList;
     TextView noDatalabel;
     ImageView noData;
-    public static ConnectionsListFragment newInstance() {
-        return new ConnectionsListFragment();
+    public static ConnectionsTabFragment newInstance() {
+        return new ConnectionsTabFragment();
     }
 
     @Override

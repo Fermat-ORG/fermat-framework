@@ -41,12 +41,12 @@ import java.util.List;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
+public class RequestsTabFragment extends AbstractFermatFragment<ReferenceAppFermatSession<CryptoCustomerCommunitySubAppModuleManager>, SubAppResourcesProviderManager>
         implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity>, AcceptDialog.OnDismissListener {
 
     private static final int MAX = 20;
 
-    protected final String TAG = "ConnectionNotificationsFragment";
+    protected final String TAG = "RequestsTabFragment";
 
     private SwipeRefreshLayout swipeRefresh;
     private boolean isRefreshing = false;
@@ -62,8 +62,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Refe
      *
      * @return InstalledFragment instance object
      */
-    public static ConnectionNotificationsFragment newInstance() {
-        return new ConnectionNotificationsFragment();
+    public static RequestsTabFragment newInstance() {
+        return new RequestsTabFragment();
     }
 
     @Override
