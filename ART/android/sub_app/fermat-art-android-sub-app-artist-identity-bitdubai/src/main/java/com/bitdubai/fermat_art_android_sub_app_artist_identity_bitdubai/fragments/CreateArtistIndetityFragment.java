@@ -7,6 +7,7 @@ package com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.fragmen
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -119,9 +120,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private TextView WarningLabel;
     private TextView alias;
     private String WarningColor = "#DF0101";
-    private String NormalColor  =  "#0080FF";
+    private String NormalColor = "#0080FF";
     private boolean contextMenuDelete = false;
-
 
 
     private static final int ERROR_IMAGE_VIEW = 5;
@@ -138,7 +138,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         super.onCreate(savedInstanceState);
 
         try {
-            artistIdentitySubAppSession=(ArtistIdentitySubAppSession)appSession;
+            artistIdentitySubAppSession = (ArtistIdentitySubAppSession) appSession;
             moduleManager = artistIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
@@ -189,8 +189,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         getToolbar().setBackground(getResources().getDrawable(R.drawable.art_action_bar_background));
 
 
-
-        if (artArtistPreferenceSettings.isPresentationHelpEnabled()==true) {
+        if (artArtistPreferenceSettings.isPresentationHelpEnabled() == true) {
             setUpHelpTkyArtist(false);
         }
 
@@ -238,7 +237,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             } else {
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
             }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            //  bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
             artistImageByteArray = toByteArray(bitmap);
             artistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
@@ -260,9 +259,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         );
         mArtistExternalName.setAdapter(adapter2);
         ArtExternalPlatform[] externalPlatforms = ArtExternalPlatform.values();
-        for (int i=0; i<externalPlatforms.length;i++){
-            if(externalPlatforms[i].getCode().equals(
-                    identitySelected.getExternalPlatform().getCode())){
+        for (int i = 0; i < externalPlatforms.length; i++) {
+            if (externalPlatforms[i].getCode().equals(
+                    identitySelected.getExternalPlatform().getCode())) {
                 mArtistExternalPlatform.setSelection(i + 1);
                 try {
                     List<UUID> externalIdentityIDList = getArtistIdentityIdByPlatform(externalPlatforms[i]);
@@ -348,22 +347,21 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExposureLevel = (Spinner) layout.findViewById(R.id.art_exposureLevel);
         mArtistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.art_artistAcceptConnectionsType);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.aai_layout_user_image);
-        camEditButton=(ImageButton)layout.findViewById(R.id.art_cam_edit_image_button);
+        camEditButton = (ImageButton) layout.findViewById(R.id.art_cam_edit_image_button);
 
         mArtistExternalPlatform.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
         mArtistExternalName.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
         mArtistExposureLevel.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
         mArtistAcceptConnectionsType.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
 
-        if(!isUpdate){
+        if (!isUpdate) {
             camEditButton.setImageResource(R.drawable.art_add_picture_button);
             createButton.setImageResource(R.drawable.art_create_button);
-        }else{
+        } else {
             camEditButton.setImageResource(R.drawable.art_edit_picture_button);
             createButton.setImageResource(R.drawable.art_save_changes_button);
         }
         mArtistUserName.requestFocus();
-
 
 
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
@@ -409,8 +407,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            //MIG
-            //    mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
+                //MIG
+                //    mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
             }
 
             @Override
@@ -511,7 +509,6 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         break;
 
 
-
                 }
 
             }
@@ -546,19 +543,19 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private int createNewIdentity() throws InvalidParameterException {
         UUID externalIdentityID = null;
         ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
-        if(mArtistExternalPlatform.getSelectedItem() != mArtistExternalPlatform.getItemAtPosition(0)){
+        if (mArtistExternalPlatform.getSelectedItem() != mArtistExternalPlatform.getItemAtPosition(0)) {
             artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
         }
-        if(!mArtistExternalName.getSelectedItem().equals(mArtistExternalName.getItemAtPosition(0))){
-            if(artExternalPlatform !=null){
+        if (!mArtistExternalName.getSelectedItem().equals(mArtistExternalName.getItemAtPosition(0))) {
+            if (artExternalPlatform != null) {
                 List<UUID> identityByPlatformList = new ArrayList<>();
-                try{
+                try {
                     identityByPlatformList = getArtistIdentityIdByPlatform(artExternalPlatform);
-                }catch(Exception e){
+                } catch (Exception e) {
                 }
                 if (!identityByPlatformList.isEmpty()) {
-                    externalIdentityID = identityByPlatformList.get(mArtistExternalName.getSelectedItemPosition()-1);
+                    externalIdentityID = identityByPlatformList.get(mArtistExternalName.getSelectedItemPosition() - 1);
                 }
             }
         }
@@ -570,7 +567,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     mArtistExternalPlatform.getSelectedItem().toString());
         }*/
         if (mArtistExternalName.getCount() > 1) {
-            if(mArtistExternalName.getSelectedItemPosition() > 0){
+            if (mArtistExternalName.getSelectedItemPosition() > 0) {
                 externalUsername = mArtistExternalName.getSelectedItem().toString();
             }
         }
@@ -594,9 +591,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 artistAcceptConnectionsType,
                                 externalIdentityID,
                                 artExternalPlatform);
-                    }else{
+                    } else {
                         byte[] currentImage;
-                        if(updateProfileImage) {
+                        if (updateProfileImage) {
                             currentImage = checkedImage();
                             moduleManager.updateArtistIdentity(
                                     artistName,
@@ -632,8 +629,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private byte[] checkedImage() {
 
 
-
-        if(artistImageByteArray == null){
+        if (artistImageByteArray == null) {
             return convertImage(R.drawable.ic_profile_male);
         }
 
@@ -646,14 +642,14 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             byte[] ArtistImageBytes,
             UUID externalIdentityID) {
 
-        if (ArtistImageBytes == null){
-          //  WarningCircle.setVisibility(View.VISIBLE);
+        if (ArtistImageBytes == null) {
+            //  WarningCircle.setVisibility(View.VISIBLE);
             //WarningLabel.setVisibility(View.VISIBLE);
         }
 
-        if(mArtistExternalPlatform.getSelectedItemPosition()==0){
+        if (mArtistExternalPlatform.getSelectedItemPosition() == 0) {
             //mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
-        }else{
+        } else {
             //MIG
             //mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
         }
@@ -666,24 +662,26 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             mArtistExternalName.setBackgroundColor(Color.parseColor("#0080FF"));}
 */
 
-        if (ArtistExternalName.isEmpty()){
+        if (ArtistExternalName.isEmpty()) {
             //mArtistUserName.setHintTextColor(Color.parseColor(WarningColor));
             alias.setTextColor(Color.parseColor(WarningColor));
-            }
+        }
 
-        if (ArtistExternalName.isEmpty()){
+        if (ArtistExternalName.isEmpty()) {
 
-            return false;}
+            return false;
+        }
 
         boolean identitySelectedHasID;
-        try{
+        try {
             identitySelectedHasID = identitySelected.getExternalIdentityID() != null;
-        }catch(Exception e){
+        } catch (Exception e) {
             identitySelectedHasID = false;
         }
-        if(externalIdentityID == null && identitySelectedHasID && isUpdate){
+        if (externalIdentityID == null && identitySelectedHasID && isUpdate) {
 
-            return false;}
+            return false;
+        }
         /*
         if (ArtistImageBytes == null){
 
@@ -817,47 +815,26 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Uri selectedImage2 = data.getData();
-
                     File myFile = new File(selectedImage2.getPath());
                     myFile.getAbsolutePath();
                     Bundle extras2 = data.getExtras();
-
                     Bitmap fixedBitmap = FixRotation(myFile, (Bitmap) extras2.get("data"));
-
-
-                    Bundle extras = data.getExtras();
                     imageBitmap = fixedBitmap;
-
-                    /*
-                    //-----------------------------------------------
-                    ContentResolver contentResolver2 = getActivity().getContentResolver();
-                    try {
-                        imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver2, selectedImage2);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    */
-
                     imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                     artistImageByteArray = toByteArray(imageBitmap);
-
                     updateProfileImage = true;
-
                     Picasso.with(getActivity()).load(selectedImage2).transform(new CircleTransform()).into(artistImage);
-
                     updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
-                    File myFile2 = new File(selectedImage.getPath());
-                    myFile2.getAbsolutePath();
-                    Bundle extras3 = data.getExtras();
-
+                    String absolutePath = getRealPathFromURI(selectedImage);
+                    File uriFile = new File(absolutePath);
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            //imageBitmap = FixRotation(myFile2, imageBitmap);
+                            imageBitmap = FixRotation(uriFile, imageBitmap);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             artistImageByteArray = toByteArray(imageBitmap);
                             updateProfileImage = true;
@@ -877,7 +854,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
     }
 
-    private Bitmap FixRotation(File myFile,Bitmap bitmap) {
+    private Bitmap FixRotation(File myFile, Bitmap bitmap) {
 
         Bitmap rotatedBitmap = null;
 
@@ -886,11 +863,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             int rotationInDegrees = exifToDegrees(rotation);
             Matrix matrix = new Matrix();
-            if (rotation != 0f) {matrix.preRotate(rotationInDegrees);}
-            rotatedBitmap = Bitmap.createBitmap(bitmap,0,0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            if (rotation != 0f) {
+                matrix.preRotate(rotationInDegrees);
+            }
+            rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
 
-        }catch(IOException ex){
+        } catch (IOException ex) {
             Log.e(TAG, "Failed to get Exif data", ex);
         }
 
@@ -898,10 +877,29 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     }
 
     private int exifToDegrees(int exifOrientation) {
-        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) { return 90; }
-        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {  return 180; }
-        else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {  return 270; }
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+            return 90;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+            return 180;
+        } else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+            return 270;
+        }
         return 0;
+    }
+
+
+    public String getRealPathFromURI(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int column_index = 0;
+       if(cursor != null){
+         column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);}
+
+        cursor.moveToFirst();
+
+        return cursor.getString(column_index);
     }
 
     @Override
@@ -910,7 +908,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-        if (updateProfileImage) {menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");}
+        if (updateProfileImage) {
+            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete Picture");
+        }
 
 
         super.onCreateContextMenu(menu, view, menuInfo);
